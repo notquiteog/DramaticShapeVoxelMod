@@ -138,6 +138,7 @@ local mouseDX, mouseDY = 0, 0         -- relative counts since last update
 local lookTouch = nil                 -- { id, x, y } of the claimed finger
 local touchMove = nil                 -- the touch d-pad's analog deflection
 local captured = false                -- mouse relative mode engaged by us
+local clickAsButtons = false          -- left/right read as GB A/B by us
 
 -- the placed-camera record this module last handed to Voxel3D, so passes
 -- that key behaviour off "is the first-person rig the one drawing" (the
@@ -525,14 +526,16 @@ function FirstPerson.update(dt)
 
   local driving = FirstPerson.driving()
 
-  -- mouse capture follows DRIVING, not engagement: the pointer is taken
-  -- only while the rung is on, the overworld is on top, and the window has
-  -- focus. It is given back the moment any of the three ends -- so a menu,
-  -- a dialog or a battle over the world frees the cursor, and the player
-  -- can reach the rest of the desktop without leaving the rung. Checked
-  -- against the live mode rather than toggled on edges, so a capture lost
-  -- to the OS (alt-tab) re-arms itself on the next focused frame, and so
-  -- does one dropped for a menu when that menu closes.
+  -- Two questions about the same mouse, and they do NOT have the same
+  -- answer: where the POINTER may go, and what the BUTTONS mean.
+  --
+  -- The POINTER is taken only while the look is being driven -- the rung
+  -- on, the overworld on top, the window focused. It is given back the
+  -- moment any of the three ends, so a menu, a dialog or a battle over the
+  -- world frees the cursor and the player can reach the rest of the
+  -- desktop without leaving the rung. Checked against the live mode rather
+  -- than toggled on edges, so a capture lost to the OS (alt-tab) re-arms
+  -- itself on the next focused frame, and so does one dropped for a menu.
   local wantCapture = driving
   if wantCapture and love.window and love.window.hasFocus then
     local okF, focus = pcall(love.window.hasFocus)
@@ -545,6 +548,14 @@ function FirstPerson.update(dt)
     end
     captured = wantCapture
   end
+
+  -- The BUTTONS follow the rung alone, pointer or no pointer. A player on
+  -- this rung is holding a mouse instead of a pad whatever is on screen,
+  -- so left stays A and right stays B through the menu that just freed the
+  -- cursor -- which is the menu they most want to answer. Nothing is stolen
+  -- by claiming them that wide: the engine's own mousepressed only feeds
+  -- the mod pointer hooks, and no game UI is clicked with a cursor.
+  clickAsButtons = engagedNow
 
   -- The mouse's counts, accumulated by the wrapped handler since the last
   -- tick; dropped unread while something else owns the screen.
@@ -780,8 +791,8 @@ function FirstPerson.install()
   -- traffic through input.pointer. Besides being reload-safe, this gives our
   -- synthetic A/B presses their own source so releasing a click cannot clear
   -- a keyboard, controller, or touch hold.
-  -- While the mouse is captured there is no cursor to click UI with, so
-  -- the buttons become GB buttons: left is A, right is B -- through the
+  -- While a free-camera rung is selected, including in menus,
+  -- the buttons remain GB buttons: left is A, right is B -- through the
   -- overlay's own press path, which a rebind can never detach. What WE
   -- pressed is remembered per button, so the release always reaches the
   -- overlay even if the capture ended while the button was down --
@@ -823,7 +834,7 @@ function FirstPerson.install()
     end
 
     local button = ev.button
-    if ev.phase == "pressed" and captured then
+    if ev.phase == "pressed" and clickAsButtons then
       if hordeMouse(button, true) then return true end
       local mapped = MOUSE_BTN[button]
       if mapped then
