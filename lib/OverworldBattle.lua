@@ -134,6 +134,20 @@ OverworldBattle.hudScaleSetting = ModSetting.new("hudScale", "HUD SCALE",
 -- Staging battles on Gold is a battle-presentation adapter written against
 -- those Gen 2 seams; docs/GEN1_GEN2_DIFFERENCES.md carries what it needs.
 function OverworldBattle.available()
+  if Generation.isGen1() then return true end
+  -- Gen 2 stages too, by a different route for the two things that differ:
+  -- the billboard textures (lib/Gen2Staged.lua, over Gold's activeMon/pic
+  -- instead of Gen 1's drawPicsLayer) and the delivery of the finished arena
+  -- canvas (returned from the world pipeline, because Game.renderer -- and so
+  -- setWorldOverride -- is absent there). The arena search itself needed
+  -- nothing: BattleArena.find reads only backed Map members.
+  return Generation.isGen2() and Voxel3D.available()
+end
+
+-- Which engine SEAMS install() may patch. The six Gen 1 BattleState members
+-- the staged pics used, plus pushBattle, are absent on Gen 2 -- that part of
+-- install() is Gen 1's alone, and the presence tests inside it say so too.
+function OverworldBattle.seamsAvailable()
   return Generation.isGen1()
 end
 
@@ -1301,6 +1315,13 @@ function OverworldBattle.prepareTrainer(battle)
 end
 
 function OverworldBattle.textures(battle)
+  -- Gen 2 builds these from Gold's own battle screen: it has no
+  -- drawPicsLayer to drive and no battle.enemy / battle.player to swap, so
+  -- sideTexture below cannot run there at all. Gen2Staged answers with the
+  -- same { canvas, ax, ay, trainer } shape.
+  if Generation.isGen2() then
+    return V.require("Gen2Staged").textures(game())
+  end
   if not battle then return nil end
   OverworldBattle.prepareTrainer(battle)
   local out = {}
@@ -1359,9 +1380,11 @@ function OverworldBattle.refreshSpriteOwnershipHook()
 end
 
 function OverworldBattle.install()
-  -- Every wrap below lands on a Gen 1 seam. See OverworldBattle.available.
-  if not OverworldBattle.available() then
-    OverworldBattle.skipped = "gen2 has no Gen 1 battle seams to stage on"
+  -- Every wrap below lands on a Gen 1 seam. The FEATURE runs on Gen 2 (see
+  -- OverworldBattle.available); these particular members do not exist there.
+  if not OverworldBattle.seamsAvailable() then
+    OverworldBattle.skipped =
+      "gen2 stages through Gen2Staged/Gen2Battle; these seams are Gen 1's"
     return
   end
   local OverworldState = require("src.world.OverworldController")

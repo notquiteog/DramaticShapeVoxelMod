@@ -108,6 +108,25 @@ function Gen2Battle.holdWorldBg(options)
   return true
 end
 
+-- Is this mon already standing on the arena as a billboard this frame?
+--
+-- Asked per drawPic call rather than once per frame because a side can be
+-- declined mid-battle (a faint, a send-out, a Transform mid-animation) and
+-- the flat slot has to come back for it the moment it is.
+function Gen2Battle.stagedMon(mon)
+  if mon == nil then return false end
+  local OverworldBattle = V.require("OverworldBattle")
+  if not OverworldBattle.available() then return false end
+  local shot = OverworldBattle.shot()
+  if not (shot and shot.canvas) then return false end
+  local drawn = V.require("Gen2Staged").drawn
+  if type(drawn) ~= "table" then return false end
+  for _, staged in pairs(drawn) do
+    if staged == mon then return true end
+  end
+  return false
+end
+
 Gen2Battle.installed = false
 
 function Gen2Battle.install()
@@ -146,6 +165,23 @@ function Gen2Battle.install()
     -- the world the engine drew for us a moment ago.
     if type(self.drawHud) == "function" then self:drawHud() end
     if type(self.drawBottom) == "function" then self:drawBottom(0) end
+  end
+
+  -- The mons are geometry standing on the arena now, drawn in the 3D pass
+  -- before this screen composites at all, so the flat panel must not draw
+  -- them a second time in their slots. Exactly the mons a billboard was
+  -- built for this frame, and nothing else: a side Gen2Staged declined --
+  -- a fainted slot, a missing pic, the send-out before a mon exists -- still
+  -- draws flat, which is what keeps the screen honest while the arena is
+  -- only half there.
+  if type(BattleState.drawPic) == "function"
+     and not BattleState.dramaticShapeGen2PicHook then
+    local innerPic = BattleState.drawPic
+    function BattleState:drawPic(mon, back, ...)
+      if Gen2Battle.stagedMon(mon) then return end
+      return innerPic(self, mon, back, ...)
+    end
+    BattleState.dramaticShapeGen2PicHook = true
   end
 
   BattleState.dramaticShapeGen2SceneHook = true

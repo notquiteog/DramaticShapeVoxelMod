@@ -432,6 +432,24 @@ mod.content.render_pipelines:register("voxel", {
     -- real overworld frame.
     local state = ctx and ctx.state
     if nativeNamingOwnsFrame(state) then return nil end
+
+    -- A staged battle's finished arena, on Gen 2.
+    --
+    -- Gen 1 hands that canvas to the renderer instead
+    -- (Renderer:setWorldOverride, in OverworldBattle's BattleState.draw
+    -- wrapper), but Game.renderer is one of the members the Gen 2
+    -- compatibility layer cannot back -- Game2 draws its own scene -- so
+    -- there is nothing there to override.
+    --
+    -- What Gen 2 has instead is this seam, already in the right place:
+    -- during a battle with BATTLE BG = world, Game2:drawScene calls
+    -- world:draw() behind the battle panel, and world:draw is what asks for
+    -- the world pipeline. So the arena simply IS this frame's world image,
+    -- and lib/Gen2Battle.lua's suppressed panel clear is what lets it show.
+    if Generation.isGen2() then
+      local staged = OverworldBattle.shot()
+      if staged and staged.canvas then return staged.canvas end
+    end
     if type(state) ~= "table" or not (state.map and state.camera and state.player) then
       return nil
     end

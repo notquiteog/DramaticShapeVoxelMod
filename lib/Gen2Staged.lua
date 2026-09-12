@@ -1,0 +1,140 @@
+-- The staged battle's billboard textures, on Gold, Silver and Crystal.
+--
+-- OverworldBattle stages a fight by rendering each side's pic into its own
+-- small canvas with a known anchor -- centred on `ax`, feet on `ay` -- and
+-- handing those to BattleScene, which hangs them in the 3D scene as quads
+-- standing on the arena's ground. Everything about that is generation
+-- neutral except where the pic comes from.
+--
+-- The Gen 1 route cannot be reused. OverworldBattle.sideTexture drives the
+-- engine's own `drawPicsLayer` with the battle's fields temporarily swapped
+-- (`OFF[side]`), and reads `battle.enemy`, `battle.player`,
+-- `battle.trainerPic`, `battle.showPlayerBack`. None of that exists on Gen 2:
+-- Gold has no drawPicsLayer, and its battlers live under
+-- `battle.sides[i].battlers` rather than on two named fields.
+--
+-- Gold offers something better for this particular job, though. Its battle
+-- screen resolves a pic to an IMAGE through two members the compatibility
+-- layer leaves in place:
+--
+--   screen:activeMon(side)     the live battler, "enemy" / "player"
+--   screen:pic(mon, back)      -> image, trueColor, path
+--
+-- so the texture can be drawn directly instead of by re-entering a draw
+-- layer with the screen's state bent around it. That is both simpler and
+-- less invasive -- nothing on the battle is mutated and put back.
+--
+-- And `pic` is the right seam rather than merely a convenient one: it
+-- resolves through the engine's `pokemon.sprite` hook
+-- (src/ui/gen2/BattleState.lua:750), which this mod already owns. So the art
+-- that lands on the billboard is the art BATTLE ART selected -- the chosen
+-- generation, shiny routing and all -- exactly as on Gen 1.
+
+local V = ...
+local Generation = V.require("Generation")
+
+local Gen2Staged = {}
+
+-- The live Gen 2 battle screen. Found by walking the stack rather than
+-- captured in a draw wrapper, because the textures are rendered from the
+-- pipeline's UPDATE tick, before anything has drawn this frame.
+local function screenFor(game)
+  local stack = game and game.stack
+  local states = stack and stack.states
+  if type(states) ~= "table" then return nil end
+  for i = #states, 1, -1 do
+    local s = states[i]
+    if type(s) == "table" and type(s.activeMon) == "function"
+       and type(s.pic) == "function" then
+      return s
+    end
+  end
+  return nil
+end
+
+Gen2Staged.screenFor = screenFor
+
+-- One canvas per side, kept and resized rather than reallocated per frame.
+local canvases = {}
+
+local function canvasFor(side, w, h)
+  local g = love.graphics
+  if not (g and g.newCanvas) then return nil end
+  local held = canvases[side]
+  if held and held:getWidth() >= w and held:getHeight() >= h then
+    return held
+  end
+  local ok, canvas = pcall(g.newCanvas, w, h)
+  if not ok or not canvas then return nil end
+  if canvas.setFilter then pcall(canvas.setFilter, canvas, "nearest", "nearest") end
+  canvases[side] = canvas
+  return canvas
+end
+
+function Gen2Staged.release()
+  for side, canvas in pairs(canvases) do
+    if canvas and canvas.release then pcall(canvas.release, canvas) end
+    canvases[side] = nil
+  end
+end
+
+-- Which sides a billboard was actually drawn for this frame, so the flat
+-- panel can skip exactly those mons and nothing else (lib/Gen2Battle.lua
+-- reads this). Cleared at the top of every textures() pass.
+Gen2Staged.drawn = {}
+
+-- The padding the Gen 1 anchor uses, so a pic's feet sit on the ground quad
+-- rather than one pixel through it.
+local FOOT_PAD = 1
+
+function Gen2Staged.sideTexture(game, side)
+  local screen = screenFor(game)
+  if not screen then return nil end
+  local back = side == "player"
+  local okMon, mon = pcall(screen.activeMon, screen, side)
+  if not (okMon and mon) then return nil end
+  local okPic, image = pcall(screen.pic, screen, mon, back)
+  if not (okPic and image) then return nil end
+  local okDim, iw, ih = pcall(image.getDimensions, image)
+  if not (okDim and iw and ih and iw > 0 and ih > 0) then return nil end
+
+  local BattleScene = V.require("BattleScene")
+  local cw = math.max(BattleScene.GB_W or 160, iw + 2)
+  local ch = math.max(BattleScene.GB_H or 144, ih + 2)
+  local ax = cw / 2
+  local ay = ih + FOOT_PAD
+  local canvas = canvasFor(side, cw, ch)
+  if not canvas then return nil end
+
+  local g = love.graphics
+  local prev = g.getCanvas()
+  local pr, pg, pb, pa = g.getColor()
+  local okDraw = pcall(function()
+    g.setCanvas(canvas)
+    g.clear(0, 0, 0, 0)
+    g.setColor(1, 1, 1, 1)
+    -- centred on ax with the feet on ay, which is the anchor contract
+    -- BattleScene.billboard reads (tw / 2 - ax, th - ay).
+    g.draw(image, ax - iw / 2, ay - ih)
+  end)
+  g.setCanvas(prev)
+  g.setColor(pr, pg, pb, pa)
+  if not okDraw then return nil end
+
+  Gen2Staged.drawn[side] = mon
+  return { canvas = canvas, ax = ax, ay = ay, trainer = false }
+end
+
+-- The same shape OverworldBattle.textures returns, so BattleScene cannot tell
+-- which generation built it.
+function Gen2Staged.textures(game)
+  if not Generation.isGen2() then return nil end
+  Gen2Staged.drawn = {}
+  local out = {}
+  out.enemy = Gen2Staged.sideTexture(game, "enemy")
+  out.player = Gen2Staged.sideTexture(game, "player")
+  if not (out.enemy or out.player) then return nil end
+  return out
+end
+
+return Gen2Staged

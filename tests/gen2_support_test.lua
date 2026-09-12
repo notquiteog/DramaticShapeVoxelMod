@@ -105,6 +105,10 @@ local GEN2_PATCHES = {
     absentFrom = "src.battle.BattleState",
     key = "dramaticShapeGen2SceneHook",
     owner = "Gen2Battle (the battle drawn over the diorama)" },
+  { module = "src.ui.gen2.BattleState",
+    absentFrom = "src.battle.BattleState",
+    key = "dramaticShapeGen2PicHook",
+    owner = "Gen2Battle (the flat pic skipped for a billboarded mon)" },
 }
 
 local previousVersion = GameVersion.get()
@@ -150,7 +154,12 @@ for _, cart in ipairs(carts) do
     T.eq(#Voxel.availableLevelLabels(), #Voxel.ANGLE_LABELS,
       label .. ": every voxel rung is on the ladder")
     T.check(Voxel.freeCamAvailable(), label .. ": the free-cam rungs are offered")
-    T.check(OverworldBattle.available(), label .. ": battles can be staged")
+    T.check(OverworldBattle.seamsAvailable(),
+      label .. ": the Gen 1 battle seams are this cart's to patch")
+    -- The Gen 2 texture pass refuses to build anything on a Gen 1 cart, so
+    -- the two arms can never both answer for one battle.
+    T.eq(lib("Gen2Staged").textures(nil), nil,
+      label .. ": the Gen 2 billboard pass declines on a Gen 1 cart")
     local Gen2Battle = lib("Gen2Battle")
     T.check(not Gen2Battle.available(),
       label .. ": the Gen 2 arm of 3D-BTL declines here")
@@ -177,10 +186,22 @@ for _, cart in ipairs(carts) do
     T.eq(labels[#labels], "75",
       label .. ": the highest selectable rung is the 75 degree orbit")
 
-    T.check(not OverworldBattle.available(),
-      label .. ": the Gen 1 arena cannot stage a battle on this cart")
-    T.eq(OverworldBattle.enabled(), false,
-      label .. ": and the Gen 1 staged-battle switch reads off")
+    -- NOT OverworldBattle.available() here, deliberately. That answer is
+    -- `isGen2() and Voxel3D.available()`, and Voxel3D is false in a headless
+    -- harness with no shaders -- so asserting it is false would pass with the
+    -- whole staged feature deleted, which is the one thing this case must not
+    -- do. The honest Gen 1/Gen 2 split is which engine SEAMS may be patched:
+    -- the six absent Gen 1 BattleState members and pushBattle are never
+    -- touched here, and the engine-table sweep below is the evidence.
+    T.check(not OverworldBattle.seamsAvailable(),
+      label .. ": the Gen 1 battle seams are never patched on this cart")
+
+    -- The Gen 2 arm of the staged battle is present and gated to Gen 2.
+    local Gen2Staged = lib("Gen2Staged")
+    T.check(type(Gen2Staged.textures) == "function",
+      label .. ": the Gen 2 billboard texture pass is published")
+    T.check(type(Gen2Staged.sideTexture) == "function",
+      label .. ": and its per-side entry")
 
     -- 3D-BTL is still OFFERED here -- by the other implementation of the
     -- same row, which draws the fight over the live diorama instead of

@@ -606,6 +606,17 @@ end
 -- the engine's own pipeline context gets it too (OverworldController's
 -- ctx.paletteFor).
 local function paletteFor(state, home)
+  -- Gold answers nil here, and nil is the right answer rather than a gap.
+  -- `paletteNameFor` is absent on the Gen 2 world, and its own pipeline ctx
+  -- passes `paletteFor = function() return nil end` for the stated reason:
+  -- "imageFor keys its bakes by GbcPalette.mode, so the colour is already in
+  -- the art" (src/world/gen2/World.lua:drawPipeline). That is true of our
+  -- atlas too, which lib/TerrainAtlas.lua bakes per BG palette slot on Gen 2 --
+  -- so there is no palette left to hand the colour helpers, exactly as in
+  -- Gen 1's own true-colour modes.
+  if type(state.paletteNameFor) ~= "function" then
+    return function() return nil end
+  end
   return function(map)
     return PaletteFX.pal(require("src.core.Game").data,
                          state:paletteNameFor(map or home))
