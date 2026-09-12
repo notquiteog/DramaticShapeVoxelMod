@@ -549,6 +549,12 @@ end
 -- fallback while the first slices run.
 function VoxelScene.prefetch(state)
   local Voxel = V.require("VoxelState")
+  -- Gold's connected-map rows carry an id and a baked image where Gen 1's
+  -- carry the Map itself, so give them the field every reader below wants.
+  -- No-op on Gen 1 and free after the first pass. lib/Gen2Neighbors.lua
+  -- argues the whole thing; without it every OUTDOOR Gen 2 map took the
+  -- world pass down on `nb.map.id` and fell back to the flat 2D draw.
+  V.require("Gen2Neighbors").ensure(state)
 
   local live, ids = { [state.map.id] = true }, { state.map.id }
   for _, nb in ipairs(state.neighbors or {}) do
@@ -1325,6 +1331,7 @@ function VoxelScene.warmAtlas(map)
 end
 
 function VoxelScene.render(state, w, h, vw, vh, paletteFor)
+  V.require("Gen2Neighbors").ensure(state)
   lastPaletteFor = paletteFor
   -- With nothing cached at all (the first frame of a fresh toggle), return
   -- nil and let the pipeline choose its cold-build veil.  A settled failure

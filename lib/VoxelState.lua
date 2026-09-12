@@ -22,7 +22,26 @@
 -- collision, movement, triggers or scripts.
 
 local V = ...
-local Generation = V.require("Generation")
+
+-- Resolved on first ask, not at load, and tolerant of having no V at all.
+--
+-- This module is low-level enough that several cases load it bare --
+-- `loadfile("lib/VoxelState.lua")()` with no vararg -- to read the ladder
+-- without standing up a mod namespace. A file-scope `V.require` made it
+-- unloadable there, which is a real cost for a question only one function
+-- asks. No discriminator means Gen 1, which is what this mod assumed
+-- everywhere before Gen 2 was a target.
+local Generation
+local function generation()
+  if Generation == nil then
+    Generation = false
+    if V and type(V.require) == "function" then
+      local ok, module = pcall(V.require, "Generation")
+      if ok and type(module) == "table" then Generation = module end
+    end
+  end
+  return Generation or nil
+end
 
 local Voxel = {}
 
@@ -111,7 +130,9 @@ Voxel.ORBIT_LEVEL_COUNT = 6
 -- needs the walk driven through Gold's own step and landing machinery rather
 -- than through a wrapper it never calls.
 function Voxel.freeCamAvailable()
-  return Generation.isGen1()
+  local G = generation()
+  if not G then return true end
+  return G.isGen1()
 end
 
 -- The ladder the engine is handed, which is what decides the hotkey's wrap and

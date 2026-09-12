@@ -631,7 +631,10 @@ local function prefetchArena(state, host)
     return terrain, neighbors, water, neighborWater, visuals, neighborVisuals
   end
   local live = { [host.id] = true, [state.map.id] = true }
-  for _, nb in ipairs(state.neighbors or {}) do live[nb.map.id] = true end
+  V.require("Gen2Neighbors").ensure(state)
+  for _, nb in ipairs(state.neighbors or {}) do
+    if nb.map then live[nb.map.id] = true end
+  end
   ChunkMesher.setLive(live)
   TerrainAtlas.setLive(live)
   ChunkMesher.request(host, false, nil, true)
@@ -1116,7 +1119,11 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
   -- the floor the fight is staged on: normally the player's own, sometimes
   -- another floor of the same cave or building (see BattleArena)
   local host = arena.map or state.map
-  local neighbors = (host == state.map) and (state.neighbors or {}) or {}
+  -- resolved(), not the raw list: a row we could not build a Map for has to
+  -- be skipped rather than read off, or one unresolvable connection takes the
+  -- whole arena draw with it.
+  local neighbors = (host == state.map)
+    and V.require("Gen2Neighbors").resolved(state) or {}
   local whiteFill = UiBackplates.arenaWhite()
   local gen6Fill = UiBackplates.arenaGen6()
   local pngFill = UiBackplates.arenaPng()

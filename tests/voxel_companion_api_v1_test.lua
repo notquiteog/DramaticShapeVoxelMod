@@ -273,6 +273,9 @@ local function namespace(mod)
     VoxelState = fakeVoxelState,
     Voxel3D = fakeVoxel3D,
     DayNight = fakeDayNight,
+    -- The real module: it takes no V and reads src.core.GameVersion, which
+    -- is unset here, so it answers Gen 1 -- the cart this case describes.
+    Generation = assert(loadfile("lib/Generation.lua"))(),
   }
   return {
     mod = mod,

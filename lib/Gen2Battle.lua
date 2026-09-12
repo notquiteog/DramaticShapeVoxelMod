@@ -34,13 +34,27 @@
 -- the battle background genuinely is a white field. So the native WORLD mode
 -- shows the world in the MARGINS and a white slab where the fight is.
 --
--- Suppress that one fill and the diorama is behind the fight as well. The
--- engine hands us the two injection points to do it without patching a
--- drawing helper: `drawScene(bodyFn)` takes the whole body, and
--- `drawSceneBody(panelFn)` takes the panel -- so the panel is rebuilt as its
--- own two calls minus the clear, and every other path through the scene (the
--- slide-in, the animation view, the lifted rows, the exp burst,
--- `battle.overlay`) is still the engine's own.
+-- Suppress that one fill and the diorama is behind the fight as well. So this
+-- replaces `drawPanel` with its own body minus the clear, and every other path
+-- through the scene -- the slide-in, the animation view, the lifted rows, the
+-- exp burst, `battle.overlay` -- is still the engine's own.
+--
+-- `drawPanel` and NOT the `drawSceneBody(panelFn)` seam, which is the tidier
+-- looking route and was the first attempt. The engine builds the panel as
+-- `panelFn or function() self:drawPanel() end`, so passing a panel works --
+-- right up until another mod wraps `drawSceneBody` with a signature that
+-- drops the argument:
+--
+--     function BattleState2:drawSceneBody()      -- no panelFn
+--       ...
+--       innerDrawSceneBody(self)                 -- and none forwarded
+--     end
+--
+-- crystal_animated_sprites_with_shiny_visuals 2.0.3 does exactly that, and
+-- the result is silent: our panel is swallowed, the engine falls back to its
+-- own `drawPanel`, and the fight draws on a white slab with no error anywhere.
+-- Replacing `drawPanel` itself needs no argument to survive a chain, so it
+-- cannot be broken by a link that forgets to forward one.
 --
 -- What this deliberately does NOT do, and what separates it from the Gen 1
 -- rung: there is no arena search and no over-the-shoulder camera. The world
@@ -111,25 +125,27 @@ function Gen2Battle.install()
     Gen2Battle.installed = true
     return
   end
-  local inner = BattleState.drawScene
+  local inner = BattleState.drawPanel
   if type(inner) ~= "function" then
-    Gen2Battle.skipped = "this engine's Gen 2 battle screen has no drawScene"
+    Gen2Battle.skipped = "this engine's Gen 2 battle screen has no drawPanel"
     return
   end
 
-  function BattleState:drawScene(bodyFn)
-    -- A caller that brought its own body owns the whole scene; leave it be.
-    if bodyFn or not sceneOverrideOn() then
-      return inner(self, bodyFn)
+  function BattleState:drawPanel()
+    if not sceneOverrideOn() then return inner(self) end
+    -- The engine's own guard, borrowed rather than guessed: with no battler
+    -- pair the panel prints NO BATTLE over a cleared field, and that field
+    -- has to stay opaque or the message sits on the map. hasBattleSides is
+    -- exported for exactly this kind of reuse.
+    local sides = BattleState.hasBattleSides
+    if type(sides) == "function" then
+      local ok, has = pcall(sides, self)
+      if ok and not has then return inner(self) end
     end
-    return inner(self, function()
-      self:drawSceneBody(function()
-        -- drawPanel's own body, minus the Chrome.clear() that would paint
-        -- over the world the engine drew for us a moment ago.
-        if type(self.drawHud) == "function" then self:drawHud() end
-        if type(self.drawBottom) == "function" then self:drawBottom(0) end
-      end)
-    end)
+    -- drawPanel's own body, minus the Chrome.clear() that would paint over
+    -- the world the engine drew for us a moment ago.
+    if type(self.drawHud) == "function" then self:drawHud() end
+    if type(self.drawBottom) == "function" then self:drawBottom(0) end
   end
 
   BattleState.dramaticShapeGen2SceneHook = true
