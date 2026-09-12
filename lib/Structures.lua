@@ -162,6 +162,41 @@ local function keyOf(tx, ty)
   return (ty + 64) * 4096 + (tx + 64)
 end
 
+-- Whether the volume builder models this shape -- regioning it and reading
+-- its height off the drawing, instead of taking the class height as final.
+--
+-- `not s.authored` is the Gen 1 rule and it is right there: an authored
+-- shape carries a hand-picked height (a table is 6px, a bed is 12px) and
+-- regioning it would overrule the profile that picked it.
+--
+-- Gen 2 has no such profile. Its shapes are authored in the sense the
+-- MESHER cares about -- fold my art, do not smear one tile on every face --
+-- while their heights are exactly what a volume reading should decide,
+-- because a Johto house is as tall as its facade is deep. `s.volume` is
+-- that second half said separately (lib/Gen2TileShape.lua), and without it
+-- every building in Johto was a 16px slab with a roof lying on top.
+function Structures.volumeClaims(s)
+  if not (s and s.art == "upright") then return false end
+  if s.volume then return true end
+  return not s.authored
+end
+
+-- Whether the door fold may replace this shape with the facade's wall.
+--
+-- A hand PIN wins over the fold -- the fold is detection, and rule 1 of the
+-- resolution order is that an authored tile bypasses detection. A DERIVED
+-- classification is not a pin: it IS detection, and a more specific
+-- detector is welcome to refine it. Gen 2 has no profile to pin with, so
+-- all of its shapes arrive authored; without the `derived` exemption the
+-- fold never ran on Gold, the door cell kept the `ground` its warp-carpet
+-- collision earns it, and every Johto house was drawn with a notch cut out
+-- of its front.
+function Structures.doorFoldClaims(s)
+  if s == nil then return true end
+  if not s.authored then return true end
+  return s.derived == true
+end
+
 -- TEST429: the Overworld's $0E/$55 pair is not a row of independent
 -- columns. It is the authored fence family: every 2x2-tile collision cell
 -- draws one post, and adjacent cells imply the rails between them. The old
@@ -940,8 +975,19 @@ function Structures.forMap(map)
             for dx = 0, 1 do
               local dk = keyOf(cx * 2 + dx, cy * 2 + dy)
               local ds = shapeAt[dk]
-              if not (ds and ds.authored) then
-                shapeAt[dk] = shapes.classes.wall
+              -- A hand PIN wins over the fold; a DERIVED classification
+              -- does not. Gen 2 has no profile to pin with, so all of its
+              -- shapes arrive authored and this guard used to swallow
+              -- every Johto door -- the fold never ran, the door cell kept
+              -- the `ground` its warp-carpet collision earns it, and each
+              -- house was drawn with a notch cut out of its front.
+              if Structures.doorFoldClaims(ds) then
+                -- the Gen 2 wall, where there is one: the canonical Gen 1
+                -- `wall` is unauthored, so handing a Johto doorway that
+                -- shape would leave one column of the facade folding by a
+                -- different rule than the wall it sits in
+                shapeAt[dk] = (shapes.gen2Classes and shapes.gen2Classes.wall)
+                  or shapes.classes.wall
                 -- remembered for buildVolume: a folded doorway column
                 -- answers to its REGION for height and top, not to its
                 -- own drawn extent (see the door adoption there)
@@ -956,9 +1002,20 @@ function Structures.forMap(map)
 
   -- a structure cell: solid art the detector may model (authored tiles are
   -- profile-pinned and keep their authored shape)
+  -- Which cells get modelled as a VOLUME -- regioned, and given a height
+  -- read off the drawing rather than off their class.
+  --
+  -- `not s.authored` is the Gen 1 rule and it is right there: an authored
+  -- shape carries a hand-picked height (a table is 6px, a bed is 12px) and
+  -- regioning it would overrule the profile that picked it.
+  --
+  -- Gen 2 has no such profile. Its shapes are authored in the sense the
+  -- MESHER cares about -- fold my art, do not smear one tile on every face
+  -- -- while their heights are exactly what a volume reading should
+  -- decide, because a Johto house is as tall as its facade is deep.
+  -- `s.volume` is that second half said separately (lib/Gen2TileShape.lua).
   local function structural(k)
-    local s = shapeAt[k]
-    return s and s.art == "upright" and not s.authored
+    return Structures.volumeClaims(shapeAt[k])
   end
 
   -- ---- cylinders: profile-pinned round graphics, one per 16x16 cell ----
@@ -3121,12 +3178,29 @@ function Structures.buildStairs(S, map, x0, x1, y0, y1)
   end
 end
 
+local function Gen2RoofRows(G2, map, tx, run)
+  if type(G2.roofRowsFor) ~= "function" then return 0 end
+  local ok, rows = pcall(G2.roofRowsFor, map, tx, run.north, run.front)
+  return (ok and tonumber(rows)) or 0
+end
+
 -- ---- volume mode: per-column runs with real drawn heights ----
 
 -- `tiles` is a list of {tx, ty} forming one region (or what is left of one
 -- after object extraction); runs are column-local, heights are measured
 -- per column and reconciled per region.
 function Structures.buildVolume(S, map, tiles)
+  -- Gen 2 reads its own unit and roof rows; see the two sites below.
+  -- Resolved per call and tolerated absent, so a Gen 1 map and a stub
+  -- harness both take exactly the path they always did.
+  local G2
+  do
+    local ok, module = pcall(V.require, "Gen2TileShape")
+    if ok and type(module) == "table" and module.supports(map) then
+      G2 = module
+    end
+  end
+
   local cols = {}
   for _, c in ipairs(tiles) do
     cols[c[1]] = cols[c[1]] or {}
@@ -3157,7 +3231,17 @@ function Structures.buildVolume(S, map, tiles)
       -- cap at MAX_ROWS (a long-period repeat is still not one column of
       -- drawing).
       local unit, repeatRead = math.min(extent, MAX_ROWS), false
-      if extent > 1 then
+      -- The repeat scan below is a Gen 1 reading and it is actively wrong
+      -- on Gen 2. It exists because Kanto draws a cliff plateau as one
+      -- rock tile repeated down a column, and reading that column's whole
+      -- extent turned a 16px mesa into a 48px fin. GSC draws EVERYTHING
+      -- that way: house brick repeats every other row, a tree border is
+      -- one four-tile pattern tiled over a whole map edge. Measured on
+      -- NEW_BARK_TOWN and ROUTE_29, the scan fired on 12/12 roof columns,
+      -- 8/12 wall columns and 24/24 ledges, collapsing every one of them
+      -- to unit 2 -- which is the 16px slab the bug report called "long,
+      -- not tall". On Gen 2 the drawn extent is simply the answer.
+      if extent > 1 and not G2 then
         local t0 = map:tileAt(tx, front)
         for k = 1, extent - 1 do
           if map:tileAt(tx, front - k) == t0 then
@@ -3300,7 +3384,17 @@ function Structures.buildVolume(S, map, tiles)
     -- whole roof area -- and a rooftop tilted into a 48px ramp reads
     -- wrong instantly. Distinct top rows -> slope; repeated -> level top.
     local roofRows = 0
-    if S.outdoor and (not run.fromRepeat or adopted) and h >= 16
+    if G2 then
+      -- Gold says which rows are roof rather than leaving it to be
+      -- guessed from the art: PAL_BG_ROOF is reserved for them, which is
+      -- why a Johto roof is red and a Kanto one is not. The art test
+      -- below cannot work here -- Johto's roof tiles repeat, so it
+      -- answers "no roof" for every house in the game.
+      if S.outdoor and h >= 16 and not flatDoor then
+        roofRows = math.min(Gen2RoofRows(G2, map, r.tx, run),
+                            math.floor(h / 8) - 1)
+      end
+    elseif S.outdoor and (not run.fromRepeat or adopted) and h >= 16
        and not flatDoor and not kantoRetaining then
       roofRows = math.min(2, math.floor(h / 8) - 1)
       if roofRows > 0 and map:tileAt(r.tx, run.north)

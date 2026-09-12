@@ -1,5 +1,109 @@
 # Changelog
 
+## 1.12.1 - Gen 2: things stand up, and stand ON the ground
+
+1.12.0 classified Johto's tiles correctly and then built them wrong. Four
+faults, reported as "the trees are long not tall so they're going into
+walking pathways", "doors aren't being detected as part of wall" and
+"everybody is hovering in the air". They share one root: a single flag,
+`authored`, was being asked three different questions.
+
+### One flag, three questions
+
+`authored` means "fold my art properly" to the mesher, "do not region me
+into a volume" to Structures, and "do not overrule me" to every detector.
+Gen 1 can afford one word for all three, because there an authored shape is
+a human's decision in `data/voxel_heights.lua`. A Gen 2 shape is not a
+decision, it IS detection -- so it wants the first and not the other two.
+Marked authored, Johto got the textures right and everything else wrong;
+marked unauthored it stood up and lost its textures. The flag is now three:
+
+- `authored` - fold my art (unchanged, the mesher's question)
+- `volume`   - read my height off the drawing (Structures)
+- `derived`  - I am detection, refine me (the door fold)
+
+### Buildings stand up
+
+`Structures.buildVolume` reads a structure's height from how many map rows
+deep its drawing is -- Gen 1's fold-up rule, and the right one. Two things
+kept Johto out of it.
+
+First, Gen 2 shapes were never offered to it at all: `structural()` claims
+`not s.authored`. They are claimed by `volume` now.
+
+Second, the repeat scan. It exists because Kanto draws a cliff plateau as
+one rock tile repeated down a column, and reading that column's full extent
+turned a 16px mesa into a 48px fin. GSC draws *everything* that way: house
+brick repeats every other row, a tree border is one four-tile pattern tiled
+over a whole map edge. Measured on NEW_BARK_TOWN and ROUTE_29, the scan
+fired on 12/12 roof columns, 8/12 wall columns and 24/24 ledges, collapsing
+each to unit 2 -- the 16px slab the report called "long, not tall". On Gen 2
+the drawn extent is simply the answer.
+
+Roof rows come from `PAL_BG_ROOF` now rather than from guessing at the art.
+GSC reserves that slot -- its two colours are rewritten per map group, which
+is why a Johto roof is red and a Kanto one is not -- so it says outright
+where a facade stops. The art test it replaces cannot work here: Johto's
+roof tiles repeat, so it answered "no roof" for every house in the game.
+`roof` is consequently no longer a class of its own; the roof rows answer
+`wall` so the whole house is one region and the gable emerges from it.
+
+### Trees are tall, and are not plateaus
+
+`tree` is deliberately NOT a volume class, which is the same judgement from
+the other side: a house is as tall as its facade is drawn, a tree is as tall
+as a tree however much forest the map paints. Volumed, VIOLET_CITY's 174
+contiguous tree cells became one stepped plateau whose terraces followed
+each column's extent, with the camera inside it. A flat 32px -- two cells --
+reads as a treeline and stays uniform across a border. The Gen 1 number was
+16, one cell, which is where "long, not tall" came from on the tree side.
+
+### Doors are part of the wall
+
+The door fold marks a door cell's tiles structural so the door art stands in
+the building's front face. It skips authored cells, so on Gen 2 it never
+ran: the door cell kept the `ground` its warp-carpet collision earns it, and
+every Johto house was drawn with a notch cut out of its front. It now
+accepts a derived shape, and hands it the Gen 2 wall rather than the
+canonical Gen 1 one, so the doorway column folds by the same rule as the
+wall it sits in. A profile pin still wins -- Celadon Mansion's staircases
+are door tiles, and their pins have to survive this.
+
+### Nobody hovers
+
+`VoxelScene.groundAt` decides the height a character rides at, and it read
+the per-TILE shape table. `TileShape.forMap` fills that table from
+`map.walkable` and `map.waterTiles`, and Gold has neither -- Gen2Compat
+records `walkable` as absent outright, "Gold has no per-map tile set to
+extend". Every tile therefore fell to the `wall` fallback.
+
+Measured on a real Crystal boot, before: `groundAt` answered **16px for
+every cell of every map** -- every character in Johto standing one full
+block off the ground. After: walkable cells answer 0, and a ledge answers
+its own 6 so standing on one is standing ON it.
+
+Two changes, because there were two faults. `groundAt` now asks
+`TileShape.at`, which resolves per CELL -- collision is per 16x16 cell on
+both generations, which is the whole reason that function exists. And the
+per-tile fallback on Gen 2 is flat ground rather than a 16px wall, because
+`wall` is a claim that table cannot make there, and it is what a naive
+reader believes.
+
+Gen 1 keeps the table lookup it has always used: there the fallback is
+sound, `map.walkable` is present, and this runs for every entity every
+frame.
+
+### Verified
+
+`tests/gen2_tile_shape_test.lua` **74/74**, mutation-checked five ways --
+every one of the fixes above fails the case when reverted. Two of them
+survived the first mutation run, because the case asserted the flag VALUES
+and not what anything does with them; `Structures.volumeClaims` and
+`Structures.doorFoldClaims` are named and asked directly now.
+`tests/gen2_support_test.lua` 163/163. Full suite 88 pass / 96 fail of 184,
+causes identical to 1.12.0 -- zero regressions. `gen2check` unchanged at 10
+errors / 40 warnings.
+
 ## 1.12.0 - Gen 2: tiles are classified, not guessed
 
 Johto's trees, buildings, fences, ledges and tall grass now build as those

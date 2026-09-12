@@ -228,6 +228,28 @@ local function groundAt(map, cellX, cellY, px, py)
   if not map:inBounds(cellX, cellY) then return 0 end
   local shapes = TileShape.forMap(map)
   local s = shapes[map:cellTile(cellX, cellY)]
+  -- On Gen 2 the per-TILE table cannot answer this, and its wrong answer is
+  -- the worst possible one.
+  --
+  -- forMap fills that table from `map.walkable` and `map.waterTiles`, and
+  -- neither exists on Gold -- Gen2Compat records `walkable` as absent
+  -- outright ("Gold has no per-map tile set to extend"). Every tile
+  -- therefore fell to the `wall` fallback, so this function answered 16 for
+  -- every cell on the map and every character in Johto stood a block off
+  -- the ground. The full resolution knows better, because it asks the CELL:
+  -- collision is per 16x16 cell on both generations, which is exactly why
+  -- TileShape.at exists.
+  --
+  -- Gen 1 keeps the table lookup it has always used. There the fallback is
+  -- sound -- `map.walkable` is present, so a walkable tile really is
+  -- classed ground -- and this function is called for every entity every
+  -- frame.
+  if shapes.gen2Classes then
+    local tx, ty = cellX * 2, cellY * 2 + 1    -- the cell's bottom-left tile
+    local ok, resolved = pcall(TileShape.at, map, shapes,
+                               map:tileAt(tx, ty), tx, ty)
+    if ok and type(resolved) == "table" then s = resolved end
+  end
   if not s then return 0 end
   -- a recessed class (water) still supports whatever stands on it; only
   -- raised ground lifts the model.  Stairs never do: the class height is

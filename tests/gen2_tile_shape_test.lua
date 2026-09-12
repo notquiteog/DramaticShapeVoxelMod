@@ -101,6 +101,13 @@ local function fakeMap(cells, environment)
     end,
     isWaterCell = function() return false end,
     isWalkableCell = function() return false end,
+    -- groundAt asks these two as well: the bounds check (so an entity
+    -- mid seam-step is not hoisted onto the border block) and the cell's
+    -- bottom-left tile, which is the one collision is judged by.
+    inBounds = function(_, cx, cy)
+      return cx >= 0 and cy >= 0 and cells[cy] ~= nil and cells[cy][cx] ~= nil
+    end,
+    cellTile = function(self, cx, cy) return self:tileAt(cx * 2, cy * 2 + 1) end,
   }
 end
 
@@ -166,7 +173,10 @@ T.eq(G2.paletteOf(map.tileset, 16), ROOF, "a roof tile reads as PAL_BG_ROOF")
 
 T.eq(classOf(0, 0), "ground", "open paving is ground")
 T.eq(classOf(1, 4), "tree", "a GREEN solid is a tree")
-T.eq(classOf(2, 1), "roof", "a PAL_BG_ROOF solid is a roof")
+T.eq(classOf(2, 1), "wall",
+  "a PAL_BG_ROOF solid is WALL, not a class of its own -- the roof is the "
+    .. "top of the building's drawing and has to be in the same region for "
+    .. "the volume builder's gable to find it")
 T.eq(classOf(3, 1), "grass", "the tall-grass collision is grass")
 T.eq(classOf(4, 1), "water", "the water collision is water")
 T.eq(classOf(4, 2), "ledge", "a ledge collision is a ledge")
@@ -213,7 +223,7 @@ local function shapeAt(cx, cy)
   return TileShape.at(map, shapes, map:tileAt(cx * 2, cy * 2 + 1),
                       cx * 2, cy * 2 + 1)
 end
-for _, want in ipairs({ { 1, 4, "tree" }, { 2, 1, "roof" }, { 2, 2, "wall" },
+for _, want in ipairs({ { 1, 4, "tree" }, { 2, 1, "wall" }, { 2, 2, "wall" },
                         { 4, 1, "water" }, { 4, 2, "ledge" } }) do
   local s = shapeAt(want[1], want[2])
   T.check(type(s) == "table", "TileShape.at answers a shape at "
@@ -240,6 +250,122 @@ T.check(kinds > 2,
          table.sort(o)
          return table.concat(o, " ")
        end)())
+
+-- ------- the three flags, which are three different questions
+--
+-- These were one flag once (`authored`) and every one of the reported
+-- symptoms came from that: houses 16px tall, doors punched out of their
+-- own facades, and every character in Johto standing a block in the air.
+do
+  local g2wall = shapes.gen2Classes.wall
+  local g2ledge = shapes.gen2Classes.ledge
+  local g2tree = shapes.gen2Classes.tree
+
+  T.eq(g2wall.authored, true,
+    "authored: fold my art properly (the mesher reads this)")
+  T.eq(g2wall.derived, true,
+    "derived: I am detection, not a hand pin, so a better detector may "
+      .. "refine me (the door fold reads this)")
+  T.eq(g2wall.volume, true,
+    "volume: read my height off the drawing (Structures reads this)")
+
+  -- and the classes that must NOT be volumed, because their height is a
+  -- property of what they are rather than of how much is drawn
+  T.eq(g2ledge.volume, nil,
+    "a ledge is 6px because a ledge is 6px, however many rows the map paints")
+  T.eq(g2ledge.h, 6, "so it keeps its class height")
+  T.eq(shapes.gen2Classes.fence.volume, nil, "same for a fence")
+  T.eq(g2tree.volume, nil,
+    "and a tree is as tall as a tree, not as tall as the forest is deep -- "
+      .. "volumed, VIOLET_CITY's 174 contiguous tree cells became one "
+      .. "stepped plateau with the camera inside it")
+  T.eq(g2tree.h, 32,
+    "tree height is overridden to 32px: two cells, so a treeline stands "
+      .. "over the player instead of reading as a hedge")
+end
+
+-- ------- what Structures DOES with those flags
+--
+-- Asserting the flag values alone was not enough, and a mutation run
+-- proved it: flipping `structural` back to `not s.authored` and flipping
+-- the door fold back to skipping every authored shape both left this case
+-- fully green. The flags are only interesting through the two decisions
+-- that read them, so those are named and asked directly.
+do
+  local Structures = lib("Structures")
+  local g2 = shapes.gen2Classes
+
+  T.eq(Structures.volumeClaims(g2.wall), true,
+    "the volume builder claims a Gen 2 wall, so a house is as tall as its "
+      .. "facade is deep instead of a flat 16px slab")
+  T.eq(Structures.volumeClaims(g2.ledge), false,
+    "and does NOT claim a ledge, whose 6px is a property of what it is")
+  T.eq(Structures.volumeClaims(g2.tree), false, "nor a tree")
+  T.eq(Structures.volumeClaims(shapes.classes.wall), true,
+    "Gen 1's unauthored wall is claimed exactly as it always was")
+  T.eq(Structures.volumeClaims({ art = "upright", authored = true }), false,
+    "and a Gen 1 profile pin is still left alone -- that is the rule this "
+      .. "flag had to be added WITHOUT breaking")
+  T.eq(Structures.volumeClaims({ art = "flat" }), false, "flat art is never a volume")
+  T.eq(Structures.volumeClaims(nil), false, "and an absent shape is not one either")
+
+  T.eq(Structures.doorFoldClaims(g2.ground), true,
+    "the door fold may replace a DERIVED classification, which is what "
+      .. "puts a Johto door into its own facade")
+  T.eq(Structures.doorFoldClaims({ authored = true }), false,
+    "but never a hand pin -- Celadon Mansion's staircases are door tiles, "
+      .. "and their profile pins have to survive this")
+  T.eq(Structures.doorFoldClaims({ authored = false }), true,
+    "an unauthored shape is claimed the way it always was")
+  T.eq(Structures.doorFoldClaims(nil), true, "so is an empty cell")
+end
+
+-- ------- roofRowsFor: where a facade stops and a roof starts
+--
+-- Gen 1 infers this from the art -- distinct top rows mean a pitch, a
+-- repeated texture means a flat rooftop -- and on Johto that inference is
+-- worthless, because the brick repeats and the answer comes back "no roof".
+do
+  T.eq(G2.roofRowsFor(map, 4, 2, 5), 2,
+    "two roof-palette rows at the run's north end are two roof rows")
+  T.eq(G2.roofRowsFor(map, 2, 4, 9), 0,
+    "a run that does not start in roof palette has no roof rows")
+  -- the count starts at the run's NORTH end and stops at the first row
+  -- that is not roof, so a run beginning below the roof has none -- which
+  -- is what keeps a tree or a rock face from growing a gable
+  T.eq(G2.roofRowsFor(map, 4, 4, 5), 0,
+    "a run starting below the roof rows counts none")
+  T.eq(G2.roofRowsFor(map, 4, 3, 5), 1,
+    "and one starting on the roof's last row counts just that row")
+end
+
+-- ------- the support height, which is what put everyone in the air
+--
+-- VoxelScene.groundAt used to read the per-TILE table, and on Gen 2 that
+-- table cannot answer: forMap fills it from map.walkable and
+-- map.waterTiles, and Gold has neither, so every tile fell to the `wall`
+-- fallback. Measured on a real Crystal boot before the fix, groundAt
+-- answered 16px for every cell of every map.
+do
+  local VoxelScene = lib("VoxelScene")
+  T.eq(type(VoxelScene.groundAt), "function", "groundAt is reachable")
+
+  -- the per-tile table must no longer claim `wall` for a tile it cannot
+  -- classify: that claim is what a naive reader believes
+  local anyTile = shapes[6]
+  T.check(anyTile ~= nil, "the per-tile table is still filled")
+  T.eq(anyTile.class, "ground",
+    "an unclassifiable Gen 2 tile defaults to flat ground, not to a 16px "
+      .. "wall -- the wall default is what lifted every character")
+
+  T.eq(VoxelScene.groundAt(map, 0, 0), 0, "open paving supports at 0")
+  T.eq(VoxelScene.groundAt(map, 3, 1), 0, "so does tall grass")
+  T.eq(VoxelScene.groundAt(map, 4, 2), 6,
+    "a ledge supports at its own 6px, so standing on one is standing ON it")
+  T.eq(VoxelScene.groundAt(map, 1, 4), 32,
+    "and a tree reports its full height, which is what a shadow and a "
+      .. "billboard behind it need")
+end
 
 -- ------- Gen 1 is untouched
 --

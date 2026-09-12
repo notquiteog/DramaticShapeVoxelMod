@@ -514,6 +514,21 @@ function TileShape.forMap(map)
       shapes[t] = shapes.classes.water
     elseif map.walkable and map.walkable[t] then
       shapes[t] = shapes.classes.ground
+    elseif gen2Shape() and gen2Shape().supports(map) then
+      -- Gen 2: this table cannot decide, so it must not pretend to.
+      --
+      -- The two tests above it are `map.waterTiles` and `map.walkable`, and
+      -- Gold has neither -- so every tile reached this line and was called
+      -- a 16px wall. Nothing that RENDERS noticed, because every render
+      -- path goes through TileShape.at and gets the real per-cell answer;
+      -- what noticed was every reader that takes the per-tile table at its
+      -- word, and the loudest of those is VoxelScene.groundAt, which lifted
+      -- every character in Johto one block into the air.
+      --
+      -- Flat ground is the honest default here: an unknown tile contributes
+      -- no geometry and supports whatever stands on it, which is what a
+      -- caller that cannot ask about a cell should be told.
+      shapes[t] = shapes.classes.ground
     else
       shapes[t] = shapes.classes.wall
     end

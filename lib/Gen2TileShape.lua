@@ -104,14 +104,94 @@ end
 -- neighbours and comparing `bs.class == s.class`, so two cells of the same
 -- class must compare equal for a building to fold as one building rather
 -- than as a column of unrelated boxes.
+-- Classes whose height is a property of the DRAWING, not of the class.
+-- A house is as tall as its facade is deep; a tree mass is as tall as it
+-- is drawn. Everything else here has a height because of what it is.
+local VOLUME_CLASSES = { wall = true, cliff = true }
+
+-- Heights this generation overrides, for classes whose Gen 1 number was
+-- picked against Gen 1 art.
+--
+-- `tree` is the whole list, and it is deliberately NOT a volume class,
+-- which is the second half of the same judgement. A house is as tall as
+-- its facade is drawn; a tree is as tall as a tree, however much forest
+-- the map paints. Volumed, Johto's tree borders became one stepped
+-- plateau -- 174 contiguous cells in VIOLET_CITY resolving to a green
+-- tabletop whose terraces followed each column's extent, with the camera
+-- inside it. A flat 32px is two cells: tall enough to stand over the
+-- player and read as a treeline rather than a hedge, uniform enough that
+-- a border reads as one thing. The Gen 1 number was 16 -- one cell --
+-- which is where "long, not tall" came from on the tree side.
+local GEN2_HEIGHTS = { tree = 32 }
+
+-- How many rows at a run's north end are roof.
+--
+-- The volume builder asks this to decide where a structure's facade stops
+-- and its roof slope begins. Gen 1 infers it from the art -- distinct top
+-- rows mean a pitched roof, a repeated texture means a flat rooftop --
+-- and on Johto that inference is worthless, because the brick repeats
+-- everywhere and the answer comes back "no roof, and while we are here,
+-- your house is 16px tall".
+--
+-- PAL_BG_ROOF answers it outright. GSC reserves the slot: its two colours
+-- are rewritten per map group (Palettes.bgSet, `roofSlot`), which is the
+-- whole reason a Johto roof is red and a Kanto one is not, and nothing
+-- else in a tileset wears it.
+--
+-- Capped at 2 the way the Gen 1 reading is, and floored at 0 for a run
+-- with no roof in it at all (a tree, a rock face, a fence post).
+function Gen2TileShape.roofRowsFor(map, tx, north, front)
+  if type(map) ~= "table" or type(map.tileAt) ~= "function" then return 0 end
+  local tileset = map.tileset
+  local rows = 0
+  for ty = north, math.min(front, north + 1) do
+    local ok, tile = pcall(map.tileAt, map, tx, ty)
+    if not ok then break end
+    if Gen2TileShape.paletteOf(tileset, tonumber(tile)) ~= PAL_ROOF then break end
+    rows = rows + 1
+  end
+  return rows
+end
+
 local function classTable(shapes)
   local out = {}
   for class, shape in pairs(shapes.classes or {}) do
     -- copy, because shapes.classes entries are the UNAUTHORED canonical
     -- objects the Gen 1 cell rules hand out; marking those authored in
     -- place would put every fallback tile on the structure path
-    out[class] = { class = shape.class, h = shape.h, art = shape.art,
-                   flat = shape.flat, authored = true }
+    out[class] = { class = shape.class, h = GEN2_HEIGHTS[class] or shape.h,
+                   art = shape.art,
+                   flat = shape.flat, authored = true,
+                   -- Classified, not hand-pinned.
+                   --
+                   -- `authored` tells the mesher to fold this shape's art
+                   -- properly, and it tells every DETECTOR in Structures to
+                   -- keep its hands off -- because on Gen 1 an authored
+                   -- shape is a human's decision and detection must not
+                   -- overrule it. A Gen 2 shape is not that: it is
+                   -- detection itself, and a more specific detector is
+                   -- welcome to refine it. The door fold is the case that
+                   -- found this -- it skips authored cells, so on Gen 2 it
+                   -- never ran and every house wore a hole where its door
+                   -- should be.
+                   derived = true,
+                   -- Whether Structures may region this into a VOLUME and
+                   -- read its height off the drawing, rather than taking
+                   -- the class height as final.
+                   --
+                   -- `authored` alone cannot express this. It means two
+                   -- things at once -- "fold my art intelligently" to the
+                   -- mesher, "do not volume me" to Structures -- and Gen 2
+                   -- needs the first without the second. Marked true, a
+                   -- Johto house was a 16px box with a slab on it; marked
+                   -- false it stood up and lost its textures. This flag
+                   -- splits them.
+                   --
+                   -- Only the classes whose real height IS how much of
+                   -- them is drawn. A ledge is 6px because a ledge is
+                   -- 6px, however many rows of it the map paints, and the
+                   -- same goes for fences and signposts.
+                   volume = VOLUME_CLASSES[class] or nil }
   end
   return out
 end
@@ -176,7 +256,21 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
   end
   if Permissions.isCounter(coll) then return "counter" end
 
-  if palTop == PAL_ROOF or palBot == PAL_ROOF then return "roof" end
+  -- A roof is NOT its own class here, and that is the opposite of the
+  -- first cut. `roof` has art "top" and a fixed 28px height, which made
+  -- every Johto house a green slab lying on a 16px box -- the "long, not
+  -- tall" the bug report named.
+  --
+  -- A building's roof rows are the TOP of its drawing, and the volume
+  -- builder already knows what to do with them: it splits a structure's
+  -- drawn height into a vertical facade and a slope rising north to the
+  -- drawn peak (Structures.buildVolume, `run.rise`). For that to happen
+  -- the roof and the wall have to be ONE region, so both answer `wall`
+  -- and the palette's testimony is handed over separately, through
+  -- roofRowsFor below. What the slot buys is certainty about WHERE the
+  -- roof starts: Gen 1 infers it from the art, which on Johto's repeating
+  -- brick infers nothing.
+  if palTop == PAL_ROOF or palBot == PAL_ROOF then return "wall" end
   if palTop == PAL_GREEN then return "tree" end
   -- deliberately NO palette rule for water. Collision already answers it
   -- (perm == WATER, above) and answers it authoritatively; adding
