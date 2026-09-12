@@ -43,6 +43,24 @@ local V = ...
 
 local TileShape = {}
 
+-- The Gen 2 classifier, resolved on first ask rather than at load.
+--
+-- Lazy because this module is also loaded by cases that hand it a stub V
+-- whose `require` asserts on names it was not told about, and tolerant
+-- because a Gen 1 boot must never pay for a Gen 2 dependency. Absent, every
+-- answer below is exactly the one it was before Gen 2 was a target.
+local Gen2Shape
+local function gen2Shape()
+  if Gen2Shape == nil then
+    Gen2Shape = false
+    if V and type(V.require) == "function" then
+      local ok, module = pcall(V.require, "Gen2TileShape")
+      if ok and type(module) == "table" then Gen2Shape = module end
+    end
+  end
+  return Gen2Shape or nil
+end
+
 -- class -> height fallbacks, used when data/voxel_heights.lua is missing
 -- or omits a class. Same numbers the shipped file carries; a cell is 16x16.
 local FALLBACK_HEIGHTS = {
@@ -501,6 +519,16 @@ function TileShape.forMap(map)
     end
   end
   shapes.count = count
+  -- Gen 2: nothing above this line fired, because voxel_heights.lua is
+  -- keyed by Gen 1 tileset ids and Gold's are different names. Give the
+  -- record the per-class table the collision/palette classifier resolves
+  -- into (lib/Gen2TileShape.lua); TileShape.at consults it per position.
+  do
+    local G2 = gen2Shape()
+    if G2 and type(G2.install) == "function" then
+      pcall(G2.install, shapes, map)
+    end
+  end
   cache[cacheKey] = shapes
   return shapes
 end
@@ -555,6 +583,17 @@ function TileShape.at(map, shapes, tile, tx, ty)
     end
   end
   if not s or s.authored then return s end
+  -- Gen 2's answer, which stands where the authored profile stands on
+  -- Gen 1: ahead of the generic cell rules, behind anything hand-pinned.
+  -- It only exists on a map the classifier could install for, so a Gen 1
+  -- boot never reaches past this line.
+  if shapes.gen2Classes then
+    local G2 = gen2Shape()
+    if G2 and type(G2.at) == "function" then
+      local ok, g = pcall(G2.at, map, shapes, tile, tx, ty)
+      if ok and type(g) == "table" then return g end
+    end
+  end
   local cx = math.floor(tx / 2)
   local cy = math.floor(ty / 2)
   if map:isWaterCell(cx, cy) then return shapes.classes.water end

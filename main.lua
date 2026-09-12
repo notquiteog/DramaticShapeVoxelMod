@@ -2257,7 +2257,17 @@ mod.hooks:wrap("world.tod", function(next, tod, ctx)
   return DayNight.tod()
 end)
 
-mod.exports.version = "1.10.8"
+-- The manifest's version, not a second copy of it.
+--
+-- This was a literal, and it had drifted two releases behind -- a Crystal
+-- boot of 1.11.1 reported 1.10.8 to anyone who asked. That is not cosmetic:
+-- companion mods gate their integrations on this string (Dramatic Sky Ride's
+-- README tells its users to "add the battle art version you use to their
+-- main.lua in tested versions"), so a stale value makes a companion refuse
+-- to integrate, or integrate against a contract this build no longer has.
+-- `mod.version` is the loader's own copy of the manifest field
+-- (src/mods/Loader.lua), so the two can no longer disagree.
+mod.exports.version = mod.version
 mod.exports.battlePresentation = BattlePresentation.export()
 mod.exports.battleStage = BattleStage.export(OverworldBattle)
 mod.exports.voxel_companion = Companion.provider

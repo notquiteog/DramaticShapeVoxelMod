@@ -1,5 +1,97 @@
 # Changelog
 
+## 1.12.0 - Gen 2: tiles are classified, not guessed
+
+Johto's trees, buildings, fences, ledges and tall grass now build as those
+things. Before this they were all the same 16px box wearing its own facade
+art on the roof, which is the bug report that started this: "why do all the
+trees, buildings and fences have the wrong shape and top/side images?"
+
+### What was actually wrong
+
+Not the textures. Nothing on a Gen 2 map was being CLASSIFIED at all.
+
+`TileShape` resolves a tile to an extrusion shape from the hand-authored
+groups in `data/voxel_heights.lua`, keyed by TILESET ID. Every id in that
+8,284-line file is a Gen 1 one -- `OVERWORLD`, `GYM`, `CAVERN`, `FOREST`,
+`DOJO` -- and Gold's are `TILESET_JOHTO`, `TILESET_FOREST`, `TILESET_TOWER`,
+`TILESET_DARK_CAVE`. None match, so rule 1 never fired and every tile fell
+through to the generic cell rules. Measured over a 16x16 patch of
+NEW_BARK_TOWN, `TileShape.at` answered:
+
+    ground=92  wall=164     -- and nothing else
+
+No tree, no roof, no fence, no ledge, no grass. The wrong textures were the
+second half of the same bug: the mesher's structure-fold path is gated on
+`s.authored` (`ChunkMesher`: `if s.art == "upright" and s.authored`), and an
+unauthored box tops itself with `s.topTile or tile` -- the tile's own
+front-facing drawing, laid flat. That is the window art on the rooftops and
+the grass on the treetops.
+
+### The fix
+
+`lib/Gen2TileShape.lua`, and deliberately NOT a second authored profile.
+Gold already carries the classification in two places:
+
+- the **collision byte**, per 16x16 cell: the cart's own tile-type table
+  (`src/world/gen2/Permissions.lua`) -- land, water, wall, tall grass,
+  ledge and its jump facing, cut tree, headbutt tree, counter, waterfall.
+- the **palette slot**, per 8x8 tile: GSC's eight BG palettes
+  (`src/world/gen2/TileAttrs.lua`). The slot is semantic rather than
+  decorative. `PAL_BG_ROOF` is a roof and nothing else -- its colours are
+  per map-group, which is why a Johto roof is red and a Kanto one is not --
+  and `PAL_BG_GREEN` is foliage.
+
+Crossed, they separate every solid this mod has a shape for. Shapes come
+back marked `authored = true`, which is the load-bearing half: that flag is
+what puts the mesher on its structure path, so a run of tree cells folds as
+one drawing and a roof wears its own top row.
+
+The same maps now:
+
+    NEW_BARK_TOWN  ground=45 roof=12 tree=20 wall=11 signpost=2
+    ROUTE_29       ground=100 tree=119 grass=24 ledge=16 wall=7 fence=3
+    VIOLET_CITY    tree=174 water=76 ground=68 wall=24 roof=16
+    ILEX_FOREST    tree=224 ground=110 wall=39 water=32
+
+It also generalises: a tileset nobody has looked at classifies itself, which
+a hand-authored profile can never do.
+
+### Two rules this got wrong first, and how they were caught
+
+Both by censusing INTERIORS rather than trusting the outdoor maps, and both
+are the same mistake -- reading a palette as a subject when it is only a
+colour.
+
+- A `palette == PAL_BG_WATER` rule for water found **five cells of water
+  inside ELM'S LAB** and one in the player's house. Indoors that slot is
+  whatever the room's blue thing is: a TV, a machine, a poster. Dropped --
+  collision already answers water, and answers it authoritatively.
+- "A thin solid is a fence" made **68 fences out of DARK CAVE's rock
+  pillars** and 10 out of Sprout Tower's floor furniture. Now gated to the
+  `TOWN` and `ROUTE` environments, the two GSC itself treats as outside.
+
+Interiors and caves resolve to `ground`/`wall`/`ledge`/`water` only.
+
+### Gen 1 is untouched
+
+The classifier refuses a Gen 1 boot outright (`Gen2TileShape.supports`), and
+sits behind every authored answer on the Gen 2 side, so a hand-pinned tile
+always wins. `tests/gen2_tile_shape_test.lua` asserts both, and was
+mutation-checked three ways: not installing the classifier fails 11 checks,
+returning `wall` for everything fails 15, and -- the subtle one -- getting
+every class right while leaving `authored` false still fails 5, because that
+is the variant that fixes the shapes and leaves the textures broken.
+
+### Also
+
+Both Gen 2 cases now run from either the mod root or the engine root. They
+resolved the mod through a hardcoded `mods/DramaticShapeVoxelMod`, which is
+right from one of those and finds nothing from the other -- and "finds
+nothing" is not an error here: the SDK hands back a run whose `mod` is nil
+and whose error list is empty, so the case died indexing it instead of
+saying so. The path now comes from the case's own `arg[0]`.
+
 ## 1.11.1 — Gen 2: outdoors, and the battle staged
 
 Two fixes that between them are most of what "looks and feels like Gen 1"

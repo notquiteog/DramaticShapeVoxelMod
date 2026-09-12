@@ -47,7 +47,26 @@ local ENGINE = {
   ["src.battle.BattleState"] = require("src.battle.BattleState"),
 }
 
-local MOD_PATH = os.getenv("DS_MOD_PATH") or "mods/DramaticShapeVoxelMod"
+-- Where this mod's files are, RELATIVE TO CWD.
+--
+-- Two callers run this file from two different directories -- the suite
+-- runner from the mod's own root, a one-off from the engine root -- and the
+-- SDK reads mod files through `mods/<basename>` under `opts.root`, which
+-- defaults to ".". A hardcoded "mods/DramaticShapeVoxelMod" is therefore
+-- right from one of those and finds nothing from the other, and "finds
+-- nothing" is not an error here: loadMod hands back a run whose `mod` is nil
+-- and whose error list is empty, so the case dies indexing it rather than
+-- saying what went wrong. Derive it from this file's own path instead.
+local function modPath()
+  local env = os.getenv("DS_MOD_PATH")
+  if env and env ~= "" then return env end
+  local self = arg and arg[0]
+  local root = self and self:match("^(.*)[/\\]tests[/\\][^/\\]+$")
+  if root == nil or root == "" then return "." end
+  return root
+end
+
+local MOD_PATH = modPath()
 local MOD_ID = "BATTLE_ART_VOXEL_FORK"
 
 -- Every Gen 2 cart the engine knows, then one Gen 1 cart as the control.
