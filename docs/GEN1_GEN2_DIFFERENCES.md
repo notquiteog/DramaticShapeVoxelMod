@@ -45,8 +45,9 @@ asks `lib/Generation.lua` first.
   `ui.start_menu.items`, `ui.title_menu.items`, `intro.oak_speech.build`,
   `world.tod`, `core.update`, `render.hud` and `input.pointer` are raised by
   both engine arms.
-- **3D-BTL**, by the second implementation described below: the fight is drawn
-  over the live diorama instead of over Gold's white field.
+- **3D-BTL, staged**: the arena, the over-the-shoulder camera, the mons
+  standing on the ground as billboards and the depth-of-field pass, by the
+  second implementation described below.
 - **The battle-exit fade.** `BattleState.finish` is backed and the four UI
   facades are write-through, so the shutter closes on Gold too.
 - **T-SHIFT, V-GRID, V-CURVE, WATER, the day/night clock.**
@@ -106,18 +107,30 @@ BATTLE BG is then held at `world` while the row is on and its row comes off the
 menu, the same way the Gen 1 rung holds BATTLE LAYOUT at OG. Both come back
 the moment 3D-BTL is switched off.
 
-**What the Gen 2 arm deliberately does not do**, and what still separates it
-from the Gen 1 rung:
+**And it is staged, as on Gen 1.** `lib/Gen2Staged.lua` builds the billboard
+textures from Gold's own `screen:activeMon(side)` and `screen:pic(mon, back)`
+-- drawing the image directly rather than re-entering a draw layer with the
+battle's fields swapped, which is what Gen 1's `sideTexture` does and what
+Gold has no equivalent for. `pic` resolves through the `pokemon.sprite` hook
+this mod already owns, so the art standing on the ground is the art BATTLE ART
+selected, shiny routing and all.
 
-- No arena search and no over-the-shoulder camera. The world behind the fight
-  is the player's own view of the map they are standing on, because that is
-  what `World:draw` draws. "The fight happens on the diorama", not "the fight
-  is staged and shot".
-- The mons, their placement and their scale stay Gold's, drawn in its flat
-  panel over the 3D ground rather than as billboards standing in it.
+The finished arena is returned from the world pipeline rather than pushed
+through `Renderer:setWorldOverride`, which does not exist on Gen 2 -- and that
+is the better seam anyway, since `Game2:drawScene` is already asking the
+pipeline for a world image at that exact point in the frame.
+
+Gold's flat pics are skipped for exactly the mons a billboard was built for
+this frame, so a side the texture pass declined -- a faint, a missing pic, the
+send-out before a mon exists -- still draws in its slot.
+
+What still separates it from the Gen 1 rung:
+
 - Gold's HUD is authored for a white field, so name and HP boxes can land on
   busy geometry. Gen 1 has `UiBackplates` for exactly this; wiring it to the
   Gen 2 HUD is the obvious next improvement.
+- The billboard anchor is the pic's own height rather than Gen 1's measured
+  `BattleArt.metrics`, so framing can sit a little lower than on Gen 1.
 
 One trap worth recording, because it cost a while: shot early, a Gen 2 battle
 over the world looks greyscale and wrong. That is the entrance fade --
@@ -231,6 +244,13 @@ These bit during the port and are recorded so they are not rediscovered.
   tuple from the Player's own `walkPhase` / `drawFlip` and fields. Gen 1's hop
   arc, surf bob and spin lift are deliberately not synthesised: they are read
   off Gen 1 Player fields Gold does not keep.
+- **A connected map's row has a different shape, and it only bites outdoors.**
+  Gen 1's is `{ map = <Map>, ox, oy }`; Gold's is `{ id, ox, oy, image }`,
+  because Gold draws a neighbour as one pre-baked whole-map image and never
+  needs a Map. Every `nb.map.id` therefore read nil and took the world pass
+  down -- so a Gen 2 boot rendered a bedroom perfectly and fell back to the
+  flat 2D map the moment the player stepped into a town. `lib/Gen2Neighbors.lua`
+  fills the field in from `World:connectionMap`, the engine's own cache.
 - **`map.warpAt` is a name collision, not a rename.** Gen 1's is a table keyed
   by cell; Gold's is a *method*. `map.warpAt[k]` and `pairs(map.warpAt)` both
   raise. Enumerate `map.warps`, which Gold carries as an ordered array.
@@ -281,9 +301,7 @@ Gen 2 is declared because the mod runs there and the diorama draws, not
 because every feature crossed. What a supported build still owes:
 
 - animated tiles on Gen 2 (water and flowers are coloured but still);
-- the rest of the Gen 2 battle presentation: an arena and an
-  over-the-shoulder camera, the mons as billboards standing in the scene
-  rather than in a flat panel over it, and backplates under Gold's HUD;
+- backplates under Gold's battle HUD, and a measured billboard anchor;
 - the walk through Gold's own step machinery, for 1ST and 3RD;
 - Johto/Kanto-Gen2 mappings for the GEN6 arena router and map atmosphere,
   which still carry Kanto map ids and fall back safely on a Johto map;

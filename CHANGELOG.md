@@ -1,5 +1,42 @@
 # Changelog
 
+## 1.11.1 — Gen 2: outdoors, and the battle staged
+
+Two fixes that between them are most of what "looks and feels like Gen 1"
+means on Gold, Silver and Crystal. 1.11.0 shipped without either; this
+supersedes it.
+
+### Outdoor maps draw as dioramas
+
+Every OUTDOOR Gen 2 map was falling back to the flat 2D draw. Interiors were
+perfect, which is exactly why it was missed: an interior has no connections.
+
+A connected map's row is the one world shape the engines disagree about --
+Gen 1's is `{ map = <Map>, ox, oy }`, Gold's is `{ id, ox, oy, image }`,
+because Gold draws a neighbour as one pre-baked image and never needs a Map.
+So every `nb.map.id` read nil and took the world pass down with it.
+`lib/Gen2Neighbors.lua` fills the field in from the engine's own cache
+(`World:connectionMap`), which makes every existing reader correct with no
+edit.
+
+### 3D-BTL is staged
+
+Not merely drawn over the diorama: the fight is shot on the map's nearest
+clear ground with the over-the-shoulder camera, the mons standing on that
+ground as billboards, and the depth-of-field pass behind them.
+
+Most of the pipeline was already generation-neutral -- `BattleArena.find`
+reads only backed Map members, `battle.started` is raised by both engines and
+was already wired to the entry written for battles that skip `pushBattle`.
+Three things differed: the billboard textures (`lib/Gen2Staged.lua`, built
+from Gold's `activeMon` / `pic` rather than Gen 1's `drawPicsLayer`), the
+delivery of the finished arena (returned from the world pipeline, because
+`Game.renderer` is absent on Gen 2), and the palette (`paletteNameFor` is
+absent there, and nil is the right answer -- the atlas is already coloured).
+
+Gold's flat pics are skipped for exactly the mons a billboard was built for,
+so a declined side still draws in its slot.
+
 ## 1.11.0 — Gen 2: Gold, Silver and Crystal
 
 The manifest declares `"games": ["gen1", "gen2"]`. The mod loads and runs on

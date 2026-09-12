@@ -1,7 +1,7 @@
 {
   "id": "BATTLE_ART_VOXEL_FORK",
   "name": "BATTLE ART VOXEL FORK",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "api": 2,
   "entry": "main.lua",
   "profile": "content",
@@ -21,6 +21,6 @@
     "engine_internals"
   ],
   "affects_link": false,
-  "description": "Adds generations of sprites to 3D-battles, with either a voxel background, or nostalgic arena fill options like white, or gen6 location art. Added new provider api things to allow stadium mods and other UI mods to use Battle Art sprites, and handle battle options and imports. Press 3 to toggle voxel modes, or check in the options menu for VOXEL: Full, 15, 35, 50, 75, OFF. World fill is a cyan, dark or black filler, which can be turned off if provided by Kanto First Person. That mod needs to be at version 1.60 or newer, and you need to add the battle art version you use to their main.lua in tested versions. Gen 2 (Gold, Silver, Crystal): the diorama, the sprites and 3D-BTL all run there -- on Gen 2 the fight is drawn over the live diorama rather than staged with an arena camera. The 1ST and 3RD rungs are Gen 1 only. See docs/GEN1_GEN2_DIFFERENCES.md.",
+  "description": "Adds generations of sprites to 3D-battles, with either a voxel background, or nostalgic arena fill options like white, or gen6 location art. Added new provider api things to allow stadium mods and other UI mods to use Battle Art sprites, and handle battle options and imports. Press 3 to toggle voxel modes, or check in the options menu for VOXEL: Full, 15, 35, 50, 75, OFF. World fill is a cyan, dark or black filler, which can be turned off if provided by Kanto First Person. That mod needs to be at version 1.60 or newer, and you need to add the battle art version you use to their main.lua in tested versions. Gen 2 (Gold, Silver, Crystal): the diorama, the sprites and 3D-BTL all run there, and 3D-BTL is STAGED -- the arena, the over-the-shoulder camera and the mons standing on the ground as billboards, as on Gen 1. The 1ST and 3RD rungs are Gen 1 only. See docs/GEN1_GEN2_DIFFERENCES.md.",
   "github": "absol89/DramaticShapeVoxelMod"
 }
