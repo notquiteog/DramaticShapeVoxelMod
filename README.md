@@ -4,7 +4,22 @@
 
 Battle Art Voxel Fork turns the overworld of the [Pokémon Gen 1 Recompilation Project](https://github.com/bryanthaboi/pokemon-gen1-recomp-project) into a 3D voxel diorama and stages battles inside that world. It also provides configurable static and animated battle sprites, arena backdrops, trainer art, first-person exploration, water reflections, lighting, and compatibility hooks for other presentation mods.
 
-Version 1.9.0 supports Pokémon Red, Blue, and Yellow on Gen1Recomp `0.1.69` through current pre-2.0 releases. It is intentionally declared as a Gen 1 mod; Pokémon Gold uses different engine modules and needs a real port rather than a manifest change. See the [Gen 1 and Gen 2 differences and porting guide](docs/GEN1_GEN2_DIFFERENCES.md).
+Version 1.11.0 supports **Pokémon Red, Blue, Yellow, Gold, Silver and Crystal** on Gen1Recomp `0.1.69` through current pre-2.0 releases. On Gen 2 the diorama, the battle art and 3D-BTL all run; the 1ST and 3RD first-person rungs are Gen 1-only, because free movement has no seam on Gold. Read the [Gen 2 support notes](docs/GEN1_GEN2_DIFFERENCES.md) for exactly what crosses and what does not — it is deliberately specific about the difference.
+
+## Provenance
+
+This is a fork. The lineage is
+[TeJota1337/DramaticShapeVoxelMod](https://github.com/TeJota1337/DramaticShapeVoxelMod)
+→ [absol89/DramaticShapeVoxelMod](https://github.com/absol89/DramaticShapeVoxelMod)
+→ this repository, which adds Gen 2 support. All credit for the mod itself
+belongs upstream; the tile and sprite data the geometry is derived from is
+[pret/pokered](https://github.com/pret/pokered) and
+[pret/pokecrystal](https://github.com/pret/pokecrystal).
+
+**No licence is declared anywhere in that chain**, so no redistribution terms
+are granted and none are claimed here. This fork exists under GitHub's own
+forking terms. If you are the upstream author and want it taken down or
+licensed differently, open an issue.
 
 ## Highlights
 
