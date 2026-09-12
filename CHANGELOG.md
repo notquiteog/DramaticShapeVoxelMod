@@ -1,5 +1,58 @@
 # Changelog
 
+## 1.12.2 - Gen 2: one cell, and each town its own roofs
+
+Three faults reported on the cart: "why are bushes 2 high?", "why are trees
+expanding into the walking path? (for example: new bark)", and "a lot of
+interior objects (especially tables) are way too tall". The first two were
+1.12.1's tree height overreaching, the third was that same overreach
+reaching indoors, and a fourth showed up in the same pass -- a town wearing
+another town's roofs.
+
+### Trees and bushes are one cell again
+
+1.12.1 set Johto's `tree` class to 32px -- two cells -- to stand over the
+player as a treeline. It bought the opposite complaint: at the diorama's
+35-degree camera a 32px box leans two cells of screen space over the ground
+in front of it, so a tree border along a path read as growing INTO the path
+(New Bark's west treeline), and every bush in Johto stood two storeys tall.
+Bushes resolve to the same `tree` class as a tree -- wall collision over
+PAL_BG_GREEN -- so one number ruled both. The class default is 16, one cell,
+which is what Gen 1 draws Kanto's trees at and what reads correctly under
+the same camera. Reverted to it.
+
+### Interiors are not volumes
+
+The volume reading was the other overcorrection, and it reached indoors.
+`wall` and `cliff` were volume classes everywhere, but indoors every solid
+answers `wall` -- Gen 2 has no profile to tell a table from a bookshelf from
+the back of the room -- so a lab's furniture and its walls were one region,
+and the region's extent is however deep the furnished end of the room
+happens to be. ELM'S LAB has three cells of solid across its top, so every
+table in it became a 48px tower. The volume reading is now an OUTDOOR one:
+TOWN and ROUTE are the two environments GSC itself treats as outside, and
+everywhere else the class height stands -- one cell, the honest answer for
+a wall the drawing does not give a depth to. `ELM'S LAB` and the player's
+house verify back at furniture height, the starter balls sitting ON the
+ball table instead of floating over a tower.
+
+The same gate covers `thin`: fences, railings and signposts are an outdoor
+reading, and ungated it made 68 fences out of DARK CAVE's rock and 10 out
+of Sprout Tower's floor furniture.
+
+### Each town wears its own roofs
+
+Found while verifying the above, on every boot that visited more than one
+town: the atlas bake that colours Gen 2 terrain keyed its cache on
+`tileset.id # daytime # mode`, but the palettes it bakes are the MAP's --
+Gold loads the eight BG palettes per map group and then rewrites the roof
+slot from that group's roof colours. GSC's towns share one tileset graphics
+file (TILESET_JOHTO), so the first town visited decided every later town's
+roofs for the session: New Bark came up in Cherrygrove's pink after one
+visit there. The key now carries the map id, so a bake is one map's answer.
+(New Bark green after Cherrygrove; Violet its own green over water; the
+order that broke it is the regression test.)
+
 ## 1.12.1 - Gen 2: things stand up, and stand ON the ground
 
 1.12.0 classified Johto's tiles correctly and then built them wrong. Four

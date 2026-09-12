@@ -199,7 +199,18 @@ local function gen2Bake(map)
   local daytime = world.tod or world.daytime or "DAY"
   local bgSet = Palettes.bgSet(world.palettes, map.def, daytime)
   local mode = GbcPalette.mode or "?"
-  local key = tostring(tileset.id) .. "#" .. tostring(daytime) .. "#" .. mode
+  -- The palettes this bake colors with are the MAP's, not the tileset's:
+  -- Gold loads the eight BG palettes per map group and then rewrites the
+  -- roof slot from that group's roof colours (Palettes.bgSet,
+  -- data.roofs[mapDef.group]), and LoadSpecialMapPalette can override the
+  -- whole set for one map. GSC's towns share one tileset graphics file
+  -- (TILESET_JOHTO), so a key without the map made the FIRST town visited
+  -- decide every later town's roofs for the session -- New Bark came up in
+  -- Cherrygrove's pink after one visit there. Keying by map id is the
+  -- honest scope: a bake is one map's answer, and a few extra tileset-sized
+  -- images cost nothing next to a town wearing another town's roofs.
+  local key = tostring(map.id or "?") .. "#" .. tostring(tileset.id)
+    .. "#" .. tostring(daytime) .. "#" .. mode
   if gen2Cache[key] ~= nil then
     return gen2Cache[key] or nil, gen2Data[key]
   end

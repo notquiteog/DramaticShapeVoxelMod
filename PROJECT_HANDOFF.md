@@ -1,3 +1,67 @@
+# Johto diorama: one-cell trees, outdoor-only volumes, per-map roof bake - 2026-09-12
+
+Three faults reported on the JohtoDioramaCart after 1.12.1: bushes two
+storeys tall, tree borders reading as growing into the walking path (New
+Bark), and interior furniture -- especially tables -- way too tall. All
+three were 1.12.1's two overcorrections (the 32px tree, the everywhere
+volume reading) and all three are fixed in `lib/Gen2TileShape.lua`:
+
+- `tree` is back at the class default 16px, one cell. The 32px box leaned
+  two cells of screen space over the ground at the 35-degree camera, which
+  read as a treeline growing INTO the path, and every bush -- bushes are
+  the same class, wall collision over PAL_BG_GREEN -- stood two storeys.
+- The volume reading is gated OUTDOORS (`TOWN`/`ROUTE`,
+  `Palettes.ROOF_ENVIRONMENTS`). Indoors every solid answers `wall`, so
+  furniture and the room's back wall were one region and ELM'S LAB's
+  tables read their height off the room's depth -- 48px towers. The same
+  gate covers `thin`, whose fence/sign reading had already made 68 fences
+  out of DARK CAVE's rock when ungated.
+
+A fourth fault was found while verifying and is fixed in
+`lib/TerrainAtlas.lua`: the Gen 2 atlas bake keyed its cache on
+`tileset.id # daytime # mode`, but `Palettes.bgSet` loads the BG palettes
+per map group and rewrites the roof slot from that group's roof colours.
+GSC's towns share TILESET_JOHTO, so the first town visited decided every
+later town's roofs -- New Bark came up in Cherrygrove's pink after one
+visit there. The key now carries the map id.
+
+## Evidence, in this checkout
+
+- `tests/gen2_tile_shape_test.lua`: 80/80. The two assertions that pinned
+  the old behaviour were updated (`tree.h` 32 -> 16, `groundAt` 32 -> 16)
+  and a new indoor block pins the volume gate (`wall.volume == nil` on an
+  INDOOR map, `Structures.volumeClaims` false, isolated solids stay
+  `wall` rather than fences/signposts).
+- `tests/gen2_support_test.lua`: 163/163.
+- LuaJIT 2.1 compile sweep: 141 production files, 0 failures.
+- Real Crystal boots (engine source at HEAD, shipped-equivalent harness,
+  Xvfb + llvmpipe, sandboxed POKEPORT_IDENTITY), screenshots at the FULL,
+  35 and 75 rungs:
+  - NEW_BARK_TOWN: green gabled roofs with doors in facades, one-cell
+    treelines and bushes off the path, town signs low, NPCs on the ground.
+  - ELM'S LAB: tables at furniture height, starter balls sitting ON the
+    ball table, bookshelf racks proper, the healing machine ON its table.
+  - PLAYERS_HOUSE_1F: the dining table low with the seated pair beside it,
+    kitchen counters low.
+  - CHERRYGROVE_POKECENTER_1F: the counter an 8px band with the machine on
+    top, nurse behind it.
+  - ROUTE_29: ledges 6px with their lip, tall grass as tufts on flat
+    ground, the fence one cell wide and low, tree borders off the path.
+  - VIOLET_CITY: gym's plank roof and facades correct, one-cell tree mass
+    (174 cells) with no plateau and no gable.
+  - Roof regression order: CHERRYGROVE -> NEW_BARK -> VIOLET in one
+    session keeps each town its own roof colour (this was the pink-roof
+    reproduction; it stays green now).
+- Known gaps unchanged: animated tiles (water, flowers) are coloured but
+  still; Cherrygrove's water-edge wall boxes carry their own art and are
+  read at the volume depth their drawing gives -- not part of the report.
+
+## Release
+
+Bumped `manifest.json` to 1.12.2 (`mod.exports.version` follows the
+manifest). Tagged and released as `v1.12.2` on notquiteog/
+DramaticShapeVoxelMod; JohtoDioramaCart re-pinned.
+
 # Lavender Battle Art parity + exact bald-square fix - 2026-09-10
 
 The previous follow-up targeted the wrong rectangle. The large 12x12

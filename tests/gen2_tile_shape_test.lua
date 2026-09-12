@@ -279,9 +279,45 @@ do
     "and a tree is as tall as a tree, not as tall as the forest is deep -- "
       .. "volumed, VIOLET_CITY's 174 contiguous tree cells became one "
       .. "stepped plateau with the camera inside it")
-  T.eq(g2tree.h, 32,
-    "tree height is overridden to 32px: two cells, so a treeline stands "
-      .. "over the player instead of reading as a hedge")
+  T.eq(g2tree.h, 16,
+    "a tree is one cell high, the class default -- the 32px override was an "
+      .. "overcorrection: at the 35-degree camera a 32px box leans two cells "
+      .. "of screen space over the ground in front of it, so a tree border "
+      .. "along a path read as growing INTO the path, and every bush in "
+      .. "Johto stood two storeys tall. Gen 1 draws Kanto's trees one cell "
+      .. "high and they read correctly there")
+end
+
+-- ------- the outdoor gate: indoors nothing is a volume and nothing is a fence
+--
+-- Volumed indoors, every solid answers `wall` -- Gen 2 has no profile to tell
+-- a table from a bookshelf from the back of the room -- so a lab's furniture
+-- and its walls were one region, and every table in ELM'S LAB became a 48px
+-- tower. And ungated, `thin` made fences out of DARK CAVE's rock and Sprout
+-- Tower's floor furniture. TOWN and ROUTE are the only environments GSC
+-- itself treats as outside.
+do
+  local Structures = lib("Structures")
+  local indoor = fakeMap(CELLS, "INDOOR")
+  local indoorShapes = { classes = shapes.classes }
+  T.eq(G2.install(indoorShapes, indoor), true,
+    "the classifier still installs on an indoor map")
+  T.eq(indoorShapes.gen2Classes.wall.volume, nil,
+    "indoors a wall is NOT a volume -- the class height is the honest answer")
+  T.eq(indoorShapes.gen2Classes.tree.volume, nil, "and a tree never was")
+  T.eq(Structures.volumeClaims(indoorShapes.gen2Classes.wall), false,
+    "so Structures leaves every indoor solid at its class height -- the "
+      .. "reading that made ELM'S LAB's tables 48px towers is gone")
+  local function indoorPal(cx, cy)
+    local top = indoor:tileAt(cx * 2, cy * 2)
+    local bot = indoor:tileAt(cx * 2, cy * 2 + 1)
+    return G2.paletteOf(indoor.tileset, top), G2.paletteOf(indoor.tileset, bot)
+  end
+  T.eq(G2.classAt(indoor, 1, 2, indoorPal(1, 2)), "wall",
+    "an isolated solid stays a wall indoors -- the thin test is an OUTDOOR "
+      .. "reading, and ungated it made furniture into fences")
+  T.eq(G2.classAt(indoor, 3, 2, indoorPal(3, 2)), "wall",
+    "a gray solid indoors is a wall too, not a signpost")
 end
 
 -- ------- what Structures DOES with those flags
@@ -362,7 +398,7 @@ do
   T.eq(VoxelScene.groundAt(map, 3, 1), 0, "so does tall grass")
   T.eq(VoxelScene.groundAt(map, 4, 2), 6,
     "a ledge supports at its own 6px, so standing on one is standing ON it")
-  T.eq(VoxelScene.groundAt(map, 1, 4), 32,
+  T.eq(VoxelScene.groundAt(map, 1, 4), 16,
     "and a tree reports its full height, which is what a shadow and a "
       .. "billboard behind it need")
 end

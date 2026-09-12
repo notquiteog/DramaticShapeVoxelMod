@@ -107,22 +107,35 @@ end
 -- Classes whose height is a property of the DRAWING, not of the class.
 -- A house is as tall as its facade is deep; a tree mass is as tall as it
 -- is drawn. Everything else here has a height because of what it is.
+-- ...and only OUTDOORS, which is the other half of the same sentence.
+--
+-- A volume reading says "you are as tall as your drawing is deep", and that
+-- is true of a house because a house's facade IS drawn going up the map.
+-- It is not true of a room. Indoors every solid answers `wall` -- Gen 2 has
+-- no profile to tell a table from a bookshelf from the back of the room --
+-- so a lab's furniture and its walls are one region, and the region's
+-- extent is however deep the furnished end of the room happens to be.
+-- ELM'S LAB has three cells of solid across its top, so every table in it
+-- became a 48px tower. Indoors the class height is the honest answer: one
+-- cell, the height Gen 1 gives an unauthored interior wall.
 local VOLUME_CLASSES = { wall = true, cliff = true }
 
--- Heights this generation overrides, for classes whose Gen 1 number was
--- picked against Gen 1 art.
+-- `tree` is NOT on that list, and it does not get a height of its own
+-- either. Both halves were tried and both were wrong.
 --
--- `tree` is the whole list, and it is deliberately NOT a volume class,
--- which is the second half of the same judgement. A house is as tall as
--- its facade is drawn; a tree is as tall as a tree, however much forest
--- the map paints. Volumed, Johto's tree borders became one stepped
--- plateau -- 174 contiguous cells in VIOLET_CITY resolving to a green
--- tabletop whose terraces followed each column's extent, with the camera
--- inside it. A flat 32px is two cells: tall enough to stand over the
--- player and read as a treeline rather than a hedge, uniform enough that
--- a border reads as one thing. The Gen 1 number was 16 -- one cell --
--- which is where "long, not tall" came from on the tree side.
-local GEN2_HEIGHTS = { tree = 32 }
+-- Volumed, Johto's tree borders became one stepped plateau: 174 contiguous
+-- cells in VIOLET_CITY resolving to a green tabletop whose terraces
+-- followed each column's extent, with the camera inside it. So it takes a
+-- flat height like any other fixed class.
+--
+-- That height is 16 -- one cell -- and not the 32 it was briefly given.
+-- Two cells was an overcorrection to the plateau, and it bought the
+-- opposite complaint: a 32px box leans two cells of screen space over the
+-- ground in front of it at the diorama's 35-degree camera, so a tree
+-- border along a path reads as growing INTO the path, and every bush in
+-- Johto stood two storeys tall. Gen 1 draws Kanto's trees one cell high
+-- (the OVERWORLD profile pins them `cylinder`, h 16) and they read
+-- correctly there, so the class default is simply right.
 
 -- How many rows at a run's north end are roof.
 --
@@ -153,14 +166,13 @@ function Gen2TileShape.roofRowsFor(map, tx, north, front)
   return rows
 end
 
-local function classTable(shapes)
+local function classTable(shapes, outdoors)
   local out = {}
   for class, shape in pairs(shapes.classes or {}) do
     -- copy, because shapes.classes entries are the UNAUTHORED canonical
     -- objects the Gen 1 cell rules hand out; marking those authored in
     -- place would put every fallback tile on the structure path
-    out[class] = { class = shape.class, h = GEN2_HEIGHTS[class] or shape.h,
-                   art = shape.art,
+    out[class] = { class = shape.class, h = shape.h, art = shape.art,
                    flat = shape.flat, authored = true,
                    -- Classified, not hand-pinned.
                    --
@@ -191,7 +203,7 @@ local function classTable(shapes)
                    -- them is drawn. A ledge is 6px because a ledge is
                    -- 6px, however many rows of it the map paints, and the
                    -- same goes for fences and signposts.
-                   volume = VOLUME_CLASSES[class] or nil }
+                   volume = (outdoors and VOLUME_CLASSES[class]) or nil }
   end
   return out
 end
@@ -315,7 +327,7 @@ end
 -- TileShape.forMap, so the copies above are made once rather than per tile.
 function Gen2TileShape.install(shapes, map)
   if not Gen2TileShape.supports(map) then return false end
-  shapes.gen2Classes = classTable(shapes)
+  shapes.gen2Classes = classTable(shapes, outdoor(map))
   return true
 end
 
