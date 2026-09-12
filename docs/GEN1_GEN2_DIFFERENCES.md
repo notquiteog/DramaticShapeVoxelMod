@@ -120,9 +120,7 @@ keeps a plain image on `self.sprite`. The static art is already replaced by the
 `pokemon.sprite` hook before Gold draws it, so nothing is lost for the art
 itself; the animation surgery is what stays behind.
 
-## Known limitation: the terrain is greyscale
-
-This is the most visible gap and it is worth stating plainly.
+## Colour: the atlas is baked per palette slot
 
 Gen 1 hangs a `TileRenderer` off the map and that renderer owns the atlas the
 mesher samples. Gold has no `map.renderer` -- Gen2Compat records it absent,
@@ -131,15 +129,42 @@ because Gold bakes whole-*map* images on the World
 fallback the world pass got no texture at all and drew the diorama in flat
 white: correct geometry, no art.
 
-`lib/TerrainAtlas.lua` now falls back to the tileset's own image, which is the
-same file Gold's `World:atlasFor` hands its own renderer. That file is the raw
-2bpp Game Boy tile data -- 2-bit greyscale, four shades -- because a Gen 2 tile
-takes its four colours at *draw* time from its PalMap slot inside the eight BG
-palettes loaded for the map's environment, time of day and map group. Gold's
-map bake walks those eight slots; an atlas has no single palette to bake into.
+The tileset does carry an atlas, and it is the same file Gold's
+`World:atlasFor` hands its own renderer -- but on disk it is raw 2bpp Game Boy
+tile data, four shades of grey. A Gen 2 tile takes its four colours at *draw*
+time from one of eight BG palettes, chosen per tile by its PalMap slot, and
+Gold's map bake walks those eight slots under a palette uniform. A mesher
+cannot do that: it samples ONE texture per map, so the colour has to be in the
+atlas.
 
-So a Gen 2 diorama is textured in greyscale. Porting the per-slot bake is the
-next piece of work and the one that would most change how this looks.
+So `lib/TerrainAtlas.lua` bakes one. For every tile id the mesher can ask for
+it writes that tile's own graphic, recoloured through its own slot, at that
+tile's own index -- which makes the naive `tileId -> atlas position` lookup the
+mesher already does correct on Gen 2 in three ways at once:
+
+- **Colour.** Each 8x8 goes through `TileRenderer.recolorSample`, the engine's
+  own shade mapper, which is exported for exactly this: *"a render pipeline
+  bakes a map's palette into its own texture atlas the same way, and has to
+  land on the identical colors as the 2D tiles it is standing in for."* The
+  four colours come from `Palettes.bgSet(world.palettes, map.def, daytime)`
+  through `GbcPalette.color`, so the COLOR option reaches the diorama too and a
+  DMG-mode map is not left sitting on a colour field.
+- **VRAM bank.** Crystal's metatile bytes are often 0-95 with the bank in the
+  attr nybble, and the bank-1 graphic lives at `$80 + id` on the sheet
+  (`TileAttrs.sheetTileId`). Sampling position `id` drew the bank-0 tile for
+  every bank-1 one. This was wrong independently of colour.
+- **Flips.** Crystal carries per-tile x/y flips in the same attr, so those are
+  baked in for the same reason.
+
+Keyed by tileset, time of day and palette mode, because all three change the
+answer -- and an uncoloured bake is returned but deliberately *not* cached, so
+the frame after the palettes come up gets the coloured atlas rather than being
+stuck with grey for the session.
+
+What this does **not** do: animated tiles. Gold drives water and flower
+animation by frame rewrite (`tileset.anim`, `animFrames`, `flowerFrames`), and
+the Gen 1 animation path in this file keys off `TileRenderer.animFrame` and the
+Gen 1 renderer. A Gen 2 map's water is coloured but still.
 
 ## Other Gen 2 shapes worth knowing
 
@@ -190,8 +215,12 @@ These bit during the port and are recorded so they are not rediscovered.
   cart, and it reads the **engine** tables to prove the Gen 1-only patches did
   not land -- a test that asked the mod's own flags would pass with the whole
   gate deleted.
-- The mod's full suite: 183/183, with the only difference from upstream being
-  the added case.
+- The mod's full suite, run from the mod directory with `DS_MOD_PATH=.`:
+  99 pass / 84 fail, against pristine upstream's 98 / 84 -- the single
+  difference being the added case. The 84 are pre-existing and identical in
+  both: cases that need a real LOVE context, and cases whose hardcoded
+  `DS_MOD_PATH` default points at a directory name this package no longer
+  uses.
 - A real Crystal boot, on the shipped 0.2.59 AppImage under Xvfb with a
   sandboxed save identity: mod `state=loaded`, no boot errors, ladder
   `OFF/FULL/15/35/50/75`, rung 7 clamped to 5, the world reached
@@ -203,7 +232,7 @@ These bit during the port and are recorded so they are not rediscovered.
 Gen 2 is declared because the mod runs there and the diorama draws, not
 because every feature crossed. What a supported build still owes:
 
-- coloured terrain (the per-slot palette bake above);
+- animated tiles on Gen 2 (water and flowers are coloured but still);
 - a Gen 2 battle-presentation adapter, for 3D-BTL;
 - the walk through Gold's own step machinery, for 1ST and 3RD;
 - Johto/Kanto-Gen2 mappings for the GEN6 arena router and map atmosphere,

@@ -46,7 +46,7 @@ return {
       "1ST needs the 3D pass like every rung; without it the level still persists but the world stays 2D and the grid walk stays in charge",
       "in 1ST, scripted walks, ledge hops and spinner slides play out as the grid moves they are, with the camera riding along; free control resumes when they land",
       "rooms have no ceilings, so a first-person look over an interior wall shows the void the diorama always had behind it",
-      "on Gold, Silver and Crystal the terrain is GREYSCALE: a Gen 2 tile takes its colours at draw time from one of eight BG palettes, and an atlas has no single palette to bake into -- the geometry, shadows and sprites are unaffected",
+      "on Gold, Silver and Crystal the terrain is coloured by baking the tileset atlas per BG palette slot, so the diorama lands on the same colours as the flat map -- but animated tiles (water, flowers) are coloured and still, because Gold animates them by frame rewrite",
       "3D-BTL is not offered on Gold, Silver or Crystal -- Gold composes its battles on its own screen, through seams the arena has no counterpart for, so the row comes off the menu and battles draw as Gold's own with BATTLE ART's sprites in them",
       "the voxel ladder ends at 75 on Gold, Silver and Crystal: the 1ST and 3RD rungs take the walk as well as the eye, and free movement has no seam there",
     },

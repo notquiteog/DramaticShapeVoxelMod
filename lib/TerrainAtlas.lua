@@ -34,6 +34,7 @@ local Assets = require("src.render.Assets")
 local TileRenderer = require("src.render.TileRenderer")
 local PaletteFX = require("src.render.PaletteFX")
 local CommunityVisuals = V.require("CommunityVisuals")
+local Generation = V.require("Generation")
 
 -- TEST125 appends five independent high-resolution materials to Pokemon
 -- Tower's otherwise tiny 8px tile atlas. The new 2048px reference granite
@@ -106,6 +107,152 @@ end
 -- The static atlas for `map` under `colors`: the answer this file gave
 -- before animation existed, and the base every animated frame is patched
 -- over. Returns the image and, when we baked it ourselves, its pixels.
+-- ------- Gen 2 colour
+--
+-- A Gen 2 tile is greyscale on disk and takes its four colours at DRAW time
+-- from one of eight BG palettes, picked per tile by its PalMap slot. Gold's
+-- own map bake walks those eight slots and draws each slot's tiles under a
+-- palette uniform (src/world/gen2/World.lua:bakeMapImage). A mesher cannot do
+-- that: it samples ONE atlas texture per map, so the colour has to be in the
+-- atlas.
+--
+-- So bake one. For every tile id the mesher can ask for, write that tile's own
+-- graphic, recoloured through its own slot, at that tile's own index -- which
+-- makes the naive `tileId -> atlas position` lookup the mesher already does
+-- correct on Gen 2, in two ways at once:
+--
+--   colour  each 8x8 is recoloured through TileRenderer.recolorSample, the
+--           engine's own shade mapper. It is exported for exactly this --
+--           "a render pipeline bakes a map's palette into its own texture
+--           atlas the same way, and has to land on the identical colors as
+--           the 2D tiles it is standing in for" -- so the diorama and the
+--           flat map agree, including under the COLOR option, because
+--           GbcPalette.color routes through it.
+--
+--   bank    Crystal's metatile bytes are often 0-95 with the VRAM bank in the
+--           attr nybble, and the bank-1 graphic lives at $80+id on the sheet
+--           (TileAttrs.sheetTileId). Sampling position `id` would have drawn
+--           the bank-0 tile for every bank-1 one. Reading through sheetTileId
+--           and writing to `id` fixes that whether or not colour is available.
+--
+-- Crystal also carries per-tile x/y flips in the same attr, so those are baked
+-- in for the same reason.
+--
+-- Keyed by tileset, time of day and palette mode, because all three change the
+-- answer -- the same reasoning as the Gen 1 bake's paletteKey above. `false`
+-- memoises a refusal so a map whose palettes are not up yet is retried on the
+-- next map rather than every frame.
+local gen2Cache = {}
+local gen2Data = {}
+
+-- The live Gen 2 world, for the two things only it has: the palette data the
+-- cart was extracted with, and what time it is. Read through the facade on
+-- every call rather than captured, because neither exists yet when this file
+-- is loaded (src/mods/Loader.lua's game.ready is the honest early seam).
+local function gen2World()
+  local ok, Game = pcall(require, "src.core.Game")
+  if not ok or type(Game) ~= "table" then return nil end
+  local ow = Game.overworld
+  if type(ow) ~= "table" then return nil end
+  if ow.palettes == nil then return nil end
+  return ow
+end
+
+local function gen2Modules()
+  -- Gen 2 only: a Gen 1 boot REFUSES a require for a src.*.gen2.* module
+  -- outright (Loader's crossGenerationDenial), which is correct -- the structs
+  -- it reads are not that game's -- so this must never be reached there.
+  if not Generation.isGen2() then return nil end
+  local ok, Palettes = pcall(require, "src.world.gen2.Palettes")
+  if not ok or type(Palettes) ~= "table" then return nil end
+  local okA, TileAttrs = pcall(require, "src.world.gen2.TileAttrs")
+  if not okA or type(TileAttrs) ~= "table" then return nil end
+  local okG, GbcPalette = pcall(require, "src.render.GbcPalette")
+  if not okG or type(GbcPalette) ~= "table" then return nil end
+  return Palettes, TileAttrs, GbcPalette
+end
+
+-- The four colours of one palette slot, as recolorSample wants them: 0-255
+-- triples, brightest first.
+local function slotColors(GbcPalette, palette)
+  if not palette then return nil end
+  local out = {}
+  for i = 1, 4 do
+    local c = GbcPalette.color(palette, i)
+    if not c then return nil end
+    out[i] = c
+  end
+  return out
+end
+
+local function gen2Bake(map)
+  local tileset = map.tileset
+  if not (tileset and type(tileset.image) == "string") then return nil end
+  if not (love.image and love.image.newImageData) then return nil end
+  local Palettes, TileAttrs, GbcPalette = gen2Modules()
+  if not Palettes then return nil end
+  local world = gen2World()
+  if not world then return nil end
+
+  -- tod is the live field; daytime is the same answer under the name the
+  -- event payloads use, and DAY is what bgSet itself falls back to.
+  local daytime = world.tod or world.daytime or "DAY"
+  local bgSet = Palettes.bgSet(world.palettes, map.def, daytime)
+  local mode = GbcPalette.mode or "?"
+  local key = tostring(tileset.id) .. "#" .. tostring(daytime) .. "#" .. mode
+  if gen2Cache[key] ~= nil then
+    return gen2Cache[key] or nil, gen2Data[key]
+  end
+
+  local ok, image, pixels = pcall(function()
+    local src = Assets.imageData(tileset.image)
+    local iw, ih = src:getDimensions()
+    local perRow = tileset.tilesPerRow or 16
+    local total = math.floor(iw / 8) * math.floor(ih / 8)
+    local dst = love.image.newImageData(iw, ih)
+
+    for id = 0, total - 1 do
+      local attr = TileAttrs.forTile(tileset, id)
+      local from = TileAttrs.sheetTileId(id, attr)
+      if from >= total then from = id end
+      local colors = bgSet and slotColors(GbcPalette, bgSet[attr.palette])
+      local sxo = (from % perRow) * 8
+      local syo = math.floor(from / perRow) * 8
+      local dxo = (id % perRow) * 8
+      local dyo = math.floor(id / perRow) * 8
+      for py = 0, 7 do
+        for px = 0, 7 do
+          local ox = attr.xFlip and (7 - px) or px
+          local oy = attr.yFlip and (7 - py) or py
+          local r, g, b, a = src:getPixel(sxo + ox, syo + oy)
+          if colors then
+            r, g, b, a = TileRenderer.recolorSample(r, g, b, a, colors)
+          end
+          dst:setPixel(dxo + px, dyo + py, r, g, b, a)
+        end
+      end
+    end
+    return love.graphics.newImage(dst), dst
+  end)
+
+  if not ok or not image then
+    gen2Cache[key] = false
+    return nil
+  end
+  -- An uncoloured bake is still worth returning -- it carries the bank remap,
+  -- which is right whether or not palettes answered -- but it is NOT cached,
+  -- so the frame after the palettes come up gets the coloured one instead of
+  -- being stuck with greyscale for the session.
+  if not bgSet then
+    if image.setFilter then pcall(image.setFilter, image, "nearest", "nearest") end
+    return image, pixels
+  end
+  if image.setFilter then pcall(image.setFilter, image, "nearest", "nearest") end
+  gen2Cache[key] = image
+  gen2Data[key] = pixels
+  return image, pixels
+end
+
 -- The tileset's own art, for a map whose generation has no `map.renderer`.
 --
 -- Gen 1 hangs a TileRenderer off the map and that renderer owns the atlas
@@ -141,7 +288,10 @@ local function staticAtlas(map, colors)
   local renderer = map.renderer
   local base = renderer and renderer.image
   if not base then
-    -- no renderer: the tileset art is the atlas, uncoloured (see above)
+    -- No renderer. Bake the Gen 2 atlas if the palettes are up; otherwise the
+    -- raw tileset art, which is greyscale but is terrain rather than nothing.
+    local baked, bakedPixels = gen2Bake(map)
+    if baked then return baked, bakedPixels end
     local fallback = tilesetAtlas(map)
     if not fallback then return nil end
     return fallback, false
@@ -446,9 +596,11 @@ end
 local function rendererPixels(map)
   local renderer = map.renderer
   if not renderer then
-    -- Same reasoning as tilesetAtlas: with no renderer the art on disk IS
-    -- what the atlas was built from, which is the route this function already
-    -- takes for an atlas nobody replaced.
+    -- The baked Gen 2 atlas owns its own pixels; without one the art on disk
+    -- IS what the atlas was built from, which is the route this function
+    -- already takes for an atlas nobody replaced.
+    local _, bakedPixels = gen2Bake(map)
+    if bakedPixels then return bakedPixels end
     local path = map.tileset and map.tileset.image
     if type(path) ~= "string" then return nil end
     local ok, data = pcall(Assets.imageData, path)

@@ -552,8 +552,16 @@ test is the one the user runs.
   because a gate skip is not an error and would otherwise pass; and it reads
   the ENGINE tables for the install sentinels, so "the Gen 1 patch did not
   land" is evidence rather than our own bookkeeping.
-- Full mod suite: **183/183**, and a file-by-file diff against pristine
-  upstream shows the only difference is the added case. Three unit tests
+- Full mod suite: **99 pass / 84 fail**, against pristine upstream's
+  **98 / 84** -- a file-by-file diff shows the only difference is the added
+  case. The 84 are pre-existing and identical in both copies (cases needing a
+  real LOVE context, and cases whose hardcoded `DS_MOD_PATH` default names a
+  directory this package is not called). An earlier measurement of this
+  reported 183/183 and was wrong: the loop expanded `$?` after a
+  `$(basename ...)` substitution, so it recorded basename's exit code rather
+  than the test's. The regression conclusion is unchanged -- it rests on the
+  upstream-vs-fork diff, which was measured correctly -- but the absolute
+  pass counts were not real. Three unit tests
   needed their stub `V` taught about the new `Generation` module
   (`interface_sprites_install_test`, `legendary_cave_merge_test`,
   `atmosphere_companion_integration_test`) -- those stubs assert on unknown
@@ -581,9 +589,14 @@ accident -- see the known limitation in the doc.
 
 ### Remaining work, in the order it would pay off
 
-1. Colour the Gen 2 terrain: bake the tileset atlas per PalMap slot against the
-   eight BG palettes Gold loads for the map's environment, time of day and map
-   group (`src/world/gen2/World.lua:bakeMapImage` is the model).
+1. DONE (2026-09-12): Gen 2 terrain colour, by baking the tileset atlas per
+   PalMap slot against the eight BG palettes. Verified on Crystal in
+   PLAYERS_HOUSE_2F -- tan floor, brown panelling, blue console screens, all
+   matching the flat 2D render. Remaining in this area: ANIMATED tiles, which
+   Gold drives by frame rewrite (`tileset.anim` / `animFrames` /
+   `flowerFrames`) where the Gen 1 path in TerrainAtlas keys off
+   `TileRenderer.animFrame` and the Gen 1 renderer -- so Gen 2 water is
+   coloured but still.
 2. A Gen 2 battle-presentation adapter for `3D-BTL`, against `pic` / `drawPic`
    / `picScale` / `bgMode` / `extendedHUD` and the neutral `battle.overlay` and
    `render.compose` hooks. Note Gold's battle is OPAQUE and paints its own map,

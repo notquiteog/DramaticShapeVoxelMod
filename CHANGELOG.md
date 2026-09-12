@@ -65,6 +65,17 @@ is the full account; the short version is below.
 
 ### Added
 
+- Gen 2 terrain colour. `lib/TerrainAtlas.lua` bakes the tileset atlas per BG
+  palette slot: for every tile id the mesher can ask for it writes that tile's
+  graphic, recoloured through its own slot, at that tile's own index -- so the
+  mesher's existing `tileId -> atlas position` lookup becomes correct on Gen 2
+  in colour, in Crystal's VRAM bank remap (`TileAttrs.sheetTileId`, wrong
+  independently of colour) and in Crystal's per-tile flips. Colours come from
+  `Palettes.bgSet` through `GbcPalette.color`, and the shade mapping is the
+  engine's own exported `TileRenderer.recolorSample`, so the diorama lands on
+  the same colours as the flat map and the COLOR option reaches it. Animated
+  tiles are the remaining gap: Gold drives water and flowers by frame rewrite,
+  so they are coloured but still.
 - `lib/Generation.lua`: the cart discriminator every install site asks before
   patching rather than calling. `number` / `isGen1` / `isGen2` / `version` /
   `lineage` / `isCrystal` / `screenId`, read from the engine's own
