@@ -132,6 +132,32 @@ end
 
 local DIRS4 = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } }
 
+-- Is this cell a doorway?
+--
+-- Map:isDoorTileCell is the question both generations answer. On Gen 1 it is
+-- literally `doorTiles[cellTile(cx, cy)]` (src/world/Map.lua:254), and on Gold
+-- it is the narrow Permissions.isImmediateWarp arm -- a door walked INTO
+-- rather than a mat stood on -- which Gen2Compat backs.
+--
+-- The raw `doorTiles[cellTile(...)]` form this replaces broke the whole mesh
+-- on a Gen 2 map, twice over: `doorTiles` is a Gen 1 tileset list that Gold
+-- does not carry, so indexing it raised, and `cellTile` answers a COLL_* byte
+-- there rather than a tile id, so even a guarded read would have looked the
+-- wrong number up in the wrong table. The tileset fallback is kept for a
+-- Gen 1 map whose tileset predates the method.
+local function doorCell(map, cx, cy)
+  if type(map.isDoorTileCell) == "function" then
+    local ok, value = pcall(map.isDoorTileCell, map, cx, cy)
+    if ok and value == true then return true end
+    if ok then return false end
+  end
+  if type(map.doorTiles) == "table" and type(map.cellTile) == "function" then
+    local ok, tile = pcall(map.cellTile, map, cx, cy)
+    return ok and map.doorTiles[tile] == true
+  end
+  return false
+end
+
 local function keyOf(tx, ty)
   return (ty + 64) * 4096 + (tx + 64)
 end
@@ -906,7 +932,7 @@ function Structures.forMap(map)
   -- silently did nothing and the flights stayed painted on the floor.
   for cy = math.floor(y0 / 2), math.floor(y1 / 2) do
     for cx = math.floor(x0 / 2), math.floor(x1 / 2) do
-      if map.doorTiles[map:cellTile(cx, cy)] then
+      if doorCell(map, cx, cy) then
         local northK = keyOf(cx * 2, cy * 2 - 1)
         local ns = shapeAt[northK]
         if ns and ns.art == "upright" then

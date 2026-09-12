@@ -1,7 +1,7 @@
 -- Sharing metadata (25-community-and-ecosystem.md 3.2).  Read by tooling
 -- and the manager detail pane; never by the loader's merge.
 return {
-  summary = "Gen 1 Red, Blue, and Yellow only: the overworld as a 3D diorama, and battles fought on it with real occlusion, tilt-shift, and over-the-shoulder fights.",
+  summary = "The overworld as a 3D diorama, with real occlusion and tilt-shift. On Red, Blue and Yellow the battles are fought on it too, over the shoulder; on Gold, Silver and Crystal the diorama and the sprites cross but the staged battle and first person do not.",
   author = "DramaticShape",
   contact = "https://github.com/DramaticShape/BATTLE_ART_VOXEL_FORK",
   tags = { "graphics", "3d", "voxel", "render-pipeline", "presentation",
@@ -46,11 +46,14 @@ return {
       "1ST needs the 3D pass like every rung; without it the level still persists but the world stays 2D and the grid walk stays in charge",
       "in 1ST, scripted walks, ledge hops and spinner slides play out as the grid moves they are, with the camera riding along; free control resumes when they land",
       "rooms have no ceilings, so a first-person look over an interior wall shows the void the diorama always had behind it",
+      "on Gold, Silver and Crystal the terrain is GREYSCALE: a Gen 2 tile takes its colours at draw time from one of eight BG palettes, and an atlas has no single palette to bake into -- the geometry, shadows and sprites are unaffected",
+      "3D-BTL is not offered on Gold, Silver or Crystal -- Gold composes its battles on its own screen, through seams the arena has no counterpart for, so the row comes off the menu and battles draw as Gold's own with BATTLE ART's sprites in them",
+      "the voxel ladder ends at 75 on Gold, Silver and Crystal: the 1ST and 3RD rungs take the walk as well as the eye, and free movement has no seam there",
     },
   },
   credits = {
     { who = "pret/pokered", for_ = "the tile and sprite data the geometry is derived from" },
   },
   compat = { engine = ">=0.1.37 <2.0.0", modApi = 2,
-             games = { "red", "blue", "yellow" } },
+             games = { "red", "blue", "yellow", "gold", "silver", "crystal" } },
 }

@@ -106,10 +106,46 @@ end
 -- The static atlas for `map` under `colors`: the answer this file gave
 -- before animation existed, and the base every animated frame is patched
 -- over. Returns the image and, when we baked it ourselves, its pixels.
+-- The tileset's own art, for a map whose generation has no `map.renderer`.
+--
+-- Gen 1 hangs a TileRenderer off the map and that renderer owns the atlas
+-- image the mesher samples. Gold has no such field -- Gen2Compat records
+-- `renderer` as absent, because Gold bakes whole-MAP images on the World
+-- instead (src/world/gen2/World.lua:bakeMapImage) and never keeps a per-map
+-- atlas. Without this fallback the world pass got no texture at all and drew
+-- the diorama in flat white: correct geometry, no art.
+--
+-- What the tileset does carry is the atlas itself, and it is the same image
+-- Gold's own World:atlasFor hands its renderer (:8675). So sample that.
+--
+-- KNOWN LIMITATION, and it is visible: that file is the raw 2bpp Game Boy
+-- tile data -- 2-bit greyscale, four shades -- because a Gen 2 tile takes its
+-- four colours at DRAW time from its PalMap slot inside the eight BG palettes
+-- loaded for the map's environment, time of day and map group. Gold's map
+-- bake walks those eight slots; an atlas has no single palette to bake. So a
+-- Gen 2 diorama is textured in greyscale until that per-slot bake is ported,
+-- which is the "Gen 2 blocks, tiles, palettes and borders are translated"
+-- item in docs/GEN1_GEN2_DIFFERENCES.md. Greyscale terrain rather than no
+-- terrain is the trade this file already names for a driver without pixel
+-- access, and it is the same trade here.
+local function tilesetAtlas(map)
+  local path = map.tileset and map.tileset.image
+  if type(path) ~= "string" then return nil end
+  local ok, image = pcall(Assets.image, path)
+  if not ok or not image then return nil end
+  if image.setFilter then pcall(image.setFilter, image, "nearest", "nearest") end
+  return image
+end
+
 local function staticAtlas(map, colors)
   local renderer = map.renderer
   local base = renderer and renderer.image
-  if not base then return nil end
+  if not base then
+    -- no renderer: the tileset art is the atlas, uncoloured (see above)
+    local fallback = tilesetAtlas(map)
+    if not fallback then return nil end
+    return fallback, false
+  end
   -- already true color: RED++'s baked per-map atlas, or a mod's own art
   if not colors or renderer.gbcAtlas or map.tileset.trueColor then
     return base, false
@@ -409,7 +445,15 @@ end
 -- is made -- so that one has to come back off the texture (readback below).
 local function rendererPixels(map)
   local renderer = map.renderer
-  if not renderer then return nil end
+  if not renderer then
+    -- Same reasoning as tilesetAtlas: with no renderer the art on disk IS
+    -- what the atlas was built from, which is the route this function already
+    -- takes for an atlas nobody replaced.
+    local path = map.tileset and map.tileset.image
+    if type(path) ~= "string" then return nil end
+    local ok, data = pcall(Assets.imageData, path)
+    return ok and data or nil
+  end
   if TileRenderer.atlasImageData then
     local ok, data = pcall(TileRenderer.atlasImageData, renderer)
     if ok and data then return data end

@@ -48,6 +48,7 @@
 local V = ...
 
 local FirstPerson = V.require("FirstPerson")
+local Generation = V.require("Generation")
 
 local FreeMove = {}
 
@@ -276,7 +277,7 @@ function FreeMove.tick(state)
   end
   if not suppressed and input:wasPressed("start") then
     require("src.core.Sound").play(Game.data, "Start_Menu")
-    require("src.ui.Screens").push(Game, "StartMenu")
+    require("src.ui.Screens").push(Game, Generation.screenId("StartMenu"))
     return
   end
 

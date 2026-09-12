@@ -15,6 +15,7 @@
 -- pokemon.sprite wrap (player back -> front substitution).
 
 local V = ...
+local Generation = V.require("Generation")
 
 local ModSetting = V.require("ModSetting")
 local BattleArt = V.require("BattleArt")
@@ -519,9 +520,40 @@ function InterfaceSprites.install()
     return front or out
   end)
 
-  InterfaceSprites.installSummary()
-  InterfaceSprites.installTitle()
-  InterfaceSprites.installDex()
+  -- The pokemon.sprite wrapper above is the whole cross-generation story: it
+  -- is the engine's own art seam (src/pokemon/Sprites.lua) and Gold resolves
+  -- every battle, summary and dex pic through the same hook with the same ctx
+  -- keys, so the substituted art lands on both generations from this one
+  -- subscription.
+  --
+  -- The three installers below are different in kind: each reaches into a
+  -- Gen 1 SCREEN CLASS and replaces a method, and none of those classes is the
+  -- one a Gen 2 boot instantiates.
+  --
+  --   Title   Gold's title screen has no cycling starter to reskin. It is
+  --           Ho-Oh over the clouds (Suicune on Crystal) with its own trail
+  --           animation and no `currentSprite` at all
+  --           (src/ui/gen2/TitleState.lua), so there is no seam to take.
+  --   Summary Gold's summary pic is a MonAnimView held on `self.picAnim`
+  --           (src/ui/gen2/SummaryMenu.lua:351) where Gen 1 keeps a plain
+  --           image on `self.sprite`. The animation surgery below is written
+  --           for the Gen 1 field and would half-land on the other shape --
+  --           and it is not needed for the static art, which the hook above
+  --           has already replaced by the time Gold draws it.
+  --   Dex     the same story as Summary, on the same field names.
+  --
+  -- So these stay Gen 1 only. Pointing them at the gen2/ siblings would be the
+  -- plausible wrong answer: the require would succeed, the patch would land,
+  -- and it would read fields Gold does not have.
+  if Generation.isGen1() then
+    InterfaceSprites.installSummary()
+    InterfaceSprites.installTitle()
+    InterfaceSprites.installDex()
+  else
+    InterfaceSprites.screenPatchesSkipped =
+      "gen2 screen classes hold their pics on different fields; the "
+      .. "pokemon.sprite hook covers the art itself"
+  end
 end
 
 -- SummaryMenu already draws the canonical shaped HP gauge through

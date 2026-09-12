@@ -21,6 +21,9 @@
 -- Purely presentational, like tilt and survey zoom: nothing here reaches
 -- collision, movement, triggers or scripts.
 
+local V = ...
+local Generation = V.require("Generation")
+
 local Voxel = {}
 
 -- FULL is a PRESET, not another angle: one rung that puts the whole mode in
@@ -86,6 +89,43 @@ end
 -- player rather than orbiting the view centre, which is what decides that
 -- the look inputs are read, the walk goes free and the cards turn to face
 -- the eye. Everything that used to ask isFirstPerson for those asks this.
+-- The rungs an ORBIT camera alone can serve: OFF, FULL, 15, 35, 50, 75.
+-- Everything above them stands in the player's own eyes and, with the eye,
+-- takes the walk (lib/FreeMove.lua).
+Voxel.ORBIT_LEVEL_COUNT = 6
+
+-- Can this cart carry the free-cam rungs?
+--
+-- Gen 1 only, and the reason is the WALK rather than the camera. The eye and
+-- its tween are ordinary rendering and would be fine on Gold. Free movement is
+-- not: it replaces OverworldController:handleInput, and on a Gen 2 boot that
+-- name resolves to Gen2Compat's facade over the live World, which dispatches
+-- back through `update`, `interact` and `talkTo` and nothing else
+-- (src/mods/Gen2Compat.lua:1383). The patch would be taken, read back as ours,
+-- and never called -- so the camera would stand in the player's head with the
+-- grid walk still underneath it, the mouse captured for a look the feet do not
+-- follow. A rung that half-works is worse than a rung that is not offered, so
+-- the ladder simply ends at 75 there.
+--
+-- Restoring these rungs on Gold is a movement problem, not a camera one: it
+-- needs the walk driven through Gold's own step and landing machinery rather
+-- than through a wrapper it never calls.
+function Voxel.freeCamAvailable()
+  return Generation.isGen1()
+end
+
+-- The ladder the engine is handed, which is what decides the hotkey's wrap and
+-- the options row's values. Pipelines.maxLevel is `#labels - 1` and both
+-- setLevel and applyOptions clamp to it (src/render/Pipelines.lua:157), so a
+-- level stored by a Gen 1 session lands on 75 here instead of on a rung that
+-- cannot render -- no migration code of our own.
+function Voxel.availableLevelLabels()
+  if Voxel.freeCamAvailable() then return Voxel.ANGLE_LABELS end
+  local out = {}
+  for i = 1, Voxel.ORBIT_LEVEL_COUNT do out[i] = Voxel.ANGLE_LABELS[i] end
+  return out
+end
+
 function Voxel.isFreeCam(level)
   level = level or Voxel.level
   return Voxel.isFirstPerson(level) or Voxel.isThirdPerson(level)

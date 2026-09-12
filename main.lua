@@ -113,6 +113,7 @@ local Shadows = V.require("Shadows")
 local AntiAlias = V.require("AntiAlias")
 local FirstPerson = V.require("FirstPerson")
 local FreeMove = V.require("FreeMove")
+local Generation = V.require("Generation")
 local PoisonFlash = V.require("PoisonFlash")
 local MomHealFlash = V.require("MomHealFlash")
 local HealOverlay = V.require("HealOverlay")
@@ -304,7 +305,10 @@ end
 
 mod.content.render_pipelines:register("voxel", {
   label = "VOXEL",
-  levels = Voxel.ANGLE_LABELS,
+  -- The ladder this cart can actually walk. Gen 1 gets every rung; a Gen 2
+  -- boot stops at 75 because the two rungs above it take the WALK as well as
+  -- the eye, and free movement has no seam on Gold (Voxel.freeCamAvailable).
+  levels = Voxel.availableLevelLabels(),
   -- 3 is the engine's TILT key, which this mode supersedes -- see the
   -- hotkey block near the bottom of this file for how it is claimed
   hotkey = "3",
@@ -844,6 +848,11 @@ local SETTINGS = {
   { OverworldBattle.setting,
     "Fight on the map: the battle draws over the nearest clear ground, "
     .. "shot over the shoulder with a slow parallax drift.",
+    -- Off the menu entirely where a battle cannot be staged: Gold composes
+    -- its battles on its own screen, through seams this arena has no
+    -- counterpart for (OverworldBattle.available). A row that decides nothing
+    -- is worse than no row -- the same reasoning BATTLE LAYOUT is dropped on.
+    when = function() return OverworldBattle.available() end,
     full = true },
   { OverworldBattle.trainerBattleSetting,
     "STOCK keeps Battle Art's native trainer and player-Pokemon presentation. "
@@ -1651,7 +1660,7 @@ mod.hooks:wrap("ui.start_menu.items", function(next, game, items)
       local Menu = require("src.ui.Menu")
       local Screens = require("src.ui.Screens")
       local TextBox = require("src.render.TextBox")
-      local function reopen() Screens.push(game, "StartMenu") end
+      local function reopen() Screens.push(game, Generation.screenId("StartMenu")) end
       game.stack:push(Menu.new(game, {
         { label = "SAVE", onSelect = function()
           VoxelMeshDisk.bind(game, false) -- explicit persistence, including OFF
@@ -1995,8 +2004,17 @@ StadiumBackground.install()
 -- per-cell consequence still runs through the engine's own machinery
 -- (onStepComplete, checkEdgeExit, checkLedgeHop, checkBoulderPush). The
 -- file argues the whole arrangement.
-FirstPerson.install()
-FreeMove.install()
+--
+-- Both of them exist to serve the free-cam rungs, and those rungs are off the
+-- ladder on a Gen 2 boot (Voxel.freeCamAvailable): `handleInput` is not one of
+-- the three members Gen2Compat's World facade dispatches back through, so the
+-- walk wrapper would never be called. Installing either there would leave dead
+-- patches on the engine for a rung the player cannot select, so neither goes
+-- on. Gold's own walk, input and landing pipeline stay untouched.
+if Voxel.freeCamAvailable() then
+  FirstPerson.install()
+  FreeMove.install()
+end
 VoxelTransitionGate.install()
 
 -- TEST48 SELECT/BACK CAMERA CYCLER, transplanted from N64 Memory TEST455.
@@ -2114,9 +2132,19 @@ end)
 -- Declared as a transitions record rather than a constant in that file, so the
 -- fade is retunable in data exactly like the eight wipes it answers, and a total
 -- conversion can make it as long or as short as its own pacing wants.
-mod.content.transitions:register(BattleExit.ID, {
-  frames = BattleExit.FRAMES,
-})
+--
+-- Gen 1 only, and only the RECORD is: `transitions` is one of the registries
+-- with no Gen 2 home at all (src/mods/Schemas.lua:577, "Gold draws its own
+-- battle intro"), so a write here on a Gen 2 boot is taken, dropped, and
+-- reported on the mod manager's error feed. The fade itself is unaffected --
+-- BattleExit.frames reads game.data.transitions for a tuned value and falls
+-- back to BattleExit.FRAMES, so on Gold the shutter closes over the same 12
+-- frames and only the retuning-in-data part is missing.
+if Generation.isGen1() then
+  mod.content.transitions:register(BattleExit.ID, {
+    frames = BattleExit.FRAMES,
+  })
+end
 
 BattleExit.install()
 

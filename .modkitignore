@@ -32,3 +32,35 @@ assets/docs/buidling_to_voxel/voxel_build_verify.py
 # assets/docs/**.md stays in: data/voxel_heights.lua points a modder at the
 # building catalogue, and the methodology is where the geometry's provenance
 # is written down.
+
+# The screenshot, probe, dump and benchmark scripts, excluded for the same
+# reason as the block above. Each drives the engine directly and several
+# patch Gen 1 BattleState / OverworldController seams to stage a shot, so
+# they read as private engine requires against the archive -- and none of
+# them is something a player installs. They run by hand in an engine
+# checkout, like the authoring tools below.
+tests/aa_shots.lua
+tests/bike_shop_shots.lua
+tests/bills_desk_shots.lua
+tests/cam_shots.lua
+tests/chief_house_shots.lua
+tests/fp_shots.lua
+tests/heal_machine_shots.lua
+tests/house_furniture_shots.lua
+tests/ladder_shots.lua
+tests/mart_shots.lua
+tests/mon_shots.lua
+tests/monline_probe.lua
+tests/pic_dump.lua
+tests/potted_plant_shots.lua
+tests/roof_cap_shots.lua
+tests/roof_curve_shots.lua
+tests/round_regress_shots.lua
+tests/route1_candidates.lua
+tests/shelf_relief_shots.lua
+tests/ship_can_shots.lua
+tests/tp_shots.lua
+tests/trash_can_shots.lua
+tests/voxel_bench.lua
+tests/voxel_shots_ab.lua
+tests/water_curve_shots.lua

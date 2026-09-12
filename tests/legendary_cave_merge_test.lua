@@ -23,7 +23,12 @@ love = { graphics = { newMesh = function() end }, data = {
   decompress = function(_, _, raw) return raw end,
   newByteData = function() end,
 } }
-local Timings = assert(loadfile('lib/LoadTimings.lua'))({})
+local Generation = assert(loadfile('lib/Generation.lua'))()
+local Timings = assert(loadfile('lib/LoadTimings.lua'))({
+  require = function(name)
+    return name == 'Generation' and Generation or nil
+  end,
+})
 local Disk = assert(loadfile('lib/VoxelMeshDisk.lua'))({
   require = function(name)
     return name == 'LoadTimings' and Timings or { check = function() end }

@@ -37,6 +37,7 @@
 
 -- the mod namespace (see main.lua): V.require loads a sibling module
 local V = ...
+local Generation = V.require("Generation")
 
 local ModSetting = V.require("ModSetting")
 local BattleArena = V.require("BattleArena")
@@ -109,7 +110,35 @@ OverworldBattle.hudScaleSetting = ModSetting.new("hudScale", "HUD SCALE",
                                                   { "scaled", "og" },
                                                   { "SCALED", "OG" }, 1)
 
+-- Gen 1 only, and this is the choke point the whole staged-battle feature
+-- hangs from: main.lua's stagedBattles() reads nothing else, so a false here
+-- takes the row off the OPTIONS menu, leaves BATTLE LAYOUT alone, and keeps
+-- every arena, camera and billboard path dormant.
+--
+-- A staged battle is composed by replacing six Gen 1 BattleState seams --
+-- picImage, resolveBattleScale, frontPlacement, backPlacement, newWild,
+-- newTrainer -- plus OverworldController:pushBattle. On a Gen 2 boot none of
+-- those exist: Gold's battle screen is src/ui/gen2/BattleState.lua, which
+-- resolves its pics through `pic` / `drawPic` and scales them through
+-- `picScale` / `imageScale` / `panelScale`, and World:startBattle constructs
+-- and pushes in one call so there is no unpushed battle to decorate.
+-- Gen2Compat records all seven as ABSENT, with its reasons.
+--
+-- So this is not a gate over a working feature; it is the honest state of the
+-- port. What DOES cross is the art itself: BATTLE ART's sprites reach Gold
+-- through the engine's own `pokemon.sprite` hook (lib/InterfaceSprites.lua,
+-- main.lua), which Gold raises with the same name and the same ctx keys -- so
+-- a Gen 2 battle still fights with the selected generation's Pokemon, drawn on
+-- Gold's own battle screen instead of on a 3D arena.
+--
+-- Staging battles on Gold is a battle-presentation adapter written against
+-- those Gen 2 seams; docs/GEN1_GEN2_DIFFERENCES.md carries what it needs.
+function OverworldBattle.available()
+  return Generation.isGen1()
+end
+
 function OverworldBattle.enabled()
+  if not OverworldBattle.available() then return false end
   return OverworldBattle.setting:get() and true or false
 end
 
@@ -1330,8 +1359,17 @@ function OverworldBattle.refreshSpriteOwnershipHook()
 end
 
 function OverworldBattle.install()
+  -- Every wrap below lands on a Gen 1 seam. See OverworldBattle.available.
+  if not OverworldBattle.available() then
+    OverworldBattle.skipped = "gen2 has no Gen 1 battle seams to stage on"
+    return
+  end
   local OverworldState = require("src.world.OverworldController")
-  if not OverworldState.dramaticShapeBattleHook then
+  -- Each seam below is presence-tested before it is wrapped. On Gen 1 every
+  -- one is there and every test passes; the tests are what keep a missing
+  -- seam a declined feature rather than a wrapper that captured nil and
+  -- errors on its first call.
+  if OverworldState.pushBattle and not OverworldState.dramaticShapeBattleHook then
     local inner = OverworldState.pushBattle
     -- The one place the overworld starts a battle, and it runs BEFORE the
     -- transition is pushed -- which is what lets the cull happen off-screen
@@ -1351,7 +1389,7 @@ function OverworldBattle.install()
   -- second front. The unchanged-species guard leaves Transform in charge.
   OverworldBattle.refreshSpriteOwnershipHook()
 
-  if not BattleState.dramaticShapeTrainerPartyHook then
+  if BattleState.newTrainer and not BattleState.dramaticShapeTrainerPartyHook then
     local newTrainer = BattleState.newTrainer
     function BattleState.newTrainer(game_, oppClass, partyIndex)
       local battle = newTrainer(game_, oppClass, partyIndex)
@@ -1490,7 +1528,7 @@ function OverworldBattle.install()
   end
 
 
-  if not BattleState.dramaticShapeEncounterKindHook then
+  if BattleState.newWild and not BattleState.dramaticShapeEncounterKindHook then
     local newWild = BattleState.newWild
     function BattleState.newWild(game_, species, level, opts)
       local battle = newWild(game_, species, level, opts)
@@ -1505,31 +1543,35 @@ function OverworldBattle.install()
   -- has one anchor to hang from whichever side and whichever species it is
   -- carrying. Outside that render both helpers answer exactly as they always
   -- did.
-  local innerBack = BattleState.backPlacement
-  function BattleState.backPlacement(w, h, pad, padL, scale)
-    local x, y, s = innerBack(w, h, pad, padL, scale)
-    if not texturing then return x, y, s end
-    if texturingMetric then
-      -- Snap to integer canvas texels. The side canvas is nearest-filtered, so
-      -- a half-texel destination (any odd-width/height sprite: center or y1 is
-      -- fractional) lands each source texel off-centre and the later ~3x
-      -- billboard upscale doubles or drops an edge row/column in the world.
-      return math.floor(texturingAx - texturingMetric.center * scale),
-             math.floor(texturingAy - (texturingMetric.y1 + 1) * scale), s
+  if BattleState.backPlacement then
+    local innerBack = BattleState.backPlacement
+    function BattleState.backPlacement(w, h, pad, padL, scale)
+      local x, y, s = innerBack(w, h, pad, padL, scale)
+      if not texturing then return x, y, s end
+      if texturingMetric then
+        -- Snap to integer canvas texels. The side canvas is nearest-filtered, so
+        -- a half-texel destination (any odd-width/height sprite: center or y1 is
+        -- fractional) lands each source texel off-centre and the later ~3x
+        -- billboard upscale doubles or drops an edge row/column in the world.
+        return math.floor(texturingAx - texturingMetric.center * scale),
+               math.floor(texturingAy - (texturingMetric.y1 + 1) * scale), s
+      end
+      return texturingAx - w * scale / 2,
+             texturingAy - (h - pad) * scale, s
     end
-    return texturingAx - w * scale / 2,
-           texturingAy - (h - pad) * scale, s
   end
 
-  local innerFront = BattleState.frontPlacement
-  function BattleState.frontPlacement(ex, ey, w, h, scale)
-    local x, y, s = innerFront(ex, ey, w, h, scale)
-    if not texturing then return x, y, s end
-    if texturingMetric then
-      return math.floor(texturingAx - texturingMetric.center * scale),
-             math.floor(texturingAy - (texturingMetric.y1 + 1) * scale), s
+  if BattleState.frontPlacement then
+    local innerFront = BattleState.frontPlacement
+    function BattleState.frontPlacement(ex, ey, w, h, scale)
+      local x, y, s = innerFront(ex, ey, w, h, scale)
+      if not texturing then return x, y, s end
+      if texturingMetric then
+        return math.floor(texturingAx - texturingMetric.center * scale),
+               math.floor(texturingAy - (texturingMetric.y1 + 1) * scale), s
+      end
+      return texturingAx - w * scale / 2, texturingAy - h * scale, s
     end
-    return texturingAx - w * scale / 2, texturingAy - h * scale, s
   end
 
   local innerDraw = BattleState.draw

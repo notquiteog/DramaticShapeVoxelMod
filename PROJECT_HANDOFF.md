@@ -511,3 +511,88 @@ included. Corrected donor capability-query drawing and cleared map-local lamp
 state at scene end. LuaJIT compiled 151 Lua files; 18 standalone suites and
 91 interior/menu, 55 city-ground, 216 Lavender-approach assertions passed.
 These are local static/mocked checks, not Android gameplay/visual validation.
+
+## Gen 2 support: Gold, Silver and Crystal (2026-09-12)
+
+`manifest.json` now declares `"games": ["gen1", "gen2"]` at version `1.11.0`.
+`docs/GEN1_GEN2_DIFFERENCES.md` was rewritten from "why this is Gen 1-only"
+into the state of the port; `CHANGELOG.md` carries the per-file list. This
+section is the evidence and what is left.
+
+### The rule the port is built on
+
+On a Gen 2 boot, `src/mods/Gen2Compat.lua` answers a mod's require for fifteen
+Gen 1 names. The `src.world.OverworldController` answer is a facade over the
+live `World` that dispatches back through exactly three members -- `update`,
+`interact`, `talkTo` (`Gen2Compat.worldTick` / `interactWrapper` /
+`talkToWrapper`). A patch on anything else is taken, reads back as our own
+function, and is never called.
+
+So every install site that PATCHES rather than CALLS now asks
+`lib/Generation.lua` first. Sites that go through a hook, an event or a
+registry needed nothing: those names mean the same thing in both engines.
+
+### Checks performed in this checkout
+
+Engine: `gen1recomp` source at HEAD, whose `src/mods/Gen2Compat.lua` is
+byte-identical to the shipped `0.2.59` AppImage, so the compat contract under
+test is the one the user runs.
+
+- `modkit gen2check`: **38 errors -> 10**. The ten are the
+  `lib/OverworldBattle.lua` write sites for the five absent battle members.
+  MK404 reports a patch of an absent member separately from the read and there
+  is no idiom that silences a write while still patching, so these are the
+  static scan's view of code that is gated at runtime by
+  `OverworldBattle.available()` plus a per-seam presence test. Not clean, and
+  deliberately so.
+- `modkit validate`: byte-identical to upstream (the four pre-existing MK301
+  ROM-cache findings, unchanged).
+- `tests/gen2_support_test.lua`: 118/118 over Gold, Silver, Crystal and a Red
+  control. It asserts `mod.state == "loaded"` rather than only `#errors == 0`,
+  because a gate skip is not an error and would otherwise pass; and it reads
+  the ENGINE tables for the install sentinels, so "the Gen 1 patch did not
+  land" is evidence rather than our own bookkeeping.
+- Full mod suite: **183/183**, and a file-by-file diff against pristine
+  upstream shows the only difference is the added case. Three unit tests
+  needed their stub `V` taught about the new `Generation` module
+  (`interface_sprites_install_test`, `legendary_cave_merge_test`,
+  `atmosphere_companion_integration_test`) -- those stubs assert on unknown
+  module names by design, so a new dependency has to be declared.
+- **Real Crystal boot**, shipped `0.2.59` AppImage under Xvfb with a sandboxed
+  save identity (`POKEPORT_IDENTITY`) so the user's own profile was untouched:
+  `state=loaded`, zero boot errors, `GameVersion` reported
+  `crystal / generation 2 / lineage crystal`, ladder `OFF/FULL/15/35/50/75`,
+  rung 7 clamped to 5, world reached (`PLAYERS_HOUSE_2F`), and the diorama
+  drawn at both FULL and 75 degrees with real geometry, cast shadows and the
+  player billboard. Software GL (llvmpipe) was needed for the 3D pass;
+  without it the engine correctly keeps the 2D path.
+
+Three crashes were found only by that real boot, not by any static check --
+`doorTiles`, `Player:pose` and `map.renderer`. Each one left the world flat
+while the mod reported itself loaded, which is the failure mode this whole
+port is about.
+
+### Not verified
+
+One interior map on one cart. No outdoor, cave, water or connected-map
+playtest; no Gold or Silver boot (headless only); no battle fought on Gen 2;
+no save/reload cycle. The terrain is greyscale by construction, not by
+accident -- see the known limitation in the doc.
+
+### Remaining work, in the order it would pay off
+
+1. Colour the Gen 2 terrain: bake the tileset atlas per PalMap slot against the
+   eight BG palettes Gold loads for the map's environment, time of day and map
+   group (`src/world/gen2/World.lua:bakeMapImage` is the model).
+2. A Gen 2 battle-presentation adapter for `3D-BTL`, against `pic` / `drawPic`
+   / `picScale` / `bgMode` / `extendedHUD` and the neutral `battle.overlay` and
+   `render.compose` hooks. Note Gold's battle is OPAQUE and paints its own map,
+   so the world behind it must be composed rather than revealed.
+3. The walk through Gold's own step machinery for `1ST` / `3RD`:
+   `movement.collision`, `input.step` / `input.key`, and `world.stepped` in
+   place of Gen 1's `onStepComplete`.
+4. Johto/Kanto-Gen2 mappings for the GEN6 arena router and map atmosphere,
+   which still carry Kanto map ids and currently fall back safely.
+5. Gen 2 equivalents for the `game.data.field` features that answer nil there:
+   CAVE DARKNESS (`darkMaps`), the heal-machine sheet (`overworldFx`) and the
+   cut-tree swaps.

@@ -3,6 +3,7 @@
 -- optimization work, but do not cover gameplay on a normal launch.
 -- execution time. Nested probes are exclusive; suspended jobs accrue nothing.
 local V = ...
+local Generation = V.require("Generation")
 local D = { visible = false }
 local clock = (love and love.timer and love.timer.getTime) or os.clock
 local main = { stack = {}, running = true }
@@ -270,7 +271,9 @@ function D.install(mod)
           { label = D.visible and "HIDE" or "SHOW",
             onSelect = function() D.visible = not D.visible end },
         }, { tx = 10, ty = 0, tw = 10,
-             onCancel = function() Screens.push(game, "StartMenu") end }))
+             onCancel = function()
+               Screens.push(game, Generation.screenId("StartMenu"))
+             end }))
       end,
     })
     return out

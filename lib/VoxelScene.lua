@@ -698,11 +698,44 @@ local function tableItemAnchor(map, entity, sprite, gh)
   return SpriteBillboards.tableAnchor(sprite.def)
 end
 
+-- The pose tuple, from whichever character class this generation runs.
+--
+-- (sprite, px, py, facing, walk phase, flip, hopping) is the shape the scene
+-- reads, and three of the four classes that reach here already answer it:
+-- Gen 1's Player and NPC both have `pose`, and so does Gold's own NPC
+-- (src/world/gen2/Npc.lua:542), which returns exactly this tuple.
+--
+-- Gold's PLAYER is the one that does not. src/world/gen2/Player.lua draws
+-- itself and never needed the accessor, so `player:pose()` is a nil call --
+-- and since the player is in `state.entities`, that nil call used to take the
+-- whole world pass down and leave the map flat. It carries the same facts
+-- under its own names, so compose the tuple from those: `walkPhase` and
+-- `drawFlip` are its own methods, and the fields are the ones Gold's NPC pose
+-- reads. Deliberately NOT reaching for Gen 1's hop arc, surf bob or spin
+-- lift: those are read off Gen 1 Player fields that Gold does not keep, and a
+-- made-up value would move the character for no reason. Gold's own
+-- animations for those beats stay with Gold's renderer.
+-- Total by construction: every branch answers a tuple, because the callers
+-- add the result to the pose list unconditionally and a nil sprite would only
+-- move the crash one line down. A character with neither accessor still
+-- stands in its own cell facing its own way, which is the worst case worth
+-- drawing.
+local function poseOf(entity)
+  if type(entity.pose) == "function" then return entity:pose() end
+  local phase = 0
+  if type(entity.walkPhase) == "function" then phase = entity:walkPhase() end
+  local flip = entity.stepFlip
+  if type(entity.drawFlip) == "function" then flip = entity:drawFlip() end
+  return entity.sprite, entity.px,
+         entity.py + (entity.spriteYOffset or 0),
+         entity.facing, phase, flip, false
+end
+
 local function posesOf(state, spriteColors)
   local colors = spriteColors(state.map)
   local n, me = 0, nil
   for _, g in ipairs(state.ghosts or {}) do
-    local sprite, vx, vy, facing, phase, flip = g.npc:pose()
+    local sprite, vx, vy, facing, phase, flip = poseOf(g.npc)
     n = n + 1
     local p = poseSlot(n)
     p.entity = g.npc
@@ -716,7 +749,7 @@ local function posesOf(state, spriteColors)
   end
   for _, e in ipairs(state.entities or {}) do
     if not (state.flyAnim and e == state.player) then
-      local sprite, vx, vy, facing, phase, flip = e:pose()
+      local sprite, vx, vy, facing, phase, flip = poseOf(e)
       n = n + 1
       local p = poseSlot(n)
       p.entity = e

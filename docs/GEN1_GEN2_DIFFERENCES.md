@@ -1,187 +1,213 @@
-# Why Battle Art is Gen 1-only today
+# Battle Art on Gen 2: what runs, what does not, and why
 
-Battle Art 1.9.0 supports the Gen 1 games: Red, Blue, and Yellow. The manifest
-deliberately declares `"games": ["gen1"]`, so a Gen 2 game skips the mod rather
-than starting a renderer whose engine integrations were written for Kanto.
+Battle Art 1.11.0 declares `"games": ["gen1", "gen2"]`. It loads and runs on
+Gold, Silver and Crystal, and the diorama draws there.
 
-This is not an asset limitation. Much of the artwork, GPU renderer, camera
-math, and image handling can be reused for Gold. The present limitation is the
-code between those reusable pieces and the game: Gen1Recomp has distinct Gen 1
-and Gen 2 world, battle, script, and UI implementations. Battle Art currently
-patches or reads many Gen 1 implementation details directly.
+That is a narrower claim than "the mod works on Gen 2", and the difference is
+the point of this document. Two of the headline features are Gen 1-only, by
+design rather than by omission, and the terrain is greyscale. Everything below
+separates what was verified from what is still missing.
 
-Simply adding `"gen2"` to the manifest would therefore be unsafe. Some hooks
-would never run, some would refer to the wrong screen or data shape, and at
-least one module would fail during startup.
+The engine developers' companion documents are
+[Guide: Preparing Your Mod For Gen 2](https://github.com/bryanthaboi/gen1recomp/wiki/Guide-Preparing-Your-Mod-For-Gen-2)
+and `docs/mod-api-gen2-compat.md` in the engine tree.
 
-The engine developers' companion document is the
-[Guide: Preparing Your Mod For Gen 2](https://github.com/bryanthaboi/gen1recomp/wiki/Guide-Preparing-Your-Mod-For-Gen-2).
+## The one fact the rest follows from
 
-## Confirmed blockers
+On a Gen 2 boot a mod's `require` for one of fifteen Gen 1 names is answered by
+`src/mods/Gen2Compat.lua`. For `src.world.OverworldController` that answer is a
+facade over the live `World`, and it dispatches back through exactly three
+members: `update`, `interact` and `talkTo` (`Gen2Compat.worldTick`,
+`interactWrapper`, `talkToWrapper`, `src/mods/Gen2Compat.lua:1383`).
 
-The engine's `modkit gen2check` currently reports these concrete issues:
+A patch on any other member is *taken*, *reads back as your own function*, and
+is *never called*. Gold calls its own method. So the failure mode for this
+port was never a crash -- it was a feature that installs cleanly and does
+nothing, which is why every install site that patches rather than calls now
+asks `lib/Generation.lua` first.
 
-- `lib/MomHealFlash.lua` imports `src.script.Commands` and replaces the Gen 1
-  `fade` command. Gold does not run that module, and the compatibility layer
-  has no adapter for it. This is a startup blocker if Gen 2 is enabled without
-  first making the installation game-specific.
-- `StartMenu` is used as a literal screen id in `lib/FreeMove.lua` and
-  `main.lua`. Gold uses `Gen2StartMenu`, so these paths would open or compare
-  the wrong screen.
-- The manifest currently names only `gen1`. This is intentional containment,
-  not the underlying technical cause.
+## What runs on Gold, Silver and Crystal
 
-The audit cannot prove that every `engine_internals` member is portable. A
-missing error in that report does not mean the remaining integrations already
-work on Gold.
+- **The voxel diorama.** `render_pipelines` is a registry with the same target
+  on both generations, and `src/world/gen2/World.lua:11643` asks
+  `Pipelines.worldPipeline()` for the world pass and hands it a full ctx
+  through `World:drawPipeline`. The mesher, the camera, the depth buffer, the
+  shadow map and the sprite billboards all run on that ctx.
+- **BATTLE ART's sprites.** The engine resolves every battle, summary and dex
+  pic through the `pokemon.sprite` hook (`src/pokemon/Sprites.lua`), which Gold
+  raises under the same name with the same `ctx` keys -- so one subscription
+  reskins both generations. A Gen 2 battle is fought with the selected
+  generation's art, on Gold's own battle screen. `player.sprite` and
+  `pokemon.icon` are the same story.
+- **The options rows, the hotkeys and the start-menu rows.** `ui.options.rows`,
+  `ui.start_menu.items`, `ui.title_menu.items`, `intro.oak_speech.build`,
+  `world.tod`, `core.update`, `render.hud` and `input.pointer` are raised by
+  both engine arms.
+- **The battle-exit fade.** `BattleState.finish` is backed and the four UI
+  facades are write-through, so the shutter closes on Gold too.
+- **T-SHIFT, V-GRID, V-CURVE, WATER, the day/night clock.**
 
-## Important architectural differences
+## What is Gen 1-only, and why
 
-### World and map data
+### 3D-BTL, the staged battle
 
-The voxel scene reads Gen 1 `src.world.Map`, `MapLoader`, tileset definitions,
-block layouts, border blocks, seamless connections, and live `Map:setBlock`
-updates. Terrain classification, authored structures, water, flowers, grass,
-indoor voids, and persistent mesh fingerprints all begin with those shapes.
+`OverworldBattle.available()` returns false on Gen 2 and the row comes off the
+OPTIONS menu.
 
-Gen 2 has a separate world/map stack and different generated data. A port
-needs a translator that presents Gold maps to the mesher in a stable neutral
-shape. Pointing the existing code at a Gen 2 map table is not sufficient.
+Staging a battle means replacing six Gen 1 `BattleState` seams -- `picImage`,
+`resolveBattleScale`, `frontPlacement`, `backPlacement`, `newWild`,
+`newTrainer` -- plus `OverworldController:pushBattle`. Gen2Compat records all
+seven as **absent**, each with its reason. Gold's battle screen is
+`src/ui/gen2/BattleState.lua`: it resolves pics through `pic` / `drawPic`,
+scales them through `picScale` / `imageScale` / `panelScale`, and
+`World:startBattle` constructs and pushes in one call, so there is no unpushed
+battle to decorate.
 
-### Player, NPCs, collision, and first-person movement
+Restoring it is a battle-presentation adapter written against those Gen 2
+seams. The arena search, the camera composition, the depth-of-field pass, the
+backplates and the imported art are all reusable; the adapter has to supply
+battle start/end notification, front/back image ownership and placement,
+trainer identity, Transform state, and the HUD/text/animation suppression
+seams. Gold's own `bgMode` / `BG_WORLD_DIM` / `extendedHUD` /
+`extendedWorldHUD` / `bottomUIVisible` / `statusHUDVisible` are the likely
+hooks, and `battle.overlay` plus `render.compose` are the neutral ones.
 
-Free movement currently wraps Gen 1 `OverworldController:handleInput` and asks
-Gen 1 `Collision` and field-data tables about occupancy, ledges, warps, forced
-movement, cycling, surfing, encounters, and step completion. Character cards
-also assume Gen 1 player, NPC, and follower records.
+Note one difference that changes the design rather than the plumbing: on Gen 1
+a staged battle works because the battle canvas is transparent and the
+StateStack finds the overworld below it. Gold's battle stays **opaque** and its
+map is painted by `Game2:drawScene` / `Game2:paintBattleSurround`, so the world
+behind a Gen 2 battle has to be composed, not revealed.
 
-Gold has different world objects and movement/script ownership. The visual
-first-person camera is reusable, but walking must call Gold's own movement and
-landing consequences. Reusing the Gen 1 movement wrapper would risk skipped
-warps, events, encounters, or scene scripts.
+### The 1ST and 3RD rungs, and free movement
 
-### Battles
+`Voxel.freeCamAvailable()` returns false on Gen 2 and the ladder ends at the
+75-degree rung -- `OFF / FULL / 15 / 35 / 50 / 75`. `Pipelines.maxLevel` is
+`#labels - 1` and both `setLevel` and `applyOptions` clamp to it, so a level
+stored by a Gen 1 session lands on 75 rather than on a rung that cannot draw.
 
-Staged battles currently wrap Gen 1 `src.battle.BattleState` and Gen 1
-`OverworldController:pushBattle`. Battle Art reads and replaces Gen 1 picture
-layers, HUD layers, placement helpers, Transform effects, trainer constructors,
-and battle lifecycle methods.
+The camera is not the problem; the walk is. `FreeMove` replaces
+`OverworldController:handleInput`, which is not one of the three dispatch
+seams, so the wrapper would never be called: the eye would stand in the
+player's head with the grid walk still underneath it and the mouse captured for
+a look the feet do not follow. A rung that half-works is worse than a rung
+that is not offered.
 
-Gold has a separate Gen 2 battle engine and Gen 2 battle UI. The arena camera,
-depth-of-field pass, backplates, imported sprite assets, and projection math
-remain useful, but a new battle adapter must provide:
+Restoring it is a movement problem. The walk has to run through Gold's own
+step and landing machinery -- `movement.collision` and `input.step` / `input.key`
+are raised on both generations, and `world.stepped` is the supported
+replacement for Gen 1's `onStepComplete` seam.
 
-- battle start and end notifications;
-- player and opponent monster records;
-- front/back image ownership and placement;
-- trainer and wild encounter identity;
-- Transform state;
-- HUD, text, animation, and picture-layer suppression seams.
+### The two presentation fixes
 
-### Scripts and field effects
+- `MomHealFlash` is Gen 1 content: `REDS_HOUSE_1F` is a Kanto map and `fade` is
+  a Gen 1 verb. It no longer patches `src.script.Commands` at all -- it takes
+  the `script.command` hook, which both runners raise with the same
+  `(ctx, name, args)` list -- so the mod no longer requires a Gen 1-only
+  engine module. It still installs on Gen 1 only, because wrapping Gold's VM
+  to ask a question with a constant answer would put a link in front of every
+  command the cart's bytecode runs.
+- `PoisonFlash` wraps `applyFieldPoison`, which is backed for *calls* but is
+  not a dispatch seam, so the patch would be inert. Gold's field poison stays
+  entirely the engine's.
 
-Two small presentation fixes patch Gen 1 gameplay classes directly:
+### The two screen-class installers
 
-- Mom's heal-flash suppression replaces `src.script.Commands.fade` and checks
-  for `REDS_HOUSE_1F`.
-- Poison-flash suppression replaces Gen 1
-  `OverworldController:applyFieldPoison`.
+`InterfaceSprites.installTitle` / `installSummary` / `installDex` reach into
+Gen 1 screen classes. Gold's title screen has no cycling starter to reskin --
+it is Ho-Oh over the clouds, Suicune on Crystal, with no `currentSprite` at
+all -- and Gold's summary pic is a `MonAnimView` on `self.picAnim` where Gen 1
+keeps a plain image on `self.sprite`. The static art is already replaced by the
+`pokemon.sprite` hook before Gold draws it, so nothing is lost for the art
+itself; the animation surgery is what stays behind.
 
-These fixes must be installed only for Gen 1. Gold's mom, healing sequence,
-field poison behavior, and script VM should remain untouched unless a separate
-Gen 2-specific presentation fix is designed and tested.
+## Known limitation: the terrain is greyscale
 
-### Menus and screen ids
+This is the most visible gap and it is worth stating plainly.
 
-Options, party, box, start-menu, and battle UI hooks currently target Gen 1
-classes and screen ids. Gold has Gen 2 screens and layouts. A port should use
-generation-neutral engine hooks where available and separate adapters where
-the screen implementations genuinely differ.
+Gen 1 hangs a `TileRenderer` off the map and that renderer owns the atlas the
+mesher samples. Gold has no `map.renderer` -- Gen2Compat records it absent,
+because Gold bakes whole-*map* images on the World
+(`src/world/gen2/World.lua:bakeMapImage`) and keeps no per-map atlas. Without a
+fallback the world pass got no texture at all and drew the diorama in flat
+white: correct geometry, no art.
 
-### Location-specific content
+`lib/TerrainAtlas.lua` now falls back to the tileset's own image, which is the
+same file Gold's `World:atlasFor` hands its own renderer. That file is the raw
+2bpp Game Boy tile data -- 2-bit greyscale, four shades -- because a Gen 2 tile
+takes its four colours at *draw* time from its PalMap slot inside the eight BG
+palettes loaded for the map's environment, time of day and map group. Gold's
+map bake walks those eight slots; an atlas has no single palette to bake into.
 
-The GEN6 arena router contains Kanto map ids and encounter rules. The image
-loader and time-of-day snapshot are reusable, but Gold needs a Johto/Kanto
-Gen 2 mapping table. Unmatched locations should continue to fall back safely
-instead of borrowing an unrelated Kanto picture.
+So a Gen 2 diorama is textured in greyscale. Porting the per-slot bake is the
+next piece of work and the one that would most change how this looks.
 
-## Reusable portions
+## Other Gen 2 shapes worth knowing
 
-The following parts are good foundations for a Gen 2 port.
+These bit during the port and are recorded so they are not rediscovered.
 
-### Reusable as-is or with very small changes
+- **`map.doorTiles` does not exist** and `Map:cellTile` answers a `COLL_*`
+  byte rather than a tile id -- unrelated number spaces. `doorTiles[cellTile(...)]`
+  therefore failed twice over and took the whole mesh build down. The neutral
+  question is `Map:isDoorTileCell(cx, cy)`, which on Gen 1 *is* that lookup
+  (`src/world/Map.lua:254`) and on Gold is the narrow
+  `Permissions.isImmediateWarp` arm.
+- **Gold's `Player` has no `pose()`.** Gen 1's Player and NPC both have one and
+  so does `src/world/gen2/Npc.lua:542`, but Gold's Player draws itself and
+  never needed the accessor -- and since the player is in `state.entities`,
+  that nil call took the world pass down. `lib/VoxelScene.lua` composes the
+  tuple from the Player's own `walkPhase` / `drawFlip` and fields. Gen 1's hop
+  arc, surf bob and spin lift are deliberately not synthesised: they are read
+  off Gen 1 Player fields Gold does not keep.
+- **`map.warpAt` is a name collision, not a rename.** Gen 1's is a table keyed
+  by cell; Gold's is a *method*. `map.warpAt[k]` and `pairs(map.warpAt)` both
+  raise. Enumerate `map.warps`, which Gold carries as an ordered array.
+- **`game.data.field` is warned and answers nil**, so CAVE DARKNESS
+  (`field.darkMaps`), the heal-machine sheet (`field.overworldFx`) and the
+  cut-tree swaps (`field.cutTreeSwaps`) are off on Gen 2. Every one of those
+  reads was already nil-guarded, so they degrade to "feature off" rather than
+  failing; Gold has real equivalents (a DARKNESS palset, `tryCut`) and wiring
+  them up is separate work.
+- **The `transitions` registry has no Gen 2 home at all**, so the battle-exit
+  timing record is registered on Gen 1 only. `BattleExit.frames` falls back to
+  `BattleExit.FRAMES`, so the fade still runs at 12 frames on Gold -- only
+  retuning it in data is missing.
+- **Crystal is a real fork, not a reskin.** `GameVersion.engine()` answers
+  `"gs"` for Gold/Silver and `"crystal"` for Crystal, and `lib/Generation.lua`
+  exposes that as `Generation.lineage()` / `isCrystal()`. Crystal has animated
+  battle front pics, its own intro and splash, and screens Gold never had.
 
-- `Mat4` and the low-level camera/projection math.
-- `Voxel3D` GPU resources, shaders, depth rendering, canvas handling, and
-  backdrop compositing.
-- Packed mesh upload in `ChunkMesher`, once supplied neutral geometry.
-- Anti-aliasing, depth of field, voxel grid, world curve, and most
-  post-processing code.
-- `BackdropImage` loading and cover-fit behavior.
-- Mod settings, `input.pointer`, source-owned `mod.input`, and controller
-  input handling.
-- Render-distance rectangle math.
-- Static and animated Battle Art image collections.
+## How this was verified
 
-### Reusable algorithms that need a Gen 2 adapter
+- `python3 tools/modkit.py gen2check mods/DramaticShapeVoxelMod`: 38 errors
+  down to 10. All ten are the `lib/OverworldBattle.lua` write sites above, which
+  MK404 reports by design -- it flags a patch of an absent member separately
+  from the read, and there is no idiom that silences a write while still
+  patching. They sit behind `OverworldBattle.available()` and a per-seam
+  presence test, and never execute on a Gen 2 boot.
+- `python3 tools/modkit.py validate`: byte-identical to upstream.
+- `tests/gen2_support_test.lua`: 118 checks across Gold, Silver, Crystal and a
+  Red control. It asserts `mod.state == "loaded"` and zero boot errors on each
+  cart, and it reads the **engine** tables to prove the Gen 1-only patches did
+  not land -- a test that asked the mod's own flags would pass with the whole
+  gate deleted.
+- The mod's full suite: 183/183, with the only difference from upstream being
+  the added case.
+- A real Crystal boot, on the shipped 0.2.59 AppImage under Xvfb with a
+  sandboxed save identity: mod `state=loaded`, no boot errors, ladder
+  `OFF/FULL/15/35/50/75`, rung 7 clamped to 5, the world reached
+  (`PLAYERS_HOUSE_2F`), and the diorama drawn at both the FULL and 75-degree
+  rungs with real geometry, cast shadows and the player billboard.
 
-- Terrain and structure meshing. The algorithms are reusable after Gen 2
-  blocks, tiles, palettes, and borders are translated.
-- Water, sky, day/night tint, shadows, and reflections. These need Gold map
-  outdoor/canopy/water metadata and its current time-of-day source.
-- First- and third-person cameras. Camera placement is reusable; player and
-  character extraction plus movement are not.
-- Staged-battle arena search and camera composition. They need Gold collision,
-  map, battle, sprite, and lifecycle adapters.
-- Shiny routing. Gen 2's DV shiny predicate is already owned by Battle Art and
-  is conceptually appropriate, but the DVs and active species must be read
-  from Gold's monster and Transform records.
-- GEN6 backgrounds and boss selection. The selection framework is reusable;
-  the location/encounter mapping needs Johto data.
+## Definition of ready, restated
 
-### Gen 1-specific code to replace or conditionally skip
+Gen 2 is declared because the mod runs there and the diorama draws, not
+because every feature crossed. What a supported build still owes:
 
-- `MomHealFlash` and `PoisonFlash` installation.
-- Direct `src.script.Commands`, Gen 1 `BattleState`, `OverworldController`,
-  `Map`, `Collision`, and Gen 1 menu-class modifications.
-- Literal Kanto screen and map ids where they represent engine behavior rather
-  than optional content mappings.
-- Gen 1 field-data assumptions in free movement and mesh invalidation.
-
-## Suggested porting sequence
-
-1. Keep the manifest Gen 1-only while building the port. Add an explicit game
-   discriminator at startup and conditionally install every direct Gen 1
-   patch, beginning with Mom/poison flash and menu hooks.
-2. Define a small neutral world adapter: map id, dimensions, outdoor status,
-   tileset/palette, blocks, connections, player position, characters, and live
-   geometry invalidation.
-3. Implement that adapter for Gen 2 and render a stationary Gold map with
-   first-person movement and staged battles disabled.
-4. Adapt characters, water metadata, day/night, shadows, and connected maps.
-5. Integrate Gold movement through its own collision and step/event APIs. Test
-   warps, ledges, encounters, forced movement, followers, and scripted scenes
-   before enabling 1ST.
-6. Build a Gen 2 battle adapter. Start with static front/back art and ordinary
-   wild battles, then trainers, Transform, animation, HUD suppression, fishing,
-   surfing, and special encounters.
-7. Add Johto background mappings and Gen 2 menu/UI integrations.
-8. Run `modkit gen2check`, engine fixture tests, and real Gold playtests. Only
-   then add Gen 2 to `manifest.json`.
-
-## Definition of ready
-
-Gen 2 should not be advertised merely because the mod boots. A supported build
-should at minimum pass:
-
-- outdoor, indoor, cave, water, and connected-map rendering;
-- map edits and revisits without stale geometry;
-- ordinary walking plus first-person collision, warps, encounters, and scenes;
-- wild, trainer, fishing, surfing, shiny, and Transform battles;
-- party/box/menu entry and exit without Gen 1 screen assumptions;
-- Mom healing and poison behavior without modifying gameplay;
-- clean fallback when optional art is missing;
-- both legacy and sandboxed engine mesh paths where applicable.
-
-Until those conditions are met, the Gen 1-only manifest is a safety feature:
-Gold gets the engine's native renderer instead of a partially installed mod.
+- coloured terrain (the per-slot palette bake above);
+- a Gen 2 battle-presentation adapter, for 3D-BTL;
+- the walk through Gold's own step machinery, for 1ST and 3RD;
+- Johto/Kanto-Gen2 mappings for the GEN6 arena router and map atmosphere,
+  which still carry Kanto map ids and fall back safely on a Johto map;
+- Gen 2 equivalents for the `field.*` features listed above;
+- outdoor, cave, water and connected-map playtests beyond the one interior
+  verified here.

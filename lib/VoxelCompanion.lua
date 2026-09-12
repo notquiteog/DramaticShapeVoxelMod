@@ -6,6 +6,7 @@
 -- It does not advertise terrain, shadow, or battle capabilities.
 
 local V = ...
+local Generation = V.require("Generation")
 
 local API = V.require("VoxelCompanionAPI")
 local VisualObjects = V.require("VoxelVisualObjects")
@@ -1586,12 +1587,24 @@ local function poseOf(entity)
   }
 end
 
+-- The cart this snapshot was taken on, as a label for the companion payload.
+--
+-- This used to allow-list red/blue/yellow off Game.save.version and answer nil
+-- for anything else, which refused every Gen 2 snapshot with "Gen 1 game
+-- identity is unavailable" -- a whole feature gated on a version name, which
+-- is what MK409 is about. The identity is only ever stamped into the record
+-- below; nothing branches on it, so there was never a Gen 1 requirement here.
+--
+-- GameVersion is also the right source rather than the save: it is the
+-- engine's own answer on both generations (src/core/GameVersion.lua), while
+-- save.version is a Gen 1 save field that Gold's save layout does not carry.
 local function currentGameVersion()
+  local version = Generation.version()
+  if version then return version end
+  -- Pre-GameVersion fallback, unchanged in meaning for a Gen 1 boot.
   local ok, Game = pcall(require, "src.core.Game")
-  local version = ok and Game and Game.save and Game.save.version
-  if version == "red" or version == "blue" or version == "yellow" then
-    return version
-  end
+  local saved = ok and Game and Game.save and Game.save.version
+  if type(saved) == "string" and saved ~= "" then return saved end
   return nil
 end
 
@@ -1601,7 +1614,7 @@ local function snapshotFor(self)
     return nil, "overworld map is unavailable"
   end
   local game = currentGameVersion()
-  if not game then return nil, "Gen 1 game identity is unavailable" end
+  if not game then return nil, "game identity is unavailable" end
   local width = integer(map.widthCells, nil)
     or integer(map.def and map.def.width, 0) * 2
   local height = integer(map.heightCells, nil)

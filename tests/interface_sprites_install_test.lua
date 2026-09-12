@@ -156,9 +156,13 @@ local V = { mod = {
     return "mod/" .. rel
   end },
 } }
+-- The real Generation module, not a fake: it needs no V and answers from
+-- src.core.GameVersion, which is unset here and so reads Gen 1 -- the arm
+-- whose screen-class installers this case is about.
+local Generation = assert(loadfile("lib/Generation.lua"))()
 function V.require(name)
   return assert(({ ModSetting=ModSetting, BattleArt=BattleArt,
-    AnimatedBattleArt=AnimatedBattleArt })[name], name)
+    AnimatedBattleArt=AnimatedBattleArt, Generation=Generation })[name], name)
 end
 
 local InterfaceSprites = assert(loadfile("lib/InterfaceSprites.lua"))(V)

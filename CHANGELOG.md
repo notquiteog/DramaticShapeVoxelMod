@@ -1,5 +1,78 @@
 # Changelog
 
+## 1.11.0 — Gen 2: Gold, Silver and Crystal
+
+The manifest declares `"games": ["gen1", "gen2"]`. The mod loads and runs on
+all three Gen 2 carts and the diorama draws there. `docs/GEN1_GEN2_DIFFERENCES.md`
+is the full account; the short version is below.
+
+### Runs on Gen 2
+
+- The voxel diorama, the camera ladder, the depth buffer, the shadow map and
+  the sprite billboards, through the same `render_pipelines` registry Gold
+  asks for the world pass.
+- BATTLE ART's sprites, through the engine's own `pokemon.sprite` hook, which
+  Gold raises with the same name and ctx keys -- so a Gen 2 battle is fought
+  with the selected generation's art on Gold's own battle screen.
+- The options rows, hotkeys, start-menu rows, the day/night clock, T-SHIFT,
+  V-GRID, V-CURVE, WATER and the battle-exit fade.
+
+### Gen 1 only, deliberately
+
+- `3D-BTL`. Staging a battle replaces six Gen 1 `BattleState` seams plus
+  `OverworldController:pushBattle`, and Gen2Compat records all seven as absent
+  with reasons. The row comes off the OPTIONS menu on Gen 2 rather than
+  sitting there deciding nothing.
+- The `1ST` and `3RD` rungs. The ladder ends at `75` on Gen 2: those two rungs
+  take the walk as well as the eye, and `handleInput` is not one of the three
+  members Gold's facade dispatches back through, so the walk wrapper would
+  never be called. The engine clamps a stored Gen 1 level down to `75`.
+- `MomHealFlash`, `PoisonFlash`, and the title/summary/dex screen-class
+  installers.
+
+### Fixed
+
+- `lib/MomHealFlash.lua` no longer requires `src.script.Commands` -- the only
+  hard Gen 2 blocker the mod had, since a Gen 2 boot never runs that module
+  and the require alone lands on the mod manager's error feed. It takes the
+  `script.command` hook instead, which both script runners raise with the same
+  `(ctx, name, args)` list, and which leaves an engine gameplay class
+  unpatched.
+- `lib/Structures.lua` asked `map.doorTiles[map:cellTile(cx, cy)]`, which on a
+  Gen 2 map failed twice over -- `doorTiles` does not exist there, and
+  `cellTile` answers a `COLL_*` byte from an unrelated number space. It now
+  asks `Map:isDoorTileCell`, which is that same lookup on Gen 1. This was
+  taking down the whole mesh build and leaving the world flat.
+- `lib/VoxelScene.lua` called `entity:pose()` on every character, but Gold's
+  `Player` has no such accessor (its NPC does, and so do both Gen 1 classes),
+  so the world pass died on the player and the map stayed flat. The tuple is
+  composed from the Player's own `walkPhase` / `drawFlip` and fields.
+- `lib/TerrainAtlas.lua` sampled `map.renderer`, which Gold does not have --
+  it bakes whole-map images on the World instead. It now falls back to the
+  tileset's own atlas, the same file Gold's `World:atlasFor` uses. Terrain is
+  greyscale on Gen 2 as a result: see the known limitation in the doc.
+- `lib/VoxelCompanion.lua` allow-listed `red`/`blue`/`yellow` off
+  `Game.save.version` and refused every other cart with "Gen 1 game identity
+  is unavailable". The identity is only a label in the snapshot, nothing
+  branches on it, and `GameVersion` answers on both generations -- which is
+  also the right source, since `save.version` is a Gen 1 save field.
+- The `transitions` record is registered on Gen 1 only; that registry has no
+  Gen 2 home, so the write was reported on the boot error feed. The fade still
+  runs at its default 12 frames on Gen 2.
+- The start menu is opened by `Generation.screenId("StartMenu")` in all three
+  places that pushed the literal id, which resolves to `Gen2StartMenu` on a
+  Gen 2 boot.
+
+### Added
+
+- `lib/Generation.lua`: the cart discriminator every install site asks before
+  patching rather than calling. `number` / `isGen1` / `isGen2` / `version` /
+  `lineage` / `isCrystal` / `screenId`, read from the engine's own
+  `GameVersion` with no cart allow-list of its own.
+- `tests/gen2_support_test.lua`: 118 checks over Gold, Silver, Crystal and a
+  Red control. Asserts `mod.state`, not just the error count, and reads the
+  engine tables to prove the Gen 1-only patches did not land.
+
 ## TEST137 — Tower master and wall finishes
 
 - Added `TOWER VISUALS` as the first row in
