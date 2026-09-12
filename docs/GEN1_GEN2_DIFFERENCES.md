@@ -4,9 +4,11 @@ Battle Art 1.11.0 declares `"games": ["gen1", "gen2"]`. It loads and runs on
 Gold, Silver and Crystal, and the diorama draws there.
 
 That is a narrower claim than "the mod works on Gen 2", and the difference is
-the point of this document. Two of the headline features are Gen 1-only, by
-design rather than by omission, and the terrain is greyscale. Everything below
-separates what was verified from what is still missing.
+the point of this document. 3D-BTL runs there too, but by a second
+implementation that draws the fight over the diorama rather than staging and
+shooting it; the 1ST and 3RD rungs are Gen 1-only by design rather than by
+omission. Everything below separates what was verified from what is still
+missing.
 
 The engine developers' companion documents are
 [Guide: Preparing Your Mod For Gen 2](https://github.com/bryanthaboi/gen1recomp/wiki/Guide-Preparing-Your-Mod-For-Gen-2)
@@ -43,40 +45,86 @@ asks `lib/Generation.lua` first.
   `ui.start_menu.items`, `ui.title_menu.items`, `intro.oak_speech.build`,
   `world.tod`, `core.update`, `render.hud` and `input.pointer` are raised by
   both engine arms.
+- **3D-BTL**, by the second implementation described below: the fight is drawn
+  over the live diorama instead of over Gold's white field.
 - **The battle-exit fade.** `BattleState.finish` is backed and the four UI
   facades are write-through, so the shutter closes on Gold too.
 - **T-SHIFT, V-GRID, V-CURVE, WATER, the day/night clock.**
 
 ## What is Gen 1-only, and why
 
-### 3D-BTL, the staged battle
+### 3D-BTL: offered on both, implemented twice
 
-`OverworldBattle.available()` returns false on Gen 2 and the row comes off the
-OPTIONS menu.
+The row runs on Gen 2, by a different implementation rather than a port
+(`lib/Gen2Battle.lua`). What is Gen 1-only is the *staging*.
 
-Staging a battle means replacing six Gen 1 `BattleState` seams -- `picImage`,
-`resolveBattleScale`, `frontPlacement`, `backPlacement`, `newWild`,
-`newTrainer` -- plus `OverworldController:pushBattle`. Gen2Compat records all
-seven as **absent**, each with its reason. Gold's battle screen is
-`src/ui/gen2/BattleState.lua`: it resolves pics through `pic` / `drawPic`,
-scales them through `picScale` / `imageScale` / `panelScale`, and
-`World:startBattle` constructs and pushes in one call, so there is no unpushed
-battle to decorate.
+**The Gen 1 rung stages the fight.** It finds clear ground, points an
+over-the-shoulder camera at it, renders the mons as billboards in that 3D
+space, and composites the HUD over the result. That needs six Gen 1
+`BattleState` seams -- `picImage`, `resolveBattleScale`, `frontPlacement`,
+`backPlacement`, `newWild`, `newTrainer` -- plus
+`OverworldController:pushBattle`. Gen2Compat records all seven as **absent**,
+each with its reason: Gold's battle screen is `src/ui/gen2/BattleState.lua`,
+which resolves pics through `pic` / `drawPic` and scales them through
+`picScale` / `imageScale` / `panelScale`, and `World:startBattle` constructs
+and pushes in one call so there is no unpushed battle to decorate. So
+`OverworldBattle.available()` is false on Gen 2 and stays false.
 
-Restoring it is a battle-presentation adapter written against those Gen 2
-seams. The arena search, the camera composition, the depth-of-field pass, the
-backplates and the imported art are all reusable; the adapter has to supply
-battle start/end notification, front/back image ownership and placement,
-trainer identity, Transform state, and the HUD/text/animation suppression
-seams. Gold's own `bgMode` / `BG_WORLD_DIM` / `extendedHUD` /
-`extendedWorldHUD` / `bottomUIVisible` / `statusHUDVisible` are the likely
-hooks, and `battle.overlay` plus `render.compose` are the neutral ones.
+**On Gen 2 the engine already does the hard part.** `Game2:drawScene` has a
+branch for it (`src/core/Game2.lua:1848`):
 
-Note one difference that changes the design rather than the plumbing: on Gen 1
-a staged battle works because the battle canvas is transparent and the
-StateStack finds the overworld below it. Gold's battle stays **opaque** and its
-map is painted by `Game2:drawScene` / `Game2:paintBattleSurround`, so the world
-behind a Gen 2 battle has to be composed, not revealed.
+```lua
+if battleSurround(self.stack) == "world" then
+  self.frameWorldActive = true
+  self:letterbox(w, h, true)
+  self.world:draw()          -- the LIVE world, every frame
+  Chrome.worldSurround = true
+end
+wide:drawWidescreen(w, h)
+```
+
+`World:draw` is the very function that asks `Pipelines.worldPipeline()` and
+calls `World:drawPipeline`, so under BATTLE BG = world the thing drawn behind
+a Gen 2 battle IS this mod's diorama, live, at whatever rung is selected.
+`Chrome.worldSurround` then suppresses the letterbox fill that would cover it.
+
+One thing was left over, and it is the whole of `lib/Gen2Battle.lua`: the
+160x144 panel still clears itself opaque. `BattleState:drawPanel` opens with
+`Chrome.clear()`, a full-panel `paletteFill`, and unlike `Chrome.letterbox` it
+does not consult `worldSurround` -- because on the cart the battle background
+genuinely is a white field. So native WORLD mode shows the world in the
+MARGINS and a white slab where the fight is.
+
+Suppressing that one fill puts the diorama behind the fight as well, and the
+engine hands over the two injection points to do it without patching a drawing
+helper: `drawScene(bodyFn)` takes the whole body and `drawSceneBody(panelFn)`
+takes the panel, so the panel is rebuilt as its own two calls minus the clear.
+Every other path through the scene -- the slide-in, the animation view, the
+lifted rows, the exp burst, `battle.overlay` -- stays the engine's own.
+
+BATTLE BG is then held at `world` while the row is on and its row comes off the
+menu, the same way the Gen 1 rung holds BATTLE LAYOUT at OG. Both come back
+the moment 3D-BTL is switched off.
+
+**What the Gen 2 arm deliberately does not do**, and what still separates it
+from the Gen 1 rung:
+
+- No arena search and no over-the-shoulder camera. The world behind the fight
+  is the player's own view of the map they are standing on, because that is
+  what `World:draw` draws. "The fight happens on the diorama", not "the fight
+  is staged and shot".
+- The mons, their placement and their scale stay Gold's, drawn in its flat
+  panel over the 3D ground rather than as billboards standing in it.
+- Gold's HUD is authored for a white field, so name and HP boxes can land on
+  busy geometry. Gen 1 has `UiBackplates` for exactly this; wiring it to the
+  Gen 2 HUD is the obvious next improvement.
+
+One trap worth recording, because it cost a while: shot early, a Gen 2 battle
+over the world looks greyscale and wrong. That is the entrance fade --
+`drawScene` opens with `GbcPalette.setBgp(self:exitFadeBgp() or ...)` and the
+fade ramp greys the whole panel on purpose. Wait for `phase == "menu"` before
+judging a screenshot. Reproducing it with the mod *disabled* is what settled
+that it was not ours.
 
 ### The 1ST and 3RD rungs, and free movement
 
@@ -233,7 +281,9 @@ Gen 2 is declared because the mod runs there and the diorama draws, not
 because every feature crossed. What a supported build still owes:
 
 - animated tiles on Gen 2 (water and flowers are coloured but still);
-- a Gen 2 battle-presentation adapter, for 3D-BTL;
+- the rest of the Gen 2 battle presentation: an arena and an
+  over-the-shoulder camera, the mons as billboards standing in the scene
+  rather than in a flat panel over it, and backplates under Gold's HUD;
 - the walk through Gold's own step machinery, for 1ST and 3RD;
 - Johto/Kanto-Gen2 mappings for the GEN6 arena router and map atmosphere,
   which still carry Kanto map ids and fall back safely on a Johto map;

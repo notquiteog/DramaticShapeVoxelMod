@@ -115,6 +115,7 @@ local FirstPerson = V.require("FirstPerson")
 local FreeMove = V.require("FreeMove")
 local Generation = V.require("Generation")
 local PoisonFlash = V.require("PoisonFlash")
+local Gen2Battle = V.require("Gen2Battle")
 local MomHealFlash = V.require("MomHealFlash")
 local HealOverlay = V.require("HealOverlay")
 local TransformCompat = V.require("TransformCompat")
@@ -173,7 +174,21 @@ local applyFull
 -- behind its UI. A staged 3D battle owns that space instead, so WORLD cannot
 -- be represented and falls back to WHITE. BLACK is an ordinary opaque
 -- letterbox and remains a valid explicit choice.
+-- WORLD means opposite things on the two engines, so this corrects it on one
+-- and holds it on the other.
+--
+-- Gen 1: the engine's WORLD battle background shows a FROZEN 2D overworld
+-- under the battle, which composites as broken bars against a 3D diorama --
+-- there is no live world back there to show through. So it is corrected away,
+-- every tick, while BLACK stays valid.
+--
+-- Gen 2: the opposite. src/core/Game2.lua:1848 draws `self.world:draw()` live
+-- behind the battle under WORLD, and that call routes through
+-- Pipelines.worldPipeline -- so the thing behind a Gen 2 battle IS the
+-- diorama. WORLD is the mode 3D-BTL needs there, and lib/Gen2Battle.lua holds
+-- it on rather than letting this take it away.
 local function ensureBattleBgCompatible(opts)
+  if Gen2Battle.available() then return Gen2Battle.holdWorldBg(opts) end
   if opts and opts.battleBg == "world" then
     opts.battleBg = "white"
     return true
@@ -848,11 +863,12 @@ local SETTINGS = {
   { OverworldBattle.setting,
     "Fight on the map: the battle draws over the nearest clear ground, "
     .. "shot over the shoulder with a slow parallax drift.",
-    -- Off the menu entirely where a battle cannot be staged: Gold composes
-    -- its battles on its own screen, through seams this arena has no
-    -- counterpart for (OverworldBattle.available). A row that decides nothing
-    -- is worse than no row -- the same reasoning BATTLE LAYOUT is dropped on.
-    when = function() return OverworldBattle.available() end,
+    -- One row, two implementations behind it: OverworldBattle stages the
+    -- fight on Gen 1, lib/Gen2Battle.lua draws it over the live diorama on
+    -- Gen 2. Off the menu only where neither can run.
+    when = function()
+      return OverworldBattle.available() or Gen2Battle.available()
+    end,
     full = true },
   { OverworldBattle.trainerBattleSetting,
     "STOCK keeps Battle Art's native trainer and player-Pokemon presentation. "
@@ -1528,6 +1544,18 @@ mod.hooks:wrap("ui.options.rows", function(next, game, rows)
     BattleArt.forceRomPlayer(game)
     dropRow(out, "battleLayout")
   end
+  -- The Gen 2 arm takes BATTLE BG the same way and for the same reason: WORLD
+  -- is what puts the engine into the branch that draws the world behind the
+  -- fight at all (lib/Gen2Battle.lua), so while 3D-BTL is on it is the only
+  -- value that means anything. Held, and the row comes off with it; both come
+  -- back the moment 3D-BTL is switched off.
+  if Gen2Battle.enabled() then
+    local opts = game and game.save and game.save.options
+    if Gen2Battle.holdWorldBg(opts) and game.writeOptions then
+      pcall(game.writeOptions, game)
+    end
+    dropRow(out, "battleBg")
+  end
   local full = Voxel.isFull(Pipelines.level("voxel"))
   if full then
     -- FULL owns the rows that PARAMETERISE the diorama -- the wireframe, the
@@ -1979,6 +2007,9 @@ end
 -- where the reasoning for each one is written down. Installed once, here,
 -- so this file keeps naming every engine seam the mod touches.
 OverworldBattle.install()
+-- The Gen 2 arm of the same row. Its own file argues why it is a different
+-- implementation rather than a port; on Gen 1 it declines and does nothing.
+Gen2Battle.install()
 StadiumBackground.install()
 
 -- ------- the first-person rung's inputs and its walk

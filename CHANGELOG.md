@@ -17,12 +17,32 @@ is the full account; the short version is below.
 - The options rows, hotkeys, start-menu rows, the day/night clock, T-SHIFT,
   V-GRID, V-CURVE, WATER and the battle-exit fade.
 
+### 3D-BTL runs on Gen 2, by a second implementation
+
+`lib/Gen2Battle.lua`. The Gen 1 rung STAGES the fight -- clear ground, an
+over-the-shoulder camera, the mons as billboards -- and that needs six Gen 1
+`BattleState` seams plus `pushBattle`, all seven of which Gen2Compat records
+as absent. So `OverworldBattle.available()` stays false on Gen 2.
+
+But the Gen 2 engine already draws the world behind a battle: under
+BATTLE BG = world, `Game2:drawScene` calls `self.world:draw()` every frame,
+and that is the call that asks `Pipelines.worldPipeline()` -- so the thing
+behind a Gen 2 battle is this mod's live diorama. All that was left was the
+160x144 panel clearing itself opaque over it (`Chrome.clear` does not consult
+`Chrome.worldSurround`, because on the cart the battle background really is a
+white field). The panel is rebuilt without that one fill through the engine's
+own injection points, `drawScene(bodyFn)` and `drawSceneBody(panelFn)`, so
+every other path through the scene stays the engine's. BATTLE BG is held at
+`world` while the row is on and its row comes off the menu, the way the Gen 1
+rung holds BATTLE LAYOUT at OG.
+
+Not staged, though: no arena search, no over-the-shoulder camera, and the mons
+stay in Gold's flat panel over the 3D ground rather than standing in it.
+Gold's HUD is authored for a white field, so a name or HP box can land on busy
+geometry -- backplates under it are the next improvement.
+
 ### Gen 1 only, deliberately
 
-- `3D-BTL`. Staging a battle replaces six Gen 1 `BattleState` seams plus
-  `OverworldController:pushBattle`, and Gen2Compat records all seven as absent
-  with reasons. The row comes off the OPTIONS menu on Gen 2 rather than
-  sitting there deciding nothing.
 - The `1ST` and `3RD` rungs. The ladder ends at `75` on Gen 2: those two rungs
   take the walk as well as the eye, and `handleInput` is not one of the three
   members Gold's facade dispatches back through, so the walk wrapper would

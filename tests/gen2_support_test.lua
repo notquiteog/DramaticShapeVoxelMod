@@ -89,6 +89,24 @@ local ENGINE_PATCHES = {
     key = "dramaticShapeEncounterKindHook", owner = "OverworldBattle newWild" },
 }
 
+-- The mirror image: a patch that must land on Gen 2 and must NOT land on
+-- Gen 1. Without this half, "the Gen 1 patches stayed off" would be satisfied
+-- by a build that installed nothing at all on Gen 2 either.
+--
+-- Note WHICH table it has to land on. The mod requires
+-- `src.battle.BattleState`, and on a Gen 2 boot that name is answered by a
+-- write-through facade whose writes go to `src/ui/gen2/BattleState.lua` --
+-- so the sentinel appears on Gold's class and NOT on the Gen 1 module the
+-- name literally spells. Looking for it on the Gen 1 module would fail while
+-- the patch was landing perfectly, which is exactly the confusion the facade
+-- exists to hide.
+local GEN2_PATCHES = {
+  { module = "src.ui.gen2.BattleState",
+    absentFrom = "src.battle.BattleState",
+    key = "dramaticShapeGen2SceneHook",
+    owner = "Gen2Battle (the battle drawn over the diorama)" },
+}
+
 local previousVersion = GameVersion.get()
 
 for _, cart in ipairs(carts) do
@@ -133,6 +151,14 @@ for _, cart in ipairs(carts) do
       label .. ": every voxel rung is on the ladder")
     T.check(Voxel.freeCamAvailable(), label .. ": the free-cam rungs are offered")
     T.check(OverworldBattle.available(), label .. ": battles can be staged")
+    local Gen2Battle = lib("Gen2Battle")
+    T.check(not Gen2Battle.available(),
+      label .. ": the Gen 2 arm of 3D-BTL declines here")
+    T.eq(Gen2Battle.enabled(), false,
+      label .. ": and reads off, so the two arms never both run")
+    T.eq(Gen2Battle.holdWorldBg({ battleBg = "white" }), false,
+      label .. ": it does not touch BATTLE BG on Gen 1, where WORLD is the "
+        .. "incompatible mode ensureBattleBgCompatible corrects away")
   else
     T.eq(Generation.screenId("StartMenu"), "Gen2StartMenu",
       label .. ": the start menu resolves to Gold's screen id")
@@ -152,9 +178,32 @@ for _, cart in ipairs(carts) do
       label .. ": the highest selectable rung is the 75 degree orbit")
 
     T.check(not OverworldBattle.available(),
-      label .. ": battles are not staged on this cart")
+      label .. ": the Gen 1 arena cannot stage a battle on this cart")
     T.eq(OverworldBattle.enabled(), false,
-      label .. ": and the staged-battle switch reads off whatever is stored")
+      label .. ": and the Gen 1 staged-battle switch reads off")
+
+    -- 3D-BTL is still OFFERED here -- by the other implementation of the
+    -- same row, which draws the fight over the live diorama instead of
+    -- staging it (lib/Gen2Battle.lua).
+    local Gen2Battle = lib("Gen2Battle")
+    T.check(Gen2Battle.available(),
+      label .. ": the Gen 2 arm of 3D-BTL is available")
+    T.check(Gen2Battle.installed,
+      label .. ": the Gen 2 battle scene wrapper installed -- "
+        .. tostring(Gen2Battle.skipped))
+    T.check(Gen2Battle.enabled(),
+      label .. ": and it is on by default, like the Gen 1 rung")
+
+    -- BATTLE BG = world is what puts the engine into the branch that draws
+    -- the world behind the fight at all, so the row is held there.
+    local held = { battleBg = "white" }
+    T.check(Gen2Battle.holdWorldBg(held),
+      label .. ": holdWorldBg reports the change it made")
+    T.eq(held.battleBg, "world",
+      label .. ": BATTLE BG is held at world while 3D-BTL is on")
+    T.check(not Gen2Battle.holdWorldBg(held),
+      label .. ": and reports no change once it is already world, so the "
+        .. "options file is not rewritten every frame")
 
     -- the reasons are published rather than inferred from a false flag
     T.check(lib("MomHealFlash").skipped,
@@ -180,6 +229,26 @@ for _, cart in ipairs(carts) do
       T.check(not landed,
         label .. ": " .. patch.owner .. " left " .. patch.module
           .. " unpatched (" .. patch.key .. ")")
+    end
+  end
+
+  for _, patch in ipairs(GEN2_PATCHES) do
+    -- The Gen 1 module must never carry it, on either cart: on Gen 1 because
+    -- this arm does not install, and on Gen 2 because the facade writes past
+    -- that module entirely.
+    T.check(ENGINE[patch.absentFrom][patch.key] == nil,
+      label .. ": " .. patch.owner .. " never touches " .. patch.absentFrom)
+    if cart.generation == 2 then
+      -- Required lazily and only here: a Gen 1 boot REFUSES a mod's require
+      -- for a src.*.gen2.* module outright (the loader's crossGenerationDenial)
+      local ok, gen2Class = pcall(require, patch.module)
+      T.check(ok and type(gen2Class) == "table",
+        label .. ": " .. patch.module .. " is requirable on this cart")
+      if ok and type(gen2Class) == "table" then
+        T.check(gen2Class[patch.key] ~= nil,
+          label .. ": " .. patch.owner .. " patched " .. patch.module
+            .. " (" .. patch.key .. ")")
+      end
     end
   end
 

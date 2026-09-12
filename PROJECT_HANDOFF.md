@@ -597,10 +597,22 @@ accident -- see the known limitation in the doc.
    `flowerFrames`) where the Gen 1 path in TerrainAtlas keys off
    `TileRenderer.animFrame` and the Gen 1 renderer -- so Gen 2 water is
    coloured but still.
-2. A Gen 2 battle-presentation adapter for `3D-BTL`, against `pic` / `drawPic`
-   / `picScale` / `bgMode` / `extendedHUD` and the neutral `battle.overlay` and
-   `render.compose` hooks. Note Gold's battle is OPAQUE and paints its own map,
-   so the world behind it must be composed rather than revealed.
+2. PARTLY DONE (2026-09-12): `3D-BTL` runs on Gen 2 via `lib/Gen2Battle.lua`,
+   which is a different implementation rather than a port. The engine already
+   draws `world:draw()` behind a battle under BATTLE BG = world -- and that is
+   the call that asks for our pipeline -- so the work was suppressing the
+   panel's own opaque `Chrome.clear` through `drawScene(bodyFn)` /
+   `drawSceneBody(panelFn)`, and holding BATTLE BG there. Verified on Crystal:
+   CYNDAQUIL vs RATTATA fought over the 3D bedroom, HUD and menu over the top.
+   What remains is the STAGED half: an arena search, the over-the-shoulder
+   camera, the mons as billboards standing in the scene instead of in Gold's
+   flat panel over it, and backplates under Gold's HUD (which is authored for
+   a white field and can land a name box on busy geometry).
+
+   Trap recorded: a Gen 2 battle shot during its ENTRANCE looks greyscale --
+   `drawScene` opens with `GbcPalette.setBgp(self:exitFadeBgp() or ...)` and
+   the fade ramp greys the panel deliberately. Wait for `phase == "menu"`.
+   Reproducing it with the mod disabled is what proved it was not ours.
 3. The walk through Gold's own step machinery for `1ST` / `3RD`:
    `movement.collision`, `input.step` / `input.key`, and `world.stepped` in
    place of Gen 1's `onStepComplete`.
