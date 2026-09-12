@@ -599,6 +599,29 @@ function BattleScene.letterboxFov(fovGB, ph, s)
   return 2 * math.atan(math.tan(fovGB / 2) * ph / span)
 end
 
+-- Tolerant on purpose: a good many cases hand this module a hand-built stub
+-- `V` whose require either asserts on an unknown name or answers a generic
+-- fake, and neither should make the neighbour fix-up a hard dependency of
+-- loading the file. A harness without it simply gets Gen 1's own shapes,
+-- which is what those cases are describing anyway.
+local function ensureNeighbors(state)
+  local ok, N = pcall(V.require, "Gen2Neighbors")
+  if ok and type(N) == "table" and type(N.ensure) == "function" then
+    N.ensure(state)
+  end
+end
+
+-- Only the rows that carry a Map, so an unresolvable connection is skipped
+-- rather than read off nil. Falls back to the engine's own list where the
+-- helper is absent, which is the Gen 1 shape and already correct there.
+local function resolvedNeighbors(state)
+  local ok, N = pcall(V.require, "Gen2Neighbors")
+  if ok and type(N) == "table" and type(N.resolved) == "function" then
+    return N.resolved(state)
+  end
+  return state.neighbors or {}
+end
+
 -- ------- palette
 --
 -- The world palette a map draws under, in the shape VoxelScene's colour
@@ -642,7 +665,7 @@ local function prefetchArena(state, host)
     return terrain, neighbors, water, neighborWater, visuals, neighborVisuals
   end
   local live = { [host.id] = true, [state.map.id] = true }
-  V.require("Gen2Neighbors").ensure(state)
+  ensureNeighbors(state)
   for _, nb in ipairs(state.neighbors or {}) do
     if nb.map then live[nb.map.id] = true end
   end
@@ -1133,8 +1156,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
   -- resolved(), not the raw list: a row we could not build a Map for has to
   -- be skipped rather than read off, or one unresolvable connection takes the
   -- whole arena draw with it.
-  local neighbors = (host == state.map)
-    and V.require("Gen2Neighbors").resolved(state) or {}
+  local neighbors = (host == state.map) and resolvedNeighbors(state) or {}
   local whiteFill = UiBackplates.arenaWhite()
   local gen6Fill = UiBackplates.arenaGen6()
   local pngFill = UiBackplates.arenaPng()

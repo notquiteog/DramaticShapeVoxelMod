@@ -538,6 +538,18 @@ local function rebuildNeighborhood(state)
   if GranitePillars.setLive then GranitePillars.setLive(live) end
 end
 
+-- Tolerant on purpose: a good many cases hand this module a hand-built stub
+-- `V` whose require either asserts on an unknown name or answers a generic
+-- fake, and neither should make the neighbour fix-up a hard dependency of
+-- loading the file. A harness without it simply gets Gen 1's own shapes,
+-- which is what those cases are describing anyway.
+local function ensureNeighbors(state)
+  local ok, N = pcall(V.require, "Gen2Neighbors")
+  if ok and type(N) == "table" and type(N.ensure) == "function" then
+    N.ensure(state)
+  end
+end
+
 -- Request everything `state`'s frame wants and evict what it no longer
 -- does; returns the current map's terrain mesh (or nil while it builds)
 -- and the neighbour meshes ready to draw. render() calls this for the
@@ -554,7 +566,7 @@ function VoxelScene.prefetch(state)
   -- No-op on Gen 1 and free after the first pass. lib/Gen2Neighbors.lua
   -- argues the whole thing; without it every OUTDOOR Gen 2 map took the
   -- world pass down on `nb.map.id` and fell back to the flat 2D draw.
-  V.require("Gen2Neighbors").ensure(state)
+  ensureNeighbors(state)
 
   local live, ids = { [state.map.id] = true }, { state.map.id }
   for _, nb in ipairs(state.neighbors or {}) do
@@ -1331,7 +1343,7 @@ function VoxelScene.warmAtlas(map)
 end
 
 function VoxelScene.render(state, w, h, vw, vh, paletteFor)
-  V.require("Gen2Neighbors").ensure(state)
+  ensureNeighbors(state)
   lastPaletteFor = paletteFor
   -- With nothing cached at all (the first frame of a fresh toggle), return
   -- nil and let the pipeline choose its cold-build veil.  A settled failure
