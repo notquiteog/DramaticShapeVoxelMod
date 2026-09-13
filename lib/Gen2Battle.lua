@@ -150,6 +150,26 @@ function Gen2Battle.install()
     return
   end
 
+  -- Game2.paintBattleSurround shades the margins even in WORLD mode.
+  -- Suppress its explicit dim value while the diorama owns the background;
+  -- changing battleFit cannot remove these side strips and rescales the HUD.
+  if type(BattleState.bgMode) == "function" then
+    local innerBg = BattleState.bgMode
+    local savedDim = setmetatable({}, { __mode = "k" })
+    function BattleState:bgMode()
+      if sceneOverrideOn() then
+        if not savedDim[self] then
+          savedDim[self] = { value = rawget(self, "BG_WORLD_DIM") }
+        end
+        self.BG_WORLD_DIM = 0
+      elseif savedDim[self] then
+        self.BG_WORLD_DIM = savedDim[self].value
+        savedDim[self] = nil
+      end
+      return innerBg(self)
+    end
+  end
+
   function BattleState:drawPanel()
     if not sceneOverrideOn() then return inner(self) end
     -- The engine's own guard, borrowed rather than guessed: with no battler
@@ -182,6 +202,20 @@ function Gen2Battle.install()
       return innerPic(self, mon, back, ...)
     end
     BattleState.dramaticShapeGen2PicHook = true
+  end
+
+  -- The animation view has its own opaque fill, independent of drawPanel.
+  do
+    local okView, BattleAnimView = pcall(require, "src.ui.gen2.BattleAnimView")
+    if okView and type(BattleAnimView.fillBackground) == "function"
+       and not BattleAnimView.dramaticShapeGen2AnimHook then
+      local innerFill = BattleAnimView.fillBackground
+      function BattleAnimView:fillBackground(palByte)
+        if sceneOverrideOn() then return end
+        return innerFill(self, palByte)
+      end
+      BattleAnimView.dramaticShapeGen2AnimHook = true
+    end
   end
 
   BattleState.dramaticShapeGen2SceneHook = true

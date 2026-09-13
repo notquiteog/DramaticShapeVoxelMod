@@ -1,3 +1,35 @@
+# Gen 2 parity in progress — 2026-09-13
+
+Local branch `Legendary-Additions`, no new release yet. Battle background dim
+and attack-animation clears are now gated by 3D-BTL (the earlier battleFit=fill
+attempt was wrong: Game2.paintBattleSurround explicitly dims the margins).
+Round border trees use the complete two-cell drawing; interactive bushes and
+isolated cave rocks use one-cell hulls. Route 29's grass-capped lip classification
+and fence post/rail routing are present. Gen 2 cache token refreshed.
+
+Fresh checks: gen2 shapes 92, gen2 support 181, budget 35, storage 7; 158 Lua
+production files compile. Disposable six-mod engine boots (source 2cc86d5,
+llvmpipe/Xvfb, Free Fly published 1.8.2) captured a real Cyndaquil/Sentret battle
+including 30 attack frames without white fill and without dark side strips.
+Seven map driver checks show no unclaimed round scenery. These are desktop
+checks, not Android. Some companion warnings still occur (Wild Skies Map API,
+Wilds nil-sprite fallback); not claimed as a zero-warning gameplay session.
+
+USER CORRECTION: furniture still too tall; Mom's appliances still laid out in
+depth; fence/ledge corners remain boxes; ledges must be thin bars rather than
+cell-wide raised shelves; rocks/boulders and low ocean barrier rocks need actual
+models. Elm's Lab camera must stand on clear floor. Do not publish this interim
+geometry. Fetch and integrate applicable upstream artyrambles/DRAMALESS_SHAPE
+main commits (fetched through 97ca3e1); preserve Battle Art ownership/identity.
+Their history has no common ancestor with this checkout, so do not overwrite the
+fork with their renderer. Latest sprite-size and GBCFX fixes already exist here.
+
+QA artifacts/drivers: /tmp/johto-parity; isolated engine there links local mod
+and published companions. Base engine /home/admin/Apps/Gen1Recomp/source.
+Save identity johto-parity-qa; imported test data in johto-shots/crystal.
+Cart remains 1.1.2 with Battle Art 1.12.2 and Free Fly 1.8.1. Release/re-pin is
+still pending after the corrected geometry is verified.
+
 # Johto diorama: one-cell trees, outdoor-only volumes, per-map roof bake - 2026-09-12
 
 Three faults reported on the JohtoDioramaCart after 1.12.1: bushes two

@@ -183,8 +183,8 @@ T.eq(classOf(4, 2), "ledge", "a ledge collision is a ledge")
 T.eq(classOf(2, 2), "wall", "masonry with solid neighbours is a wall")
 T.eq(classOf(1, 2), "fence", "a BROWN solid open on both sides is a fence")
 T.eq(classOf(3, 2), "signpost", "a GRAY solid open on both sides is a signpost")
-T.eq(classOf(4, 3), "tree", "a HEADBUTT tree is a tree")
-T.eq(classOf(4, 4), "tree", "a CUT tree is a tree")
+T.eq(classOf(4, 3), "bush", "a HEADBUTT tree is a short round bush")
+T.eq(classOf(4, 4), "bush", "a CUT tree is a short round bush")
 
 -- ------- the two rules that were wrong the first time
 --
@@ -279,13 +279,11 @@ do
     "and a tree is as tall as a tree, not as tall as the forest is deep -- "
       .. "volumed, VIOLET_CITY's 174 contiguous tree cells became one "
       .. "stepped plateau with the camera inside it")
-  T.eq(g2tree.h, 16,
-    "a tree is one cell high, the class default -- the 32px override was an "
-      .. "overcorrection: at the 35-degree camera a 32px box leans two cells "
-      .. "of screen space over the ground in front of it, so a tree border "
-      .. "along a path read as growing INTO the path, and every bush in "
-      .. "Johto stood two storeys tall. Gen 1 draws Kanto's trees one cell "
-      .. "high and they read correctly there")
+  T.eq(g2tree.h, 32, "border trees are two cells high")
+  T.eq(g2tree.art, "planter", "border trees enter the paired 16x32 round hull builder")
+  T.eq(shapeAt(4, 3).h, 16, "headbutt bushes stay one cell high")
+  T.eq(shapeAt(4, 4).art, "cylinder", "cut bushes also enter the round builder")
+  T.eq(shapeAt(1, 2).art, "post", "fences enter the post and rails builder")
 end
 
 -- ------- the outdoor gate: indoors nothing is a volume and nothing is a fence
@@ -302,6 +300,7 @@ do
   local indoorShapes = { classes = shapes.classes }
   T.eq(G2.install(indoorShapes, indoor), true,
     "the classifier still installs on an indoor map")
+  T.eq(indoorShapes.gen2Classes.wall.foldCell, true, "indoor wall art stays in its own cell")
   T.eq(indoorShapes.gen2Classes.wall.volume, nil,
     "indoors a wall is NOT a volume -- the class height is the honest answer")
   T.eq(indoorShapes.gen2Classes.tree.volume, nil, "and a tree never was")
@@ -398,9 +397,33 @@ do
   T.eq(VoxelScene.groundAt(map, 3, 1), 0, "so does tall grass")
   T.eq(VoxelScene.groundAt(map, 4, 2), 6,
     "a ledge supports at its own 6px, so standing on one is standing ON it")
-  T.eq(VoxelScene.groundAt(map, 1, 4), 16,
+  T.eq(VoxelScene.groundAt(map, 1, 4), 32,
     "and a tree reports its full height, which is what a shadow and a "
       .. "billboard behind it need")
+end
+
+-- Source vocabulary distinguishes a complete border tree from a grassy cliff.
+do
+  local m = fakeMap(CELLS, "ROUTE")
+  m.tileset.blocks = { {30,31,6,6,62,63,6,6,6,6,6,6,6,6,6,6} }
+  m.tileset.collision = { {HEADBUTT,LAND,LAND,LAND} }
+  local ids = {30,31,46,47}
+  m.tileAt = function(_, x, y) return ids[(y % 2)*2 + x%2 + 1] end
+  m.cellCollision = function() return WALL_C end
+  T.eq(G2.classAt(m,0,0,GREEN,GREEN), "tree", "named headbutt crown identifies border tree top")
+  ids = {46,47,62,63}
+  T.eq(G2.classAt(m,0,0,GREEN,GREEN), "tree", "named root identifies border tree base")
+  ids = {5,61,5,61}
+  T.eq(G2.classAt(m,0,0,GREEN,GREEN), "ledge", "vertical grassy rock edge is six-pixel terrain, not a tree")
+  ids = {5,5,76,76}
+  T.eq(G2.classAt(m,0,0,GREEN,GREEN), "ledge", "blocked lip after the jump tile is also six pixels")
+  ids = {5,5,26,26}
+  T.eq(G2.classAt(m,0,0,GREEN,BROWN), "wall", "unknown green solids do not become trees")
+  m.def.environment = "CAVE"
+  m.cellCollision = function(_,x,y) return x==0 and y==0 and WALL_C or LAND end
+  T.eq(G2.classAt(m,0,0,BROWN,BROWN), "rock", "isolated cave rocks enter the round builder")
+  m.cellCollision = function(_,x,y) return y==0 and WALL_C or LAND end
+  T.eq(G2.classAt(m,0,0,BROWN,BROWN), "wall", "connected cave walls remain walls")
 end
 
 -- ------- Gen 1 is untouched

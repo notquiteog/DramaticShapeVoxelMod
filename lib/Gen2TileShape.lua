@@ -98,6 +98,41 @@ function Gen2TileShape.paletteOf(tileset, tileId)
   return attr.palette
 end
 
+-- Named collision cells provide the foliage artwork vocabulary.
+-- Palette GREEN alone also describes grass-topped rock, so it cannot identify
+-- a tree. Read all blocks, including ones not placed on the current map.
+local vocabularyCache = setmetatable({}, { __mode = "k" })
+local function vocabulary(tileset, Permissions)
+  if not (tileset and tileset.blocks and tileset.collision) then return nil end
+  if vocabularyCache[tileset] then return vocabularyCache[tileset] end
+  local out = { crowns = {}, roots = {} }
+  for id, block in pairs(tileset.blocks) do
+    local coll = tileset.collision[id]
+    if coll then
+      for cy = 0, 1 do for cx = 0, 1 do
+        local i = cy * 8 + cx * 2 + 1
+        local c = coll[cy * 2 + cx + 1]
+        if c and block[i] and block[i+1] and block[i+4] and block[i+5] then
+          if Permissions.isHeadbuttTree(c) then
+            out.crowns[block[i] .. ":" .. block[i+1]] = true
+            out.roots[block[i+4] .. ":" .. block[i+5]] = true
+          end
+        end
+      end end
+    end
+  end
+  vocabularyCache[tileset] = out
+  return out
+end
+
+local function drawing(map, cx, cy)
+  local ids = {}
+  for dy = 0, 1 do for dx = 0, 1 do
+    ids[#ids + 1] = map:tileAt(cx * 2 + dx, cy * 2 + dy)
+  end end
+  return ids
+end
+
 -- One shape object per class, shared across the map.
 --
 -- Shared deliberately: the mesher decides a structure's extent by walking
@@ -120,22 +155,9 @@ end
 -- cell, the height Gen 1 gives an unauthored interior wall.
 local VOLUME_CLASSES = { wall = true, cliff = true }
 
--- `tree` is NOT on that list, and it does not get a height of its own
--- either. Both halves were tried and both were wrong.
---
--- Volumed, Johto's tree borders became one stepped plateau: 174 contiguous
--- cells in VIOLET_CITY resolving to a green tabletop whose terraces
--- followed each column's extent, with the camera inside it. So it takes a
--- flat height like any other fixed class.
---
--- That height is 16 -- one cell -- and not the 32 it was briefly given.
--- Two cells was an overcorrection to the plateau, and it bought the
--- opposite complaint: a 32px box leans two cells of screen space over the
--- ground in front of it at the diorama's 35-degree camera, so a tree
--- border along a path reads as growing INTO the path, and every bush in
--- Johto stood two storeys tall. Gen 1 draws Kanto's trees one cell high
--- (the OVERWORLD profile pins them `cylinder`, h 16) and they read
--- correctly there, so the class default is simply right.
+-- Trees keep a one-cell footprint and use the Gen 1 carved round hull.
+-- Border trees are twice the height of interactive cut/headbutt bushes;
+-- neither joins the neighbouring forest into a volume.
 
 -- How many rows at a run's north end are roof.
 --
@@ -205,6 +227,18 @@ local function classTable(shapes, outdoors)
                    -- same goes for fences and signposts.
                    volume = (outdoors and VOLUME_CLASSES[class]) or nil }
   end
+  out.tree.art, out.tree.h = "planter", 32
+  out.bush = { class = "bush", art = "cylinder", h = 16,
+               authored = true, derived = true }
+  out.rock = { class = "rock", art = "cylinder", h = 16,
+               authored = true, derived = true }
+  out.fence.art = "post"
+  if not outdoors then
+    -- Confine texture folding to the object's own 16px collision cell.
+    -- Adjacent furniture and the back wall share a class indoors.
+    out.wall.foldCell = true
+    out.counter.foldCell = true
+  end
   return out
 end
 
@@ -264,9 +298,20 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
   -- or HEADBUTT tree, and by palette otherwise -- and both agree, which is
   -- what makes the palette rule trustworthy for the plain ones.
   if Permissions.isCutTree(coll) or Permissions.isHeadbuttTree(coll) then
-    return "tree"
+    return "bush"
   end
   if Permissions.isCounter(coll) then return "counter" end
+  if map.def and map.def.environment == "CAVE" then
+    local isolated = true
+    for _, d in ipairs({ {0,-1}, {0,1}, {-1,0}, {1,0} }) do
+      local okN, nc = pcall(map.cellCollision, map, cx+d[1], cy+d[2])
+      if not okN or Permissions.of(tonumber(nc) or -1) == Permissions.WALL then
+        isolated = false
+        break
+      end
+    end
+    if isolated then return "rock" end
+  end
 
   -- A roof is NOT its own class here, and that is the opposite of the
   -- first cut. `roof` has art "top" and a fixed 28px height, which made
@@ -283,7 +328,26 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
   -- roof starts: Gen 1 infers it from the art, which on Johto's repeating
   -- brick infers nothing.
   if palTop == PAL_ROOF or palBot == PAL_ROOF then return "wall" end
-  if palTop == PAL_GREEN then return "tree" end
+  if palTop == PAL_GREEN then
+    local vocab = vocabulary(map.tileset, Permissions)
+    if not vocab then return "tree" end -- limited metadata fallback
+    local ids = drawing(map, cx, cy)
+    if vocab.crowns[ids[1] .. ":" .. ids[2]]
+        or vocab.roots[ids[3] .. ":" .. ids[4]] then return "tree" end
+    -- Johto's grass-topped retaining edge uses these source tiles. The hop
+    -- collision is on the plain ground BEFORE this blocked lip, so collision
+    -- alone cannot find the visible six-pixel ledge (Route 29).
+    if map.tileset.id == "TILESET_JOHTO" then
+      local edge = { [59]=true, [60]=true, [61]=true, [75]=true, [76]=true, [77]=true }
+      local found, compatible = false, true
+      for _, id in ipairs(ids) do
+        found = found or edge[id]
+        compatible = compatible and (edge[id] or id == 5 or id == 6)
+      end
+      if found and compatible then return "ledge" end
+    end
+    return "wall" -- grass-topped rock is not foliage or a timber fence
+  end
   -- deliberately NO palette rule for water. Collision already answers it
   -- (perm == WATER, above) and answers it authoritatively; adding
   -- `palTop == PAL_WATER` on top of that found five cells of water inside

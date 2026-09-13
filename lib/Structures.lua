@@ -209,7 +209,9 @@ end
 -- Overworld tile $3C, so the fence belongs to the same material family
 -- without changing bridge geometry or consuming another atlas slot.
 function Structures.buildCommunityFence(S, map, postCells)
-  if not (CommunityVisuals.customCourtyards()
+  local gen2 = S.gen2 == true
+  -- Derived Johto fences use this geometry at the baseline setting.
+  if not gen2 and not (CommunityVisuals.customCourtyards()
       and map.tileset and map.tileset.id == "OVERWORLD") then return false end
 
   local nodes, claimed = {}, {}
@@ -236,6 +238,29 @@ function Structures.buildCommunityFence(S, map, postCells)
     { (ax + 7.50) / atlasW, (ay + 0.50) / atlasH },
     { (ax + 0.50) / atlasW, (ay + 0.50) / atlasH },
   }
+  if gen2 then
+    -- Pick actual texels from the fence drawing, not Kanto's timber slot.
+    local data = pixels(map.tileset)
+    if not data then return false end
+    local node = nodes[next(nodes)]
+    local c = node.tiles[1]
+    local tile = S.tileAt[keyOf(c[1], c[2])]
+    local bx, by = (tile % perRow) * 8, math.floor(tile / perRow) * 8
+    local tones = {}
+    for y = 0, 7 do
+      for x = 0, 7 do
+        local r, g, b, a = data:getPixel(bx + x, by + y)
+        if a > 0 then tones[#tones + 1] = { r + g + b,
+          (bx + x + .5) / atlasW, (by + y + .5) / atlasH } end
+      end
+    end
+    table.sort(tones, function(a, b) return a[1] < b[1] end)
+    if #tones == 0 then return false end
+    for name, fraction in pairs({ dark = .1, shadow = .3, body = .5, light = .7 }) do
+      local t = tones[math.max(1, math.floor(#tones * fraction))]
+      sample[name] = { t[2], t[3] }
+    end
+  end
   local quads = S.objectQuads
 
   local function quad(c1, c2, c3, c4, tone, shade, textured)
@@ -244,7 +269,7 @@ function Structures.buildCommunityFence(S, map, postCells)
       c1, c2, c3, c4, u = uv[1], v = uv[2], shade = shade,
       kantoFence = true,
     }
-    if textured then
+    if textured and not gen2 then
       q.uv = {
         { grainUV[1][1], grainUV[1][2] },
         { grainUV[2][1], grainUV[2][2] },
@@ -930,6 +955,7 @@ function Structures.forMap(map)
   -- still overdraws a walker's feet even though characters stamp over
   -- terrain.)
   S = { shapeAt = shapeAt, tileAt = tileAt, outdoor = Map.isOutdoor(def),
+        gen2 = shapes.gen2Classes ~= nil,
         hideBareRing = hullRingOnly or nil,
         runs = {}, skip = {}, ground = {}, doorFold = {}, objectQuads = {},
         grassQuads = {}, flowerQuads = {}, roundStamps = {}, figures = {} }
@@ -2319,13 +2345,13 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
                 ids[#ids + 1] = S.tileAt[keyOf(cx * 2 + dx, cy * 2 + dy)]
               end
             end
-            local sig = tsid .. "|p32|" .. gsig .. "|"
+            local sig = tsid .. (s.class == "tree" and "|tree32|" or "|p32|") .. gsig .. "|"
                         .. table.concat(ids, ":")
             local tpl = roundCache[sig]
             if not tpl then
               local tq, tbg = roundTemplate(S, map, data, cx, cy,
                                             groundTiles, 16, nil, 32,
-                                            PLANTER_SPRAY)
+                                            (s.class ~= "tree") and PLANTER_SPRAY or nil)
               tpl = { quads = tq, bg = tbg }
               roundCache[sig] = tpl
             end

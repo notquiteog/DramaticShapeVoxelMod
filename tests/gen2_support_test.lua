@@ -45,6 +45,9 @@ local GameVersion = require("src.core.GameVersion")
 local ENGINE = {
   ["src.world.OverworldController"] = require("src.world.OverworldController"),
   ["src.battle.BattleState"] = require("src.battle.BattleState"),
+  ["src.ui.gen2.BattleState"] = require("src.ui.gen2.BattleState"),
+  ["src.ui.gen2.BattleAnimView"] = require("src.ui.gen2.BattleAnimView"),
+  ["src.ui.gen2.Chrome"] = require("src.ui.gen2.Chrome"),
 }
 
 -- Where this mod's files are, RELATIVE TO CWD.
@@ -132,6 +135,7 @@ local GEN2_PATCHES = {
 
 local previousVersion = GameVersion.get()
 
+local installedBattleSetting
 for _, cart in ipairs(carts) do
   local label = ("%s (gen %d)"):format(cart.id, cart.generation)
 
@@ -236,14 +240,35 @@ for _, cart in ipairs(carts) do
 
     -- BATTLE BG = world is what puts the engine into the branch that draws
     -- the world behind the fight at all, so the row is held there.
-    local held = { battleBg = "white" }
+    local held = { battleBg = "white", battleFit = "fixed" }
     T.check(Gen2Battle.holdWorldBg(held),
       label .. ": holdWorldBg reports the change it made")
     T.eq(held.battleBg, "world",
       label .. ": BATTLE BG is held at world while 3D-BTL is on")
+    T.eq(held.battleFit, "fixed", label .. ": the HUD keeps its configured size")
     T.check(not Gen2Battle.holdWorldBg(held),
       label .. ": and reports no change once it is already world, so the "
         .. "options file is not rewritten every frame")
+
+    local state = setmetatable({ game = { options = { battleBg = "world" } },
+      BG_WORLD_DIM = .31 }, { __index = ENGINE["src.ui.gen2.BattleState"] })
+    T.eq(state:bgMode(), "world", label .. ": world backdrop retained")
+    T.eq(state.BG_WORLD_DIM, 0, label .. ": no dark margin overlay in 3D-BTL")
+    local Chrome = ENGINE["src.ui.gen2.Chrome"]
+    local paletteFill, fills = Chrome.paletteFill, 0
+    Chrome.paletteFill = function() fills = fills + 1 end
+    ENGINE["src.ui.gen2.BattleAnimView"].fillBackground({}, 0xe4)
+    T.eq(fills, 0, label .. ": attack animation does not clear over the diorama")
+    -- Engine classes persist across harness loads; the first installation
+    -- owns their closures, just as one mod instance owns a real boot.
+    installedBattleSetting = installedBattleSetting or OverworldBattle.setting
+    installedBattleSetting:sync(false)
+    state:bgMode()
+    T.eq(state.BG_WORLD_DIM, .31, label .. ": stock dim restored with 3D-BTL off")
+    ENGINE["src.ui.gen2.BattleAnimView"].fillBackground({}, 0xe4)
+    T.eq(fills, 1, label .. ": stock animation fill returns with 3D-BTL off")
+    Chrome.paletteFill = paletteFill
+    installedBattleSetting:sync(true)
 
     -- the reasons are published rather than inferred from a false flag
     T.check(lib("MomHealFlash").skipped,

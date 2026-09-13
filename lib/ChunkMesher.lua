@@ -2847,7 +2847,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
             -- and a fully-folded structure (wall, desk) tops with its
             -- northmost row.
             local north, front = ty, ty
-            while ty - north < 6 do
+            while ty - north < 6 and (not s.foldCell or north > math.floor(ty / 2) * 2) do
               local bs = S.shapeAt[keyOf(tx, north - 1)]
               if bs and bs.authored and bs.class == s.class then
                 north = north - 1
@@ -2855,7 +2855,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
                 break
               end
             end
-            while front - ty < 6 do
+            while front - ty < 6 and (not s.foldCell or front < math.floor(ty / 2) * 2 + 1) do
               local bs = S.shapeAt[keyOf(tx, front + 1)]
               if bs and bs.authored and bs.class == s.class then
                 front = front + 1
@@ -2870,7 +2870,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
               -- bookcase wearing its shelf-top trim), else with the
               -- run's own top row
               local above = S.shapeAt[keyOf(tx, north - 1)]
-              row = (above and above.authored and above.art == "upright")
+              row = (not s.foldCell and above and above.authored and above.art == "upright")
                     and (north - 1) or north
             end
             topTile = S.tileAt[keyOf(tx, row)]
@@ -3007,7 +3007,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
                   -- different jumble per row.
                   if d == 5 then shade = 1 end
                   local front = ty
-                  while front < ty + 6 do
+                  while front < ty + 6 and (not s.foldCell or front < math.floor(ty / 2) * 2 + 1) do
                     local fs2 = S.shapeAt[keyOf(tx, front + 1)]
                     if fs2 and fs2.authored and fs2.class == s.class then
                       front = front + 1
@@ -3017,7 +3017,8 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
                   end
                   local fk = keyOf(tx, front - band)
                   local fs = S.shapeAt[fk]
-                  if fs and fs.authored and fs.class == s.class then
+                  if fs and fs.authored and fs.class == s.class
+                     and (not s.foldCell or front - band >= math.floor(ty / 2) * 2) then
                     src = S.tileAt[fk]
                   end
                 end
