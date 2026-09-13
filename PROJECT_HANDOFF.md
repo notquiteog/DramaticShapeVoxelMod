@@ -1,3 +1,16 @@
+# 1.14.1 - Gen 2 doubles on the staged battle — 2026-09-13
+
+Additive, released on Legendary-Additions (tag v1.14.1): when a battle
+carries the double-battles fork's second slots (battle.player2 /
+battle.enemy2), Gen2Staged composes BOTH mons into each side's staged
+billboard card (lead left, partner right, same ground line) and
+Gen2Battle's flat-panel skip covers both through the drawn table. Verified
+in-engine: a wild double on Route 29 (Sentret joining Geodude, rolled
+from the map's own table) stages both mons on the diorama while the
+engine's text runs the round. Cart repinned as JohtoDioramaCart 1.3.3.
+The double-battles fork is NOT on the cart yet: its Crystal layer is beta
+(second foe's HP plate, player-side partner, aim menu remaining).
+
 # Crystal 1.13.0 / cart 1.2.0 released — 2026-09-13
 
 The original interim corrections below have now been superseded. Branch remains
