@@ -90,7 +90,7 @@ local FOOT_PAD = 1
 function Gen2Staged.sideTexture(game, side)
   local screen = screenFor(game)
   if not screen then return nil end
-  local back = side == "player"
+  local back = (side == "player" or side == "player2")
   local okMon, mon = pcall(screen.activeMon, screen, side)
   if not (okMon and mon) then return nil end
   local okPic, image = pcall(screen.pic, screen, mon, back)
@@ -98,11 +98,29 @@ function Gen2Staged.sideTexture(game, side)
   local okDim, iw, ih = pcall(image.getDimensions, image)
   if not (okDim and iw and ih and iw > 0 and ih > 0) then return nil end
 
+  -- A 2v2 round fields a partner beside the lead (the doubles layer keeps
+  -- battle.player2 / battle.enemy2 on the battle).  Both pics compose into
+  -- ONE card per side -- the same staged look the Gen 1 doubles adapter
+  -- draws -- so the anchors stay one-cell honest and the flat panel skips
+  -- both mons through the drawn table.
+  local partner = nil
+  local battle = screen.battle
+  if battle and battle.doubles then
+    local p2 = (side == "player" and battle.player2)
+      or (side == "enemy" and battle.enemy2) or nil
+    if p2 and p2 ~= mon and (p2.hp or 0) > 0 then partner = p2 end
+  end
+  local pimage = nil
+  if partner then
+    local ok2, img2 = pcall(screen.pic, screen, partner, back)
+    if ok2 and img2 then pimage = img2 end
+  end
+
   local BattleScene = V.require("BattleScene")
-  local cw = math.max(BattleScene.GB_W or 160, iw + 2)
-  local ch = math.max(BattleScene.GB_H or 144, ih + 2)
+  local cw = math.max(BattleScene.GB_W or 160, iw + iw2 + 2)
+  local ch = math.max(BattleScene.GB_H or 144, math.max(ih, ih2) + 2)
   local ax = cw / 2
-  local ay = ih + FOOT_PAD
+  local ay = ch - FOOT_PAD
   local canvas = canvasFor(side, cw, ch)
   if not canvas then return nil end
 
@@ -114,14 +132,22 @@ function Gen2Staged.sideTexture(game, side)
     g.clear(0, 0, 0, 0)
     g.setColor(1, 1, 1, 1)
     -- centred on ax with the feet on ay, which is the anchor contract
-    -- BattleScene.billboard reads (tw / 2 - ax, th - ay).
-    g.draw(image, ax - iw / 2, ay - ih)
+    -- BattleScene.billboard reads (tw / 2 - ax, th - ay).  With a partner,
+    -- the lead sits left of centre and the partner right of it, feet on
+    -- the same ground line.
+    if pimage then
+      g.draw(image, ax - iw, ay - ih)
+      g.draw(pimage, ax, ay - ih2)
+    else
+      g.draw(image, ax - iw / 2, ay - ih)
+    end
   end)
   g.setCanvas(prev)
   g.setColor(pr, pg, pb, pa)
   if not okDraw then return nil end
 
   Gen2Staged.drawn[side] = mon
+  if partner then Gen2Staged.drawn[side .. "2"] = partner end
   return { canvas = canvas, ax = ax, ay = ay, trainer = false }
 end
 

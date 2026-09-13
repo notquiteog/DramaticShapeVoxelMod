@@ -1,3 +1,11 @@
+## 1.14.1 - Gen 2 doubles on the staged battle
+
+- When a battle carries the doubles layer's second slots (battle.player2 /
+  battle.enemy2, as staged by the double-battles fork's Crystal 2v2 core),
+  each side's staged billboard composes BOTH mons into one card -- lead
+  left, partner right, feet on the same ground line -- and the flat panel
+  skips both mons through the drawn table.  No doubles, no change.
+
 # Changelog
 
 ## 1.14.0 - Crystal HD-2D scenery and the common interiors
