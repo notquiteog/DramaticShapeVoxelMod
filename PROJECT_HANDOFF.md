@@ -1,4 +1,4 @@
-# Crystal 1.13.0 / cart 1.2.0 release preparation — 2026-09-13
+# Crystal 1.13.0 / cart 1.2.0 released — 2026-09-13
 
 The original interim corrections below have now been superseded. Branch remains
 Legendary-Additions. Applicable DRAMALESS commits are cherry-picked; license
@@ -12,9 +12,23 @@ Modern UI has been forked to notquiteog/gen2recomp and its unmodified upstream
 archive published as v1.0.15 for an installable checksum pin. Modern Johto stays
 optional/off by default. CG3 label copy prepared at JohtoDioramaCart/art/CG3.png
 (512×512; original Pictures image unchanged). Cart base remains crystal and
-seal remains sealed+. Mod version bumped to 1.13.0. Final package validation,
-mod release, cart re-pin/boot, and cart release still pending at this checkpoint.
-QA scripts/artifacts are /tmp/johto-parity and tests/*cart_driver.lua.
+seal remains sealed+. RELEASED 2026-09-13: branch Legendary-Additions pushed,
+tagged `v1.13.0` and released on notquiteog/DramaticShapeVoxelMod with
+`BATTLE_ART_VOXEL_FORK-1.13.0.zip` + `sha256sums.txt` (sha256
+`70dce2c9…` — matches the cart pin). JohtoDioramaCart 1.2.0 committed
+(df540b3), tagged `v1.2.0` and released with `johto_diorama-1.2.0.g1rcart` +
+`cart_sums.txt`; index entry validates clean against the
+gen1recomp-mod-index checker (tags trimmed to the 8-tag cap). Boot verified
+from the packaged files: release g1rcart in a clean save's carts/ with the
+pinned 1.13.0 zip as the installed mod — all eleven pinned versions load in
+the pinned order and the game reaches ready (kanto_gear has no priority, so
+loading ahead of Wilds proves the cart's load_order applied; driver boots
+drop the cart by design — scripted boots call bootGame(version, nil), so the
+in-engine cart-context asserts cannot run under POKEPORT_DRIVER; the
+launcher-request boot `love . --game=crystal --cart=johto_diorama` is the
+cart path). QA scripts/artifacts are /tmp/johto-parity and
+tests/*cart_driver.lua; every pin's sha256 was checked against its published
+release asset.
 
 # Gen 2 parity in progress — 2026-09-13
 
