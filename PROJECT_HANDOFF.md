@@ -9,9 +9,15 @@ in-engine: a wild double on Route 29 (Sentret joining Geodude, rolled
 from the map's own table) stages both mons on the diorama while the
 engine's text runs the round. Cart repinned as JohtoDioramaCart 1.3.3. The doubles follow-up shipped
 the same day: Battle Art 1.14.1 + double-battles-gen2 0.8.0 (second HP
-plate, doubles default on) are ON the cart as JohtoDioramaCart 1.4.0 —
-thirteen pins, boot-verified from the packaged files. Remaining in the
-double-battles fork: the player-side partner and aim menu; in
+plate, doubles default on) are ON the cart — JohtoDioramaCart 1.5.0
+swapped Free Fly out for the dramatic-sky-ride fork (0.2.19: the Crystal
+rider crop is verified through the engine's asset reader; Gen 1
+untouched) and repinned gen1online-plus 0.5.2 (server connect-address
+banner). Thirteen pins, boot-verified from the packaged files, stack
+audit clean: no hard dependencies between mods, no cart-member conflicts,
+all thirteen claim Gen 2, and the priority order is the pinned load
+order (Crystal Animated Sprites outermost on pokemon.sprite). Remaining
+in the double-battles fork: the player-side partner and aim menu; in
 gen1online-plus: PVP 2v2 over the doubles2 contract.
 
 # Crystal 1.13.0 / cart 1.2.0 released — 2026-09-13
