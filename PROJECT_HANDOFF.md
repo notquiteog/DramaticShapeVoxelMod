@@ -7,9 +7,12 @@ billboard card (lead left, partner right, same ground line) and
 Gen2Battle's flat-panel skip covers both through the drawn table. Verified
 in-engine: a wild double on Route 29 (Sentret joining Geodude, rolled
 from the map's own table) stages both mons on the diorama while the
-engine's text runs the round. Cart repinned as JohtoDioramaCart 1.3.3.
-The double-battles fork is NOT on the cart yet: its Crystal layer is beta
-(second foe's HP plate, player-side partner, aim menu remaining).
+engine's text runs the round. Cart repinned as JohtoDioramaCart 1.3.3. The doubles follow-up shipped
+the same day: Battle Art 1.14.1 + double-battles-gen2 0.8.0 (second HP
+plate, doubles default on) are ON the cart as JohtoDioramaCart 1.4.0 —
+thirteen pins, boot-verified from the packaged files. Remaining in the
+double-battles fork: the player-side partner and aim menu; in
+gen1online-plus: PVP 2v2 over the doubles2 contract.
 
 # Crystal 1.13.0 / cart 1.2.0 released — 2026-09-13
 
