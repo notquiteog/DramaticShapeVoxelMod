@@ -1422,6 +1422,10 @@ function Buildings.build(S, map, data, perRow)
   local vessel = s and s.tilesets and s.tilesets[tileset.id] and s.tilesets[tileset.id].ship_hull
   if vessel then V.require("ShipHull").prepare(S,map,data,perRow,vessel,read,emit) end
   local list = s and s.buildings and s.buildings[tileset.id]
+  if S.gen2 then
+    local furniture = V.data("gen2_furniture")
+    list = furniture and furniture[tileset.id] or list
+  end
   if not list then return end
 
   local atlasW = tileset.imageWidth or 128
@@ -1530,6 +1534,17 @@ end
 -- a building claim with height as a full model (skip, never a second
 -- box; see its support branches).
 function Buildings.stamp(S, map, quads, tx, ty, bw, bh, t)
+  if S.gen2 and t and t.id:match("^crystal_") then
+    S.furniture=S.furniture or {}
+    local minX,minZ,maxX,maxZ,maxY=math.huge,math.huge,-math.huge,-math.huge,0
+    for _,q in ipairs(quads) do for i=1,4 do
+      local p=q[i]
+      minX,minZ=math.min(minX,p[1]),math.min(minZ,p[3])
+      maxX,maxZ,maxY=math.max(maxX,p[1]),math.max(maxZ,p[3]),math.max(maxY,p[2])
+    end end
+    S.furniture[#S.furniture+1]={id=t.id,support=t.support or 0,
+      x0=tx*8+minX,z0=ty*8+minZ,x1=tx*8+maxX,z1=ty*8+maxZ,height=maxY}
+  end
   local shape = { class = "building", h = (t and t.support) or 0,
                   art = "building", flat = false, authored = true }
   local keep = nil

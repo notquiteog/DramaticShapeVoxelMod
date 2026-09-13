@@ -232,6 +232,10 @@ local function classTable(shapes, outdoors)
                authored = true, derived = true }
   out.rock = { class = "rock", art = "cylinder", h = 16,
                authored = true, derived = true }
+  out.boulder = { class = "boulder", art = "canopy", h = 24,
+                  authored = true, derived = true }
+  out.oceanrock = { class = "oceanrock", art = "oceanrock", h = 4,
+                    authored = true, derived = true }
   out.fence.art = "post"
   if not outdoors then
     -- Confine texture folding to the object's own 16px collision cell.
@@ -281,6 +285,35 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
 
   local perm = Permissions.of(coll)
 
+  if map.tileset and map.tileset.id == "TILESET_JOHTO" then
+    local ids = drawing(map,cx,cy)
+    if ids[1]==88 and ids[2]==88 and ids[3]==88 and ids[4]==88 then
+      return "oceanrock"
+    end
+    -- Coastal boulders are complete 32px drawings, not four cliff corners.
+    local grid={{43,44,44,45},{59,60,60,61},{59,60,60,61},{75,76,76,77}}
+    local offsets={ ["43,44,59,60"]={0,0},["44,45,60,61"]={1,0},
+                    ["59,60,75,76"]={0,1},["60,61,76,77"]={1,1} }
+    local offset=offsets[table.concat(ids,",")]
+    if offset then
+      local matches=true
+      for r=1,4 do for c=1,4 do
+        if map:tileAt((cx-offset[1])*2+c-1,(cy-offset[2])*2+r-1)~=grid[r][c] then matches=false end
+      end end
+      if matches then return "boulder" end
+    end
+    if perm == Permissions.WALL then
+      local edge={ [43]=true,[44]=true,[45]=true,[59]=true,[60]=true,
+                   [61]=true,[75]=true,[76]=true,[77]=true }
+      local found,compatible=false,true
+      for _,id in ipairs(ids) do
+        found=found or edge[id]
+        compatible=compatible and (edge[id] or id==5 or id==6)
+      end
+      if found and compatible then return "ledge" end
+    end
+  end
+
   if perm == Permissions.WATER then
     return Permissions.isWaterfall(coll) and "wall" or "water"
   end
@@ -290,7 +323,11 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
     -- ground.  Tall grass keeps its own class (flat base plus standing
     -- tufts); a ledge is the 6px lip you hop off.
     if Permissions.isGrass(coll) then return "grass" end
-    if Permissions.isLedge(coll) then return "ledge" end
+    -- Johto draws the lip in the blocked cell beyond the hop trigger.
+    -- Raising the trigger itself adds an entire extra cell of shelf.
+    if Permissions.isLedge(coll) then
+      return map.tileset and map.tileset.id=="TILESET_JOHTO" and "ground" or "ledge"
+    end
     return "ground"
   end
 
@@ -392,6 +429,40 @@ end
 function Gen2TileShape.install(shapes, map)
   if not Gen2TileShape.supports(map) then return false end
   shapes.gen2Classes = classTable(shapes, outdoor(map))
+  -- CPU-only support survives a warm terrain cache. It comes from the same
+  -- complete recipes as the meshes, without building meshes in an actor draw.
+  local ok,recipes=pcall(V.data,"gen2_furniture")
+  local list=ok and recipes and recipes[map.tileset.id]
+  if list then
+    local supports={}
+    local tw,th=map.def.width*4,map.def.height*4
+    for _,t in ipairs(list) do
+      local bh,bw=#t.tiles,#t.tiles[1]
+      local x0,z0,x1,z1=math.huge,math.huge,-math.huge,-math.huge
+      for _,p in ipairs(t.parts) do
+        x0,x1=math.min(x0,p.x[1]),math.max(x1,p.x[2]+1)
+        z0,z1=math.min(z0,p.z or 0),math.max(z1,(p.z or 0)+(p.depth or 0))
+      end
+      for ty=0,th-bh do for tx=0,tw-bw do
+        if map:tileAt(tx,ty)==t.tiles[1][1] then
+          local match=true
+          for r=1,bh do for c=1,bw do
+            if map:tileAt(tx+c-1,ty+r-1)~=t.tiles[r][c] then match=false end
+          end end
+          if match then
+            for cy=math.floor(ty/2),math.floor((ty+bh-1)/2) do
+              for cx=math.floor(tx/2),math.floor((tx+bw-1)/2) do
+                local x,z=cx*16+8-tx*8,cy*16+8-ty*8
+                supports[cy*4096+cx]=(x>=x0 and x<x1 and z>=z0 and z<z1)
+                  and (t.support or 0) or 0
+              end
+            end
+          end
+        end
+      end end
+    end
+    shapes.gen2FurnitureSupports=supports
+  end
   return true
 end
 

@@ -11,6 +11,7 @@ end
 
 local V = {
   require = function(name)
+    if name == "LegendaryTowerExterior" then return { activeFor = function() return false end } end
     assert(name == "BuildBudget", name)
     return { tick = function() end }
   end,

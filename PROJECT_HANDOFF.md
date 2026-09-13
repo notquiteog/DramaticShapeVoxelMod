@@ -1,3 +1,21 @@
+# Crystal 1.13.0 / cart 1.2.0 release preparation — 2026-09-13
+
+The original interim corrections below have now been superseded. Branch remains
+Legendary-Additions. Applicable DRAMALESS commits are cherry-picked; license
+notice retained. Whole furniture recipes in data/gen2_furniture.lua replace
+Mom's kitchen and lab furniture, with CPU-only support heights for warm-cache
+boots. Gen2Ledges makes three-pixel lips/corners; Gen2Rocks models coastal,
+ocean and live rock actors. See docs/CRYSTAL_1_13.md for scope and evidence.
+
+Eleven-mod compatibility driver passed with all five requested additions.
+Modern UI has been forked to notquiteog/gen2recomp and its unmodified upstream
+archive published as v1.0.15 for an installable checksum pin. Modern Johto stays
+optional/off by default. CG3 label copy prepared at JohtoDioramaCart/art/CG3.png
+(512×512; original Pictures image unchanged). Cart base remains crystal and
+seal remains sealed+. Mod version bumped to 1.13.0. Final package validation,
+mod release, cart re-pin/boot, and cart release still pending at this checkpoint.
+QA scripts/artifacts are /tmp/johto-parity and tests/*cart_driver.lua.
+
 # Gen 2 parity in progress — 2026-09-13
 
 Local branch `Legendary-Additions`, no new release yet. Battle background dim

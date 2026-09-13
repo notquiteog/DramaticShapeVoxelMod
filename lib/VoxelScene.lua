@@ -20,6 +20,7 @@ local Shadows = V.require("Shadows")
 local ChunkMesher = V.require("ChunkMesher")
 local SpriteBillboards = V.require("SpriteBillboards")
 local ItemPokeballs = V.require("ItemPokeballs")
+local Gen2Rocks = V.require("Gen2Rocks")
 local TileShape = V.require("TileShape")
 local TerrainAtlas = V.require("TerrainAtlas")
 local Voxel = V.require("VoxelState")
@@ -227,7 +228,7 @@ local function groundAt(map, cellX, cellY, px, py)
   -- exactly one step -- the "hops like a ledge" seam bug.
   if not map:inBounds(cellX, cellY) then return 0 end
   local shapes = TileShape.forMap(map)
-  local s = shapes[map:cellTile(cellX, cellY)]
+  local s = not shapes.gen2Classes and shapes[map:cellTile(cellX, cellY)] or nil
   -- On Gen 2 the per-TILE table cannot answer this, and its wrong answer is
   -- the worst possible one.
   --
@@ -249,6 +250,10 @@ local function groundAt(map, cellX, cellY, px, py)
     local ok, resolved = pcall(TileShape.at, map, shapes,
                                map:tileAt(tx, ty), tx, ty)
     if ok and type(resolved) == "table" then s = resolved end
+    -- Whole furniture recipes supersede the cell classifier. Read the same
+    -- built support that carries the table so starter balls sit on its lid.
+    local support=shapes.gen2FurnitureSupports and shapes.gen2FurnitureSupports[cellY*4096+cellX]
+    if support~=nil then return math.max(0,support) end
   end
   if not s then return 0 end
   -- a recessed class (water) still supports whatever stands on it; only
@@ -680,6 +685,7 @@ end
 
 function VoxelScene.invalidate()
   ItemPokeballs.invalidate()
+  Gen2Rocks.invalidate()
   GranitePillars.invalidate()
   SafariFoliage.invalidate()
   V.require("GameCorner").invalidate()
@@ -949,7 +955,7 @@ local function drawCast(state, posed, atlasFor)
       -- claim this pass; otherwise retain the mirrored engine sprite.
       context.reflectionPlane = reflectPlane
       context.reflectionRaise = Water.CAST_RAISE
-      local claimed = ItemPokeballs.draw(context) or CharacterRenderers.first(
+      local claimed = Gen2Rocks.draw(context) or ItemPokeballs.draw(context) or CharacterRenderers.first(
         reflectPlane and "drawReflection" or "drawEntity", context)
       if not claimed then
         drawEntity(p.sprite, p.px, p.py, facing, p.phase, p.flip, p.gh,
@@ -1322,7 +1328,7 @@ local function castShadows(state, terrain, nbMesh, posed, cx, cy, vw, vh,
       local facing = viewFacing(p)
       local context = actorContext(state, p)
       context.facing = facing
-      local claimed = ItemPokeballs.draw(context, ShadowMap) or CharacterRenderers.first("drawShadow", context)
+      local claimed = Gen2Rocks.draw(context, ShadowMap) or ItemPokeballs.draw(context, ShadowMap) or CharacterRenderers.first("drawShadow", context)
       if not claimed then
         local def = p.sprite.def
         -- viewFacing, exactly as the camera draw picks it (see viewFacing for

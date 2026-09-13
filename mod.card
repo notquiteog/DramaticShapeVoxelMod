@@ -1,9 +1,9 @@
 -- Sharing metadata (25-community-and-ecosystem.md 3.2).  Read by tooling
 -- and the manager detail pane; never by the loader's merge.
 return {
-  summary = "The overworld as a 3D diorama, with real occlusion and tilt-shift. On Red, Blue and Yellow the battles are fought on it too, over the shoulder; on Gold, Silver and Crystal the diorama and the sprites cross but the staged battle and first person do not.",
-  author = "DramaticShape",
-  contact = "https://github.com/DramaticShape/BATTLE_ART_VOXEL_FORK",
+  summary = "A 3D diorama and staged Battle Art for Red, Blue, Yellow, Gold, Silver and Crystal. Crystal includes round foliage, source-modelled furniture, thin retaining ledges and real rock models. First- and third-person free movement remain Gen 1-only.",
+  author = "DramaticShape contributors / notquiteog fork",
+  contact = "https://github.com/notquiteog/DramaticShapeVoxelMod",
   tags = { "graphics", "3d", "voxel", "render-pipeline", "presentation",
            "battle" },
   differences = {
@@ -13,7 +13,7 @@ return {
       "with 3D-BTL on, a battle draws over the map's nearest clear ground instead of over a white field",
       "the battle's text box and menu are frosted glass over that ground rather than an opaque white slab, on the same panels the HUDs sit on",
       "the map's NPCs are culled for the length of a battle, so the wipe plays over an empty map",
-      "a battle's letterbox voids go black rather than white, because the battle canvas is no longer white",
+      "Gen 2 battles keep the diorama visible through surrounding margins and attack-animation background clears",
       "the engine's TILT and GBC FX rows are taken OFF the OPTIONS menu and held at off for as long as this mod is installed -- TILT is the flat fake of what this mode does for real, GBC FX is a full-screen pass over the top of it; uninstalling puts both rows back",
       "hotkeys 3 and 5 are taken over from those two, which have no key and no row while this is loaded",
       "on the 1ST rung ONLY, the grid walk is replaced by free camera-relative movement: collision, warps, ledges, encounters and scripts still run through the engine's own machinery, and every other rung leaves movement untouched",

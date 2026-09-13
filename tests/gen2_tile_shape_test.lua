@@ -179,7 +179,7 @@ T.eq(classOf(2, 1), "wall",
     .. "the volume builder's gable to find it")
 T.eq(classOf(3, 1), "grass", "the tall-grass collision is grass")
 T.eq(classOf(4, 1), "water", "the water collision is water")
-T.eq(classOf(4, 2), "ledge", "a ledge collision is a ledge")
+T.eq(classOf(4, 2), "ground", "Johto hop trigger is flat; the blocked lip carries the ledge")
 T.eq(classOf(2, 2), "wall", "masonry with solid neighbours is a wall")
 T.eq(classOf(1, 2), "fence", "a BROWN solid open on both sides is a fence")
 T.eq(classOf(3, 2), "signpost", "a GRAY solid open on both sides is a signpost")
@@ -224,7 +224,7 @@ local function shapeAt(cx, cy)
                       cx * 2, cy * 2 + 1)
 end
 for _, want in ipairs({ { 1, 4, "tree" }, { 2, 1, "wall" }, { 2, 2, "wall" },
-                        { 4, 1, "water" }, { 4, 2, "ledge" } }) do
+                        { 4, 1, "water" }, { 4, 2, "ground" } }) do
   local s = shapeAt(want[1], want[2])
   T.check(type(s) == "table", "TileShape.at answers a shape at "
     .. want[1] .. "," .. want[2])
@@ -395,8 +395,8 @@ do
 
   T.eq(VoxelScene.groundAt(map, 0, 0), 0, "open paving supports at 0")
   T.eq(VoxelScene.groundAt(map, 3, 1), 0, "so does tall grass")
-  T.eq(VoxelScene.groundAt(map, 4, 2), 6,
-    "a ledge supports at its own 6px, so standing on one is standing ON it")
+  T.eq(VoxelScene.groundAt(map, 4, 2), 0,
+    "Johto hop trigger supports at floor height without an extra shelf")
   T.eq(VoxelScene.groundAt(map, 1, 4), 32,
     "and a tree reports its full height, which is what a shadow and a "
       .. "billboard behind it need")
@@ -424,6 +424,25 @@ do
   T.eq(G2.classAt(m,0,0,BROWN,BROWN), "rock", "isolated cave rocks enter the round builder")
   m.cellCollision = function(_,x,y) return y==0 and WALL_C or LAND end
   T.eq(G2.classAt(m,0,0,BROWN,BROWN), "wall", "connected cave walls remain walls")
+end
+
+-- ------- Gen 1 is untouched
+do
+  -- Support is available before Structures or a GPU mesh exists, including
+  -- after a persistent mesh cache hit. The apron stays walkable at y=0.
+  local tiles={{35,34,34,36},{37,21,21,53},{37,21,21,53},{51,50,50,52},
+               {28,64,64,29},{1,1,1,1}}
+  local m=fakeMap({},"INDOOR")
+  m.tileset.id="TILESET_PLAYERS_HOUSE"
+  m.def.width,m.def.height=3,3
+  m.tileAt=function(_,x,y)
+    local row=tiles[y-3]
+    return row and row[x-3] or 1
+  end
+  local shapes={classes=TileShape.forMap(map).classes}
+  T.check(G2.install(shapes,m),"furniture supports install without a mesh")
+  T.eq(shapes.gen2FurnitureSupports[2*4096+2],6,"table lid supports at six pixels before mesh build")
+  T.eq(shapes.gen2FurnitureSupports[4*4096+2],0,"walkable table apron is not an invisible step")
 end
 
 -- ------- Gen 1 is untouched

@@ -969,6 +969,7 @@ function Structures.forMap(map)
   V.require("TowerGarden").prepare(S,map,keyOf)
   V.require("GameCorner").build(S,map)
   Buildings.build(S, map, pixels(tileset), perRow)
+  V.require("Gen2Ledges").build(S,map)
   if tileset.id == "PLATEAU" then
     V.require("FacadeEntrances").build(S, map, pixels(tileset), perRow)
   end
@@ -2279,7 +2280,7 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
             local test377Forest = CommunityVisuals.customForest()
               and tsid == "FOREST"
               and tostring(map.id or "") == "VIRIDIAN_FOREST"
-            local sig = tsid .. "|g32|"
+            local sig = tsid .. (s.class=="boulder" and "|boulder24|" or "|g32|")
                         .. (test377Forest and "test377-forest|"
                             or "battle-art|")
                         .. gsig .. "|" .. table.concat(ids, ":")
@@ -2297,6 +2298,9 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
                 nil, -- taperVox
                 true -- pinBase
               )
+              if s.class=="boulder" then
+                tq=V.require("Gen2Rocks").terrain(S,map,cx*2,cy*2,32,24)
+              end
               if test377Forest then
                 for _, q in ipairs(tq or {}) do
                   for i = 1, 4 do q[i][2] = q[i][2] * 1.18 end
@@ -2369,6 +2373,23 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
           end
           grouped[ckey + 8192] = true
         end
+      elseif s and s.art == "oceanrock" and near then
+        -- Four separate little rocks per collision cell, each carved from
+        -- its own 8px source tile, standing only four pixels out of the sea.
+        for dy=0,1 do for dx=0,1 do
+          local tx,ty=cx*2+dx,cy*2+dy
+          local tk=keyOf(tx,ty)
+          if data then
+            local sig=tsid.."|ocean4|"..tostring(S.tileAt[tk])
+            local tpl=roundCache[sig]
+            if not tpl then
+              local tq=V.require("Gen2Rocks").terrain(S,map,tx,ty,8,4)
+              tpl={quads=tq};roundCache[sig]=tpl
+            end
+            S.roundStamps[#S.roundStamps+1]={quads=tpl.quads,mx=tx*8+4,mz=ty*8+4,r=4}
+          end
+          S.skip[tk],S.ground[tk]=true,20
+        end end
       elseif s and s.art == "cylinder" and near then
         -- a `stump`-class cell is the same hull with a cut face: its
         -- top capRows of drawing project onto the round top. A `can`-class

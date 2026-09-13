@@ -1,12 +1,11 @@
 # Battle Art on Gen 2: what runs, what does not, and why
 
-Battle Art 1.11.0 declares `"games": ["gen1", "gen2"]`. It loads and runs on
+Battle Art 1.13.0 declares `"games": ["gen1", "gen2"]`. It loads and runs on
 Gold, Silver and Crystal, and the diorama draws there.
 
 That is a narrower claim than "the mod works on Gen 2", and the difference is
 the point of this document. 3D-BTL runs there too, but by a second
-implementation that draws the fight over the diorama rather than staging and
-shooting it; the 1ST and 3RD rungs are Gen 1-only by design rather than by
+implementation that stages the fight through the native Gen 2 battle screen; the 1ST and 3RD rungs are Gen 1-only by design rather than by
 omission. Everything below separates what was verified from what is still
 missing.
 
@@ -57,7 +56,8 @@ asks `lib/Generation.lua` first.
 ### 3D-BTL: offered on both, implemented twice
 
 The row runs on Gen 2, by a different implementation rather than a port
-(`lib/Gen2Battle.lua`). What is Gen 1-only is the *staging*.
+(`lib/Gen2Battle.lua`). Gen 2 uses `Gen2Staged` for its own staged camera and sprite composition.
+The legacy Gen 1 staging hooks listed below are not used on Gen 2.
 
 **The Gen 1 rung stages the fight.** It finds clear ground, points an
 over-the-shoulder camera at it, renders the mons as billboards in that 3D

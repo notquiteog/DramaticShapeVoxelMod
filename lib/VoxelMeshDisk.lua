@@ -536,7 +536,7 @@ function Disk.fingerprint(map, slot, masks, kind)
     "trueColor", tileset.trueColor and "1" or "0",
   }
   if type(map.cellCollision) == "function" then
-    parts[#parts + 1] = "gen2-round-fence-cell-fold-v1"
+    parts[#parts + 1] = "gen2-crystal-parity-1.13.0"
   end
   -- PR51 changed shrub vertices/UVs; only Safari needs its meshes rebuilt.
   if map.id=='SAFARI_ZONE_CENTER' or map.id=='SAFARI_ZONE_EAST'

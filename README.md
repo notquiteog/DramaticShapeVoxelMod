@@ -1,10 +1,12 @@
 # Battle Art Voxel Fork
 
+**1.13.0 — Crystal scenery:** round border trees and shorter bushes, six-pixel tables, upright kitchen and lab furniture, thin joined ledges, coastal and live rock models, and transparent battle surrounds/animation clears. [Changes and verification](docs/CRYSTAL_1_13.md).
+
 **TEST137 Tower master and wall finishes:** adds a true **TOWER VISUALS** A/B switch as the first row in **LEGENDARY VISUALS → POKEMON TOWER**. `BATTLE ART` restores the original Tower atlas, wall height, floor, counter, graves and stairs and disables the added fog/details; `LEGENDARY VISUALS` restores the complete Tower conversion. A new **TOWER WALL** row selects the existing dark `SMOKE BLACK` granite or the new 2048px `STORM WHITE` and `PEARL WHITE` reference-matched slabs. TEST137 also closes claimed grave-floor gaps in staged battles so the blue scene void cannot show between monuments. Keep **Grass and Flowers TEST4** and **Battle Cinematics TEST5** as the companion mods. See [TEST137 notes](docs/TEST137.md).
 
 Battle Art Voxel Fork turns the overworld of the [Pokémon Gen 1 Recompilation Project](https://github.com/bryanthaboi/pokemon-gen1-recomp-project) into a 3D voxel diorama and stages battles inside that world. It also provides configurable static and animated battle sprites, arena backdrops, trainer art, first-person exploration, water reflections, lighting, and compatibility hooks for other presentation mods.
 
-Version 1.11.0 supports **Pokémon Red, Blue, Yellow, Gold, Silver and Crystal** on Gen1Recomp `0.1.69` through current pre-2.0 releases. On Gen 2 the diorama, the battle art and 3D-BTL all run; the 1ST and 3RD first-person rungs are Gen 1-only, because free movement has no seam on Gold. Read the [Gen 2 support notes](docs/GEN1_GEN2_DIFFERENCES.md) for exactly what crosses and what does not — it is deliberately specific about the difference.
+Version 1.13.0 supports **Pokémon Red, Blue, Yellow, Gold, Silver and Crystal** on Gen1Recomp `0.1.69` through current pre-2.0 releases. On Gen 2 the diorama, the battle art and 3D-BTL all run; the 1ST and 3RD first-person rungs are Gen 1-only, because free movement has no seam on Gold. Read the [Gen 2 support notes](docs/GEN1_GEN2_DIFFERENCES.md) for exactly what crosses and what does not — it is deliberately specific about the difference.
 
 ## Provenance
 
@@ -16,7 +18,9 @@ belongs upstream; the tile and sprite data the geometry is derived from is
 [pret/pokered](https://github.com/pret/pokered) and
 [pret/pokecrystal](https://github.com/pret/pokecrystal).
 
-**No licence is declared anywhere in that chain**, so no redistribution terms
+Two additional input fixes are adapted from [artyrambles/DRAMALESS_SHAPE](https://github.com/artyrambles/DRAMALESS_SHAPE); its [MIT notice](docs/licenses/DRAMALESS_SHAPE.txt) is retained.
+
+**No licence is declared for the rest of that chain**, so no redistribution terms
 are granted and none are claimed here. This fork exists under GitHub's own
 forking terms. If you are the upstream author and want it taken down or
 licensed differently, open an issue.

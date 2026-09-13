@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.13.0 - Crystal scenery and battle parity
+
+- Model Mom's kitchen appliances, dining table, stools, and Elm's lab furniture as whole drawings. Dining and starter tables stand six pixels high; cabinet fronts fold once onto 12–16px footprints. Starter balls use the modelled table height, including before a mesh build.
+- Carve complete two-cell border trees into round canopies and keep interactive bushes shorter. Build fences through the post-and-rails path.
+- Give Johto retaining lips three-pixel-wide geometry with joined corners; leave the adjacent jump trigger flat.
+- Model large coastal boulders, four-pixel ocean barrier rocks, and live Strength/Rock Smash actors. Gameplay collision and object scripts remain engine-owned.
+- Keep the world visible around Gen 2 battle panels and during attack animations. Restore stock dimming and clearing when the scene override is disabled.
+- Integrate DRAMALESS_SHAPE mouse-release and menu-click fixes while retaining the input.pointer hook and source-owned button presses.
+- Add full-cart Crystal checks, floor-safe camera placement, furniture support/geometry assertions, and rock/ledge geometry regressions.
+
+See [verification and compatibility notes](docs/CRYSTAL_1_13.md).
+
 ## 1.12.2 - Gen 2: one cell, and each town its own roofs
 
 Three faults reported on the cart: "why are bushes 2 high?", "why are trees
