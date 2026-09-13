@@ -261,6 +261,14 @@ function Structures.buildCommunityFence(S, map, postCells)
       sample[name] = { t[2], t[3] }
     end
   end
+  local hdWood = gen2 and CommunityVisuals.crystalHD(map)
+    and V.require("Gen2Materials").woodTile(map)
+  if hdWood then
+    local x,y=(hdWood%perRow)*8,math.floor(hdWood/perRow)*8
+    grainUV={{(x+.5)/atlasW,(y+7.5)/atlasH},{(x+7.5)/atlasW,(y+7.5)/atlasH},
+      {(x+7.5)/atlasW,(y+.5)/atlasH},{(x+.5)/atlasW,(y+.5)/atlasH}}
+    for name in pairs(sample) do sample[name]={(x+4)/atlasW,(y+4)/atlasH} end
+  end
   local quads = S.objectQuads
 
   local function quad(c1, c2, c3, c4, tone, shade, textured)
@@ -269,7 +277,7 @@ function Structures.buildCommunityFence(S, map, postCells)
       c1, c2, c3, c4, u = uv[1], v = uv[2], shade = shade,
       kantoFence = true,
     }
-    if textured and not gen2 then
+    if textured and (not gen2 or hdWood) then
       q.uv = {
         { grainUV[1][1], grainUV[1][2] },
         { grainUV[2][1], grainUV[2][2] },
@@ -323,6 +331,14 @@ function Structures.buildCommunityFence(S, map, postCells)
     -- A compact 4x4 post, deliberately lower and slimmer than the old
     -- 16px standee. The cap rises just above the upper rail.
     box(x - 2, 0, z - 2, x + 2, 13, z + 2)
+    if hdWood then
+      -- Beveled end grain catches light at turns without growing a full
+      -- collision-cell block or extending the rails into a walking lane.
+      local rim={{x-2,13,z-2},{x+2,13,z-2},{x+2,13,z+2},{x-2,13,z+2}}
+      local cap={{x-1.3,14,z-1.3},{x+1.3,14,z-1.3},{x+1.3,14,z+1.3},{x-1.3,14,z+1.3}}
+      for i=1,4 do local j=i%4+1;quad(rim[i],rim[j],cap[j],cap[i],"light",.92,true) end
+      quad(cap[1],cap[2],cap[3],cap[4],"light",1,true)
+    end
 
     -- Emit each connection once. Rails stop at the neighbouring post's
     -- face, so corners and T-junctions meet cleanly without overlapping
@@ -2310,9 +2326,20 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
               roundCache[sig] = tpl
             end
             ground = tpl.bg or false
-            S.roundStamps[#S.roundStamps + 1] =
-              { quads = tpl.quads, mx = cx * 16 + 16, mz = cy * 16 + 16,
-                r = 16 }
+            if s.class == "boulder" then
+              ground = V.require("Gen2Rocks").ground(map,cx,cy)
+            end
+            local stamp = { quads = tpl.quads, mx = cx * 16 + 16, mz = cy * 16 + 16, r = 16 }
+            if s.class == "foresttree" and CommunityVisuals.crystalHD(map) then
+              -- The existing registry owns integer collision cells. Keep the
+              -- southern-left owner; lift 20 selects the wide two-cell crown
+              -- centered eight pixels east/north of that cell in Gen2Trees.
+              stamp.mx,stamp.mz=cx*16+8,(cy+1)*16+8
+              stamp.lift,stamp.baseY=20,roundTemplateBase(tpl)
+              stamp.hideCrown,stamp.keepTree,stamp.communityTree=true,true,true
+              rounds[mapKey][cx.."|"..(cy+1)]=20
+            end
+            S.roundStamps[#S.roundStamps + 1] = stamp
           end
           for dy = 0, 3 do
             for dx = 0, 3 do
@@ -2360,9 +2387,18 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
               roundCache[sig] = tpl
             end
             ground = tpl.bg or false
-            S.roundStamps[#S.roundStamps + 1] =
-              { quads = tpl.quads, mx = cx * 16 + 8,
+            local stamp = { quads = tpl.quads, mx = cx * 16 + 8,
                 mz = (cy + 1) * 16 + 8 }
+            if s.class == "tree" and CommunityVisuals.crystalHD(map) then
+              -- The full drawing owns two cells, but the trunk belongs to
+              -- its southern ground contact. Reuse the budgeted leafy tree
+              -- renderer and its existing shadow/neighbor/battle ownership.
+              local lift = ((cx * 13 + cy * 7) % 3 == 0) and 17 or 10
+              stamp.lift, stamp.baseY = lift, roundTemplateBase(tpl)
+              stamp.hideCrown, stamp.keepTree, stamp.communityTree = true, true, true
+              rounds[mapKey][cx .. "|" .. (cy + 1)] = lift
+            end
+            S.roundStamps[#S.roundStamps + 1] = stamp
           end
           for dy = 0, 3 do
             for dx = 0, 1 do
@@ -2439,6 +2475,9 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
           local tpl = roundCache[sig]
           if not tpl then
             local tq, tbg = roundTemplate(S, map, data, cx, cy, groundTiles, 16, cap, nil, nil, base, tall, well, taper, true)
+            if S.gen2 and s.class == "rock" then
+              tq = V.require("Gen2Rocks").terrain(S,map,cx*2,cy*2,16,14)
+            end
             tpl = { quads = tq, bg = tbg }; roundCache[sig] = tpl
           end
           ground = tpl.bg or false
@@ -2465,6 +2504,17 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
             local mk = map.id or (map.def and map.def.id) or tostring(map)
             reg[mk] = reg[mk] or {}
             reg[mk][cx .. "|" .. cy] = lift
+          end
+          if s.class == "roundtree" and CommunityVisuals.crystalHD(map) then
+            stamp.lift, stamp.baseY = 10, roundTemplateBase(tpl)
+            stamp.hideCrown, stamp.keepTree, stamp.communityTree = true, true, true
+            rounds[mapKey][cx .. "|" .. cy] = 10
+          end
+          if s.class == "bush" and CommunityVisuals.crystalHD(map) then
+            stamp.lift, stamp.baseY = 4, roundTemplateBase(tpl)
+            stamp.hideCrown, stamp.keepTree, stamp.communityTree = true, true, true
+            rounds[mapKey][cx .. "|" .. cy] = 4
+            saplings[mapKey][cx .. "|" .. cy] = true
           end
           if enhancedSapling then
             -- TEST455's proven young-tree handoff, plus the Battle Art-only

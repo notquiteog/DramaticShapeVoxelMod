@@ -60,4 +60,67 @@ local lab = {
   item("crystal_lab_device", {{14,15},{30,31}},16,
     {upright(0,15,0,4,5,15,0,12)}),
 }
-return {TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab}
+-- Common house, shop and Center families are separate vocabularies: identical
+-- numeric tile IDs across tilesets are never treated as the same object.
+local function tableParts(width,depth)
+  return {upright(0,width-1,0,22,23,25,0,depth,3),
+    {kind="upright",x={0,width-1},top={26,26},facade={26,28},z=2,depth=depth-4,
+     supports={fromRow=26,zones={
+       {x={2,4},z={2,4}},{x={width-5,width-3},z={2,4}},
+       {x={2,4},z={depth-5,depth-3}},
+       {x={width-5,width-3},z={depth-5,depth-3}}}}}}
+end
+local commonHouse={
+  item("crystal_house_table",{{38,39,39,41},{54,47,47,57},{5,47,47,21},{60,58,58,59}},1,
+    tableParts(32,28),6),
+  item("crystal_house_bookcase",{{14,15},{14,15},{30,31}},1,
+    {upright(0,15,0,2,3,23,12,12)}),
+  item("crystal_house_tv",{{6,7},{22,23},{30,31}},1,
+    {upright(0,15,0,3,4,23,12,12)}),
+  item("crystal_house_radio",{{12,13},{28,29},{30,31}},1,
+    {upright(0,15,0,3,4,23,12,12)}),
+  house[8], -- same complete stool drawing, including floor and leg zones
+}
+local mart={
+  item("crystal_mart_cooler",{{12,13},{86,87},{88,89},{90,91}},72,
+    {upright(0,15,0,5,6,31,20,12)}),
+  item("crystal_mart_shelf",{{12,13},{80,81},{80,81},{94,95}},72,
+    {upright(0,15,0,5,6,31,20,12)}),
+  item("crystal_mart_display",{{64,65,66,43},{80,81,82,69},{67,68,92,93},{83,84,31,85}},72,
+    {upright(0,31,0,7,8,31,16,16)}),
+  item("crystal_mart_bench",{{38,39},{54,55},{40,41},{56,57}},72,
+    {upright(0,15,0,26,27,31,0,32)},5),
+  item("crystal_mart_counter",{{62,63},{62,63}},72,
+    {upright(0,15,0,11,12,15,0,16,4)},8),
+}
+local center={
+  item("crystal_center_healer",{{28,29,30,31},{44,45,46,47},{60,61,61,63},{76,77,78,79}},17,
+    {upright(0,31,0,7,8,31,16,16)}),
+  item("crystal_center_terminal",{{32,33},{48,49},{64,65}},17,
+    {upright(0,15,0,4,5,23,12,12)}),
+  item("crystal_center_receiver",{{3,37},{19,53},{70,71}},17,
+    {upright(0,15,0,4,5,23,8,16)}),
+  item("crystal_center_seat",{{72,73},{88,89}},17,
+    {upright(1,14,0,10,11,15,1,14)},5),
+  item("crystal_center_counter",{{52,52},{36,36}},17,
+    {upright(0,15,0,7,8,15,0,16)},8),
+  item("crystal_center_counter_ball",{{12,52},{36,36}},17,
+    {upright(0,15,0,7,8,15,0,16)},8),
+  item("crystal_center_counter_balls",{{12,12},{36,36}},17,
+    {upright(0,15,0,7,8,15,0,16)},8),
+  item("crystal_center_bin",{{68,69},{84,85}},17,
+    {upright(1,14,0,3,4,15,2,12)}),
+}
+local bedroom={
+  item("crystal_bedroom_table",{{16,17,17,18},{32,33,33,34},{48,49,49,50}},1,
+    {upright(0,31,0,17,18,20,0,24,3)},6),
+  item("crystal_bedroom_books",{{5,6},{21,22},{37,38},{53,54}},1,
+    {upright(0,15,0,5,6,31,20,12)}),
+  item("crystal_bedroom_pc",{{11,12},{27,28},{43,44}},1,
+    {upright(0,15,0,3,4,23,12,12)}),
+  item("crystal_bed",{{59,60},{75,76},{91,92}},1,
+    {upright(0,15,0,19,20,23,0,24,2)},6),
+}
+return {TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
+  TILESET_HOUSE=commonHouse,TILESET_MART=mart,TILESET_POKECENTER=center,
+  TILESET_PLAYERS_ROOM=bedroom}

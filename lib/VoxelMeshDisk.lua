@@ -536,7 +536,7 @@ function Disk.fingerprint(map, slot, masks, kind)
     "trueColor", tileset.trueColor and "1" or "0",
   }
   if type(map.cellCollision) == "function" then
-    parts[#parts + 1] = "gen2-crystal-parity-1.13.0"
+    parts[#parts + 1] = "gen2-crystal-hd2d-1"
   end
   -- PR51 changed shrub vertices/UVs; only Safari needs its meshes rebuilt.
   if map.id=='SAFARI_ZONE_CENTER' or map.id=='SAFARI_ZONE_EAST'
@@ -548,6 +548,9 @@ function Disk.fingerprint(map, slot, masks, kind)
   -- trees/fences/pillars (or vice versa), while every default remains the
   -- creator's original cache family.
   local CommunityVisuals = V.require("CommunityVisuals")
+  if map and type(map.cellCollision) == "function" then
+    parts[#parts + 1] = CommunityVisuals.crystalStyle:get()
+  end
   -- Final contract: brick courses, bridge boards, crown-lock and the
   -- grain-mapped TEST435 fence must never reuse an older community mesh.
   parts[#parts + 1] = "legendary-visuals-final"

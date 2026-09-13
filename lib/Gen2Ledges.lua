@@ -8,7 +8,7 @@ local edges={
   [76]={s=true},[77]={e=true,s=true},
 }
 function Gen2Ledges.build(S,map)
-  if not S.gen2 or map.tileset.id~="TILESET_JOHTO" then return end
+  if not S.gen2 or (map.tileset.id~="TILESET_JOHTO" and map.tileset.id~="TILESET_JOHTO_MODERN") then return end
   local pr=map.tileset.tilesPerRow or 16
   local aw,ah=map.tileset.imageWidth or 128,map.tileset.imageHeight or 128
   local cells={}

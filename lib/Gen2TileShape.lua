@@ -228,6 +228,10 @@ local function classTable(shapes, outdoors)
                    volume = (outdoors and VOLUME_CLASSES[class]) or nil }
   end
   out.tree.art, out.tree.h = "planter", 32
+  out.foresttree = { class = "foresttree", art = "canopy", h = 40,
+    authored = true, derived = true }
+  out.roundtree = { class = "roundtree", art = "cylinder", h = 28,
+    authored = true, derived = true }
   out.bush = { class = "bush", art = "cylinder", h = 16,
                authored = true, derived = true }
   out.rock = { class = "rock", art = "cylinder", h = 16,
@@ -270,7 +274,8 @@ local OUTDOOR = { TOWN = true, ROUTE = true }
 
 local function outdoor(map)
   local def = map and map.def
-  return def ~= nil and OUTDOOR[def.environment] == true
+  return def ~= nil and (OUTDOOR[def.environment] == true
+    or (map.tileset and map.tileset.id == "TILESET_FOREST"))
 end
 
 -- The class for one CELL.  Collision first -- it is the cart's own answer
@@ -285,7 +290,27 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
 
   local perm = Permissions.of(coll)
 
-  if map.tileset and map.tileset.id == "TILESET_JOHTO" then
+  local tsid=map.tileset and map.tileset.id
+  if perm==Permissions.WALL and (tsid=="TILESET_FOREST" or tsid=="TILESET_PARK") then
+    local grid={{12,13,14,15},{28,29,30,31},{44,45,46,47},{60,61,62,63}}
+    local offsets={["12,13,28,29"]={0,0},["14,15,30,31"]={1,0},
+      ["44,45,60,61"]={0,1},["46,47,62,63"]={1,1}}
+    local off=offsets[table.concat(drawing(map,cx,cy),",")]
+    if off then
+      local whole=true
+      for y=1,4 do for x=1,4 do
+        if map:tileAt((cx-off[1])*2+x-1,(cy-off[2])*2+y-1)~=grid[y][x] then whole=false end
+      end end
+      if whole then return "foresttree" end
+    end
+  end
+  if perm==Permissions.WALL and tsid=="TILESET_KANTO" then
+    local sig=table.concat(drawing(map,cx,cy),",")
+    if sig=="64,65,80,81" then return "roundtree" end
+    if sig=="42,43,58,59" then return "rock" end
+    if sig=="14,14,85,85" then return "fence" end
+  end
+  if map.tileset and (map.tileset.id == "TILESET_JOHTO" or map.tileset.id == "TILESET_JOHTO_MODERN") then
     local ids = drawing(map,cx,cy)
     if ids[1]==88 and ids[2]==88 and ids[3]==88 and ids[4]==88 then
       return "oceanrock"
@@ -374,7 +399,7 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
     -- Johto's grass-topped retaining edge uses these source tiles. The hop
     -- collision is on the plain ground BEFORE this blocked lip, so collision
     -- alone cannot find the visible six-pixel ledge (Route 29).
-    if map.tileset.id == "TILESET_JOHTO" then
+    if (map.tileset.id == "TILESET_JOHTO" or map.tileset.id == "TILESET_JOHTO_MODERN") then
       local edge = { [59]=true, [60]=true, [61]=true, [75]=true, [76]=true, [77]=true }
       local found, compatible = false, true
       for _, id in ipairs(ids) do

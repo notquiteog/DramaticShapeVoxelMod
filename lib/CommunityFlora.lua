@@ -250,6 +250,11 @@ end
 local function isOutdoor(map)
   local def = map and map.def
   if not def then return false end
+  if type(map.cellCollision) == "function" then
+    return (map.tileset and map.tileset.id == "TILESET_FOREST")
+      or def.environment == "TOWN" or def.environment == "ROUTE"
+      or def.environment == "FOREST"
+  end
   local tid = def.tileset or (map.tileset and map.tileset.id)
   if tid and OPEN_AIR_TILESETS[tid] then return true end
   local ok, outdoor = pcall(function()
@@ -1862,6 +1867,7 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
           -- the crown's underside, where a leaf lets go
           (not boulder) and (base + (sapling and 15 or (lift + 3))) or nil }
       local mx, mz = cx * 16 + 8, cy * 16 + 8
+      if type(map.cellCollision) == "function" and lift == 20 then mx,mz=mx+8,mz-8 end
       -- A connected wall is already planted across its full authored footprint;
       -- repeated square boulder shadows underneath would show as dark stepping
       -- stones. Standalone pillars and every tree retain their locked shadows.
@@ -2043,6 +2049,9 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         box(4.55,base+8.78,base+14.55,0.62,0.94,1.02,0.38)
         box(4.82,base+14.55,base+14.81,0.94,0.99,1.045,0.42)
         end
+      elseif type(map.cellCollision) == "function" then
+        tQ, cQ = V.require("Gen2Trees").append(tV,tI,tQ,cV,cI,cQ,
+          mx,base,mz,lift,cx*31+cy*17)
       elseif sapling then
         -- TEST47 CITY-SUPPORTED SAPLING:
         -- The cuttable prop is deliberately NOT the smallest mature tree any
@@ -7385,7 +7394,7 @@ function Flora.drawCommunityTrees(state)
   local map = state and state.map
   if not (map and isOutdoor(map)) then return end
   local visuals = V.require("CommunityVisuals")
-  if not (visuals.customTrees() or visuals.customCutTrees()
+  if not (visuals.crystalHD(map) or visuals.customTrees() or visuals.customCutTrees()
     or (visuals.customForest() and isCanopy(map))) then return end
   local player = state.player
   local px, pz = (player and player.px or 0) + 8, (player and player.py or 0) + 8

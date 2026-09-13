@@ -85,4 +85,26 @@ check(#F.meshes >= start, "test reached a partial graphics upload")
 F.flora.setLive({UNRELATED=true})
 check(not next(F.queue) and F.flora.treeStats().pending == 0, "eviction cancels unfinished work")
 for i=start,#F.meshes do check(F.meshes[i].released == 1, "unfinished GPU resources released exactly once") end
+-- A sandbox may advertise storage but reject a write. Finished meshes must
+-- still publish once; a failed optional cache cannot cause a rebuild loop.
+F.flora.evictTrees()
+local save,load=F.disk.saveTreeParts,F.disk.loadTreeParts
+F.disk.saveTreeParts=function() return false end
+F.disk.loadTreeParts=function() return nil end
+F.flora.requestCommunityTrees(map,{},2,false)
+F.pump()
+check(F.flora.treeStats().maps==1 and F.flora.treeStats().pending==0,
+  "cache write rejection retains the complete GPU owner")
+F.flora.requestCommunityTrees(map,{},2,false)
+check(not next(F.queue),"cache write rejection does not retry finished geometry")
+F.disk.saveTreeParts,F.disk.loadTreeParts=save,load
+F.flora.evictTrees()
+local crystal=F.map("NEW_BARK_TOWN",{["2|2"]=10,["4|4"]=17})
+crystal.def.tileset,crystal.def.environment="TILESET_JOHTO","TOWN"
+crystal.cellCollision=function()return 7 end
+F.flora.requestCommunityTrees(crystal,{},2,false)
+F.pump()
+check(F.flora.treeStats().vertices>0 and F.flora.treeStats().vertices<2500,
+  "dense Crystal trees use bounded volumetric foliage rather than XL crowns")
+F.flora.evictTrees()
 print(checks .. " checks passed (Legendary geometry/cache/ownership/R.DIST)")

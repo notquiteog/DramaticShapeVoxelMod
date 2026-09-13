@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.14.0 - Crystal HD-2D scenery and the common interiors
+
+- Add the CRYSTAL SCENERY options row (HD-2D / SOURCE ART, HD-2D by default). SOURCE ART falls back to the previous Crystal reading; the choice is per session like the other rows.
+- Model the common house, Mart, Pokémon Center and bedroom tilesets as whole drawings: dining and bedroom tables, beds and bookcases, Mart counters, shelves, coolers and benches, the Center's healer, counter, terminals, seats and bins. Identical numeric tile IDs across tilesets stay separate vocabularies -- one tileset's table is never another's.
+- Carve Crystal's dense border trees into compact broadleaf crowns (`Gen2Trees`) and classify forest, park and Kanto tree drawings into their own classes through a whole-drawing source-pixel check, so a lone tree cell never stands in for the four-cell tree.
+- Add render-only materials (`Gen2Materials`): wood grain for fences with beveled post caps that catch light at turns, and grass/leaf variation. Source pixels are never modified; normalized atlas UVs stay valid when the atlas is enlarged.
+- Rocks and boulders sample their neighbours and stand on the shoreline lip next to water; fractured-plane lighting follows each face instead of a stack of latitude bands.
+- Support Modern Johto's retiled ledges (`TILESET_JOHTO_MODERN`) in the lip/corner geometry.
+- Legendary tree cache writes no longer throw when a sandbox rejects them: completed GPU sections publish and the write is skipped instead of destroying good meshes and retrying forever.
+- Add a read-only coverage audit (`tests/gen2_coverage_audit.lua`) that censuses an imported Crystal cache per tileset: authored objects against generic solids.
+
+See [verification and compatibility notes](docs/CRYSTAL_1_13.md) for the 1.13.0 scope this builds on.
+
 ## 1.13.0 - Crystal scenery and battle parity
 
 - Model Mom's kitchen appliances, dining table, stools, and Elm's lab furniture as whole drawings. Dining and starter tables stand six pixels high; cabinet fronts fold once onto 12–16px footprints. Starter balls use the modelled table height, including before a mesh build.

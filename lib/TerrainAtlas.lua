@@ -1609,6 +1609,11 @@ function TerrainAtlas.forMap(map, colors)
   if not base then return nil end
   base, baked = communityAtlas(map, colors, base, baked)
   base, baked = safariGround(map, base, baked)
+  -- Declared animations retain their native frame pipeline. Crystal's static
+  -- atlases can use higher-resolution materials without changing source art.
+  if Generation.isGen2() and not specsFor(map.tileset) then
+    return V.require("Gen2Materials").apply(map,base,baked)
+  end
   return TerrainAtlas.animate(map, colors, base, baked) or base
 end
 
@@ -1717,6 +1722,7 @@ end
 -- per map ever entered, and each pins the engine's own baked ImageData
 -- alive behind it.
 function TerrainAtlas.setLive(live)
+  if Generation.isGen2() then V.require("Gen2Materials").setLive(live) end
   for id,entry in pairs(safariAtlases)do if not live[id]then releaseSafari(entry);safariAtlases[id]=nil end end
   for key, entry in pairs(animated) do
     if entry and entry.mapId and not live[entry.mapId] then
@@ -1732,6 +1738,7 @@ function TerrainAtlas.setLive(live)
 end
 
 function TerrainAtlas.invalidate()
+  if Generation.isGen2() then V.require("Gen2Materials").invalidate() end
   for _,entry in pairs(safariAtlases)do releaseSafari(entry)end
   safariAtlases={}
   cache = {}

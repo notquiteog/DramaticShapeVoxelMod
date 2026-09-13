@@ -8,6 +8,15 @@ local ModSetting = V.require("ModSetting")
 
 local CommunityVisuals = {}
 
+CommunityVisuals.crystalStyle = ModSetting.new(
+  "crystalStyle", "CRYSTAL SCENERY",
+  { "hd2d", "source" }, { "HD-2D", "SOURCE ART" }
+)
+function CommunityVisuals.crystalHD(map)
+  return map and type(map.cellCollision) == "function"
+    and CommunityVisuals.crystalStyle:get() == "hd2d"
+end
+
 local CITY_GROUND_MAPS = {
   LAVENDER_TOWN = true,
   FUCHSIA_CITY = true,
@@ -161,6 +170,7 @@ CommunityVisuals.settings = {
   CommunityVisuals.caves,
   CommunityVisuals.caveDetails,
   CommunityVisuals.caveSound,
+  CommunityVisuals.crystalStyle,
   CommunityVisuals.trees,
   CommunityVisuals.treeDetail,
   CommunityVisuals.cutTrees,

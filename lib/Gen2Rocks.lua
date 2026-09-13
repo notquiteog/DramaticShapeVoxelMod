@@ -3,29 +3,46 @@
 local V=...
 local M={}
 local meshes={}
-function M.geometry(width,height,depth,sample)
+function M.geometry(width,height,depth,sample,seed)
   local out={}
-  local steps,bands=12,7
+  seed=seed or 0
+  local steps,bands=9,5
+  local radii={0,.58,.88,1,.88,.68}
+  local levels={1,.89,.66,.36,.09,0}
   local function point(j,i)
     i=i%steps
-    local t=(j/bands)*math.pi*.72
     local a=i/steps*math.pi*2
-    local radius=math.sin(t)
-    local jitter=1+.045*math.sin(i*7+j*3)
-    return {width*.5*radius*math.cos(a)*jitter,
-      math.max(0,height*(math.cos(t)-math.cos(math.pi*.72))/(1-math.cos(math.pi*.72))),
-      depth*.5*radius*math.sin(a)*jitter}
+    local radius=radii[j+1]*(.94+.06*math.sin(i*7+seed*3))
+    local skew=math.sin(j*2+seed)*.035*(1-radius)
+    local h=levels[j+1]
+    if j>0 and j<bands then h=h+.035*math.sin(i*3+j*7+seed) end
+    return {width*.5*(radius*math.cos(a)+skew),height*h,
+      depth*.5*(radius*math.sin(a)-skew)}
   end
   for j=0,bands-1 do for i=0,steps-1 do
     local a,b,c,d=point(j,i),point(j,i+1),point(j+1,i+1),point(j+1,i)
     local u,v=sample((i+.5)/steps,(j+.5)/bands)
-    out[#out+1]={a,b,c,d,u=u,v=v,shade=.82+.16*(1-j/bands)+.05*math.sin(i/steps*math.pi*2)}
+    -- Light follows each fractured plane, not a stack of latitude bands.
+    local ax,ay,az=b[1]-d[1],b[2]-d[2],b[3]-d[3]
+    local bx,by,bz=c[1]-a[1],c[2]-a[2],c[3]-a[3]
+    local nx,ny,nz=ay*bz-az*by,az*bx-ax*bz,ax*by-ay*bx
+    local norm=math.sqrt(nx*nx+ny*ny+nz*nz)
+    local shade=.76+(norm>0 and .22*math.abs((nx*.35+ny*.8+nz*.48)/norm) or .2)
+    out[#out+1]={a,b,c,d,u=u,v=v,shade=shade}
   end end
   for i=0,steps-1 do
     local u,v=sample((i+.5)/steps,1)
     out[#out+1]={{0,0,0},point(bands,i+1),point(bands,i),{0,0,0},u=u,v=v,shade=.65}
   end
   return out
+end
+function M.ground(map,cx,cy)
+  local Permissions=require("src.world.gen2.Permissions")
+  for y=-1,2 do for x=-1,2 do
+    if (x<0 or y<0 or x>1 or y>1)
+      and Permissions.isWater(map:cellCollision(cx+x,cy+y)) then return 20 end
+  end end
+  return 5
 end
 function M.terrain(S,map,tx,ty,size,height)
   local pr=map.tileset.tilesPerRow or 16

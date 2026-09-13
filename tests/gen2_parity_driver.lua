@@ -35,6 +35,11 @@ return function(game)
     {"ELMS_LAB",4,4}, {"ELMS_LAB",4,9,"ELMS_LAB_entrance"}, {"PLAYERS_HOUSE_1F",3,6},
     {"CHERRYGROVE_POKECENTER_1F",4,4}, {"DARK_CAVE_VIOLET_ENTRANCE",7,15}, {"BLACKTHORN_GYM_2F",5,5},
   }
+  if os.getenv("HD_SCENERY_QA")=="1" then
+    for _,loc in ipairs({{"ILEX_FOREST",10,10},{"NATIONAL_PARK",15,15},
+      {"ROUTE_14",10,10},{"GOLDENROD_CITY",15,15},{"BILLS_FAMILYS_HOUSE",3,5},
+      {"AZALEA_MART",4,4},{"PLAYERS_HOUSE_2F",3,3}}) do shots[#shots+1]=loc end
+  end
   for _, loc in ipairs(shots) do
     assert(game.world:setMap(loc[1],loc[2],loc[3],"down"))
     local Permissions=require("src.world.gen2.Permissions")
@@ -82,7 +87,7 @@ return function(game)
       local tx,ty=cx*2,cy*2
       local s=Shapes.at(map,shapes,map:tileAt(tx,ty),tx,ty)
       counts[s.class]=(counts[s.class] or 0)+1
-      if s.class=="tree" or s.class=="bush" or s.class=="rock" or s.class=="boulder" or s.class=="oceanrock" then
+      if s.class=="foresttree" or s.class=="roundtree" or s.class=="tree" or s.class=="bush" or s.class=="rock" or s.class=="boulder" or s.class=="oceanrock" then
         if not S.skip[key(tx,ty)] then unclaimed=unclaimed+1 end
       elseif s.class=="ledge" then
         assert(s.h==6, "oversized ledge: "..loc[1])

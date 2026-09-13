@@ -38,7 +38,7 @@ local V = { path = "." }
 function V.require(name)
   if mods[name] then return mods[name] end
   if name == "BuildBudget" or name == "VoxelMeshDisk" or name == "LoadTimings"
-    or name == "LegendaryTreeCache" or name == "CommunityFlora" or name == "Mat4" then
+    or name == "Gen2Trees" or name == "LegendaryTreeCache" or name == "CommunityFlora" or name == "Mat4" then
     mods[name] = assert(loadfile("lib/" .. name .. ".lua"))(V)
     if name == "LegendaryTreeCache" then
       local create = mods[name].new
@@ -50,6 +50,7 @@ function V.require(name)
 end
 mods.CacheTrace = { log = function(event, id, detail) F.events[#F.events + 1] = { event, id, detail } end }
 mods.CommunityVisuals = {
+  crystalHD = function(map) return map and map.cellCollision ~= nil end,
   customTrees = function() return true end, customCutTrees = function() return true end,
   customForest = function() return false end, fullTreeDetail = function() return F.mode == "full" end,
   treeDetailLevel = function() return F.mode end,
@@ -67,6 +68,7 @@ function mods.Voxel3D.newMesh(vertices, indices)
   return love.graphics.newMesh({}, #indices)
 end
 function mods.Voxel3D.draw(mesh) F.draws[#F.draws + 1] = mesh end
+mods.Voxel3D.drawFoliage = mods.Voxel3D.draw
 mods.ChunkMesher = {}
 function mods.ChunkMesher.requestWork(map, name, signature, priority, work, cancel)
   local key = map.id .. ":" .. name

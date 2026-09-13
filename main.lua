@@ -776,6 +776,9 @@ local SETTINGS = {
     "FULL retains the approved foliage. BALANCED and HANDHELD remove decorative "
     .. "shells, keep near crossed-card silhouettes, and thin distant bunches. "
     .. "Tree positions and sizes stay fixed; R.DIST bounds neighbor work.", full = true },
+  { CommunityVisuals.crystalStyle,
+    "Layered trees and natural scenery for Crystal. SOURCE ART restores the "
+    .. "source-carved scenery. Characters remain crisp 2D sprites.", full = true },
   { CommunityVisuals.trees,
     "Choose Battle Art's authored round trees or the finalized Legendary Visuals "
     .. "small, medium, large and mature XL tree family. LEGENDARY FAST uses "
@@ -1214,7 +1217,7 @@ local LEGENDARY_CATEGORIES = {
   } },
   { id = "legendary_nature", label = "GRASS & TREES", settings = {
     CommunityVisuals.grass,
-    CommunityVisuals.trees, CommunityVisuals.treeDetail,
+    CommunityVisuals.crystalStyle, CommunityVisuals.trees, CommunityVisuals.treeDetail,
     CommunityVisuals.forest, ForestAtmos.setting,
   } },
   { id = "legendary_structures", label = "ROADS & STRUCTURES", settings = {

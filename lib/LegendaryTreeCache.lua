@@ -123,7 +123,10 @@ function Cache.new(M)
         index.cells = ctx.cells
         if Disk.available() then
           if not wrote or not Disk.saveTreeParts(target, recipe, indexKey, index, Budget.check) then
-            error("Legendary section cache write failed for " .. id)
+            -- Storage is optional. The completed GPU sections already belong
+            -- to this job; publish them even when a sandbox rejects caching.
+            -- Throwing here destroyed good meshes and retried forever.
+            Trace.log("tree-cache-write-skipped", id, "retaining completed GPU sections")
           end
         end
         cached = index
@@ -148,7 +151,7 @@ function Cache.new(M)
   end
   function self:request(map, masks, priority, bodyOnly, onlySapling)
     if not map or not map.id then return end
-    if not (Visuals.customTrees() or Visuals.customCutTrees() or Visuals.customForest()) then return end
+    if not (Visuals.crystalHD(map) or Visuals.customTrees() or Visuals.customCutTrees() or Visuals.customForest()) then return end
     local ok, static = pcall(V.require, "StaticGeometry")
     local data = ok and static.data and static.data()
     if data then masks = V.require("VoxelPrecache").masksFor(data, map.id) end
