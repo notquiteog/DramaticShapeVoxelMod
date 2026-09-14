@@ -1,6 +1,14 @@
 # Working checkpoint — scenery + reproduced glitchmon — 2026-09-14
 
-Candidates BA1.19.0, Online+0.5.4, cart1.11.0 (publication pending).
+Published BA1.19.0, Online+0.5.5 and cart1.11.0.
+Cart source bc51249d04b1e8f49c661a01a1ec6b32e2d5e03b, release v1.11.0.
+BA runtime b3d16b195062c175e6ec83631b121457622329db; ZIP SHA256
+342e552d1c1287ba4e8d0503a8d1c4a7e406a067bdefd15008d3f2fd096c7b35.
+Online+ eb06b95d9124ae691622fde3a390592c8e5a5405; ZIP SHA256
+ad5c22f4a848ba074fca75a8e37132beb8e84209b88a7e742b0e7a7d92844074.
+0.5.5 normalizes numeric Crystal time-of-day IDs for standalone offline
+encounters (0/1/2/3 -> morning/day/night/night); pure roster tests pass.
+The cart delegates offline encounters to Wilds. No BA runtime change after1.19.0.
 BA: actual crystal_center_healer now horizontal (Elm's earlier separate recipe
 was already fixed); PokéCom healer uses bed recipe. Native sign components share
 their ground baseline and a shallow backing joins the cap. Capped roof courses,
@@ -45,7 +53,27 @@ CRITICAL QA CORRECTIONS:
 - Support: from engine cwd, DS_MOD_PATH=mods/BATTLE_ART_VOXEL_FORK luajit
   /home/admin/Projects/DramaticShapeVoxelMod/tests/gen2_support_test.lua.
 
-Remaining: final packaging/publication + pins; exact Gamma parity, broader
+Final 13-pin source/index equality and online cart pack pass; cart SHA256
+a0f271d699f43878d1bcad901163f74a3e85c2bce0e12ec416bb37186edbde82.
+Packaged native camera-key test with core.update enabled passes all angle
+levels, first-person activation, saved choice and menu blocking in
+/tmp/johto-hd/cart-camera-diag.log. An earlier failure was a queued text/menu
+screen in the copied profile, correctly blocking the hotkey. QA drivers now
+clear initial mod greeting/UI after settling before entering free roam; their
+explicit menu gating assertion remains. No camera runtime regression found.
+
+Final exact packaged 13-mod cart + normal update hooks: 40 views PASS in
+/tmp/johto-hd/cart-camera-scenery-final.log; screenshots in matching directory,
+reviewed outdoor/indoor contact sheets. Driver reached final PASS; the launcher
+was ended by its timeout during shutdown (not a clean-exit claim). Initial
+visual fixture failure was a queued text screen; clearing it after scene settle
+fixes the fixture, without changing production menu behavior.
+All three towns PASS with Online+0.5.5 in cart-1.11.0-final-055.log: no duplicate
+Online actors, one follower, ambient retained. Exact pinned archives installed
+ONLY in johto-appimage-qa; user profile and live game untouched.
+The camera fixture updates after runtime1.19.0 are QA-only and are not in that ZIP.
+
+Remaining: exact Gamma parity, broader
 map/texture polish and hardware performance are not claimed complete.
 
 # Published checkpoint — cart1.10.0 / camera3 restored — 2026-09-14

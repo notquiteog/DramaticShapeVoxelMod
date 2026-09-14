@@ -8,6 +8,9 @@ return function(game)
  game.world.rollEncounter=function()return nil end
  assert(game.world:setMap('NEW_BARK_TOWN',7,5,'down'))
  U.wait(120)
+ -- A copied AppImage save can leave its load/menu screen on the stack.
+ -- Begin in free roam; the explicit menu-blocking check is below.
+ game.stack:clear()
  P.setLevel('voxel',1)
  assert(P.maxLevel('voxel')==7,'first/third person unavailable')
  for _,level in ipairs({4,5,6,7,0,2,3,4}) do

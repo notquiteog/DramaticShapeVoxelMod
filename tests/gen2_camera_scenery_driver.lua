@@ -19,6 +19,9 @@ return function(game)
   P.setLevel('voxel',3);U.wait(150)
   for _=1,2400 do if M.pending()==0 and S.ready then break end U.wait(1) end
   assert(M.pending()==0 and S.ready,'scene did not settle')
+  -- Boot companions may enqueue a greeting after the map has loaded. This
+  -- is a scenery fixture; the separate keyboard driver checks modal gating.
+  game.stack:clear()
   for _,level in ipairs({6,7}) do
    P.setLevel('voxel',level);U.wait(45)
    assert(F.engaged() and F.driving(),'first/third-person camera did not accept input')
