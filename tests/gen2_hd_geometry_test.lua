@@ -5,7 +5,7 @@ local Mat4=assert(loadfile('lib/Mat4.lua'))()
 local checks=0
 local function check(ok,msg) checks=checks+1;assert(ok,msg) end
 local families={}
-for seed=0,2 do
+for seed=0,23 do
   families[Trees.family(seed,10)]=true
   local tv,ti,cv,ci,dv,di={},{},{},{},{},{}
   Trees.append(tv,ti,0,cv,ci,0,0,0,0,10,seed,dv,di,0)

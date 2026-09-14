@@ -1435,12 +1435,18 @@ function MOUND.shadowImg()
 end
 
 function MOUND.leafyImg()
-  if V.require("Generation").isGen2() and V.mod and V.mod.read then
-    return MOUND.detailImg()
-  end
   local T = MOUND.TRUNK
   if T.limg ~= nil then return T.limg or nil end
   local ok, img = pcall(function()
+    if V.require("Generation").isGen2() and V.mod and V.mod.read then
+      local bytes = assert(V.mod:read("assets/crystal/foliage-clusters.png"))
+      local file = love.filesystem.newFileData(bytes, "foliage-clusters.png")
+      local image = love.graphics.newImage(file, {mipmaps=true})
+      file:release()
+      image:setFilter("nearest", "nearest")
+      image:setMipmapFilter("linear")
+      return image
+    end
     local W, H = 16, 16
     local data = love.image.newImageData(W, H)
     -- TEST242: richer forest palette for buried crown mass.  Dark pockets
@@ -1483,10 +1489,10 @@ function MOUND.detailImg()
   if T.dimg ~= nil then return T.dimg or nil end
   local ok, img = pcall(function()
     if V.require("Generation").isGen2() and V.mod and V.mod.read then
-      local bytes = assert(V.mod:read("assets/crystal/foliage-clusters.png"))
-      local file = love.filesystem.newFileData(bytes, "foliage-clusters.png")
-      -- The original atlas has far more leaf detail than a distant border can
-      -- display. Mip levels prevent that detail flickering into yellow noise.
+      local bytes = assert(V.mod:read("assets/crystal/foliage-sprays-v2.png"))
+      local file = love.filesystem.newFileData(bytes, "foliage-sprays-v2.png")
+      -- Larger individual leaves define the outer silhouette. Mip levels
+      -- keep their edges stable in distant borders.
       local image = love.graphics.newImage(file, {mipmaps=true})
       file:release()
       image:setFilter("nearest", "nearest")

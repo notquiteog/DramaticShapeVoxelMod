@@ -892,6 +892,8 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
     if S.gen2 and not to and CommunityVisuals.crystalHD(map) then
       V.require("Gen2GroundEdges").append(map,x0,z0,h,tile,push,uvRect,
         aoShades(x0/8,z0/8,h,shade))
+      V.require("Gen2GroundCover").append(map,x0,z0,h,tile,push,uvRect,
+        aoShades(x0/8,z0/8,h,shade))
     end
   end
 
@@ -2818,10 +2820,23 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
             seY = math.max(run.h, hS - 8)
             neY = math.max(run.h, hN - 8)
           end
+          if S.gen2 then
+            local c=V.require("Gen2RoofShell").corners(run,tx,ty,heightAt)
+            swY,seY,neY,nwY=c[1],c[2],c[3],c[4]
+          end
           local u0, u1, v0, v1 = uvRect(roofTile, 0, 8)
           push({ { x0, swY, z0 + 8 }, { x0 + 8, seY, z0 + 8 },
                  { x0 + 8, neY, z0 }, { x0, nwY, z0 } },
                { { u0, v1 }, { u1, v1 }, { u1, v0 }, { u0, v0 } }, 0.95)
+          if S.gen2 then
+            local wallTile=map:tileAt(tx,math.min(run.front,run.north+run.roofRows))
+            if map.tileset.id=="TILESET_JOHTO" or map.tileset.id=="TILESET_JOHTO_MODERN" then
+              wallTile=27
+            end
+            V.require("Gen2RoofShell").append(run,tx,ty,{swY,seY,neY,nwY},
+              function(nx,ny)return S.runs[keyOf(nx,ny)] end,
+              heightAt,push,uvRect,wallTile)
+          end
         elseif run then
           local topTile = s.topTile
             or map:tileAt(tx, ChunkMesher.flatTopRow(run, ty))
@@ -3005,6 +3020,13 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
                                                   run.front - band))
                   end
                   if d == 5 then shade = 1 end
+                  -- Crystal's source only paints the front. Folding roof
+                  -- rows onto the rear and corner trim across every flank
+                  -- produces green rear walls and striped side walls.
+                  if S.gen2 and run.rise>0 and d~=5
+                      and (tileset.id=="TILESET_JOHTO" or tileset.id=="TILESET_JOHTO_MODERN") then
+                    src=band==0 and 2 or 27
+                  end
                 elseif s.art == "upright" then
                   -- profile-authored upright (a pinned wall or furniture
                   -- box): fold the drawing up the face, band 0 the

@@ -1,3 +1,15 @@
+## 1.16.0 — 2026-09-13
+
+Crystal HD-2D scenery pass: original large-leaf sprays over smaller inner crowns,
+non-repeating broadleaf/conifer/spreading selection, sparse low meadow blades,
+and softer sun edges with cool skylight in shadow. Correct Johto plaster to the
+actual wall tile; retain terrain tile 50, add warm timber and blue-gray windows.
+Seal pitched roof sides from facade to roof edge, including differing adjacent
+roof sections. Johto roofed buildings use plaster on rear/flank walls instead
+of folding roof art and repeating corner trim. Mesh revision 43 refreshes the changed foliage and ground geometry. Source maps,
+collision and Gen 1 rendering paths remain intact. This is an incremental pass;
+full Gamma Emerald parity, complete prop coverage and hardware QA remain open.
+
 ## 1.15.3 — 2026-09-13
 
 Preserve the native Crystal back-sprite orientation instead of applying the Gen 1 front-pic mirror. Widen the Crystal staged camera, with additional field of view at widescreen aspect ratios; external cinematic cameras retain ownership. Verified two Sentret and correctly facing Cyndaquil at 2560x1440.

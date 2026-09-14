@@ -1,3 +1,29 @@
+# Scenery and roof-shell pass — 2026-09-13
+
+Battle Art 1.16.0 candidate: original RGBA foliage-sprays-v2.png with prompt and
+built-in generation provenance beside it. Larger outer sprays, smaller inner
+crowns and hashed species choice; sparse bounded meadow cover. Crystal HD
+sunlight uses a nine-tap tent filter and cool shadow fill, with Gen 1/source
+lighting branch preserved. Corrected plaster tile 50 ->27 after native New Bark
+map inspection; tile50 is terrain. Blue-gray windows and warm timber retain
+source silhouettes. User reported roof holes: pitched tops had no side closure
+above run.h. Gen2RoofShell now shares corner profiles with the mesher, closes
+exposed gables and differing adjacent heights; shared interior faces omitted.
+Johto roofed flanks/rears now use wall art instead of folded roof rows.
+Mesh cache revision43. Geometry, collision and native map data remain separate.
+
+Actual software-GPU checks: 16-map/19-view scenery pass at
+/tmp/johto-hd/roof-final.log, including east/west/rear roof views;
+previous art pass /tmp/johto-hd/parity-final.
+Native 1440p doubles damage, paired rendering, survivor promotion and party
+ownership PASS at /tmp/johto-hd/parity-battle-2k.log (before roof-only change).
+Pure roof/ground bounds and exclusions, scenery9, HD60, tree108, support181,
+item balls, bin/bed, staged pair and Lua syntax pass. Known Online+ map_scripts
+incompatibility remains recorded; not a zero-warning boot. No Android hardware
+verification. Complete prop coverage, better encounter-grass art, architecture
+geometry, caves and exact Gamma Emerald parity remain open. Do not claim full
+parity based on this incremental scenery release.
+
 # Release checkpoint — cart 1.7.0 — 2026-09-13
 
 Final pushed pins: Battle Art 1.15.3 (35c7fad), Double Battles 0.9.1

@@ -166,6 +166,7 @@ local SHADER = [[
   uniform float sunDark;      // how far into black a shadow goes; 0 = off
   uniform float sunBias;
   uniform vec2 sunTexel;
+  uniform float crystalLight;
   uniform Image modelSunMap;
   uniform float modelSunDark;
   uniform float modelSunBias;
@@ -195,7 +196,19 @@ local SHADER = [[
     vec2 e = min(p.xy, 1.0 - p.xy);
     float edge = smoothstep(0.0, 0.06, min(e.x, e.y));
     if (edge <= 0.0) return 1.0;
-    float z = p.z - sunBias;
+    float z = p.z - sunBias * (1.0 + crystalLight * 0.7);
+    if (crystalLight > 0.5) {
+      // A compact tent filter softens the sun's edge while keeping a dark
+      // contact centre. No screen-space blur touches the sprites or UI.
+      float sum = 0.0;
+      for (int y = -1; y <= 1; y++) {
+        for (int x = -1; x <= 1; x++) {
+          float weight = (x == 0 ? 2.0 : 1.0) * (y == 0 ? 2.0 : 1.0);
+          sum += weight * step(z, sunDepth(p.xy + sunTexel * vec2(float(x), float(y))));
+        }
+      }
+      return 1.0 - sunDark * edge * (1.0 - sum / 16.0);
+    }
     float lit = step(z, sunDepth(p.xy + sunTexel * vec2(-0.5, -0.5)))
               + step(z, sunDepth(p.xy + sunTexel * vec2( 0.5, -0.5)))
               + step(z, sunDepth(p.xy + sunTexel * vec2(-0.5,  0.5)))
@@ -342,7 +355,12 @@ local SHADER = [[
 #endif
     // the hour's tint multiplies like the sun terms do: it is LIGHT, the
     // same warm or moonlit cast on every surface, not a palette swap
-    vec3 litRgb = p.rgb * vShade * sunlight(vSun)
+    float sun = sunlight(vSun);
+    // Cool skylight remains in the shade; a shadow need not erase the
+    // material colour. Day/night tint still applies to the complete result.
+    vec3 sunFill = mix(vec3(sun), vec3(sun) + (1.0-sun)*vec3(0.20,0.30,0.40), crystalLight);
+    float faceLight = mix(vShade, max(vShade, 0.64), crystalLight);
+    vec3 litRgb = p.rgb * faceLight * sunFill
                 * modelSunlight(vModelSun) * dayTint;
     vec3 rgb = litRgb;
     if (streetLampOn > 0.001) {
@@ -1052,6 +1070,11 @@ function Voxel3D.beginScene(w, h, cx, cy, vw, vh, sky, slot, modelShadow, borrow
   local tex = ShadowMap.texture()
   if tex then pcall(sh.send, sh, "sunMap", tex) end
   pcall(sh.send, sh, "sunDark", map and Voxel3D.SHADOW_ALPHA or 0)
+  local hdOK,hd=pcall(function()
+    local game=require("src.core.Game")
+    return game.world and V.require("CommunityVisuals").crystalHD(game.world.map)
+  end)
+  pcall(sh.send,sh,"crystalLight",hdOK and hd and 1 or 0)
   pcall(sh.send, sh, "sunBias", ShadowMap.bias)
   local texel = 1 / ShadowMap.res
   pcall(sh.send, sh, "sunTexel", { texel, texel })

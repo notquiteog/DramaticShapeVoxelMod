@@ -23,11 +23,12 @@ map.tileset.id='TILESET_LAB';Edges.append(map,0,0,0,6,emit,uv,1)
 map.tileset.id='OVERWORLD';Edges.append(map,0,0,0,6,emit,uv,1)
 assert(count==8,'water, raised surfaces, interiors and Gen 1 must be untouched')
 assert(Materials.architectureKind('TILESET_JOHTO',14)=='roof')
-assert(Materials.architectureKind('TILESET_JOHTO',50)=='plaster')
+assert(Materials.architectureKind('TILESET_JOHTO',27)=='plaster')
+assert(Materials.architectureKind('TILESET_JOHTO',50)==nil,'terrain tile is not plaster')
 assert(Materials.architectureKind('TILESET_LAB',6)=='furnitureWood')
 assert(Materials.architectureKind('TILESET_LAB',14)==nil,'bin art is not roofing')
 assert(Materials.architectureKind('OVERWORLD',14)==nil,'Gen 1 keeps its own art')
-for _,kind in ipairs({'roof','plaster','furnitureWood'}) do
+for _,kind in ipairs({'roof','plaster','furnitureWood','window','timberTrim','wallBase'}) do
   for y=0,31 do for x=0,31 do
     local r,g,b=Materials.color(kind,x,y,.6,.5,.2,1)
     assert(r>=0 and r<=1 and g>=0 and g<=1 and b>=0 and b<=1)

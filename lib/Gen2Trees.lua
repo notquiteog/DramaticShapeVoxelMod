@@ -3,7 +3,7 @@
 local Trees = {}
 function Trees.family(seed,lift)
   if lift<=4 then return "shrub" end
-  return ({"broadleaf","conifer","spreading"})[seed%3+1]
+  return ({"broadleaf","conifer","spreading"})[math.floor((math.sin(seed*12.9898+19.19)*43758.5453)%1*3)+1]
 end
 function Trees.append(tv,ti,tq,cv,ci,cq,x,y,z,lift,seed,dv,di,dq)
   local family=Trees.family(seed,lift)
@@ -99,7 +99,7 @@ function Trees.append(tv,ti,tq,cv,ci,cq,x,y,z,lift,seed,dv,di,dq)
       rs[j+1]={}
       for i=0,5 do
         local a=i*math.pi/3+angle+l*.43
-        local r=rx*radii[j+1]*(.93+.07*math.sin(i*9+l*3+seed))
+        local r=rx*.72*radii[j+1]*(.93+.07*math.sin(i*9+l*3+seed))
         rs[j+1][i+1]={cx+math.cos(a)*r,cy+ry*ys[j+1],cz+math.sin(a)*r*.91}
       end
     end
@@ -116,7 +116,7 @@ function Trees.append(tv,ti,tq,cv,ci,cq,x,y,z,lift,seed,dv,di,dq)
         local a=j*math.pi/4+angle+l*.31
         local ly=cy+ry*(j%2==0 and .33 or -.03)
         local lx,lz=cx+math.cos(a)*rx*.86,cz+math.sin(a)*rx*.79
-        local size=(bush and 2.2 or 3.3)*(family=="conifer" and .9 or 1)*(.85+variation(j+l*8)*.3)
+        local size=(bush and 2.8 or 4.4)*(family=="conifer" and .9 or 1)*(.85+variation(j+l*8)*.3)
         for plane=0,2 do
           local pa=a+plane*math.pi/3
           local ux,uz=math.cos(pa)*size,math.sin(pa)*size

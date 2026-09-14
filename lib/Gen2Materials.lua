@@ -20,7 +20,12 @@ local labWood={[3]=true,[4]=true,[5]=true,[6]=true,[7]=true,
 function M.architectureKind(id,tile)
   if id=="TILESET_JOHTO" or id=="TILESET_JOHTO_MODERN" then
     if tile>=13 and tile<=18 then return "roof" end
-    if tile==50 then return "plaster" end
+    if tile==27 then return "plaster" end
+    if tile==2 then return "wallBase" end
+    if tile==38 then return "window" end
+    if tile==1 or tile==22 or tile==26 or tile==28 or (tile>=55 and tile<=58) then
+      return "timberTrim"
+    end
   elseif id=="TILESET_LAB" and labWood[tile] then return "furnitureWood" end
 end
 function M.woodTile(map)
@@ -82,6 +87,22 @@ function M.color(kind,x,y,r,g,b,light)
   elseif kind=="plaster" then
     local v=grain*.024
     return .76+v,.73+v,.64+v
+  elseif kind=="wallBase" then
+    if y<12 then return M.color("plaster",x,y,r,g,b,light) end
+    local v=(y==12 or y==27) and -.06 or grain*.016
+    return .34+v,.29+v,.21+v
+  elseif kind=="window" then
+    local edge=math.min(x,y,31-x,31-y)
+    if edge<3 then return .18,.16,.12 end
+    if edge<5 or (x>=14 and x<=17) then return .43,.33,.22 end
+    local glow=(1-y/31)*.08
+    local reflection=(x+y)%27<3 and .09 or 0
+    return .30+glow+reflection,.46+glow+reflection,.49+glow+reflection
+  elseif kind=="timberTrim" then
+    if r>b*1.25 and g>b*1.15 then
+      local v=math.sin(x*1.1+math.sin(y*.3))*.02+grain*.012
+      return .39+v,.29+v,.18+v
+    end
   elseif kind=="furnitureWood" then
     -- Recolour only the wood's ochre fill. Books, machine components and
     -- the source trim remain readable and retain their original outlines.

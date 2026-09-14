@@ -11,6 +11,15 @@ return function(game)
   local Shapes, Structures = V.require("TileShape"), V.require("Structures")
   local Mesher, Voxel = V.require("ChunkMesher"), V.require("VoxelState")
   local dir = assert(os.getenv("SHOT_DIR"), "SHOT_DIR required")
+  local roofShell=V.require("Gen2RoofShell")
+  local appendRoof=roofShell.append
+  local roofPanels=0
+  roofShell.append=function(run,tx,ty,c,runAt,heightAt,emit,uv,tile)
+    return appendRoof(run,tx,ty,c,runAt,heightAt,function(vertices,tex,shade)
+      roofPanels=roofPanels+1
+      return emit(vertices,tex,shade)
+    end,uv,tile)
+  end
   local rocks=V.require("Gen2Rocks")
   local drawRock=rocks.draw
   local liveRocks={}
@@ -123,10 +132,27 @@ return function(game)
       assert(V.require("DepthOfField").lastApplied,"depth-of-field shader did not run")
       assert(U.shot(game,dir.."/NEW_BARK_depth_of_field.png"))
       P.setLevel("depth_of_field",0)
+      if os.getenv("ROOF_SHELL_QA")=="1" then
+        local renderer=V.require("Voxel3D")
+        local project=renderer.viewProjection
+        for _,view in ipairs({{"east",{310,150,150}},
+            {"west",{-86,150,150}},{"rear",{112,150,-180}}}) do
+          renderer.viewProjection=function(...)
+            renderer.camera={eye=view[2],focus={112,30,32},fov=.7}
+            return project(...)
+          end
+          U.wait(4)
+          assert(U.shot(game,dir.."/NEW_BARK_roof_"..view[1]..".png"))
+        end
+        renderer.viewProjection=project
+        renderer.camera=nil
+      end
     end
   end
   checkLoader()
   assert(liveRocks.SPRITE_ROCK and liveRocks.SPRITE_BOULDER,"live rock actors did not render as models")
   rocks.draw=drawRock
+  roofShell.append=appendRoof
+  assert(roofPanels>0,"no roof side panels reached the mesher")
   print("[parity] PASS: installed companion set loaded; round ownership and ledge height verified")
 end
