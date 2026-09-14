@@ -2,6 +2,7 @@
 -- occlude actors. No opaque voxel canopy remains in this presentation.
 local M={}
 function M.append(v,indices,q,x,y,z,lift,seed,family)
+  local first=#v+1
   local bush=lift<=4
   local shrub=lift==3
   local h=bush and 13 or (lift==20 and 42 or 34)
@@ -90,6 +91,7 @@ function M.append(v,indices,q,x,y,z,lift,seed,family)
     for _,i in ipairs({1,2,3,1,3,4}) do indices[#indices+1]=k+i end
     q=q+1
   end end
+  for i=first,#v do v[i][7],v[i][8],v[i][9]=x,z,1 end
   return q
 end
 return M

@@ -71,6 +71,11 @@ Voxel3D.FACE_SHADE = {
   [6] = 0.68,   -- -Z north (away)
 }
 
+Voxel3D.TREE_FORMAT = {
+  Voxel3D.FORMAT[1],Voxel3D.FORMAT[2],Voxel3D.FORMAT[3],
+  {"VertexCanopy","float",3},
+}
+local battleCutScope
 local SHADER = [[
   varying float weatherDistance;
   varying float vShade;
@@ -87,6 +92,7 @@ local SHADER = [[
   varying LOVE_HIGHP_OR_MEDIUMP vec3 vGrid;
 #endif
 #ifdef VERTEX
+]] .. V.require("CanopyBillboard").shader .. [[
   uniform mat4 vp;
   uniform mat4 model;
   uniform mat4 sunModel;      // where the SUN sees this vertex (see below)
@@ -106,7 +112,7 @@ local SHADER = [[
     // posed rather than the world's grid sliding across a leaning sprite
     vGrid = vertex_position.xyz;
 #endif
-    vec4 w = model * vertex_position;
+    vec4 w = faceCanopy(model,vertex_position,eye);
     vFoliageRay = w.xyz - eye;
     weatherDistance = max(0.0, length(w.xyz-eye)-300.0);
     // All four vertices of a marked facade lie on one Z plane, so this is
@@ -123,7 +129,7 @@ local SHADER = [[
     // with the card's position asks the question the sun actually
     // answered. (The pull below is excluded for the same reason: it is a
     // depth trick aimed at the camera's own buffer.)
-    vSun = (sunVP * (sunModel * vertex_position)).xyz;
+    vSun = (sunVP * faceCanopy(sunModel,vertex_position,eye)).xyz;
     // Stadium owns and completes its live model shadow map before requesting
     // our environment. Translate this map-world receiver into Stadium's
     // arena-local coordinates and sample that finished map as a second light
@@ -320,7 +326,10 @@ local SHADER = [[
     float b = 2.0 * hi.x + 3.0 * hi.y - 4.0 * hi.x * hi.y;
     return (4.0 * a + b + 0.5) / 16.0;
   }
+]] .. V.require("BattleOcclusion").shader .. [[
   vec4 effect(vec4 color, Image tex, vec2 tc, vec2 sc) {
+    if (battleCutOn > 0.5 && vFoliageRay.y > battleCutFloor
+        && (battleBlocked(vFoliageRay,battleCutA) || battleBlocked(vFoliageRay,battleCutB))) discard;
     if (foliageCutOn > 0.5) {
       float opening = max(foliageOpening(vFoliageRay, foliageTargetA),
                           foliageOpening(vFoliageRay, foliageTargetB));
@@ -626,9 +635,13 @@ end
 -- Build a mesh in the shared format. `verts` is the LOVE vertex list and
 -- `map` the triangle index list. Returns nil when meshes are unavailable,
 -- which the callers treat the same way they treat a missing model.
-function Voxel3D.newMesh(verts, map)
+function Voxel3D.newMesh(verts, map, format)
   if #verts == 0 then return nil end
-  local ok, mesh = pcall(love.graphics.newMesh, Voxel3D.FORMAT, verts,
+  if not format and verts[1][9] then format=Voxel3D.TREE_FORMAT end
+  if format==Voxel3D.TREE_FORMAT then
+    for _,v in ipairs(verts) do v[7],v[8],v[9]=v[7] or 0,v[8] or 0,v[9] or 0 end
+  end
+  local ok, mesh = pcall(love.graphics.newMesh, format or Voxel3D.FORMAT, verts,
                          "triangles", "static")
   if not ok then return nil end
   if map and #map > 0 then pcall(mesh.setVertexMap, mesh, map) end
@@ -1163,6 +1176,8 @@ function Voxel3D.beginScene(w, h, cx, cy, vw, vh, sky, slot, modelShadow, borrow
   Voxel3D.focusW = m[13] * cx + m[14] * 0 + m[15] * cy + m[16]
   sceneShader = sh
   activeShader = sh
+  battleCutScope=nil
+  pcall(sh.send, sh, "battleCutOn", 0)
   pcall(sh.send, sh, "foliageCutOn", 0)
   active = true
   return true
@@ -1581,12 +1596,22 @@ function Voxel3D.draw(mesh, texture, model, pull, sunModel)
   -- sending a uniform to the other shader would go nowhere
   local sh = activeShader
   if not sh then return end
+  pcall(sh.send,sh,"battleCutOn",battleCutScope and 1 or 0)
+  if battleCutScope then
+    pcall(sh.send,sh,"battleCutFloor",battleCutScope.floor)
+    pcall(sh.send,sh,"battleCutA",battleCutScope[1])
+    pcall(sh.send,sh,"battleCutB",battleCutScope[2])
+  end
   if texture then mesh:setTexture(texture) end
   -- LOVE defaults matrix uniforms to column-major; Mat4 is row-major
   pcall(sh.send, sh, "model", "row", model or IDENTITY)
   pcall(sh.send, sh, "sunModel", "row", sunModel or model or IDENTITY)
   pcall(sh.send, sh, "pull", pull or 0)
   love.graphics.draw(mesh)
+end
+
+function Voxel3D.battleOcclusion(arena,ground,textures)
+  battleCutScope=V.require("BattleOcclusion").build(Voxel3D.eye,arena,ground,textures)
 end
 
 -- BattleScene owns this short-lived scope; overworld calls have no target.

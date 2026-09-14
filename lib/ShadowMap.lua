@@ -120,10 +120,12 @@ ShadowMap.slack = ShadowMap.BIAS
 local SHADER = [[
   varying float vDepth;
 #ifdef VERTEX
+]] .. V.require("CanopyBillboard").shader .. [[
+  uniform vec3 canopyEye;
   uniform mat4 lightVP;
   uniform mat4 model;
   vec4 position(mat4 transform_projection, vec4 vertex_position) {
-    vec4 c = lightVP * (model * vertex_position);
+    vec4 c = lightVP * faceCanopy(model,vertex_position,canopyEye);
     // the projection is orthographic (w is 1) and fit() maps clip z onto
     // [0,1] directly (see Z01 there), so clip z IS the stored depth,
     // linear in world units along the sun line -- under every clip-range
@@ -604,6 +606,7 @@ function ShadowMap.draw(mesh, texture, model)
   local sh = getShader()
   if texture then mesh:setTexture(texture) end
   pcall(sh.send, sh, "model", "row", model or IDENTITY)
+  pcall(sh.send,sh,"canopyEye",V.require("Voxel3D").eye or {0,0,1})
   love.graphics.draw(mesh)
 end
 

@@ -805,6 +805,7 @@ local function shadowSignature(state, arena, terrain, nbMesh, visuals,
                   -- from somewhere new must be re-cast from there
                   math.floor(ShadowMap.KX * 128),
                   math.floor(ShadowMap.KZ * 128) }
+  for _,n in ipairs(Voxel3D.eye or {}) do parts[#parts+1]=math.floor(n*4) end
   if normalBall and normalBall.ball then
     parts[#parts + 1] = "legendaryBall:" .. normalBallSig()
   end
@@ -1370,6 +1371,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
       pcall(Backdrop.draw, state)
       pcall(SkyLayer.draw, state)
       Voxel3D.glass(true)
+      Voxel3D.battleOcclusion(arena,groundY,textures)
       if battleUnderlay then
         WorldUnderlay.draw({ map = host }, cx, cy, battleUnderlay)
       end
@@ -1428,6 +1430,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
       pcall(CommunityFlora.battleLeaves, state, host, arena)
     end
     end
+    Voxel3D.battleOcclusion()
     -- The mons, standing on their tiles. Depth-tested like everything else,
     -- so a ledge or a tree between the camera and a Pokemon really is in
     -- front of it, and the alpha discard cuts the sprite's own outline out of
@@ -1555,6 +1558,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
     -- Zero pull makes the depth invariant under every hosted camera cut; the
     -- upright cards already intersect the floor only at their bottom edge.
     if not flatFill then
+    Voxel3D.battleOcclusion(arena,groundY,textures)
     local pull = 0
     Voxel3D.draw(ChunkMesher.grass(host), atlasFor(host), nil, pull)
     for _, nb in ipairs(neighbors) do
@@ -1570,6 +1574,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
                    ShadowMap.snug(Mat4.translate(nb.ox, 0, nb.oy)))
     end
     end
+    Voxel3D.battleOcclusion()
     if drawActorPass then
       -- Enter the selected model provider while this arena's depth target and
       -- camera are live. The host owns actor shader/state cleanup. Logical
@@ -1624,6 +1629,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
       tint = Voxel3D.tint,
     }
   end)
+  Voxel3D.battleOcclusion()
   -- the placed camera is ours for exactly this pass; anything else that
   -- renders (the free-roam pipeline, next frame) must find the orbit back
   Voxel3D.camera = nil

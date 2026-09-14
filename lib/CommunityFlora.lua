@@ -615,13 +615,13 @@ MOUND.Timings = V.require("LoadTimings")
 -- TEST97 mature-tree persistence. Keep these helpers on MOUND rather than
 -- adding module locals: this donor file sits at LuaJIT's chunk-local ceiling.
 MOUND.MeshDisk = V.require("VoxelMeshDisk")
-MOUND.TREE_RAW_FORMAT = "<" .. string.rep("f", 36)
-MOUND.TREE_VERTEX_BYTES = 6 * 4
+MOUND.TREE_RAW_FORMAT = "<" .. string.rep("f", 54)
+MOUND.TREE_VERTEX_BYTES = 9 * 4
 -- TEST101 keeps TEST100's stable eight-cell draw/cache sections, but limits
 -- each graphics-driver write to a small flat triangle-stream slice. The old
 -- fresh path passed a complete section-sized Lua table to one immutable mesh
 -- constructor. TEST102 measures this path; TEST101 did not remove the stall.
-MOUND.TREE_UPLOAD_SLICE = 2048
+MOUND.TREE_UPLOAD_SLICE = 1365
 MOUND.TREE_RAW_QUADS = 512
 MOUND.TREE_PACK_POLL_QUADS = 64
 MOUND.TREE_SECTION_VERTEX_BUDGET = 65520 -- multiple of a three-card bunch (18 vertices)
@@ -635,13 +635,13 @@ function MOUND.packTreeStream(vertices, indices)
     for k = 0, 5 do
       local vertex = vertices[indices[at + k]]
       if not vertex then return nil end
-      for field = 1, 6 do
-        values[valueAt] = vertex[field]
+      for field = 1, 9 do
+        values[valueAt] = vertex[field] or 0
         valueAt = valueAt + 1
       end
     end
     parts[#parts + 1] = love.data.pack(
-      "string", MOUND.TREE_RAW_FORMAT, unpack(values, 1, 36))
+      "string", MOUND.TREE_RAW_FORMAT, unpack(values, 1, 54))
     quads = quads + 1
     if quads % MOUND.TREE_RAW_QUADS == 0 then
       chunks[#chunks + 1] = table.concat(parts)
@@ -662,7 +662,7 @@ function MOUND.meshFromTreeStream(record, keepChunks)
   local allocated
   local ok, mesh = pcall(function()
     local result = MOUND.Timings.call("mesh_alloc", love.graphics.newMesh,
-                                         Voxel3D.FORMAT, record.n,
+                                         Voxel3D.TREE_FORMAT, record.n,
                                          "triangles", "static")
     allocated = result
     local ctx = MOUND.treeContext()
@@ -853,7 +853,7 @@ function MOUND.publishTreePart(p, rawParts, parts)
     -- Retain TEST93's known-working immutable constructor as a safe fallback
     -- if a host rejects the flat streaming path.
     MOUND.treeBuildYield(true)
-    local mesh = Voxel3D.newMesh(vertices, indices)
+    local mesh = Voxel3D.newMesh(vertices, indices, Voxel3D.TREE_FORMAT)
     if mesh and ctx.resources then ctx.resources[mesh] = true end
     MOUND.treeBuildYield(true)
     return mesh

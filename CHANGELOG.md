@@ -1,3 +1,21 @@
+## 1.20.0 - occlusion volumes, canopy billboards, staged animation
+
+- Battler groups occlude what is behind them: a camera-relative occlusion
+  volume per side (lib/BattleOcclusion.lua) lets the subjects and their
+  supporting floor block scenery and each other correctly, while scenery
+  behind the group stays intact.
+- Illustrated tree crowns turn into camera-facing billboards about their
+  own trunks, in both the colour and shadow passes, with solid trunks
+  never rotating (lib/CanopyBillboard.lua).
+- The Gen 2 staged billboards now take their art through a provider seam:
+  a companion that supplies full-body animation (Crystal Animated Sprites'
+  stagedPokemonSprite export) drives the staged card without replacing the
+  engine screen or reaching into its files; the engine pic stays the
+  fallback.
+- Heal overlay, shadow, voxel-scene and mesh-disk supporting changes for
+  the above; land/coast ground continuity and bounded shoreline rocks in
+  CommunityFlora.
+
 ## 1.19.1 — 2026-09-14
 
 Allow first-person and rotating third-person camera look during Crystal world

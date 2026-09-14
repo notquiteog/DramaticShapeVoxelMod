@@ -292,14 +292,18 @@ end
 function HealOverlay.draw(ha, project, scale, ctx)
   local state = ctx and ctx.state
   if not (ha and state and project and scale) then return false end
-  local img, quads = sheet(state)
+  local gen2 = V.require("Generation").isGen2() and V.require("Gen2HealOverlay")
+  local img, quads
+  if gen2 then img, quads = gen2.sheet(state) else img, quads = sheet(state) end
   if not img then return false end
 
   local PaletteFX = require("src.render.PaletteFX")
   -- ADVANCED hands out no sprite palette (see objPalette), the SGB modes
   -- hand out the map's, and the mono ones hand out none and want none
   local colors
-  if PaletteFX.usesGbcPack() then
+  if gen2 then
+    colors = gen2.colors(state, ha)
+  elseif PaletteFX.usesGbcPack() then
     local pack = PaletteFX.gbcPack()
     local palette, group = HealOverlay.objPalette(pack and pack.world)
     colors = palette and PaletteFX.darkObp(palette, group) or nil
@@ -311,7 +315,7 @@ function HealOverlay.draw(ha, project, scale, ctx)
   -- permute whatever palette is in force rather than always permuting GRAYS
   -- the way the flat closure does, which is what would otherwise drop a
   -- coloured overlay to grey twice a second on the ADVANCED pack.
-  if not ha.visible then
+  if not gen2 and not ha.visible then
     colors = PaletteFX.permute(colors or PaletteFX.GRAYS, FLASH_MAP)
   end
   -- The occluding shader colours as well as discards, so it replaces the
@@ -339,7 +343,8 @@ function HealOverlay.draw(ha, project, scale, ctx)
   end
 
   love.graphics.setColor(1, 1, 1, 1)
-  for _, p in ipairs(HealOverlay.points(ha)) do
+  local points = gen2 and gen2.points(state, ha) or HealOverlay.points(ha)
+  for _, p in ipairs(points) do
     local sx, sy, s = HealOverlay.place(project, p, scale)
     if sx then
       if eye then

@@ -91,16 +91,36 @@ Gen2Staged.drawn = {}
 -- rather than one pixel through it.
 local FOOT_PAD = 1
 
+-- Companions own art. A staged provider may supply full-body animation
+-- without replacing the original engine screen or reaching into its files.
+local function picFor(game,screen,mon,back)
+  local providers=game and game.mods and game.mods.exports
+  local provider=providers and providers.crystal_animated_sprites_with_shiny_visuals
+  if provider and type(provider.stagedPokemonSprite)=="function" then
+    local ok,pic=pcall(provider.stagedPokemonSprite,mon,back)
+    if ok and pic and pic.image and type(pic.width)=="number"
+       and type(pic.height)=="number" and pic.width>0 and pic.height>0 then
+      return pic.image,pic.width,pic.height,pic.quad
+    end
+  end
+  local ok,image=pcall(screen.pic,screen,mon,back)
+  if not (ok and image) then return nil end
+  local sized,w,h=pcall(image.getDimensions,image)
+  if sized and w and h and w>0 and h>0 then return image,w,h end
+end
+Gen2Staged.picFor=picFor
+local function drawPic(g,image,quad,x,y)
+  if quad then g.draw(image,quad,x,y) else g.draw(image,x,y) end
+end
+
 function Gen2Staged.sideTexture(game, side)
   local screen = screenFor(game)
   if not screen then return nil end
   local back = (side == "player" or side == "player2")
   local okMon, mon = pcall(screen.activeMon, screen, side)
   if not (okMon and mon) then return nil end
-  local okPic, image = pcall(screen.pic, screen, mon, back)
-  if not (okPic and image) then return nil end
-  local okDim, iw, ih = pcall(image.getDimensions, image)
-  if not (okDim and iw and ih and iw > 0 and ih > 0) then return nil end
+  local image,iw,ih,quad=picFor(game,screen,mon,back)
+  if not image then return nil end
 
   -- A 2v2 round fields a partner beside the lead (the doubles layer keeps
   -- battle.player2 / battle.enemy2 on the battle).  Both pics compose into
@@ -114,14 +134,11 @@ function Gen2Staged.sideTexture(game, side)
       or (side == "enemy" and battle.enemy2) or nil
     if p2 and p2 ~= mon and (p2.hp or 0) > 0 then partner = p2 end
   end
-  local pimage = nil
+  local pimage, pquad = nil,nil
   local iw2,ih2=0,0
   if partner then
-    local ok2, img2 = pcall(screen.pic, screen, partner, back)
-    if ok2 and img2 then
-      local sized,w,h=pcall(img2.getDimensions,img2)
-      if sized and w and h then pimage,iw2,ih2=img2,w,h end
-    end
+    pimage,iw2,ih2,pquad=picFor(game,screen,partner,back)
+    if not pimage then iw2,ih2=0,0 end
   end
 
   local BattleScene = V.require("BattleScene")
@@ -144,10 +161,10 @@ function Gen2Staged.sideTexture(game, side)
     -- the lead sits left of centre and the partner right of it, feet on
     -- the same ground line.
     if pimage then
-      g.draw(image, ax - iw, ay - ih)
-      g.draw(pimage, ax, ay - ih2)
+      drawPic(g,image,quad,ax-iw,ay-ih)
+      drawPic(g,pimage,pquad,ax,ay-ih2)
     else
-      g.draw(image, ax - iw / 2, ay - ih)
+      drawPic(g,image,quad,ax-iw/2,ay-ih)
     end
   end)
   g.setCanvas(prev)
@@ -159,7 +176,7 @@ function Gen2Staged.sideTexture(game, side)
   -- The native back slot already faces up-field. Gen 1's staged front-pic
   -- mirror would turn this back sprite away from its opponents a second time.
   return { canvas = canvas, ax = ax, ay = ay, trainer = false,
-    noMirror=back, modernFraming=true }
+    noMirror=back, modernFraming=true,contentWidth=iw+iw2,contentHeight=math.max(ih,ih2) }
 end
 
 -- The same shape OverworldBattle.textures returns, so BattleScene cannot tell

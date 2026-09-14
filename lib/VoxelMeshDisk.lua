@@ -87,7 +87,7 @@ local STATIC_PLAYTHROUGH = "bavc_static_mesh_v2"
 -- complete Structures/terrain pipeline at every cold map crossing.
 -- Revision 38 refreshes Crystal tree material UVs, the horizontal healing
 -- bed and the open bin. Old geometry must not mask these visual corrections.
-Disk.CACHE_REVISION = 48
+Disk.CACHE_REVISION = 49
 -- Patch releases which do not change emitted vertices must keep the existing
 -- world cache usable. This token matches the first static-mesh-cache-v2 build;
 -- CACHE_REVISION, not the public mod version, owns geometry compatibility.
@@ -1195,13 +1195,13 @@ function Disk.stats()
   return out
 end
 
-local function streamRecord(blob, pos, yieldFn)
+local function streamRecord(blob, pos, yieldFn, fields)
   local n = readU32(blob, pos)
   if not n then return nil end
   local chunks = readU32(blob, pos + 4)
   if not chunks or chunks > 65536 then return nil end
   pos = pos + 8
-  local expected = n * 6 * 4
+  local expected = n * (fields or 6) * 4
   if chunks ~= (expected > 0 and math.ceil(expected / RAW_CHUNK) or 0) then
     return nil
   end
@@ -1460,7 +1460,7 @@ local function decodeTreeBlob(blob, pos, map, path, yieldFn)
                    apron = flags == 1, detailFarCount = farCount }
     for _, name in ipairs(TREE_MATERIALS) do
       local stream
-      stream, pos = streamRecord(blob, pos, yieldFn)
+      stream, pos = streamRecord(blob, pos, yieldFn, 9)
       if not stream then
         return rejectBody(map, path, "malformed tree material stream " .. name)
       end
@@ -1495,10 +1495,10 @@ end
 
 local function write(file, bytes) file:write(bytes) end
 
-local function writeChunked(file, record, yieldFn)
+local function writeChunked(file, record, yieldFn, fields)
   local n = record and record.n or 0
   write(file, u32(n or 0))
-  local bytes = (n or 0) * 6 * 4
+  local bytes = (n or 0) * (fields or 6) * 4
   local chunks = bytes > 0 and math.ceil(bytes / RAW_CHUNK) or 0
   write(file, u32(chunks))
   if not record or n == 0 then return true end
@@ -1745,7 +1745,7 @@ function Disk.saveTreeParts(map, recipe, signature, parts, yieldFn)
       write(file, u32(part.apron and 1 or 0))
       write(file, u32(part.detailFarCount or 0))
       for _, name in ipairs(TREE_MATERIALS) do
-        assert(writeChunked(file, part[name], yieldFn))
+        assert(writeChunked(file, part[name], yieldFn, 9))
       end
       if yieldFn then yieldFn() end
       Budget.check()
