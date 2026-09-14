@@ -1,6 +1,17 @@
+# Release checkpoint — cart 1.8.0 — 2026-09-13
+
+Cart source 8a947c9 pins Battle Art 1.16.0 (eb332ca); the other twelve pins,
+Crystal sealed+ and CG3 are unchanged. Pack SHA256:
+fc470d8e8b165b2330a307d4e32474d8327c96d2eba70a3a1bad71eceb887b67.
+Online validation and exact source/pack byte equality pass. Packaged full-cart
+boot loads 1.16.0, reaches game.ready and submits first frame:
+/tmp/johto-hd/cart-1.8.0-boot.log. QA release-engine now uses extracted 1.16.0
+under packaged-1.8.0 for Battle Art; companions still packaged-1.7.0. Only the
+johto-parity-qa cart was updated; no real user profile touched.
+
 # Scenery and roof-shell pass — 2026-09-13
 
-Battle Art 1.16.0 candidate: original RGBA foliage-sprays-v2.png with prompt and
+Battle Art 1.16.0 (eb332ca), published: original RGBA foliage-sprays-v2.png with prompt and
 built-in generation provenance beside it. Larger outer sprays, smaller inner
 crowns and hashed species choice; sparse bounded meadow cover. Crystal HD
 sunlight uses a nine-tap tent filter and cool shadow fill, with Gen 1/source
