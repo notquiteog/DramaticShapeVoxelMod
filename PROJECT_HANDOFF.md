@@ -1,3 +1,25 @@
+# Release checkpoint — 2026-09-13
+
+Published and pushed: Battle Art v1.15.0 (031e26d), Sky Ride v0.2.20
+(c70b36f), and JohtoDioramaCart v1.6.0 (0359aba). Cart SHA256:
+255626a4f9012f50533541f6335a4ce85e706d300743e209124b7b4768cf4ccf.
+Mod archive SHA256: bd34b99f643d803fe31b6d8052933b15cd17445b9edb72bfc49e2a6320349945.
+Sky Ride archive SHA256: e75d1d16c49f11198ae0b208180926281677097b70e199ec7c0b26519466f94e.
+
+Online cart validation checked all thirteen published pins. The actual cart
+launch (--game=crystal --cart=johto_diorama, no driver) loaded the thirteen
+packaged versions in pinned order and reached game.ready. A separate driver
+against the extracted release packages passed real rendered water/camera
+checks, both rungs moving east from (7,5) to (9,5). Art/CG3 bytes preserved.
+Logs: /tmp/johto-hd/packaged-cart.log, packaged-camera-water.log and
+cart-validation.log. Full scenery screenshots: /tmp/johto-hd/review2.
+The separate Sky Ride owner-delegation regression passes; its older generic
+load test could not run against this import because it tries Gen 1 Data.load
+and requests text_pointers.lua. Do not claim that fixture passed.
+
+Fast ground/water Pokémon report remains open and broad scenery coverage
+remains iterative. Neither was represented as fully fixed in release notes.
+
 # Crystal 1.15.0 follow-up — 2026-09-13
 
 Prepared after 1.14.2: smaller item balls, horizontal Elm healing bed, open
