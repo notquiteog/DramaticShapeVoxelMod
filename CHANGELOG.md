@@ -1,3 +1,7 @@
+## 1.15.3 — 2026-09-13
+
+Preserve the native Crystal back-sprite orientation instead of applying the Gen 1 front-pic mirror. Widen the Crystal staged camera, with additional field of view at widescreen aspect ratios; external cinematic cameras retain ownership. Verified two Sentret and correctly facing Cyndaquil at 2560x1440.
+
 ## 1.15.2 — 2026-09-13
 
 Fix missing second-sprite dimensions in Crystal staged pairs, so both opponents render completely. Respect the doubles companion modern HUD ownership and omit legacy backplates underneath it. Same-species two-Sentret GPU check and a focused staged-pair dimensions/placement test pass.

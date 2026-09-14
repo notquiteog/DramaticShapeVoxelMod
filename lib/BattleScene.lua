@@ -1256,6 +1256,13 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
   else
     cam = BattleCam.rig(arena, groundY)
     cam.fov = BattleScene.letterboxFov(cam.fov, ph, s)
+    if textures and textures.player and textures.player.modernFraming then
+      -- Crystal's back cards no longer need to fill the old handheld slots.
+      -- Expand the world view for widescreen without making higher resolution
+      -- alone change perspective. External cinematic cameras keep ownership.
+      local wide=math.max(0,math.min(.6,pw/ph-4/3))
+      cam.fov=2*math.atan(math.tan(cam.fov/2)*(1.25+wide*.45))
+    end
   end
 
   local cx, cy = arena.mid[1], arena.mid[2]

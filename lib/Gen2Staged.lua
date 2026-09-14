@@ -152,7 +152,10 @@ function Gen2Staged.sideTexture(game, side)
 
   Gen2Staged.drawn[side] = mon
   if partner then Gen2Staged.drawn[side .. "2"] = partner end
-  return { canvas = canvas, ax = ax, ay = ay, trainer = false }
+  -- The native back slot already faces up-field. Gen 1's staged front-pic
+  -- mirror would turn this back sprite away from its opponents a second time.
+  return { canvas = canvas, ax = ax, ay = ay, trainer = false,
+    noMirror=back, modernFraming=true }
 end
 
 -- The same shape OverworldBattle.textures returns, so BattleScene cannot tell

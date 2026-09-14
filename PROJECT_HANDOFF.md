@@ -1,3 +1,16 @@
+# 1440p framing and facing correction — 2026-09-13
+
+User caught mirrored player back art and requested a more expansive 2K view.
+Gen2Staged now returns noMirror for the native back slot; BattleScene expands
+its own Crystal lens by 1.25 + widescreen delta (about 1.45 at 16:9). External
+camera ownership is preserved. Double Battles 0.9.1 renders its compact HUD
+at full-window edges with scale capped at4, outside the old handheld scissor;
+font DPI follows that display scale. First 2K attempt clipped the edge cards:
+fixed with scoped setScissor reset. Latest complete 2560x1440 native battle
+passes at /tmp/johto-hd/doubles-2k2.log, screenshots in doubles-2k2. Both
+Sentret and the corrected Cyndaquil facing are visually verified. Scenery and
+lighting still fall short of Gamma Emerald; do not claim exact parity.
+
 # Modern doubles UI follow-up — 2026-09-13
 
 User requested a modern battle UI, then correctly pointed out incomplete
