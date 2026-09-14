@@ -1,6 +1,12 @@
 # Working checkpoint — target input, encounter ownership, dialogue look — 2026-09-14
 
-Candidates BA1.19.1, Double Battles0.9.3, cart1.12.0.
+Published BA1.19.1, Double Battles0.9.3, cart1.12.0.
+BA runtime ae0c0fc71825609fb157de54686f7dd94e019f5f; ZIP SHA256
+5705c92215d0dc3b0a6167626f5b9d5cafe80027d273ea7b52c06e237204baec.
+Double Battles9ec5d57f3762d1f74aa6ae358cebce08c3438820; ZIP SHA256
+f2f9f12acf0f79b46f860761811c34431e79010e99a6ab35ebef3cbde69e81fc.
+Cart77a8f7f15220bf39a8f376cd1f064358b75535c4; cart SHA256
+07c86143d1e26e50a328aae1523a243456b1ce128fbe44e4e4f137ebf239e17b.
 Latest user asked whether general doubles logic and multiplayer were fully
 finished/verified. Answered NO explicitly. Crystal normal UI still commands
 one player-side active; paired ally command collection and full spread-move/
@@ -40,8 +46,12 @@ Validation (disposable AppImage QA profile, 0.2.60 update, core.update enabled):
 - Old native-actions regression uses an explicit pair fixture now; direct mod
   encounter doubling is deliberately removed. It is not a new native-run claim.
 
-Only johto-appimage-qa updated; user profile/live save untouched. Release/pins
-pending. Previous published checkpoint follows.
+Only johto-appimage-qa updated; user profile/live save untouched. All13 source
+and index pins match and online packing passes. Exact released archives installed
+in QA; cart-1.12.0-final.log asserts real cart scope, Crystal/sealed+/1.12.0,
+BA1.19.1,13 companions, hidden HUD, and repeats the full dialogue-camera PASS.
+Native log confirms Double Battles0.9.3 loaded. Runtime ZIP predates this
+handoff-only follow-up. Previous published checkpoint follows.
 
 # Working checkpoint — scenery + reproduced glitchmon — 2026-09-14
 
