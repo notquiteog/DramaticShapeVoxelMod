@@ -889,6 +889,10 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
                     { x0 + 8, h, z0 + 8 }, { x0, h, z0 + 8 } },
                   { { u0, v0 }, { u1, v0 }, { u1, v1 }, { u0, v1 } },
                   aoShades(x0 / 8, z0 / 8, h, shade))
+    if S.gen2 and not to and CommunityVisuals.crystalHD(map) then
+      V.require("Gen2GroundEdges").append(map,x0,z0,h,tile,push,uvRect,
+        aoShades(x0/8,z0/8,h,shade))
+    end
   end
 
   -- vertical quad for face direction `d` of the tile column at (x0, z0),

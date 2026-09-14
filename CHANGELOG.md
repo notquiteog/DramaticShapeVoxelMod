@@ -1,3 +1,7 @@
+## 1.15.1 — 2026-09-13
+
+Crystal scenery refinement: varied crown rotation, height and branches; mip-filtered foliage; narrow irregular grass fringes; staggered roof courses and warmer lab wood. Render-only, source materials and Gen 1 retain their existing paths. Full current-companion 16-map scenery driver passed; this is an incremental art pass, not complete Gamma Emerald parity.
+
 ## 1.15.0 — Crystal foliage, small items and native camera/animation support
 
 - Add original leaf artwork for broadleaf, conifer, spreading trees and shrubs;

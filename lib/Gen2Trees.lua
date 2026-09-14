@@ -24,7 +24,15 @@ function Trees.append(tv,ti,tq,cv,ci,cq,x,y,z,lift,seed,dv,di,dq)
   local bush=lift<=4
   dq=dq or 0
   local height=bush and 13 or (lift==20 and 40 or (lift>=17 and 33 or 28))
-  local angle=(seed%97)/97*math.pi*2
+  -- Stable variation belongs to the tree, never the animation clock. Adjacent
+  -- cells must not repeat the same crown orientation and tier spacing.
+  local function variation(salt)
+    local v=math.sin(seed*12.9898+salt*78.233)*43758.5453
+    return v-math.floor(v)
+  end
+  height=height*(.91+variation(1)*.16)
+  local angle=variation(2)*math.pi*2
+  local width=.86+variation(3)*.22
   local leanX,leanZ=math.cos(angle)*.8,math.sin(angle)*.8
   local function ring(radius,h,lean)
     local r={}
@@ -53,9 +61,37 @@ function Trees.append(tv,ti,tq,cv,ci,cq,x,y,z,lift,seed,dv,di,dq)
       {-1.8,.53,4.8,6.4,5.4},{-1.2,.82,-.5,6.2,4.3}}
   end
   for l,b in ipairs(lobes) do
-    local shrink=bush and .65 or (lift==20 and 1.4 or 1)
-    local cx,cy,cz=x+b[1]*shrink+leanX,y+height*b[2],z+b[3]*shrink+leanZ
-    local rx,ry=b[4]*shrink,b[5]*(bush and .47 or 1)
+    local shrink=(bush and .65 or (lift==20 and 1.4 or 1))*width
+    local ox,oz=b[1]*shrink,b[3]*shrink
+    local cx=x+ox*math.cos(angle)-oz*math.sin(angle)+leanX
+    local cz=z+ox*math.sin(angle)+oz*math.cos(angle)+leanZ
+    local cy=y+height*(b[2]+(variation(l+10)-.5)*.065)
+    -- Exposed tapering boughs connect the off-centre crowns to the trunk.
+    -- Four sides suffice beneath foliage and keep dense forest costs bounded.
+    if not bush and l>1 and family~="conifer" then
+      local ax,ay,az=x+leanX*.6,y+height*.36,z+leanZ*.6
+      local bx,by,bz=cx,cy-1,cz
+      local dx,dy,dz=bx-ax,by-ay,bz-az
+      local len=math.sqrt(dx*dx+dy*dy+dz*dz)
+      dx,dy,dz=dx/len,dy/len,dz/len
+      local flat=math.sqrt(dx*dx+dz*dz)
+      local ux,uz=flat>.001 and -dz/flat or 1,flat>.001 and dx/flat or 0
+      local vx,vy,vz=dy*uz,dz*ux-dx*uz,-dy*ux
+      local ends={}
+      for j,center in ipairs({{ax,ay,az},{bx,by,bz}}) do
+        local radius=j==1 and .85 or .25
+        ends[j]={}
+        for i=0,3 do
+          local a=i*math.pi/2
+          local u,v=math.cos(a)*radius,math.sin(a)*radius
+          ends[j][i+1]={center[1]+ux*u+vx*v,center[2]+vy*v,center[3]+uz*u+vz*v}
+        end
+      end
+      for i=1,4 do local n=i%4+1
+        tq=quad(tv,ti,tq,ends[1][i],ends[1][n],ends[2][n],ends[2][i],.78)
+      end
+    end
+    local rx,ry=b[4]*shrink*(.90+variation(l+30)*.16),b[5]*(bush and .47 or 1)
     local rs={}
     for j=0,3 do
       local radii=family=="conifer" and {.52,1,.56,.02} or {.32,1,.87,.12}
@@ -80,7 +116,7 @@ function Trees.append(tv,ti,tq,cv,ci,cq,x,y,z,lift,seed,dv,di,dq)
         local a=j*math.pi/4+angle+l*.31
         local ly=cy+ry*(j%2==0 and .33 or -.03)
         local lx,lz=cx+math.cos(a)*rx*.86,cz+math.sin(a)*rx*.79
-        local size=(bush and 2.5 or 4.5)*(family=="conifer" and .9 or 1)
+        local size=(bush and 2.2 or 3.3)*(family=="conifer" and .9 or 1)*(.85+variation(j+l*8)*.3)
         for plane=0,2 do
           local pa=a+plane*math.pi/3
           local ux,uz=math.cos(pa)*size,math.sin(pa)*size

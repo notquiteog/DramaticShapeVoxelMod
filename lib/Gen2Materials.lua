@@ -15,6 +15,14 @@ local floorKinds={
   TILESET_POKECENTER={[17]="floor"},
 }
 local woodSlots=setmetatable({},{__mode="k"})
+local labWood={[3]=true,[4]=true,[5]=true,[6]=true,[7]=true,
+  [19]=true,[20]=true,[21]=true,[22]=true,[23]=true,[37]=true,[38]=true,[39]=true}
+function M.architectureKind(id,tile)
+  if id=="TILESET_JOHTO" or id=="TILESET_JOHTO_MODERN" then
+    if tile>=13 and tile<=18 then return "roof" end
+    if tile==50 then return "plaster" end
+  elseif id=="TILESET_LAB" and labWood[tile] then return "furnitureWood" end
+end
 function M.woodTile(map)
   local ts=map and map.tileset
   if not (ts and ts.blocks) then return nil end
@@ -64,6 +72,23 @@ function M.color(kind,x,y,r,g,b,light)
   elseif kind=="stone" then
     local v=.38+(r+g+b)/3*.25+grain*.065
     return v*.99,v,v*.96
+  elseif kind=="roof" then
+    local row=math.floor(y/8)
+    local joint=(x+(row%2)*8)%16
+    local seam=(y%8==7 or joint==0) and .68 or 1
+    local bevel=y%8==0 and 1.12 or 1
+    local tone=(.93+noise(math.floor((x+(row%2)*8)/16),row,3)*.10)*seam*bevel
+    return r*tone,g*tone,b*tone
+  elseif kind=="plaster" then
+    local v=grain*.024
+    return .76+v,.73+v,.64+v
+  elseif kind=="furnitureWood" then
+    -- Recolour only the wood's ochre fill. Books, machine components and
+    -- the source trim remain readable and retain their original outlines.
+    if r>b*1.25 and g>b*1.15 then
+      local v=math.sin(y*.6+math.sin(x*.18))*.018+grain*.012
+      return .42+v,.30+v*.8,.19+v*.5
+    end
   end
   return r,g,b
 end
@@ -85,6 +110,7 @@ function M.apply(map,base,source)
     local tile=ty*pr+tx
     local attr=attrs.forTile(map.tileset,tile)
     local kind=tile==woodTile and "wood" or kinds[tile]
+    local architecture=M.architectureKind(map.tileset.id,tile)
     local light,ar,ag,ab=0,0,0,0
     for sy=0,7 do for sx=0,7 do
       local r,g,b=source:getPixel(tx*8+sx,ty*8+sy)
@@ -95,6 +121,13 @@ function M.apply(map,base,source)
       local r,g,b,a=source:getPixel(tx*8+math.floor(x/4),ty*8+math.floor(y/4))
       if kind=="floor" then r,g,b=M.color(kind,x,y,ar/64,ag/64,ab/64,light)
       elseif kind then r,g,b=M.color(kind,x,y,r,g,b,light)
+      elseif architecture=="roof" then
+        -- Keep dark eaves and edge outlines; replace the drawn stripes with
+        -- staggered courses using this map's own roof palette.
+        if math.max(r,g,b)>.20 then
+          r,g,b=M.color("roof",x,y,ar/64*.84,ag/64*.84,ab/64*.84,1)
+        end
+      elseif architecture then r,g,b=M.color(architecture,x,y,r,g,b,1)
       elseif attr.palette==3 then
         -- Preserve the drawn leaf/flower silhouette while taking fluorescent
         -- yellow out of the grass palette. This includes mixed edge tiles.

@@ -1485,9 +1485,12 @@ function MOUND.detailImg()
     if V.require("Generation").isGen2() and V.mod and V.mod.read then
       local bytes = assert(V.mod:read("assets/crystal/foliage-clusters.png"))
       local file = love.filesystem.newFileData(bytes, "foliage-clusters.png")
-      local image = love.graphics.newImage(file)
+      -- The original atlas has far more leaf detail than a distant border can
+      -- display. Mip levels prevent that detail flickering into yellow noise.
+      local image = love.graphics.newImage(file, {mipmaps=true})
       file:release()
       image:setFilter("nearest", "nearest")
+      image:setMipmapFilter("linear")
       return image
     end
     -- TEST244 GRASS-QUALITY FOLIAGE:

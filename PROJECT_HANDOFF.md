@@ -1,3 +1,23 @@
+# 1.15.1 scenery / gameplay hotfix follow-up — 2026-09-13
+
+Scenery changes: Gen2Trees stable crown rotation/height/width and exposed
+boughs; smaller leaf sprays, mipmapped original foliage; Gen2GroundEdges
+bounded 0.35–1.5px turf fringes over Johto dirt tiles; roof courses and lab
+wood in the HD atlas. Source/collision untouched; mesh cache revision 39.
+Full 16-map/19-view comparison passes at /tmp/johto-hd/polish2; pictures
+reviewed for New Bark and Elm. Pure geometry/material/ownership suites pass.
+Buildings and vegetation still need substantial work for Gamma Emerald parity.
+
+User interrupted with opponents immune to damage and an unowned level-50
+Ho-Oh after fainting. Doubles 0.8.0 was ignoring the native {kind=move}
+action shape. Fixed in its own repo 0.8.1 with survivor promotion and owned
+party loss/replacement tests (39/39). Real native BattleState.submit damages
+foes and promotes the survivor: /tmp/johto-hd/doubles-fix.log. Sky Ride's
+temporary test giver grants level-50 Ho-Oh on interaction; removed from its
+production entry list in 0.2.21, no existing save mons deleted. This is an
+identified source, not proof the user interacted with it. Fast overworld
+motion remains un-reproduced/open. No Android verification.
+
 # Release checkpoint — 2026-09-13
 
 Published and pushed: Battle Art v1.15.0 (031e26d), Sky Ride v0.2.20
