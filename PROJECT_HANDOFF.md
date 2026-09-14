@@ -1,3 +1,18 @@
+# Release checkpoint — cart 1.7.0 — 2026-09-13
+
+Final pushed pins: Battle Art 1.15.3 (35c7fad), Double Battles 0.9.1
+(c391673), Sky Ride 0.2.21 (6349c56). Cart source 0488bf3, Crystal sealed+,
+CG3 unchanged, thirteen mods. Packed SHA256:
+67bcc0dd8475521b3b4f109f2b4e6c243edc0e551c64b9dc3952ffabe40436c1.
+Online validation passes. Pack bytes equal cartkit.bundle_bytes(source).
+Extracted release ZIPs passed native BattleState.submit, damage, two same-
+species rendered actors, survivor promotion and owned-party checks at
+/tmp/johto-hd/doubles-cart-1.7.0.log. 1440p source build evidence is
+/tmp/johto-hd/doubles-2k2. Current packaged QA engine is release-engine,
+mods point to /tmp/johto-hd/packaged-1.7.0. No user profile was installed or
+modified; only johto-parity-qa cart was replaced. Do not use unreleased
+1.6.1 artifacts; those were intermediate builds before UI/facing feedback.
+
 # 1440p framing and facing correction — 2026-09-13
 
 User caught mirrored player back art and requested a more expansive 2K view.
