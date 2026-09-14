@@ -599,6 +599,15 @@ mod.content.render_pipelines:register("tiltshift", {
   end,
 })
 
+mod.content.render_pipelines:register("depth_of_field", {
+  label = "DEPTH OF FIELD",
+  levels = V.require("DepthOfField").LABELS,
+  priority = 11,
+  update = function(_, level) V.require("DepthOfField").level = level or 0 end,
+  worldPresent = function(canvas) return V.require("DepthOfField").apply(canvas) end,
+  invalidate = function() V.require("DepthOfField").invalidate() end,
+})
+
 -- ------- this mod's own settings
 --
 -- Neither of these is a pipeline: they own no pass of the frame, they

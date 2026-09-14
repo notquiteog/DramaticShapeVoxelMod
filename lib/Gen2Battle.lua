@@ -181,6 +181,19 @@ function Gen2Battle.install()
       local ok, has = pcall(sides, self)
       if ok and not has then return inner(self) end
     end
+    -- HUD backplates: with the white slab gone, the HUDs' name/HP tiles
+    -- would sit straight on the diorama.  The engine's own box style under
+    -- both blocks keeps them readable and matches the text box that draws
+    -- after them.  Enemy block: name/level/gender/bar/frame, tiles (0,0)
+    -- through (11,3).  Player block: name/status/bar/numbers/exp, tiles
+    -- (9,6) through (19,12).
+    do
+      local okFont, BoxFont = pcall(require, "src.render.Font")
+      if okFont and BoxFont and type(BoxFont.drawBox) == "function" then
+        BoxFont.drawBox(0, 0, 12, 4)
+        BoxFont.drawBox(9, 6, 11, 7)
+      end
+    end
     -- drawPanel's own body, minus the Chrome.clear() that would paint over
     -- the world the engine drew for us a moment ago.
     if type(self.drawHud) == "function" then self:drawHud() end

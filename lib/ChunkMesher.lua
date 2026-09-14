@@ -2658,7 +2658,12 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
                         TOWER_GRANITE_SWATCH_TILE, false)
       end
 
-      if s and S.skip[k] then
+      if s and S.skip[k] and S.waterGround and S.waterGround[k] then
+        -- Coastal rock footprints share the same recessed, reflective sea
+        -- mesh as their neighbors. An opaque y=0 tile here made blue square
+        -- plinths even after the source-rock pedestal was removed.
+        topQuad(tx*8,ty*8,S.gen2WaterHeight or -2,S.ground[k] or 20,1,waterPush)
+      elseif s and S.skip[k] then
         -- an object stands here; paint its synthesized ground and let the
         -- prebuilt prism quads (appended below) carry the art
         local g = S.ground[k]

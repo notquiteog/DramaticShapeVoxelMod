@@ -802,6 +802,19 @@ function OverworldBattle.update(dt)
   if not session then return end
 
   local g = game()
+  -- The Gen 2 world's own update never drives the tile-animation clock
+  -- (TileRenderer.tick rides the Gen 1 overworld's update), so on Gold,
+  -- Silver and Crystal the water cycle would sit at frame zero and the
+  -- staged atlas rewrites would have nothing to chase.  Tick it here --
+  -- the same call the Gen 1 overworld makes -- whenever a Gen 2 boot has
+  -- the pipeline up.
+  do
+    local okGen, Generation = pcall(V.require, "Generation")
+    if okGen and Generation.isGen2() then
+      pcall(function() require("src.render.TileRenderer").tick(dt) end)
+    end
+  end
+
   local top = g and g.stack and g.stack:top()
   local ow = g and g.overworld
   -- A battle that ended without saying so (a script tearing the state down,

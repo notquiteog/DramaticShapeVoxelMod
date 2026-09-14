@@ -381,16 +381,21 @@ local DIRS4 = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } }
 -- One animated entry's tile slot, written into `out` at step `step`.
 local function patch(out, entry, spec, step)
   local perRow, tile = entry.perRow, spec.tile
-  local dx, dy = (tile % perRow) * 8, math.floor(tile / perRow) * 8
+  local s = entry.scale or 1
+  local t8 = 8 * s
+  local dx, dy = (tile % perRow) * t8, math.floor(tile / perRow) * t8
   if spec.kind == "hshift" then
     -- the water rotate (the asm's rrca/rlca run): the tile's own pixels,
     -- rolled sideways. Read from the UNANIMATED base, or each step would
-    -- compound on the last one's shift.
-    local o = spec.offsets[step % #spec.offsets + 1]
-    for y = 0, 7 do
-      for x = 0, 7 do
+    -- compound on the last one's shift.  The roll is scale-aware: an
+    -- HD-material atlas stores the same tile at s atlas pixels per source
+    -- pixel, so the shift moves o*s and the roll wraps at the tile's own
+    -- scaled width.
+    local o = spec.offsets[step % #spec.offsets + 1] * s
+    for y = 0, t8 - 1 do
+      for x = 0, t8 - 1 do
         local r, g, b, a = entry.base:getPixel(dx + x, dy + y)
-        out:setPixel(dx + (x + o) % 8, dy + y, r, g, b, a)
+        out:setPixel(dx + (x + o) % t8, dy + y, r, g, b, a)
       end
     end
   elseif spec.kind == "frames" then
@@ -442,16 +447,17 @@ local function patch(out, entry, spec, step)
       mask = {}
       for i = 0, 63 do mask[i] = dark[i] or not reach[i] end
     end
-    for y = 0, 7 do
-      for x = 0, 7 do
-        local r, g, b, a = frame:getPixel(x, y)
-        if mask and not mask[y * 8 + x] then
-          out:setPixel(dx + x, dy + y, 0, 0, 0, 0)
+    for y = 0, t8 - 1 do
+      for x = 0, t8 - 1 do
+        local fr, fg, fb, fa = frame:getPixel(math.floor(x / s), math.floor(y / s))
+        local r, g, b, a = fr, fg, fb, fa
+        if mask and not mask[math.floor(y / s) * 8 + math.floor(x / s)] then
+          r, g, b, a = 0, 0, 0, 0
         else
-          local col = shades and shades[shadeOf(r)]
+          local col = shades and shades[shadeOf(fr)]
           if col and a > 0 then r, g, b = col[1], col[2], col[3] end
-          out:setPixel(dx + x, dy + y, r, g, b, a)
         end
+        out:setPixel(dx + x, dy + y, r, g, b, a)
       end
     end
   end
@@ -474,6 +480,19 @@ local function specsFor(tileset)
       out = out or {}
       out[#out + 1] = spec
     end
+  end
+  -- The Gen 2 importer writes no `animation` string onto its tileset
+  -- records (the Gen 1 one does), so the vanilla water cycle never reached
+  -- Crystal's tilesets and every pond sat still.  The ids are the cart's
+  -- own -- tile $14 is water on Gold, Silver and Crystal, and the GSC
+  -- water animation is the same horizontal shift Gen 1 runs -- so the
+  -- vanilla hshift spec serves them as-is.  Flowers stay still until the
+  -- ROM's own flower frames are imported; a Gen 1 flower frame drawn over
+  -- a Crystal tile would be wrong art, not animation.
+  local noDeclarations = (declared == nil) or (type(declared) == "table" and #declared == 0)
+  if out == nil and noDeclarations and Generation.isGen2() then
+    out = { { tile = 0x14, kind = "hshift", period = 20,
+              offsets = { 1, 2, 3, 2, 1, 0, 7, 0 } } }
   end
   return out
 end
@@ -1438,9 +1457,14 @@ local function newEntry(map, base, baked)
     -- exact ~3 Hz frames where the game stalled for ~50 ms. Instead we keep
     -- the CPU base and prebuild every animation state as an immutable texture
     -- once. Runtime animation becomes pointer selection only.
+    local scale = 1
+    local perRow = tileset.tilesPerRow or 16
+    if perRow * 8 > 0 and w % (perRow * 8) == 0 then
+      scale = math.max(1, math.floor(w / (perRow * 8)))
+    end
     local e = {
       base = src,
-      specs = specs, perRow = tileset.tilesPerRow or 16,
+      specs = specs, perRow = perRow, scale = scale,
       frames = {}, frameCount = 0, step = nil, image = nil,
       width = w, height = h,
     }
@@ -1611,8 +1635,16 @@ function TerrainAtlas.forMap(map, colors)
   base, baked = safariGround(map, base, baked)
   -- Declared animations retain their native frame pipeline. Crystal's static
   -- atlases can use higher-resolution materials without changing source art.
-  if Generation.isGen2() and not specsFor(map.tileset) then
-    return V.require("Gen2Materials").apply(map,base,baked)
+  if Generation.isGen2() then
+    -- Both layers compose: the HD-2D materials recolor the atlas first,
+    -- then the water slot rewrite runs per step on the finished art.
+    local specs = specsFor(map.tileset)
+    if specs then
+      local ib, idata = V.require("Gen2Materials").apply(map, base, baked)
+      if ib then base, baked = ib, idata or baked end
+      return TerrainAtlas.animate(map, colors, base, baked) or base
+    end
+    return V.require("Gen2Materials").apply(map, base, baked)
   end
   return TerrainAtlas.animate(map, colors, base, baked) or base
 end

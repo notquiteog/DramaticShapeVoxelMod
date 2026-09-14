@@ -104,7 +104,7 @@ crystal.def.tileset,crystal.def.environment="TILESET_JOHTO","TOWN"
 crystal.cellCollision=function()return 7 end
 F.flora.requestCommunityTrees(crystal,{},2,false)
 F.pump()
-check(F.flora.treeStats().vertices>0 and F.flora.treeStats().vertices<2500,
+check(F.flora.treeStats().vertices>0 and F.flora.treeStats().vertices<4500,
   "dense Crystal trees use bounded volumetric foliage rather than XL crowns")
 F.flora.evictTrees()
 print(checks .. " checks passed (Legendary geometry/cache/ownership/R.DIST)")

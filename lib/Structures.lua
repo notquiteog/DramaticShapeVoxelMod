@@ -972,6 +972,7 @@ function Structures.forMap(map)
   -- terrain.)
   S = { shapeAt = shapeAt, tileAt = tileAt, outdoor = Map.isOutdoor(def),
         gen2 = shapes.gen2Classes ~= nil,
+        gen2WaterHeight = shapes.gen2Classes and shapes.gen2Classes.water.h,
         hideBareRing = hullRingOnly or nil,
         runs = {}, skip = {}, ground = {}, doorFold = {}, objectQuads = {},
         grassQuads = {}, flowerQuads = {}, roundStamps = {}, figures = {} }
@@ -1078,6 +1079,7 @@ function Structures.forMap(map)
     end
   end
   Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
+  if S.gen2 then V.require("Gen2ShoreRock").build(S,map) end
 
   -- ---- stairs: profile-pinned cells that render as real steps ----
   Structures.buildStairs(S, map, x0, x1, y0, y1)
@@ -2300,6 +2302,7 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
                         .. (test377Forest and "test377-forest|"
                             or "battle-art|")
                         .. gsig .. "|" .. table.concat(ids, ":")
+            if s.class=="boulder" then sig=sig.."|"..((cx*26+cy*14)%7) end
             local tpl = roundCache[sig]
             if not tpl then
               local tq, tbg = roundTemplate(S, map, data, cx, cy,
@@ -2346,6 +2349,9 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
               local tk = keyOf(cx * 2 + dx, cy * 2 + dy)
               S.skip[tk] = true
               S.ground[tk] = ground
+              if s.class=="boulder" and ground==20 then
+                S.waterGround=S.waterGround or {};S.waterGround[tk]=true
+              end
             end
           end
           grouped[ckey + 1] = true
@@ -2416,7 +2422,7 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
           local tx,ty=cx*2+dx,cy*2+dy
           local tk=keyOf(tx,ty)
           if data then
-            local sig=tsid.."|ocean4|"..tostring(S.tileAt[tk])
+            local sig=tsid.."|ocean4|"..tostring(S.tileAt[tk]).."|"..((tx*13+ty*7)%7)
             local tpl=roundCache[sig]
             if not tpl then
               local tq=V.require("Gen2Rocks").terrain(S,map,tx,ty,8,4)
@@ -2425,6 +2431,7 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
             S.roundStamps[#S.roundStamps+1]={quads=tpl.quads,mx=tx*8+4,mz=ty*8+4,r=4}
           end
           S.skip[tk],S.ground[tk]=true,20
+          S.waterGround=S.waterGround or {};S.waterGround[tk]=true
         end end
       elseif s and s.art == "cylinder" and near then
         -- a `stump`-class cell is the same hull with a cut face: its

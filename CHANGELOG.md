@@ -1,3 +1,20 @@
+## 1.14.2 - HUD backplates and the Crystal water cycle
+
+- Gen 2 staged battles draw the engine's own box style under both HUD
+  blocks (enemy and player name/HP regions) before the HUD draws, so
+  names, levels and HP bars stay readable over the diorama instead of
+  landing on busy geometry.
+- Crystal tilesets join the water animation: the Gen 2 importer writes no
+  `animation` string, so the vanilla water hshift spec (tile $14, the same
+  rrca/rlca roll Gen 1 runs) is served to Gen 2 tilesets that declare
+  nothing of their own, the animated atlas composes with the HD-2D
+  materials rather than replacing them, and the slot rewrite is
+  scale-aware for the material pipeline's enlarged atlases. Gen 2's
+  update now drives the tile-animation clock, which only the Gen 1
+  overworld ticked before. Flowers stay still until their ROM frames are
+  imported. Marked experimental in place: the per-frame atlas swap is the
+  remaining piece before the water visibly moves in voxel mode.
+
 ## 1.14.1 - Gen 2 doubles on the staged battle
 
 - When a battle carries the doubles layer's second slots (battle.player2 /

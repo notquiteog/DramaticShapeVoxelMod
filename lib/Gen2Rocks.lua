@@ -7,7 +7,7 @@ function M.geometry(width,height,depth,sample,seed)
   local out={}
   seed=seed or 0
   local steps,bands=9,5
-  local radii={0,.58,.88,1,.88,.68}
+  local radii={0,.58,.85,.98,1,.97}
   local levels={1,.89,.66,.36,.09,0}
   local function point(j,i)
     i=i%steps
@@ -59,7 +59,7 @@ function M.terrain(S,map,tx,ty,size,height)
     end
   end end
   data:release()
-  local quads=M.geometry(size*.88,height,size*.78,function(u,v)
+  local quads=M.geometry(size*.99,height,size*.97,function(u,v)
     if #tones>0 then
       local tone=tones[(math.floor(u*61)+math.floor(v*47)*13)%#tones+1]
       return tone[1],tone[2]
@@ -69,7 +69,7 @@ function M.terrain(S,map,tx,ty,size,height)
     local y=math.min(size-3,2+math.floor(v*(size-4)))
     local tile=S.tileAt[key(tx+math.floor(x/8),ty+math.floor(y/8))]
     return ((tile%pr)*8+x%8+.5)/aw,(math.floor(tile/pr)*8+y%8+.5)/ah
-  end)
+  end,(tx*13+ty*7)%7)
   -- Small source patches retain the stone's grain on each facet instead of
   -- turning a few sampled highlights into broad metallic-looking bands.
   for _,q in ipairs(quads) do

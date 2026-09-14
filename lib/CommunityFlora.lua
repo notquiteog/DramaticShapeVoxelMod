@@ -2050,8 +2050,8 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         box(4.82,base+14.55,base+14.81,0.94,0.99,1.045,0.42)
         end
       elseif type(map.cellCollision) == "function" then
-        tQ, cQ = V.require("Gen2Trees").append(tV,tI,tQ,cV,cI,cQ,
-          mx,base,mz,lift,cx*31+cy*17)
+        tQ, cQ, dQ = V.require("Gen2Trees").append(tV,tI,tQ,cV,cI,cQ,
+          mx,base,mz,lift,cx*31+cy*17,dV,dI,dQ)
       elseif sapling then
         -- TEST47 CITY-SUPPORTED SAPLING:
         -- The cuttable prop is deliberately NOT the smallest mature tree any

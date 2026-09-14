@@ -20,11 +20,29 @@ return function(game)
     return claimed
   end
   local function key(x,y) return (y+64)*4096+x+64 end
-  for _, id in ipairs({"BATTLE_ART_VOXEL_FORK", "free_fly", "npc_bubbles",
+  for _, id in ipairs({"BATTLE_ART_VOXEL_FORK", "npc_bubbles",
       "overworld_wild_spawns", "wild_skies", "crystal_animated_sprites_with_shiny_visuals"}) do
     assert(game.mods.mods[id] and game.mods.mods[id].state == "loaded", id .. " not loaded")
   end
-  assert(#game.mods.errors == 0, "loader errors")
+  local travel=game.mods.mods.DRAMATIC_SKY_RIDE or game.mods.mods.free_fly
+  assert(travel and travel.state=="loaded","travel companion not loaded")
+  if os.getenv("CURRENT_CART_QA")=="1" then
+    for _,id in ipairs({"gen1online-plus","double_battles","DRAMATIC_SKY_RIDE",
+      "kanto_gear","gen3_box","gen2_modern_ui","running_shoes","modern_johto"}) do
+      assert(game.mods.mods[id] and game.mods.mods[id].state=="loaded",id.." not loaded")
+    end
+  end
+  local function checkLoader()
+    for _,message in ipairs(game.mods.errors) do
+      -- The cart's independently published Online+ 0.5.0 declares a Gen 1
+      -- map-script registry. Record that known incompatibility explicitly;
+      -- never permit unrelated loader errors or claim its casino is tested.
+      assert(os.getenv("HD_SCENERY_QA")=="1" and message==
+        "gen1online-plus: the map_scripts registry has no Gen 2 target; those registrations do not apply here",message)
+      print("[companion incompatibility]",message)
+    end
+  end
+  checkLoader()
   game.world.trySceneScript = function() return false end
   game.world.rollEncounter = function() return nil end
   P.setLevel("voxel",3)
@@ -99,8 +117,15 @@ return function(game)
     print("[parity]",loc[1],table.concat(report," "),"roundStamps="..#S.roundStamps,"unclaimed="..unclaimed)
     assert(unclaimed==0,"unclaimed round scenery on "..loc[1])
     assert(U.shot(game,dir.."/"..(loc[4] or loc[1])..".png"))
+    if os.getenv("HD_SCENERY_QA")=="1" and loc[1]=="NEW_BARK_TOWN" then
+      P.setLevel("depth_of_field",2)
+      U.wait(10)
+      assert(V.require("DepthOfField").lastApplied,"depth-of-field shader did not run")
+      assert(U.shot(game,dir.."/NEW_BARK_depth_of_field.png"))
+      P.setLevel("depth_of_field",0)
+    end
   end
-  assert(#game.mods.errors == 0, "loader errors at end")
+  checkLoader()
   assert(liveRocks.SPRITE_ROCK and liveRocks.SPRITE_BOULDER,"live rock actors did not render as models")
   rocks.draw=drawRock
   print("[parity] PASS: full cart loaded; round ownership and ledge height verified")
