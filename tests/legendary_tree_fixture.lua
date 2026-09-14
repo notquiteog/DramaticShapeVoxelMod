@@ -38,7 +38,7 @@ local V = { path = "." }
 function V.require(name)
   if mods[name] then return mods[name] end
   if name == "BuildBudget" or name == "VoxelMeshDisk" or name == "LoadTimings"
-    or name == "Gen2Trees" or name == "LegendaryTreeCache" or name == "CommunityFlora" or name == "Mat4" then
+    or name == "Gen2DepthTrees" or name == "Gen2Trees" or name == "LegendaryTreeCache" or name == "CommunityFlora" or name == "Mat4" then
     mods[name] = assert(loadfile("lib/" .. name .. ".lua"))(V)
     if name == "LegendaryTreeCache" then
       local create = mods[name].new
@@ -50,6 +50,8 @@ function V.require(name)
 end
 mods.CacheTrace = { log = function(event, id, detail) F.events[#F.events + 1] = { event, id, detail } end }
 mods.CommunityVisuals = {
+  crystalDepth=function(map)return F.depth and map and map.cellCollision~=nil end,
+  crystalStyle={get=function()return "hd2d" end},
   crystalHD = function(map) return map and map.cellCollision ~= nil end,
   customTrees = function() return true end, customCutTrees = function() return true end,
   customForest = function() return false end, fullTreeDetail = function() return F.mode == "full" end,

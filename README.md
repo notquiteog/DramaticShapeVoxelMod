@@ -1,12 +1,12 @@
 # Battle Art Voxel Fork
 
-**1.13.0 — Crystal scenery:** round border trees and shorter bushes, six-pixel tables, upright kitchen and lab furniture, thin joined ledges, coastal and live rock models, and transparent battle surrounds/animation clears. [Changes and verification](docs/CRYSTAL_1_13.md).
+**1.17.0 — Layered Crystal HD-2D:** illustrated curved tree canopies, low shrubs with separate cuttable saplings, small flowers, irregular reef stones, softened wet-sand shores, expanded furniture and floors, and optional lighting/Depth of Field. Johto Diorama selects HD-2D DEPTH by default. [Settings, coverage and verification](docs/CRYSTAL_1_17.md).
 
 **TEST137 Tower master and wall finishes:** adds a true **TOWER VISUALS** A/B switch as the first row in **LEGENDARY VISUALS → POKEMON TOWER**. `BATTLE ART` restores the original Tower atlas, wall height, floor, counter, graves and stairs and disables the added fog/details; `LEGENDARY VISUALS` restores the complete Tower conversion. A new **TOWER WALL** row selects the existing dark `SMOKE BLACK` granite or the new 2048px `STORM WHITE` and `PEARL WHITE` reference-matched slabs. TEST137 also closes claimed grave-floor gaps in staged battles so the blue scene void cannot show between monuments. Keep **Grass and Flowers TEST4** and **Battle Cinematics TEST5** as the companion mods. See [TEST137 notes](docs/TEST137.md).
 
 Battle Art Voxel Fork turns the overworld of the [Pokémon Gen 1 Recompilation Project](https://github.com/bryanthaboi/pokemon-gen1-recomp-project) into a 3D voxel diorama and stages battles inside that world. It also provides configurable static and animated battle sprites, arena backdrops, trainer art, first-person exploration, water reflections, lighting, and compatibility hooks for other presentation mods.
 
-Version 1.13.0 supports **Pokémon Red, Blue, Yellow, Gold, Silver and Crystal** on Gen1Recomp `0.1.69` through current pre-2.0 releases. On Gen 2 the diorama, the battle art and 3D-BTL all run; the 1ST and 3RD first-person rungs are Gen 1-only, because free movement has no seam on Gold. Read the [Gen 2 support notes](docs/GEN1_GEN2_DIFFERENCES.md) for exactly what crosses and what does not — it is deliberately specific about the difference.
+Version 1.17.0 declares support for **Pokémon Red, Blue, Yellow, Gold, Silver and Crystal**. Current Crystal verification uses Gen1Recomp 0.2.59. Gen 2 supports the diorama, staged battles and 1ST/3RD camera-relative native grid walking. Gen 1 keeps its existing free-movement path. The [Gen 2 support notes](docs/GEN1_GEN2_DIFFERENCES.md) distinguish current support from historical limitations.
 
 ## Provenance
 

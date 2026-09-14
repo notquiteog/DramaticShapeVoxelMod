@@ -752,6 +752,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
 
   local function heightAt(tx, ty)
     local k = keyOf(tx, ty)
+    if S.waterGround and S.waterGround[k] then return S.gen2WaterHeight or -2 end
     if S.skip[k] then return 0 end
     local run = S.runs[k]
     if run then return run.h end
@@ -884,6 +885,9 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
   -- `to` routes the quad somewhere other than the main sink -- the water
   -- surface is the only caller that ever does (see runGeometry's header).
   local function topQuad(x0, z0, h, tile, shade, to)
+    if not to and S.gen2 and CommunityVisuals.crystalDepth(map) then
+      tile = V.require("Gen2FloorFinish").tile(map,tile,x0,z0,h)
+    end
     local u0, u1, v0, v1 = uvRect(tile, 0, 8)
     ;(to or push)({ { x0, h, z0 }, { x0 + 8, h, z0 },
                     { x0 + 8, h, z0 + 8 }, { x0, h, z0 + 8 } },
@@ -1203,6 +1207,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
 
   local function renderHeightAt(tx, ty)
     local k = keyOf(tx, ty)
+    if S.waterGround and S.waterGround[k] then return S.gen2WaterHeight or -2 end
     if S.skip[k] then return 0 end
     local s = S.shapeAt[k]
     local run = S.runs[k]
@@ -2664,7 +2669,9 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
                         TOWER_GRANITE_SWATCH_TILE, false)
       end
 
-      if s and S.skip[k] and S.waterGround and S.waterGround[k] then
+      if s and S.shore and S.shore[k] then
+        -- The complete sloped beach patch is emitted with object geometry.
+      elseif s and S.skip[k] and S.waterGround and S.waterGround[k] then
         -- Coastal rock footprints share the same recessed, reflective sea
         -- mesh as their neighbors. An opaque y=0 tile here made blue square
         -- plinths even after the source-rock pedestal was removed.
@@ -3244,7 +3251,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
       end
       if target == push then ownCell(x0, z0, x1, z1) end
       target({ q[1], q[2], q[3], q[4] }, quadUV(q),
-        groundShades(q, q.shade))
+        q.shore and q.shade or groundShades(q, q.shade))
     end
   end
 

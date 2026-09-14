@@ -1,3 +1,42 @@
+# Working release candidate — 1.17.0 / cart 1.9.0 — 2026-09-14
+
+Current working tree adds layered HD-2D foliage, low shrubs / retained Cut
+saplings, essential-crown LOD protection, matching twelve-tile forest fill,
+44 furniture recipes, 16 floor finishes, small flowers / low Park rims,
+unequal reef clusters, native rock-ground selection, soft wet-sand shores,
+and rounded mound ledges with the outward dirt face preserved. Optional
+SceneFinish world lighting + existing DOF leave UI outside the composite.
+Battle stage persists until its native screen is popped. Cache revision 45.
+Generated original crown PNG / prompt: assets/crystal/depth-crowns-v2.*.
+See docs/CRYSTAL_1_17.md for coverage and explicit remaining work.
+
+Companions: Double Battles 0.9.2 defers HUD during animation BG bakes and draws
+it once after FX. Sky Ride 0.2.22 restores main_55_gen2_test_gift.lua in parts.txt
+at the user's request. Scientist (9,10), New Bark: grants missing owned-species
+level-50 Ho-Oh/Fly, Suicune/Surf, Raikou and Gyarados/Surf only on interaction.
+No boot gifts or save deletion. Cart source selects crystalStyle=depth and
+Wilds catch_hud_size=0; publication/pin synchronization still pending here.
+
+Actual evidence this checkout: /tmp/johto-hd/tree-npc-final.log (16 maps/19 views,
+NPC presence/no auto-gift, trees/roofs/furniture/live fruit/rock ownership),
+scenery-final.log (8 views, 255 flowers, native shallow Park rims, varied reefs),
+depth-final-2k.log (style switching and optional shaders), battle-final-2k.log
+(native damage, both Sentret, survivor/party ownership, animation HUD, KO/escape
+stage lifetime). Latest mound-only rerun: ledge-mounds.log. All-map inventory
+and screenshots: all-maps-depth + all-maps-tail (373+15=388). The first run hit
+its time bound; tail rerendered from map374. No unavailable walkable cameras.
+Inventory 79 recipes, 77 placed, 1,447 placements. All-map sweep predates final
+foliage/shore/Park fixes; focused native checks cover those final changes.
+Pure support181, doubles39, trees110, HD60, furniture44, floor16, flower/shore/
+rock/mound/roof/staged-pair/HUD tests pass. No Android/hardware GPU validation.
+
+Still open: fast bouncing Charmander un-reproduced (stationary three-city
+probe in charmander-probe.log had no species/jumps); exact Gamma Emerald
+parity, remaining generic props/architecture (notably Park benches), high-angle
+foliage, and hardware performance. Known Online+ registry warning and Wild
+Skies Gen 2 defCellTile mismatch remain; optional cache writes reject but GPU
+owners survive. Do not claim complete visual coverage from map smoke tests.
+
 # Release checkpoint — cart 1.8.0 — 2026-09-13
 
 Cart source 8a947c9 pins Battle Art 1.16.0 (eb332ca); the other twelve pins,

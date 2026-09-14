@@ -438,6 +438,11 @@ end
 function Gen2TileShape.at(map, shapes, tile, tx, ty)
   local classes = shapes and shapes.gen2Classes
   if type(classes) ~= "table" then return nil end
+  if map.tileset.id=="TILESET_PARK" and V.require("CommunityVisuals").crystalHD(map)
+    and V.require("Gen2Flowers").bedAt(map,tx,ty) then
+    if tile==1 or tile==3 then return classes.ground end
+    return {class="gardenrim",h=3,art="block",authored=true,derived=true}
+  end
   local cx, cy = math.floor(tx / 2), math.floor(ty / 2)
   local tileset = map.tileset
   local okT, top = pcall(map.tileAt, map, cx * 2, cy * 2)
@@ -510,6 +515,13 @@ function Gen2TileShape.census(map, shapes, w, h)
     end
   end
   return out
+end
+
+-- Rendering role only: native collision still owns Cut/Headbutt and regrowth.
+function Gen2TileShape.bushLift(map, cx, cy)
+  local Permissions = modules()
+  local ok, coll = pcall(map.cellCollision, map, cx, cy)
+  return (ok and Permissions and Permissions.isCutTree(coll)) and 4 or 3
 end
 
 return Gen2TileShape

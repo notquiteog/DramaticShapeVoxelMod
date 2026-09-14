@@ -1425,6 +1425,19 @@ function Buildings.build(S, map, data, perRow)
   if S.gen2 then
     local furniture = V.data("gen2_furniture")
     list = furniture and furniture[tileset.id] or list
+    if V.require("CommunityVisuals").crystalDepth(map) then
+      local depth = V.data("gen2_depth_furniture")
+      local reviewed = depth and depth[tileset.id]
+      if reviewed then
+        local combined = {}
+        for _, t in ipairs(list or {}) do combined[#combined+1] = t end
+        for _, spec in ipairs(reviewed) do
+          local t = V.require("Gen2FurnitureTemplates").resolve(tileset,spec)
+          if t then combined[#combined+1] = t end
+        end
+        list = combined
+      end
+    end
   end
   if not list then return end
 
@@ -1471,6 +1484,8 @@ function Buildings.build(S, map, data, perRow)
               if not models[key] then
                 if S.gen2 and t.model=="bin" then
                   models[key]=V.require("Gen2Bin").build(t,data,perRow,atlasW,atlasH)
+                elseif S.gen2 and t.model=="planter" then
+                  models[key]=V.require("Gen2Planter").build(t,data,perRow,atlasW,atlasH)
                 elseif t.claimOnly then
                   -- claim the cells, stamp nothing: the drawing here is
                   -- the off-map half of a building another map models in
@@ -1511,7 +1526,11 @@ function Buildings.build(S, map, data, perRow)
               end
               built = models[key]
             end
-            Buildings.stamp(S, map, built, tx, ty, bw, bh, t)
+            -- Imported/replaced art may leave a reviewed crop empty. Keep
+            -- its native surface instead of claiming a hole for no model.
+            if not S.gen2 or #built>0 or t.claimOnly then
+              Buildings.stamp(S, map, built, tx, ty, bw, bh, t)
+            end
             if S.outdoor and tileset.id == "OVERWORLD" then
               V.require("FacadeEntrances").stamp(S, map, data, perRow,
                                                 tx, ty, bw, bh, t)
@@ -1605,8 +1624,10 @@ function Buildings.stamp(S, map, quads, tx, ty, bw, bh, t)
         floorTile = (tx + c + ty + r) % 2 == 0 and 15 or 31
       end
       if groundTiles then
-        local row = groundTiles[r % #groundTiles + 1]
-        floorTile = assert(row[c % #row + 1], "missing furniture floor tile")
+        local gy = t.groundAligned and ty+r or r
+        local gx = t.groundAligned and tx+c or c
+        local row = groundTiles[gy % #groundTiles + 1]
+        floorTile = assert(row[gx % #row + 1], "missing furniture floor tile")
       end
       if t and t.bicycle == "wall" then
         -- Keep the original wall shape/support. Replace only its private

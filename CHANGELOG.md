@@ -1,3 +1,27 @@
+## 1.17.0 — 2026-09-14
+
+Add CRYSTAL SCENERY → HD-2D DEPTH alongside VOXEL HD and SOURCE ART.
+Curved illustrated maple/pine/spreading crowns replace the opaque crown hull;
+essential canopy layers survive distant LOD, including the twelve-tile forest
+apron. Headbutt/fruit shrubs are low trunkless mounds; Cut retains a sapling.
+Original generated foliage artwork and prompts are included.
+
+Add 44 source-crop furniture recipes and 16 floor finishes, keeping bounded
+support heights. Reject empty floor-only prop matches. Small flowers have
+stems, leaves and petals; Park flowerbeds retain a shallow rim. Rocks select
+nearby native land/water rather than inventing a square pedestal, and short
+unequal reef clusters replace the regular ocean-rock grid. Reviewed Johto
+beaches use a shallow irregular wet-sand slope. Ledge grass caps roll down as
+rounded mounds while the unjumpable face keeps its dirt art. Native collision
+is unchanged.
+
+Optional SOFT LIGHT/CINEMA processing affects the world, with separate Depth
+of Field; menus remain outside the post-processing pass. Keep the battle stage
+until the native battle screen leaves the stack, including KO/escape endings.
+Double Battles 0.9.2 supplies the corresponding HUD/attack-compositing fix.
+Cache revision 45 refreshes changed scenery. See docs/CRYSTAL_1_17.md for
+verification and known coverage limits; this is not complete Gamma Emerald parity.
+
 ## 1.16.0 — 2026-09-13
 
 Crystal HD-2D scenery pass: original large-leaf sprays over smaller inner crowns,

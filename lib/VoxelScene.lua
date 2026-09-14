@@ -21,6 +21,7 @@ local ChunkMesher = V.require("ChunkMesher")
 local SpriteBillboards = V.require("SpriteBillboards")
 local ItemPokeballs = V.require("ItemPokeballs")
 local Gen2Rocks = V.require("Gen2Rocks")
+local Gen2FruitTrees = V.require("Gen2FruitTrees")
 local TileShape = V.require("TileShape")
 local TerrainAtlas = V.require("TerrainAtlas")
 local Voxel = V.require("VoxelState")
@@ -686,6 +687,7 @@ end
 function VoxelScene.invalidate()
   ItemPokeballs.invalidate()
   Gen2Rocks.invalidate()
+  Gen2FruitTrees.invalidate()
   GranitePillars.invalidate()
   SafariFoliage.invalidate()
   V.require("GameCorner").invalidate()
@@ -955,7 +957,7 @@ local function drawCast(state, posed, atlasFor)
       -- claim this pass; otherwise retain the mirrored engine sprite.
       context.reflectionPlane = reflectPlane
       context.reflectionRaise = Water.CAST_RAISE
-      local claimed = Gen2Rocks.draw(context) or ItemPokeballs.draw(context) or CharacterRenderers.first(
+      local claimed = Gen2Rocks.draw(context) or Gen2FruitTrees.draw(context) or ItemPokeballs.draw(context) or CharacterRenderers.first(
         reflectPlane and "drawReflection" or "drawEntity", context)
       if not claimed then
         drawEntity(p.sprite, p.px, p.py, facing, p.phase, p.flip, p.gh,
@@ -1328,7 +1330,7 @@ local function castShadows(state, terrain, nbMesh, posed, cx, cy, vw, vh,
       local facing = viewFacing(p)
       local context = actorContext(state, p)
       context.facing = facing
-      local claimed = Gen2Rocks.draw(context, ShadowMap) or ItemPokeballs.draw(context, ShadowMap) or CharacterRenderers.first("drawShadow", context)
+      local claimed = Gen2Rocks.draw(context, ShadowMap) or Gen2FruitTrees.draw(context, ShadowMap) or ItemPokeballs.draw(context, ShadowMap) or CharacterRenderers.first("drawShadow", context)
       if not claimed then
         local def = p.sprite.def
         -- viewFacing, exactly as the camera draw picks it (see viewFacing for

@@ -10,11 +10,16 @@ local CommunityVisuals = {}
 
 CommunityVisuals.crystalStyle = ModSetting.new(
   "crystalStyle", "CRYSTAL SCENERY",
-  { "hd2d", "source" }, { "HD-2D", "SOURCE ART" }
+  { "hd2d", "source", "depth" }, { "VOXEL HD", "SOURCE ART", "HD-2D DEPTH" }
 )
 function CommunityVisuals.crystalHD(map)
   return map and type(map.cellCollision) == "function"
-    and CommunityVisuals.crystalStyle:get() == "hd2d"
+    and CommunityVisuals.crystalStyle:get() ~= "source"
+end
+
+function CommunityVisuals.crystalDepth(map)
+  return map and type(map.cellCollision)=="function"
+    and CommunityVisuals.crystalStyle:get()=="depth"
 end
 
 local CITY_GROUND_MAPS = {

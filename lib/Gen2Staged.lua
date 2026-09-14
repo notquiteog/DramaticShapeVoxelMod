@@ -53,6 +53,10 @@ local function screenFor(game)
 end
 
 Gen2Staged.screenFor = screenFor
+function Gen2Staged.holdsScene(game,battle)
+  local screen=screenFor(game)
+  return screen~=nil and screen.battle==battle
+end
 
 -- One canvas per side, kept and resized rather than reallocated per frame.
 local canvases = {}

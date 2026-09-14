@@ -758,6 +758,17 @@ function OverworldBattle.providerFinish()
   session.snapped = false
 end
 
+function OverworldBattle.onBattleEnded()
+  -- Gen 2 decides the outcome before its animation/message queue and exit
+  -- fade finish. The screen, not that early event, owns the stage lifetime.
+  if session and Generation.isGen2()
+      and V.require("Gen2Staged").holdsScene(game(),session.battle) then
+    session.ending=true
+    return
+  end
+  OverworldBattle.finish()
+end
+
 function OverworldBattle.finish()
   -- The 3D player mod reads this small, presentation-only handoff. Clear it
   -- even if a battle was torn down before a staged session fully opened, so
@@ -802,6 +813,11 @@ function OverworldBattle.update(dt)
   if not session then return end
 
   local g = game()
+  if session.ending and Generation.isGen2()
+      and not V.require("Gen2Staged").holdsScene(g,session.battle) then
+    OverworldBattle.finish()
+    return
+  end
   local top = g and g.stack and g.stack:top()
   local ow = g and g.overworld
   -- A battle that ended without saying so (a script tearing the state down,

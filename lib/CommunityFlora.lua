@@ -781,6 +781,7 @@ function MOUND.publishTreePart(p, rawParts, parts)
     local piece, used = nil, 0
     local function fresh()
       return { x=p.x, y=p.y, z=p.z, radius=p.radius, apron=p.apron,
+        essentialFoliage=p.essentialFoliage,
         tV=p.tV, tI={}, sV=p.sV, sI={}, cV=p.cV, cI={},
         dV=p.dV, dI={}, shV=p.shV, shI={} }
     end
@@ -801,7 +802,9 @@ function MOUND.publishTreePart(p, rawParts, parts)
     return rawParts
   end
   local ctx = MOUND.treeContext()
-  if ctx.buildGroup == "mature" and ctx.buildRecipe ~= "full" then
+  -- HD-2D cards ARE the canopy, not optional sprays over a solid hull.
+  -- Removing their distant prefix would turn whole trees into bare branches.
+  if not p.essentialFoliage and ctx.buildGroup == "mature" and ctx.buildRecipe ~= "full" then
     local stride = ctx.buildRecipe == "handheld" and 3 or 2
     local ordered = {}
     for pass = 0, 1 do
@@ -1486,11 +1489,17 @@ end
 -- create the fine silhouette and highlight breakup visible in the HD grass.
 function MOUND.detailImg()
   local T = MOUND.TRUNK
+  local style=V.require("CommunityVisuals").crystalStyle:get()
+  if T.dstyle~=style then
+    if T.dimg and T.dimg.release then T.dimg:release() end
+    T.dimg=nil;T.dstyle=style
+  end
   if T.dimg ~= nil then return T.dimg or nil end
   local ok, img = pcall(function()
     if V.require("Generation").isGen2() and V.mod and V.mod.read then
-      local bytes = assert(V.mod:read("assets/crystal/foliage-sprays-v2.png"))
-      local file = love.filesystem.newFileData(bytes, "foliage-sprays-v2.png")
+      local name=style=="depth" and "depth-crowns-v2.png" or "foliage-sprays-v2.png"
+      local bytes = assert(V.mod:read("assets/crystal/"..name))
+      local file = love.filesystem.newFileData(bytes, name)
       -- Larger individual leaves define the outer silhouette. Mip levels
       -- keep their edges stable in distant borders.
       local image = love.graphics.newImage(file, {mipmaps=true})
@@ -1850,6 +1859,7 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         spatialPart = {
           x = bx + sectionWorld * 0.5, y = 22,
           z = bz + sectionWorld * 0.5, radius = 125, apron = treeEntry.apron,
+          essentialFoliage = V.require("CommunityVisuals").crystalDepth(map),
           tV = {}, tI = {}, tQ = 0, sV = {}, sI = {}, sQ = 0,
           cV = {}, cI = {}, cQ = 0, dV = {}, dI = {}, dQ = 0,
           shV = {}, shI = {}, shQ = 0,
@@ -2070,8 +2080,19 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         box(4.82,base+14.55,base+14.81,0.94,0.99,1.045,0.42)
         end
       elseif type(map.cellCollision) == "function" then
-        tQ, cQ, dQ = V.require("Gen2Trees").append(tV,tI,tQ,cV,cI,cQ,
-          mx,base,mz,lift,cx*31+cy*17,dV,dI,dQ)
+        local trees=V.require("Gen2Trees")
+        local seed=cx*31+cy*17
+        if V.require("CommunityVisuals").crystalDepth(map) then
+          -- Preserve the real trunk/bough depth, replacing voxel crown hulls
+          -- with a small set of overlapping illustrated foliage layers.
+          if lift ~= 3 then
+            tQ=trees.append(tV,tI,tQ,{},{},0,mx,base,mz,lift,seed)
+          end
+          dQ=V.require("Gen2DepthTrees").append(dV,dI,dQ,
+            mx,base,mz,lift,seed,trees.family(seed,lift))
+        else
+          tQ,cQ,dQ=trees.append(tV,tI,tQ,cV,cI,cQ,mx,base,mz,lift,seed,dV,dI,dQ)
+        end
       elseif sapling then
         -- TEST47 CITY-SUPPORTED SAPLING:
         -- The cuttable prop is deliberately NOT the smallest mature tree any
@@ -7792,5 +7813,11 @@ MOUND.uploadTreeCache = MOUND.Timings.wrap("tree_upload", MOUND.uploadTreeCache)
 MOUND.treeCacheSignature = MOUND.Timings.wrap("tree_keys", MOUND.treeCacheSignature)
 MOUND.drawTreeParts = MOUND.Timings.wrap("tree_draw", MOUND.drawTreeParts)
 Flora.drawCommunityTrees = MOUND.Timings.wrap("tree_other", Flora.drawCommunityTrees)
+
+-- Live fruit-tree actors use the same materials as the surrounding forest.
+-- The textures remain owned and invalidated here, including style switches.
+function Flora.crystalTreeMaterials()
+  return MOUND.barkImg(), MOUND.detailImg()
+end
 
 return Flora

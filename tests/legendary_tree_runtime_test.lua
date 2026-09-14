@@ -107,4 +107,20 @@ F.pump()
 check(F.flora.treeStats().vertices>0 and F.flora.treeStats().vertices<4500,
   "dense Crystal trees use bounded volumetric foliage rather than XL crowns")
 F.flora.evictTrees()
+F.depth=true
+local depth=F.map("DEPTH_FOREST",{["2|2"]=20,["4|4"]=20})
+depth.def.tileset,depth.def.environment="TILESET_JOHTO","TOWN"
+depth.cellCollision=function()return 7 end
+F.flora.requestCommunityTrees(depth,{},2,false)
+F.pump()
+local foliage=0
+for _,part in ipairs(F.M.TRUNK.cache[depth.id].parts) do
+  if part.detail then
+    check(part.detailFarCount==nil,"essential HD-2D canopy survives distant LOD")
+    foliage=foliage+part.detail.n
+  end
+end
+check(foliage>=24,"both layered crowns uploaded")
+F.flora.evictTrees()
+F.depth=false
 print(checks .. " checks passed (Legendary geometry/cache/ownership/R.DIST)")

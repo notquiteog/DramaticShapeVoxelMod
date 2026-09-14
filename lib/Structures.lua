@@ -923,20 +923,38 @@ function Structures.forMap(map)
   -- WATER and the other tilesets' own borders keep the full ring: a flat
   -- sheet of water is what water looks like from above anyway, and an
   -- interior's border is black already.
+  local depthForestBorder = false
+  if borderBlk and CommunityVisuals.crystalDepth(map)
+      and V.require("Gen2DepthGrass").groundTile(map) then
+    -- Inspect the whole drawing, including brown trunk rows. Palette alone
+    -- mistakes grass-topped rock for forest and misses mixed-palette trees.
+    -- Gen 2's native border is what tileAt/cellCollision read outside the map.
+    depthForestBorder = #borderBlk == 16
+    local treeClasses = { tree=true, foresttree=true, roundtree=true, bush=true }
+    for cy=-2,-1 do for cx=-2,-1 do
+      local tile=borderBlk[(cy*2%4)*4+(cx*2%4)+1]
+      local shape=tile and TileShape.at(map,shapes,tile,cx*2,cy*2)
+      if not (shape and treeClasses[shape.class]) then depthForestBorder=false end
+    end end
+  end
   local hullRingOnly = borderBlk and (
     (def.tileset == "OVERWORLD"
       and (TileRenderer.voidFill or "trees") == "trees")
-    or legendaryViridian
+    or legendaryViridian or depthForestBorder
   )
+  -- HD-2D uses the SAME model/material builder throughout its forest apron.
+  -- Both classification and carving must reach this boundary: extending only
+  -- tileLookup would leave a band of uncarved boxes behind the near trees.
+  local roundRing = depthForestBorder and RING or ROUND_RING
   local tw2, th2 = tw, th
   local function tileLookup(tx, ty)
     if tx >= 0 and ty >= 0 and tx < tw2 and ty < th2 then
       return map:tileAt(tx, ty)
     end
     if not borderBlk then return nil end
-    if hullRingOnly and (tx < -ROUND_RING or ty < -ROUND_RING
-                         or tx >= tw2 + ROUND_RING
-                         or ty >= th2 + ROUND_RING) then
+    if hullRingOnly and (tx < -roundRing or ty < -roundRing
+                         or tx >= tw2 + roundRing
+                         or ty >= th2 + roundRing) then
       return nil
     end
     return borderBlk[(ty % 4) * 4 + (tx % 4) + 1] or 0
@@ -974,6 +992,7 @@ function Structures.forMap(map)
         gen2 = shapes.gen2Classes ~= nil,
         gen2WaterHeight = shapes.gen2Classes and shapes.gen2Classes.water.h,
         hideBareRing = hullRingOnly or nil,
+        roundRing = roundRing,
         runs = {}, skip = {}, ground = {}, doorFold = {}, objectQuads = {},
         grassQuads = {}, flowerQuads = {}, roundStamps = {}, figures = {} }
   -- These source scrolls are mounted relief, not another folded wall band.
@@ -1354,6 +1373,7 @@ function Structures.forMap(map)
     -- ---- flowers: the animated meadow tile stands as a 1px cutout ----
     Structures.buildFlowers(S, map, tw, th, x0, x1, y0, y1, data)
     Structures.buildLavenderFlowerbed(S, map, data)
+    if S.gen2 then V.require("Gen2Shoreline").build(S,map) end
   end
 
   -- ---- authored ground under pinned props ----
@@ -2206,6 +2226,7 @@ end
 function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
   local data = pixels(map.tileset)
   local tw, th = map.def.width * 4, map.def.height * 4
+  local roundRing = S.roundRing or ROUND_RING
 
   -- ground-set fingerprint: the template's art-matched floor depends on
   -- which ground tiles this map places, so maps sharing a tileset but
@@ -2272,8 +2293,8 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
       local ckey = cy * 8192 + cx
       local k = keyOf(cx * 2, cy * 2)
       local s = (not grouped[ckey]) and S.shapeAt[k] or nil
-      local near = cx * 2 >= -ROUND_RING and cx * 2 < tw + ROUND_RING
-               and cy * 2 >= -ROUND_RING and cy * 2 < th + ROUND_RING
+      local near = cx * 2 >= -roundRing and cx * 2 < tw + roundRing
+               and cy * 2 >= -roundRing and cy * 2 < th + roundRing
       if s and s.art == "canopy" and near then
         -- ONE 32px hull over the 2x2-cell drawing. The partner cells
         -- must be round-pinned too, or the drawing is partial (a map
@@ -2302,7 +2323,7 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
                         .. (test377Forest and "test377-forest|"
                             or "battle-art|")
                         .. gsig .. "|" .. table.concat(ids, ":")
-            if s.class=="boulder" then sig=sig.."|"..((cx*26+cy*14)%7) end
+            if s.class=="boulder" then sig=sig.."|"..cx..":"..cy end
             local tpl = roundCache[sig]
             if not tpl then
               local tq, tbg = roundTemplate(S, map, data, cx, cy,
@@ -2329,9 +2350,6 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
               roundCache[sig] = tpl
             end
             ground = tpl.bg or false
-            if s.class == "boulder" then
-              ground = V.require("Gen2Rocks").ground(map,cx,cy)
-            end
             local stamp = { quads = tpl.quads, mx = cx * 16 + 16, mz = cy * 16 + 16, r = 16 }
             if s.class == "foresttree" and CommunityVisuals.crystalHD(map) then
               -- The existing registry owns integer collision cells. Keep the
@@ -2344,12 +2362,16 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
             end
             S.roundStamps[#S.roundStamps + 1] = stamp
           end
+          local waterGround=false
+          if s.class=="boulder" then
+            ground,waterGround=V.require("Gen2Rocks").ground(map,cx,cy,2,S)
+          end
           for dy = 0, 3 do
             for dx = 0, 3 do
               local tk = keyOf(cx * 2 + dx, cy * 2 + dy)
               S.skip[tk] = true
               S.ground[tk] = ground
-              if s.class=="boulder" and ground==20 then
+              if waterGround then
                 S.waterGround=S.waterGround or {};S.waterGround[tk]=true
               end
             end
@@ -2416,20 +2438,25 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
           grouped[ckey + 8192] = true
         end
       elseif s and s.art == "oceanrock" and near then
-        -- Four separate little rocks per collision cell, each carved from
-        -- its own 8px source tile, standing only four pixels out of the sea.
+        -- Unequal overlapping reef stones share the whole collision cell.
+        -- They no longer reveal a four-ball grid at every source tile.
+        if data then
+          local rocks=V.require("Gen2Rocks")
+          local layout=rocks.shoreClusterLayout(cx,cy)
+          local sig=tsid.."|reef|"..layout.seed
+          local tpl=roundCache[sig]
+          if not tpl then
+            local tq={}
+            for _,stone in ipairs(layout) do
+              for _,q in ipairs(rocks.terrain(S,map,cx*2,cy*2,8,4,stone)) do tq[#tq+1]=q end
+            end
+            tpl={quads=tq};roundCache[sig]=tpl
+          end
+          S.roundStamps[#S.roundStamps+1]={quads=tpl.quads,mx=cx*16+8,mz=cy*16+8,r=8}
+        end
         for dy=0,1 do for dx=0,1 do
           local tx,ty=cx*2+dx,cy*2+dy
           local tk=keyOf(tx,ty)
-          if data then
-            local sig=tsid.."|ocean4|"..tostring(S.tileAt[tk]).."|"..((tx*13+ty*7)%7)
-            local tpl=roundCache[sig]
-            if not tpl then
-              local tq=V.require("Gen2Rocks").terrain(S,map,tx,ty,8,4)
-              tpl={quads=tq};roundCache[sig]=tpl
-            end
-            S.roundStamps[#S.roundStamps+1]={quads=tpl.quads,mx=tx*8+4,mz=ty*8+4,r=4}
-          end
           S.skip[tk],S.ground[tk]=true,20
           S.waterGround=S.waterGround or {};S.waterGround[tk]=true
         end end
@@ -2479,6 +2506,7 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
           if communityTree then sig = sig .. "|community_n64_memory_tree_v1" end
           if enhancedSapling then sig = sig .. "|community_cut_tree_test47" end
           if forestBoulder then sig = sig .. "|viridian_boulder_source_test97" end
+          if S.gen2 and s.class == "rock" then sig=sig.."|"..cx..":"..cy end
           local tpl = roundCache[sig]
           if not tpl then
             local tq, tbg = roundTemplate(S, map, data, cx, cy, groundTiles, 16, cap, nil, nil, base, tall, well, taper, true)
@@ -2518,9 +2546,11 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
             rounds[mapKey][cx .. "|" .. cy] = 10
           end
           if s.class == "bush" and CommunityVisuals.crystalHD(map) then
-            stamp.lift, stamp.baseY = 4, roundTemplateBase(tpl)
+            local lift = CommunityVisuals.crystalDepth(map)
+              and V.require("Gen2TileShape").bushLift(map, cx, cy) or 4
+            stamp.lift, stamp.baseY = lift, roundTemplateBase(tpl)
             stamp.hideCrown, stamp.keepTree, stamp.communityTree = true, true, true
-            rounds[mapKey][cx .. "|" .. cy] = 4
+            rounds[mapKey][cx .. "|" .. cy] = lift
             saplings[mapKey][cx .. "|" .. cy] = true
           end
           if enhancedSapling then
@@ -2542,11 +2572,18 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
         -- the volume path never boxes a pinned cell. Ground is the
         -- template's own art-matched tile; `false` (no match, headless)
         -- falls to the commonest-ground pass below.
+        local waterGround=false
+        if S.gen2 and s.class=="rock" then
+          ground,waterGround=V.require("Gen2Rocks").ground(map,cx,cy,1,S)
+        end
         for dy = 0, 1 do
           for dx = 0, 1 do
             local tk = keyOf(cx * 2 + dx, cy * 2 + dy)
             S.skip[tk] = true
             S.ground[tk] = ground
+            if waterGround then
+              S.waterGround=S.waterGround or {};S.waterGround[tk]=true
+            end
           end
         end
       end
@@ -4689,6 +4726,14 @@ function Structures.buildGrass(S, map, x0, x1, y0, y1, data)
       -- tile-level test sprouted tufts all over town plazas.
       if s and s.art == "grass"
          and map:isGrassCell(math.floor(tx / 2), math.floor(ty / 2)) then
+        local layered=CommunityVisuals.crystalDepth(map)
+          and V.require("Gen2DepthGrass").append(quads,map,tx,ty)
+        if layered then
+          -- The raised blades replace the ROM tuft drawing, including its
+          -- flat copy. Keep the native collision/classification unchanged.
+          S.skip[k] = true
+          S.ground[k] = V.require("Gen2DepthGrass").groundTile(map)
+        else
         local tileId = S.tileAt[k]
         local tpl = templates[tileId]
         if not tpl then
@@ -4707,6 +4752,7 @@ function Structures.buildGrass(S, map, x0, x1, y0, y1, data)
               uv = q.uv, shade = q.shade,
             }
           end
+        end
         end
       end
     end
@@ -4859,6 +4905,8 @@ end
 
 function Structures.buildFlowers(S, map, tw, th, x0, x1, y0, y1, data)
   local templates = {}
+  local flowers=CommunityVisuals.crystalHD(map) and V.require("Gen2Flowers")
+  local crystal=flowers and flowers.forTileset(map.tileset)
   -- flowerQuads, not objectQuads: flowers sit on WALKABLE cells, so
   -- their mesh draws after the characters with the character pull
   -- (ChunkMesher's flower mesh) -- terrain-baked they lose the depth
@@ -4869,7 +4917,10 @@ function Structures.buildFlowers(S, map, tw, th, x0, x1, y0, y1, data)
       Budget.tick()
       local k = keyOf(tx, ty)
       local s = S.shapeAt[k]
-      if s and s.art == "flower" then
+      if crystal and S.tileAt[k]==3 and s then
+        S.skip[k],S.ground[k]=true,crystal.ground
+        if tx>=0 and ty>=0 and tx<tw and ty<th then flowers.append(quads,map,tx,ty) end
+      elseif s and s.art == "flower" then
         -- the tile's atlas slot carries only the standing cutout now, so
         -- EVERY flower position -- ring included -- paints synthesized
         -- ground instead of its own art: the commonest flat neighbour

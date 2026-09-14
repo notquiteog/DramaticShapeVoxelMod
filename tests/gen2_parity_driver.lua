@@ -20,9 +20,21 @@ return function(game)
       return emit(vertices,tex,shade)
     end,uv,tile)
   end
+  if os.getenv("QA_DEPTH_STYLE")=="1" then
+    V.require("CommunityVisuals").crystalStyle:sync("depth")
+    Mesher.invalidate(nil,"HD-2D depth QA")
+  end
   local rocks=V.require("Gen2Rocks")
   local drawRock=rocks.draw
   local liveRocks={}
+  local fruit=V.require("Gen2FruitTrees")
+  local drawFruit=fruit.draw
+  local fruitDrawn=false
+  fruit.draw=function(c,shadow)
+    local claimed=drawFruit(c,shadow)
+    if claimed and not shadow then fruitDrawn=true end
+    return claimed
+  end
   rocks.draw=function(c,shadow)
     local claimed=drawRock(c,shadow)
     if claimed and not shadow then liveRocks[c.sprite.def.id]=true end
@@ -68,7 +80,16 @@ return function(game)
       {"AZALEA_MART",4,4},{"PLAYERS_HOUSE_2F",3,3}}) do shots[#shots+1]=loc end
   end
   for _, loc in ipairs(shots) do
+    local partyCount=#game.save.party
     assert(game.world:setMap(loc[1],loc[2],loc[3],"down"))
+    if loc[1]=="NEW_BARK_TOWN" then
+      local givers=0
+      for _,obj in ipairs(game.world.maps.NEW_BARK_TOWN.objects or {}) do
+        if obj.name=="DSR_GEN2_TEST_GIVER" and obj.owner=="DRAMATIC_SKY_RIDE" then givers=givers+1 end
+      end
+      assert(givers==1,"restored Sky Ride test scientist missing or duplicated")
+      assert(#game.save.party==partyCount,"test giver granted Pokemon on entry")
+    end
     local Permissions=require("src.world.gen2.Permissions")
     local map=game.world.map
     if Permissions.of(map:cellCollision(loc[2],loc[3]))==Permissions.WALL then
@@ -96,6 +117,34 @@ return function(game)
     U.wait(140)
     local map = game.world.map
     local shapes, S = Shapes.forMap(map), Structures.forMap(map)
+    if os.getenv("QA_DEPTH_STYLE")=="1" then
+      local cut,bush=0,0
+      for cell in pairs((_G.__ds_sapling_cells or {})[map.id] or {}) do
+        local cx,cy=cell:match("^(-?%d+)|(-?%d+)$");cx,cy=tonumber(cx),tonumber(cy)
+        local coll=map:cellCollision(cx,cy)
+        local lift=(_G.__ds_round_cells or {})[map.id][cell]
+        if Permissions.isCutTree(coll) then assert(lift==4,"cut sapling shape changed");cut=cut+1
+        elseif Permissions.isHeadbuttTree(coll) then assert(lift==3,"shrub kept tree trunk");bush=bush+1 end
+      end
+      print("[tree roles]",map.id,cut,"cut saplings",bush,"low shrubs")
+    end
+    if os.getenv("QA_DEPTH_STYLE")=="1" and S.roundRing==12 then
+      local outer=0
+      local tree={tree=true,roundtree=true,foresttree=true,bush=true}
+      local tw,th=map.def.width*4,map.def.height*4
+      for ty=-12,th+11 do for tx=-12,tw+11 do
+        if tx < -4 or ty < -4 or tx >= tw+4 or ty >= th+4 then
+          local k=key(tx,ty)
+          local s=S.shapeAt[k]
+          if s and tree[s.class] then
+            assert(S.skip[k],"unmodelled forest fill at "..map.id..":"..tx..","..ty)
+            outer=outer+1
+          end
+        end
+      end end
+      assert(outer>0,"forest apron contains no distant tree models")
+      print("[forest apron]",map.id,outer,"outer tiles owned by tree models")
+    end
     local Permissions=require("src.world.gen2.Permissions")
     assert(Permissions.of(map:cellCollision(loc[2],loc[3]))~=Permissions.WALL,"camera placed on blocked scenery")
     for _,f in ipairs(S.furniture or {}) do
@@ -151,8 +200,11 @@ return function(game)
   end
   checkLoader()
   assert(liveRocks.SPRITE_ROCK and liveRocks.SPRITE_BOULDER,"live rock actors did not render as models")
+  if os.getenv("QA_DEPTH_STYLE")=="1" then assert(fruitDrawn,"fruit tree model did not render") end
+  fruit.draw=drawFruit
   rocks.draw=drawRock
   roofShell.append=appendRoof
   assert(roofPanels>0,"no roof side panels reached the mesher")
   print("[parity] PASS: installed companion set loaded; round ownership and ledge height verified")
+  love.event.quit()
 end

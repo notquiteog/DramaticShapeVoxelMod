@@ -847,7 +847,13 @@ function Voxel3D.viewProjection(cx, cy, vw, vh)
 
   local a = Voxel.angle
   local focal = Voxel.FOCAL
-  local dist = focal * vh
+  local depthStyle=false
+  local okDepth,depth=pcall(function()
+    local game=require("src.core.Game")
+    return V.require("CommunityVisuals").crystalDepth(game.world and game.world.map)
+  end)
+  depthStyle=okDepth and depth
+  local dist = focal * vh * (depthStyle and 1.18 or 1)
   -- the FOV that makes a straight-down camera at `dist` frame exactly `vh`
   -- world pixels, which is the framing the flat view already has
   local fov = 2 * math.atan(1 / (2 * focal))

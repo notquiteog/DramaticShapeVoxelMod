@@ -51,7 +51,15 @@ local function meadow(x,y)
   local function n(dx,dy)return noise((ix+dx)%4,(iy+dy)%4,53) end
   return (n(0,0)*(1-u)+n(1,0)*u)*(1-v)+(n(0,1)*(1-u)+n(1,1)*u)*v
 end
-function M.color(kind,x,y,r,g,b,light)
+function M.color(kind,x,y,r,g,b,light,depth)
+  if depth and kind=="grass" then
+    local patch=math.floor(meadow(x,y)*5)/5
+    return (.31+patch*.09)*light,(.47+patch*.13)*light,(.16+patch*.06)*light
+  elseif depth and kind=="path" then
+    local patch=math.floor(meadow(x,y)*4)/4
+    local chip=noise(math.floor(x/3),math.floor(y/3),37)>.97 and -.06 or 0
+    return (.62+patch*.10+chip)*light,(.53+patch*.09+chip)*light,(.34+patch*.08+chip)*light
+  end
   local grain=noise(x,y,19)-.5
   if kind=="grass" then
     local field=(meadow(x,y)-.5)*.095+grain*.018
@@ -118,14 +126,31 @@ local function release(e)
 end
 function M.apply(map,base,source)
   if not V.require("CommunityVisuals").crystalHD(map) or not source then return base,source end
+  local depth=V.require("CommunityVisuals").crystalDepth(map)
   local old=cache[map.id]
-  if old and old.base==base then return old.image,old.data end
+  if old and old.base==base and old.depth==depth then return old.image,old.data end
   local w,h=source:getDimensions()
   local scale=4
   local data=love.image.newImageData(w*scale,h*scale)
   local attrs=require("src.world.gen2.TileAttrs")
   local kinds=floorKinds[map.tileset.id] or {}
   local woodTile=M.woodTile(map)
+  local floorModule=depth and V.require("Gen2FloorFinish")
+  local floorFinish=floorModule and floorModule.forTileset(map.tileset)
+  local flowers=V.require("Gen2Flowers")
+  local flowerMaterial=flowers.forTileset(map.tileset)
+  local shore=depth and V.require("Gen2Shoreline")
+  local shoreMaterial=shore and shore.forTileset(map.tileset)
+  local sandLight=1
+  if shoreMaterial then
+    local tile=shoreMaterial.tile;local n=0
+    local pr=map.tileset.tilesPerRow or 16
+    for y=0,7 do for x=0,7 do
+      local r,g,b=source:getPixel(tile%pr*8+x,math.floor(tile/pr)*8+y)
+      n=n+math.max(r,g,b)
+    end end
+    sandLight=math.max(.35,math.min(1,n/64/.83))
+  end
   local pr=map.tileset.tilesPerRow or 16
   for ty=0,h/8-1 do for tx=0,w/8-1 do
     local tile=ty*pr+tx
@@ -140,8 +165,16 @@ function M.apply(map,base,source)
     light=kind=="wood" and 1 or math.max(.35,math.min(1,light/64/.83))
     for y=0,31 do for x=0,31 do
       local r,g,b,a=source:getPixel(tx*8+math.floor(x/4),ty*8+math.floor(y/4))
-      if kind=="floor" then r,g,b=M.color(kind,x,y,ar/64,ag/64,ab/64,light)
-      elseif kind then r,g,b=M.color(kind,x,y,r,g,b,light)
+      if shoreMaterial and tile==shoreMaterial.slot then
+        r,g,b=M.color("path",x,0,0,0,0,sandLight,true)
+        r,g,b=shore.color(x,y,r,g,b);a=1
+      elseif flowerMaterial and tile==flowerMaterial.slot then
+        r,g,b=flowers.color(x,y);a=1
+      elseif floorFinish and floorFinish.quadrants[tile]~=nil then
+        r,g,b=floorModule.color(floorFinish,floorFinish.quadrants[tile],x,y)
+        a=1
+      elseif kind=="floor" then r,g,b=M.color(kind,x,y,ar/64,ag/64,ab/64,light)
+      elseif kind then r,g,b=M.color(kind,x,y,r,g,b,light,depth)
       elseif architecture=="roof" then
         -- Keep dark eaves and edge outlines; replace the drawn stripes with
         -- staggered courses using this map's own roof palette.
@@ -162,7 +195,7 @@ function M.apply(map,base,source)
   end end
   local image=love.graphics.newImage(data);image:setFilter("nearest","nearest")
   release(old)
-  cache[map.id]={base=base,image=image,data=data}
+  cache[map.id]={base=base,image=image,data=data,depth=depth}
   return image,data
 end
 function M.setLive(live)

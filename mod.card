@@ -1,7 +1,7 @@
 -- Sharing metadata (25-community-and-ecosystem.md 3.2).  Read by tooling
 -- and the manager detail pane; never by the loader's merge.
 return {
-  summary = "A 3D diorama and staged Battle Art for Red, Blue, Yellow, Gold, Silver and Crystal. Crystal includes round foliage, source-modelled furniture, thin retaining ledges and real rock models. First- and third-person free movement remain Gen 1-only.",
+  summary = "Diorama and staged Battle Art for Gen 1 and Gen 2. Crystal includes optional layered HD-2D foliage, low shrubs, furniture, flowers, irregular rock models, soft shores and lighting, plus native grid walking in first/third person.",
   author = "DramaticShape contributors / notquiteog fork",
   contact = "https://github.com/notquiteog/DramaticShapeVoxelMod",
   tags = { "graphics", "3d", "voxel", "render-pipeline", "presentation",
