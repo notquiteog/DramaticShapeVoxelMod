@@ -1,3 +1,7 @@
+## 1.15.2 — 2026-09-13
+
+Fix missing second-sprite dimensions in Crystal staged pairs, so both opponents render completely. Respect the doubles companion modern HUD ownership and omit legacy backplates underneath it. Same-species two-Sentret GPU check and a focused staged-pair dimensions/placement test pass.
+
 ## 1.15.1 — 2026-09-13
 
 Crystal scenery refinement: varied crown rotation, height and branches; mip-filtered foliage; narrow irregular grass fringes; staggered roof courses and warmer lab wood. Render-only, source materials and Gen 1 retain their existing paths. Full current-companion 16-map scenery driver passed; this is an incremental art pass, not complete Gamma Emerald parity.

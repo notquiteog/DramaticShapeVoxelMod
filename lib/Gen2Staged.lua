@@ -111,9 +111,13 @@ function Gen2Staged.sideTexture(game, side)
     if p2 and p2 ~= mon and (p2.hp or 0) > 0 then partner = p2 end
   end
   local pimage = nil
+  local iw2,ih2=0,0
   if partner then
     local ok2, img2 = pcall(screen.pic, screen, partner, back)
-    if ok2 and img2 then pimage = img2 end
+    if ok2 and img2 then
+      local sized,w,h=pcall(img2.getDimensions,img2)
+      if sized and w and h then pimage,iw2,ih2=img2,w,h end
+    end
   end
 
   local BattleScene = V.require("BattleScene")

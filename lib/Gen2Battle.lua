@@ -189,7 +189,8 @@ function Gen2Battle.install()
     -- (9,6) through (19,12).
     do
       local okFont, BoxFont = pcall(require, "src.render.Font")
-      if okFont and BoxFont and type(BoxFont.drawBox) == "function" then
+      local ownsHud=type(self.usesModernDoublesHud)=="function" and self:usesModernDoublesHud()
+      if not ownsHud and okFont and BoxFont and type(BoxFont.drawBox) == "function" then
         BoxFont.drawBox(0, 0, 12, 4)
         BoxFont.drawBox(9, 6, 11, 7)
       end

@@ -1,3 +1,18 @@
+# Modern doubles UI follow-up — 2026-09-13
+
+User requested a modern battle UI, then correctly pointed out incomplete
+Sentret sprites and blurry text in the first comparison. Doubles 0.9.0
+owns its native-panel HUD/menu/move/dialogue renderer in lib/gen2_hud.lua;
+Battle Art 1.15.2 honors usesModernDoublesHud() to omit legacy backplates.
+Fonts use the actual panel transform scale as glyph DPI (7px logical,
+35px raster at scale5), fixing magnified antialiasing. Missing iw2/ih2 in
+Gen2Staged caused paired textures to fail: now reads each image size.
+Two-Sentret real screen check passes, both staged.drawn entries asserted,
+image /tmp/johto-hd/doubles-sharp/doubles_menu.png. Labels/HP and move PP,
+survivor promotion, native damage and party ownership verified. Original
+special prompts remain native. Explicit enemy aim and player pair command
+collection remain future work; don't imply full modern doubles mechanics.
+
 # 1.15.1 scenery / gameplay hotfix follow-up — 2026-09-13
 
 Scenery changes: Gen2Trees stable crown rotation/height/width and exposed
