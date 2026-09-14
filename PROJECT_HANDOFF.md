@@ -1,3 +1,53 @@
+# Working checkpoint — scenery + reproduced glitchmon — 2026-09-14
+
+Candidates BA1.19.0, Online+0.5.4, cart1.11.0 (publication pending).
+BA: actual crystal_center_healer now horizontal (Elm's earlier separate recipe
+was already fixed); PokéCom healer uses bed recipe. Native sign components share
+their ground baseline and a shallow backing joins the cap. Capped roof courses,
+subtler roof materials, curved side foliage for rotating views, and a free-camera
+only upper room enclosure for INDOOR maps. Cache48. Native40-view review passed:
+/tmp/johto-hd/camera-scenery-shell.log and image folder; Center placement checks
+in center-sign-roof-final.log. Pure geometry/roof/bed/style/material/furniture and
+support181 pass. Scenery driver skips story/encounter triggers for visual QA.
+
+ROOT CAUSE REPRODUCED: user confirmed the brown sprite in live X11 window capture
+(/tmp/johto-hd/user-game-window; read-only capture, no user inputs injected).
+Online+'s core.update job rerolled its offline roster every frame; towns with
+empty grass lists randomly inserted/removed rare slots. Eight corrupt rare
+entries (New Bark/Cherrygrove + aliases) spell species T/M/C/S with letter-valued
+levels and fell back to SPRITE_PIKACHU, whose Wilds placeholder is Charmander.
+Native old-code log live-hook-motion.log records repeated NEW_BARK_TOWN_obj_301/
+302 with species T/M. It was spawning fresh actors, so per-object displacement
+probes could not detect it. Online+ candidate validates species/levels, keeps a
+per-visit roster, consumes claimed local entries, removes corrupted database
+rows and yields offline wild/follower ownership to Wilds via exported capability
+API. Server encounters remain when connected, removed on disconnect with Wilds.
+Native copied-save900 frames PASS in live-hook-fixed.log; ambient stays and
+adding Cyndaquil leaves exactly one follower. No live server test.
+
+CRITICAL QA CORRECTIONS:
+- Actual AppImage profile is /home/admin/.local/share/pokemon-love2d, NOT its
+  sibling love/pokemon-love2d. User files untouched. Copied to johto-appimage-qa.
+- AppImage filename is0.2.59 but profile chainloads updates/gen1recomp-0.2.60.love.
+  Thus patching ONLY AppImage main.lua did nothing! Copied update payload's main
+  is patched for QA, no real user engine changed. Source and native059/060 World,
+  Npc, Gen2Compat, SpriteRenderer are byte-identical; Game2 changed shader origin.
+- POKEPORT_DRIVER skips core.update by calling Game:update directly. For motion
+  verification the disposable driver's update branch MUST call
+  PlatformHooks.update(Game,1/60). This runs Online+'s actual Jobs.step.
+- Script shortcut also ignores --cart. In disposable launcher only, change
+  `if scripted then` to `if scripted and not resolvedLaunch.cartSpecified then`.
+  Assert SaveData.getCart()==johto_diorama. scope5.log proves it. Earlier cart-path
+  checks that asserted only version/HUD did not prove scope in an updated fused
+  profile; retain their geometry/input results, not claims about that scope.
+- Run source LOVE from /tmp/johto-hd/engine. A repo containing main.lua can shadow
+  the intended game even when the LOVE argument points at the engine.
+- Support: from engine cwd, DS_MOD_PATH=mods/BATTLE_ART_VOXEL_FORK luajit
+  /home/admin/Projects/DramaticShapeVoxelMod/tests/gen2_support_test.lua.
+
+Remaining: final packaging/publication + pins; exact Gamma parity, broader
+map/texture polish and hardware performance are not claimed complete.
+
 # Published checkpoint — cart1.10.0 / camera3 restored — 2026-09-14
 
 Released/pushed:

@@ -96,7 +96,7 @@ local mart={
 }
 local center={
   item("crystal_center_healer",{{28,29,30,31},{44,45,46,47},{60,61,61,63},{76,77,78,79}},17,
-    {upright(0,31,0,7,8,31,16,16)}),
+    {upright(0,31,0,27,28,31,0,32,2)},6),
   item("crystal_center_terminal",{{32,33},{48,49},{64,65}},17,
     {upright(0,15,0,4,5,23,12,12)}),
   item("crystal_center_receiver",{{3,37},{19,53},{70,71}},17,

@@ -48,6 +48,28 @@ function M.append(v,indices,q,x,y,z,lift,seed,family)
     q=q+1
     end
   end
+  -- Curved leaf cheeks fill the east/west silhouette during free camera
+  -- rotation. These sit on the crown boundary, rather than crossing through
+  -- its centre. Crop out the illustrated trunk so side views keep one trunk.
+  local sideW=shrub and 5.8 or (bush and 4.0 or 10*spread)
+  local sideD=shrub and 3.2 or (bush and 3.0 or 7.5*spread)
+  local low=shrub and 1 or h*.36
+  local high=shrub and 7.4 or h*.92
+  for _,side in ipairs({-1,1}) do for strip=0,3 do
+    local k=#v
+    local left,right=-1+strip*.5,-.5+strip*.5
+    for _,p in ipairs({{left,0},{right,0},{right,1},{left,1}}) do
+      local d,t=p[1],p[2]
+      local bow=math.sqrt(math.max(0,1-d*d))
+      local radius=sideW*(.55+.45*bow)*(t==1 and .70 or 1)
+      local u=(col+.02+(d+1)*.48)*.5
+      local vv=(row+.02+(1-t)*.64)*.5
+      if shrub then vv=.686+(1-t)*.26 end
+      v[#v+1]={x+side*radius,y+low+(high-low)*t,z+d*sideD,u,vv,.93}
+    end
+    for _,i in ipairs({1,2,3,1,3,4}) do indices[#indices+1]=k+i end
+    q=q+1
+  end end
   -- A shallow illustrated crown cap keeps canopy volume at steep camera
   -- angles. Its UV crop excludes the trunk; the side layers still provide
   -- the silhouette from the ground. All eight quads share their edges.

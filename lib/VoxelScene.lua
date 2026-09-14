@@ -1523,6 +1523,7 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   -- One material-coloured plane below the whole loaded neighborhood closes
   -- literal terrain holes without obscuring a single valid world fragment.
   -- Drawn before terrain, depth alone decides where it remains visible.
+  V.require("Gen2InteriorShell").draw(state.map)
   WorldUnderlay.draw(state, cx, cy, underlayColor)
   Voxel3D.draw(terrain, atlasFor(state.map), nil)
   CavePerimeter.draw(state.map, atlasFor(state.map))

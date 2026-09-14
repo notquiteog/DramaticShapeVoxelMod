@@ -2840,6 +2840,8 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
                  { x0 + 8, neY, z0 }, { x0, nwY, z0 } },
                { { u0, v1 }, { u1, v1 }, { u1, v0 }, { u0, v0 } }, 0.95)
           if S.gen2 then
+            V.require("Gen2RoofShell").courses({swY,seY,neY,nwY},tx,ty,
+              push,uvRect,roofTile,heightAt(tx-1,ty)<run.h,heightAt(tx+1,ty)<run.h)
             local wallTile=map:tileAt(tx,math.min(run.front,run.north+run.roofRows))
             if map.tileset.id=="TILESET_JOHTO" or map.tileset.id=="TILESET_JOHTO_MODERN" then
               wallTile=27

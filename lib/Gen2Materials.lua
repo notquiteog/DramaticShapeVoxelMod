@@ -97,10 +97,16 @@ function M.color(kind,x,y,r,g,b,light,depth)
   elseif kind=="roof" then
     local row=math.floor(y/8)
     local joint=(x+(row%2)*8)%16
-    local seam=(y%8==7 or joint==0) and .68 or 1
-    local bevel=y%8==0 and 1.12 or 1
-    local tone=(.93+noise(math.floor((x+(row%2)*8)/16),row,3)*.10)*seam*bevel
-    return r*tone,g*tone,b*tone
+    local tileNoise=noise(math.floor((x+(row%2)*8)/16),row,3)
+    local bevel=(y%8)/7
+    local seam=(y%8==7 or joint==0) and .78 or 1
+    local tone=(.88+tileNoise*.14+.12*math.sin(bevel*math.pi))*seam
+    local gray=(r+g+b)/3
+    -- Weathered glazed tiles retain the town's roof hue, with a softer
+    -- saturation and irregular mineral flecks instead of bright brick grids.
+    local fleck=(noise(x,y,83)-.5)*.014
+    return (r*.78+gray*.22)*tone+fleck,
+      (g*.78+gray*.22)*tone+fleck,(b*.78+gray*.22)*tone+fleck
   elseif kind=="plaster" then
     local v=grain*.024
     return .76+v,.73+v,.64+v

@@ -31,3 +31,16 @@ R.append(run,0,3,R.corners(run,0,3,h),at,h,function(p)
 end,function()return 0,1,0,1 end,27)
 assert(seam==1,'different roof heights leave an open step')
 print('roof shell meets facade and slope; shared faces culled; stepped roof sealed')
+
+local courseCount=0
+R.courses({24,24,32,32},0,0,function(p,uv)
+ courseCount=courseCount+1
+ for i,v in ipairs(p) do
+  local base=32-v[3]
+  assert(v[2]>=base-1e-6 and v[2]<=base+.281,'roof relief exceeded thin course thickness')
+  assert(v[1]>=0 and v[1]<=8 and v[3]>=0 and v[3]<=8,'roof altered footprint')
+  assert(uv[i][1]>=0 and uv[i][1]<=1 and uv[i][2]>=0 and uv[i][2]<=1)
+ end
+end,function()return 0,1,0,1 end,13,true,true)
+assert(courseCount==16,'four capped overlapping courses expected')
+print('roof courses follow base slope with bounded relief and closed ends')

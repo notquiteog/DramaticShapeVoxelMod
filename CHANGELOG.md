@@ -1,3 +1,23 @@
+## 1.19.0 — 2026-09-14
+
+Lay the actual Crystal Pokémon Center healer flat, including the PokéCom
+variant. The earlier repair covered Elm's distinct healing machine only.
+Keep native sign lettering on one board and close the detached cap gap with
+a shallow backing. Add overlapping, capped roof courses and subtler roof
+materials while retaining the sealed roof base and native building footprint.
+
+Improve rotating views with curved east/west crown foliage. First-person and
+third-person interiors gain an upper room enclosure and ceiling behind the
+existing cutaway walls; ordinary diorama views retain their open presentation.
+Cache revision48. All changes are visual; map collision and warps are intact.
+
+Validation: 1440p Center/Goldenrod/New Bark placement checks; 40 first/third-
+person views across New Bark, Center, Elm's lab, Mom's house and Route29, with
+four headings each and live camera-input gates asserted. The lab fixture now
+stands in a verified walkable aisle. Pure geometry/material/furniture tests and
+support181 pass. Software GPU; exhaustive map and hardware coverage remains
+open. The reproduced town glitchmon is repaired in companion Online+0.5.4.
+
 ## 1.18.0 — 2026-09-14
 
 Restore the 3-key camera cycle on Crystal through native input.key and

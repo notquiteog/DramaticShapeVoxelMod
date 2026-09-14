@@ -2,6 +2,9 @@ local recipes=assert(loadfile('data/gen2_furniture.lua'))()
 local bed,bin
 for _,r in ipairs(recipes.TILESET_LAB) do if r.id=='crystal_healing_machine' then bed=r elseif r.id=='crystal_lab_bin' then bin=r end end
 assert(bed.support==6 and bed.parts[1].depth==32 and bed.parts[1].top[2]==27,'healing bed must be horizontal at six-pixel height')
+local center
+for _,r in ipairs(recipes.TILESET_POKECENTER) do if r.id=='crystal_center_healer' then center=r end end
+assert(center.support==6 and center.parts[1].depth==32 and center.parts[1].top[2]==27,'Center bed must also lie down')
 local data={getPixel=function(_,x,y)local c=(x+y)%4/3;return c,c,c,1 end}
 local q=assert(loadfile('lib/Gen2Bin.lua'))().build(bin,data,16,128,128)
 assert(#q==50,'bin must include all outer, rim, inner and base faces')

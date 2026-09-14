@@ -73,7 +73,7 @@ return {
   prop('gate_terminal',44,{2,0,2,4},'machine',1),
  },
  TILESET_POKECOM_CENTER={
-  prop('pokecom_healer',5,full,'machine',1),
+  prop('pokecom_healer',5,full,'bed',1),
   prop('pokecom_terminal',7,{2,0,2,4},'machine',1),
   prop('pokecom_call_terminal',36,left,'machine',1),
   prop('pokecom_seat',46,{0,0,2,2},'seat',1),

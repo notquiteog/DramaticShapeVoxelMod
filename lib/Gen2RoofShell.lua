@@ -42,4 +42,34 @@ function M.append(run,tx,ty,c,runAt,heightAt,emit,uvRect,tile)
     end
   end
 end
+-- Thin overlapping courses follow the sealed roof plane. The original
+-- plane remains underneath; side/end caps close each raised tile lip.
+function M.courses(c,tx,ty,emit,uvRect,tile,west,east)
+  local x,z=tx*8,ty*8
+  local u0,u1,v0,v1=uvRect(tile,0,8)
+  local downSouth=c[1]+c[2]<=c[3]+c[4]
+  local function height(t,right)
+    local n,south=right and c[3] or c[4],right and c[2] or c[1]
+    return n+(south-n)*t
+  end
+  for row=0,3 do
+    local a,b=row/4,(row+1)/4
+    local liftA,liftB=downSouth and 0 or .28,downSouth and .28 or 0
+    local an,bn=height(a,false),height(b,false)
+    local ae,be=height(a,true),height(b,true)
+    local A,B,C,D={x,an+liftA,z+a*8},{x+8,ae+liftA,z+a*8},
+      {x+8,be+liftB,z+b*8},{x,bn+liftB,z+b*8}
+    local va,vb=v0+(v1-v0)*a,v0+(v1-v0)*b
+    emit({D,C,B,A},{{u0,vb},{u1,vb},{u1,va},{u0,va}},.97)
+    local t=downSouth and b or a
+    local p,q=downSouth and D or A,downSouth and C or B
+    local vv=downSouth and vb or va
+    emit({{x,height(t,false),z+t*8},{x+8,height(t,true),z+t*8},q,p},
+      {{u0,vv},{u1,vv},{u1,vv},{u0,vv}},.68)
+    if west then emit({{x,an,z+a*8},{x,bn,z+b*8},D,A},
+      {{u0,va},{u0,vb},{u0,vb},{u0,va}},.78) end
+    if east then emit({{x+8,be,z+b*8},{x+8,ae,z+a*8},B,C},
+      {{u1,vb},{u1,va},{u1,va},{u1,vb}},.78) end
+  end
+end
 return M

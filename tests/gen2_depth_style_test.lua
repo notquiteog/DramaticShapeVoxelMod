@@ -10,7 +10,7 @@ local Trees=assert(loadfile('lib/Gen2DepthTrees.lua'))()
 for _,family in ipairs({'broadleaf','conifer','spreading','shrub'}) do
  local v,i={},{}
  Trees.append(v,i,0,0,0,0,family=='shrub' and 4 or 20,42,family)
- assert(#v>0 and #i<=168,'layered trees and crown cap must have a bounded budget')
+ assert(#v>0 and #i<=216,'layered trees and crown cap must have a bounded budget')
  for _,p in ipairs(v) do
   assert(p[2]>=0 and p[2]<60,'invalid crown height')
   assert(p[4]>=0 and p[4]<=1 and p[5]>=0 and p[5]<=1,'invalid crown atlas UV')
@@ -45,3 +45,15 @@ for _,quad in ipairs(q) do
 end
 map.tileset.id='TILESET_LAB';assert(not Grass.append({},map,0,0),'indoor art used as grass')
 print('HD-2D default and style isolation, layered crown budget and grass bounds passed')
+
+local Shell=assert(loadfile('lib/Gen2InteriorShell.lua'))({require=function(name)
+ assert(name=='Structures');return {forMap=function()return {furniture={{height=40}}}end}
+end})
+assert(Shell.geometry({def={environment='TOWN',width=10,height=9}})==nil)
+local vertices,indices,ceiling=Shell.geometry({def={environment='INDOOR',width=5,height=4}})
+assert(#vertices==20 and #indices==30 and ceiling>=56)
+for _,p in ipairs(vertices) do
+ assert(p[2]==0 or p[2]==ceiling)
+ assert(p[1]<0 or p[1]>160 or p[3]<0 or p[3]>128,'room wall intrudes into map')
+end
+print('Ground-level room enclosure stays outside native map; overhead/outdoors excluded PASS')

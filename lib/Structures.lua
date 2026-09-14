@@ -4033,6 +4033,15 @@ function Structures.buildObject(S, map, region, cluster,
       end
     end
   end
+  -- Native signs are a single board: disconnected letters and highlights
+  -- belong at their source positions, not on their own ground-level feet.
+  -- Limit this to one sign cell so adjacent separate props retain their bases.
+  if S.gen2 and pinnedShape and pinnedShape.class == "signpost"
+      and bw <= 16 and bh <= 16 then
+    local bottom = 0
+    for _, c in ipairs(comps) do bottom = math.max(bottom, c.lowY) end
+    for _, c in ipairs(comps) do c.lowY = bottom end
+  end
   for _, c in ipairs(comps) do
     c.z0 = cluster.minY * 8 + math.floor(c.lowY / 8) * 8
            + (support and 8 or 0) + (8 - depth) / 2
@@ -4057,6 +4066,32 @@ function Structures.buildObject(S, map, region, cluster,
       end
       for idx, c in pairs(comp) do
         if c ~= biggest then solidPx[idx] = nil end
+      end
+    end
+  end
+
+  if S.gen2 and pinnedShape and pinnedShape.class == "signpost"
+      and bw <= 16 and bh <= 16 and comps[1] then
+    -- The source's light line under the cap is open to the background flood.
+    -- A shallow backing board closes that gap without moving the lettering.
+    local data=pixels(map.tileset)
+    local sample,best=nil,-1
+    if data then for _,i in pairs(solidPx) do
+      local r,g,b=data:getPixel(srcU[i],srcV[i])
+      if r+g+b>best then sample,best=i,r+g+b end
+    end end
+    if sample then
+      local c=comps[1]
+      local x0,x1=wx0+2,wx0+bw-2
+      local y0,y1=baseY+4,baseY+c.lowY+1
+      local z0,z1=c.z0+.25,c.z1-.25
+      local a,b,c1,d={x0,y0,z0},{x1,y0,z0},{x1,y0,z1},{x0,y0,z1}
+      local e,f,g,h={x0,y1,z0},{x1,y1,z0},{x1,y1,z1},{x0,y1,z1}
+      for _,face in ipairs({{d,c1,g,h},{b,a,e,f},{e,h,g,f},
+        {a,b,c1,d},{a,d,h,e},{c1,b,f,g}}) do
+        face.u=(srcU[sample]+.5)/atlasW;face.v=(srcV[sample]+.5)/atlasH
+        face.shade=.88;face.visualObjectId=visualObjectId
+        quads[#quads+1]=face
       end
     end
   end
