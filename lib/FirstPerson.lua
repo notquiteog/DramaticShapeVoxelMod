@@ -199,6 +199,28 @@ function FirstPerson.driving()
   return FirstPerson.engaged() and FirstPerson.onTop()
 end
 
+-- Looking does not grant movement. Crystal dialogue and world scripts can
+-- hold the player's feet while the same world camera continues to turn.
+function FirstPerson.looking()
+  if not FirstPerson.engaged() then return false end
+  local ok, allowed = pcall(function()
+    local Game = require("src.core.Game")
+    local world = Game.world
+    if not (world and world == Game.overworld) then return FirstPerson.onTop() end
+    if not world.map or world.battleActive then return false end
+    local stack = Game.stack
+    if not stack then return false end
+    -- Inspect the complete stack: a battle's own text box must not hand its
+    -- controls to the overworld. Other menus retain their cursor and inputs.
+    for _, state in ipairs(stack.states or {}) do
+      if not state.isTextBox then return false end
+    end
+    local top=stack:top()
+    return not top or top.isTextBox == true
+  end)
+  return ok and allowed == true
+end
+
 -- The right stick's live X, for a camera that is not this one: while a
 -- battle is staged the free-roam look is not driving, but the axes are
 -- still arriving on the wrap below (which records whatever the rung), and
@@ -532,19 +554,19 @@ function FirstPerson.update(dt)
   -- part of the dive in from the orbit, which carries the eye anyway
   ThirdPerson.update(dt, FirstPerson.blend)
 
-  local driving = FirstPerson.driving()
+  local looking = FirstPerson.looking()
 
   -- Two questions about the same mouse, and they do NOT have the same
   -- answer: where the POINTER may go, and what the BUTTONS mean.
   --
   -- The POINTER is taken only while the look is being driven -- the rung
-  -- on, the overworld on top, the window focused. It is given back the
-  -- moment any of the three ends, so a menu, a dialog or a battle over the
+  -- on, a world or dialogue view, and the window focused. It is given back
+  -- when a menu or battle takes over, so those screens over the
   -- world frees the cursor and the player can reach the rest of the
   -- desktop without leaving the rung. Checked against the live mode rather
   -- than toggled on edges, so a capture lost to the OS (alt-tab) re-arms
   -- itself on the next focused frame, and so does one dropped for a menu.
-  local wantCapture = driving
+  local wantCapture = looking
   if wantCapture and love.window and love.window.hasFocus then
     local okF, focus = pcall(love.window.hasFocus)
     wantCapture = okF and focus or false
@@ -574,14 +596,14 @@ function FirstPerson.update(dt)
   -- LEFT turn -- so "move the mouse right, look right" means subtracting.
   local dx, dy = mouseDX, mouseDY
   mouseDX, mouseDY = 0, 0
-  if driving and (dx ~= 0 or dy ~= 0) then
+  if looking and (dx ~= 0 or dy ~= 0) then
     FirstPerson.lookInput(-dx * FirstPerson.MOUSE_SENS,
                           dy * FirstPerson.MOUSE_SENS)
   end
 
   -- the right stick is a rate: radians per second, squared response so
   -- the first half of the throw aims and the rest turns
-  if driving then
+  if looking then
     local rx, ry = stick.x, stick.y
     local function curve(v)
       local a = math.abs(v)
@@ -744,6 +766,19 @@ function FirstPerson.install()
   installed = true
 
   local Game = require("src.core.Game")
+  local gen2 = V.require("Generation").isGen2()
+
+  if gen2 then
+    -- The Gen 2 facade does not dispatch patched gamepadaxis/touch methods.
+    -- Use the native input hooks, also while a world script holds movement.
+    V.mod.hooks:wrap("input.gamepad", function(next, game, ev)
+      if ev.phase == "axis" then
+        if ev.axis == "rightx" then stick.x = ev.value
+        elseif ev.axis == "righty" then stick.y = ev.value end
+      end
+      return next(game, ev)
+    end)
+  end
 
   -- ------- right stick
   do
@@ -834,6 +869,23 @@ function FirstPerson.install()
     return false
   end
   V.mod.hooks:wrap("input.pointer", function(next, game, ev)
+    if gen2 and ev.source == "touch" then
+      if ev.phase == "pressed" and FirstPerson.looking() and not lookTouch then
+        lookTouch = { id=ev.id, x=ev.x, y=ev.y }
+        return true
+      elseif lookTouch and lookTouch.id == ev.id then
+        if ev.phase == "moved" then
+          local per=FirstPerson.TOUCH_TURN/math.max(320,love.graphics.getWidth())
+          if FirstPerson.looking() then
+            FirstPerson.lookInput(-(ev.x-lookTouch.x)*per,(ev.y-lookTouch.y)*per)
+          end
+          lookTouch.x,lookTouch.y=ev.x,ev.y
+        elseif ev.phase == "released" or ev.phase == "cancelled" then
+          lookTouch=nil
+        end
+        return true
+      end
+    end
     if ev.source ~= "mouse" then return next(game, ev) end
     if ev.phase == "moved" and captured then
       mouseDX = mouseDX + (ev.dx or 0)
@@ -898,7 +950,7 @@ function FirstPerson.install()
   do
     local inner = Game.touchpressed
     function Game:touchpressed(id, x, y)
-      if FirstPerson.driving() then
+      if FirstPerson.looking() then
         local onControl = nil
         pcall(function() onControl = TouchControls:hitTest(x, y) end)
         if not onControl and not lookTouch then
@@ -913,7 +965,7 @@ function FirstPerson.install()
           return
         end
         inner(self, id, x, y)
-        if onControl == "dpad" and TouchControls.dpadTouch == id then
+        if FirstPerson.driving() and onControl == "dpad" and TouchControls.dpadTouch == id then
           touchMove = dpadVector(x, y)
         end
         return
@@ -928,7 +980,7 @@ function FirstPerson.install()
         local w = 1280
         pcall(function() w = love.graphics.getWidth() end)
         local per = FirstPerson.TOUCH_TURN / math.max(320, w)
-        if FirstPerson.driving() then
+        if FirstPerson.looking() then
           -- negated yaw for the same reason as the mouse (see update):
           -- drag right, look right, the mobile-shooter convention
           FirstPerson.lookInput(-(x - lookTouch.x) * per,

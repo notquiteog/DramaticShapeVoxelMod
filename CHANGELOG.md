@@ -1,3 +1,15 @@
+## 1.19.1 — 2026-09-14
+
+Allow first-person and rotating third-person camera look during Crystal world
+scripts and dialogue. Keep the native movement lock, text advancement, menus
+and battle camera ownership intact. Native gamepad/pointer hooks now carry
+Gen 2 right-stick and touch look alongside mouse input.
+
+Verified both camera modes in the Linux AppImage's 0.2.60 runtime: mouse,
+right-stick and touch input change yaw during text; walking stays locked and
+the text stays open; world-script look works and start menus block it.
+Pure camera gating/input tests and the 181-check generation support suite pass.
+
 ## 1.19.0 — 2026-09-14
 
 Lay the actual Crystal Pokémon Center healer flat, including the PokéCom

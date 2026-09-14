@@ -1,3 +1,48 @@
+# Working checkpoint — target input, encounter ownership, dialogue look — 2026-09-14
+
+Candidates BA1.19.1, Double Battles0.9.3, cart1.12.0.
+Latest user asked whether general doubles logic and multiplayer were fully
+finished/verified. Answered NO explicitly. Crystal normal UI still commands
+one player-side active; paired ally command collection and full spread-move/
+doubles mechanics parity remain unfinished. Online+ pvp/session exchanges one
+action per player; no doubles network protocol exists. Do not claim online
+2v2 support or a two-computer Internet playtest.
+
+Double Battles: new gen2_target.lua wraps native submit/update. A move enters
+opponent selection only while two living enemies exist; directional aim, A
+confirm, B cancel, no PP/turn consumption until confirm. Modern HUD renders
+choices and highlights selected foe. Core already honors action.target.
+Automatic wild partners now require the scoped World.tryWildEncounter ->
+rollEncounter(kind=wild,terrain=grass/water) -> startBattle origin. Scope restored
+on errors/return; direct mod, visible spawn, fishing and special calls remain
+singles. Partners use matching terrain table; SOMETIMES now rolls its30% chance.
+Trainer auto-decoration also requires current World.startBattle scope: Online+
+and native link set pvp/link flags AFTER Battle.new emits battle.started, so a
+flag-only guard is too late. No runtime reads of another mod's private files.
+
+BA: FirstPerson.looking separate from driving. Crystal world scripts and only
+text-box stacks allow look; movement retains original busy/stack gates. Menus,
+battles and text over another screen do not grant world-camera ownership.
+Public input.gamepad and input.pointer carry Gen2 stick/touch alongside mouse.
+
+Validation (disposable AppImage QA profile, 0.2.60 update, core.update enabled):
+- /tmp/johto-hd/target-093.log PASS: supplied spawn/fish mon identity/HP retained;
+  native random doubles; choose either target via native input, cancel no PP;
+  selected damage only; next mod spawn cannot inherit random origin. Screenshot
+  target-093/target_second.png reviewed at2560x1440.
+- /tmp/johto-hd/dialogue-1191.log PASS: modes6/7 mouse/stick/touch yaw while text
+  stays up, no walking, script VM gate permits look, start menu blocks look.
+- /tmp/johto-hd/pvp-guard-093.log PASS: two LOCAL Online+ engine/session peers,
+  trainer_doubles=true, no auto-decoration,3 mirrored singles rounds match HP/PP.
+  Transport is an in-memory test adapter; Internet transport is NOT tested.
+- Pure target/cancel/fainted fallback/link tests + HUD DPI/animation capture;
+  native engine core39; BA support181 and camera/inversion/movement guards PASS.
+- Old native-actions regression uses an explicit pair fixture now; direct mod
+  encounter doubling is deliberately removed. It is not a new native-run claim.
+
+Only johto-appimage-qa updated; user profile/live save untouched. Release/pins
+pending. Previous published checkpoint follows.
+
 # Working checkpoint — scenery + reproduced glitchmon — 2026-09-14
 
 Published BA1.19.0, Online+0.5.5 and cart1.11.0.

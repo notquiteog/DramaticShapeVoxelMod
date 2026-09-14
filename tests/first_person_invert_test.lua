@@ -41,3 +41,19 @@ check(near(FirstPerson.yaw, 0.25) and near(FirstPerson.pitch, -0.4),
 
 FirstPerson.invertYSetting:setIndex(1)
 print(("%d checks passed (first-person inversion)"):format(checks))
+
+local world={map={},busy=function()return true end}
+local stack={states={},top=function(self)return self.states[#self.states] end}
+package.loaded['src.core.Game']={world=world,overworld=world,stack=stack}
+modules.VoxelState.isFreeCam=function()return true end
+modules.Voxel3D.available=function()return true end
+check(FirstPerson.looking() and not FirstPerson.driving(),'cutscene allows look without movement')
+stack.states={{isTextBox=true}}
+check(FirstPerson.looking() and not FirstPerson.driving(),'dialogue allows look without movement')
+stack.states={{},{isTextBox=true}}
+check(not FirstPerson.looking(),'dialogue over a menu cannot grant world control')
+stack.states={};world.battleActive=true
+check(not FirstPerson.looking(),'battle keeps its own camera')
+world.battleActive=false;world.busy=function()return false end
+check(FirstPerson.looking() and FirstPerson.driving(),'free roam retains look and walking')
+print('Dialogue/cutscene look, movement lock, menu and battle ownership PASS')
