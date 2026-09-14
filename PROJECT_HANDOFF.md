@@ -1,3 +1,23 @@
+# Crystal 1.15.0 follow-up — 2026-09-13
+
+Prepared after 1.14.2: smaller item balls, horizontal Elm healing bed, open
+lab bin, original foliage atlas and distinct family UVs, irregular grass,
+native imported animation frames and native camera-relative Gen 2 grid walk.
+Sky Ride companion 0.2.20 delegates its older onTop bridge to providers that
+advertise supportsGen2World; this fixed the observed mid-step camera drop.
+See docs/CRYSTAL_1_15.md and CRYSTAL_FOLIAGE_ART.md for scope/provenance.
+
+Fresh checks: full 16-map/19-view driver passes (/tmp/johto-hd/review2),
+camera/water GPU driver passes (/tmp/johto-hd/camera-water6), SDK 181 support
+and 95 shapes, pure geometry/ownership checks. Current 13-companion QA engine
+is /tmp/johto-hd/engine. Online+ still records its exact unsupported map_scripts
+registration; do not claim zero loader errors for the whole stack.
+
+User's cart-1.5.0 fast ground/water Pokémon report remains un-reproduced in
+two instrumented current boots; /tmp/johto-hd/spawns*.log records water and
+ambient guests. No Wilds movement patch made. No Android claim. Every prop
+family is not yet bespoke: continue the 35-tileset coverage audit.
+
 # 1.14.1 - Gen 2 doubles on the staged battle — 2026-09-13
 
 Additive, released on Legendary-Additions (tag v1.14.1): when a battle

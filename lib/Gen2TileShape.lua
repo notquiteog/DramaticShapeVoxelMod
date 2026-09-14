@@ -351,7 +351,7 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
     -- Johto draws the lip in the blocked cell beyond the hop trigger.
     -- Raising the trigger itself adds an entire extra cell of shelf.
     if Permissions.isLedge(coll) then
-      return map.tileset and map.tileset.id=="TILESET_JOHTO" and "ground" or "ledge"
+      return map.tileset and (map.tileset.id=="TILESET_JOHTO" or map.tileset.id=="TILESET_JOHTO_MODERN") and "ground" or "ledge"
     end
     return "ground"
   end

@@ -58,6 +58,9 @@ local ThirdPerson = V.require("ThirdPerson")
 local ModSetting = V.require("ModSetting")
 
 local FirstPerson = {}
+-- Public capability for companions whose old Gen 2 stack bridge predates
+-- native support. Such bridges must delegate rather than gate moving feet.
+FirstPerson.supportsGen2World = true
 
 -- ------- the rig's numbers
 --
@@ -177,10 +180,15 @@ end
 -- the mod that asks the same question of the same stack (CamControl's
 -- zooms above all), rather than each restating the pcall.
 function FirstPerson.onTop()
-  local ok, top, ow = pcall(function()
+  local ok, top, ow, gen2World = pcall(function()
     local Game = require("src.core.Game")
-    return Game.stack and Game.stack:top(), Game.overworld
+    return Game.stack and Game.stack:top(), Game.overworld, Game.world
   end)
+  -- Gen 2 draws the world beneath an empty UI stack, rather than pushing
+  -- the world itself. Menus/battles and scripted movement still own input.
+  if ok and ow and ow==gen2World then
+    return top==nil and not ow:busy()
+  end
   return ok and top ~= nil and top == ow
 end
 

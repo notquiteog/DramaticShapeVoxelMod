@@ -1,3 +1,9 @@
+> Updated 2026-09-13: the historical limitations below are superseded for
+> current engines by `Gen2CameraWalk` (1ST/3RD with native, camera-relative
+> grid steps) and `Gen2AtlasAnimation` (the imported native animation programs,
+> including Crystal water/flowers, composed with HD materials). No engine
+> gameplay or importer files were changed. See `CRYSTAL_1_15.md`.
+
 # Battle Art on Gen 2: what runs, what does not, and why
 
 Battle Art 1.13.0 declares `"games": ["gen1", "gen2"]`. It loads and runs on

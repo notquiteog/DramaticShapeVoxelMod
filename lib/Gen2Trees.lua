@@ -6,17 +6,22 @@ function Trees.family(seed,lift)
   return ({"broadleaf","conifer","spreading"})[seed%3+1]
 end
 function Trees.append(tv,ti,tq,cv,ci,cq,x,y,z,lift,seed,dv,di,dq)
+  local family=Trees.family(seed,lift)
   local function quad(verts,indices,n,a,b,c,d,shade)
     local k=#verts
     for j,p in ipairs({a,b,c,d}) do
       local uv=({{0,1},{1,1},{1,0},{0,0}})[j]
+      if verts==cv then
+        local col=(family=="conifer" or family=="shrub") and 1 or 0
+        local row=(family=="spreading" or family=="shrub") and 1 or 0
+        uv={(col+.2+uv[1]*.6)*.5,(row+.2+uv[2]*.6)*.5}
+      end
       verts[#verts+1]={p[1],p[2],p[3],uv[1],uv[2],shade}
     end
     for _,v in ipairs({1,2,3,1,3,4}) do indices[#indices+1]=k+v end
     return n+1
   end
   local bush=lift<=4
-  local family=Trees.family(seed,lift)
   dq=dq or 0
   local height=bush and 13 or (lift==20 and 40 or (lift>=17 and 33 or 28))
   local angle=(seed%97)/97*math.pi*2
@@ -75,13 +80,20 @@ function Trees.append(tv,ti,tq,cv,ci,cq,x,y,z,lift,seed,dv,di,dq)
         local a=j*math.pi/4+angle+l*.31
         local ly=cy+ry*(j%2==0 and .33 or -.03)
         local lx,lz=cx+math.cos(a)*rx*.86,cz+math.sin(a)*rx*.79
-        local size=(bush and 1.9 or 3.0)*(family=="conifer" and .9 or 1)
+        local size=(bush and 2.5 or 4.5)*(family=="conifer" and .9 or 1)
         for plane=0,2 do
           local pa=a+plane*math.pi/3
           local ux,uz=math.cos(pa)*size,math.sin(pa)*size
           local vx,vy,vz=-math.sin(pa)*size*.32,size*.9,math.cos(pa)*size*.32
           dq=quad(dv,di,dq,{lx-ux-vx,ly-vy,lz-uz-vz},{lx+ux-vx,ly-vy,lz+uz-vz},
             {lx+ux+vx,ly+vy,lz+uz+vz},{lx-ux+vx,ly+vy,lz-uz+vz},.96)
+          local col=(family=="conifer" or family=="shrub") and 1 or 0
+          local row=(family=="spreading" or family=="shrub") and 1 or 0
+          for k=#dv-3,#dv do
+            -- Inset prevents sampling the neighboring cluster at tile edges.
+            dv[k][4]=(col+.002+dv[k][4]*.996)*.5
+            dv[k][5]=(row+.002+dv[k][5]*.996)*.5
+          end
         end
       end
     end

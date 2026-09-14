@@ -56,9 +56,10 @@ local lab = {
     {upright(0,31,0,3,4,15,0,14,6),
      upright(0,31,16,16,16,21,0,16)},6),
   item("crystal_healing_machine", {{66,67,68,69},{82,83,84,85},{70,71,71,73},{86,87,88,89}},16,
-    {upright(0,31,0,11,12,31,16,16)}),
-  item("crystal_lab_device", {{14,15},{30,31}},16,
-    {upright(0,15,0,4,5,15,0,12)}),
+    -- The mattress/control surface lies across the full two-cell bed. Only
+    -- its shallow apron folds vertically; it is not a standing appliance.
+    {upright(0,31,0,27,28,31,0,32,2)},6),
+  {id="crystal_lab_bin",tiles={{14,15},{30,31}},groundTiles={{16}},model="bin",parts={},support=0},
 }
 -- Common house, shop and Center families are separate vocabularies: identical
 -- numeric tile IDs across tilesets are never treated as the same object.

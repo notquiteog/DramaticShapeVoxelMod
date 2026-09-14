@@ -34,7 +34,7 @@ return function(game)
   end
   local function checkLoader()
     for _,message in ipairs(game.mods.errors) do
-      -- The cart's independently published Online+ 0.5.0 declares a Gen 1
+      -- The cart's independently published Online+ 0.5.2 declares a Gen 1
       -- map-script registry. Record that known incompatibility explicitly;
       -- never permit unrelated loader errors or claim its casino is tested.
       assert(os.getenv("HD_SCENERY_QA")=="1" and message==
@@ -128,5 +128,5 @@ return function(game)
   checkLoader()
   assert(liveRocks.SPRITE_ROCK and liveRocks.SPRITE_BOULDER,"live rock actors did not render as models")
   rocks.draw=drawRock
-  print("[parity] PASS: full cart loaded; round ownership and ledge height verified")
+  print("[parity] PASS: installed companion set loaded; round ownership and ledge height verified")
 end

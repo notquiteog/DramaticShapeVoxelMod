@@ -113,26 +113,13 @@ end
 -- takes the walk (lib/FreeMove.lua).
 Voxel.ORBIT_LEVEL_COUNT = 6
 
--- Can this cart carry the free-cam rungs?
---
--- Gen 1 only, and the reason is the WALK rather than the camera. The eye and
--- its tween are ordinary rendering and would be fine on Gold. Free movement is
--- not: it replaces OverworldController:handleInput, and on a Gen 2 boot that
--- name resolves to Gen2Compat's facade over the live World, which dispatches
--- back through `update`, `interact` and `talkTo` and nothing else
--- (src/mods/Gen2Compat.lua:1383). The patch would be taken, read back as ours,
--- and never called -- so the camera would stand in the player's head with the
--- grid walk still underneath it, the mouse captured for a look the feet do not
--- follow. A rung that half-works is worse than a rung that is not offered, so
--- the ladder simply ends at 75 there.
---
--- Restoring these rungs on Gold is a movement problem, not a camera one: it
--- needs the walk driven through Gold's own step and landing machinery rather
--- than through a wrapper it never calls.
+-- Gen 2 uses its native pollInput seam for camera-relative grid movement.
+-- Older facades without the native seam retain the orbit-only ladder.
 function Voxel.freeCamAvailable()
   local G = generation()
-  if not G then return true end
-  return G.isGen1()
+  if not G or G.isGen1() then return true end
+  local ok, walk = pcall(V.require, "Gen2CameraWalk")
+  return ok and walk.available() or false
 end
 
 -- The ladder the engine is handed, which is what decides the hotkey's wrap and

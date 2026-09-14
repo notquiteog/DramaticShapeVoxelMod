@@ -28,11 +28,20 @@ local function noise(x,y,s)
   local n=math.sin(x*127.1+y*311.7+s*74.7)*43758.5453
   return n-math.floor(n)
 end
+local function meadow(x,y)
+  -- Periodic value noise gives irregular patches without diagonal waves or
+  -- seams between repeated tiles. Fine grain stays below the broad variation.
+  local gx,gy=x/8,y/8
+  local ix,iy=math.floor(gx),math.floor(gy)
+  local u,v=gx-ix,gy-iy
+  u=u*u*(3-2*u);v=v*v*(3-2*v)
+  local function n(dx,dy)return noise((ix+dx)%4,(iy+dy)%4,53) end
+  return (n(0,0)*(1-u)+n(1,0)*u)*(1-v)+(n(0,1)*(1-u)+n(1,1)*u)*v
+end
 function M.color(kind,x,y,r,g,b,light)
   local grain=noise(x,y,19)-.5
   if kind=="grass" then
-    local field=math.sin(x*math.pi/16)*math.cos(y*math.pi/16)*.026
-      +math.cos((x+y)*math.pi/8)*.018+grain*.026
+    local field=(meadow(x,y)-.5)*.095+grain*.018
     local blade=(noise(math.floor(x/2),math.floor(y/3),7)>.84) and .024 or 0
     return (.37+field+blade)*light,(.56+field+blade)*light,(.24+field*.65)*light
   elseif kind=="path" then

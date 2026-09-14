@@ -1,3 +1,16 @@
+## 1.15.0 — Crystal foliage, small items and native camera/animation support
+
+- Add original leaf artwork for broadleaf, conifer, spreading trees and shrubs;
+  replace diagonal grass stripes with irregular patches.
+- Shrink live overworld Poké Balls from nine to four pixels, preserving support
+  heights. Lay Elm's healing bed horizontally and give his bin an open rim.
+- Complete native Gen 2 atlas animation: imported water/flower frames compose
+  with HD materials and the actual water draw consumes changing textures.
+- Enable 1ST/3RD with camera-relative native Crystal grid steps. Sky Ride 0.2.20
+  fixes its older bridge disabling camera input during a step.
+- Keep 1.14.2 HUD backplates. Refresh scenery cache revision to 38.
+- See docs/CRYSTAL_1_15.md for desktop verification and remaining reports.
+
 ## 1.14.2 - HUD backplates and the Crystal water cycle
 
 - Gen 2 staged battles draw the engine's own box style under both HUD

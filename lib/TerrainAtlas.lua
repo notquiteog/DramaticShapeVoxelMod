@@ -481,19 +481,6 @@ local function specsFor(tileset)
       out[#out + 1] = spec
     end
   end
-  -- The Gen 2 importer writes no `animation` string onto its tileset
-  -- records (the Gen 1 one does), so the vanilla water cycle never reached
-  -- Crystal's tilesets and every pond sat still.  The ids are the cart's
-  -- own -- tile $14 is water on Gold, Silver and Crystal, and the GSC
-  -- water animation is the same horizontal shift Gen 1 runs -- so the
-  -- vanilla hshift spec serves them as-is.  Flowers stay still until the
-  -- ROM's own flower frames are imported; a Gen 1 flower frame drawn over
-  -- a Crystal tile would be wrong art, not animation.
-  local noDeclarations = (declared == nil) or (type(declared) == "table" and #declared == 0)
-  if out == nil and noDeclarations and Generation.isGen2() then
-    out = { { tile = 0x14, kind = "hshift", period = 20,
-              offsets = { 1, 2, 3, 2, 1, 0, 7, 0 } } }
-  end
   return out
 end
 
@@ -1633,18 +1620,9 @@ function TerrainAtlas.forMap(map, colors)
   if not base then return nil end
   base, baked = communityAtlas(map, colors, base, baked)
   base, baked = safariGround(map, base, baked)
-  -- Declared animations retain their native frame pipeline. Crystal's static
-  -- atlases can use higher-resolution materials without changing source art.
   if Generation.isGen2() then
-    -- Both layers compose: the HD-2D materials recolor the atlas first,
-    -- then the water slot rewrite runs per step on the finished art.
-    local specs = specsFor(map.tileset)
-    if specs then
-      local ib, idata = V.require("Gen2Materials").apply(map, base, baked)
-      if ib then base, baked = ib, idata or baked end
-      return TerrainAtlas.animate(map, colors, base, baked) or base
-    end
-    return V.require("Gen2Materials").apply(map, base, baked)
+    base, baked = V.require("Gen2Materials").apply(map, base, baked)
+    return V.require("Gen2AtlasAnimation").apply(map, base, baked)
   end
   return TerrainAtlas.animate(map, colors, base, baked) or base
 end
@@ -1754,6 +1732,7 @@ end
 -- per map ever entered, and each pins the engine's own baked ImageData
 -- alive behind it.
 function TerrainAtlas.setLive(live)
+  if Generation.isGen2() then V.require("Gen2AtlasAnimation").setLive(live) end
   if Generation.isGen2() then V.require("Gen2Materials").setLive(live) end
   for id,entry in pairs(safariAtlases)do if not live[id]then releaseSafari(entry);safariAtlases[id]=nil end end
   for key, entry in pairs(animated) do
@@ -1770,6 +1749,7 @@ function TerrainAtlas.setLive(live)
 end
 
 function TerrainAtlas.invalidate()
+  if Generation.isGen2() then V.require("Gen2AtlasAnimation").invalidate() end
   if Generation.isGen2() then V.require("Gen2Materials").invalidate() end
   for _,entry in pairs(safariAtlases)do releaseSafari(entry)end
   safariAtlases={}

@@ -1469,7 +1469,9 @@ function Buildings.build(S, map, data, perRow)
             if not built then
               local key = tileset.id .. ":" .. index
               if not models[key] then
-                if t.claimOnly then
+                if S.gen2 and t.model=="bin" then
+                  models[key]=V.require("Gen2Bin").build(t,data,perRow,atlasW,atlasH)
+                elseif t.claimOnly then
                   -- claim the cells, stamp nothing: the drawing here is
                   -- the off-map half of a building another map models in
                   -- full (the tower's roof rows on ROUTE_10 -- Lavender's

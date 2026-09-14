@@ -47,6 +47,12 @@ function M.geometry()
   end
  end
  button(1.3,4.27,.3,3);button(.88,4.57,.2,4);button(.64,4.77,.06,2)
+ -- A handheld four-pixel ball beside a sixteen-pixel character. Scale the
+ -- complete model about its ground contact, including the button; transform
+ -- is also used by rock actors and must remain a positioning-only helper.
+ for _,v in ipairs(vs) do
+  for axis=1,3 do v[axis]=v[axis]*4/9 end
+ end
  return vs,ix
 end
 local function prepare()

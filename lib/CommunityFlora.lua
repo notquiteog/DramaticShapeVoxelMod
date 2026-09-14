@@ -1435,6 +1435,9 @@ function MOUND.shadowImg()
 end
 
 function MOUND.leafyImg()
+  if V.require("Generation").isGen2() and V.mod and V.mod.read then
+    return MOUND.detailImg()
+  end
   local T = MOUND.TRUNK
   if T.limg ~= nil then return T.limg or nil end
   local ok, img = pcall(function()
@@ -1479,6 +1482,14 @@ function MOUND.detailImg()
   local T = MOUND.TRUNK
   if T.dimg ~= nil then return T.dimg or nil end
   local ok, img = pcall(function()
+    if V.require("Generation").isGen2() and V.mod and V.mod.read then
+      local bytes = assert(V.mod:read("assets/crystal/foliage-clusters.png"))
+      local file = love.filesystem.newFileData(bytes, "foliage-clusters.png")
+      local image = love.graphics.newImage(file)
+      file:release()
+      image:setFilter("nearest", "nearest")
+      return image
+    end
     -- TEST244 GRASS-QUALITY FOLIAGE:
     -- Replace the fern-like seven-leaf spray with a handful of larger,
     -- individually readable broad leaves.  Like the HD grass, each blade/leaf

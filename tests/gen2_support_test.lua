@@ -198,16 +198,11 @@ for _, cart in ipairs(carts) do
     T.eq(Generation.screenId("BoxMenu"), "Gen2PcMenu",
       label .. ": Bill's PC top menu pairs with PcMenu, not BoxMenu")
 
-    T.eq(#Voxel.availableLevelLabels(), Voxel.ORBIT_LEVEL_COUNT,
-      label .. ": the ladder ends at the last orbit rung")
-    T.check(not Voxel.freeCamAvailable(),
-      label .. ": the free-cam rungs are not offered")
-    -- The engine clamps a stored level to #labels - 1 in both setLevel and
-    -- applyOptions, so a level saved by a Gen 1 session cannot select a rung
-    -- that is no longer there. Assert the ladder's last rung is an orbit one.
-    local labels = Voxel.availableLevelLabels()
-    T.eq(labels[#labels], "75",
-      label .. ": the highest selectable rung is the 75 degree orbit")
+    T.eq(#Voxel.availableLevelLabels(), #Voxel.ANGLE_LABELS,
+      label .. ": native camera walk exposes both free-camera rungs")
+    T.check(Voxel.freeCamAvailable(), label .. ": camera-relative input seam available")
+    T.eq(Voxel.availableLevelLabels()[#Voxel.ANGLE_LABELS], Voxel.ANGLE_LABELS[#Voxel.ANGLE_LABELS],
+      label .. ": third-person camera selectable")
 
     -- NOT OverworldBattle.available() here, deliberately. That answer is
     -- `isGen2() and Voxel3D.available()`, and Voxel3D is false in a headless

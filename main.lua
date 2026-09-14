@@ -2066,15 +2066,12 @@ StadiumBackground.install()
 -- (onStepComplete, checkEdgeExit, checkLedgeHop, checkBoulderPush). The
 -- file argues the whole arrangement.
 --
--- Both of them exist to serve the free-cam rungs, and those rungs are off the
--- ladder on a Gen 2 boot (Voxel.freeCamAvailable): `handleInput` is not one of
--- the three members Gen2Compat's World facade dispatches back through, so the
--- walk wrapper would never be called. Installing either there would leave dead
--- patches on the engine for a rung the player cannot select, so neither goes
--- on. Gold's own walk, input and landing pipeline stay untouched.
+-- Gen 2 keeps the native grid and rotates only the input intent through
+-- World.pollInput; Gen 1 retains its existing continuous walk adapter.
 if Voxel.freeCamAvailable() then
   FirstPerson.install()
-  FreeMove.install()
+  if Generation.isGen2() then V.require("Gen2CameraWalk").install()
+  else FreeMove.install() end
 end
 VoxelTransitionGate.install()
 

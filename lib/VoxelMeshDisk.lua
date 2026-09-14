@@ -85,9 +85,9 @@ local STATIC_PLAYTHROUGH = "bavc_static_mesh_v2"
 -- streams and Legendary placement registry that were previously session-only.
 -- Cached terrain can now restore signs, trees and pillars without rerunning the
 -- complete Structures/terrain pipeline at every cold map crossing.
--- Revision 37 combines these streams with upstream prop spans, restored
--- ladders and museum/Safari geometry. Neither parent cache is reusable.
-Disk.CACHE_REVISION = 37
+-- Revision 38 refreshes Crystal tree material UVs, the horizontal healing
+-- bed and the open bin. Old geometry must not mask these visual corrections.
+Disk.CACHE_REVISION = 38
 -- Patch releases which do not change emitted vertices must keep the existing
 -- world cache usable. This token matches the first static-mesh-cache-v2 build;
 -- CACHE_REVISION, not the public mod version, owns geometry compatibility.
@@ -1807,4 +1807,3 @@ Disk.saveTreeParts = Timings.wrap("cache_other", Disk.saveTreeParts)
 Disk.saveRamToDisk = Timings.wrap("cache_other", Disk.saveRamToDisk)
 
 return Disk
-
