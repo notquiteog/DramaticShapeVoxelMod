@@ -105,12 +105,11 @@ local center={
     {upright(1,14,0,10,11,15,1,14)},5),
   item("crystal_center_counter",{{52,52},{36,36}},17,
     {upright(0,15,0,7,8,15,0,16)},8),
-  item("crystal_center_counter_ball",{{12,52},{36,36}},17,
+  item("crystal_center_counter_ball",{{52,12},{36,36}},17,
     {upright(0,15,0,7,8,15,0,16)},8),
   item("crystal_center_counter_balls",{{12,12},{36,36}},17,
     {upright(0,15,0,7,8,15,0,16)},8),
-  item("crystal_center_bin",{{68,69},{84,85}},17,
-    {upright(1,14,0,3,4,15,2,12)}),
+  {id="crystal_center_bin",tiles={{68,69},{84,85}},groundTiles={{17}},model="bin",parts={},support=0},
 }
 local bedroom={
   item("crystal_bedroom_table",{{16,17,17,18},{32,33,33,34},{48,49,49,50}},1,

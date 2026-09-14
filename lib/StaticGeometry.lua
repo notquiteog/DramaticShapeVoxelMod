@@ -57,6 +57,19 @@ local function sameScalarList(a, b)
   return sameList(a, b)
 end
 
+local function sameAttrs(a,b)
+  a,b=a or {},b or {}
+  if #a~=#b then return false end
+  for i,attr in ipairs(a) do
+    local other=b[i]
+    if not other then return false end
+    for _,key in ipairs({'palette','vramBank','xFlip','yFlip','priority'}) do
+      if attr[key]~=other[key] then return false end
+    end
+  end
+  return true
+end
+
 local function clean(value)
   local cleaned = tostring(value or "-"):gsub("[\t\r\n]", " ")
   return cleaned
@@ -131,7 +144,7 @@ local function geometryDifferences(map)
   local liveDef, liveTs = map.def, map.tileset
   if liveDef.tileset ~= def.tileset or liveDef.width ~= def.width
      or liveDef.height ~= def.height or liveDef.borderBlock ~= def.borderBlock
-     or liveDef.outdoor ~= def.outdoor then
+     or liveDef.outdoor ~= def.outdoor or liveDef.environment ~= def.environment then
     out[#out + 1] = { "map.layout", map.id,
                       "tileset/size/border/outdoor changed at runtime" }
   end
@@ -155,7 +168,10 @@ local function geometryDifferences(map)
      or not sameScalarList(liveTs.walkable, tileset.walkable)
      or not sameScalarList(liveTs.doorTiles, tileset.doorTiles)
      or not sameScalarList(liveTs.waterTiles, tileset.waterTiles)
-     or not sameScalarList(liveTs.shoreTiles, tileset.shoreTiles) then
+     or not sameScalarList(liveTs.shoreTiles, tileset.shoreTiles)
+     or not sameScalarList(liveTs.collision, tileset.collision)
+     or not sameScalarList(liveTs.tilePalettes, tileset.tilePalettes)
+     or not sameAttrs(liveTs.tileAttrs, tileset.tileAttrs) then
     out[#out + 1] = { "tileset.rules", liveDef.tileset,
                       "geometry-bearing collision/material rules changed" }
   end
@@ -182,8 +198,13 @@ function StaticGeometry.report(map)
 end
 
 function StaticGeometry.capture(data)
-  if snapshot or not (data and data.maps and data.tilesets) then return false end
-  snapshot = { maps = clone(data.maps), tilesets = clone(data.tilesets) }
+  if snapshot or not data then return false end
+  -- mods.loaded carries the native registry names. Gen 2's Game facade
+  -- translates them on reads, but the event payload itself is not a facade.
+  local definitions = data.gen2Maps or data.maps
+  local tilesets = data.gen2Tilesets or data.tilesets
+  if not (definitions and tilesets) then return false end
+  snapshot = { maps = clone(definitions), tilesets = clone(tilesets) }
   maps = {}
   return true
 end

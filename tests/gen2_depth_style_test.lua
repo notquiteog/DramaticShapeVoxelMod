@@ -10,7 +10,7 @@ local Trees=assert(loadfile('lib/Gen2DepthTrees.lua'))()
 for _,family in ipairs({'broadleaf','conifer','spreading','shrub'}) do
  local v,i={},{}
  Trees.append(v,i,0,0,0,0,family=='shrub' and 4 or 20,42,family)
- assert(#v>0 and #i<=120,'layered trees must have a bounded curved-card budget')
+ assert(#v>0 and #i<=168,'layered trees and crown cap must have a bounded budget')
  for _,p in ipairs(v) do
   assert(p[2]>=0 and p[2]<60,'invalid crown height')
   assert(p[4]>=0 and p[4]<=1 and p[5]>=0 and p[5]<=1,'invalid crown atlas UV')

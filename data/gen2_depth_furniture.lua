@@ -9,6 +9,10 @@ local full={0,0,4,4}
 local left={0,0,2,4}
 local top={0,0,4,2}
 return {
+ TILESET_PARK={
+  prop('park_bench',14,{0,0,4,3},'bench',1),
+  prop('park_bin',15,{0,0,2,2},'bin',1),
+ },
  TILESET_TRADITIONAL_HOUSE={
   prop('traditional_shelves',2,full,'cabinet',4),
   prop('traditional_drawers',26,left,'cabinet',4),
@@ -28,7 +32,8 @@ return {
   prop('radio_planter',11,left,'planter',1),
   prop('radio_terminal',18,left,'machine',1),
   prop('radio_equipment',28,{2,0,2,4},'machine',1),
-  prop('radio_mixing_desk',22,{0,1,4,3},'console',1),
+  prop('radio_mixing_desk',56,{0,2,4,2},'console',1),
+  prop('radio_desk_terminal',43,{2,2,2,2},'console',1),
   prop('radio_chair',20,{0,0,2,2},'seat',1),
  },
  TILESET_GAME_CORNER={

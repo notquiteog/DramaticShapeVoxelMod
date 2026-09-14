@@ -1,3 +1,22 @@
+## 1.18.0 — 2026-09-14
+
+Restore the 3-key camera cycle on Crystal through native input.key and
+pipelineGate. The old Gen 1 overworld-state check refused every live Gen 2
+press. Angles, first person and third person now cycle and persist; menus and
+cutscenes retain their input gate. Gen 1 keeps its existing keyboard path.
+
+Capture native Gen 2 map/tileset registries for the static geometry cache.
+Fingerprint collision, environment and tile attributes, and reject live changes.
+Add open Park benches and bins, correct the Center counter-ball crop, and
+replace the unused radio-desk recipe with the actual placed source blocks.
+Add shallow illustrated crown caps for steeper views and continuous fractured
+Dark Cave wall surfaces with untouched floor contact. Cache revision47.
+
+Validation: native full keyboard cycle and menu gate; five-map prop/cave/crown
+review; 164 cached records with encode/decode and warm scene reload; support181,
+47 furniture recipes and geometry/material tests. Software GPU only. Bouncing
+Charmander remains reported in New Bark on cart1.9.0 and un-reproduced locally.
+
 ## 1.17.2 — 2026-09-14
 
 Apply the fresh-save camera default immediately: Gen 2 emits save.created

@@ -13,6 +13,7 @@ local floorKinds={
   TILESET_HOUSE={[1]="floor"},TILESET_PLAYERS_HOUSE={[1]="floor"},
   TILESET_LAB={[16]="floor"},TILESET_MART={[72]="floor"},
   TILESET_POKECENTER={[17]="floor"},
+  TILESET_DARK_CAVE={[1]="caveFloor",[22]="caveFloor",[16]="caveRock",[20]="water"},
 }
 local woodSlots=setmetatable({},{__mode="k"})
 local labWood={[3]=true,[4]=true,[5]=true,[6]=true,[7]=true,
@@ -52,7 +53,15 @@ local function meadow(x,y)
   return (n(0,0)*(1-u)+n(1,0)*u)*(1-v)+(n(0,1)*(1-u)+n(1,1)*u)*v
 end
 function M.color(kind,x,y,r,g,b,light,depth)
-  if depth and kind=="grass" then
+  if kind=="caveFloor" then
+    local broad=math.floor(meadow(x,y)*6)/6
+    local chip=noise(math.floor(x/2),math.floor(y/2),81)>.94 and -.035 or 0
+    return (.34+broad*.11+chip)*light,(.32+broad*.09+chip)*light,(.27+broad*.07+chip)*light
+  elseif kind=="caveRock" then
+    local seam=math.abs(math.sin(x*.22+math.sin(y*.21)*1.6))<.12 and -.055 or 0
+    local facet=math.floor(meadow(x,y)*5)/5
+    return .30+facet*.12+seam,.31+facet*.11+seam,.30+facet*.10+seam
+  elseif depth and kind=="grass" then
     local patch=math.floor(meadow(x,y)*5)/5
     return (.31+patch*.09)*light,(.47+patch*.13)*light,(.16+patch*.06)*light
   elseif depth and kind=="path" then

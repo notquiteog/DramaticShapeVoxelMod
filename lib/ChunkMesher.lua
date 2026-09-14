@@ -906,7 +906,11 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
   -- Corners run bottom-left, bottom-right, top-right, top-left as seen
   -- from outside; u follows +X on the north/south faces so a door or sign
   -- never draws mirrored.
-  local function sideQuad(d, x0, z0, y0, y1, tile, vTop, vBot, shade)
+  LG.gen2Cave = V.require("Gen2CaveSurface").enabled(map)
+  LG.gen2CavePush = function(c, uv, shade)
+    push(V.require("Gen2CaveSurface").face(c), uv, shade)
+  end
+  local function sideQuad(d, x0, z0, y0, y1, tile, vTop, vBot, shade, to)
     local x1, z1 = x0 + 8, z0 + 8
     local c
     if d == 5 then                                       -- south, at z1
@@ -919,7 +923,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
       c = { { x0, y0, z0 }, { x0, y0, z1 }, { x0, y1, z1 }, { x0, y1, z0 } }
     end
     local u0, u1, v0, v1 = uvRect(tile, vTop, vBot)
-    push(c, { { u0, v1 }, { u1, v1 }, { u1, v0 }, { u0, v0 } }, shade)
+    ;(to or push)(c, { { u0, v1 }, { u1, v1 }, { u1, v0 }, { u0, v0 } }, shade)
   end
 
   local def = map.def
@@ -2859,6 +2863,8 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
             towerGraniteTop(tx, ty, x0, z0, h,
                             VOLUME_TOP_SHADE,
                             TOWER_GRANITE_SWATCH_TILE, "wall")
+          elseif LG.gen2Cave and s.class=="wall" then
+            topQuad(x0,z0,h,16,VOLUME_TOP_SHADE,LG.gen2CavePush)
           elseif caveKind then
             caveNaturalTop(tx, ty, x0, z0, h, VOLUME_TOP_SHADE, caveKind)
           elseif isKantoRetainingWall(s, tile, run, tx, ty) then
@@ -2927,6 +2933,8 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
             towerGraniteTop(tx, ty, x0, z0, h,
                             s.art == "upright" and VOLUME_TOP_SHADE or 1,
                             TOWER_GRANITE_SWATCH_TILE, "counter")
+          elseif LG.gen2Cave and s.class=="wall" then
+            topQuad(x0,z0,h,16,VOLUME_TOP_SHADE,LG.gen2CavePush)
           elseif caveKind then
             caveNaturalTop(tx, ty, x0, z0, h,
                            s.art == "upright" and VOLUME_TOP_SHADE or 1,
@@ -3076,6 +3084,8 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
                   towerGraniteSide(d, x0, z0, y0, y1, faceShade)
                 elseif towerInterior and s.class == "counter" then
                   towerGraniteCounterSide(d, x0, z0, y0, y1, faceShade)
+                elseif LG.gen2Cave and s.class=="wall" then
+                  sideQuad(d,x0,z0,y0,y1,16,0,8,faceShade,LG.gen2CavePush)
                 elseif CommunityVisuals.customCaves() and tileset.id == "CAVERN"
                    and (s.class == "wall" or s.class == "ledge") then
                   caveNaturalSide(d, x0, z0, y0, y1, faceShade)

@@ -48,6 +48,26 @@ function M.append(v,indices,q,x,y,z,lift,seed,family)
     q=q+1
     end
   end
+  -- A shallow illustrated crown cap keeps canopy volume at steep camera
+  -- angles. Its UV crop excludes the trunk; the side layers still provide
+  -- the silhouette from the ground. All eight quads share their edges.
+  local capY=shrub and 6.2 or h*.77
+  local capW=shrub and 7.0 or (bush and 4.8 or 12*spread)
+  local capD=shrub and 3.8 or (bush and 3.2 or 8*spread)
+  for iz=0,1 do for ix=0,3 do
+    local k=#v
+    for _,p in ipairs({{ix/2-1,iz-1},{(ix+1)/2-1,iz-1},
+      {(ix+1)/2-1,iz},{ix/2-1,iz}}) do
+      local dx,dz=p[1],p[2]
+      local dome=math.max(0,1-dx*dx)*math.max(0,1-dz*dz)
+      local u=(col+.02+(dx+1)*.48)*.5
+      local vv=(row+.02+(dz+1)*.32)*.5
+      if shrub then vv=.686+(dz+1)*.13 end
+      v[#v+1]={x+dx*capW,y+capY+dome*(shrub and 1.8 or 3),z+dz*capD,u,vv,1}
+    end
+    for _,i in ipairs({1,2,3,1,3,4}) do indices[#indices+1]=k+i end
+    q=q+1
+  end end
   return q
 end
 return M

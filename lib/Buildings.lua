@@ -1484,6 +1484,8 @@ function Buildings.build(S, map, data, perRow)
               if not models[key] then
                 if S.gen2 and t.model=="bin" then
                   models[key]=V.require("Gen2Bin").build(t,data,perRow,atlasW,atlasH)
+                elseif S.gen2 and t.model=="bench" then
+                  models[key]=V.require("Gen2Bench").build(t,data,perRow,atlasW,atlasH)
                 elseif S.gen2 and t.model=="planter" then
                   models[key]=V.require("Gen2Planter").build(t,data,perRow,atlasW,atlasH)
                 elseif t.claimOnly then

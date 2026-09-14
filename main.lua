@@ -1418,10 +1418,15 @@ end
 -- Memory camera ladder: OFF -> 15 -> 35 -> 50 -> 75 -> 1ST -> 3RD.
 -- FULL remains an OPTIONS preset rather than a hotkey stop; pressing from
 -- FULL advances from its matching 35-degree view to 50 degrees.
+local function cameraGate(game)
+  if Generation.isGen2() and game.pipelineGate then return game:pipelineGate() end
+  return game.stack and game.stack:top(), game.overworld
+end
+
 local function cycleVoxelCamera(game)
   local Pipelines = require("src.render.Pipelines")
-  local top = game.stack and game.stack:top()
-  if not Pipelines.canToggle("voxel", top, game.overworld) then return false end
+  local top, world = cameraGate(game)
+  if not Pipelines.canToggle("voxel", top, world) then return false end
   local nextLevel = Voxel.nextHotkeyLevel(Pipelines.level("voxel"))
   Pipelines.setLevel("voxel", nextLevel)
   Pipelines.syncOptions(game.save.options)
@@ -1441,11 +1446,9 @@ end
 do
   local Game = require("src.core.Game")
   local Pipelines = require("src.render.Pipelines")
-  local inner = Game.keypressed
-
-  function Game:keypressed(key)
+  local function handleKey(self,key)
     local claim = HOTKEYS[key]
-    local top = self.stack and self.stack:top()
+    local top, world = cameraGate(self)
     -- A screen with its own key handler gets the key first, exactly as the
     -- engine's first branch does: typing a nickname must not toggle a
     -- render mode. Only free-roam presses are ours to take.
@@ -1455,17 +1458,17 @@ do
         -- so the registry's plain "advance one and wrap" is not what it
         -- wants; 6 still is. The gate is the registry's own either way.
         if key == "3" then
-          if cycleVoxelCamera(self) then return end
+          if cycleVoxelCamera(self) then return true end
         else
-          local stepped = Pipelines.hotkey(key, top, self.overworld) and true
+          local stepped = Pipelines.hotkey(key, top, world) and true
           if stepped then
             Pipelines.syncOptions(self.save.options)
             require("src.render.Tilt").setLevel(self.save.options.tilt or 0)
             self:writeOptions()
-            return
+            return true
           end
         end
-      elseif Pipelines.canToggle("voxel", top, self.overworld) then
+      elseif Pipelines.canToggle("voxel", top, world) then
         -- All four answer to the voxel pass's own free-roam gate --
         -- borrowed from the registry rather than restated, so a press
         -- mid-warp or mid-cutscene is refused for the wireframe exactly when
@@ -1480,10 +1483,25 @@ do
         -- parameterise the pass and leave the layout alone; the guard answers
         -- for all of them, so nothing here has to know which key it was.
         if stagedBattles() then OverworldBattle.forceOG(self) end
-        return
+        return true
       end
     end
-    return inner(self, key)
+    return false
+  end
+  if Generation.isGen2() then
+    -- Crystal has no live game.overworld or overworld state-stack entry.
+    -- Use its native keyboard hook and menu/cutscene gate, before TILT can
+    -- consume 3. The stable pipeline ID is independent of its UI label.
+    mod.hooks:wrap("input.key",function(next,game,ev)
+      if ev and ev.phase=="pressed" and handleKey(game,ev.key) then return true end
+      return next(game,ev)
+    end)
+  else
+    local inner=Game.keypressed
+    function Game:keypressed(key)
+      if handleKey(self,key) then return end
+      return inner(self,key)
+    end
   end
 end
 

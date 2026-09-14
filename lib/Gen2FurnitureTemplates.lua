@@ -31,6 +31,7 @@ function M.resolve(ts,spec)
    z=z,depth=depth,rise=rise,stretch=true}
  end
  local kind=spec.kind
+ if kind=='bench' or kind=='bin' then t.model=kind;return t end
  if kind=='planter' then t.model='planter';return t end
  if kind=='bed' or kind=='table' then
   t.support=6

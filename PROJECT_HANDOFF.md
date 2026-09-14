@@ -1,3 +1,31 @@
+# Working candidate — camera key and known-gap fixes — 2026-09-14
+
+Latest user request: 3 no longer changes camera including first person.
+FIXED: live Game2 has no game.overworld. main.lua now uses pipelineGate and
+public input.key before native TILT claims 3. Native keyboard regression passes
+levels 4,5,6,7,0,2,3,4 from FULL, first-person activation, persistence and menu
+gating: /tmp/johto-hd/gaps-camera-2.log. Gen1 wrapper retained.
+
+BA1.18.0 candidate: native static snapshot/cache rules; open Park bench/bin,
+actual radio-desk placement, Center counter-ball crop; shallow illustrated crown
+caps; Dark Cave fractured wall surface and floor material. Cache rev47. Pure
+support181, furniture47, HD60, geometry and new known-gap tests pass. Final
+native five-map test /tmp/johto-hd/gaps-visual-4.log passes 164 RAM records with
+encode/decode/warm reload. Screenshots reviewed. Not persistent disk proof.
+
+Online+0.5.3 candidate omits unsupported Gen1 map_scripts registry on Gen2;
+Casino Lounge map remains unported. Wild Skies fork1.12.2 candidate imports MIT
+upstream release1.12.1, corrects (def,tileset,x,y) collision calls for neighbouring
+maps; native seam11 tests pass. Local repo wild-skies-gen2 / origin
+notquiteog/wild_skies. Original MIT LICENSE retained.
+
+Bouncing Charmander remains OPEN despite user confirming New Bark/cart1.9.0.
+New 900-frame x3city depth/flat probe /tmp/johto-hd/gaps-motion.log found no jumps.
+Wilds uses a Charmander placeholder for SPRITE_PIKACHU, but a leaked actor is
+only a lead. No speculative clamp or follower hiding. User gameplay save is
+not present in the disposable QA profiles. Broader Gamma parity and hardware
+performance remain open. Cart1.10.0 packaging/publication is next.
+
 # Published checkpoint — Crystal HD-2D / cart 1.9.0 — 2026-09-14
 
 Latest user request is completed for Crystal: removed the scenery-style

@@ -87,7 +87,7 @@ local STATIC_PLAYTHROUGH = "bavc_static_mesh_v2"
 -- complete Structures/terrain pipeline at every cold map crossing.
 -- Revision 38 refreshes Crystal tree material UVs, the horizontal healing
 -- bed and the open bin. Old geometry must not mask these visual corrections.
-Disk.CACHE_REVISION = 46
+Disk.CACHE_REVISION = 47
 -- Patch releases which do not change emitted vertices must keep the existing
 -- world cache usable. This token matches the first static-mesh-cache-v2 build;
 -- CACHE_REVISION, not the public mod version, owns geometry compatibility.
@@ -658,6 +658,17 @@ function Disk.fingerprint(map, slot, masks, kind)
   addList(parts, def.blocks)
   parts[#parts + 1] = "tiles"
   addList(parts, tileset.blocks)
+  if type(map.cellCollision) == "function" then
+    parts[#parts + 1] = "gen2-rules"
+    parts[#parts + 1] = tostring(def.environment)
+    addList(parts, tileset.collision)
+    addList(parts, tileset.tilePalettes)
+    for _,attr in ipairs(tileset.tileAttrs or {}) do
+      for _,key in ipairs({'palette','vramBank','xFlip','yFlip','priority'}) do
+        parts[#parts+1]=tostring(attr[key])
+      end
+    end
+  end
   parts[#parts + 1] = "masks"
   addList(parts, canonicalMasks(map, masks))
   return table.concat(parts, "|")

@@ -51,17 +51,20 @@ Double Battles 0.9.2 keeps modern HUD panels outside attack-effect image bakes.
 
 This release moves toward the supplied Gamma Emerald references; it does not
 provide exact visual parity or fully authored coverage of every object.
-Park benches and several generic architectural/interior surfaces still use
-source-derived boxes. The unused radio mixing-desk and centre-counter-ball
-recipes need further source inspection. Cavern and terrain material refinement,
-more natural high-angle foliage, and broader hardware/performance review remain.
+Follow-up 1.18.0 replaces Park benches/bins and corrects the unused radio desk
+and Center counter-ball recipes against native placements. Crown caps improve
+steep views; Dark Cave has continuous fractured wall surfaces and muted floor
+materials. Other generic architectural/interior surfaces, further terrain and
+foliage art, and hardware/performance review remain open.
 
-The reported fast, bouncing Charmander is still un-reproduced. A stationary
-three-city probe found no Charmander or multi-cell jumps; no speculative global
-movement slowdown is included. Known companion issues remain: Online+ uses a
-Gen 1-only map_scripts registry, and Wild Skies reports a Gen 2 defCellTile
-argument mismatch on some ticks. Optional cache writes can fail while completed
-GPU meshes remain usable. These runs are not described as warning-free.
+The fast, bouncing Charmander remains reported in New Bark Town on cart1.9.0.
+A 900-frame-per-city probe in both depth and flat views found no multi-cell
+jumps. Its source is unconfirmed; no speculative movement slowdown is included.
+Wild Skies 1.12.2 corrects native neighbouring-map collision arguments; Online+
+0.5.3 omits unsupported Gen 1 map-script registration on Crystal. This does not
+port the Casino Lounge map. Native static-cache snapshots and RAM encode/decode
+now pass; persistent storage still depends on the host. Optional companion
+provider notices can remain. These runs are not described as warning-free.
 
 Foliage was generated with the built-in image-generation tool, without copying
 reference-game assets. The unchanged PNG and exact prompt are recorded in
