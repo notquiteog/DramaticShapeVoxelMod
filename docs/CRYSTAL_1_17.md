@@ -3,7 +3,10 @@
 **As of 1.17.1, layered HD-2D is the default Crystal presentation for this
 fork.** The CRYSTAL SCENERY selector and its VOXEL HD / SOURCE ART alternatives
 have been removed. Old saved values are ignored. Johto Diorama 1.9.0 also
-hides Wilds' overworld Poké Ball HUD by default.
+hides Wilds' overworld Poké Ball HUD by default. Version 1.17.2 labels
+the camera control HD-2D CAMERA and applies the first-run FULL preset
+immediately, including Gen 2 boots where the initial restore preceded save creation.
+Existing explicit camera choices remain saved.
 
 The new maple, pine and spreading crowns use original transparent artwork,
 layered around real trunk geometry. Distant forest fill uses the same models
@@ -37,8 +40,8 @@ Double Battles 0.9.2 keeps modern HUD panels outside attack-effect image bakes.
 - Eight focused flower/rock scenes replace 255 source flower tiles; native
   Park rims are asserted shallow. Original map tiles remain unchanged.
 - Sixteen-map scenery/roof/interior pass, native fruit-rock draw ownership,
-  restored Sky Ride scientist presence without party changes, 1440p live style
-  cycling, shader composition, and native doubles attacks/KO/escape pass.
+  restored Sky Ride scientist presence without party changes, 1440p fixed-style
+  migration, shader composition, and native doubles attacks/KO/escape pass.
 - Geometry checks cover closed rocks, bounded uneven reef clusters, continuous
   mound corners and shore slopes, low shrubs, cut sapling size, furniture/floor
   isolation, retained distant foliage and existing Gen 1 tree budgets.

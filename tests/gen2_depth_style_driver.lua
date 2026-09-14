@@ -4,6 +4,10 @@ return function(game)
  local U=dofile('tests/drivers/util.lua')
  local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib
  local P=require('src.render.Pipelines')
+ if os.getenv('QA_FRESH_HD2D')=='1' then
+  assert(P.level('voxel')==1,'fresh profile must start in HD-2D without driver intervention')
+  assert(game.options.pipelines.voxel==1,'default camera must survive options reload')
+ end
  local visual=V.require('CommunityVisuals')
  local mesher=V.require('ChunkMesher')
  local voxel=V.require('VoxelState')

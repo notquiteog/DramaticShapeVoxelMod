@@ -1,3 +1,23 @@
+# Final default-camera check — 2026-09-14
+
+1.17.2 changes the Gen 2 camera label to HD-2D CAMERA and applies the newly
+seeded camera in save.created. Game2 restores pipelines BEFORE emitting its
+boot save.created event, so the existing FULL default was recorded but not
+activated for that boot. The seed helper still preserves an explicit OFF.
+Fresh imported profile johto-hd2d-fresh-qa now passes pre-driver camera-level
+and options assertions, then fixed-style migration/1440p/shader checks:
+/tmp/johto-hd/fresh-hd2d-default-6.log. Support181 passes. Earlier attempts
+incorrectly expected level3; the existing default is FULL (level1, 35 degrees).
+
+The strict cart-HUD check originally failed because engine scripted boot
+ignores --cart and passes nil into bootGame. A disposable main.lua copy in
+/tmp/johto-hd/release-engine changes only its scripted-branch condition to
+`if scripted and not resolvedLaunch.cartSpecified then`; this routes --cart
+through the normal validated startLaunchRequest path while retaining the
+frame driver. Engine source and user profile untouched. Actual cart-path
+1.17.1 boot passes /tmp/johto-hd/cart-1.9.0-final-cart-path.log. Re-run with
+packaged 1.17.2 and publish cart1.9.0 after updating pin/hash.
+
 # HD-2D-only Crystal presentation — 2026-09-14
 
 Latest user steering removes the voxel style and its selector. 1.17.1 makes

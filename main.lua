@@ -319,7 +319,7 @@ function voidFill.check()
 end
 
 mod.content.render_pipelines:register("voxel", {
-  label = "VOXEL",
+  label = Generation.isGen2() and "HD-2D CAMERA" or "VOXEL",
   -- The ladder this cart can actually walk. Gen 1 gets every rung; a Gen 2
   -- boot stops at 75 because the two rungs above it take the WALK as well as
   -- the eye, and free movement has no seam on Gold (Voxel.freeCamAvailable).
@@ -2255,7 +2255,11 @@ end)
 
 mod.events:on("save.created", function(payload)
   local save = payload and payload.save
-  if save then Voxel.seedOptions(save.options) end
+  if save and Voxel.seedOptions(save.options) then
+    -- Gen 2 announces its boot save after the initial pipeline restore.
+    -- Apply the newly seeded default now as well as recording it for reload.
+    require("src.render.Pipelines").applyOptions(save.options)
+  end
   BattleArt.migrateDuplicateSetting()
   DayNight.restore()
   pinEngineFx()

@@ -1,3 +1,13 @@
+## 1.17.2 — 2026-09-14
+
+Apply the fresh-save camera default immediately: Gen 2 emits save.created
+after its initial pipeline restore, leaving the boot view OFF until a reload.
+
+Rename the Gen 2 camera control to HD-2D CAMERA; its stable internal ID
+preserves saved preferences. Verify fresh profiles start in the existing FULL
+preset without test-driver camera setup. The removed scenery-style selector
+remains absent; explicit camera choices, including OFF, remain saved.
+
 ## 1.17.1 — 2026-09-14
 
 Make layered HD-2D the default Crystal presentation for the fork and remove
