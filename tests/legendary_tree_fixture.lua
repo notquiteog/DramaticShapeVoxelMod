@@ -51,7 +51,6 @@ end
 mods.CacheTrace = { log = function(event, id, detail) F.events[#F.events + 1] = { event, id, detail } end }
 mods.CommunityVisuals = {
   crystalDepth=function(map)return F.depth and map and map.cellCollision~=nil end,
-  crystalStyle={get=function()return "hd2d" end},
   crystalHD = function(map) return map and map.cellCollision ~= nil end,
   customTrees = function() return true end, customCutTrees = function() return true end,
   customForest = function() return false end, fullTreeDetail = function() return F.mode == "full" end,

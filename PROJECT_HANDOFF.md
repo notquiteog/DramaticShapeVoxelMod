@@ -1,3 +1,30 @@
+# HD-2D-only Crystal presentation — 2026-09-14
+
+Latest user steering removes the voxel style and its selector. 1.17.1 makes
+crystalHD/crystalDepth unconditional for native Gen 2 maps, removes the
+crystalStyle row/registration and selectable opaque-canopy path, and ignores
+legacy saved style values. Gen 1 keeps its established rendering path. Optional
+HD-2D LIGHT / Depth of Field remain. Cart should carry no obsolete crystalStyle
+pin option. Gen2 depth_style_driver now checks the fixed default, ignored old
+saved values and optional shaders instead of cycling the removed row.
+
+Packaging audit caught main.lua was accidentally omitted from 410b452's
+staging list: published 1.17.0 lacks optional-light pipeline registration and
+the battle-ended hook despite having their modules. Both entry-point changes
+must be INCLUDED in 1.17.1. Do not claim 1.17.0 alone fixes these two features.
+Doubles runtime0.9.2 is correct; its QA driver was adjusted in the source repo
+for the now-removed style API (no runtime change / no new pin needed).
+Native tree role QA now inspects S.roundStamps instead of sandbox-invisible
+_G registries, so cut/bush counts become meaningful.
+
+# Lower ledges follow-up — 2026-09-14
+
+User judged the six-pixel mound crest too tall. 1.17.1 lowers it to 2.5 pixels,
+retains its three-pixel footprint and smooth profile, and scales all six source
+dirt rows over the shorter unjumpable face. Cache revision46. Collision and
+jump permissions unchanged. Cart 1.9.0 is not yet published; update its Battle
+Art pin from the just-published 1.17.0 to 1.17.1 before publishing it.
+
 # Working release candidate — 1.17.0 / cart 1.9.0 — 2026-09-14
 
 Current working tree adds layered HD-2D foliage, low shrubs / retained Cut

@@ -8,18 +8,14 @@ local ModSetting = V.require("ModSetting")
 
 local CommunityVisuals = {}
 
-CommunityVisuals.crystalStyle = ModSetting.new(
-  "crystalStyle", "CRYSTAL SCENERY",
-  { "hd2d", "source", "depth" }, { "VOXEL HD", "SOURCE ART", "HD-2D DEPTH" }
-)
+-- The Crystal fork has one scenery style. Old saved crystalStyle values are
+-- deliberately ignored; they cannot restore the retired voxel-canopy mode.
 function CommunityVisuals.crystalHD(map)
   return map and type(map.cellCollision) == "function"
-    and CommunityVisuals.crystalStyle:get() ~= "source"
 end
 
 function CommunityVisuals.crystalDepth(map)
-  return map and type(map.cellCollision)=="function"
-    and CommunityVisuals.crystalStyle:get()=="depth"
+  return CommunityVisuals.crystalHD(map)
 end
 
 local CITY_GROUND_MAPS = {
@@ -175,7 +171,6 @@ CommunityVisuals.settings = {
   CommunityVisuals.caves,
   CommunityVisuals.caveDetails,
   CommunityVisuals.caveSound,
-  CommunityVisuals.crystalStyle,
   CommunityVisuals.trees,
   CommunityVisuals.treeDetail,
   CommunityVisuals.cutTrees,

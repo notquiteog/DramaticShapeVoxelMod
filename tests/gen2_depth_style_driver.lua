@@ -28,39 +28,37 @@ return function(game)
  assert(not config.catchHudEnabled(wild.logic.mod),'ball HUD still enabled')
  P.setLevel('voxel',3);P.setLevel('depth_of_field',0)
  V.require('DayNight').setting:sync('day')
- -- Prevent this visual QA from storing test choices in the disposable profile.
- local write=game.writeOptions;game.writeOptions=function()end
- visual.crystalStyle:sync('hd2d')
- local row=visual.crystalStyle:row()
- for _,style in ipairs({'source','depth','hd2d','source','depth'}) do
-  assert(row.step(game,1))
-  assert(visual.crystalStyle:get()==style,'live row selected wrong style')
-  assert(game.mods.modOptions.BATTLE_ART_VOXEL_FORK.crystalStyle==style,'loader option stale')
+ assert(visual.crystalStyle==nil,'retired scenery selector is still exposed')
+ game.mods.modOptions.BATTLE_ART_VOXEL_FORK=game.mods.modOptions.BATTLE_ART_VOXEL_FORK or {}
+ -- Existing installs may retain the old stored value. None may restore the
+ -- retired voxel/source branch or interfere with a fresh HD-2D mesh rebuild.
+ for _,oldStyle in ipairs({'hd2d','source','depth'}) do
+  game.mods.modOptions.BATTLE_ART_VOXEL_FORK.crystalStyle=oldStyle
+  visual.invalidate()
   U.wait(5)
   for _=1,2400 do if mesher.pending()==0 and voxel.ready then break end U.wait(1) end
-  assert(mesher.pending()==0 and voxel.ready,'style rebuild failed')
+  assert(mesher.pending()==0 and voxel.ready,'HD-2D rebuild failed')
+  assert(visual.crystalDepth(map),'old saved preference disabled HD-2D')
   U.wait(20)
   local S=structures.forMap(map)
   local grass=0
   for k,s in pairs(S.shapeAt) do
-   if s.art=='grass' then
-    if S.skip[k] and S.ground[k]==5 then grass=grass+1 end
-   end
+   if s.art=='grass' and S.skip[k] and S.ground[k]==5 then grass=grass+1 end
   end
-  if style=='depth' then assert(grass>0,'raised grass retained flat ROM tuft art') end
+  assert(grass>0,'raised grass retained flat ROM tuft art')
   local n=0
   for cy=0,map.heightCells-1 do for cx=0,map.widthCells-1 do
    n=n+1;assert(map:cellCollision(cx,cy)==original[n],'presentation changed collision')
   end end
-  assert(U.shot(game,dir..'/'..style..'.png'))
  end
- game.writeOptions=write
+ game.mods.modOptions.BATTLE_ART_VOXEL_FORK.crystalStyle=nil
+ assert(U.shot(game,dir..'/depth.png'))
  P.setLevel('hd2d_light',2);P.setLevel('depth_of_field',1)
  U.wait(12)
  assert(V.require('SceneFinish').lastApplied,'HD-2D light shader did not run')
  assert(V.require('DepthOfField').lastApplied,'depth-of-field shader did not run')
  assert(U.shot(game,dir..'/depth_optional_shaders.png'))
  P.setLevel('hd2d_light',0);P.setLevel('depth_of_field',0)
- print('[depth styles] PASS: live cycling, scene rebuild, grass underlay, collision and hidden ball HUD')
+ print('[depth styles] PASS: HD-2D default, retired-setting migration, scene rebuild, grass underlay, collision and hidden ball HUD')
  love.event.quit()
 end

@@ -3,11 +3,9 @@ local V={require=function(name)return assert(modules[name],name)end}
 modules.ModSetting=assert(loadfile('lib/ModSetting.lua'))(V)
 local visuals=assert(loadfile('lib/CommunityVisuals.lua'))(V)
 local map={tileset={id='TILESET_JOHTO',imageWidth=128,imageHeight=128},cellCollision=function()end}
-assert(visuals.crystalStyle:get()=='hd2d','existing default changed')
-assert(visuals.crystalHD(map) and not visuals.crystalDepth(map))
-visuals.crystalStyle:sync('source');assert(not visuals.crystalHD(map))
-visuals.crystalStyle:sync('depth');assert(visuals.crystalHD(map) and visuals.crystalDepth(map))
-assert(not visuals.crystalDepth({tileset={id='OVERWORLD'}}),'depth style leaked into Gen 1')
+assert(visuals.crystalStyle==nil,'retired scenery setting remains exposed')
+assert(visuals.crystalHD(map) and visuals.crystalDepth(map),'Crystal must default to HD-2D')
+assert(not visuals.crystalDepth({tileset={id='OVERWORLD'}}),'Crystal style leaked into Gen 1')
 local Trees=assert(loadfile('lib/Gen2DepthTrees.lua'))()
 for _,family in ipairs({'broadleaf','conifer','spreading','shrub'}) do
  local v,i={},{}
@@ -46,4 +44,4 @@ for _,quad in ipairs(q) do
  end
 end
 map.tileset.id='TILESET_LAB';assert(not Grass.append({},map,0,0),'indoor art used as grass')
-print('style isolation, persistent values, layered crown budget and grass bounds passed')
+print('HD-2D default and style isolation, layered crown budget and grass bounds passed')

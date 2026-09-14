@@ -1,3 +1,17 @@
+## 1.17.1 — 2026-09-14
+
+Make layered HD-2D the default Crystal presentation for the fork and remove
+the scenery-style selector and opaque-canopy alternative. Ignore old saved
+style values. Lighting and Depth of Field remain optional. Complete entry-point
+wiring for HD-2D LIGHT and battle-end stage retention; those module changes
+were present in 1.17.0 but its entry-point hooks were missing.
+
+Lower Crystal mound ledges from six pixels to 2.5 pixels after visual feedback.
+Keep their three-pixel depth, smooth grass slope, and full dirt-face texture
+compressed to the shorter face. Collision and jump behaviour remain native.
+Cache revision46 refreshes geometry. Native 1440p default/migration and optional
+shader checks supplement the scenery and battle checks described in 1.17.0.
+
 ## 1.17.0 — 2026-09-14
 
 Add CRYSTAL SCENERY → HD-2D DEPTH alongside VOXEL HD and SOURCE ART.

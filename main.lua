@@ -608,6 +608,15 @@ mod.content.render_pipelines:register("depth_of_field", {
   invalidate = function() V.require("DepthOfField").invalidate() end,
 })
 
+mod.content.render_pipelines:register("hd2d_light", {
+  label = "HD-2D LIGHT",
+  levels = V.require("SceneFinish").LABELS,
+  priority = 12,
+  update = function(_, level) V.require("SceneFinish").level = level or 0 end,
+  worldPresent = function(canvas, ctx) return V.require("SceneFinish").apply(canvas,ctx) end,
+  invalidate = function() V.require("SceneFinish").invalidate() end,
+})
+
 -- ------- this mod's own settings
 --
 -- Neither of these is a pipeline: they own no pass of the frame, they
@@ -785,9 +794,6 @@ local SETTINGS = {
     "FULL retains the approved foliage. BALANCED and HANDHELD remove decorative "
     .. "shells, keep near crossed-card silhouettes, and thin distant bunches. "
     .. "Tree positions and sizes stay fixed; R.DIST bounds neighbor work.", full = true },
-  { CommunityVisuals.crystalStyle,
-    "Layered trees and natural scenery for Crystal. SOURCE ART restores the "
-    .. "source-carved scenery. Characters remain crisp 2D sprites.", full = true },
   { CommunityVisuals.trees,
     "Choose Battle Art's authored round trees or the finalized Legendary Visuals "
     .. "small, medium, large and mature XL tree family. LEGENDARY FAST uses "
@@ -1226,7 +1232,7 @@ local LEGENDARY_CATEGORIES = {
   } },
   { id = "legendary_nature", label = "GRASS & TREES", settings = {
     CommunityVisuals.grass,
-    CommunityVisuals.crystalStyle, CommunityVisuals.trees, CommunityVisuals.treeDetail,
+    CommunityVisuals.trees, CommunityVisuals.treeDetail,
     CommunityVisuals.forest, ForestAtmos.setting,
   } },
   { id = "legendary_structures", label = "ROADS & STRUCTURES", settings = {
@@ -2176,7 +2182,7 @@ InterfaceSprites.install()
 -- so this is where the map's cast comes back.
 mod.events:on("battle.ended", function()
   LegendaryPokeballs.finish()
-  OverworldBattle.finish()
+  OverworldBattle.onBattleEnded()
 end)
 
 -- ------- and the way back out

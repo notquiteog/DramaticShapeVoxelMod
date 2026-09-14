@@ -1,6 +1,7 @@
 -- Rounded earth mounds, including turns. Grass rolls down toward the inside;
 -- the outward, unjumpable face retains its source dirt texture and height.
 local Gen2Ledges={}
+local HEIGHT=2.5
 local function key(x,y) return (y+64)*4096+x+64 end
 local edges={
   [43]={w=true,n=true},[44]={n=true},[45]={e=true,n=true},
@@ -14,7 +15,7 @@ function Gen2Ledges.height(x,z,edge)
   if edge.n then distance=math.min(distance,z) end
   if edge.s then distance=math.min(distance,8-z) end
   local t=math.max(0,math.min(1,1-distance/3))
-  return 6*t*t*(3-2*t)
+  return HEIGHT*t*t*(3-2*t)
 end
 function Gen2Ledges.build(S,map)
   if not S.gen2 or (map.tileset.id~="TILESET_JOHTO" and map.tileset.id~="TILESET_JOHTO_MODERN") then return end
@@ -54,7 +55,8 @@ function Gen2Ledges.build(S,map)
       {x+1,height(x+1,z+1),z+1},{x,height(x,z+1),z+1},5,c.sx,c.sz,1)
     for _,d in ipairs({{0,1},{0,-1},{-1,0},{1,0}}) do
       if not cells[(z+d[2])..":"..(x+d[1])] then
-        for y=0,5 do
+        for band=0,5 do
+          local y,top=band*HEIGHT/6,(band+1)*HEIGHT/6
           local a,b
           if d[2]==1 then a,b={x,y,z+1},{x+1,y,z+1}
           elseif d[2]==-1 then a,b={x+1,y,z},{x,y,z}
@@ -63,8 +65,8 @@ function Gen2Ledges.build(S,map)
           local ha,hb=height(a[1],a[3]),height(b[1],b[3])
           if ha>y or hb>y then
             a[2],b[2]=math.min(y,ha),math.min(y,hb)
-            quad(a,b,{b[1],math.min(y+1,hb),b[3]},
-              {a[1],math.min(y+1,ha),a[3]},c.tile,c.sx,7-y,.85)
+            quad(a,b,{b[1],math.min(top,hb),b[3]},
+              {a[1],math.min(top,ha),a[3]},c.tile,c.sx,7-band,.85)
           end
         end
       end

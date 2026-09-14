@@ -1,9 +1,9 @@
 # Crystal 1.17.0 — layered scenery
 
-Choose **CRYSTAL SCENERY → HD-2D DEPTH** for curved illustrated foliage and
-raised grass. **VOXEL HD** keeps the volumetric canopy style; **SOURCE ART**
-keeps the imported material treatment. Johto Diorama 1.9.0 selects HD-2D DEPTH
-and hides Wilds' overworld Poké Ball HUD by default.
+**As of 1.17.1, layered HD-2D is the default Crystal presentation for this
+fork.** The CRYSTAL SCENERY selector and its VOXEL HD / SOURCE ART alternatives
+have been removed. Old saved values are ignored. Johto Diorama 1.9.0 also
+hides Wilds' overworld Poké Ball HUD by default.
 
 The new maple, pine and spreading crowns use original transparent artwork,
 layered around real trunk geometry. Distant forest fill uses the same models
@@ -19,7 +19,7 @@ underlays come from adjacent native ground/water. Existing walkable coastal
 islands remain land. Reviewed Johto beaches use irregular wet-sand slopes.
 Ledge tops now roll down into grass as rounded mounds; the outward,
 unjumpable face keeps its source dirt art. The three-pixel footprint and
-six-pixel outer crest preserve the thin ledge proportions.
+2.5-pixel outer crest preserve the thin ledge proportions (lowered in 1.17.1).
 
 **HD-2D LIGHT → SOFT LIGHT / CINEMA** and **DEPTH OF FIELD** are optional.
 World post-processing leaves text and menus sharp. The battle diorama remains

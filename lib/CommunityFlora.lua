@@ -1489,7 +1489,7 @@ end
 -- create the fine silhouette and highlight breakup visible in the HD grass.
 function MOUND.detailImg()
   local T = MOUND.TRUNK
-  local style=V.require("CommunityVisuals").crystalStyle:get()
+  local style=V.require("Generation").isGen2() and "depth" or "gen1"
   if T.dstyle~=style then
     if T.dimg and T.dimg.release then T.dimg:release() end
     T.dimg=nil;T.dstyle=style
@@ -2082,17 +2082,13 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
       elseif type(map.cellCollision) == "function" then
         local trees=V.require("Gen2Trees")
         local seed=cx*31+cy*17
-        if V.require("CommunityVisuals").crystalDepth(map) then
-          -- Preserve the real trunk/bough depth, replacing voxel crown hulls
-          -- with a small set of overlapping illustrated foliage layers.
-          if lift ~= 3 then
-            tQ=trees.append(tV,tI,tQ,{},{},0,mx,base,mz,lift,seed)
-          end
-          dQ=V.require("Gen2DepthTrees").append(dV,dI,dQ,
-            mx,base,mz,lift,seed,trees.family(seed,lift))
-        else
-          tQ,cQ,dQ=trees.append(tV,tI,tQ,cV,cI,cQ,mx,base,mz,lift,seed,dV,dI,dQ)
+        -- Retain the trunk/bough recipe; Crystal crowns always use the
+        -- illustrated layers, with no selectable opaque-canopy fallback.
+        if lift ~= 3 then
+          tQ=trees.append(tV,tI,tQ,{},{},0,mx,base,mz,lift,seed)
         end
+        dQ=V.require("Gen2DepthTrees").append(dV,dI,dQ,
+          mx,base,mz,lift,seed,trees.family(seed,lift))
       elseif sapling then
         -- TEST47 CITY-SUPPORTED SAPLING:
         -- The cuttable prop is deliberately NOT the smallest mature tree any

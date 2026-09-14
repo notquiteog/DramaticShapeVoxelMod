@@ -52,7 +52,7 @@ for _,q in ipairs(S.objectQuads) do
   end
 end
 check(tops==63,"corner should be a joined L, not a filled square")
-check(slopes>0 and Ledges.height(4,5,{s=true})==0 and Ledges.height(4,8,{s=true})==6,
+check(slopes>0 and Ledges.height(4,5,{s=true})==0 and Ledges.height(4,8,{s=true})==2.5,
   "mound slopes to grass but retains the dirt-side crest")
 for z=0,8 do
  assert(Ledges.height(8,z,{s=true})==Ledges.height(0,z,{s=true,e=true}),"ledge corner seam")

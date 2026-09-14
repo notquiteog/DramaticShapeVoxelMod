@@ -87,7 +87,7 @@ local STATIC_PLAYTHROUGH = "bavc_static_mesh_v2"
 -- complete Structures/terrain pipeline at every cold map crossing.
 -- Revision 38 refreshes Crystal tree material UVs, the horizontal healing
 -- bed and the open bin. Old geometry must not mask these visual corrections.
-Disk.CACHE_REVISION = 45
+Disk.CACHE_REVISION = 46
 -- Patch releases which do not change emitted vertices must keep the existing
 -- world cache usable. This token matches the first static-mesh-cache-v2 build;
 -- CACHE_REVISION, not the public mod version, owns geometry compatibility.
@@ -549,7 +549,7 @@ function Disk.fingerprint(map, slot, masks, kind)
   -- creator's original cache family.
   local CommunityVisuals = V.require("CommunityVisuals")
   if map and type(map.cellCollision) == "function" then
-    parts[#parts + 1] = CommunityVisuals.crystalStyle:get()
+    parts[#parts + 1] = "crystal-hd2d"
   end
   -- Final contract: brick courses, bridge boards, crown-lock and the
   -- grain-mapped TEST435 fence must never reuse an older community mesh.

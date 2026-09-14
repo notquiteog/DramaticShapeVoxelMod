@@ -21,7 +21,7 @@ return function(game)
     end,uv,tile)
   end
   if os.getenv("QA_DEPTH_STYLE")=="1" then
-    V.require("CommunityVisuals").crystalStyle:sync("depth")
+    assert(V.require("CommunityVisuals").crystalDepth(game.world.map),"HD-2D must be default")
     Mesher.invalidate(nil,"HD-2D depth QA")
   end
   local rocks=V.require("Gen2Rocks")
@@ -119,12 +119,13 @@ return function(game)
     local shapes, S = Shapes.forMap(map), Structures.forMap(map)
     if os.getenv("QA_DEPTH_STYLE")=="1" then
       local cut,bush=0,0
-      for cell in pairs((_G.__ds_sapling_cells or {})[map.id] or {}) do
-        local cx,cy=cell:match("^(-?%d+)|(-?%d+)$");cx,cy=tonumber(cx),tonumber(cy)
-        local coll=map:cellCollision(cx,cy)
-        local lift=(_G.__ds_round_cells or {})[map.id][cell]
-        if Permissions.isCutTree(coll) then assert(lift==4,"cut sapling shape changed");cut=cut+1
-        elseif Permissions.isHeadbuttTree(coll) then assert(lift==3,"shrub kept tree trunk");bush=bush+1 end
+      for _,stamp in ipairs(S.roundStamps or {}) do
+        if stamp.lift==3 or stamp.lift==4 then
+          local cx,cy=math.floor(stamp.mx/16),math.floor(stamp.mz/16)
+          local coll=map:cellCollision(cx,cy)
+          if Permissions.isCutTree(coll) then assert(stamp.lift==4,"cut sapling shape changed");cut=cut+1
+          else assert(stamp.lift==3,"shrub kept tree trunk");bush=bush+1 end
+        end
       end
       print("[tree roles]",map.id,cut,"cut saplings",bush,"low shrubs")
     end
