@@ -1,3 +1,48 @@
+# Published checkpoint — Crystal HD-2D / cart 1.9.0 — 2026-09-14
+
+Latest user request is completed for Crystal: removed the scenery-style
+selector and voxel/source alternatives; always use layered HD-2D scenery.
+Gen 2's camera row is HD-2D CAMERA. Keep its stable internal pipeline ID for
+saved-camera and companion compatibility. Fresh profiles activate FULL on the
+initial boot; explicit camera settings including OFF are retained. Optional
+HD-2D LIGHT and Depth of Field remain separate. Gen 1 retains its rendering.
+
+Published runtime commits / versions:
+- Battle Art 1.17.2: 585ed1b72328a4decacffb8dd5717daa035c5b0b.
+  ZIP SHA256 88afb747e2e30435595af70fdf6a52c7c4c7162635b648880d000e3871483417.
+- Double Battles 0.9.2: 7620f92b3bbf13485318b48e6b454f0607c5e774.
+  Source HEAD dbf5484 is a later QA-driver-only update for removed style API.
+- Sky Ride 0.2.22: 669a27fe12b3a1cf92b96b9a04929e6b813b6bc9.
+- Cart 1.9.0: 2ff63883f743689f766a2979b0792979f52f7f2d.
+  Cart SHA256 2a048bd7d53785e6d40888430d12dba3cefea0063214249f250904c0d03b0577.
+  Crystal sealed+, CG3 cover, all thirteen pins retained. Wilds HUD option0.
+  No obsolete crystalStyle pin. Online pack validates all release pins;
+  exact bundle/source bytes and index metadata match.
+
+Final packaged cart test PASS:
+/tmp/johto-hd/cart-1.9.0-hd2d-verified.log and corresponding screenshot folder.
+Fresh disposable profile, actual cart launch path, 2560x1440: camera level1
+and saved options asserted BEFORE driver camera changes; hidden HUD asserted
+from cart options, no manual override; removed style API, legacy values,
+scene rebuild, source collision preservation, optional light and DOF pass.
+The one-line disposable launcher adjustment below is necessary because the
+engine's script shortcut discards --cart; no engine source was modified.
+Packaged 16-map/19-view scenery PASS: packaged-scenery-1.9.0.log; packaged
+1440p battle attacks/paired Sentret/KO/escape/party PASS: packaged-battle-1.9.0.log.
+Those two run BA1.17.1; 1.17.2 changes only camera label and fresh-save pipeline
+activation. Final source support181 passes. No Android/hardware GPU testing.
+Only johto-parity-qa and johto-hd2d-fresh-qa profiles were used/updated.
+
+The 1.17.2 fix uses the EXISTING Voxel.seedOptions FULL preset in save.created
+and immediately applies it when newly seeded, matching save.loaded behavior.
+No extra game.ready callback remains. Previous temporary 35-degree/level3
+assertions below describe investigation, not shipped code.
+
+Remaining: exact Gamma Emerald parity, generic architecture/props (including
+Park benches), high-angle foliage and hardware performance. Fast bouncing
+Charmander remains un-reproduced. Known Online+ Gen1 map-script and Wild Skies
+defCellTile warnings remain. Do not claim every object perfected.
+
 # Final default-camera check — 2026-09-14
 
 1.17.2 changes the Gen 2 camera label to HD-2D CAMERA and applies the newly
