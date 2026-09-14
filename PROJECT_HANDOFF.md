@@ -1,3 +1,27 @@
+# Published checkpoint — cart1.10.0 / camera3 restored — 2026-09-14
+
+Released/pushed:
+- BA1.18.0 runtime79f0d9a131871f946f601e89ffd4c81bac4146f6;
+  ZIP SHA4641547e91f285fcc6d702c196294cb122540f6f97e20e458218d91ead5c5f98.
+- Online+0.5.3 e1f4b69b29e16c0fea1c67c9249f80f0fa8aa520.
+- Wild Skies1.12.2 c65703c992149d62dd1419a0f3d7cc7f0becf190;
+  fork notquiteog/wild_skies, local wild-skies-gen2.
+- Cart1.10.0 cb0e39a, Crystal sealed+,13mods,CG3 unchanged.
+  SHA346358ac8f8e142d535c052914c94d89160995e1e0e8893ea63454493b590d2b.
+
+Actual packaged cart-path camera test PASS:
+/tmp/johto-hd/cart-1.10.0-camera.log. Asserts BA1.18.0 and cart HUD option0,
+then real love.keypressed3 reaches first/thirdperson, persists choice and
+refuses menu presses. Log confirms all three new companion versions loaded.
+Exact bundle/source equality and online pin/hash validation pass. Index meta
+pins/load order synchronized. QA cart copied ONLY to johto-parity-qa profile.
+
+Source 1440p doubles attack/KO/escape/animation/party regression PASS:
+/tmp/johto-hd/gaps-battle.log. Packaged keyboard test also passes independently
+in packaged-camera-1.10.0.log. Five-map/cache/crown evidence and open issues
+below remain accurate. Runtime release zip was built before this handoff-only
+commit. Do not claim the bouncing actor or exact Gamma parity is fixed.
+
 # Working candidate — camera key and known-gap fixes — 2026-09-14
 
 Latest user request: 3 no longer changes camera including first person.
