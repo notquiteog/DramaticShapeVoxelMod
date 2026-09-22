@@ -1,5 +1,17 @@
 # City/roof follow-up — 2026-09-22 — 1.21.0-beta.2
 
+Published: https://github.com/notquiteog/DramaticShapeVoxelMod/releases/tag/v1.21.0-beta.2
+Runtime commit c8c0ec2c6f0ebb805770b130765c086e43a801df. Prerelease, not latest.
+Exact ZIP: /tmp/firered-hd2d/BATTLE_ART_VOXEL_FORK-1.21.0-beta.2.zip
+569 entries, 7,638,611 bytes. SHA256:
+11eb3b63db413e2670de87eb7f525b505ca18657edbdf826cbca059b8c23e7a0.
+GitHub uploaded digest verified equal. Exact extracted package passed native
+1440p roof QA (packaged-beta2.log) and additional first-person close rear
+views (rear-close.log, rear-close/oak_lab_rear_1.png through rear_3.png).
+Rear wall is closed without internal fins; shadow-edge aliasing and plain
+side/rear materials remain visual polish work. Final static scan is recorded
+in validate-beta2-final.log with the same six existing findings.
+
 Latest user steering: not every roof is curved or hipped; Oak's Pallet lab needs
 its chimney and no grass folded into the building. Then reported lines off
 lab's back. Fixed roof type and cropping; removed internal divider walls that
