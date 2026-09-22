@@ -1,3 +1,28 @@
+# Release QA — 2026-09-22
+
+Packaged ZIPs, exact SHA-256 pins and sealed carts tested in isolated
+release-031-{yellow,crystal,firered}-qa profiles. Official Gen1Recomp 0.3.1
+.love checksum verified. A QA-only copy changes only the scripted boot's two
+cart-id arguments to honor QA_CART (stock driver boot discards --cart); no
+production engine/loader/gameplay changes. FireRed reimported from the user's
+local ROM into the disposable QA cache. Player profiles/saves untouched.
+
+Three cart runs passed identity/pin/version checks, four native interiors and
+field return each. Crystal/Yellow load all five mods plus Running Shoes.
+FireRed bundles all five at the user's request: four load, Ride stays
+wrong_generation because its Gen 3 port is unfinished. Rendered Yellow and
+Crystal contact sheet and FireRed Oak lab/field captures inspected. Logs and
+archives: /tmp/release-031-20260922. 368 packaged Lua files and the assembled
+Ride source compile with LuaJIT; tree-art, lab, options, LeafGreen alias,
+shared-world/activity and Gen 2 target-selection focused tests pass. Wilds
+version, ASCII metadata, option-label and ZIP hygiene checks pass.
+
+No claim of exhaustive visual parity or full multiplayer activity revalidation
+on 0.3.1. Earlier two-client 0.2.73 evidence is retained separately. Gen 1/2
+online doubles, Gen 3 Ride and the remaining disconnect/mixed-mod matrix are
+still unfinished. Kanto Gear is absent; all packages exclude ROMs, player saves,
+import caches and private battle artwork. Companion mods remain independent.
+
 # Main-branch source checkpoint — 2026-09-22
 
 User requested committing and pushing all mod/cart work to main. This checkpoint

@@ -1,3 +1,9 @@
+## 1.22.0 — 2026-09-22
+
+Original tree artwork is now the default in Crystal and FireRed/LeafGreen, with optional illustrated trees and flat or modeled trunks. Adds closed roof eaves, LeafGreen tileset aliases, modeled Oak lab furniture, supported starter balls and Pokédex items, and native in-game settings. Keeps native battle cards separated.
+
+Known limits: Specialty interiors, forest gates and broader visual coverage remain unfinished.
+
 ## Unreleased — original art, LeafGreen, Oak’s lab and in-game settings
 
 - Default to each game’s original tree art; keep illustrated trees and modeled

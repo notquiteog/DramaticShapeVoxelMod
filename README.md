@@ -1,3 +1,7 @@
+**1.22.0: Original-art scenery and Oak lab models.** Original tree artwork is now the default in Crystal and FireRed/LeafGreen, with optional illustrated trees and flat or modeled trunks. Adds closed roof eaves, LeafGreen tileset aliases, modeled Oak lab furniture, supported starter balls and Pokédex items, and native in-game settings. Keeps native battle cards separated.
+
+Specialty interiors, forest gates and broader visual coverage remain unfinished.
+
 **FireRed preview (1.21.0-beta.3):** install this mod separately in FireRed
 on Gen1Recomp **0.2.73+**. Outdoor 2.5D rendering and camera controls are now
 available at display resolution, with complete gym exteriors, shared city buildings, outdoor props and initial home/lab
