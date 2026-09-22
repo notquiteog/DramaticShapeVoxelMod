@@ -1,3 +1,57 @@
+# FireRed preview — 2026-09-21
+
+New user request: make this work for FireRed too. Added 1.21.0-beta.1 as a
+separate opt-in preview; DO NOT repin the Crystal sealed cart to this preview.
+Existing stable BA1.20.3/cart1.13.1 remain the user's Crystal release.
+See docs/FIRERED_SUPPORT.md for the exact scope. Do not claim FireRed full
+visual parity, completed interiors, staged battles or companion compatibility.
+
+Actual installed engine0.2.73 supports FireRed. The source checkout at
+/home/admin/Apps/Gen1Recomp/source is stale and its old ModTargets rejects
+gen3 in ANY manifest. Use /tmp/johto-hd/engine-0273 (actual AppImage payload).
+Minimum engine bumped to0.2.73 because older loaders reject the gen3 token.
+QA fused payload /tmp/johto-hd/appimage-0273-qa.love remains actual0.2.73 with
+scripted cart handling / PlatformHooks driver updates, not an engine port.
+
+Gen3Integration branches before all legacy installs. It wraps native
+FieldView.draw and scopes native Tilt off around Display.present. Gen3Scene
+uses shared Voxel3D/ShadowMap/Mat4/Gen2DepthTrees/Gen2Trees with native
+Tileset/Sprite providers. No new ROM-cache reads or shipped imported pixels.
+General outdoor trees and Pallet buildings are mapped; other art stays flat.
+Interiors/caves, doors, healing, shop camera and special effects fall back to
+native. Battles are not patched. First/rotating-third-person maps BOTH
+wasPressed and isDown through native Player.update. A failed/unsupported GPU
+must also stop remapping movement. Foliage fixed in static modes, facing in
+free modes. Neighbor ghosts are never ticked from the renderer.
+
+Native QA profiles created (copies of imported inputs, no live saves):
+/home/admin/.local/share/firered-hd2d-qa and battle-art-crossgen-qa.
+The user's /home/admin/.local/share/pokemon-love2d was read-only.
+User's canonical US1.0 FireRed ROM already existed in Apps; reused its imported
+firered cache. None of that art/ROM is committed or included in the release.
+
+Evidence in /tmp/firered-hd2d:
+- views.log and views/: thirteen mode screenshots across Pallet/Route1/
+  Viridian/starting bedroom, native eastward movement10->12 from camera-up,
+  real key3 dispatcher and canopyFacing assertions PASS.
+- battle.log: native wild intro reached command, screenshot, engine abort
+  and HD2D return PASS. This is not a combat/multiplayer test.
+- crystal.log and crystal-regression.png: actual0.2.73 Crystal New Bark
+  terrain/trees built, Gen3 export absent; separate no-cart QA boot.
+- crystal-support-final.log:181/181 using actual0.2.73 modules and old test
+  helpers via LUA_PATH. Gen3 adapter contract and Crystal roof tests pass.
+- validation-final.log: same SIX pre-existing MK301 findings, no new findings.
+  Need old test helpers in LUA_PATH when modkit targets extracted payload.
+- All changed Lua compiled under system LuaJIT. Full Python checker lacks
+  lupa in system Python; use LuaJIT directly or the dependency runtime.
+
+Rendering bugs caught/fixed during QA: roof pixels live in native overlayer,
+wall-bottom column walk must include preceding walls, camera movement must
+rotate newly pressed directions too, and native get(pair) rebinds animation
+so repeated neighbor lookup must not restart the active animation clock.
+Remaining: map/prop profiles, sign alpha edging, material/detail parity,
+FireRed native effect adapters, battle staging, controllers/touch free look.
+
 # Roof update and fresh coverage — 2026-09-21
 
 Published BA1.20.3 and cart1.13.1 (do not overwrite releases).

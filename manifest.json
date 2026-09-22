@@ -1,16 +1,17 @@
 {
   "id": "BATTLE_ART_VOXEL_FORK",
   "name": "BATTLE ART VOXEL FORK",
-  "version": "1.20.3",
+  "version": "1.21.0-beta.1",
   "api": 2,
   "entry": "main.lua",
   "profile": "content",
   "category": "GRAPHICS",
   "games": [
     "gen1",
-    "gen2"
+    "gen2",
+    "gen3"
   ],
-  "game_version": "0.0.0-dev || >=0.1.69 <3.0.0",
+  "game_version": "0.0.0-dev || >=0.2.73 <3.0.0",
   "priority": 100,
   "dependencies": [],
   "optional_dependencies": [
@@ -26,6 +27,6 @@
     "engine_internals"
   ],
   "affects_link": false,
-  "description": "Adds generations of sprites to 3D-battles, with either a voxel background, or nostalgic arena fill options like white, or gen6 location art. Added new provider api things to allow stadium mods and other UI mods to use Battle Art sprites, and handle battle options and imports. Press 3 to toggle voxel modes, or check in the options menu for VOXEL: Full, 15, 35, 50, 75, OFF. World fill is a cyan, dark or black filler, which can be turned off if provided by Kanto First Person. That mod needs to be at version 1.60 or newer, and you need to add the battle art version you use to their main.lua in tested versions. Gen 2 (Gold, Silver, Crystal): the diorama, the sprites and 3D-BTL all run there, and 3D-BTL is STAGED -- the arena, the over-the-shoulder camera and the mons standing on the ground as billboards, as on Gen 1. Johto's tiles are classified from the cart's own collision bytes and BG palette slots, so trees, roofs, ledges, tall grass, fences and signposts build as those things instead of as identical boxes. The 1ST and 3RD rungs also support Gen 2 through native camera-relative grid steps. See docs/GEN1_GEN2_DIFFERENCES.md.",
+  "description": "Adds generations of sprites to 3D-battles, with either a voxel background, or nostalgic arena fill options like white, or gen6 location art. Added new provider api things to allow stadium mods and other UI mods to use Battle Art sprites, and handle battle options and imports. Press 3 to toggle voxel modes, or check in the options menu for VOXEL: Full, 15, 35, 50, 75, OFF. World fill is a cyan, dark or black filler, which can be turned off if provided by Kanto First Person. That mod needs to be at version 1.60 or newer, and you need to add the battle art version you use to their main.lua in tested versions. Gen 2 (Gold, Silver, Crystal): the diorama, the sprites and 3D-BTL all run there, and 3D-BTL is STAGED -- the arena, the over-the-shoulder camera and the mons standing on the ground as billboards, as on Gen 1. Johto's tiles are classified from the cart's own collision bytes and BG palette slots, so trees, roofs, ledges, tall grass, fences and signposts build as those things instead of as identical boxes. The 1ST and 3RD rungs also support Gen 2 through native camera-relative grid steps. See docs/GEN1_GEN2_DIFFERENCES.md. FireRed beta on Gen1Recomp 0.2.73+: native field adapter with HD-2D outdoor trees, shadows, Pallet building profiles and static/first/rotating-third-person cameras. FireRed interiors, battles and special effects retain native presentation. See docs/FIRERED_SUPPORT.md; Crystal cart remains separate.",
   "github": "notquiteog/DramaticShapeVoxelMod"
 }

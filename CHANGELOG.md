@@ -1,3 +1,26 @@
+## 1.21.0-beta.1 — 2026-09-21
+
+Add an opt-in FireRed field-rendering beta for Gen1Recomp 0.2.73 or newer.
+Game3 bypasses render pipelines, so a separate native FieldView adapter now
+feeds Battle Art's shared depth/shadow renderer without installing Gen1/Gen2
+facade patches. Native imported tile layers and animation remain live. General
+outdoor trees reuse the illustrated foliage families; Pallet houses/lab have
+scoped roof and facade profiles. Camera 3 cycles OFF/FULL/15/35/50/75/1ST/3RD;
+right-button drag looks in free modes. Both pressed and held movement intent
+rotate through the native player update, retaining collision and scripts.
+
+This is NOT full FireRed visual parity. Interiors, caves, healing, doors and
+special field effects keep the engine's presentation. Battles are native;
+Crystal's double-battle/HD-2D battle companions are not ported by this update.
+Other city buildings, fences, rocks, grass and decorations need more profiles.
+The Crystal sealed cart stays on its stable release. No ROM/art cache ships.
+
+Native 0.2.73 checks: Pallet, Route 1, Viridian and the starting bedroom;
+13 mode screenshots; actual camera-relative steps and hotkey dispatch;
+native battle entry/render/abort/field return; separate Crystal scene boot.
+Headless generation/adapter tests and 181 Gen1/Gen2 support checks pass.
+Six existing MK301 findings remain; static validation is not clean.
+
 ## 1.20.3 — 2026-09-21
 
 Give Crystal pitched roofs a restrained Japanese ceramic-tile treatment:

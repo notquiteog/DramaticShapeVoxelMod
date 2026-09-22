@@ -1,3 +1,9 @@
+**FireRed preview (1.21.0-beta.1):** install this mod separately in FireRed
+on Gen1Recomp **0.2.73+**. Outdoor HD-2D rendering and camera controls are now
+available; interiors and battles retain native presentation. This is an early
+port, not full Crystal/Gamma Emerald parity. [Scope and controls](docs/FIRERED_SUPPORT.md).
+The sealed Johto cart remains Crystal-only on its stable release.
+
 # Battle Art Voxel Fork
 
 **Crystal 1.20.3:** Japanese-inspired ceramic pitched roofs with curved tile
@@ -12,7 +18,7 @@ what has actually been checked; all-map visual perfection is not claimed.
 
 Battle Art Voxel Fork turns the overworld of the [Pokémon Gen 1 Recompilation Project](https://github.com/bryanthaboi/pokemon-gen1-recomp-project) into a 3D voxel diorama and stages battles inside that world. It also provides configurable static and animated battle sprites, arena backdrops, trainer art, first-person exploration, water reflections, lighting, and compatibility hooks for other presentation mods.
 
-Version 1.17.2 declares support for **Pokémon Red, Blue, Yellow, Gold, Silver and Crystal**. Current Crystal verification uses Gen1Recomp 0.2.59. Gen 2 supports the diorama, staged battles and 1ST/3RD camera-relative native grid walking. Gen 1 keeps its existing free-movement path. The [Gen 2 support notes](docs/GEN1_GEN2_DIFFERENCES.md) distinguish current support from historical limitations.
+The stable line supports **Pokémon Red, Blue, Yellow, Gold, Silver and Crystal**; the 1.21 preview also enables **FireRed**. Current native verification uses Gen1Recomp 0.2.73. Gen 2 supports the diorama, staged battles and 1ST/3RD camera-relative native grid walking. Gen 1 keeps its existing free-movement path. The [Gen 2 support notes](docs/GEN1_GEN2_DIFFERENCES.md) distinguish current support from historical limitations.
 
 ## Provenance
 

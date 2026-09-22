@@ -81,6 +81,7 @@ end
 
 function Generation.isGen1() return Generation.number() == 1 end
 function Generation.isGen2() return Generation.number() == 2 end
+function Generation.isGen3() return Generation.number() == 3 end
 
 -- The version id: "red" / "blue" / "yellow" / "gold" / "silver" / "crystal",
 -- or nil when the engine did not answer. For CONTENT that genuinely differs
@@ -107,7 +108,7 @@ end
 -- claiming it. This is reachable in the SDK harness, which takes a generation
 -- without setting GameVersion.
 function Generation.lineage()
-  local fallback = Generation.isGen2() and "gs" or "gen1"
+  local fallback = Generation.isGen3() and "game3" or (Generation.isGen2() and "gs" or "gen1")
   local GameVersion = resolve()
   if not GameVersion or type(GameVersion.engine) ~= "function" then
     return fallback
@@ -116,7 +117,7 @@ function Generation.lineage()
   if not ok or type(id) ~= "string" then return fallback end
   -- GameVersion's own default is "gen1" for any row without an `engine` key,
   -- which is the same unset answer the harness leaves behind.
-  if id == "gen1" and Generation.isGen2() then return fallback end
+  if id == "gen1" and not Generation.isGen1() then return fallback end
   return id
 end
 
@@ -146,7 +147,8 @@ local SCREEN_PAIRS = { BoxMenu = "Gen2PcMenu" }
 
 function Generation.screenId(name)
   if type(name) ~= "string" or name == "" then return name end
-  if Generation.isGen1() then return name end
+  -- Game3's native menus have no mechanical Gen2 screen-id equivalent.
+  if not Generation.isGen2() then return name end
   return SCREEN_PAIRS[name] or ("Gen2" .. name)
 end
 

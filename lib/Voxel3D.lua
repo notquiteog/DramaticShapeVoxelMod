@@ -862,6 +862,7 @@ function Voxel3D.viewProjection(cx, cy, vw, vh)
   local focal = Voxel.FOCAL
   local depthStyle=false
   local okDepth,depth=pcall(function()
+    if V.require("Generation").isGen3() then return true end
     local game=require("src.core.Game")
     return V.require("CommunityVisuals").crystalDepth(game.world and game.world.map)
   end)
@@ -1090,6 +1091,7 @@ function Voxel3D.beginScene(w, h, cx, cy, vw, vh, sky, slot, modelShadow, borrow
   if tex then pcall(sh.send, sh, "sunMap", tex) end
   pcall(sh.send, sh, "sunDark", map and Voxel3D.SHADOW_ALPHA or 0)
   local hdOK,hd=pcall(function()
+    if V.require("Generation").isGen3() then return true end
     local game=require("src.core.Game")
     return game.world and V.require("CommunityVisuals").crystalHD(game.world.map)
   end)

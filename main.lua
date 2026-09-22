@@ -77,6 +77,13 @@ end
 
 -- ------- pipelines
 
+-- Game3 owns a native field pass instead of dispatching render_pipelines.
+-- Do not install the Gen1/Gen2 facade patches into that separate runtime.
+if V.require("Generation").isGen3() then
+  V.require("Gen3Integration").install()
+  return
+end
+
 local Voxel = V.require("VoxelState")
 local Voxel3D = V.require("Voxel3D")
 local VoxelScene = V.require("VoxelScene")
