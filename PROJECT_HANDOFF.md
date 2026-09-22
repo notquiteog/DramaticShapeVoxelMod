@@ -1,3 +1,38 @@
+# Published release handoff — 2026-09-22
+
+User requested all pending project work committed/pushed to main and new carts.
+Battle Art 1.21.0 (1b7eb90), Double Battles 0.9.5 (5319358) and Wild Skies
+1.12.3 (88dfdd5) are published. Battle Art's main is now the default branch;
+Legendary-Additions also contains the full implementation commit. All absol89
+commits through upstream 1.11.0 remain in the merge ancestry.
+
+Carts: Johto Diorama 1.14.0 (12 mods), Yellow Online 1.2.0 (56 mods), and
+public notquiteog/VoxelRed 0.1.0, a clearly marked Battle Art-only FireRed
+preview. User explicitly selected the preview rather than awaiting companion
+Gen 3 ports. CG3 stays on Crystal; Kanto Gear is absent in all three.
+
+Final packaged-cart QA on actual 0.2.73, isolated profiles:
+- Every pinned version loads through the native sealed-cart boot path.
+- Elm's Lab / Oak's Lab / FireRed Viridian Center: static, first-person and
+  rotating camera views, followed by field return. Screenshots inspected.
+- Yellow exposed the obsolete Followers EX/PokePC pair's missing asset lookup;
+  remove those two pins because Wilds 2.2.0 already owns followers and their
+  settings migration. Hide its catch HUD as requested.
+- Fixed Wild Skies virtual card resolution in its own package, not Battle Art:
+  the engine's monochrome OBJ baker tried to read GPU-only card paths as files.
+ 20 portrait tests pass; native forced-Pidgey rendering no longer fails open.
+- Crystal retains existing occasional Wilds sprite-fallback warnings. This is
+  not Internet multiplayer, exhaustive map polish or a complete playthrough.
+
+Artifacts/logs and SHA-256 audit: /tmp/cart-release-20260922. QA profiles:
+cart-release-{crystal,yellow,firered}-qa. User saves were not modified. Engine
+cartkit's old six-game list needed a FireRed addition; VoxelRed includes a
+small wrapper, and the runtime independently accepts the packed cart.
+
+Earlier entries below retain implementation history and explicit limitations.
+FireRed specialty interior coverage, full depth-positioned FireRed battlers,
+companion Gen 3 ports and multiplayer doubles are still unfinished.
+
 # Release preparation — 2026-09-22
 
 User authorized committing all project work to main and publishing new carts.
