@@ -2082,10 +2082,10 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
       elseif type(map.cellCollision) == "function" then
         local trees=V.require("Gen2Trees")
         local seed=cx*31+cy*17
-        -- Retain the trunk/bough recipe; Crystal crowns always use the
-        -- illustrated layers, with no selectable opaque-canopy fallback.
+        -- Keep the full trunk behind its own illustrated foliage plane.
+        -- Its grounded base retains ordinary world geometry.
         if lift ~= 3 then
-          tQ=trees.append(tV,tI,tQ,{},{},0,mx,base,mz,lift,seed)
+          tQ=trees.appendTrunk(tV,tI,tQ,mx,base,mz,lift,seed)
         end
         dQ=V.require("Gen2DepthTrees").append(dV,dI,dQ,
           mx,base,mz,lift,seed,trees.family(seed,lift))
@@ -7721,6 +7721,12 @@ function Flora.castShadows(state, ShadowMap, Mat4x, wx, wz)
   end
   if part.hoods and MOUND.leafyImg() then
     pcall(ShadowMap.draw, part.hoods, MOUND.leafyImg(), model)
+  end
+  -- Crystal foliage is now one alpha-tested card, with no solid hood to
+  -- cast its silhouette. Keep the existing nearest-section shadow budget.
+  if state.map and type(state.map.cellCollision)=="function"
+      and part.detail and MOUND.detailImg() then
+    pcall(ShadowMap.draw, part.detail, MOUND.detailImg(), model)
   end
 end
 

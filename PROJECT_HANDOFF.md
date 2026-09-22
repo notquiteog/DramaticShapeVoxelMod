@@ -1,52 +1,49 @@
-# Working checkpoint — anchored crowns / 0.2.73 — 2026-09-21
+# Working checkpoint — illustrated tree cards / 0.2.73 — 2026-09-21
 
-The user pushed the previous batch: BA1.20.0, Sky Ride0.2.23,
-Double Battles0.9.4 and cart1.12.1. The Crystal full-body provider remained
-uncommitted and unpinned. This batch prepares BA1.20.1, sprites2.1.0 and cart1.13.0.
+User's FINAL tree direction supersedes the anchored multi-layer prototype:
+use flat illustrated foliage. One card per tree; NO 3D cap/cheeks/stacked crowns.
+Billboard in yaw AND pitch for overhead, 1ST, 3RD and battle views. Original trunks/boughs use negative anchor Y to keep upper wood behind its own foliage plane; grounded bases stay unchanged. Same art/recipe for border fill. Three tree families plus
+low shrubs and cut saplings remain. VertexCanopy stores anchor X/Z/Y now; negative Y marks upper-wood
+occlusion and zero means ordinary solid geometry. Cache55. Each tree
+uses six streamed foliage vertices (two triangles), down from up to216.
+Native shadow pass includes the foliage card for its existing nearest section.
 
-Latest tree direction: user reconsidered the first-person-only request.
-Individual illustrated leaf layers face the active eye in first person,
-third person and battles. Each lobe now has its own pivot; fixed cheeks,
-rounded inner crown and trunk do not swivel. Remove the perched broadleaf
-crown, lower the secondary conifer layer, and replace the flat rectangular
-cap with a compact rounded core using interior-leaf UVs. Both world and
-border-fill trees share this recipe. Cache52; maximum36 quads per crown.
+User pushed the previous batch: BA1.20.0, Sky Ride0.2.23, Double Battles0.9.4,
+cart1.12.1. Crystal full-body provider was still uncommitted/unpinned. Current
+batch prepares BA1.20.1, sprites2.1.0 and cart1.13.0. Earlier local 1.20.1 zip
+and 26a4149 crown prototype are superseded and MUST NOT be shipped.
 
-Native validation uses the actual 0.2.73 AppImage payload and native binary,
-extracted from the user's Apps folder to /tmp/johto-hd/squashfs-root. Only
-QA main.lua is patched: script boot must honor --cart, and driver/autopilot
-updates must call PlatformHooks.update(Game,1/60). Runtime and cart scope
-are asserted. No user profile changes or live game input. The old /tmp QA
-payload was lost between sessions; do not reuse historical log claims.
-System LOVE uses ~/.local/share/love, whereas the AppImage uses
-~/.local/share. Only the disposable johto-appimage-qa profile is modified.
+Native QA uses the actual 0.2.73 AppImage payload/binary from the user's Apps
+folder, extracted at /tmp/johto-hd/squashfs-root. QA main.lua alone is patched:
+script boot honors --cart; driver updates call PlatformHooks.update(Game,1/60).
+Runtime/cart scope asserted. System LOVE uses ~/.local/share/love; AppImage
+uses ~/.local/share. Only disposable johto-appimage-qa modified; no live user
+profile/input. Old /tmp files disappeared between sessions: historical logs
+are not current evidence.
 
-Current evidence:
-- canopy-final-0273.log: GPU four-heading/off-origin-pivot/fixed-shell PASS;
-  18 world views at2560x1440, New Bark + Route29, diorama/1ST/3RD and four
-  free-camera headings each; then five staged species with 1ST still selected.
-  Full-body animation, shiny routing and opt-out/native fallback PASS.
-- Earlier rounded-cap visual candidate was rejected after screenshots exposed
-  oversized leaf stretching. Final core is smaller, lower and samples dense
-  interior leaves. Final New Bark first-person/diorama screenshots reviewed.
-- Pure geometry/style, Legendary trees141, mesh cache40, support181,
-  Gen1 heal63, and new battle-occlusion depth/group/floor tests PASS.
-- modkit has SIX MK301 ROM-cache findings on this installed tool version;
-  every reported file is byte-identical to pre-change HEAD. Historical four-
-  finding counts are not the current result. Do not call validation clean.
+Evidence before the final archive verification:
+- tree-depth-0273.log runs GPU four-heading + overhead/local-anchor/unaffected
+  solid geometry plus upper-wood depth checks,18 world views at2560x1440 across New Bark/Route29,
+  then five staged species entered with 1ST selected.
+- heal-mount-0273.log PASS: six native healing balls in Center/Elm machine,
+  horizontal bed alignment and animation completion; follower-backed Raikou,
+  cropped rider in diorama/3RD, no rider in1ST, dismount restores native player.
+- Pure style/geometry, Legendary trees141, mesh cache40, support181,
+  Gen1 heal63 and battle-occlusion group/depth/floor tests pass.
+- Installed modkit reports SIX MK301 ROM-cache findings. Every reported file
+  was byte-identical to pre-change HEAD. Do not call validation clean.
 
-Crystal sprites2.1.0 finishes the optional stagedPokemonSprite export from
-last session:502 normal/shiny BW back atlases for251 species,36,469 frames;
-all atlas dimensions, nonempty frames and timing records checked. Generated
-art stays release-only, source URLs/hashes and credits accompany it. The cart
-will enable full_body_backs; standalone defaults remain off. Native menus
-retain Crystal art. Source importer/full_body/main remain companion-owned.
+Crystal sprites2.1.0 finishes last session's stagedPokemonSprite provider:
+502 normal/shiny BW back atlases for251 species,36,469 nonempty frames checked
+for dimensions/timing. Generated art is release-only; URLs/hashes and credits
+accompany it. Cart enables full_body_backs; standalone default stays off.
+Native 0.2.73 checks: animated/shiny Cyndaquil, Totodile, Chikorita, Raikou,
+Ho-Oh and option-off fallback. Native menus retain Crystal art.
 
-Remaining limits: complete paired-allied commands and multiplayer doubles
-are NOT implemented by this presentation release; no Internet test. Exact
-Gamma Emerald parity, all maps and hardware performance remain unverified.
-Wilds still emits occasional existing pose-fallback warnings in native QA.
-Release hashes and final packaged-cart checks are recorded in the follow-up.
+Limits: paired allied commands and multiplayer doubles remain unfinished;
+no Internet test. Exact Gamma parity, all maps and hardware performance remain
+unverified. Wilds still emits occasional existing pose-fallback warnings.
+Release hashes and exact packaged-cart verification go in the follow-up.
 
 # Working checkpoint — target input, encounter ownership, dialogue look — 2026-09-14
 

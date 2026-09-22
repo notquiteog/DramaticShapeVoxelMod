@@ -1,19 +1,34 @@
--- Face individual leaf layers toward the view without rotating the fixed
--- crown shell, its cap, or the trunk. Colour and shadow passes share pivots.
+-- Camera-facing foliage, anchored where it meets the independent trunk.
+-- Share the exact transform with the shadow pass. Pitch support keeps a
+-- flat illustration readable in overhead, first-person and battle views.
 local M={}
 M.shader=[[
-  attribute vec3 VertexCanopy; // local pivot X/Z, enabled
+  attribute vec3 VertexCanopy; // local anchor X/Z/Y; negative Y marks trunk, zero is ordinary geometry
   vec4 faceCanopy(mat4 transform, vec4 vertex, vec3 camera) {
     vec4 w=transform*vertex;
-    if (VertexCanopy.z < 0.5) return w;
-    vec3 pivot=(transform*vec4(VertexCanopy.x,0.0,VertexCanopy.y,1.0)).xyz;
-    vec2 toward=(camera-pivot).xz;
+    if (abs(VertexCanopy.z) < 0.0001) return w;
+    vec3 localAnchor=vec3(VertexCanopy.x,abs(VertexCanopy.z),VertexCanopy.y);
+    vec3 anchor=(transform*vec4(localAnchor,1.0)).xyz;
+    vec3 toward=camera-anchor;
     if (dot(toward,toward)<0.0001) return w;
-    vec3 original=(transform*vec4(0.0,0.0,1.0,0.0)).xyz;
-    float a=atan(toward.x,toward.y)-atan(original.x,original.z);
-    float c=cos(a),s=sin(a);
-    vec2 d=w.xz-pivot.xz;
-    w.xz=pivot.xz+vec2(c*d.x+s*d.y,-s*d.x+c*d.y);
+    vec3 forward=normalize(toward);
+    if (VertexCanopy.z < 0.0) {
+      // Root stays physical. Only wood above the foliage anchor is put
+      // behind its own leaf plane; normal scene depth testing stays enabled.
+      if (vertex.y > localAnchor.y) {
+        float front=max(0.0,dot(w.xyz-anchor,forward)+0.35);
+        w.xyz-=forward*front;
+      }
+      return w;
+    }
+    vec3 right=vec3(toward.z,0.0,-toward.x);
+    if (dot(right,right)<0.0001) right=vec3(1.0,0.0,0.0);
+    right=normalize(right);
+    vec3 up=normalize(cross(normalize(toward),right));
+    float sx=length((transform*vec4(1.0,0.0,0.0,0.0)).xyz);
+    float sy=length((transform*vec4(0.0,1.0,0.0,0.0)).xyz);
+    vec3 d=vertex.xyz-localAnchor;
+    w.xyz=anchor+right*d.x*sx+up*d.y*sy;
     return w;
   }
 ]]

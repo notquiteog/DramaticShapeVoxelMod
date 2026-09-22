@@ -1,19 +1,21 @@
 ## 1.20.1 — 2026-09-21
 
-Keep illustrated leaf layers facing the active camera independently of one
-another. Trunks, crown sides and the rounded crown core stay anchored, so trees
-no longer swivel as one piece. This applies to first person, rotating third
-person and battle views, including the matching trees used to fill map borders.
-Remove the perched upper crown and duplicate conifer tips. Nest a smaller,
-rounded core under the leaf silhouette to avoid the old flat cap's horizontal
-lip. Cache revision52 rebuilds old tree geometry.
+Use one complete illustrated foliage card per tree, including the trees that
+fill map borders. Remove the 3D crown cap, side pieces and stacked miniature
+trees. Broadleaf, spreading, conifer and shrub artwork stay distinct; cut
+saplings retain their smaller tree silhouette. Original trunks stay rooted; upper wood sits behind its own foliage plane.
 
-Native verification targets the 0.2.73 Linux AppImage at 2560×1440. A GPU check
-covers four headings, off-origin layer pivots and fixed crown geometry; scene
-checks cover New Bark and Route29 in both free-camera modes plus staged battles.
-Geometry, tree-cache, occlusion and generation-support regressions also pass.
-Existing modkit ROM-cache findings remain; exhaustive map and hardware coverage
-and exact Gamma Emerald parity are not claimed.
+Foliage faces the active camera in both yaw and pitch so it remains readable
+in overhead, first-person, rotating third-person and battle views. The native
+shadow pass uses the same card transform within its existing section budget.
+Cache55 rebuilds older crown meshes. Each foliage image is now two triangles.
+
+Verification targets the 0.2.73 Linux AppImage at 2560×1440. GPU checks cover
+four headings, overhead views, off-origin anchors and unaffected solid meshes.
+Scene checks cover New Bark and Route29 in both free-camera modes plus staged
+battles. Geometry, tree-cache, occlusion and generation-support regressions pass.
+Existing modkit ROM-cache findings remain; exhaustive map/hardware coverage and
+exact Gamma Emerald parity are not claimed.
 
 ## 1.20.0 - occlusion volumes, canopy billboards, staged animation
 

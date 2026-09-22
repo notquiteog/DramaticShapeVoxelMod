@@ -5,6 +5,17 @@ function Trees.family(seed,lift)
   if lift<=4 then return "shrub" end
   return ({"broadleaf","conifer","spreading"})[math.floor((math.sin(seed*12.9898+19.19)*43758.5453)%1*3)+1]
 end
+-- Retain the original trunk and boughs. Their negative anchor tag asks the
+-- shared shader to keep the upper wood behind this tree's foliage plane.
+function Trees.appendTrunk(v,indices,q,x,y,z,lift,seed)
+  local first=#v+1
+  q=Trees.append(v,indices,q,{},{},0,x,y,z,lift,seed)
+  local phase=(math.sin(seed*12.9898)*43758.5453)%1
+  local h=(lift==20 and 42 or 34)*(.92+phase*.14)
+  local base=(lift<=4 and 2.5 or h*.24)+y
+  for i=first,#v do v[i][7],v[i][8],v[i][9]=x,z,-base end
+  return q
+end
 function Trees.append(tv,ti,tq,cv,ci,cq,x,y,z,lift,seed,dv,di,dq)
   local family=Trees.family(seed,lift)
   local function quad(verts,indices,n,a,b,c,d,shade)

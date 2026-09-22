@@ -120,7 +120,7 @@ for _,part in ipairs(F.M.TRUNK.cache[depth.id].parts) do
     foliage=foliage+part.detail.n
   end
 end
-check(foliage>=24,"both layered crowns uploaded")
+check(foliage==12,"both flat tree cards uploaded as two triangles each")
 F.flora.evictTrees()
 F.depth=false
 print(checks .. " checks passed (Legendary geometry/cache/ownership/R.DIST)")

@@ -87,8 +87,8 @@ local STATIC_PLAYTHROUGH = "bavc_static_mesh_v2"
 -- complete Structures/terrain pipeline at every cold map crossing.
 -- Revision 38 refreshes Crystal tree material UVs, the horizontal healing
 -- bed and the open bin. Old geometry must not mask these visual corrections.
--- Lower, connected crowns replace the detached upper foliage layer.
-Disk.CACHE_REVISION = 52
+-- Flat foliage cards replace crown shells; metadata now stores anchor X/Z/Y.
+Disk.CACHE_REVISION = 55
 -- Patch releases which do not change emitted vertices must keep the existing
 -- world cache usable. This token matches the first static-mesh-cache-v2 build;
 -- CACHE_REVISION, not the public mod version, owns geometry compatibility.
