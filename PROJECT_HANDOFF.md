@@ -1,3 +1,53 @@
+# Working checkpoint — anchored crowns / 0.2.73 — 2026-09-21
+
+The user pushed the previous batch: BA1.20.0, Sky Ride0.2.23,
+Double Battles0.9.4 and cart1.12.1. The Crystal full-body provider remained
+uncommitted and unpinned. This batch prepares BA1.20.1, sprites2.1.0 and cart1.13.0.
+
+Latest tree direction: user reconsidered the first-person-only request.
+Individual illustrated leaf layers face the active eye in first person,
+third person and battles. Each lobe now has its own pivot; fixed cheeks,
+rounded inner crown and trunk do not swivel. Remove the perched broadleaf
+crown, lower the secondary conifer layer, and replace the flat rectangular
+cap with a compact rounded core using interior-leaf UVs. Both world and
+border-fill trees share this recipe. Cache52; maximum36 quads per crown.
+
+Native validation uses the actual 0.2.73 AppImage payload and native binary,
+extracted from the user's Apps folder to /tmp/johto-hd/squashfs-root. Only
+QA main.lua is patched: script boot must honor --cart, and driver/autopilot
+updates must call PlatformHooks.update(Game,1/60). Runtime and cart scope
+are asserted. No user profile changes or live game input. The old /tmp QA
+payload was lost between sessions; do not reuse historical log claims.
+System LOVE uses ~/.local/share/love, whereas the AppImage uses
+~/.local/share. Only the disposable johto-appimage-qa profile is modified.
+
+Current evidence:
+- canopy-final-0273.log: GPU four-heading/off-origin-pivot/fixed-shell PASS;
+  18 world views at2560x1440, New Bark + Route29, diorama/1ST/3RD and four
+  free-camera headings each; then five staged species with 1ST still selected.
+  Full-body animation, shiny routing and opt-out/native fallback PASS.
+- Earlier rounded-cap visual candidate was rejected after screenshots exposed
+  oversized leaf stretching. Final core is smaller, lower and samples dense
+  interior leaves. Final New Bark first-person/diorama screenshots reviewed.
+- Pure geometry/style, Legendary trees141, mesh cache40, support181,
+  Gen1 heal63, and new battle-occlusion depth/group/floor tests PASS.
+- modkit has SIX MK301 ROM-cache findings on this installed tool version;
+  every reported file is byte-identical to pre-change HEAD. Historical four-
+  finding counts are not the current result. Do not call validation clean.
+
+Crystal sprites2.1.0 finishes the optional stagedPokemonSprite export from
+last session:502 normal/shiny BW back atlases for251 species,36,469 frames;
+all atlas dimensions, nonempty frames and timing records checked. Generated
+art stays release-only, source URLs/hashes and credits accompany it. The cart
+will enable full_body_backs; standalone defaults remain off. Native menus
+retain Crystal art. Source importer/full_body/main remain companion-owned.
+
+Remaining limits: complete paired-allied commands and multiplayer doubles
+are NOT implemented by this presentation release; no Internet test. Exact
+Gamma Emerald parity, all maps and hardware performance remain unverified.
+Wilds still emits occasional existing pose-fallback warnings in native QA.
+Release hashes and final packaged-cart checks are recorded in the follow-up.
+
 # Working checkpoint — target input, encounter ownership, dialogue look — 2026-09-14
 
 Published BA1.19.1, Double Battles0.9.3, cart1.12.0.

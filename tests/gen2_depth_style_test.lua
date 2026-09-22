@@ -16,6 +16,15 @@ for _,family in ipairs({'broadleaf','conifer','spreading','shrub'}) do
   assert(p[4]>=0 and p[4]<=1 and p[5]>=0 and p[5]<=1,'invalid crown atlas UV')
  end
  for _,n in ipairs(i)do assert(v[n],'invalid card triangle')end
+ local fixed,moving,pivots=0,0,{}
+ for _,p in ipairs(v) do
+  assert(#p==9,'tree stream lost its pivot attributes')
+  if p[9]==1 then moving=moving+1;pivots[p[7]..':'..p[8]]=true
+  else fixed=fixed+1 end
+ end
+ local count=0;for _ in pairs(pivots) do count=count+1 end
+ assert(fixed==96 and moving>0,'crown shell and cap must remain anchored')
+ assert(count>=2,'leaf layers rotate around one shared trunk pivot')
 end
 local Grass=assert(loadfile('lib/Gen2DepthGrass.lua'))()
 local shrub,sapling={},{}

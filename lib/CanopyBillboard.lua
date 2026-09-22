@@ -1,5 +1,5 @@
--- Turn each illustrated crown about its own trunk, using the active view
--- camera in BOTH colour and shadow passes. Solid trunks never rotate.
+-- Face individual leaf layers toward the view without rotating the fixed
+-- crown shell, its cap, or the trunk. Colour and shadow passes share pivots.
 local M={}
 M.shader=[[
   attribute vec3 VertexCanopy; // local pivot X/Z, enabled

@@ -1,11 +1,12 @@
-return function(game)
+return function(game,opts)
  local U=dofile('/home/admin/Apps/Gen1Recomp/source/tests/drivers/util.lua')
  local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib
  local Mon=require('src.battle.gen2.Mon');local P=require('src.render.Pipelines')
  local E=assert(game.mods.exports.crystal_animated_sprites_with_shiny_visuals)
  game.mods.modOptions.crystal_animated_sprites_with_shiny_visuals={full_body_backs=true}
  local w=game.world;w.trySceneScript=function()return false end;w.noWildEncounters=true
- assert(w:setMap('ROUTE_29',12,6,'down'));P.setLevel('voxel',3)
+ assert(w:setMap('ROUTE_29',12,6,'down'))
+ if not (opts and opts.keepCamera) then P.setLevel('voxel',3) end
  V.require('DayNight').setting:sync('day');love.window.setMode(2560,1440,{resizable=true})
  local lead=Mon.new(game.data,'CYNDAQUIL',18);game.save.party={lead}
  U.wait(180);game.stack:clear()
