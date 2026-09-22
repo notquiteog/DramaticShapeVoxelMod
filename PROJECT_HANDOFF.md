@@ -1,3 +1,41 @@
+# Published beta3 verification — 2026-09-22
+
+Published https://github.com/notquiteog/DramaticShapeVoxelMod/releases/tag/v1.21.0-beta.3
+Runtime commit03eff022d6b1e355ccff9497671b2d4853df54b6. Prerelease, not latest.
+Exact ZIP /tmp/firered-hd2d/BATTLE_ART_VOXEL_FORK-1.21.0-beta.3.zip:
+580 entries,7,791,193 bytes; SHA256
+58ad7488bcc0d69779667d597970401057b4d20cd7f13b8e183d913ab4417264.
+GitHub uploaded digest verified equal. Source/runtime files in this ZIP were
+compared byte-for-byte with the staged source before the runtime commit.
+
+Final exact-package native QA on actual Linux0.2.73:
+- packaged-beta3-gyms-final.log: PASS32 views, all8 main gyms plus Fighting
+  Dojo, full footprint assertions and unchanged native map cells.
+- packaged-beta3-outdoor-final.log: PASS27 views, native flower clock/material
+  refresh, metal corners/vertical runs and both wooden end posts. The driver
+  now includes border cells and finds a safe viewpoint around fence ends;
+  earlier incomplete runs failed to find fixtures, not runtime models.
+- Images in gym-exteriors/ and outdoor-details/. Visually reviewed Saffron's
+  final signs, Fuchsia's side wall/corner fences and Cinnabar's exterior.
+  Saffron signs mask their actual shaded/pale paving swatches separately;
+  grass-only masking left paving at their rounded top corners.
+- Changed Lua compiles; outdoor/gym/adapter/roof/furniture/known-gap tests pass.
+  Existing181 support and102 shape results remain in support-beta3.log and
+  shapes-beta3.log. Final validate-beta3-final.log has the same6 pre-existing
+  MK301 findings; it is NOT clean validation.
+- firered-tile-audit-final.log:425 maps,60 pairs,150 eligible scenes,96 whole
+  props on19 maps. Final ledger has2,115 fence cells/102 rows;66,740 unreviewed
+  cells/4,191 rows. All240,512 cells accounted for. Crystal inventory and nine
+  radio-room source checks are described below; no sealed-cart revalidation.
+
+The QA FireRed mod folder contains this exact ZIP's contents. User live profile
+and stable Crystal cart1.13.1/BA1.20.3 remain untouched. Do not repin the cart to
+this preview. Many FireRed buildings, rocks/cliffs and specialty interiors still
+remain flat; some building side walls have visible shadow artifacts. Optional
+FireRed post effects and battle integration remain unported. All-map visual
+perfection/Gamma Emerald parity is not complete. Next work should use the
+committed tile ledger's actual examples, not blanket collision-based guesses.
+
 # Tile coverage and FireRed gym exteriors — 2026-09-22 — beta3 candidate
 
 Latest steering: user wants every tile in Crystal/FireRed covered. Then flagged
