@@ -1,3 +1,92 @@
+# Release checkpoint — 2026-09-22
+
+Prepared for publication at the user's request: Online 0.7.0, Wilds 2.3.1,
+Double Battles 0.11.0, Ride 0.3.0; Johto Diorama 1.16.0, Yellow Online 1.4.0,
+Voxel Red Preview 0.3.0. Battle Art runtime remains 1.22.0. This checkpoint
+supersedes the unfinished-test status below, without claiming complete parity.
+
+Current evidence on official Gen1Recomp 0.3.1 (isolated profiles):
+- All three exact sealed-cart archives boot, validate cart identity and every
+  pinned mod version, render their lab and return to the field. Crystal loads
+  seven pins and full_body_backs=true; Yellow six; FireRed all five, including
+  the new Ride port. Lab captures inspected for all three generations.
+- 155 packaged Lua modules and the runtime-concatenated Ride source compile
+  with LuaJIT. ZIP contents/hashes checked; no ROMs, saves or import caches.
+- Native two-client FireRed Ride sync passes ground/flight, height, movement,
+  dismount, local-state isolation and disconnect. Ground/flight captures inspected.
+- Native Yellow and Crystal two-client ground Ride sync passes mount, movement,
+  dismount and disconnect. Yellow remote mount capture inspected.
+- Native Crystal online doubles pass paired choices, explicit targets, bench
+  replacement, mirrored state hashes, win/loss completion, cloned-party restore
+  and retained room. Native mirrored mechanics fixture and 43 unit checks pass.
+  Final native run preceded the small PP/egg validation and Future Sight state
+  normalization follow-ups; those have source/unit coverage, not a repeat duel.
+- Native FireRed doubles and trade fixtures pass completion, party integrity
+  and room/chat retention. Standalone FireRed Ride passes without companions.
+- Fresh LeafGreen import into a disposable profile passes ground/flight/Surf,
+  safe dismount and walkable axis-aligned follower trails.
+- Crystal sprite provider passes full-body animation checks for Cyndaquil,
+  Totodile, Chikorita, Raikou and Ho-Oh. Full-body battle capture inspected.
+
+Evidence: /tmp/ports-parity-031 (doubles-release, double-core-final,
+ride-net2, ride-gb2, ride-crystal2, ride-lg-verified, native-double, trade-final,
+sprites-cart) and /tmp/release-ports-20260922 (archives, checksums, logs, captures).
+Scripted QA .love uses the official interactive PlatformHooks.update seam and
+passes the cart ID, correcting two stock driver omissions only. No production
+engine patch or user profile/save changes. Live AppImage left untouched.
+
+Remaining: Gen 1 online doubles, advanced Crystal double weather/delayed-move
+combinations, broader mixed-mod/cancellation/disconnect matrix, exact GB custom
+rider skin/scale parity and exhaustive scenery coverage. Crystal lab/field QA
+logs a nonfatal Wilds nil-sprite fallback warning; investigate separately.
+Gen 3 flight is map-local; standalone mount fallback art is nondirectional.
+No new visual runtime changes this release. Gen 5 FireRed battle backs are
+explicitly deferred by the user to a separate future mod. Crystal uses its
+Gen 2 sprite companion, not Gen 5 art.
+
+# Port work checkpoint — 2026-09-22 (UNRELEASED)
+
+Sprite/cart QA passed on 2026-09-22: all seven exact published mod archives
+load, sealed-cart full_body_backs=true reaches the provider, and Cyndaquil,
+Totodile, Chikorita, Raikou and Ho-Oh advance animation frames through Battle
+Art's public Gen2Staged.picFor integration. Native Cyndaquil/Sentret battle
+capture inspected: full-body Cyndaquil is visible on stage. Evidence:
+/tmp/ports-parity-031/sprites-cart.log and sprites-cart-battle.png.
+Test harness detail: stock 0.3.1 scripted boot ignores the cart and bypasses
+PlatformHooks.update, unlike interactive gameplay. The isolated QA .love
+changes only cart boot arguments and the driver update call to the normal
+PlatformHooks.update seam; no production engine/mod patches. An initial
+unadjusted driver failed animation advance because it skipped that hook.
+Cart manifest/index match, all seven ZIP hashes verified locally, strict
+cartkit validation and packing pass. No new cart release published yet.
+
+Current source changes remain uncommitted; published baseline below is unchanged.
+Gen 3 Ride now has a native implementation in dramatic-sky-ride/lib/gen3/init.lua.
+Official Gen1Recomp 0.3.1 standalone FireRed fixture passed ground movement,
+free flight, native Surf, safe dismount and mounted follower suppression. Two
+native FireRed clients passed remote mount, flight height, dismount, local-state
+isolation and disconnect cleanup. Evidence: /tmp/ports-parity-031/ride*.log.
+Only the standalone ground capture has been inspected so far; other captures
+still need visual inspection. No claim of complete cross-generation Ride sync.
+
+GB Ride read-only visual/pose exports and Online adapters are implemented but
+not yet tested. Wilds Gen 3 now records the player's actual trail and hides its
+follower while mounted; corner/warp cases still need verification. Optional
+Crystal online-double provider and paired-turn transport are implemented but
+NOT verified: the first two-client run timed out with host at intro and guest
+at link-wait. Logs: /tmp/ports-parity-031/doubles-crystal-{host,guest}.log.
+Gen 1 online doubles remain unimplemented. Do not publish these as complete.
+Remaining work includes double mechanics/hash/refill checks, cancellation and
+mixed-mod cases, standalone/LeafGreen Ride, and additional Gen 2/3 visual work.
+
+Latest user addition: Crystal cart source re-adds animated sprites 2.1.0,
+SHA256 9432787d25476ccf5ce63309efefad794ba6fae877f710013e6bf73ad2aa192f,
+with full_body_backs=true in both cart.json and index-entry/meta.json. Preserve
+this seventh pin when regenerating cart manifests. Cart 1.15.0 on GitHub has
+not changed. Dedicated exact-release sprite/cart QA is under
+/tmp/ports-parity-031/sprites-cart* and isolated profile
+/home/admin/.local/share/crystal-sprites-cart-031-qa. No player saves changed.
+
 # Release QA — 2026-09-22
 
 Packaged ZIPs, exact SHA-256 pins and sealed carts tested in isolated
