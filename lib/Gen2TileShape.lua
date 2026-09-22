@@ -188,6 +188,16 @@ function Gen2TileShape.roofRowsFor(map, tx, north, front)
   return rows
 end
 
+-- The roof palette also colours some city facade bricks. Only a drawn
+-- ridge begins another house; a window followed by roof-coloured brick
+-- must not split its facade into a spurious little roof.
+function Gen2TileShape.roofStartsAt(map,tx,ty)
+  local id=map.tileset and map.tileset.id
+  if id~="TILESET_JOHTO" and id~="TILESET_JOHTO_MODERN" then return false end
+  local tile=map:tileAt(tx,ty)
+  return tile==16 or tile==17 or tile==18
+end
+
 local function classTable(shapes, outdoors)
   local out = {}
   for class, shape in pairs(shapes.classes or {}) do

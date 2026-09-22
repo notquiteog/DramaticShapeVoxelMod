@@ -1,3 +1,21 @@
+## September22 follow-up (1.21.0-beta.2 preview)
+
+Fixed one specific cause of Goldenrod's oversized/stair-stepped roofs:
+vertically adjacent complete Johto houses now split at actual ridge tiles.
+Roof-coloured facade bricks do not trigger a split. Neighbor columns share
+heights only within the same roof edge, leaving taller connected towers alone.
+Goldenrod's pink paving and yellow facade brick now have muted masonry
+materials. Mesh cache57. This does not certify every joined building.
+
+Fresh native0.2.73 checks in a separate Crystal profile: New Bark, Ecruteak,
+Goldenrod, Olivine and Celadon;45 captures (3static/6free views each).
+`tests/gen2_city_views_driver.lua` asserts the measured stacked-house case,
+window/brick continuity and static/free foliage modes. Results:
+`/tmp/firered-hd2d/crystal-city-views`. These tests used standalone Battle Art;
+the stable sealed cart remains1.13.1 and is not repinned to the FireRed preview.
+The previous388-map census and remaining interior/recipe gaps below still
+apply; this turn did not repeat an all-map visual survey.
+
 # Crystal visual coverage — 2026-09-21
 
 This is a coverage inventory, not a claim that every location or decoration

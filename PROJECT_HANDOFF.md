@@ -1,3 +1,53 @@
+# City/roof follow-up — 2026-09-22 — 1.21.0-beta.2
+
+Latest user steering: not every roof is curved or hipped; Oak's Pallet lab needs
+its chimney and no grass folded into the building. Then reported lines off
+lab's back. Fixed roof type and cropping; removed internal divider walls that
+could protrude through the cutout roof background. Inspect rear views as well
+as the front. A closed outer shell remains. Do not reintroduce global curves.
+
+Beta2 changes:
+- Gen3Scene uses Renderer:setWorldOverride at frameRects display resolution.
+  Old beta1 rendered into the low-res world canvas and lost HD texture detail.
+  Native UI and battle transitions stay native; battle/field smoke passed.
+- Gen3Tilesets resolves generated primary__secondary names on cached boots.
+  Versions.TILESET_PAIRS lacks most dynamic entries after import! Do not read
+  ROM offsets or private cache to recover them. Environment gates caves/ships.
+- General common Mart/Center/civic and Viridian houses; initial Building-primary
+  room/furniture profiles (tables, chairs, counters, cabinets, TV, PC, bed).
+  Whole-pattern extraction, no collision guessing. Many decorations remain flat.
+- Gen3RoofDetails: flat lab, straight gables, grass silhouette masking scoped
+  to reviewed art (green Viridian roofs preserved), source top-row crop,
+  modeled shaft/cap/recessed flue, exposed shell only. Back walls closed.
+  Ghost actors outside built terrain are culled, never ticked by rendering.
+- Crystal Structures splits adjacent Johto houses at real ridge16/17/18,
+  not palette7 bricks below windows; roof-height consensus scoped to roof edge.
+  Paving47 and wall brick7 get muted materials. Cache57.
+
+No source/input art committed. User's live pokemon-love2d profile untouched.
+The sealed Crystal cart stays1.13.1/BA1.20.3; DO NOT claim it contains beta2.
+This is an opt-in preview, not an all-map/Gamma Emerald completion claim.
+
+Native actual0.2.73 evidence (/tmp/firered-hd2d):
+- candidate-views.log:33 captures,5 outdoor maps +3 homes +native Oak lab
+  interior fallback, camera/foliage/movement/resolution handoff assertions.
+- roof-1440p.log and roof-1440p/: flat lab/chimney at2560x1440, static,8free,
+  3rear views. Rear center camera is partly occluded by neighboring house;
+  oblique rear images expose the lab shell. Source driver protects QA identity.
+- crystal-city-views.log and directory:45 captures5towns,3static+6free each;
+  native stacked-house/window-brick regression and foliage assertions passed.
+- coverage-beta2.log: census425FireRed maps/60pairs;258 eligibleHD scenes,
+  67props on10maps. Counts are NOT all-map visual approval. CSV containsIDs
+  and counts only. Private native composited atlases in catalog/ are QA-only.
+- battle-beta2.log: native wild intro reaches command, engine abort, HD return.
+- support-beta2.log181/181; shapes-beta2.log102/102; adapter/roof/material tests
+  pass. validate-beta2.log has same6existing MK301 findings, not clean validation.
+
+Pending: other FireRed city-specific facades, fences/rocks/ledges/flora,
+remaining home variants and specialty interiors, optional post controls and
+battle integration; Crystal large landmarks/specialty interiors, zero-match
+radio terminal and broader map/state/camera review. See both coverage docs.
+
 # FireRed preview — 2026-09-21
 
 Published: https://github.com/notquiteog/DramaticShapeVoxelMod/releases/tag/v1.21.0-beta.1

@@ -6,6 +6,9 @@ local R=V.require('Voxel3D')
 local Shadow=V.require('ShadowMap')
 local Mat=V.require('Mat4')
 local Shapes=V.require('Gen3TileShape')
+local Pairs=V.require('Gen3Tilesets')
+local Furniture=V.require('Gen3Furniture')
+local Roof=V.require('Gen3RoofDetails')
 local Trees=V.require('Gen2Trees')
 local Leaves=V.require('Gen2DepthTrees')
 local Map=require('src.core.game3.map')
@@ -47,20 +50,23 @@ function M.nativeRequired(game)
  -- those owners expose depth-aware effects. Do not hide their presentations.
  local def=Map.currentDef()
  if not (def and def.midLayout) then return true end
- local spec=Versions.TILESET_PAIRS[def.midLayout.pair] or {}
- if spec.primary~='general' then return true end
+ local spec=Pairs.resolve(def.midLayout.pair,Versions.TILESET_PAIRS)
+ if not Pairs.supports(def,spec) then return true end
  local Heal=require('src.core.game3.pokecenter_heal')
  local Doors=require('src.core.game3.doors')
  local Shop=require('src.ui.game3.shop_menu')
  local Fx=require('src.core.game3.field_effects')
  local Special=require('src.core.game3.special_field_anim')
+ local Transition=package.loaded['src.core.game3.battle_transition']
  return (Heal.isActive and Heal.isActive()) or (Doors.isBusy and Doors.isBusy())
+  or (Transition and Transition.isActive and Transition.isActive())
   or (Special.isActive and Special.isActive()) or #(Fx._anims or {})>0
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
 local function releaseGeometry()
  for _,part in ipairs(cache.parts or {})do
   if part.under then part.under:release() end
+  if part.roof then part.roof:release() end
  end
  for _,name in ipairs({'wood','leaves'})do if cache[name] then cache[name]:release() end end
  cache={}
@@ -82,8 +88,9 @@ local function prepare(game,vw,vh)
     ts=Tiles._pairs[pair] or Tiles.get(pair);groups[pair]=ts
    end
    if ts and ts.midToSlot[mid] then
-    local spec=Versions.TILESET_PAIRS[pair] or {}
-    local c={mid=mid,pair=pair,cx=cx,cy=cy,ts=ts,shape=Shapes.of(spec.primary,spec.secondary,mid)}
+    local spec=Pairs.resolve(pair,Versions.TILESET_PAIRS)
+    local c={mid=mid,pair=pair,cx=cx,cy=cy,ts=ts,primary=spec.primary,secondary=spec.secondary,
+     shape=Shapes.of(spec.primary,spec.secondary,mid)}
     cells[cx..':'..cy]=c
     signature[#signature+1]=pair..'/'..mid
    else signature[#signature+1]='?' end
@@ -94,15 +101,22 @@ local function prepare(game,vw,vh)
  for pair,ts in pairs(groups)do signature[#signature+1]=pair..tostring(ts) end
  local sig=table.concat(signature,';')
  if cache.signature==sig then return true end
- releaseGeometry();cache.signature=sig;cache.parts={}
+ releaseGeometry();cache.signature=sig;cache.parts={};cache.cells=cells
+ local props=Furniture.extract(cells)
+ Shapes.layout(cells)
+ local chimneys=Roof.prepare(cells)
+ M.chimneyCount=#chimneys
+ M.propCount=#props
  local batches={};local wood,wi,leaf,li={},{},{},{}
  for _,c in pairs(cells)do
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
   local b=batches[c.pair]
-  if not b then b={pair=c.pair,v={},i={}};batches[c.pair]=b end
+  if not b then b={pair=c.pair,secondary=c.secondary,v={},i={},rv={},ri={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
-  local column=Shapes.column(cells,c.cx..':'..c.cy)
-  if shape.kind=='tree' then
+  local column=c.column
+  if c.prop then
+   plane(b.v,b.i,x,z,uvFor(ts,c.prop.recipe.ground) or uvFor(ts,1) or uv)
+  elseif shape.kind=='tree' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    if shape.root then
     local seed=c.cx*73+c.cy*139
@@ -111,31 +125,50 @@ local function prepare(game,vw,vh)
    end
   elseif column then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
-   if shape.kind=='wall' then
+   if shape.kind=='wall' or shape.kind=='roomWall' then
     local row=c.cy-(column.first+column.roofs)
-    local top=column.height-row*16
-    quad(b.v,b.i,{{x,top,column.front},{x+16,top,column.front},{x+16,top-16,column.front},{x,top-16,column.front}},uv)
+    local step=column.height/column.walls
+    local top=column.height-row*step
+    quad(b.v,b.i,{{x,top,column.front},{x+16,top,column.front},{x+16,top-step,column.front},{x,top-step,column.front}},uv)
+    if column.indoor then
+     local u,t=(uv[1][1]+uv[2][1])*.5,uv[1][2]
+     local solid={{u,t},{u,t},{u,t},{u,t}}
+     for _,sx in ipairs({x,x+16})do
+      quad(b.v,b.i,{{sx,top,column.back},{sx,top,column.front},{sx,top-step,column.front},{sx,top-step,column.back}},solid,.82)
+     end
+     if row==0 then plane(b.v,b.i,x,column.front-16,solid,column.height)end
+     quad(b.v,b.i,{{x+16,top,column.back},{x,top,column.back},{x,top-step,column.back},{x+16,top-step,column.back}},solid,.7)
+    end
    else
+    uv=uvFor(ts,c.roofMid or c.mid)
     local row=c.cy-column.first
     local z0=column.back+(column.front-column.back)*row/column.roofs
     local z1=column.back+(column.front-column.back)*(row+1)/column.roofs
-    local function roofY(a)return column.height+13*math.sin(math.pi*(a-column.back)/(column.front-column.back)) end
-    -- Subdivide the curved roof without spreading one tile over a whole house.
-    for j=0,3 do
+    local function roofY(a)return Roof.height(column,a) end
+    -- Keep each source cell's own art on the selected flat/gabled profile.
+    for j=row==0 and math.floor((column.roofInset or 0)/4) or 0,3 do
      local a,bz=z0+(z1-z0)*j/4,z0+(z1-z0)*(j+1)/4
      local t0,t1=uv[1][2]+(uv[3][2]-uv[1][2])*j/4,uv[1][2]+(uv[3][2]-uv[1][2])*(j+1)/4
      local q={{uv[1][1],t0},{uv[2][1],t0},{uv[3][1],t1},{uv[4][1],t1}}
-     quad(b.v,b.i,{{x,roofY(a),a},{x+16,roofY(a),a},{x+16,roofY(bz),bz},{x,roofY(bz),bz}},q)
-     -- Close each end, including the gable; internal faces are harmless.
+     quad(b.rv,b.ri,{{x,roofY(a),a},{x+16,roofY(a),a},{x+16,roofY(bz),bz},{x,roofY(bz),bz}},q)
+     -- Close the exposed shell, including gables, without internal dividers.
      local wallCell=cells[c.cx..':'..column.last]
-     local side=uvFor(ts,wallCell.mid)
+     local sideMid=wallCell.mid
+     if c.secondary=='pallet_town' then sideMid=column.roofType=='flat' and 0x2C2 or 0x2A0 end
+     local side=uvFor(ts,sideMid) or uvFor(ts,wallCell.mid)
      -- Sample the facade trim for closed siding rather than stretch the roof
      -- artwork down the building's entire side.
      local u=(side[1][1]+side[2][1])*.5
      local t=side[1][2]+(side[3][2]-side[1][2])*.2
      local solid={{u,t},{u,t},{u,t},{u,t}}
-     for _,sx in ipairs({x,x+16})do
-      quad(b.v,b.i,{{sx,roofY(a),a},{sx,roofY(bz),bz},{sx,0,bz},{sx,0,a}},solid,.82)
+     for _,dx in ipairs({-1,1})do
+      if Roof.sideVisible(cells,c,dx) then
+       local sx=dx<0 and x or x+16
+       quad(b.v,b.i,{{sx,roofY(a),a},{sx,roofY(bz),bz},{sx,0,bz},{sx,0,a}},solid,.82)
+      end
+     end
+     if row==0 and j==math.floor((column.roofInset or 0)/4) then
+      quad(b.v,b.i,{{x+16,roofY(a),a},{x,roofY(a),a},{x,0,a},{x+16,0,a}},solid,.74)
      end
     end
    end
@@ -146,7 +179,16 @@ local function prepare(game,vw,vh)
    plane(b.v,b.i,x,z,uv)
   end
  end
- for _,b in pairs(batches)do cache.parts[#cache.parts+1]={pair=b.pair,under=R.newMesh(b.v,b.i)} end
+ for _,p in ipairs(props)do
+  local b=batches[p.pair]
+  Furniture.append(p,function(vertices,uv,shade)quad(b.v,b.i,vertices,uv,shade)end,uvFor)
+ end
+ for _,p in ipairs(chimneys)do
+  local b=batches[p.pair]
+  Roof.appendChimney(p,function(vertices,uv,shade)quad(b.rv,b.ri,vertices,uv,shade)end,uvFor)
+ end
+ for _,b in pairs(batches)do cache.parts[#cache.parts+1]={pair=b.pair,secondary=b.secondary,
+  under=assert(R.newMesh(b.v,b.i),'field mesh creation failed'),roof=R.newMesh(b.rv,b.ri)} end
  cache.wood=R.newMesh(wood,wi);cache.leaves=R.newMesh(leaf,li)
  M.builds=M.builds+1
  return true
@@ -160,11 +202,19 @@ local function terrain(draw)
    -- A metatile's visible roof/sign artwork may live entirely in BG2.
    -- Apply both native layers to the SAME shaped surface, not just the floor.
    if ts.overImage then draw(p.under,ts.overImage) end
+   if p.roof then
+    local material=Roof.image(ts,p.secondary,Shapes.of)
+    draw(p.roof,material or ts.image)
+    if not material and ts.overImage then draw(p.roof,ts.overImage)end
+   end
   end
  end
  draw(cache.wood,bark);draw(cache.leaves,foliage)
 end
 local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
+ -- Neighbor snapshots may cover much farther than the rendered terrain.
+ -- Do not leave those actors floating in the sky beyond its visible edge.
+ if not (cache.cells and cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]) then return end
  local spr=Sprites.getDraw(gid);if not spr then return end
  -- View-relative artwork keeps the actor facing its world heading while the
  -- camera turns; this changes the sampled frame, never the entity direction.
@@ -239,6 +289,15 @@ function M.draw(game,vw,vh,cam)
  local view=require('src.core.game3.field_view')
  local cx,cz=(Player.px or 0)+8+(view.cameraPanX or 0),(Player.py or 0)+8+(view.cameraPanY or 0)
  local width,height=love.graphics.getCanvas():getDimensions()
+ local Renderer=require('src.render.Renderer')
+ local Display=require('src.core.game3.display')
+ local override=Renderer.setWorldOverride and Renderer.frameRects and not Display.planesBroken
+ if override then
+  local rect=Renderer:frameRects()
+  width=math.max(1,math.floor(rect.vuw*rect.dpiX+.5))
+  height=math.max(1,math.floor(rect.vuh*rect.dpiY+.5))
+ end
+ M.renderWidth,M.renderHeight=width,height
  local S=V.require('VoxelState')
  S.level=cam.level;S.angle=math.rad(S.ANGLES_DEG[cam.level+1] or 35)
  R.canopyFacing=cam.level>=6
@@ -253,10 +312,17 @@ function M.draw(game,vw,vh,cam)
  if Shadow.begin(cx,cz,vw,vh) then
   terrain(Shadow.draw);actors(game,cam,Shadow.draw);Shadow.finish('firered')
  end
- if not R.beginScene(width,height,cx,cz,vw,vh,{.60,.79,.82,1},'firered') then M.restore();return false end
+ local indoor=Map.currentDef().environment=='INDOOR'
+ local background=indoor and {.035,.032,.028,1} or {.60,.79,.82,1}
+ if not R.beginScene(width,height,cx,cz,vw,vh,background,'firered') then M.restore();return false end
  terrain(R.draw);actors(game,cam,R.draw)
  local canvas=R.endScene()
  love.graphics.pop();love.graphics.setCanvas(savedCanvas);saved=false;savedCanvas=nil
+ -- Use the same public world-image handoff as Battle Art's Gen1/2 pipeline.
+ -- Otherwise an HD scene is squeezed into Game3's low-resolution field
+ -- canvas before being enlarged, throwing away foliage/geometry detail.
+ -- UI continues through the native, separate pixel-aligned plane.
+ if override then Renderer:setWorldOverride(canvas) end
  love.graphics.push('all');love.graphics.origin();love.graphics.setShader();love.graphics.setColor(1,1,1,1)
  love.graphics.setBlendMode('alpha','premultiplied');love.graphics.draw(canvas,0,0,0,vw/width,vh/height)
  love.graphics.pop()
@@ -268,6 +334,7 @@ function M.release()
  spriteMeshes={}
  if foliage then foliage:release();foliage=nil end
  if bark then bark:release();bark=nil end
+ Roof.release()
  R.invalidate();Shadow.invalidate()
 end
 return M

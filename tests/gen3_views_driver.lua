@@ -10,6 +10,12 @@ return function(game)
  local export=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK)
  local C=assert(export.firered).camera
  local V=export.lib;local R=V.require('Voxel3D')
+ local Renderer=require('src.render.Renderer')
+ local handoff=Renderer.setWorldOverride;local handedWidth=0
+ Renderer.setWorldOverride=function(self,canvas)
+  handedWidth=canvas and canvas:getWidth() or 0
+  return handoff(self,canvas)
+ end
  C.setLevel(3,game);U.wait(90)
  assert(C.active and C.rendered>0,'adapter loaded without drawing')
  local Map=require('src.core.game3.map')
@@ -18,7 +24,7 @@ return function(game)
  local Battle=require('src.core.game3.battle')
  local battleDraw=Battle.draw
  local n=0
- for _,case in ipairs({{'FR_PALLET_TOWN',10,9},{'FR_ROUTE_1',9,10},{'FR_VIRIDIAN_CITY',16,17},{'FR_PLAYERS_HOUSE_2F',6,6}})do
+ for _,case in ipairs({{'FR_PALLET_TOWN',10,9},{'FR_ROUTE_1',9,10},{'FR_VIRIDIAN_CITY',16,17},{'FR_CELADON_CITY',22,18},{'FR_CERULEAN_CITY',22,20},{'FR_PLAYERS_HOUSE_1F',6,6},{'FR_PLAYERS_HOUSE_2F',6,6},{'FR_CERULEAN_CITY_HOUSE1',5,6},{'FR_OAKS_LAB',6,6}})do
   assert(Map.load(nil,game,case[1],{x=case[2],y=case[3],facing='down'}))
   local def=Map.currentDef()
   local best,bx,by
@@ -30,16 +36,21 @@ return function(game)
   end end
   assert(bx,'no safe camera position')
   Player.reset(bx,by,'down')
-  C.setLevel(3,game);U.wait(140)
+  C.setLevel(3,game);U.wait(220)
   print('[FireRed view]',case[1],def.midLayout.pair,'HD2D',C.active)
-  if case[1]=='FR_PLAYERS_HOUSE_2F' then
+  if case[1]=='FR_OAKS_LAB' then
    assert(not C.active,'unmapped interior must preserve native presentation')
    assert(U.shot(game,dir..'/interior_native.png'));n=n+1
   else
    for _,level in ipairs({3,7,6,0})do
     C.setLevel(level,game);C.yaw=0;U.wait(12)
     assert((level==0)==not C.active,'incorrect render mode')
-    if level>0 then assert(R.canopyFacing==(level>=6),'wrong foliage rotation mode')end
+    if level>0 then
+     assert(R.canopyFacing==(level>=6),'wrong foliage rotation mode')
+     local scene=V.require('Gen3Scene');local renderer=require('src.render.Renderer')
+     assert(scene.renderWidth>=1000 and scene.renderHeight>=600,'world lost display-resolution detail')
+     assert(handedWidth==scene.renderWidth,'native field canvas downscaled the HD scene')
+    end
     assert(U.shot(game,dir..'/'..case[1]..'_'..level..'.png'));n=n+1
    end
   end

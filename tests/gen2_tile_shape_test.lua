@@ -374,6 +374,28 @@ do
     "and one starting on the roof's last row counts just that row")
 end
 
+-- Adjacent complete houses must not become one six-row city-block roof.
+do
+  local Structures=lib("Structures")
+  local m=fakeMap(CELLS)
+  local drawings={16,16,26,26,16,16,26,26}
+  m.tileAt=function(_,x,y)return drawings[y+1] end
+  local S={outdoor=true,doorFold={},tileAt={},runs={}}
+  local tiles={};for x=0,2 do for y=0,7 do tiles[#tiles+1]={x,y}end end
+  Structures.buildVolume(S,m,tiles)
+  local function at(x,y)return S.runs[(y+64)*4096+x+64]end
+  T.eq(at(1,0).front,3,"first house stops before the second ridge")
+  T.eq(at(1,4).north,4,"second house keeps its own roof")
+  T.eq(at(1,0).h,16,"repeated houses do not gain a storey")
+  T.eq(at(1,4).h,16,"second house retains its facade height")
+  drawings={16,16,26,7,26,7,26,26};m.tileset.tilePalettes[8]=ROOF
+  S.runs={};Structures.buildVolume(S,m,tiles)
+  T.eq(at(1,0).front,7,"roof-coloured bricks below windows never start a roof")
+  T.eq(G2.roofStartsAt(m,1,3),false,"brick is not a ridge")
+  m.tileset.id="TILESET_KANTO"
+  T.eq(G2.roofStartsAt(m,1,0),false,"Johto ridge IDs do not classify Kanto")
+end
+
 -- ------- the support height, which is what put everyone in the air
 --
 -- VoxelScene.groundAt used to read the per-TILE table, and on Gen 2 that

@@ -1,3 +1,36 @@
+## 1.21.0-beta.2 — 2026-09-22
+
+FireRed now hands the finished HD scene to the engine's display-resolution
+world layer instead of shrinking it through the native field canvas. UI stays
+on its separate native plane. Recover generated tileset-pair names on cached
+boots so later towns receive the shared outdoor profiles; caves and ships
+remain scoped out by their map environment.
+
+Add shared Mart/Center and Viridian house profiles, initial home walls, low
+tables with legs, chairs, kitchen counters, cabinets, televisions, a computer
+desk and a horizontal bed. Whole-object patterns prevent duplicate furniture.
+Roof edges reconcile doorway/trim columns. Oak's lab has a FLAT roof and a
+separate capped chimney with a recessed flue. Pallet houses have straight gable
+faces, not barrel curves or forced hipped sides. Crop/mask the source grass
+outside reviewed roof silhouettes; retain green roof art in Viridian. Close
+rear walls for free-camera views, remove exposed internal wall fins and cull
+neighbor actors beyond rendered terrain. Native battle transitions retain their own
+field presentation.
+
+Crystal now separates vertically adjacent Johto houses at real ridge tiles,
+not facade colour changes, and reconciles heights with the same roof edge
+instead of an entire connected city block. Goldenrod's paving and brickwork
+receive muted masonry materials. Mesh cache57. Existing ceramic roof profiles
+and camera-dependent foliage behaviour remain in place.
+
+Native 0.2.73 QA: 33 FireRed screenshots across five outdoor maps, three homes
+and the native Oak lab interior fallback; five Crystal cities,45 roof/camera
+screenshots. The FireRed census covers425 maps/60 pairs,258 eligible HD scenes
+and67 furniture matches on10 maps. These counts are inventory, NOT a visual
+approval of every map. Other city-specific buildings, many decorations,
+specialty interiors and the radio-terminal gap still need work. This remains
+an opt-in preview; the sealed Crystal cart stays on the stable release.
+
 ## 1.21.0-beta.1 — 2026-09-21
 
 Add an opt-in FireRed field-rendering beta for Gen1Recomp 0.2.73 or newer.

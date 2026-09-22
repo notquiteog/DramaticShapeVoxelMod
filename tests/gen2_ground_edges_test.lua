@@ -35,3 +35,7 @@ for _,kind in ipairs({'roof','plaster','furnitureWood','window','timberTrim','wa
   end end
 end
 print('ground fringe bounds, variation, exclusions and material ownership passed')
+assert(Materials.architectureKind('TILESET_JOHTO_MODERN',7)=='brick')
+assert(Materials.architectureKind('TILESET_KANTO',7)==nil,'Johto brick must not replace Kanto art')
+local r,g,b=Materials.color('paving',5,5,1,0,1,1,true)
+assert(math.max(r,g,b)-math.min(r,g,b)<.25,'city paving retained fluorescent palette')

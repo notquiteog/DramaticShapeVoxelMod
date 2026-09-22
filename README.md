@@ -1,6 +1,7 @@
-**FireRed preview (1.21.0-beta.1):** install this mod separately in FireRed
+**FireRed preview (1.21.0-beta.2):** install this mod separately in FireRed
 on Gen1Recomp **0.2.73+**. Outdoor HD-2D rendering and camera controls are now
-available; interiors and battles retain native presentation. This is an early
+available at display resolution, with shared city buildings and initial home
+furniture profiles. Specialty interiors and battles retain native presentation. This is an early
 port, not full Crystal/Gamma Emerald parity. [Scope and controls](docs/FIRERED_SUPPORT.md).
 The sealed Johto cart remains Crystal-only on its stable release.
 

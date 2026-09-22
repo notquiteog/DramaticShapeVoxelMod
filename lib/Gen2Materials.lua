@@ -4,8 +4,8 @@ local V=...
 local M={}
 local cache={}
 local floorKinds={
-  TILESET_JOHTO={[5]="grass",[6]="path",[20]="water",[60]="stone",[88]="stone"},
-  TILESET_JOHTO_MODERN={[5]="grass",[6]="path",[20]="water",[60]="stone",[88]="stone"},
+  TILESET_JOHTO={[5]="grass",[6]="path",[20]="water",[47]="paving",[60]="stone",[88]="stone"},
+  TILESET_JOHTO_MODERN={[5]="grass",[6]="path",[20]="water",[47]="paving",[60]="stone",[88]="stone"},
   TILESET_FOREST={[5]="grass",[20]="water"},
   TILESET_PARK={[1]="grass"},
   TILESET_KANTO={[44]="grass",[20]="water",[42]="stone",[43]="stone",[58]="stone",[59]="stone"},
@@ -26,6 +26,7 @@ function M.architectureKind(id,tile)
   if id=="TILESET_JOHTO" or id=="TILESET_JOHTO_MODERN" then
     if tile>=13 and tile<=18 then return "roof" end
     if tile==27 then return "plaster" end
+    if tile==7 then return "brick" end
     if tile==2 then return "wallBase" end
     if tile==38 then return "window" end
     if tile==1 or tile==22 or tile==26 or tile==28 or (tile>=55 and tile<=58) then
@@ -99,6 +100,16 @@ function M.color(kind,x,y,r,g,b,light,depth)
   elseif kind=="stone" then
     local v=.38+(r+g+b)/3*.25+grain*.065
     return v*.99,v,v*.96
+  elseif kind=="paving" or kind=="brick" then
+    local row=math.floor(y/8)
+    local stagger=(x+(row%2)*8)%16
+    local mortar=y%8==0 or stagger==0
+    if mortar then return .45,.43,.38 end
+    local variation=(noise(math.floor((x+(row%2)*8)/16),row,71)-.5)*.06+grain*.025
+    if kind=="paving" then
+      return (.62+variation)*light,(.51+variation)*light,(.44+variation)*light
+    end
+    return .67+variation,.61+variation,.48+variation
   elseif kind=="roof" then
     local row=math.floor(y/8)
     local joint=x%16

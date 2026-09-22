@@ -3361,6 +3361,16 @@ function Structures.buildVolume(S, map, tiles)
       local north = sorted[i]
       local front = north
       while i + 1 <= #sorted and sorted[i + 1] == front + 1 do
+        -- Johto can stack complete houses directly behind one another. A
+        -- second roof after a facade starts another building, not another
+        -- storey of the first one. Repeated brick within a facade is still
+        -- allowed; this is a roof/facade boundary, not the Gen 1 repeat scan.
+        if G2 and S.outdoor
+            and Gen2RoofRows(G2,map,tx,{north=north,front=front})>0
+            and Gen2RoofRows(G2,map,tx,{north=front,front=front})==0
+            and G2.roofStartsAt and G2.roofStartsAt(map,tx,front+1) then
+          break
+        end
         i = i + 1
         front = sorted[i]
       end
@@ -3435,6 +3445,35 @@ function Structures.buildVolume(S, map, tiles)
   -- mound's plateau) rather than drawn facades (a house's front)
   local modeRepeat = (repeatVotes[modeH] or 0) * 2 > modeN
 
+  -- A connected city block can include both a tower and small attached
+  -- houses. Reconcile roof-bearing columns only with adjacent columns at
+  -- the same north edge, never with the height of that entire city block.
+  local roofHeights={}
+  if G2 and S.outdoor then
+    local bands={}
+    for _,r in ipairs(runs) do
+      if Gen2RoofRows(G2,map,r.tx,r.run)>0 then
+        local band=bands[r.run.north] or {};bands[r.run.north]=band
+        band[#band+1]=r
+      end
+    end
+    for _,band in pairs(bands) do
+      table.sort(band,function(a,b)return a.tx<b.tx end)
+      local first=1
+      while first<=#band do
+        local last=first
+        while last<#band and band[last+1].tx==band[last].tx+1 do last=last+1 end
+        local votes={};local height,count=0,0
+        for j=first,last do
+          local h=band[j].run.unit*8;votes[h]=(votes[h] or 0)+1
+          if votes[h]>count or (votes[h]==count and h>height) then height,count=h,votes[h] end
+        end
+        for j=first,last do roofHeights[band[j].run]=height end
+        first=last+1
+      end
+    end
+  end
+
   -- Whether this REGION's tops are a rim over a uniform body -- what every
   -- cliff mound is drawn as: a top edge, then the same rock the whole way
   -- down. The top face may then lay that rim once along its north edge and
@@ -3495,7 +3534,10 @@ function Structures.buildVolume(S, map, tiles)
     local h = run.unit * 8
     local adopted = false
     local flatDoor = false
-    if run.door then
+    if roofHeights[run] then
+      h=roofHeights[run]
+      adopted=true
+    elseif run.door then
       -- A folded doorway column answers to its region ENTIRELY. Its own
       -- reading spans the door plus everything drawn above it -- a
       -- house's full height when the door is a house's, but a 32px
@@ -3504,7 +3546,7 @@ function Structures.buildVolume(S, map, tiles)
       -- above the mound around it). Height and top both come from the
       -- region: the mode height, roofed like a facade when the mode
       -- columns are drawn facades, flat when they are flat repeats.
-      h = modeH
+      h = G2 and h or modeH
       adopted = not modeRepeat
       flatDoor = modeRepeat
     elseif run.fromRepeat and modeH > h then
