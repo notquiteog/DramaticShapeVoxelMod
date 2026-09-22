@@ -1,5 +1,17 @@
 # FireRed preview — 2026-09-21
 
+Published: https://github.com/notquiteog/DramaticShapeVoxelMod/releases/tag/v1.21.0-beta.1
+Runtime commit488442e82c348a1bd7151d3cf0377f8ae9d53b45. GitHub prerelease,
+not latest; latest stable remainsv1.20.3. Exact ZIP7,636,744 bytes:
+/tmp/firered-hd2d/BATTLE_ART_VOXEL_FORK-1.21.0-beta.1.zip
+SHA25648acfd985d4f1137592016b776fe9cf937caf4571113163200a6695da1430c09.
+GitHub uploaded asset digest verified equal. Packaged native QA PASS in
+/tmp/firered-hd2d/packaged.log with13 captures under packaged-views/.
+Driver now selects safe walkable positions before screenshots and waits out
+the location banner. Reviewed final Route1, Viridian first-person and Crystal
+regression images. FireRed QA mod folder now contains the exact extracted ZIP
+instead of the earlier source symlink. Do not overwrite this published tag.
+
 New user request: make this work for FireRed too. Added 1.21.0-beta.1 as a
 separate opt-in preview; DO NOT repin the Crystal sealed cart to this preview.
 Existing stable BA1.20.3/cart1.13.1 remain the user's Crystal release.
