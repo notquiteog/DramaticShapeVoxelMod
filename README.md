@@ -5,6 +5,10 @@ furniture profiles. Specialty interiors and battles retain native presentation. 
 port, not full Crystal/Gamma Emerald parity. [Scope and controls](docs/FIRERED_SUPPORT.md).
 The sealed Johto cart remains Crystal-only on its stable release.
 
+**Upstream 1.11.0 integration:** includes capture-contact recoil, scoped battle
+fire lighting/effects and optional trainer-shadow provider support. Existing
+Crystal and FireRed features are retained.
+
 # Battle Art Voxel Fork
 
 **Crystal 1.20.3:** Japanese-inspired ceramic pitched roofs with curved tile
