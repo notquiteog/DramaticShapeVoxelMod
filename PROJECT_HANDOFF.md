@@ -1,7 +1,18 @@
 # Roof update and fresh coverage — 2026-09-21
 
-Current batch BA1.20.3 / cart1.13.1; release status/hashes will be recorded
-below after the exact archive boot. User asked whether EVERYTHING was perfect:
+Published BA1.20.3 and cart1.13.1 (do not overwrite releases).
+BA commit4b40e97f2a68f17d1be993e8f524699d8a6d894c;
+ZIP SHA256714f81a4899df2889444b3d6df518a38632c7ae629dc6c83e0ae2eafda8247d0.
+Cart commit11b7b8d0b5ee672fdbae2720f0124f8a528cece1;
+G1RCART SHA25639189929c3b8fde0849ed566afc2e041f0bceb4d03d49ddb05c69056f9e818f8.
+Both release URLs are under their respective notquiteog repositories.
+Exact packaged-cart boot PASS: /tmp/johto-hd/cart-1.13.1-final.log,18 views
+in New Bark/Celadon at1440p on0.2.73. Runtime asserted13 loaded pinned versions,
+Crystal/sealed+, hidden Wilds HUD, full-body backs default and cache56.
+Reviewed Celadon's final ceramic finish. Bundle bytes match committed cart
+source/CG3 label, QA installed bundle and index; BA hash matches exact ZIP.
+cartkit online validation passed after BA publication; archive was not rebuilt.
+ User asked whether EVERYTHING was perfect:
 answered NO. Never claim complete visual parity or exhaustive verification.
 
 Gen2RoofShell now curves the existing pitched slope, adds ceramic pans/rolled
