@@ -10,13 +10,25 @@ shaders receive it each draw. Cache55 unchanged. GPU test checks static cards
 are pixel-identical as the eye moves with projection fixed, plus four headings,
 overhead, unchanged solid geometry and upper wood behind leaves.
 
-BA1.20.1 and sprites2.1.0 are ALREADY published. Do not overwrite either.
-This correction is BA1.20.2. Cart1.13.0 source was pushed but its release has
-NOT been created yet; update its BA pin/hash to1.20.2 before publishing.
-Sprite2.1.0 commit c4857687bd665a56d7dd59698bd860216d545492;
-SHA9432787d25476ccf5ce63309efefad794ba6fae877f710013e6bf73ad2aa192f.
-Native candidate verification: /tmp/johto-hd/static-free-0273.log; exact
-released-package verification and release hashes follow after packaging.
+Published final releases (do not overwrite):
+- BA1.20.2: c96cb325cd1b5c3935cbc76177812e93d1bd2f5c
+  SHA256 57da080064880b55daca9806f88489d1c6a7a025065562d3a82885d9e284e564
+- Crystal sprites2.1.0: c4857687bd665a56d7dd59698bd860216d545492
+  SHA256 9432787d25476ccf5ce63309efefad794ba6fae877f710013e6bf73ad2aa192f
+- Cart1.13.0: 43b18fd7d81c115ad1e4f42cf34a3d7fd5008327
+  SHA256 77ddd9b88be4cc4e936fc19a471b2202d91df1e22a4a9b716a9b42634d91d123
+Cart pins BA1.20.2 and sprites2.1.0, full_body_backs=true; both manifest and
+index updated. All13 release pins verified online by cartkit. Release assets
+and checksums live on the respective notquiteog GitHub repositories.
+
+Exact packaged-cart verification PASS on actual 0.2.73 Linux AppImage:
+/tmp/johto-hd/cart-1.13.0-final-1202.log and matching screenshot directory.
+Asserts Crystal/sealed+/13 loaded pinned versions/hidden HUD/full-body default/
+cache55, GPU static/free-facing and rooted upper-wood occlusion;18 world views
+across New Bark/Route29 and5 staged species, animation/shiny/opt-out fallback.
+Reviewed static New Bark and rotating-third-person screenshots at2560x1440.
+Healing/mount native checks and pure regressions remain recorded below.
+Only disposable johto-appimage-qa profile changed; live user game untouched.
 
 # Working checkpoint — illustrated tree cards / 0.2.73 — 2026-09-21
 
