@@ -14,7 +14,7 @@ return function(game)
  game.world.rollEncounter=function()return nil end
  if game.mods.modOptions.overworld_wild_spawns then game.mods.modOptions.overworld_wild_spawns.catch_hud_size=0 end
  require('src.render.Pipelines').setLevel('voxel',3)
- assert(V.require('CommunityVisuals').crystalDepth(game.world.map),'HD-2D must be default')
+ assert(V.require('CommunityVisuals').crystalDepth(game.world.map),'2.5D must be default')
  V.require('DayNight').setting:sync('day')
  local ids={};for id in pairs(game.world.maps) do ids[#ids+1]=id end;table.sort(ids)
  local cases,best={},{}

@@ -45,8 +45,13 @@ function M.profile(def,gen)
   end end
   if x1<=x0 or z1<=z0 then return end
   b={x0*16,z0*16,x1*16,z1*16}
+  if V.require('Gen3Tilesets').resolve(def.midLayout.pair,require('src.import.gba.versions').TILESET_PAIRS).secondary=='lab' then
+   -- The first two rows are the north wall drawing, not extra floor behind
+   -- the cabinets. Its continuous backing sits just behind the native facade.
+   b[2]=math.min(b[4]-16,(z0+2)*16)-.12
+  end
  end
- return {bounds=b,height=40,theme=theme,gen=gen}
+ return {bounds=b,height=gen==3 and theme=='lab' and 32 or 40,theme=theme,gen=gen}
 end
 local function texture(theme)
  if materials[theme]then return materials[theme]end

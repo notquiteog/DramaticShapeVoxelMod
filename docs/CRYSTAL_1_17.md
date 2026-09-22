@@ -1,10 +1,10 @@
 # Crystal 1.17.0 — layered scenery
 
-**As of 1.17.1, layered HD-2D is the default Crystal presentation for this
+**As of 1.17.1, layered 2.5D is the default Crystal presentation for this
 fork.** The CRYSTAL SCENERY selector and its VOXEL HD / SOURCE ART alternatives
 have been removed. Old saved values are ignored. Johto Diorama 1.9.0 also
 hides Wilds' overworld Poké Ball HUD by default. Version 1.17.2 labels
-the camera control HD-2D CAMERA and applies the first-run FULL preset
+the camera control 2.5D CAMERA and applies the first-run FULL preset
 immediately, including Gen 2 boots where the initial restore preceded save creation.
 Existing explicit camera choices remain saved.
 
@@ -24,7 +24,7 @@ Ledge tops now roll down into grass as rounded mounds; the outward,
 unjumpable face keeps its source dirt art. The three-pixel footprint and
 2.5-pixel outer crest preserve the thin ledge proportions (lowered in 1.17.1).
 
-**HD-2D LIGHT → SOFT LIGHT / CINEMA** and **DEPTH OF FIELD** are optional.
+**2.5D LIGHT → SOFT LIGHT / CINEMA** and **DEPTH OF FIELD** are optional.
 World post-processing leaves text and menus sharp. The battle diorama remains
 through knockout/escape dialogue until the native battle screen closes.
 Double Battles 0.9.2 keeps modern HUD panels outside attack-effect image bakes.

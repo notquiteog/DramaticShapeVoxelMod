@@ -14,12 +14,19 @@ local recipes={
  {name='computer_desk',secondary='pretty_petals_flower_shop',rows={{0x35},{0x28E},{0x296}},kind='cabinet',h=28,ground=0x45,depth=12},
  {name='chair_back',rows={{0x4B}},kind='chair',h=6,ground=0x45},
  {name='chair_front',rows={{0x4E}},kind='chair',h=6,ground=0x45},
- {name='lab_wall_display',secondary='lab',rows={{0x28D},{0x295}},kind='cabinet',h=32,ground=0x289,depth=4,frontOffset=16},
- {name='lab_aquarium',secondary='lab',rows={{0x98},{0xA0}},kind='cabinet',h=28,ground=0x289,depth=11},
+ {name='lab_wall_display',secondary='lab',rows={{0x28D},{0x295}},kind='cabinet',h=30,base=12,ground=0x289,depth=1.5,frontOffset=32.2,facade={1,9,14,22}},
+ {name='lab_pokemon_machine',secondary='lab',rows={{0x2A3,0x2A4},{0x2AB,0x2AC},{0x2B3,0x2B4}},kind='labMachine',h=25,ground=0x289},
+ {name='lab_server',secondary='lab',rows={{0x29D},{0x2AD},{0x2B5}},kind='cabinet',h=30,ground=0x289,depth=12,facade={0,10,15,36}},
+ {name='lab_terminal',secondary='lab',rows={{0x06D},{0x2A6},{0x2B6}},kind='cabinet',h=25,ground=0x289,depth=12,facade={0,17,16,29}},
+ {name='lab_side_terminal',secondary='lab',rows={{0x29F}},kind='cabinet',h=16,ground=0x289,depth=9,facade={1,0,12,16}},
+ {name='lab_aquarium',secondary='lab',rows={{0x98},{0xA0}},kind='cabinet',h=28,ground=0x289,depth=11,frontOffset=34},
  {name='lab_books_left',secondary='lab',rows={{0x73},{0x283}},kind='cabinet',h=24,ground=0x289,depth=11,facade={1,0,14,27}},
  {name='lab_books_right',secondary='lab',rows={{0x74},{0x284}},kind='cabinet',h=24,ground=0x289,depth=11,facade={1,0,14,27}},
+ {name='lab_books_free_left',secondary='lab',rows={{0x28B},{0x73},{0x283}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
+ {name='lab_books_free_right',secondary='lab',rows={{0x28C},{0x74},{0x284}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
+ {name='lab_books_free_corner',secondary='lab',rows={{0x2BA},{0x73},{0x287}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
  {name='lab_work_table',secondary='lab',rows={{0x2A8,0x2A9,0x2AA},{0x2B0,0x2B1,0x2B2}},kind='table',h=9,ground=0x289,top=20},
- {name='lab_counter',secondary='lab',rows={{0x85,0x86},{0x285,0x286}},kind='counter',h=12,ground=0x289,top=16},
+ {name='lab_pokedex_desk',secondary='lab',rows={{0x85,0x86},{0x285,0x286}},kind='desk',h=12,ground=0x289},
  {name='lab_computer',secondary='lab',rows={{0x75,0x76},{0x285,0x286}},kind='cabinet',h=23,ground=0x289,depth=12,facade={1,3,30,24}},
 
 }
@@ -51,6 +58,8 @@ for _,mid in ipairs({0x2B9,0x2BC,0x298,0x2BD})do
 end
 recipe('center_table',center,{{0x29C,0x29D},{0x2A4,0x2A5}},'table',7,0x281,{top=26})
 for _,mid in ipairs({0x2F5,0x2FD})do recipe('center_seat_'..mid,center,{{mid}},'seat',6,0x281,{top=13})end
+recipe('lab_plant_left','oak_lab',{{0x293},{0x29B}},'plant',26,0x289,{cutout=true})
+recipe('lab_plant_right','oak_lab',{{0x294},{0x29C}},'plant',26,0x289,{cutout=true})
 recipe('house_plant', 'player_house',{{0x47},{0x4F}},'plant',24,1,{cutout=true})
 recipe('common_house_plant','house',{{0x47},{0x4F}},'plant',24,1,{cutout=true})
 recipe('mart_plant',mart,{{0x2B5},{0x2B6}},'plant',24,0x281,{cutout=true})
@@ -147,9 +156,68 @@ function M.append(p,emit,uvFor)
   source(1,8,14,20,{x+1,r.h,z+25.53},{x+15,r.h,z+25.53},{x+15,5,z+25.53},{x+1,5,z+25.53})
  elseif r.kind=='cabinet' then
   local front=z+(r.frontOffset or p.d-2);local back=front-r.depth
-  box(x+1,0,back,x+p.w-1,r.h,front)
+  box(x+1,r.base or 0,back,x+p.w-1,r.h,front)
   local f=r.facade or {1,0,p.w-2,p.d}
-  source(f[1],f[2],f[3],f[4],{x+1,r.h,front+.02},{x+p.w-1,r.h,front+.02},{x+p.w-1,0,front+.02},{x+1,0,front+.02})
+  source(f[1],f[2],f[3],f[4],{x+1,r.h,front+.02},{x+p.w-1,r.h,front+.02},{x+p.w-1,r.base or 0,front+.02},{x+1,r.base or 0,front+.02})
+ elseif r.kind=='labMachine' then
+  -- The native machine is a circular red platen, silver rim and blue drum
+  -- on four feet. Its top-down shadow/floor is never part of the model.
+  local function sample(sx,sy)
+   local uv=uvFor(p.ts,r.rows[math.floor(sy/16)+1][math.floor(sx/16)+1])
+   local u=uv[1][1]+(uv[2][1]-uv[1][1])*(sx%16+.5)/16
+   local v=uv[1][2]+(uv[3][2]-uv[1][2])*(sy%16+.5)/16
+   return {{u,v},{u,v},{u,v},{u,v}}
+  end
+  local silver,blue,dark=sample(7,12),sample(12,32),sample(9,38)
+  local cx,cz=x+16,z+31
+  local rings={{2,10},{5,12},{7,11},{18,11},{20,14},{22,14},{24,12}}
+  for j=1,#rings-1 do
+   local a,b=rings[j],rings[j+1]
+   for i=0,15 do
+    local t0,t1=i*math.pi/8,(i+1)*math.pi/8
+    local function pt(r,t)return {cx+math.cos(t)*r[2],r[1],cz+math.sin(t)*r[2]}end
+    emit({pt(b,t0),pt(b,t1),pt(a,t1),pt(a,t0)},j==3 and blue or silver,.78+.12*math.sin(t0))
+   end
+  end
+  -- Map the original circular red top onto a horizontal disk, preserving
+  -- the small white highlight instead of stretching it over a cylinder.
+  for i=0,15 do
+   local a,b=i*math.pi/8,(i+1)*math.pi/8
+   emit({{cx,24,cz},{cx+12*math.cos(a),24,cz+12*math.sin(a)},
+    {cx+12*math.cos(b),24,cz+12*math.sin(b)},{cx,24,cz}},silver,1)
+  end
+  for sy=0,13 do
+   local dy=(sy-6.5)/7;local half=math.sqrt(math.max(0,1-dy*dy))*12
+   source(16-half,12+sy,half*2,1,
+    {cx-half,24.03,cz+(sy/7-1)*12},{cx+half,24.03,cz+(sy/7-1)*12},
+    {cx+half,24.03,cz+((sy+1)/7-1)*12},{cx-half,24.03,cz+((sy+1)/7-1)*12})
+  end
+  for _,dx in ipairs({-11,8})do for _,dz in ipairs({-9,8})do box(cx+dx,0,cz+dz,cx+dx+3,6,cz+dz+4,silver)end end
+  box(cx-5,2,cz+10,cx+5,11,cz+12,dark)
+  source(12,37,8,8,{cx-4,10,cz+12.03},{cx+4,10,cz+12.03},{cx+4,3,cz+12.03},{cx-4,3,cz+12.03})
+ elseif r.kind=='desk' then
+  -- The Pokédex desk's native top occupies rows 6..16, not the wall
+  -- above it or the floor below its feet. Model the frame independently.
+  local back,front=z+17,z+30
+  local function color(sx,sy)
+   local t=uvFor(p.ts,r.rows[math.floor(sy/16)+1][math.floor(sx/16)+1])
+   local u=t[1][1]+(t[2][1]-t[1][1])*(sx%16+.5)/16
+   local v=t[1][2]+(t[3][2]-t[1][2])*(sy%16+.5)/16
+   return {{u,v},{u,v},{u,v},{u,v}}
+  end
+  local frame,edge=color(2,21),color(1,17)
+  box(x,10,back,x+p.w,12,front,frame)
+  source(0,6,p.w,11,{x,12.03,back},{x+p.w,12.03,back},{x+p.w,12.03,front},{x,12.03,front})
+  for _,dx in ipairs({2,p.w-4})do for _,dz in ipairs({back+1,front-3})do
+   box(x+dx,0,dz,x+dx+2,10,dz+2,frame)
+  end end
+  -- Aprons and a real right-hand drawer leave an open knee space.
+  box(x+2,8,back+1,x+p.w-2,10,back+2,edge)
+  box(x+2,8,front-2,x+p.w-2,10,front-1,edge)
+  box(x+2,8,back+1,x+3,10,front-1,edge)
+  box(x+p.w-3,8,back+1,x+p.w-2,10,front-1,edge)
+  box(x+20,3,back+2,x+30,10,front-1,frame)
+  source(20,18,11,6,{x+20,10,front-.98},{x+30,10,front-.98},{x+30,3,front-.98},{x+20,3,front-.98})
  elseif r.kind=='chair' then
   -- The native chair drawing includes green carpet around its rounded back.
   -- Sample the upholstery/frame colours into real narrow parts, so that
@@ -179,6 +247,17 @@ function M.append(p,emit,uvFor)
    source(0,r.single and 10 or 16,p.w,r.single and 6 or 16,{x,r.h,z1+.02},{x+p.w,r.h,z1+.02},{x+p.w,0,z1+.02},{x,0,z1+.02})
   elseif r.kind=='bed' then box(x+2,0,z,x+p.w-2,r.h+3,z+1)end
  end
+end
+-- Only stationary item props rest on furniture. Characters/NPCs retain
+-- native ground and animation offsets; this never changes interaction cells.
+function M.support(cells,gid,px,py)
+ if tonumber(gid)~=92 and tonumber(gid)~=94 then return 0 end
+ local c=cells and cells[math.floor(px/16)..':'..math.floor(py/16)]
+ local p=c and c.prop;local r=p and p.recipe
+ if r and (r.kind=='table' or r.kind=='counter' or r.kind=='desk') then
+  return r.h+.12,r.kind=='desk' and 5 or .4
+ end
+ return 0
 end
 function M.cutouts(pair)
  local out={}

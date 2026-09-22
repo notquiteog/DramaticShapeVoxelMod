@@ -12,12 +12,12 @@ local S={gen2=true,outdoor=true,skip={},ground={},objectQuads={}}
 M.build(S,map);assert(#S.exteriors==1 and #S.objectQuads>0)
 local back,front,roof=0,0,0
 for _,q in ipairs(S.objectQuads)do
- for _,v in ipairs(q)do assert(v[1]>=0 and v[1]<=64 and v[2]>=0 and v[2]<=33.2 and v[3]>=0 and v[3]<=64.2)end
+ for _,v in ipairs(q)do assert(v[1]>=-2 and v[1]<=66 and v[2]>=0 and v[2]<=33.25 and v[3]>=-2 and v[3]<=66)end
  if q[1][3]==0 and q[2][3]==0 and q[1][2]<=32 then back=back+1 end
  if q[1][3]>=64 and q[2][3]>=64 and q[1][2]<=32 then front=front+1 end
  if q[1][2]==33.2 and q[2][2]==33.2 and q[3][2]==33.2 then roof=roof+1 end
 end
-assert(back==32 and front==32 and roof==64,'incomplete square brick shell')
+assert(back>=32 and front>=32 and roof==64,'incomplete square brick shell')
 assert(drawing[7][5]==8 and drawing[8][3]==57,'native sign/door mutated')
 drawing[8][8]=5;assert(#M.placements(map)==0,'incomplete facade swallowed grass')
 drawing[8][8]=22;map.tileset.id='TILESET_LAB';assert(#M.placements(map)==0,'interior tile IDs became an exterior')
@@ -31,7 +31,7 @@ S={gen2=true,outdoor=true,skip={},ground={},objectQuads={}}
 M.build(S,map)
 local lowWall,dormer=false,false
 for _,q in ipairs(S.objectQuads)do
- for _,v in ipairs(q)do assert(v[2]<=32,'Kanto house has an extra floor')end
+ for _,v in ipairs(q)do assert(v[2]<=32.05,'Kanto house has an extra floor')end
  if q[1][3]==48 and q[1][2]==16 then lowWall=true end
  if q[1][3]==48 and q[1][2]==32 and q[1][1]==16 then dormer=true end
 end

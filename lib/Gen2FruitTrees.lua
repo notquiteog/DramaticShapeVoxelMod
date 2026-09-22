@@ -1,9 +1,10 @@
 -- Native fruit-tree actors retain their event/harvest identity and borrow the
--- illustrated forest's low, trunkless shrub layers in HD-2D presentation.
+-- illustrated forest's low, trunkless shrub layers in 2.5D presentation.
 local V=...
 local M={}
 local leaves
 function M.accepts(c)
+ if V.require("TreePresentation").original() then return false end
  local map=c and c.state and c.state.map
  local d=c and c.sprite and c.sprite.def
  return map and V.require('CommunityVisuals').crystalDepth(map) and d

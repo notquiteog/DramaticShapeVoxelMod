@@ -106,10 +106,15 @@ function M.install(stage)
   local G=love.graphics;local w,h=G.getDimensions();local k=Theme.scale(w,h)
   G.origin();G.scale(k);w,h=w/k,h/k
   local function label(value,x,y,width)return Theme.text(value,x,y,width)end
+  local items={}
   for id=0,3 do local c=M.cards[id];if c then
-   local ally=id%2==0;local row=math.floor(id/2)
+   items[#items+1]={id=id,x=c.anchor[1]/k,y=c.anchor[2]/k,w=76,h=id%2==0 and 27 or 22}
+  end end
+  local layout=Theme.layoutStatusCards(items,w,h)
+  for id=0,3 do local c=M.cards[id];if c then
+   local ally=id%2==0
    local cardH=ally and 27 or 22
-   local x,y=Theme.aboveHead(c.anchor[1]/k,c.anchor[2]/k,76,cardH,w,h)
+   local x,y=layout[id].x,layout[id].y
    Theme.statusCard(x,y,76,cardH,c.anchor[1]/k,Ui._mode=='target' and Ui.targetCursor()==id)
    label(c.name,x+3,y+2,49);label('Lv.'..c.level,x+53,y+2,21)
    label(c.status or 'HP',x+3,y+11,19)

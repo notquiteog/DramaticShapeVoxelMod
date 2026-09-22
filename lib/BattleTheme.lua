@@ -37,6 +37,35 @@ function M.scale(w,h)return math.max(1,math.min(4,w/320,h/240))end
 function M.aboveHead(x,y,w,h,viewW,viewH)
  return math.max(3,math.min(viewW-w-3,x-w/2)),math.max(3,math.min(viewH-h-9,y-h-10))
 end
+-- Keep paired status cards apart while retaining each sprite's own pointer.
+-- Layout uses the projected heads, so it also follows native battle motion.
+function M.layoutStatusCards(items,viewW,viewH)
+ local placed={}
+ for _,item in ipairs(items)do
+  local x,y=M.aboveHead(item.x,item.y,item.w,item.h,viewW,viewH)
+  placed[item.id]={x=x,y=y,w=item.w,h=item.h,tip=item.x}
+ end
+ for side=0,1 do
+  local group={}
+  for _,item in ipairs(items)do if item.id%2==side then group[#group+1]=item end end
+  table.sort(group,function(a,b)return a.x==b.x and a.id<b.id or a.x<b.x end)
+  for i=2,#group do
+   local a,b=placed[group[i-1].id],placed[group[i].id]
+   if a.y<b.y+b.h+6 and b.y<a.y+a.h+6 and a.x+a.w+5>b.x then
+    if a.w+b.w+11<=viewW then
+     local middle=(a.x+a.w+b.x)/2
+     local left=math.max(3,math.min(viewW-a.w-b.w-8,middle-a.w-2.5))
+     a.x=left;b.x=left+a.w+5
+    else
+     -- Very narrow screens: keep both cards above their sprites.
+     b.y=math.max(3,a.y-b.h-9)
+     if b.y+b.h+6>a.y then a.y=b.y+b.h+9 end
+    end
+   end
+  end
+ end
+ return placed
+end
 -- Use the engine's bundled pixel face directly at its design grid. Text is
 -- composited at window resolution, outside the world/attack effect canvases.
 local face,faceScale

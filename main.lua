@@ -326,7 +326,7 @@ function voidFill.check()
 end
 
 mod.content.render_pipelines:register("voxel", {
-  label = Generation.isGen2() and "HD-2D CAMERA" or "VOXEL",
+  label = Generation.isGen2() and "2.5D CAMERA" or "VOXEL",
   -- The ladder this cart can actually walk. Gen 1 gets every rung; a Gen 2
   -- boot stops at 75 because the two rungs above it take the WALK as well as
   -- the eye, and free movement has no seam on Gold (Voxel.freeCamAvailable).
@@ -616,7 +616,7 @@ mod.content.render_pipelines:register("depth_of_field", {
 })
 
 mod.content.render_pipelines:register("hd2d_light", {
-  label = "HD-2D LIGHT",
+  label = "2.5D LIGHT",
   levels = V.require("SceneFinish").LABELS,
   priority = 12,
   update = function(_, level) V.require("SceneFinish").level = level or 0 end,
@@ -719,6 +719,8 @@ end
 
 local TreePresentation=V.require("TreePresentation")
 local SETTINGS = {
+  { TreePresentation.surfaces, "Original game scenery textures, or optional detailed materials. Geometry is preserved.", full=true, when=function()return Generation.isGen2()end },
+  { TreePresentation.art, "Original game tree drawings by default; ILLUSTRATED selects the replacement artwork. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
   { TreePresentation.setting, "Flat illustrated trunks follow their leaf billboards. SOLID restores the physical trunk and boughs. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
   { LegendaryVisualsPreset.setting,
     "One master profile for Legendary world visuals. OFF preserves Battle Art, "

@@ -116,7 +116,7 @@ F.pump()
 local foliage=0
 for _,part in ipairs(F.M.TRUNK.cache[depth.id].parts) do
   if part.detail then
-    check(part.detailFarCount==nil,"essential HD-2D canopy survives distant LOD")
+    check(part.detailFarCount==nil,"essential 2.5D canopy survives distant LOD")
     foliage=foliage+part.detail.n
   end
 end

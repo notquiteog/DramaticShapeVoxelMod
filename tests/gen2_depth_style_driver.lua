@@ -4,8 +4,8 @@ return function(game)
  local U=dofile('tests/drivers/util.lua')
  local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib
  local P=require('src.render.Pipelines')
- if os.getenv('QA_FRESH_HD2D')=='1' then
-  assert(P.level('voxel')==1,'fresh profile must start in HD-2D without driver intervention')
+ if os.getenv('QA_FRESH_2.5D')=='1' then
+  assert(P.level('voxel')==1,'fresh profile must start in 2.5D without driver intervention')
   assert(game.options.pipelines.voxel==1,'default camera must survive options reload')
  end
  local visual=V.require('CommunityVisuals')
@@ -35,14 +35,14 @@ return function(game)
  assert(visual.crystalStyle==nil,'retired scenery selector is still exposed')
  game.mods.modOptions.BATTLE_ART_VOXEL_FORK=game.mods.modOptions.BATTLE_ART_VOXEL_FORK or {}
  -- Existing installs may retain the old stored value. None may restore the
- -- retired voxel/source branch or interfere with a fresh HD-2D mesh rebuild.
+ -- retired voxel/source branch or interfere with a fresh 2.5D mesh rebuild.
  for _,oldStyle in ipairs({'hd2d','source','depth'}) do
   game.mods.modOptions.BATTLE_ART_VOXEL_FORK.crystalStyle=oldStyle
   visual.invalidate()
   U.wait(5)
   for _=1,2400 do if mesher.pending()==0 and voxel.ready then break end U.wait(1) end
-  assert(mesher.pending()==0 and voxel.ready,'HD-2D rebuild failed')
-  assert(visual.crystalDepth(map),'old saved preference disabled HD-2D')
+  assert(mesher.pending()==0 and voxel.ready,'2.5D rebuild failed')
+  assert(visual.crystalDepth(map),'old saved preference disabled 2.5D')
   U.wait(20)
   local S=structures.forMap(map)
   local grass=0
@@ -59,10 +59,10 @@ return function(game)
  assert(U.shot(game,dir..'/depth.png'))
  P.setLevel('hd2d_light',2);P.setLevel('depth_of_field',1)
  U.wait(12)
- assert(V.require('SceneFinish').lastApplied,'HD-2D light shader did not run')
+ assert(V.require('SceneFinish').lastApplied,'2.5D light shader did not run')
  assert(V.require('DepthOfField').lastApplied,'depth-of-field shader did not run')
  assert(U.shot(game,dir..'/depth_optional_shaders.png'))
  P.setLevel('hd2d_light',0);P.setLevel('depth_of_field',0)
- print('[depth styles] PASS: HD-2D default, retired-setting migration, scene rebuild, grass underlay, collision and hidden ball HUD')
+ print('[depth styles] PASS: 2.5D default, retired-setting migration, scene rebuild, grass underlay, collision and hidden ball HUD')
  love.event.quit()
 end

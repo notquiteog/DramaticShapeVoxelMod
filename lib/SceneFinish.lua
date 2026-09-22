@@ -1,4 +1,4 @@
--- Optional HD-2D highlight bloom and gentle warm/cool grading. Only the world
+-- Optional 2.5D highlight bloom and gentle warm/cool grading. Only the world
 -- canvas is filtered; menus, dialogue and battle HUD compose afterward.
 local V=...
 local M={level=0,LABELS={'OFF','SOFT LIGHT','CINEMA'}}

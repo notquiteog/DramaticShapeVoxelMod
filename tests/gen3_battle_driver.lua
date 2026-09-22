@@ -15,7 +15,7 @@ return function(game)
  assert(U.shot(game,'/tmp/firered-hd2d/native-battle.png'))
  -- QA teardown uses the engine's explicit abort, not a fabricated win.
  Battle.abort('run');U.wait(120)
- assert(not Battle.isActive() and C.active,'HD2D did not return after native battle')
+ assert(not Battle.isActive() and C.active,'2.5D did not return after native battle')
  assert(U.shot(game,'/tmp/firered-hd2d/after-native-battle.png'))
  print('[FR battle] PASS native entry/render/abort/field return; no combat-logic claim')
  love.event.quit()

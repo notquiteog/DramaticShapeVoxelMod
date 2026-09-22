@@ -21,8 +21,8 @@ return function(game)
     end,uv,tile)
   end
   if os.getenv("QA_DEPTH_STYLE")=="1" then
-    assert(V.require("CommunityVisuals").crystalDepth(game.world.map),"HD-2D must be default")
-    Mesher.invalidate(nil,"HD-2D depth QA")
+    assert(V.require("CommunityVisuals").crystalDepth(game.world.map),"2.5D must be default")
+    Mesher.invalidate(nil,"2.5D depth QA")
   end
   local rocks=V.require("Gen2Rocks")
   local drawRock=rocks.draw

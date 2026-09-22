@@ -4,7 +4,7 @@ modules.ModSetting=assert(loadfile('lib/ModSetting.lua'))(V)
 local visuals=assert(loadfile('lib/CommunityVisuals.lua'))(V)
 local map={tileset={id='TILESET_JOHTO',imageWidth=128,imageHeight=128},cellCollision=function()end}
 assert(visuals.crystalStyle==nil,'retired scenery setting remains exposed')
-assert(visuals.crystalHD(map) and visuals.crystalDepth(map),'Crystal must default to HD-2D')
+assert(visuals.crystalHD(map) and visuals.crystalDepth(map),'Crystal must default to 2.5D')
 assert(not visuals.crystalDepth({tileset={id='OVERWORLD'}}),'Crystal style leaked into Gen 1')
 local Trees=assert(loadfile('lib/Gen2DepthTrees.lua'))()
 for _,family in ipairs({'broadleaf','conifer','spreading','shrub'}) do
@@ -62,7 +62,7 @@ for _,quad in ipairs(q) do
  end
 end
 map.tileset.id='TILESET_LAB';assert(not Grass.append({},map,0,0),'indoor art used as grass')
-print('HD-2D default and style isolation, flat foliage budget and grass bounds passed')
+print('2.5D default and style isolation, flat foliage budget and grass bounds passed')
 
 local Shell=assert(loadfile('lib/Gen2InteriorShell.lua'))({require=function(name)
  assert(name=='Structures');return {forMap=function()return {furniture={{height=40}}}end}

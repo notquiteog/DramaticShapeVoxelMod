@@ -1,6 +1,8 @@
 -- Whole Crystal drawings: the roof occupies the top, the facade occupies the
 -- front. The native 2D rectangle is not a stack of independent wall columns.
+local V=...
 local M={}
+local Eaves=V and V.require("RoofEaves") or assert(loadfile("lib/RoofEaves.lua"))()
 local function key(x,y)return (y+64)*4096+x+64 end
 local function row(map,x,y,w,left,middle,right)
  for dx=0,w-1 do
@@ -155,7 +157,28 @@ function M.build(S,map)
    for dz=0,g.depth-1 do for bx=0,g.width-1 do
     local x,z=bx*8,dz*8
     local a,b,c,d=height(x,z),height(x+8,z),height(x+8,z+8),height(x,z+8)
-    face({{x0+x,d,z0+z+8},{x0+x+8,c,z0+z+8},{x0+x+8,b,z0+z},{x0+x,a,z0+z}},g.roofTile,.96)
+    local sourceRow=math.min(g.roofRows-1,math.floor(dz/g.depth*g.roofRows))
+    local roofTile=map:tileAt(g.x+bx,g.y+sourceRow)
+    -- Map each roof source row continuously across its world depth, so
+    -- stretched cap/eave rows do not repeat as a stack of parallel bands.
+    local tex=uv(roofTile)
+    local sy=dz/g.depth*g.roofRows-sourceRow
+    local ey=math.min(1,sy+g.roofRows/g.depth)
+    local top,bottom=tex[1][2],tex[3][2]
+    tex[1][2],tex[2][2]=top+(bottom-top)*sy,top+(bottom-top)*sy
+    tex[3][2],tex[4][2]=top+(bottom-top)*ey,top+(bottom-top)*ey
+    local q={{x0+x,d,z0+z+8},{x0+x+8,c,z0+z+8},{x0+x+8,b,z0+z},{x0+x,a,z0+z}}
+    q.uv={tex[4],tex[3],tex[2],tex[1]};q.shade=.96;S.objectQuads[#S.objectQuads+1]=q
+    local function edge(A,B,dx,dz)
+     Eaves.edge(A,B,dx,dz,uv(roofTile),function(p,t,shade)
+      p.uv=t;p.shade=shade;S.objectQuads[#S.objectQuads+1]=p
+     end)
+    end
+    local xx,zz=x0+x,z0+z
+    if dz==0 then edge({xx,a,zz},{xx+8,b,zz},0,-2)end
+    if dz==g.depth-1 then edge({xx+8,c,zz+8},{xx,d,zz+8},0,2)end
+    if bx==0 then edge({xx,d,zz+8},{xx,a,zz},-2,0)end
+    if bx==g.width-1 then edge({xx+8,b,zz},{xx+8,c,zz+8},2,0)end
     if dz==0 then face({{x0+x+8,b,z0},{x0+x,a,z0},{x0+x,H,z0},{x0+x+8,H,z0}},g.roofTile,.7)end
     if dz==g.depth-1 and g.style~='kanto_hip' then face({{x0+x,d,z0+D},{x0+x+8,c,z0+D},{x0+x+8,H,z0+D},{x0+x,H,z0+D}},g.roofTile,.8)end
     if bx==0 then face({{x0,a,z0+z},{x0,d,z0+z+8},{x0,H,z0+z+8},{x0,H,z0+z}},g.roofTile,.75)end

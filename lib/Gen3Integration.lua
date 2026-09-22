@@ -6,7 +6,7 @@ local M={yaw=0,pitch=.16,level=3,rendered=0,active=false}
 local ModSetting=V.require('ModSetting')
 local Trees=V.require('TreePresentation')
 local Distance=V.require('RenderDistance')
-local mode=ModSetting.new('fireredCamera','HD-2D CAMERA',{0,1,2,3,4,5,6,7},
+local mode=ModSetting.new('fireredCamera','2.5D CAMERA',{0,1,2,3,4,5,6,7},
  {'OFF','FULL','15','35','50','75','1ST','ROTATING 3RD'},4)
 local function free()return M.level>=6 end
 local dirs={'up','right','down','left'}
@@ -33,7 +33,8 @@ function M.install()
  local uninstallBattle=BattleStage.install()
  local draw,present,update=FieldView.draw,Display.present,Player.update
  local failed=false
- mode:read();M.level=mode:get();mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the HD-2D field. Disable to use the original FireRed battle background.'),Trees.setting:schema('Flat illustrated trunks follow their leaf billboards; SOLID restores physical trunks.'),mode:schema('FireRed HD-2D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
+ mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original FireRed battle background.'),Trees.art:schema('Original game tree drawings or optional illustrated replacements.'),Trees.setting:schema('Flat illustrated trunks follow their leaf billboards; SOLID restores physical trunks.'),mode:schema('FireRed 2.5D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
+ V.require('InGameOptions').install(mod,schema,'BATTLE ART')
  local function field(game)return game and game.phase=='field' and game.session and not Battle.isActive() end
  FieldView.draw=function(game,w,h,opts)
   M.active=false
@@ -96,7 +97,9 @@ function M.install()
  mod.events:on('mod.options_changed',function(payload)
   if payload and payload.mod==mod.id and payload.key==Distance.setting.key then Distance.setting:sync(payload.value);Scene.invalidate()end
   if payload and payload.mod==mod.id and payload.key==BattleStage.setting.key then BattleStage.setting:sync(payload.value) end
-  if payload and payload.mod==mod.id and payload.key==Trees.setting.key then Trees.setting:sync(payload.value);Trees.changed(payload.key) end
+  if payload and payload.mod==mod.id then
+   for _,setting in ipairs({Trees.setting,Trees.art})do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
+  end
   if payload and payload.mod==mod.id and payload.key==mode.key then
    mode:sync(payload.value);M.level=mode:get()
   end

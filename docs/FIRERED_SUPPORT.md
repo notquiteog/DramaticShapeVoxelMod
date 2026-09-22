@@ -1,4 +1,4 @@
-# FireRed HD-2D preview
+# FireRed 2.5D preview
 
 Version **1.21.0-beta.3**, tested with the actual Linux **Gen1Recomp 0.2.73**
 AppImage payload. Requires 0.2.73+. Import the mod ZIP into FireRed separately;
@@ -22,7 +22,7 @@ The working tree now uses flat gym roofs with beveled edges, complete civic
 buildings and38 reviewed house/landmark families. Lavender Tower joins its
 Route10 dome to its town facade; its square base meets newly raised General
 cliff masses. The top shape is retained. These are presentation changes;
-walkable terrain/collisions remain native. TREE TRUNKS defaults to FLAT HD-2D.
+walkable terrain/collisions remain native. TREE TRUNKS defaults to FLAT 2.5D.
 
 This work is not in the beta3 ZIP and has not been pinned into the sealed cart.
 See [exterior coverage and remaining work](EXTERIOR_COVERAGE.md).
@@ -72,7 +72,7 @@ See [exterior coverage and remaining work](EXTERIOR_COVERAGE.md).
 - Press **3** to cycle OFF, FULL, 15, 35, 50, 75, first person and rotating third
   person. **Hold the right mouse button and drag** to look in the last two modes.
   Static views keep foliage fixed; free views face foliage toward the camera.
-  The mod manager exposes **HD-2D CAMERA** and saves the selection.
+  The mod manager exposes **2.5D CAMERA** and saves the selection.
 - Camera-relative native grid walking, including both new key presses and held
   input. Ordinary buttons and scripted movement are preserved.
 - GPU/render failure returns to the native field and disables camera-relative

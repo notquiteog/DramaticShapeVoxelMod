@@ -101,9 +101,9 @@ function M.image(ts,frame)
  if not ts.imageData then return end
  local data=ts.imageData:clone()
  local masks={}
- if ts.pair and (ts.pair=='network' or ts.pair=='player_house' or ts.pair=='house' or ts.pair=='building__rom_082d4bcc')then
-  masks=V.require('Gen3Furniture').cutouts(ts.pair)
- else masks=plants end
+ local artPair=V.require('Gen3Tilesets').canonical(ts.pair)
+ masks=V.require('Gen3Furniture').cutouts(artPair)
+ if not next(masks)then masks=plants end
  for mid,ground in pairs(masks)do
   local mask=M.mask(ts,mid,ground)
   local at=ts.midToSlot[mid]

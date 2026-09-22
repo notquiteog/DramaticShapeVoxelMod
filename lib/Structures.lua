@@ -943,7 +943,7 @@ function Structures.forMap(map)
       and (TileRenderer.voidFill or "trees") == "trees")
     or legendaryViridian or depthForestBorder
   )
-  -- HD-2D uses the SAME model/material builder throughout its forest apron.
+  -- 2.5D uses the SAME model/material builder throughout its forest apron.
   -- Both classification and carving must reach this boundary: extending only
   -- tileLookup would leave a band of uncarved boxes behind the near trees.
   local roundRing = depthForestBorder and RING or ROUND_RING

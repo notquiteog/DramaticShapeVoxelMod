@@ -37,7 +37,7 @@ return function(game)
   assert(bx,'no safe camera position')
   Player.reset(bx,by,'down')
   C.setLevel(3,game);U.wait(220)
-  print('[FireRed view]',case[1],def.midLayout.pair,'HD2D',C.active)
+  print('[FireRed view]',case[1],def.midLayout.pair,'2.5D',C.active)
   if case[1]=='FR_DIGLETTS_CAVE_NORTH_ENTRANCE' then
    assert(not C.active,'unmapped cave must preserve native presentation')
    assert(U.shot(game,dir..'/cave_native.png'));n=n+1

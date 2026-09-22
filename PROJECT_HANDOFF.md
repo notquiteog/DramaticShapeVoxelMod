@@ -1,3 +1,89 @@
+# Main-branch source checkpoint — 2026-09-22
+
+User requested committing and pushing all mod/cart work to main. This checkpoint
+contains the previously uncommitted presentation, options and cross-generation
+port changes described below. It does not create new release tags or installable
+cart assets. Cart source manifests are drafts using existing published pins;
+replace those pins after companion releases and final integration verification.
+Historical references to uncommitted work below describe the earlier checkpoints.
+
+# Source-art, Oak lab and native options — 2026-09-22 (UNRELEASED)
+
+User steering: original artwork/overhangs/LeafGreen; FRLG trees cut in half;
+Oak lab machine, clipped starter balls, broken wall; missing in-game options;
+real Pokédex desk. All remain uncommitted; no new releases/version/cart pins.
+
+Implemented:
+- Original tree/scenery settings, native tree atlas, complete FRLG 32x48 and
+  forest 48x80 source assembly (including forest cap 641), palette/ground masks,
+  transparent-bottom grounding and full-layout cache keys. Illustrated option
+  retained, flat/model stem setting retained. Gen 1 trees unchanged.
+- Source roof/eave work and LeafGreen semantic tileset aliases, as documented
+  in docs/SOURCE_ART.md. User-facing wording is 2.5D; persisted keys unchanged.
+- Gen3Furniture: round lab machine, native colors/platen, physical desk with
+  legs/drawer, supported Pokédex/ball sprites, thin mounted posters, complete
+  bookshelf tops and plant cutouts. Gen3Scene/InteriorDiorama align a continuous
+  back wall to the native facade; no collision/event changes.
+- InGameOptions in Battle Art, Wilds, Double Battles and Ride are independent
+  adapters. Native Game3 option_rows does not call ui.options.rows. BAV/Wilds/
+  Double get native pages; Double/Ride get missing GB rows. Numeric/toggle/choice
+  persistence emits mod.options_changed. Composed wrappers tolerate hot reload.
+- Crystal and Yellow cart SOURCE manifests reduced to five core mods plus
+  Running Shoes. Their pins still point to older releases: do NOT build new cart releases
+  from these manifests until new companion releases exist. VoxelRed remains published preview.
+
+Native evidence, not exhaustive parity:
+- Official upstream gen1recomp 0.3.0 .love, checksum verified. Runtime at
+  /tmp/source-art-030; isolated source-art-{yellow,crystal,firered,leafgreen}-030-qa
+  profiles. FireRed reimported into QA because old import was not 0.3.0 ready;
+  LeafGreen uses the user’s imported cache. Player saves/install untouched.
+- Crystal New Bark/Olivine roof and tree modes, FRLG Oak exterior and broad
+  37-view surveys completed earlier this batch. Original tree final driver
+  tests/native_tree_art_driver.lua captures Pallet and Viridian Forest native,
+  static/first/rotating plus whole cutouts. Inspected both editions’ source art;
+  final runtime views in /tmp/source-art-030/trees-final-{firered,leafgreen}.
+- tests/gen3_lab_driver.lua: native FRLG lab, machine extraction, 3 supported
+  balls, 8 cameras from walkable cells, original 2D fallback. Captures inspected
+  at /tmp/source-art-030/lab-views-{firered,leafgreen}. Latest LeafGreen run also
+  verifies complete plant alpha; prior FireRed run used same desk/machine/wall
+  but preceded that one-line plant mask dispatch correction.
+- Native options drivers: all four games’ mods load; options rows/pages open,
+  change, persist, emit events and retain values on reopening. Native methods
+  exercised, not physical keyboard clicks. Gen3 labels shortened after visual
+  overlap inspection. Captures /tmp/source-art-030/options-*.
+- Unit tests: native_tree_art, leafgreen_tilesets, gen3_lab, in_game_options,
+  interior_diorama, gen2_exteriors/roof_shell, gen3_roof/civic/outdoor and
+  boundary_scenery pass. LuaJIT compiles 76 changed/new mod Lua files plus
+  assembled Ride; all five mod repositories pass git diff --check.
+
+Remaining: Forest gate still uses flat artwork; dense forest root-placement
+coverage and specialty interiors/caves need a broader survey. No claim that
+all tiles are perfect. Ride Gen3, GB online doubles, remaining five-mod native
+0.3.0 integration matrix and releases are tracked in Online’s handoff and remain
+unfinished. Current work must not be presented as a completed five-mod cart.
+
+# Cross-generation room battle HUD — 2026-09-22 (UNRELEASED)
+
+`BattleTheme.layoutStatusCards` separates paired status cards horizontally,
+clamps them within the screen and preserves their Pokémon head pointers.
+`Gen3BattleHud` applies it to the four native FireRed battlers. Unit coverage
+includes narrow/wide viewports, screen edges and four-card placement.
+
+Actual 0.2.73 Linux, isolated crossgen-world-host/guest-qa profiles, Online +
+Wilds + Double Battles + Battle Art: two native ENet clients completed a full
+FireRed double link battle and returned with both original parties unchanged.
+Before/after captures were inspected; all four Pokémon render, and the after
+capture has four readable, separated cards above them. Fixture: Pallet Town,
+host two Lv50 Bulbasaur / guest two Lv5 Rattata, Tackle-only moves, native
+command and target flow, static staged camera. Evidence and driver:
+`/tmp/crossgen-integration/native-link-driver.lua`, `link-double-*.log`,
+`host/link-double.png`, `guest/link-double.png`. These paths are scratch data,
+not shipped assets. Player saves were not changed. No new release/cart pins.
+
+Room chat bubbles are owned by Online, which consumes the public Voxel3D
+projection API. Remaining five-mod ports and broader matrix are tracked in
+`../gen1online-plus/CROSSGEN_PORT_HANDOFF.md`; this is not full parity proof.
+
 # Published release handoff — 2026-09-22
 
 User requested all pending project work committed/pushed to main and new carts.
@@ -262,7 +348,7 @@ Authoritative latest reference: user attachment /home/admin/Downloads/lbDmiO.png
 Silver status cards must stay ABOVE EACH POKEMON with downward pointers.
 Four colored commands at lower right: Fight/PKMN above Items/Run. No red
 screen borders or edge-anchored cards. NO species-dependent sprite scaling.
-Keep native sprite artwork; HD-2D vegetation, 3D architecture/street props.
+Keep native sprite artwork; 2.5D vegetation, 3D architecture/street props.
 
 New FireRed Gen3Battle/Gen3BattleHud stage runs behind native sprites using
 ordinary engine draw seams. High-resolution cards follow native sprite alpha
@@ -287,10 +373,10 @@ Crystal flora QA PASS8 scenes255 flower cells18 views. Extended FireRed flat
 flora views need rerun after Route1 fixture correction. Broad all-map scenery
 and native tree art parity remain incomplete; source census is not approval.
 
-# Native HD-2D plant correction — 2026-09-22 (UNCOMMITTED)
+# Native 2.5D plant correction — 2026-09-22 (UNCOMMITTED)
 
 User rejected the experimental rounded flower/grass/shrub relief: they want
-FLAT HD-2D, and specifically like FireRed's original assets. Respect this
+FLAT 2.5D, and specifically like FireRed's original assets. Respect this
 steering in the continuing scenery audit. Do not restore SceneryRelief or
 invent replacement flower heads. Gen3Outdoor now emits ONE intact native
 16x16 card for each flower/grass/shrub tile. Source under/over layers are
@@ -615,7 +701,7 @@ Evidence in /tmp/firered-hd2d:
   Viridian/starting bedroom, native eastward movement10->12 from camera-up,
   real key3 dispatcher and canopyFacing assertions PASS.
 - battle.log: native wild intro reached command, screenshot, engine abort
-  and HD2D return PASS. This is not a combat/multiplayer test.
+  and 2.5D return PASS. This is not a combat/multiplayer test.
 - crystal.log and crystal-regression.png: actual0.2.73 Crystal New Bark
   terrain/trees built, Gen3 export absent; separate no-cart QA boot.
 - crystal-support-final.log:181/181 using actual0.2.73 modules and old test
@@ -941,14 +1027,14 @@ only a lead. No speculative clamp or follower hiding. User gameplay save is
 not present in the disposable QA profiles. Broader Gamma parity and hardware
 performance remain open. Cart1.10.0 packaging/publication is next.
 
-# Published checkpoint — Crystal HD-2D / cart 1.9.0 — 2026-09-14
+# Published checkpoint — Crystal 2.5D / cart 1.9.0 — 2026-09-14
 
 Latest user request is completed for Crystal: removed the scenery-style
-selector and voxel/source alternatives; always use layered HD-2D scenery.
-Gen 2's camera row is HD-2D CAMERA. Keep its stable internal pipeline ID for
+selector and voxel/source alternatives; always use layered 2.5D scenery.
+Gen 2's camera row is 2.5D CAMERA. Keep its stable internal pipeline ID for
 saved-camera and companion compatibility. Fresh profiles activate FULL on the
 initial boot; explicit camera settings including OFF are retained. Optional
-HD-2D LIGHT and Depth of Field remain separate. Gen 1 retains its rendering.
+2.5D LIGHT and Depth of Field remain separate. Gen 1 retains its rendering.
 
 Published runtime commits / versions:
 - Battle Art 1.17.2: 585ed1b72328a4decacffb8dd5717daa035c5b0b.
@@ -988,7 +1074,7 @@ defCellTile warnings remain. Do not claim every object perfected.
 
 # Final default-camera check — 2026-09-14
 
-1.17.2 changes the Gen 2 camera label to HD-2D CAMERA and applies the newly
+1.17.2 changes the Gen 2 camera label to 2.5D CAMERA and applies the newly
 seeded camera in save.created. Game2 restores pipelines BEFORE emitting its
 boot save.created event, so the existing FULL default was recorded but not
 activated for that boot. The seed helper still preserves an explicit OFF.
@@ -1006,13 +1092,13 @@ frame driver. Engine source and user profile untouched. Actual cart-path
 1.17.1 boot passes /tmp/johto-hd/cart-1.9.0-final-cart-path.log. Re-run with
 packaged 1.17.2 and publish cart1.9.0 after updating pin/hash.
 
-# HD-2D-only Crystal presentation — 2026-09-14
+# 2.5D-only Crystal presentation — 2026-09-14
 
 Latest user steering removes the voxel style and its selector. 1.17.1 makes
 crystalHD/crystalDepth unconditional for native Gen 2 maps, removes the
 crystalStyle row/registration and selectable opaque-canopy path, and ignores
 legacy saved style values. Gen 1 keeps its established rendering path. Optional
-HD-2D LIGHT / Depth of Field remain. Cart should carry no obsolete crystalStyle
+2.5D LIGHT / Depth of Field remain. Cart should carry no obsolete crystalStyle
 pin option. Gen2 depth_style_driver now checks the fixed default, ignored old
 saved values and optional shaders instead of cycling the removed row.
 
@@ -1035,7 +1121,7 @@ Art pin from the just-published 1.17.0 to 1.17.1 before publishing it.
 
 # Working release candidate — 1.17.0 / cart 1.9.0 — 2026-09-14
 
-Current working tree adds layered HD-2D foliage, low shrubs / retained Cut
+Current working tree adds layered 2.5D foliage, low shrubs / retained Cut
 saplings, essential-crown LOD protection, matching twelve-tile forest fill,
 44 furniture recipes, 16 floor finishes, small flowers / low Park rims,
 unequal reef clusters, native rock-ground selection, soft wet-sand shores,

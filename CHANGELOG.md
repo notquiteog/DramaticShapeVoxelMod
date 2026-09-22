@@ -1,7 +1,19 @@
+## Unreleased — original art, LeafGreen, Oak’s lab and in-game settings
+
+- Default to each game’s original tree art; keep illustrated trees and modeled
+  trunks optional. Assemble full FRLG trees instead of cropped border cells.
+- Preserve source roof tiles with overhangs, fascia and closed undersides.
+  Resolve LeafGreen’s tileset families through public map identities.
+- Model Oak’s round machine and Pokédex desk; support the Pokédexes and starter
+  balls above their tables. Repair the back wall and complete bookshelf claims.
+- Expose Battle Art settings in native Gen 3 OPTIONS; retain saved option keys.
+- Verify on official Gen1Recomp 0.3.0. See SOURCE_ART and PROJECT_HANDOFF for
+  actual coverage and outstanding work; exhaustive visual parity is not claimed.
+
 ## 1.21.0 — 2026-09-22
 
 Includes upstream absol89 through 1.11.0, preserving the fork’s independent
-HD-2D presentation and Gen 2/3 adapters. Requires Gen1Recomp 0.2.73+.
+2.5D presentation and Gen 2/3 adapters. Requires Gen1Recomp 0.2.73+.
 
 ### interior dioramas across three generations
 
@@ -36,9 +48,9 @@ Native 1440p FireRed and Crystal checks cover commands, head anchors and HP
 damage. FireRed battlers are still native screen sprites, and full cross-gen
 UI, doubles/multiplayer and reference-art parity remain unfinished.
 
-### native HD-2D plants, exterior fidelity and raised FireRed cliffs
+### native 2.5D plants, exterior fidelity and raised FireRed cliffs
 
-Use original FireRed flower, grass and shrub drawings as single flat HD-2D
+Use original FireRed flower, grass and shrub drawings as single flat 2.5D
 cutouts, with native colours, silhouettes and flower animation. Crystal's
 flowers and encounter grass likewise use their own native drawings. Keep
 plants fixed in static third person and facing free/battle cameras; remove
@@ -64,7 +76,7 @@ General cliff masses have32-unit caps and continuous steep edges; walkable
 ground, small jump ledges, collision and warps stay engine-owned. This is not
 yet a complete multi-level terrain or cave-portal implementation.
 
-Add TREE TRUNKS: FLAT HD-2D (default) or SOLID. Separate trunk/leaf depth and
+Add TREE TRUNKS: FLAT 2.5D (default) or SOLID. Separate trunk/leaf depth and
 remove detached neighboring fragments from the owned canopy illustrations at
 runtime. Cache67. All-exterior visual review and specialty models remain in
 progress; no new release or sealed-cart pin yet.
@@ -136,7 +148,7 @@ rotate through the native player update, retaining collision and scripts.
 
 This is NOT full FireRed visual parity. Interiors, caves, healing, doors and
 special field effects keep the engine's presentation. Battles are native;
-Crystal's double-battle/HD-2D battle companions are not ported by this update.
+Crystal's double-battle/2.5D battle companions are not ported by this update.
 Other city buildings, fences, rocks, grass and decorations need more profiles.
 The Crystal sealed cart stays on its stable release. No ROM/art cache ships.
 
@@ -273,17 +285,17 @@ Charmander remains reported in New Bark on cart1.9.0 and un-reproduced locally.
 Apply the fresh-save camera default immediately: Gen 2 emits save.created
 after its initial pipeline restore, leaving the boot view OFF until a reload.
 
-Rename the Gen 2 camera control to HD-2D CAMERA; its stable internal ID
+Rename the Gen 2 camera control to 2.5D CAMERA; its stable internal ID
 preserves saved preferences. Verify fresh profiles start in the existing FULL
 preset without test-driver camera setup. The removed scenery-style selector
 remains absent; explicit camera choices, including OFF, remain saved.
 
 ## 1.17.1 — 2026-09-14
 
-Make layered HD-2D the default Crystal presentation for the fork and remove
+Make layered 2.5D the default Crystal presentation for the fork and remove
 the scenery-style selector and opaque-canopy alternative. Ignore old saved
 style values. Lighting and Depth of Field remain optional. Complete entry-point
-wiring for HD-2D LIGHT and battle-end stage retention; those module changes
+wiring for 2.5D LIGHT and battle-end stage retention; those module changes
 were present in 1.17.0 but its entry-point hooks were missing.
 
 Lower Crystal mound ledges from six pixels to 2.5 pixels after visual feedback.
@@ -294,7 +306,7 @@ shader checks supplement the scenery and battle checks described in 1.17.0.
 
 ## 1.17.0 — 2026-09-14
 
-Add CRYSTAL SCENERY → HD-2D DEPTH alongside VOXEL HD and SOURCE ART.
+Add CRYSTAL SCENERY → 2.5D DEPTH alongside VOXEL HD and SOURCE ART.
 Curved illustrated maple/pine/spreading crowns replace the opaque crown hull;
 essential canopy layers survive distant LOD, including the twelve-tile forest
 apron. Headbutt/fruit shrubs are low trunkless mounds; Cut retains a sapling.
@@ -318,7 +330,7 @@ verification and known coverage limits; this is not complete Gamma Emerald parit
 
 ## 1.16.0 — 2026-09-13
 
-Crystal HD-2D scenery pass: original large-leaf sprays over smaller inner crowns,
+Crystal 2.5D scenery pass: original large-leaf sprays over smaller inner crowns,
 non-repeating broadleaf/conifer/spreading selection, sparse low meadow blades,
 and softer sun edges with cool skylight in shadow. Correct Johto plaster to the
 actual wall tile; retain terrain tile 50, add warm timber and blue-gray windows.
@@ -362,7 +374,7 @@ Crystal scenery refinement: varied crown rotation, height and branches; mip-filt
 - Crystal tilesets join the water animation: the Gen 2 importer writes no
   `animation` string, so the vanilla water hshift spec (tile $14, the same
   rrca/rlca roll Gen 1 runs) is served to Gen 2 tilesets that declare
-  nothing of their own, the animated atlas composes with the HD-2D
+  nothing of their own, the animated atlas composes with the 2.5D
   materials rather than replacing them, and the slot rewrite is
   scale-aware for the material pipeline's enlarged atlases. Gen 2's
   update now drives the tile-animation clock, which only the Gen 1
@@ -380,9 +392,9 @@ Crystal scenery refinement: varied crown rotation, height and branches; mip-filt
 
 # Changelog
 
-## 1.14.0 - Crystal HD-2D scenery and the common interiors
+## 1.14.0 - Crystal 2.5D scenery and the common interiors
 
-- Add the CRYSTAL SCENERY options row (HD-2D / SOURCE ART, HD-2D by default). SOURCE ART falls back to the previous Crystal reading; the choice is per session like the other rows.
+- Add the CRYSTAL SCENERY options row (2.5D / SOURCE ART, 2.5D by default). SOURCE ART falls back to the previous Crystal reading; the choice is per session like the other rows.
 - Model the common house, Mart, Pokémon Center and bedroom tilesets as whole drawings: dining and bedroom tables, beds and bookcases, Mart counters, shelves, coolers and benches, the Center's healer, counter, terminals, seats and bins. Identical numeric tile IDs across tilesets stay separate vocabularies -- one tileset's table is never another's.
 - Carve Crystal's dense border trees into compact broadleaf crowns (`Gen2Trees`) and classify forest, park and Kanto tree drawings into their own classes through a whole-drawing source-pixel check, so a lone tree cell never stands in for the four-cell tree.
 - Add render-only materials (`Gen2Materials`): wood grain for fences with beveled post caps that catch light at turns, and grass/leaf variation. Source pixels are never modified; normalized atlas UVs stay valid when the atlas is enlarged.

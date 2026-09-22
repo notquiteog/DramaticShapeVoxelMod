@@ -1615,13 +1615,21 @@ local function safariGround(map,base,baked)
  return base,baked
 end
 
+-- Original palette-baked art, before optional material replacement. Borrowed pixels.
+function TerrainAtlas.originalPixels(map)
+ local _,pixels=staticAtlas(map)
+ return pixels
+end
+
 function TerrainAtlas.forMap(map, colors)
   local base, baked = staticAtlas(map, colors)
   if not base then return nil end
   base, baked = communityAtlas(map, colors, base, baked)
   base, baked = safariGround(map, base, baked)
   if Generation.isGen2() then
-    base, baked = V.require("Gen2Materials").apply(map, base, baked)
+    if V.require("TreePresentation").surfaces:get()=="detailed" then
+      base, baked = V.require("Gen2Materials").apply(map, base, baked)
+    end
     return V.require("Gen2AtlasAnimation").apply(map, base, baked)
   end
   return TerrainAtlas.animate(map, colors, base, baked) or base

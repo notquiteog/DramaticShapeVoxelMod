@@ -133,6 +133,18 @@ local function drawing(map, cx, cy)
   return ids
 end
 
+-- A boundary donor may be either half of a two-cell tree. Normalize to
+-- the lower owner before asking the shared original-art card builder.
+function Gen2TileShape.treeRootCell(map,cx,cy)
+ local Permissions=modules();local vocab=vocabulary(map.tileset,Permissions)
+ if not vocab then return cx,cy end
+ local ids=drawing(map,cx,cy)
+ if vocab.roots[ids[3]..":"..ids[4]] then return cx,cy end
+ local below=drawing(map,cx,cy+1)
+ if vocab.roots[below[3]..":"..below[4]] then return cx,cy+1 end
+ return cx,cy
+end
+
 -- One shape object per class, shared across the map.
 --
 -- Shared deliberately: the mesher decides a structure's extent by walking

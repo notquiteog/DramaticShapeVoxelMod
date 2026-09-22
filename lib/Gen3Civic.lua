@@ -244,6 +244,16 @@ function M.append(g,emit)
   local ey=p.back+(b-p.back)/(p.front-p.back)*(p.roofEnd-p.back)
   face({{x+l,height(l,t),z+t},{x+r,height(r,t),z+t},{x+r,height(r,b),z+b},{x+l,height(l,b),z+b}},uv(p.w+l+.05,sy+.05,p.w+r-.05,ey-.05),iz==3 and .92 or 1)
  end end
+ -- The native perimeter projects beyond the recessed masonry. Close its
+ -- underside and front/back lips as well as both side edges.
+ if not (g.custom and g.custom.geometry=='tower') then
+  local Eaves=V and V.require('RoofEaves') or assert(loadfile('lib/RoofEaves.lua'))()
+  local function edge(a,b,dx,dz) Eaves.edge(a,b,dx,dz,trim,face)end
+  edge({x,height(0,p.back),z+p.back},{x+p.w,height(p.w,p.back),z+p.back},0,-1.5)
+  edge({x+p.w,height(p.w,p.front),z+p.front},{x,height(0,p.front),z+p.front},0,1.5)
+  edge({x,height(0,p.front),z+p.front},{x,height(0,p.back),z+p.back},-1,0)
+  edge({x+p.w,height(p.w,p.back),z+p.back},{x+p.w,height(p.w,p.front),z+p.front},1,0)
+ end
  local chimney=g.custom and g.custom.chimney
  if chimney then
   local l,r=chimney[1]+2,chimney[3]-2;local back=p.back+8;local front=back+12

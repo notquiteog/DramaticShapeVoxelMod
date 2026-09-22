@@ -24,7 +24,7 @@ coverage. Shared IDs can receive different treatments in different contexts.
   to remain flat; `unreviewed` is not an assertion that flat rendering is wrong.
   `unmatched_building` means a building tile did not form a recognized column.
   `native_fallback` is an intentionally retained engine scene, not a finished
-  HD-2D model. Generated pair suffixes are opaque identifiers.
+  2.5D model. Generated pair suffixes are opaque identifiers.
 
 Whole source-building patterns now match244 Crystal and103 FireRed placements.
 The [exterior map queue](coverage/exterior-maps.csv) lists all77 Crystal and76

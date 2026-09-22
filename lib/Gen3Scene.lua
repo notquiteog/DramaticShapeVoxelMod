@@ -60,6 +60,7 @@ end
 function M.nativeRequired(game)
  -- Keep native healing balls, door animation, darkness and shop framing until
  -- those owners expose depth-aware effects. Do not hide their presentations.
+ Pairs.bind(game and game.data and game.data.maps)
  local def=Map.currentDef()
  if not (def and def.midLayout) then return true end
  local spec=Pairs.resolve(def.midLayout.pair,Versions.TILESET_PAIRS)
@@ -117,7 +118,7 @@ local function prepare(game,vw,vh,cam)
    end
    if ts and ts.midToSlot[mid] then
     local spec=Pairs.resolve(pair,Versions.TILESET_PAIRS)
-    local c={mid=mid,pair=pair,cx=cx,cy=cy,ts=ts,primary=spec.primary,secondary=spec.secondary,
+    local c={mid=mid,pair=Pairs.canonical(pair),nativePair=pair,cx=cx,cy=cy,ts=ts,primary=spec.primary,secondary=spec.secondary,
      shape=fillShape or Shapes.of(spec.primary,spec.secondary,mid),boundary=biome}
     cells[cx..':'..cy]=c
     signature[#signature+1]=pair..'/'..mid..(biome or '')
@@ -151,7 +152,7 @@ local function prepare(game,vw,vh,cam)
  for _,c in pairs(cells)do
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
   local b=batches[c.pair]
-  if not b then b={pair=c.pair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},roofMids={}};batches[c.pair]=b end
+  if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
   if c.civic then
@@ -167,6 +168,12 @@ local function prepare(game,vw,vh,cam)
   elseif shape.kind=='tree' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    if shape.root and not c.stageHidden then
+    if TreeStyle.original() then
+     local native=V.require('NativeTreeArt')
+     local tx,tz=x+(shape.anchorX or 16),z+(shape.anchorZ or 12)
+     native.append(native.gen3(c),leaf,li,0,tx,0,tz,TreeStyle.flat())
+     if not TreeStyle.flat() then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,c.cx*73+c.cy*139) end
+    else
     local seed=c.cx*73+c.cy*139
     local append=TreeStyle.flat() and Trees.appendFlatTrunk or Trees.appendTrunk
     local tx,tz=x+(shape.anchorX or 16),z+(shape.anchorZ or 12)
@@ -182,7 +189,10 @@ local function prepare(game,vw,vh,cam)
      end
      resize(wood,ws);resize(leaf,ls)
     end
+    end
    end
+  elseif column and column.indoor and c.secondary=='lab' then
+   plane(b.v,b.i,x,z,uvFor(ts,0x289) or uv)
   elseif column then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    if not column.stageHidden then
@@ -224,6 +234,13 @@ local function prepare(game,vw,vh,cam)
      local t0,t1=uv[1][2]+(uv[3][2]-uv[1][2])*j/4,uv[1][2]+(uv[3][2]-uv[1][2])*(j+1)/4
      local q={{uv[1][1],t0},{uv[2][1],t0},{uv[3][1],t1},{uv[4][1],t1}}
      quad(b.rv,b.ri,{{x,roofY(a),a},{x+16,roofY(a),a},{x+16,roofY(bz),bz},{x,roofY(bz),bz}},q)
+     local function eave(A,B,dx,dz)
+      V.require('RoofEaves').edge(A,B,dx,dz,q,function(v,t,shade)quad(b.rv,b.ri,v,t,shade)end)
+     end
+     if Roof.sideVisible(cells,c,-1)then eave({x,roofY(bz),bz},{x,roofY(a),a},-2,0)end
+     if Roof.sideVisible(cells,c,1)then eave({x+16,roofY(a),a},{x+16,roofY(bz),bz},2,0)end
+     if row==0 and j==math.floor((column.roofInset or 0)/4)then eave({x,roofY(a),a},{x+16,roofY(a),a},0,-2)end
+     if row==column.roofs-1 and j==3 then eave({x+16,roofY(bz),bz},{x,roofY(bz),bz},0,2)end
      -- Close the exposed shell, including gables, without internal dividers.
      local wallCell=cells[c.cx..':'..column.last]
      local sideMid=wallCell.mid
@@ -254,6 +271,16 @@ local function prepare(game,vw,vh,cam)
    plane(b.v,b.i,x,z,uv)
   end
  end
+ local labWall={}
+ for _,c in pairs(cells)do if c.secondary=='lab' and c.cy==0 and c.mid~=0 then
+  local b=batches[c.pair];local uv=uvFor(c.ts,0x69)
+  if uv and not labWall[c.cx] then
+   labWall[c.cx]=true;local x=c.cx*16
+   quad(b.v,b.i,{{x,32,32},{x+16,32,32},{x+16,16,32},{x,16,32}},uv)
+   local u,t=(uv[1][1]+uv[2][1])*.5,uv[1][2]+(uv[3][2]-uv[1][2])*.8
+   quad(b.v,b.i,{{x,16,32},{x+16,16,32},{x+16,0,32},{x,0,32}},{{u,t},{u,t},{u,t},{u,t}})
+  end
+ end end
  for _,p in ipairs(props)do if not p.stageHidden then
   local b=batches[p.pair]
   local cutout=p.recipe.cutout
@@ -293,7 +320,7 @@ local function terrain(draw)
   end
  end
  for _,part in ipairs(cache.civics or {})do draw(part.mesh,part.image)end
- draw(cache.wood,bark);draw(cache.leaves,foliage)
+ draw(cache.wood,bark);draw(cache.leaves,TreeStyle.original() and V.require('NativeTreeArt').image() or foliage)
 end
 local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  -- Neighbor snapshots may cover much farther than the rendered terrain.
@@ -315,8 +342,8 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
   mesh=R.newMesh(v,i);spriteMeshes[key]=mesh
  end
  local yaw=cam.level>=6 and -cam.yaw or 0
- local lean=cam.level>=6 and 0 or -.4
- local model=Mat.mul(Mat.translate(x+8,opts.lift or 0,z+16),Mat.mul(Mat.rotateY(yaw),Mat.rotateX(lean)))
+ local lean=(cam.level>=6 or opts.upright) and 0 or -.4
+ local model=Mat.mul(Mat.translate(x+8,opts.lift or 0,z+16+(opts.depthOffset or 0)),Mat.mul(Mat.rotateY(yaw),Mat.rotateX(lean)))
  draw(mesh,spr.image,model)
 end
 local function actors(game,cam,draw)
@@ -324,9 +351,10 @@ local function actors(game,cam,draw)
  for _,eo in ipairs(Objects.forDraw())do
   local gid=eo.graphicsId or (eo.def and (eo.def.graphicsId or eo.def.graphics))
   if space and space.resolveObjectGraphicsId and eo.def then gid=space.resolveObjectGraphicsId(eo.def) or gid end
+  local support,depthOffset=Furniture.support(cache.cells,gid,eo.px or eo.cellX*16,eo.py or eo.cellY*16)
   actor(gid,(eo.px or eo.cellX*16)+(eo.raiseX or 0),eo.py or eo.cellY*16,
    eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,
-   {bow=(eo.bowFrames or 0)>0 or eo.raiseHand,frame=eo.customFrame,lift=-(eo.raiseY or 0)},cam,draw)
+   {bow=(eo.bowFrames or 0)>0 or eo.raiseHand,frame=eo.customFrame,upright=tonumber(gid)==92 or tonumber(gid)==94,depthOffset=depthOffset or 0,lift=support-(eo.raiseY or 0)},cam,draw)
  end
  -- Connected maps use the engine's ghost snapshots; never advance those
  -- actors here (doing that per render would reintroduce fast wandering NPCs).

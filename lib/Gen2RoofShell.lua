@@ -1,6 +1,8 @@
 -- Match the existing pitched roof exactly, then seal the exposed space above
 -- the facade. No new footprint, collision or building-height decisions.
+local V=...
 local M={}
+local Eaves=V and V.require('RoofEaves') or assert(loadfile('lib/RoofEaves.lua'))()
 local function face(emit,p,uv,shade,reverse)
   if reverse then p={p[4],p[3],p[2],p[1]};uv={uv[4],uv[3],uv[2],uv[1]} end
   emit(p,uv,shade)
@@ -84,22 +86,11 @@ function M.trim(run,tx,ty,c,runAt,emit,uvRect,tile)
   local x,z=tx*8,ty*8
   local u0,u1,v0,v1=uvRect(tile,0,8)
   local uv={{u0,v1},{u1,v1},{u1,v0},{u0,v0}}
-  for _,side in ipairs({{0,-1,4,3,z},{0,1,1,2,z+8}}) do
-    local other=runAt(tx,ty+side[2])
-    if not (other and other.rise>0) then
-      local a,b=c[side[3]],c[side[4]]
-      local edge,out=side[5],side[5]+side[2]*.6
-      local A,B,C,D={x,a+.14,edge},{x+8,b+.14,edge},
-        {x+8,b+.22,out},{x,a+.22,out}
-      local E,F,G,H={x,a-.25,edge},{x+8,b-.25,edge},
-        {x+8,b-.09,out},{x,a-.09,out}
-      local reverse=side[2]<0
-      face(emit,{D,C,B,A},uv,.90,reverse);face(emit,{E,F,G,H},uv,.48,reverse)
-      face(emit,{H,G,C,D},uv,.67,reverse)
-      -- Closed end grain only at exposed ends, never between roof cells.
-      local w,e=runAt(tx-1,ty),runAt(tx+1,ty)
-      if not (w and w.rise>0 and w.h==run.h) then face(emit,{E,H,D,A},uv,.60,reverse) end
-      if not (e and e.rise>0 and e.h==run.h) then face(emit,{G,F,B,C},uv,.60,reverse) end
+  local points={{x,c[1],z+8},{x+8,c[2],z+8},{x+8,c[3],z},{x,c[4],z}}
+  for _,e in ipairs({{0,1,1,2},{1,0,2,3},{0,-1,3,4},{-1,0,4,1}})do
+    local other=runAt(tx+e[1],ty+e[2])
+    if not (other and other.rise>0 and other.h==run.h) then
+      Eaves.edge(points[e[3]],points[e[4]],e[1]*1.5,e[2]*1.5,uv,emit,.5)
     end
   end
   -- One rounded ridge cap per column. The south half owns the ridge seam,

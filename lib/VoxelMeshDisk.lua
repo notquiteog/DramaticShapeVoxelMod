@@ -537,7 +537,7 @@ function Disk.fingerprint(map, slot, masks, kind)
     "trueColor", tileset.trueColor and "1" or "0",
   }
   if type(map.cellCollision) == "function" then
-    parts[#parts + 1] = "gen2-crystal-hd2d-3:" .. V.require("TreePresentation").setting:get()
+    parts[#parts + 1] = "gen2-crystal-hd2d-3:" .. V.require("TreePresentation").setting:get() .. ":" .. V.require("TreePresentation").art:get()
   end
   -- PR51 changed shrub vertices/UVs; only Safari needs its meshes rebuilt.
   if map.id=='SAFARI_ZONE_CENTER' or map.id=='SAFARI_ZONE_EAST'

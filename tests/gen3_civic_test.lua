@@ -5,8 +5,8 @@ for _,kind in ipairs({'gym','center','mart'})do
  M.append(g,function(v,uv)
   faces[#faces+1]={v,uv}
   for i,a in ipairs(v)do
-   assert(a[1]>=48 and a[1]<=48+p.w and a[3]>=80+p.back-.061 and a[3]<=80+p.front+p.projection,'building escaped its reviewed footprint')
-   assert(a[2]>=0 and a[2]<=math.max(p.wall+p.bevel,p.doorHeight),'building grew a ridge or underground wall')
+   assert(a[1]>=47 and a[1]<=49+p.w and a[3]>=80+p.back-1.5 and a[3]<=80+p.front+p.projection,'building escaped its reviewed footprint')
+   assert(a[2]>=0 and a[2]<=math.max(p.wall+p.bevel,p.doorHeight)+.05,'building grew a ridge or underground wall')
    assert(uv[i][1]>0 and uv[i][1]<1 and uv[i][2]>0 and uv[i][2]<1,'material samples an adjacent source rectangle')
   end
  end)

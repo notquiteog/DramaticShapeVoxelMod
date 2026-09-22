@@ -27,6 +27,6 @@
     "engine_internals"
   ],
   "affects_link": false,
-  "description": "HD-2D environments and battle presentation for Gen 1, Crystal and FireRed on Gen1Recomp 0.2.73+. Native-art plants, modeled exteriors and furniture, open-front interior dioramas, first-person and rotating cameras, shared render distance, contextual boundary scenery, optional lighting and depth of field. FireRed includes reviewed exterior families, home/lab/Mart/Center interiors and native battles over 3D scenery; specialty interiors and full depth-positioned FireRed battlers remain in progress. See docs/FIRERED_SUPPORT.md and docs/INTERIOR_DIORAMAS.md.",
+  "description": "2.5D environments and battle presentation for Gen 1, Crystal and FireRed on Gen1Recomp 0.2.73+. Native-art plants, modeled exteriors and furniture, open-front interior dioramas, first-person and rotating cameras, shared render distance, contextual boundary scenery, optional lighting and depth of field. FireRed includes reviewed exterior families, home/lab/Mart/Center interiors and native battles over 3D scenery; specialty interiors and full depth-positioned FireRed battlers remain in progress. See docs/FIRERED_SUPPORT.md and docs/INTERIOR_DIORAMAS.md.",
   "github": "notquiteog/DramaticShapeVoxelMod"
 }

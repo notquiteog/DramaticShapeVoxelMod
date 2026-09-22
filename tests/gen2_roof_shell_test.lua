@@ -55,9 +55,9 @@ local function checkTrim(x,z)
  R.trim(run,x,z,R.corners(run,x,z,h),at,function(p,uv)
   n=n+1
   for i,v in ipairs(p) do
-   assert(v[1]>=x*8 and v[1]<=(x+1)*8,'trim spread into adjacent building')
-   assert(v[2]>=run.h-.251 and v[2]<=run.h+run.rise+1.241)
-   assert(v[3]>=z*8-1.151 and v[3]<=(z+1)*8+1.151)
+   assert(v[1]>=x*8-1.5 and v[1]<=(x+1)*8+1.5,'trim spread into adjacent building')
+   assert(v[2]>=run.h-.461 and v[2]<=run.h+run.rise+1.241)
+   assert(v[3]>=z*8-1.5 and v[3]<=(z+1)*8+1.5)
    assert(uv[i][1]>=0 and uv[i][1]<=1 and uv[i][2]>=0 and uv[i][2]<=1)
    cap=cap or v[2]>run.h+run.rise
    eave=eave or v[3]<0 or v[3]>64
