@@ -1,3 +1,16 @@
+## 1.20.2 — 2026-09-21
+
+Keep trees and bushes at a fixed orientation in static third-person/diorama
+views. Face foliage toward the camera only in first person, rotating third
+person and staged battles. A fixed lean keeps static foliage visible at all
+five diorama angles, including overhead. Trunks remain behind their own leaf
+images and shadow passes follow the same orientation choice. Cache55 is still
+valid because the card geometry is unchanged.
+
+Verified on Gen1Recomp0.2.73 with GPU checks for static orientation, free-camera
+headings, overhead visibility and upper-wood occlusion, plus native world and
+battle checks. This supersedes1.20.1's camera-facing static views.
+
 ## 1.20.1 — 2026-09-21
 
 Use one complete illustrated foliage card per tree, including the trees that

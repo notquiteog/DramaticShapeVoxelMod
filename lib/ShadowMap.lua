@@ -606,7 +606,9 @@ function ShadowMap.draw(mesh, texture, model)
   local sh = getShader()
   if texture then mesh:setTexture(texture) end
   pcall(sh.send, sh, "model", "row", model or IDENTITY)
-  pcall(sh.send,sh,"canopyEye",V.require("Voxel3D").eye or {0,0,1})
+  local scene=V.require("Voxel3D")
+  pcall(sh.send,sh,"canopyEye",scene.eye or {0,0,1})
+  pcall(sh.send,sh,"canopyFacing",scene.canopyFacing and 1 or 0)
   love.graphics.draw(mesh)
 end
 

@@ -18,10 +18,12 @@ return function(game)
     for _=1,2400 do if M.pending()==0 and S.ready then break end U.wait(1) end
     assert(M.pending()==0 and S.ready,'scene failed to settle')
     game.stack:clear()
+    assert(V.require('Voxel3D').canopyFacing==false,'static view rotates trees')
     assert(U.shot(game,dir..'/'..row[1]..'_diorama.png'))
     for _,level in ipairs({6,7}) do
       P.setLevel('voxel',level);U.wait(40)
       assert(F.engaged() and F.driving())
+      assert(V.require('Voxel3D').canopyFacing==true,'free camera lost foliage facing')
       for i,yaw in ipairs({math.pi,math.pi*.5,0,-math.pi*.5}) do
         F.lookBy(yaw-F.yaw,.14-F.pitch);U.wait(8)
         assert(U.shot(game,dir..'/'..row[1]..'_'..level..'_'..i..'.png'))

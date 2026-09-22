@@ -1276,6 +1276,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
   -- before they are built; Voxel3D.eye is set by viewProjection, which
   -- beginScene calls -- so a provisional one is taken here for the sun pass
   -- and the real one is rebuilt inside the scene below.
+  Voxel3D.canopyFacing = true
   Voxel3D.camera = cam
   Voxel3D.viewProjection(cx, cy, vw, vh)
   -- A Battle Presentation host supplies its independently selected actor
@@ -1315,6 +1316,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
   local sky = VoxelScene.skyColor(host, 1)
              or VoxelScene.skyShade(INDOOR_SHADE, 1)
 
+  Voxel3D.canopyFacing = true
   Voxel3D.camera = cam
   -- the sun is turned up for the arena and put back afterwards, so the
   -- free-roam world it shares this module with keeps its own weight -- and

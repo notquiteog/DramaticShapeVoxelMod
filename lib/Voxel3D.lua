@@ -37,7 +37,7 @@ local GlassMask = V.require("GlassMask")
 local PixelCanvas = V.require("PixelCanvas")
 
 local AtmosphereCamera = V.require("AtmosphereCamera")
-local Voxel3D = {}
+local Voxel3D = { canopyFacing = false }
 
 -- Vertex format shared by terrain chunks and character models: a position,
 -- the map-canvas / sprite-sheet pixel it samples, and a per-vertex darken
@@ -1596,6 +1596,7 @@ function Voxel3D.draw(mesh, texture, model, pull, sunModel)
   -- sending a uniform to the other shader would go nowhere
   local sh = activeShader
   if not sh then return end
+  pcall(sh.send,sh,"canopyFacing",Voxel3D.canopyFacing and 1 or 0)
   pcall(sh.send,sh,"battleCutOn",battleCutScope and 1 or 0)
   if battleCutScope then
     pcall(sh.send,sh,"battleCutFloor",battleCutScope.floor)

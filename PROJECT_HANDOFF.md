@@ -1,3 +1,23 @@
+# Latest correction — static vs free-camera foliage — 2026-09-21
+
+User's final mode rule: static third-person/diorama levels1–5 keep ALL trees
+and bushes fixed; first person6 and rotating third person7 face the camera.
+Battles retain camera-facing foliage from the earlier explicit request.
+CanopyBillboard uniform canopyFacing uses fixed normal(0,.6,.8) in static
+views and the live eye in free views; wood uses the matching plane. VoxelScene
+sets the mode BEFORE shadows, BattleScene sets it for battle, both view/shadow
+shaders receive it each draw. Cache55 unchanged. GPU test checks static cards
+are pixel-identical as the eye moves with projection fixed, plus four headings,
+overhead, unchanged solid geometry and upper wood behind leaves.
+
+BA1.20.1 and sprites2.1.0 are ALREADY published. Do not overwrite either.
+This correction is BA1.20.2. Cart1.13.0 source was pushed but its release has
+NOT been created yet; update its BA pin/hash to1.20.2 before publishing.
+Sprite2.1.0 commit c4857687bd665a56d7dd59698bd860216d545492;
+SHA9432787d25476ccf5ce63309efefad794ba6fae877f710013e6bf73ad2aa192f.
+Native candidate verification: /tmp/johto-hd/static-free-0273.log; exact
+released-package verification and release hashes follow after packaging.
+
 # Working checkpoint — illustrated tree cards / 0.2.73 — 2026-09-21
 
 User's FINAL tree direction supersedes the anchored multi-layer prototype:

@@ -26,6 +26,7 @@ return function(game,opts)
  for _,species in ipairs({'CYNDAQUIL','TOTODILE','CHIKORITA','RAIKOU','HO_OH'}) do
   lead.species=species;U.wait(60)
   assert(stage.drawn.player==lead,'staged player missing')
+  assert(V.require('Voxel3D').canopyFacing==true,'battle foliage stopped facing camera')
   assert(U.shot(game,assert(os.getenv('SHOT_DIR'))..'/'..species..'.png'))
  end
  lead.species='CYNDAQUIL'

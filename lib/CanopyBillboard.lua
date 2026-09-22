@@ -3,13 +3,16 @@
 -- flat illustration readable in overhead, first-person and battle views.
 local M={}
 M.shader=[[
+  uniform float canopyFacing;
   attribute vec3 VertexCanopy; // local anchor X/Z/Y; negative Y marks trunk, zero is ordinary geometry
   vec4 faceCanopy(mat4 transform, vec4 vertex, vec3 camera) {
     vec4 w=transform*vertex;
     if (abs(VertexCanopy.z) < 0.0001) return w;
     vec3 localAnchor=vec3(VertexCanopy.x,abs(VertexCanopy.z),VertexCanopy.y);
     vec3 anchor=(transform*vec4(localAnchor,1.0)).xyz;
-    vec3 toward=camera-anchor;
+    // Static diorama trees share a fixed authored lean. Only free cameras
+    // and battle cameras orient the illustration toward their current eye.
+    vec3 toward=canopyFacing>0.5?camera-anchor:vec3(0.0,0.6,0.8);
     if (dot(toward,toward)<0.0001) return w;
     vec3 forward=normalize(toward);
     if (VertexCanopy.z < 0.0) {

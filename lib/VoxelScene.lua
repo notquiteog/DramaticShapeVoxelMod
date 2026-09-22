@@ -1493,6 +1493,7 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   -- a grey ring against a green WORLD FILL horizon.
   local underlayColor = WorldUnderlay.resolve(state, colorsFor(state.map))
 
+  Voxel3D.canopyFacing = Voxel.isFirstPerson() or Voxel.isThirdPerson()
   Voxel3D.viewProjection(cx,cy,vw,vh)
   local shCx, shCy = FirstPerson.shadowCenter(cx, cy, vh)
   Timings.call("shadows", castShadows,

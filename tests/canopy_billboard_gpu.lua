@@ -21,13 +21,14 @@ return function(V)
     #endif
   ]])
   local canvas=G.newCanvas(128,128)
-  local function render(angle,moving,viewAngle,pitch)
+  local function render(angle,moving,viewAngle,pitch,static)
     local verts={}
     for _,p in ipairs({{-8,0},{8,0},{8,16},{-8,16}}) do
       verts[#verts+1]={20+p[1],p[2],30,0,0,20,30,moving and 8 or 0}
     end
     local mesh=G.newMesh({{'VertexPosition','float',3},
       {'VertexTexCoord','float',2},{'VertexCanopy','float',3}},verts,'fan')
+    shader:send("canopyFacing",static and 0 or 1)
     pitch=pitch or 0
     shader:send('camera',{20+100*math.sin(angle)*math.cos(pitch),
       8+100*math.sin(pitch),30+100*math.cos(angle)*math.cos(pitch)})
@@ -53,6 +54,10 @@ return function(V)
   local _,front=render(0,false,0)
   local _,side=render(math.pi/2,false,0)
   assert(front==side,'solid geometry changed when camera position changed')
+  local _,staticA=render(0,true,0,0,true)
+  local _,staticB=render(math.pi/2,true,0,0,true)
+  assert(staticA==staticB,'static-view tree turns as the eye moves')
+  assert(render(0,true,nil,math.pi/2,true)>900,'fixed tree disappears overhead')
   shader:release()
   -- Report which side of the foliage plane the production transform puts
   -- each trunk fragment on. Upper wood must be behind; roots remain physical.
@@ -81,12 +86,12 @@ return function(V)
   for _,offset in ipairs({0,20}) do
     G.push('all');G.setCanvas(canvas);G.clear(0,0,0,0);G.origin()
     G.setShader(shader);G.setMeshCullMode('none');G.setBlendMode('replace')
-    shader:send('rootOffset',offset);G.draw(wood);G.pop()
+    shader:send('rootOffset',offset);shader:send('canopyFacing',1);G.draw(wood);G.pop()
     local data=canvas:newImageData();local red,green=data:getPixel(64,64)
     assert(offset==0 and green>.9 or offset==20 and red>.9,
       'upper wood must sit behind foliage without displacing the root')
     data:release()
   end
   wood:release();canvas:release();shader:release()
-  print('[canopy GPU] PASS four headings, overhead, rooted foliage, upper-wood occlusion')
+  print('[canopy GPU] PASS static orientation, free-camera headings, overhead, rooted foliage, upper-wood occlusion')
 end
