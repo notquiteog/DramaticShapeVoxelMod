@@ -2,6 +2,8 @@
 -- or bed consumes its entire drawing once; no cell is folded into a wall.
 local M={}
 local recipes={
+ {name='saffron_gym_notice_board',primary='general',scopeField='gymNotice',rows={{0x304},{0x30C}},kind='sign',h=19,ground=0x2E9,cutout=true},
+ {name='gym_notice_board',primary='general',rows={{0x160},{0x168}},kind='sign',h=19,ground=1,cutout=true},
  {name='checked_table',rows={{0x4C,0x4D},{0x54,0x55}},kind='table',h=9,ground=0x45,top=26},
  {name='kitchen_sink_hob',rows={{0x31,0x32},{0x39,0x3A}},kind='counter',h=12,ground=1,top=16},
  {name='television',rows={{0x33,0x34},{0x3B,0x3C}},kind='cabinet',h=23,ground=1,depth=9},
@@ -10,16 +12,24 @@ local recipes={
  {name='computer_desk',secondary='pretty_petals_flower_shop',rows={{0x35},{0x28E},{0x296}},kind='cabinet',h=28,ground=0x45,depth=12},
  {name='chair_back',rows={{0x4B}},kind='chair',h=6,ground=0x45},
  {name='chair_front',rows={{0x4E}},kind='chair',h=6,ground=0x45},
+ {name='lab_wall_display',secondary='lab',rows={{0x28D},{0x295}},kind='cabinet',h=32,ground=0x289,depth=4,frontOffset=16},
+ {name='lab_aquarium',secondary='lab',rows={{0x98},{0xA0}},kind='cabinet',h=28,ground=0x289,depth=11},
+ {name='lab_books_left',secondary='lab',rows={{0x73},{0x283}},kind='cabinet',h=24,ground=0x289,depth=11,facade={1,0,14,27}},
+ {name='lab_books_right',secondary='lab',rows={{0x74},{0x284}},kind='cabinet',h=24,ground=0x289,depth=11,facade={1,0,14,27}},
+ {name='lab_work_table',secondary='lab',rows={{0x2A8,0x2A9,0x2AA},{0x2B0,0x2B1,0x2B2}},kind='table',h=9,ground=0x289,top=20},
+ {name='lab_counter',secondary='lab',rows={{0x85,0x86},{0x285,0x286}},kind='counter',h=12,ground=0x289,top=16},
+ {name='lab_computer',secondary='lab',rows={{0x75,0x76},{0x285,0x286}},kind='cabinet',h=23,ground=0x289,depth=12,facade={1,3,30,24}},
+
 }
 function M.extract(cells)
  local out,ordered={},{}
- for _,c in pairs(cells)do if c.primary=='building' then ordered[#ordered+1]=c end end
+ for _,c in pairs(cells)do if c.primary=='building' or (c.primary=='general' and (c.mid==0x160 or c.gymNotice)) then ordered[#ordered+1]=c end end
  table.sort(ordered,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
  -- Longest recipes win: the computer's top is also a cabinet top.
  table.sort(recipes,function(a,b)return #a.rows>#b.rows end)
  for _,c in ipairs(ordered)do if not c.prop then
   for _,r in ipairs(recipes)do
-   if c.mid==r.rows[1][1] and (not r.secondary or r.secondary==c.secondary) then
+   if c.primary==(r.primary or 'building') and c.mid==r.rows[1][1] and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) then
     local match=true;local parts={}
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
@@ -63,10 +73,18 @@ function M.append(p,emit,uvFor)
   emit({{x0,y1,z0},{x0,y1,z1},{x0,y0,z1},{x0,y0,z0}},material,.7)
   emit({{x1,y1,z1},{x1,y1,z0},{x1,y0,z0},{x1,y0,z1}},material,.7)
  end
- if r.kind=='cabinet' then
-  local front=z+p.d-2;local back=front-r.depth
+ if r.kind=='sign' then
+  local board=uvFor(p.ts,r.rows[2][1])
+  local bu,bv=board[1][1]+(board[2][1]-board[1][1])*.5,board[1][2]+(board[3][2]-board[1][2])*.5
+  local frame={{bu,bv},{bu,bv},{bu,bv},{bu,bv}}
+  box(x+6.5,0,z+23,x+9.5,7,z+26,frame)
+  -- The native rounded board is a cutout, not an opaque rectangular slab.
+  source(1,8,14,20,{x+1,r.h,z+25.53},{x+15,r.h,z+25.53},{x+15,5,z+25.53},{x+1,5,z+25.53})
+ elseif r.kind=='cabinet' then
+  local front=z+(r.frontOffset or p.d-2);local back=front-r.depth
   box(x+1,0,back,x+p.w-1,r.h,front)
-  source(1,0,p.w-2,p.d,{x+1,r.h,front+.02},{x+p.w-1,r.h,front+.02},{x+p.w-1,0,front+.02},{x+1,0,front+.02})
+  local f=r.facade or {1,0,p.w-2,p.d}
+  source(f[1],f[2],f[3],f[4],{x+1,r.h,front+.02},{x+p.w-1,r.h,front+.02},{x+p.w-1,0,front+.02},{x+1,0,front+.02})
  elseif r.kind=='chair' then
   -- The native chair drawing includes green carpet around its rounded back.
   -- Sample the upholstery/frame colours into real narrow parts, so that

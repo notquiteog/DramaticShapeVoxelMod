@@ -17,9 +17,13 @@ function M.supports(def,spec)
  -- Caves and ships also use the General primary tileset. Its name alone
  -- must never enable outdoor recipes on those maps.
  if spec.primary=='general' then
+  -- Generated cached map definitions can default environment to TOWN even
+  -- for caves. The native header's mapType is the authoritative field.
+  local kind=tonumber(def.mapType)
+  if kind and kind>0 then return kind==1 or kind==2 or kind==3 or kind==6 end
   return def.environment=='TOWN' or def.environment=='ROUTE'
  end
  return spec.primary=='building' and
-  (def.midLayout.pair=='player_house' or def.midLayout.pair=='house')
+  (def.midLayout.pair=='player_house' or def.midLayout.pair=='house' or def.midLayout.pair=='oak_lab')
 end
 return M

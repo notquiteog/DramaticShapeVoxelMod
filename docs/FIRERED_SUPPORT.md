@@ -1,10 +1,30 @@
 # FireRed HD-2D preview
 
-Version **1.21.0-beta.2**, tested with the actual Linux **Gen1Recomp 0.2.73**
+Version **1.21.0-beta.3**, tested with the actual Linux **Gen1Recomp 0.2.73**
 AppImage payload. Requires 0.2.73+. Import the mod ZIP into FireRed separately;
 the Johto sealed cart still targets Crystal and stays on stable Battle Art.
 Supply/import your own FireRed ROM through the engine. No ROM or imported art
 is included in this repository or mod ZIP.
+
+## Beta3 additions and corrected scope
+
+- Complete exteriors for all eight main Kanto gyms plus Saffron's Fighting Dojo.
+  Whole drawings cover 6–8-column widths, missing back roof strips, wider facade
+  segments and city-specific trim. Roofs remain straight gables. The projecting
+  entrance, side/rear courses, high windows and applicable notice boards have depth.
+- Reviewed General fences use posts/rails, including mapped corners, vertical runs and end posts. Grass and
+  sand ledges are low 2.5-unit mounds with exposed dirt fronts. Flowers and grass
+  use short sloped cutouts; shrubs use crossed cutouts. Native flower animation
+  refreshes their derived material. Signs have posts and solid backs.
+- Initial lab bookshelves, counters, computer, aquarium, wall displays and work
+  table. Room walls have shallow, closed tops. Large lab machines and planters
+  remain unfinished. Specialty interiors, including gym interiors, remain native.
+- Correct the beta2 cave gate: imported cached definitions can say TOWN for
+  caves. Native `mapType` now takes priority. The corrected inventory enables
+  150 maps, not the previously reported 258. This is a scope correction, not
+  evidence that those 258 maps were previously suitable HD scenes.
+- Full tile-treatment ledgers now cover all 425 imported maps. See
+  [tile coverage](TILE_COVERAGE.md); classification is not visual approval.
 
 ## Available
 
@@ -21,7 +41,7 @@ is included in this repository or mod ZIP.
   roofing stays intact. Rear walls close the buildings for free-camera views; internal dividers are
   culled so cropped roof backgrounds cannot expose fins behind the lab.
 - Cached generated tileset names resolve without ROM reads, enabling later
-  cities' common General scenery. Map environment keeps caves/ships separate.
+  cities' common General scenery. Native header mapType keeps caves/ships separate; cached environment alone is unreliable.
 - Initial Building-primary home profiles: room walls, tables with legs, chairs,
   kitchen counter, cabinet, television, computer desk and horizontal bed.
   These are complete drawing matches, never collision-based wall guesses.
@@ -40,7 +60,7 @@ is included in this repository or mod ZIP.
 ## Native fallbacks and unfinished work
 
 Specialty interiors and caves retain native rendering pending dedicated profiles.
-The reviewed `house` and `player_house` tileset families now use initial depth
+The reviewed `house`, `player_house` and `oak_lab` tileset families now use initial depth
 profiles; many of their secondary decorations still remain flat.
 Healing, door animations, shops, battle transitions and active special field effects also use the
 native presentation. They must not disappear for the sake of a 3D screenshot.
@@ -51,8 +71,7 @@ staged battles, full-body battle providers, double-battle mod, riding, followers
 multiplayer companions or optional post-processing controls. Do not install
 Crystal-only companions on FireRed on the basis of this mod's compatibility.
 
-Other city-specific buildings and their architecture, rocks, ledges, fences, flowers,
-tall grass and decorations still need FireRed-specific recipes. Unclassified
+Other city-specific buildings and their architecture, rocks, cliff faces, remaining fence/ledge variants and decorations still need FireRed-specific recipes. Unclassified
 art stays on the terrain rather than being guessed into a wall from collision.
 FireRed roof materials retain native art; decorative materials still need
 individual treatment. Flat and gabled roofs should keep their own profiles. First-person views expose these remaining flat features.
@@ -61,16 +80,16 @@ This is not Gamma Emerald visual parity or an all-map certification.
 ## Verification performed
 
 Actual Linux0.2.73, disposable profiles using the user's already imported data.
-The beta2 view driver passes33 captures: Pallet, Route1, Viridian, Celadon,
-Cerulean, both player-house floors, a Cerulean house, and Oak's native interior.
+The beta3 view driver passes37 captures: Pallet, Route1, Viridian, Celadon,
+Cerulean, both player-house floors, a Cerulean house, Oak's initial depth interior, and a native Diglett's Cave fallback.
 HD scenes receive static/first/rotating-third/OFF checks, real native movement,
 hotkey cycling, foliage orientation and display-resolution world handoff
 assertions. A separate1440p Pallet roof driver captures static plus eight free
 views and three rear checks, and checks the lab chimney. Captures are evidence for selected views,
 not every object, location or lighting condition.
 
-The new source-art census visits425 maps/60 tileset pairs:258 maps are eligible
-for the current HD scene, and67 furniture objects match on10 maps. All425
+The current source-art census visits425 maps/60 tileset pairs:150 maps are eligible
+for the current HD scene, and96 whole-object props match on19 maps. All425
 maps being counted does not mean they have all been visually approved.
 Reproduce with `tests/gen3_coverage_driver.lua` and `SHOT_DIR` in the disposable
 `firered-hd2d-qa` identity; its CSV contains counts/identifiers, no imported art.
@@ -86,3 +105,5 @@ remain in static validation; this is not a clean modkit validation.
 Drivers: `tests/gen3_views_driver.lua`, `tests/gen3_roof_views_driver.lua`,
 `tests/gen3_battle_driver.lua`, `tests/gen3_coverage_driver.lua`.
 Local evidence: `/tmp/firered-hd2d/{candidate-views,roof-1440p,crystal-city-views}`.
+
+Beta3 adds native checks for all eight gym exteriors plus the Fighting Dojo (32 camera captures), outdoor details and flower-clock/material refresh (27 captures), and Crystal radio desk priority (nine captures). These are focused scene checks; gym puzzles and battles were not re-certified.

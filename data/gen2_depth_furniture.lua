@@ -31,9 +31,11 @@ return {
   prop('radio_shelves',10,left,'cabinet',1),
   prop('radio_planter',11,left,'planter',1),
   prop('radio_terminal',18,left,'machine',1),
+  -- Match the whole reception desk before the taller equipment recipe. Its
+  -- monitor pixels recur in the machine, but the desk's left counter does not.
+  prop('radio_desk_terminal',43,{0,2,4,2},'console',1),
   prop('radio_equipment',28,{2,0,2,4},'machine',1),
   prop('radio_mixing_desk',56,{0,2,4,2},'console',1),
-  prop('radio_desk_terminal',43,{2,2,2,2},'console',1),
   prop('radio_chair',20,{0,0,2,2},'seat',1),
  },
  TILESET_GAME_CORNER={

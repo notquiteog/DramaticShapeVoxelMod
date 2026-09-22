@@ -1,3 +1,24 @@
+## 1.21.0-beta.3 — 2026-09-22
+
+Reconstruct complete FireRed gym exteriors across all eight Kanto gym towns,
+including city-specific trim, wider facade columns, the back roof strip and
+Saffron's Fighting Dojo. Add entrance depth, side/rear detailing and notice
+boards. Keep straight roof pitches and engine-owned collision/doors intact.
+
+Add reviewed outdoor fences, low grass/sand ledges, short animated flower and
+grass cutouts, shrubs and solid signs. Add initial lab furniture and shallow
+closed interior walls. Correct the cave gate to use native mapType rather
+than the cached environment default. Specialty and gym interiors remain native.
+
+Crystal's reception radio desk now wins its complete drawing match before a
+shared monitor crop is claimed by taller equipment. The upstairs equipment
+and Lavender mixing desk remain separate. Mesh cache58.
+
+Commit tile-treatment ledgers covering every cell of 388 Crystal maps and
+425 FireRed maps, with example locations for unresolved art. This is an
+inventory, not all-map visual approval or completed Gamma Emerald parity.
+The stable Crystal cart remains unchanged; this release is an opt-in preview.
+
 ## 1.21.0-beta.2 — 2026-09-22
 
 FireRed now hands the finished HD scene to the engine's display-resolution

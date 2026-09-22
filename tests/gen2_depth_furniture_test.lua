@@ -33,3 +33,11 @@ assert(not Resolve.resolve({blocks={}},specs.TILESET_FACILITY[1]),'missing metat
 local floor={};for i=1,16 do floor[i]=1 end
 assert(not Resolve.resolve({blocks={[3]=floor,[4]=floor}},specs.TILESET_FACILITY[1]),'floor-only crop must not claim an object')
 print(count..' source-crop recipes and bounded planter geometry passed')
+-- The terminal drawing is part of a complete counter, not an isolated 2x2
+-- monitor crop that a taller equipment recipe can claim first.
+local desk,equipment
+for i,s in ipairs(specs.TILESET_RADIO_TOWER)do
+ if s.id=='crystal_depth_radio_desk_terminal' then desk=i;assert(s.crop[1]==0 and s.crop[3]==4)end
+ if s.id=='crystal_depth_radio_equipment' then equipment=i end
+end
+assert(desk and equipment and desk<equipment,'reception desk lost its specific-match priority')

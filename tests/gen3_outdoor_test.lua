@@ -1,0 +1,33 @@
+local S=assert(loadfile('lib/Gen3TileShape.lua'))()
+local O=assert(loadfile('lib/Gen3Outdoor.lua'))()
+local uv={{0,0},{1,0},{1,1},{0,1}}
+local function geometry(mid)
+ local faces={}
+ O.append({cx=3,cy=4,mid=mid,ts={},shape=S.of('general','pallet_town',mid)},function(v,t)
+  for i,p in ipairs(v)do
+   assert(p[1]>=48 and p[1]<=64 and p[3]>=64 and p[3]<=80,'prop escaped its native cell')
+   assert(p[2]>=0 and p[2]<=12,'prop became an oversized block')
+   for _,n in ipairs(t[i])do assert(n>=0 and n<=1,'UV escaped native drawing')end
+  end
+  faces[#faces+1]=v
+ end,function()return uv end)
+ return faces
+end
+for _,mid in ipairs({0xE6,0xE7,0xE8,0xE9,0xEC,0xED,0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xFC,0xFD})do
+ assert(#geometry(mid)>=20,'fence has no posts and rails')
+ assert(S.of('building','lab',mid).kind~='fence','outdoor fence leaked into an interior')
+end
+for _,mid in ipairs({0x87,0x97,0xB0,0xB1,0xC0,0xC1,0xC8,0xC9})do
+ local max=0;for _,face in ipairs(geometry(mid))do for _,p in ipairs(face)do max=math.max(max,p[2])end end
+ assert(max==2.5,'ledge is no longer a low mound')
+end
+for _,mid in ipairs({2,3,4,5,0xD})do assert(#geometry(mid)>0)end
+assert(S.of('general','pallet_town',1).reviewedSurface)
+assert(not S.of('general','unreviewed',0x333).reviewedSurface,'unknown drawing reported as reviewed ground')
+print('PASS outdoor scope, fence geometry, low ledge bounds and surface coverage distinction')
+
+assert(S.of('general','city',0xFC).turn=='north' and S.of('general','city',0xFC).axis==4)
+assert(S.of('general','city',0xFD).turn=='north' and S.of('general','city',0xFD).axis==12)
+assert(S.of('general','city',0xF0).wood and S.of('general','city',0xF0).axis==4)
+assert(S.of('general','city',0xF5).axis==12 and not S.of('general','city',0xF5).wood)
+assert(S.of('general','city',0xF2).stop and S.of('general','city',0xF2).wood)

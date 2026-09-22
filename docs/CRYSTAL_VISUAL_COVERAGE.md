@@ -1,3 +1,18 @@
+## September22 tile inventory and radio-desk follow-up (beta3 preview)
+
+The native census was repeated across all388 Crystal maps:147,500 cells and
+2,295 distinct drawing/collision/treatment rows. The committed ledger links
+remaining generic walls and classified surfaces to example locations; see
+[TILE_COVERAGE.md](TILE_COVERAGE.md). Classification alone is not approval.
+
+All82 furniture recipes now have placements. The radio reception desk had
+been shadowed by the taller equipment recipe because they shared monitor
+pixels. Matching the whole counter+monitor first fixes the desk without
+replacing the standalone equipment on5F. Nine fresh native views cover the
+reception desk, upstairs equipment and Lavender mixing desk in static, first
+and rotating third person. The stable sealed cart is still1.13.1/BA1.20.3;
+these source/preview improvements have not been cart-pinned.
+
 ## September22 follow-up (1.21.0-beta.2 preview)
 
 Fixed one specific cause of Goldenrod's oversized/stair-stepped roofs:

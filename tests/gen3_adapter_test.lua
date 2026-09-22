@@ -23,6 +23,8 @@ local generated=Pairs.resolve('general__rom_opaque',{})
 assert(generated.primary=='general' and generated.secondary=='rom_opaque')
 assert(not Pairs.supports({midLayout={pair='general__rom_opaque'},environment='INDOOR'},generated))
 assert(Pairs.supports({midLayout={pair='general__rom_opaque'},environment='TOWN'},generated))
+assert(not Pairs.supports({midLayout={},environment='TOWN',mapType=4},generated),'cave header lost to cached environment default')
+assert(not Pairs.supports({midLayout={},environment='TOWN',mapType=8},generated),'indoor header lost to cached environment default')
 assert(not Pairs.supports({midLayout={pair='unreviewed'}},{primary='building'}))
 local Furniture=assert(loadfile(root..'/lib/Gen3Furniture.lua'))()
 local fc={}

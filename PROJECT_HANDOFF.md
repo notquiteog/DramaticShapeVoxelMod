@@ -1,3 +1,62 @@
+# Tile coverage and FireRed gym exteriors — 2026-09-22 — beta3 candidate
+
+Latest steering: user wants every tile in Crystal/FireRed covered. Then flagged
+GYMS; clarified FireRed and EXTERIOR. Prioritize the exteriors, not gym puzzles.
+Answered training-data question honestly: Oak's lab is common Pokemon knowledge;
+actual fix came from the local map, with no claim about specific training items.
+
+Current source version1.21.0-beta.3, not yet published at this record's creation.
+Stable Crystal sealed cart remains1.13.1/BA1.20.3. Live user profile untouched.
+Do not claim all tiles/models or Gamma Emerald parity are complete.
+
+New runtime:
+- Gen3Buildings matches whole gym drawings across6–8 columns, including all
+  eight Kanto gyms and Saffron's Fighting Dojo. Missing top strip139/13A/13B
+  and wider facade155/15D caused holes/flat strips. City-specific trim is only
+  claimed in a complete pattern, including Saffron's secondary facade. Uniform
+  closed shell, cropped roof background, straight gables, projecting entrance.
+  Side/rear courses/high windows added; window UV cropped to exclude signage.
+- Whole notice-board recipes include context-scoped Saffron variants. Models
+  only change drawing; native collision, scripts, doors and battles untouched.
+- Gen3Outdoor: reviewed horizontal/vertical/corner/end post/rail fences,
+  low2.5-unit turf/sand ledges, short
+  flower/grass rosettes, crossed shrubs and backed signs. Flowers refresh the
+  derived atlas from the native tile-animation clock; no private cache reads.
+- Initial lab furniture/wall displays; shallow closed interior walls. Large
+  machines/planters still flat, gym interiors remain native.
+- IMPORTANT: beta2's environment gate was insufficient. Cached cave defs say
+  TOWN. Pairs.supports now prefers native mapType. Corrected eligible scene
+  count is150, not258. Native Diglett's Cave fallback is regression-tested.
+- Crystal desk terminal now matches the WHOLE counter/monitor ahead of the
+  taller equipment recipe.1F desk,5F machine and Lavender desk all place;
+  all82 furniture recipes have matches. Cache58.
+
+Audit: docs/TILE_COVERAGE.md and docs/coverage/{crystal,firered}-tiles.csv.
+Native totals:388 Crystal maps/147,500 cells/2,295 distinct treatment rows;
+425 FireRed maps/240,512 cells/11,146 rows. FireRed96 props on19maps.
+Every map cell accounted for, NOT all-map rendering or visual approval.
+Raw maps/recipe records in /tmp/firered-hd2d/tile-audit. Summarizer checks sums.
+
+QA helper /tmp/firered-hd2d/run-native.sh takes game, driver, outputdir, log,
+optional identity; internally uses correct cwd /tmp/johto-hd/engine for U.
+Actual engine0.2.73 fused QA payload, software GL; NEVER stale source as runtime.
+FireRed QA mod path contains the extracted beta3 candidate; beta2 files moved
+outside the mods directory to /tmp/firered-hd2d/installed-beta2-backup.
+Crystal standalone QA profile keeps its source symlink. No sealed-cart test.
+
+Source checks:37 FireRed scene captures under outdoor-views; nine radio-room
+captures under radio-views; gym-exteriors captures across8cities; outdoor-details
+fixtures and flower clock/material refresh. Final packaged gym/outdoor checks
+include cutout notice boards and source-reviewed vertical/corner/end fences.181 support and102 shapes pass in
+support-beta3.log/shapes-beta3.log. Geometry/adapter/furniture tests pass.
+validate-beta3.log contains the same six pre-existing MK301 findings, not clean.
+Private source atlas/layout images under gym-catalog and catalog stay untracked.
+
+Remaining: vast city/landmark/interior/rock/cliff/decoration coverage in both
+engines, all states/cameras, FireRed optional post effects and battle integration.
+Side-wall shadow aliasing and some native pixel art remain visible. Do not let
+ledger completeness or matched recipes become an all-map visual sign-off.
+
 # City/roof follow-up — 2026-09-22 — 1.21.0-beta.2
 
 Published: https://github.com/notquiteog/DramaticShapeVoxelMod/releases/tag/v1.21.0-beta.2

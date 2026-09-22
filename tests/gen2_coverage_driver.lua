@@ -2,6 +2,8 @@
 -- tileset. A coverage report records generic cells; it does not call them
 -- finished models or claim visual parity from classification alone.
 return function(game)
+ local identity=love.filesystem.getIdentity()
+ assert(identity=='johto-appimage-qa' or identity=='battle-art-crossgen-qa','refusing non-QA profile')
  local U=dofile('tests/drivers/util.lua')
  local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib
  local Map=require('src.world.gen2.Map')
@@ -54,6 +56,7 @@ return function(game)
  end
  local dir=assert(os.getenv('SHOT_DIR'))
  local groups,signatures,sprites={},{},{}
+ local tileRows={}
  local out=assert(io.open(dir..'/maps.csv','w'))
  out:write('map,tileset,environment,cells,generic_wall_cells,furniture_placements\n')
  local count=0
@@ -70,6 +73,13 @@ return function(game)
    for cy=0,map.heightCells-1 do for cx=0,map.widthCells-1 do
     local tx,ty=cx*2,cy*2
     local shape=Shape.at(map,shapes,map:tileAt(tx,ty),tx,ty)
+    local fullProp=claimed[ty*def.width*4+tx] and claimed[ty*def.width*4+tx+1] and claimed[(ty+1)*def.width*4+tx] and claimed[(ty+1)*def.width*4+tx+1]
+    local drawing=table.concat({map:tileAt(tx,ty),map:tileAt(tx+1,ty),map:tileAt(tx,ty+1),map:tileAt(tx+1,ty+1)},':')
+    local collision=map:cellCollision(cx,cy)
+    local treatment=fullProp and 'modeled_prop' or shape.class=='wall' and 'generic_wall_review' or 'classified_'..shape.class
+    local tileKey=def.tileset..':'..drawing..':'..tostring(collision)..':'..treatment
+    local row=tileRows[tileKey] or {tileset=def.tileset,drawing=drawing,collision=collision,treatment=treatment,cells=0,maps={},example=id,x=cx,y=cy}
+    tileRows[tileKey]=row;row.cells=row.cells+1;row.maps[id]=true
     if shape.class=='wall' and not (claimed[ty*def.width*4+tx] and claimed[ty*def.width*4+tx+1]
       and claimed[(ty+1)*def.width*4+tx] and claimed[(ty+1)*def.width*4+tx+1]) then
      generic=generic+1
@@ -89,6 +99,12 @@ return function(game)
   end
  end
  out:close()
+ out=assert(io.open(dir..'/crystal-tiles.csv','w'));out:write('tileset,tiles,collision,treatment,cells,maps,example_map,x,y\n')
+ local tileKeys={};for key in pairs(tileRows)do tileKeys[#tileKeys+1]=key end;table.sort(tileKeys)
+ for _,key in ipairs(tileKeys)do local r=tileRows[key];local n=0;for _ in pairs(r.maps)do n=n+1 end
+  out:write(('%s,%s,%s,%s,%d,%d,%s,%d,%d\n'):format(r.tileset,r.drawing,tostring(r.collision),r.treatment,r.cells,n,r.example,r.x,r.y))
+ end
+ out:close();print('[Crystal tile ledger]',#tileKeys,'distinct drawing/collision/treatment rows')
  out=assert(io.open(dir..'/generic-walls.csv','w'));out:write('tileset,tiles,count,example_map,x,y\n')
  for ts,rows in pairs(signatures) do for sig,row in pairs(rows) do
   out:write(('%s,%s,%d,%s,%d,%d\n'):format(ts,sig,row.count,row.map,row.x,row.y))

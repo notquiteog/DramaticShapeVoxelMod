@@ -29,16 +29,45 @@ add(viridian,'wall',{0x298,0x299,0x29A,0x29B,0x29C,0x29D,0x29E,0x2A0,0x2A1,0x2A2
 add(room,'roomWall',{0x20,0x21,0x22,0x28,0x29,0x2A,0x2B,0x2C,0x2D,0x2E,0x2F,
  0x96,0xA6,0xA8,0xAA,0xB4,0xB5,0xC0,0xC1,0xD8,0xD9,
  0x109,0x111,0x119,0x121,0x169,0x171})
+local fences={}
+local function fence(mid,wood,axis,turn,stop)
+ fences[mid]={kind='fence',ground=1,wood=wood,axis=axis,turn=turn,stop=stop}
+end
+fence(0xE6,true);fence(0xE7,false)
+fence(0xE8,true,4,'south');fence(0xE9,true,12,'south')
+fence(0xEC,false,4,'south');fence(0xED,false,12,'south')
+fence(0xF0,true,4);fence(0xF1,true,12)
+fence(0xF2,true,12,nil,true);fence(0xF3,true,4,nil,true)
+fence(0xF4,false,4);fence(0xF5,false,12)
+fence(0xFC,false,4,'north');fence(0xFD,false,12,'north')
+local ledges={
+ [0x87]={ground=1},[0x97]={ground=0xDC},
+ [0xB0]={ground=1,left=true},[0xB1]={ground=1,right=true},
+ [0xC0]={ground=0xDC,left=true},[0xC1]={ground=0xDC,right=true},
+ [0xC8]={ground=0xDC,left=true},[0xC9]={ground=0xDC,right=true},
+}
+for _,s in pairs(ledges)do s.kind='ledge' end
+local plants={ [4]={kind='flowers',ground=1,height=6},[5]={kind='shrub',ground=1,height=10},
+ [0xD]={kind='grass',ground=1,height=4} }
+-- Reviewed surfaces are intentionally flat, not missing scenery models.
+local surfaces={}
+for _,id in ipairs({1,8,9,0x10,0x11,0xD3,0xD4,0xD5,0xDB,0xDC,0xDD,0xE3,0xE4,0xE5,0xD0,0xE0,0x102,0x103,0x104,0x105,0x114,0x115,0x119,0x11C,0x11D,0x125,0x126,0x12A,0x12B,0x12C,0x12D,0x12E,0x130,0x131,0x1D0,0x1D1,0x1D2,0x1D4,0x1D8,0x1D9,0x1DA})do surfaces[id]=true end
 function M.of(primary,secondary,mid)
  if primary=='general' then
+  if fences[mid] or ledges[mid] or plants[mid] then return fences[mid] or ledges[mid] or plants[mid] end
   if trees[mid] then return {kind='tree',root=roots[mid],ground=1} end
   if mid==2 then return {kind='sign',height=12,ground=1} end
   if mid==3 then return {kind='sign',height=12,ground=1} end
+  if surfaces[mid] then return {kind='flat',reviewedSurface=true} end
   if common[mid] then return {kind=common[mid],ground=1} end
   if secondary=='viridian_city' and viridian[mid] then return {kind=viridian[mid],ground=1} end
  end
  if secondary=='pallet_town' and pallet[mid] then
   return {kind=pallet[mid],ground=0x296,roofType=mid>=0x2A8 and 'flat' or 'gable'}
+ end
+ if primary=='building' and secondary=='lab' then
+  if mid>=0x68 and mid<=0x6E then return {kind='roomWall',ground=0x289} end
+  if mid==0x289 then return {kind='flat',reviewedSurface=true} end
  end
  if primary=='building' and room[mid] then return {kind=room[mid],ground=1} end
  return {kind='flat'}
@@ -77,7 +106,7 @@ function M.layout(cells)
   c.column=col
   if col then
    if col.indoor then
-    col.height=32;col.front=(col.first+2)*16
+    col.height=32;col.front=(col.last+1)*16;col.back=col.front-4
    else
     local k=c.pair..':'..col.first..':'..col.roofType
     local band=bands[k] or {};bands[k]=band

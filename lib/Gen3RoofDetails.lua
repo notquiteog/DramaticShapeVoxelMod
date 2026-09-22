@@ -41,12 +41,16 @@ function M.prepare(cells)
  end
  return chimneys
 end
-function M.image(ts,secondary,shapeOf)
- local old=baked[ts.pair];if old and old.ts==ts then return old.image end
+function M.image(ts,secondary,shapeOf,used)
+ local old=baked[ts.pair];local complete=old and old.ts==ts
+ if complete then for mid in pairs(used or {})do if not old.mids[mid]then complete=false;break end end end
+ if complete then return old.image end
+ local mids={};for mid in pairs(old and old.ts==ts and old.mids or {})do mids[mid]=true end
+ for mid in pairs(used or {})do mids[mid]=true end
  if not ts.imageData then return nil end
  local data=ts.imageData:clone()
  for mid,slot in pairs(ts.midToSlot)do
-  if shapeOf('general',secondary,mid).kind=='roof' then
+  if mids[mid] or shapeOf('general',secondary,mid).kind=='roof' then
    local x0,y0=slot%ts.cols*16,math.floor(slot/ts.cols)*16
    for y=0,15 do for x=0,15 do
     local r,g,b,a=ts.imageData:getPixel(x0+x,y0+y)
@@ -63,7 +67,7 @@ function M.image(ts,secondary,shapeOf)
  end
  local image=love.graphics.newImage(data);image:setFilter('nearest','nearest');data:release()
  if old then old.image:release()end
- baked[ts.pair]={ts=ts,image=image};return image
+ baked[ts.pair]={ts=ts,image=image,mids=mids};return image
 end
 function M.appendChimney(p,emit,uvFor)
  local x,z,y=p.cx*16+3,p.cy*16+22,p.height

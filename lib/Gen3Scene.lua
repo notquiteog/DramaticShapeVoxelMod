@@ -9,6 +9,8 @@ local Shapes=V.require('Gen3TileShape')
 local Pairs=V.require('Gen3Tilesets')
 local Furniture=V.require('Gen3Furniture')
 local Roof=V.require('Gen3RoofDetails')
+local Buildings=V.require('Gen3Buildings')
+local Outdoor=V.require('Gen3Outdoor')
 local Trees=V.require('Gen2Trees')
 local Leaves=V.require('Gen2DepthTrees')
 local Map=require('src.core.game3.map')
@@ -67,6 +69,7 @@ local function releaseGeometry()
  for _,part in ipairs(cache.parts or {})do
   if part.under then part.under:release() end
   if part.roof then part.roof:release() end
+  if part.plants then part.plants:release() end
  end
  for _,name in ipairs({'wood','leaves'})do if cache[name] then cache[name]:release() end end
  cache={}
@@ -102,8 +105,10 @@ local function prepare(game,vw,vh)
  local sig=table.concat(signature,';')
  if cache.signature==sig then return true end
  releaseGeometry();cache.signature=sig;cache.parts={};cache.cells=cells
+ local gyms=Buildings.prepare(cells);M.gymCount=#gyms
  local props=Furniture.extract(cells)
  Shapes.layout(cells)
+ for _,c in pairs(cells)do if c.gym then c.column=Buildings.column(c.gym)end end
  local chimneys=Roof.prepare(cells)
  M.chimneyCount=#chimneys
  M.propCount=#props
@@ -111,7 +116,7 @@ local function prepare(game,vw,vh)
  for _,c in pairs(cells)do
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
   local b=batches[c.pair]
-  if not b then b={pair=c.pair,secondary=c.secondary,v={},i={},rv={},ri={}};batches[c.pair]=b end
+  if not b then b={pair=c.pair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
   if c.prop then
@@ -129,17 +134,29 @@ local function prepare(game,vw,vh)
     local row=c.cy-(column.first+column.roofs)
     local step=column.height/column.walls
     local top=column.height-row*step
-    quad(b.v,b.i,{{x,top,column.front},{x+16,top,column.front},{x+16,top-step,column.front},{x,top-step,column.front}},uv)
+    local portal=c.gym and (c.cx==c.gym.cx+3 or c.cx==c.gym.cx+4)
+    local front=column.front+(portal and 4 or 0)
+    quad(b.v,b.i,{{x,top,front},{x+16,top,front},{x+16,top-step,front},{x,top-step,front}},uv)
+    if portal then
+     local u,t=uv[1][1]+(uv[2][1]-uv[1][1])*.12,uv[1][2]+(uv[3][2]-uv[1][2])*.12
+     local trim={{u,t},{u,t},{u,t},{u,t}}
+     if row==0 then quad(b.v,b.i,{{x,top,column.front},{x+16,top,column.front},{x+16,top,front},{x,top,front}},trim,.9)end
+     local side=c.cx==c.gym.cx+3 and x or x+16
+     quad(b.v,b.i,{{side,top,column.front},{side,top,front},{side,top-step,front},{side,top-step,column.front}},trim,.8)
+    end
     if column.indoor then
      local u,t=(uv[1][1]+uv[2][1])*.5,uv[1][2]
      local solid={{u,t},{u,t},{u,t},{u,t}}
-     for _,sx in ipairs({x,x+16})do
-      quad(b.v,b.i,{{sx,top,column.back},{sx,top,column.front},{sx,top-step,column.front},{sx,top-step,column.back}},solid,.82)
+     for _,dx in ipairs({-1,1})do
+      if Roof.sideVisible(cells,c,dx)then local sx=dx<0 and x or x+16
+       quad(b.v,b.i,{{sx,top,column.back},{sx,top,column.front},{sx,top-step,column.front},{sx,top-step,column.back}},solid,.82)
+      end
      end
-     if row==0 then plane(b.v,b.i,x,column.front-16,solid,column.height)end
+     if row==0 then quad(b.v,b.i,{{x,column.height,column.back},{x+16,column.height,column.back},{x+16,column.height,column.front},{x,column.height,column.front}},solid)end
      quad(b.v,b.i,{{x+16,top,column.back},{x,top,column.back},{x,top-step,column.back},{x+16,top-step,column.back}},solid,.7)
     end
    else
+    b.roofMids[c.roofMid or c.mid]=true
     uv=uvFor(ts,c.roofMid or c.mid)
     local row=c.cy-column.first
     local z0=column.back+(column.front-column.back)*row/column.roofs
@@ -172,23 +189,29 @@ local function prepare(game,vw,vh)
      end
     end
    end
-  elseif shape.kind=='sign' then
+  elseif shape.kind=='sign' or shape.kind=='fence' or shape.kind=='ledge' or shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
-   quad(b.v,b.i,{{x,shape.height,z+12},{x+16,shape.height,z+12},{x+16,0,z+12},{x,0,z+12}},uv)
+   local plant=shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass'
+   Outdoor.append(c,function(vertices,tex,shade)quad(plant and b.pv or b.v,plant and b.pi or b.i,vertices,tex,shade)end,uvFor)
   else
    plane(b.v,b.i,x,z,uv)
   end
  end
  for _,p in ipairs(props)do
   local b=batches[p.pair]
-  Furniture.append(p,function(vertices,uv,shade)quad(b.v,b.i,vertices,uv,shade)end,uvFor)
+  local cutout=p.recipe.cutout
+  Furniture.append(p,function(vertices,uv,shade)quad(cutout and b.pv or b.v,cutout and b.pi or b.i,vertices,uv,shade)end,uvFor)
+ end
+ for _,g in ipairs(gyms)do
+  local b=batches[g.pair]
+  Buildings.appendSiding(g,function(vertices,uv,shade)quad(b.v,b.i,vertices,uv,shade)end,uvFor)
  end
  for _,p in ipairs(chimneys)do
   local b=batches[p.pair]
   Roof.appendChimney(p,function(vertices,uv,shade)quad(b.rv,b.ri,vertices,uv,shade)end,uvFor)
  end
- for _,b in pairs(batches)do cache.parts[#cache.parts+1]={pair=b.pair,secondary=b.secondary,
-  under=assert(R.newMesh(b.v,b.i),'field mesh creation failed'),roof=R.newMesh(b.rv,b.ri)} end
+ for _,b in pairs(batches)do cache.parts[#cache.parts+1]={pair=b.pair,secondary=b.secondary,roofMids=b.roofMids,
+  under=assert(R.newMesh(b.v,b.i),'field mesh creation failed'),roof=R.newMesh(b.rv,b.ri),plants=R.newMesh(b.pv,b.pi)} end
  cache.wood=R.newMesh(wood,wi);cache.leaves=R.newMesh(leaf,li)
  M.builds=M.builds+1
  return true
@@ -202,8 +225,9 @@ local function terrain(draw)
    -- A metatile's visible roof/sign artwork may live entirely in BG2.
    -- Apply both native layers to the SAME shaped surface, not just the floor.
    if ts.overImage then draw(p.under,ts.overImage) end
+   if p.plants then draw(p.plants,Outdoor.image(ts,math.floor((require('src.core.game3.tileset_anim').counter or 0)/16)) or ts.image)end
    if p.roof then
-    local material=Roof.image(ts,p.secondary,Shapes.of)
+    local material=Roof.image(ts,p.secondary,Shapes.of,p.roofMids)
     draw(p.roof,material or ts.image)
     if not material and ts.overImage then draw(p.roof,ts.overImage)end
    end
@@ -312,7 +336,7 @@ function M.draw(game,vw,vh,cam)
  if Shadow.begin(cx,cz,vw,vh) then
   terrain(Shadow.draw);actors(game,cam,Shadow.draw);Shadow.finish('firered')
  end
- local indoor=Map.currentDef().environment=='INDOOR'
+ local indoor=Map.currentDef().environment=='INDOOR' or Map.currentDef().mapType==8
  local background=indoor and {.035,.032,.028,1} or {.60,.79,.82,1}
  if not R.beginScene(width,height,cx,cz,vw,vh,background,'firered') then M.restore();return false end
  terrain(R.draw);actors(game,cam,R.draw)
@@ -334,7 +358,7 @@ function M.release()
  spriteMeshes={}
  if foliage then foliage:release();foliage=nil end
  if bark then bark:release();bark=nil end
- Roof.release()
+ Roof.release();Outdoor.release()
  R.invalidate();Shadow.invalidate()
 end
 return M

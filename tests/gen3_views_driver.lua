@@ -24,7 +24,7 @@ return function(game)
  local Battle=require('src.core.game3.battle')
  local battleDraw=Battle.draw
  local n=0
- for _,case in ipairs({{'FR_PALLET_TOWN',10,9},{'FR_ROUTE_1',9,10},{'FR_VIRIDIAN_CITY',16,17},{'FR_CELADON_CITY',22,18},{'FR_CERULEAN_CITY',22,20},{'FR_PLAYERS_HOUSE_1F',6,6},{'FR_PLAYERS_HOUSE_2F',6,6},{'FR_CERULEAN_CITY_HOUSE1',5,6},{'FR_OAKS_LAB',6,6}})do
+ for _,case in ipairs({{'FR_PALLET_TOWN',10,9},{'FR_ROUTE_1',9,10},{'FR_VIRIDIAN_CITY',16,17},{'FR_CELADON_CITY',22,18},{'FR_CERULEAN_CITY',22,20},{'FR_PLAYERS_HOUSE_1F',6,6},{'FR_PLAYERS_HOUSE_2F',6,6},{'FR_CERULEAN_CITY_HOUSE1',5,6},{'FR_OAKS_LAB',6,6},{'FR_DIGLETTS_CAVE_NORTH_ENTRANCE',5,5}})do
   assert(Map.load(nil,game,case[1],{x=case[2],y=case[3],facing='down'}))
   local def=Map.currentDef()
   local best,bx,by
@@ -38,9 +38,9 @@ return function(game)
   Player.reset(bx,by,'down')
   C.setLevel(3,game);U.wait(220)
   print('[FireRed view]',case[1],def.midLayout.pair,'HD2D',C.active)
-  if case[1]=='FR_OAKS_LAB' then
-   assert(not C.active,'unmapped interior must preserve native presentation')
-   assert(U.shot(game,dir..'/interior_native.png'));n=n+1
+  if case[1]=='FR_DIGLETTS_CAVE_NORTH_ENTRANCE' then
+   assert(not C.active,'unmapped cave must preserve native presentation')
+   assert(U.shot(game,dir..'/cave_native.png'));n=n+1
   else
    for _,level in ipairs({3,7,6,0})do
     C.setLevel(level,game);C.yaw=0;U.wait(12)
@@ -65,6 +65,6 @@ return function(game)
  -- Input cycling goes through the real Game3 dispatcher, not the facade.
  game:keypressed('3');game:keyreleased('3');U.wait(8);assert(C.level==0 and not C.active)
  game:keypressed('3');game:keyreleased('3');U.wait(8);assert(C.level==1 and C.active)
- print('[FireRed QA] PASS',n,'screenshots; native movement, camera cycle, foliage modes and interior fallback')
+ print('[FireRed QA] PASS',n,'screenshots; native movement, camera cycle, foliage modes and cave fallback')
  love.event.quit()
 end
