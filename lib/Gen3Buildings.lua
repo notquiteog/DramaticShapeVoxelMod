@@ -50,7 +50,7 @@ function M.prepare(cells)
     end
     for _,n in ipairs(parts)do
      n.gym=g
-     n.shape={kind=n.cy<=c.cy+1 and 'roof' or 'wall',ground=1,roofType='gable'}
+     n.shape={kind=n.cy<=c.cy+1 and 'roof' or 'wall',ground=1,roofType='flat'}
     end
    end
   end
@@ -70,14 +70,14 @@ function M.prepare(cells)
   end end
   if match then
    local g={cx=c.cx,cy=c.cy+1,width=6,pair=c.pair,variant='dojo',ts=c.ts};out[#out+1]=g
-   for _,n in ipairs(parts)do n.gym=g;n.shape={kind=n.cy<=g.cy+1 and 'roof' or 'wall',ground=1,roofType='gable'}end
+   for _,n in ipairs(parts)do n.gym=g;n.shape={kind=n.cy<=g.cy+1 and 'roof' or 'wall',ground=1,roofType='flat'}end
   end
  end end
  return out
 end
 function M.column(g)
  return {first=g.cy-1,last=g.cy+3,roofs=3,walls=2,front=(g.cy+4)*16,
-  back=(g.cy-1)*16,height=32,roofType='gable',roofInset=12,style='gym'}
+  back=(g.cy-1)*16,height=28,roofType='flat',roofInset=12,style='gym'}
 end
 -- Give the unseen sides a plausible continuation of the gym's concrete
 -- facade: a plinth, eave trim, masonry courses and high-set windows. This is

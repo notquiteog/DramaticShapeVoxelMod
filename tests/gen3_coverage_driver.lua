@@ -23,7 +23,7 @@ return function(game)
    cells[x..':'..y]={cx=x,cy=y,mid=mid,pair=pair,primary=spec.primary,secondary=spec.secondary,shape=shape}
   end end
   local Buildings=V.require('Gen3Buildings')
-  if supported then Buildings.prepare(cells)end
+  if supported then local gyms=Buildings.prepare(cells);V.require('Gen3Civic').prepare(cells,gyms,V.data("gen3_exteriors"))end
   local props=supported and Furniture.extract(cells) or {}
   if #props>0 then propMaps=propMaps+1 end;propsTotal=propsTotal+#props
   for _,p in ipairs(props)do recipeCounts[p.recipe.name]=(recipeCounts[p.recipe.name] or 0)+1 end
@@ -33,7 +33,7 @@ return function(game)
   end
   for _,c in pairs(cells)do
    local treatment=not supported and 'native_fallback' or c.prop and 'modeled_prop'
-    or c.column and 'modeled_building' or c.shape.kind=='flat' and (c.shape.reviewedSurface and 'reviewed_surface' or 'unreviewed')
+    or (c.column or c.civic) and 'modeled_building' or c.shape.kind=='flat' and (c.shape.reviewedSurface and 'reviewed_surface' or 'unreviewed')
     or (c.shape.kind=='roof' or c.shape.kind=='wall' or c.shape.kind=='roomWall') and 'unmatched_building'
     or 'modeled_'..c.shape.kind
    local key=pair..':'..c.mid..':'..treatment
@@ -41,6 +41,7 @@ return function(game)
    tileRows[key]=row;row.cells=row.cells+1;row.maps[id]=true
    n=n+1
    if c.prop then
+   elseif c.civic then buildings=buildings+1
    elseif c.column then if c.column.indoor then walls=walls+1 else buildings=buildings+1 end
    elseif c.shape.kind=='tree' and supported then trees=trees+1
    elseif not supported or c.shape.kind=='flat' or c.shape.kind=='roof' or c.shape.kind=='wall' or c.shape.kind=='roomWall' then flat=flat+1 end

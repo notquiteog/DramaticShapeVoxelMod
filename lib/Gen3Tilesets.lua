@@ -24,6 +24,7 @@ function M.supports(def,spec)
   return def.environment=='TOWN' or def.environment=='ROUTE'
  end
  return spec.primary=='building' and
-  (def.midLayout.pair=='player_house' or def.midLayout.pair=='house' or def.midLayout.pair=='oak_lab')
+  (def.midLayout.pair=='player_house' or def.midLayout.pair=='house' or def.midLayout.pair=='oak_lab'
+    or def.midLayout.pair=='network' or def.midLayout.pair=='building__rom_082d4bcc')
 end
 return M

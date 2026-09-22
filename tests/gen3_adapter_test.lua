@@ -12,6 +12,11 @@ assert(Shape.of('building','pallet_town',0x14).kind=='flat')
 assert(Shape.of('general','pallet_town',0x14).root)
 assert(Shape.of('general','viridian_city',0x281).kind=='roof')
 assert(Shape.of('general','other_city',0x281).kind=='flat')
+local forest=Shape.of('general','rom_082d4dc4',676)
+assert(forest.root and forest.spacing==3 and forest.treeScale==1.5 and forest.ground==1)
+assert(Shape.of('general','rom_082d4dc4',641).kind=='tree','partial canopy must not become repeated ground')
+assert(not Shape.of('general','rom_082d4dc4',648).root)
+assert(Shape.of('general','pallet_town',676).kind~='tree','forest recipe leaked across pairs')
 local cells={}
 for i,mid in ipairs({0x281,0x289,0x291,0x298,0x2a0}) do
  local cy=i+2;cells['5:'..cy]={cx=5,cy=cy,pair='pallet_outdoor',shape=Shape.of('general','pallet_town',mid)}
@@ -69,12 +74,18 @@ package.loaded['src.render.Tilt']=Tilt
 local fail,needsNative,canDraw=false,false,true
 local Scene={nativeRequired=function()return needsNative end,
  draw=function()draws=draws+1;if fail then error('test GPU error')end;return canDraw end,
- restore=function()end,release=function()end}
+ restore=function()end,release=function()end,invalidate=function()SceneInvalidated=true end}
 local hooks,events={},{}
 local mod={id='BATTLE_ART_VOXEL_FORK',version='test',exports={},
  options={get=function()end,define=function()end},
  hooks={wrap=function(_,key,fn)hooks[key]=fn end},events={on=function(_,key,fn)events[key]=fn end}}
+local treeStyle,renderDistance
 local V={mod=mod};function V.require(name)
+ if name=='RenderDistance' then renderDistance=renderDistance or assert(loadfile(root..'/lib/RenderDistance.lua'))(V);return renderDistance end
+ if name=='TreePresentation' then treeStyle=treeStyle or assert(loadfile(root..'/lib/TreePresentation.lua'))(V);return treeStyle end
+ if name=='Generation' then return {isGen3=function()return true end} end
+ if name=='BattleTheme' then return {}end
+ if name=='Gen3Battle' then return {install=function()return function()end end,enabled=function()return true end,setting={schema=function()return {}end,key='fireredBattleStage'}}end
  if name=='Gen3Scene' then return Scene end
  if name=='ModSetting' then return assert(loadfile(root..'/lib/ModSetting.lua'))(V) end
  error(name)
@@ -90,6 +101,8 @@ Player.update(game,{isDown=function(_,key)return key=='up' end});assert(moves[2]
 needsNative=false;canDraw=false;Field.draw(game);assert(not A.active and native==2)
 canDraw=true;hooks['input.key'](function()error('3 forwarded')end,game,{key='3',phase='pressed'});assert(A.level==0)
 events['mod.options_changed']({mod=mod.id,key='fireredCamera',value=7});assert(A.level==7)
+assert(treeStyle.flat(),'flat trunks must be default')
+events['mod.options_changed']({mod=mod.id,key='hdTreeTrunks',value='solid'});assert(not treeStyle.flat() and SceneInvalidated,'tree option did not refresh scene')
 fail=true;Field.draw(game);assert(native==3 and not A.active)
 Field.draw(game);assert(native==4 and draws==3,'failed GPU must stop retrying each frame')
 local restored=false;hooks['core.quit_to_launcher'](function()restored=true end);assert(restored)

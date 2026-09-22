@@ -4,6 +4,8 @@
 local V=...
 local M={yaw=0,pitch=.16,level=3,rendered=0,active=false}
 local ModSetting=V.require('ModSetting')
+local Trees=V.require('TreePresentation')
+local Distance=V.require('RenderDistance')
 local mode=ModSetting.new('fireredCamera','HD-2D CAMERA',{0,1,2,3,4,5,6,7},
  {'OFF','FULL','15','35','50','75','1ST','ROTATING 3RD'},4)
 local function free()return M.level>=6 end
@@ -27,9 +29,11 @@ function M.install()
  local Battle=require('src.core.game3.battle')
  local Tilt=require('src.render.Tilt')
  local Scene=V.require('Gen3Scene')
+ local BattleStage=V.require('Gen3Battle')
+ local uninstallBattle=BattleStage.install()
  local draw,present,update=FieldView.draw,Display.present,Player.update
  local failed=false
- mode:read();M.level=mode:get();mod.options:define({mode:schema('FireRed HD-2D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Native battles and special field effects retain their original presentation.')})
+ mode:read();M.level=mode:get();mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the HD-2D field. Disable to use the original FireRed battle background.'),Trees.setting:schema('Flat illustrated trunks follow their leaf billboards; SOLID restores physical trunks.'),mode:schema('FireRed HD-2D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
  local function field(game)return game and game.phase=='field' and game.session and not Battle.isActive() end
  FieldView.draw=function(game,w,h,opts)
   M.active=false
@@ -45,7 +49,8 @@ function M.install()
  -- setting and the original off-mode rendering remain intact.
  Display.present=function(game,...)
   if not field(game) then M.active=false end
-  if M.level==0 or failed or not field(game) or Scene.nativeRequired(game) then return present(game,...) end
+  local battle=Battle.isActive() and BattleStage.enabled()
+  if not battle and (M.level==0 or failed or not field(game) or Scene.nativeRequired(game)) then return present(game,...) end
   local level,angle=Tilt.level,Tilt.angle
   Tilt.level,Tilt.angle=0,0
   local ok,result=pcall(present,game,...)
@@ -89,16 +94,20 @@ function M.install()
   return next(game,ev)
  end)
  mod.events:on('mod.options_changed',function(payload)
+  if payload and payload.mod==mod.id and payload.key==Distance.setting.key then Distance.setting:sync(payload.value);Scene.invalidate()end
+  if payload and payload.mod==mod.id and payload.key==BattleStage.setting.key then BattleStage.setting:sync(payload.value) end
+  if payload and payload.mod==mod.id and payload.key==Trees.setting.key then Trees.setting:sync(payload.value);Trees.changed(payload.key) end
   if payload and payload.mod==mod.id and payload.key==mode.key then
    mode:sync(payload.value);M.level=mode:get()
   end
  end)
  mod.hooks:wrap('core.quit_to_launcher',function(next,...)
   FieldView.draw,Display.present,Player.update=draw,present,update
-  Scene.release();return next(...)
+  uninstallBattle();Scene.release();return next(...)
  end)
  mod.exports.version=mod.version;mod.exports.lib=V
- mod.exports.firered={camera=M,outdoor=true,battles='native',presentation='beta'}
- print('[Battle Art FireRed] native field adapter installed; battles remain native')
+ mod.exports.battleTheme=V.require('BattleTheme')
+ mod.exports.firered={camera=M,outdoor=true,battles=BattleStage,presentation='beta'}
+ print('[Battle Art FireRed] native field and battle background adapters installed')
 end
 return M

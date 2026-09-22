@@ -1,3 +1,377 @@
+# Release preparation — 2026-09-22
+
+User authorized committing all project work to main and publishing new carts.
+Battle Art 1.21.0 packages the following previously unreleased batches.
+Double Battles 0.9.5 consumes the public HUD exports independently. Crystal
+and Yellow receive updated pins; Voxel Red is explicitly a Battle Art-only
+FireRed preview. Companion Gen 3 ports and multiplayer doubles are unfinished.
+Earlier UNRELEASED entries below describe the implementation/QA history.
+
+# Interior dioramas — 2026-09-22 (UNRELEASED)
+
+Latest request: beautiful open-front interiors like two supplied room images,
+across all three generations. New shared lib/InteriorDiorama.lua frames room
+bounds with plaster, skirting, cornices, side windows and foundation. Home,
+shop, Center and lab palettes. Camera-near walls open in external views;
+first-person eyes inside see a closed room/ceiling. Compact-room static camera
+fits the complete room at the selected angle; large halls retain scrolling.
+Free camera modes stay on their own rigs. Native map/collision/scripts untouched.
+
+Voxel3D interior uniforms add warm indirect fill/contact shading and clip the
+old void border. ShadowMap.roomClip clips the same border casters (hiding only
+color left a false front shadow band). begin resets shadow roomCut every pass;
+endScene clears interior state. Shader material boundaries are inset .03 to
+remove coplanar outside faces. Wall trim segments no longer overlap plaster.
+No persistent terrain cache revision needed: these are shader/dynamic shell
+changes; FireRed scene meshes are rebuilt in memory. Fork stays beta.3.
+
+FireRed now enables network (Center) and building__rom_082d4bcc (Mart) pairs.
+25 new pair-specific furniture recipes plus 2 house planter recipes; retain
+native layers, cut out plant ground through reviewed floor colors, use shared
+camera anchors. Upper wall cornice bands align with adjacent two-row windows
+instead of stretching the single row above a claimed cabinet. Native healing,
+shop and special-field-effect fallbacks stay active. Remaining specialty
+FireRed interiors are NOT ported. See docs/INTERIOR_DIORAMAS.md.
+
+Actual 0.2.73 Linux AppImage validation (isolated profiles):
+- /tmp/interior-hd2d/final-{yellow,crystal,firered}[.log]: 4 rooms each;
+  house, lab, Mart, Center. Front/side/back/inside, normal gameplay, 1st and
+  rotating 3rd person, then outdoor return. Player placed on a walkable dry
+  non-warp cell, not arbitrary geometry. Native script suppression in QA only.
+- expanded-yellow[.log]: Museum1F and Viridian forest south gate.
+- expanded-crystal[.log]: Violet Kyle house, RadioTower1F, DanceTheater and
+  Ilex/Azalea gate. All 18 room fixtures PASS; representative screenshots
+  visually inspected, not a claim that all map instances were reviewed.
+- topdown-fr[.log]: every camera rung in the player's FireRed house. Shows
+  complete compact-room framing, no ceiling above the room, open near wall
+  also when a near-overhead eye projects inside the footprint.
+- battle-crystal[.log] PASS native move menu/damage/head anchors;
+  battle-firered[.log] PASS 1440p menus/moves/damage/stage lifetime/return.
+- Interior bounds/recipes test PASS (25 Mart/Center recipes); adapter,
+  outdoor, companion and Gen2 depth checks PASS. Gen2 support181/181 PASS.
+  Runtime/driver Lua compilation and diff whitespace checks clean.
+- Final indoor-battle[.log] PASS: render Elm's Lab first, then enter a staged
+  Crystal battle directly. Head anchors, move selection and damage succeed;
+  no stale room clipping on the battle renderer. The inspected battle still
+  shows the older circular object-cutaway edges; this is not visual approval
+  of indoor battle scenery. Reset roomCut in ShadowMap
+  begin, not only its one-time GPU orientation probe. Ceiling appears only
+  when the eye is below its actual height, not above it in a third-person rig.
+- Inventory through native map providers: 135 Gen1 room frames, 233 Crystal
+  including gates, 124 enabled FireRed. 103 other FireRed building-primary
+  interiors remain native pending separate furniture/animation profiles.
+
+Captures/logs under /tmp/interior-hd2d, none committed. Main repeatable driver:
+tests/interior_diorama_driver.lua; set QA_INVENTORY=1 QA_VIEWS=1 QA_GAMEPLAY=1
+and optional QA_INTERIORS comma-separated IDs. Uses existing run-native.sh and
+isolated identities battle-art-crossgen-qa (Yellow/Crystal), firered-hd2d-qa.
+Yellow cache is symlinked read-only by convention from the user's imported
+cache; gameplay saves are not loaded or written. Prior 88 WIP files preserved.
+No release, source commit, push, cart bump or deployment this turn.
+
+This is a shared room-presentation pass, not full reference parity for every
+object. Existing legacy furniture/wall artwork can still need bespoke fixes;
+FireRed specialty adapters, depth-aware healing and the earlier independent
+companion ports/public Voxel Red cart remain pending.
+
+# Upstream synchronization — 2026-09-22
+
+Merged all 10 new absol89 upstream/master commits through 1.11.0,
+5e9f6509c66b1782dca52e0afb0f6ab7e2cf148b, into Legendary-Additions as
+3fca9c2. Verified zero upstream commits missing from HEAD. Local merge only;
+no push, release, version bump or cart re-pin. Fork stays 1.21.0-beta.3.
+
+Preserved and restored all 88 pre-existing WIP files. Recovery refs remain:
+refs/backups/pre-absol89-1.11.0-head and
+refs/backups/pre-absol89-1.11.0-wip (stash 6d7a245). Before this handoff update,
+84 files were byte-identical to the snapshot; only handoff, BattleScene,
+ChunkMesher and Voxel3D differed from upstream integration. WIP remains
+unstaged/untracked. BattleScene shadow key retains BOTH upstream trainer
+revision and our render distance. Shader integration retains our boundary fog.
+
+Incoming changes include cut-tree regrowth rebuilding full/body variants,
+companion false-splice detection, capture recoil, scoped battle effects,
+optional trainer shadows and battle fire illumination.
+
+Validation after restoration:
+- 212 runtime Lua files compile; git diff --check clean.
+- Companion integration, boundary scenery, Gen3 adapter and terrain tests pass;
+  Gen2 support passes 181/181 with actual 0.2.73 source.
+- Actual Linux AppImage 0.2.73 native battle runs PASS: Crystal move selection,
+  damage/head anchors; FireRed 1440p menus, damage, stage lifetime and return.
+  Logs/captures: /tmp/firered-hd2d/upstream-1110-crystal[.log] and
+  /tmp/firered-hd2d/upstream-1110-fr[.log]. Inspected command screenshots from
+  both. Existing unfinished patterned ground, scene props near battlers and
+  native screen-space FireRed sprites remain; this is merge regression QA.
+- Whole-repository compilation hits the unchanged legacy test
+  tests/battle_art_voxel_fork_test.lua:2604 (over 200 locals). Runtime compile
+  above is clean. New Gen1 cut/regrow driver and optional companion effects
+  were not exercised end-to-end in this Crystal/FireRed run.
+
+# Shared distance and contextual boundaries — 2026-09-22 (UNRELEASED)
+
+Latest explicit request implemented in the working tree: shared Auto / Low /
+Medium / Far / Full for Crystal and FireRed. Auto defaults to desktop Medium,
+mobile/console Low; persisted old values still work. Full draws complete loaded
+connected rectangles plus scenery. In FireRed its map frontier is at least Far's
+(frontier regression asserted), not the old two-hop-only set.
+
+New BoundaryScenery selector gives real connected rectangles priority, then
+samples the nearest native edge. Gen3Boundary uses native map/behavior metadata;
+Gen2Boundary replaces the old uniform border ring only on Crystal outdoor/forest
+maps. Water/raised-rock/forest donors, deterministic roots/variants, same nearby
+trunk/leaf builders/materials and camera-facing rules. Ilex uses TILESET_FOREST
+rather than relying on its non-outdoor environment header. Viridian Forest's
+separate secondary tree drawing now has a 3-cell footprint / 1.5 scale: trunk676
+owns the model, crest641 is canopy (NOT ground), all use safe General ground1.
+Two map-specific QA failures caught these gaps before claiming completion.
+
+Planar distance haze avoids washing out the foreground under an elevated camera.
+Full uses rectangular region bounds. Voxel3D + reflective Water receive/reset
+matching fog uniforms. WorldUnderlay uses the sky endpoint for default cyan/nature
+under this new haze (explicit black/off unchanged), removing its unlit cyan
+horizon seam. Boundary scenery casts shadows in Crystal field and staged battles.
+Geometry cache68. Details: docs/RENDER_DISTANCE.md.
+
+Actual0.2.73 Linux AppImage QA in isolated identities (no user profile mods edited):
+- /tmp/firered-hd2d/boundary-fr-final.log PASS: Pallet, Cinnabar, Route3,
+  ViridianForest, static/first/rotating views, all5 distances, no rotation rebuild,
+  Full retains Far's connected maps.17 screenshots in matching directory.
+- /tmp/firered-hd2d/boundary-crystal-final.log PASS: Cherrygrove, Route29,
+  Blackthorn, Ilex; same camera/distance checks.17 screenshots. Driver waits for
+  actual mesh queue completion and chooses walkable, non-water, non-warp cells.
+- boundary-battle-fr.log PASS1440p head cards, input/moves, native damage,
+  stage lifetime and return. boundary-battle-crystal.log PASS native battle,
+  head anchors, move UI and damage. Both after new rectangle/water fog code;
+  subsequent edits only added Viridian crest classification and Full frontier.
+- Pure selector/distance, Gen3 adapter/forest isolation, terrain, Gen2 depth
+  checks PASS. Water cast reflection52/52 including fog uniform reset.
+- Gen2 shapes105/105 and support181/181 PASS with actual0.2.73 source + old
+  helper tests on LUA_PATH. Use relative DS_MOD_PATH=mods/BATTLE_ART_VOXEL_FORK;
+  absolute paths fool old tests.fs_io into discovering no mod.
+- 78 changed/new Lua files compile; git diff --check clean. Legacy
+  water_effect_precision_test still fails at signature line82 IDENTICALLY with
+  HEAD Water.lua (confirmed using /tmp/bav-head-water.lua). Not a new regression.
+
+This is representative QA, not approval of every map or all existing visuals.
+Existing Crystal patterned materials/rocks/buildings and complete Gamma parity
+remain broader unfinished work. No version bump, source commit, push, release
+or cart re-pin during this feature work.
+
+Previous requested FireRed companion ports/public Voxel Red cart STILL PENDING:
+see docs/VOXEL_RED_INTEGRATION.md. Independently usable Wilds of Kanto,
+Gen1Online+, Dramatic Sky Ride and Double Battles with Battle Art optional.
+Cloned upstream Wilds2.2.0 into /home/admin/Projects/overworld-spawn-mod (clean,
+no fork/release yet). Read actual engine Gen3 link/trade/battle APIs; it has
+native link doubles (mode2) and trade writeback. battle_bridge.start preserves
+native trainer doubles, but normal wild bridge explicitly excludes doubles.
+Do not replace native simulation or override owned spawn encounters. Multiplayer
+needs two-endpoint verification; no implementation or multiplayer claims yet.
+Kanto Gear removal remains shipped Johto1.13.2 from the previous work.
+
+# Final battle UI checkpoint — 2026-09-22 (UNRELEASED)
+
+Actual0.2.73 at2560x1440 final native runs:
+- /tmp/firered-hd2d/battle-ui-final.log PASS: directions, moves, HP damage,
+  stage lifetime and field return. Screens in battle-ui-final/. Inspected
+  commands + attack: native attack message panel remains oversized and is
+  explicitly unfinished. Native screen-space battlers still lack scene depth.
+- crystal-heads-final.log PASS singles head projection, move UI, damage.
+- crystal-double-heads-final.log PASS two Sentret independently drawn, three
+  separate overhead cards, second-target selection and native damage. Final
+  run includes Crystal sprite companion via QA-only symlink. No errors. First
+  double fixture had an event guard error (screen also emits battle.started);
+  corrected fixture only decorates actual sim objects with enemyParty.
+  Native screenshots inspected; projected image-frame bounds can leave extra
+  air above animated sprites. Crystal terrain is still overly patterned.
+
+Pixel font uses engine-bundled PlainPixel, nearest filtering, drawn after FX;
+shared silver pointers/colored commands use clean PKMN/ITEMS labels and a
+central diamond. No copied Gamma assets. No species scaling.
+67 changed/new Lua files compile. Targeted helper projection/occlusion,
+adapter, staged-pair, HUD visibility, outdoor, hosted-trainer tests PASS.
+Companion HUD tests PASS fallback, DPI, capture isolation, all four projected
+slot providers and semantic button order. Two broader legacy mocks still
+fail identically with HEAD BattleScene: battle_scene_visual_sidecar_test
+(missing mock battleOcclusion), stadium_hosted_extras_test (line27). Do not
+claim a clean whole suite. Native Gen1 overhead UI, full doubles mechanics,
+multiplayer doubles, exhaustive scene parity remain unverified/unfinished.
+
+Only cart removal shipped: Johto1.13.2. Battle Art / Double Battles changes
+remain uncommitted, with original manifest versions retained. QA identities
+only gained companion symlinks; no user mod source installation changed.
+
+# Follow-up: Kanto Gear removal — 2026-09-22
+
+User requested removal from all carts. JohtoDioramaCart source/index/readme
+updated, committed fd789aa and pushed main; release v1.13.2 published with
+12 pins, validated online/strict. All other source pins/options/art unchanged.
+Installed Johto cart and local downloaded/QA cart copies had only Kanto Gear
+removed, preserving their own older pins/version/art. Backups outside carts:
+/home/admin/.local/state/cart-backups/kanto-removal-20260922/*.bak.
+Yellow Online did not contain it. User must restart a currently running cart
+to unload an already loaded mod. Battle work remains separate/unreleased.
+Removed mandatory Kanto Gear assertions from two old cart QA drivers.
+
+Native Crystal head-card QA now PASS (single battle commands, move selection,
+HP damage; /tmp/firered-hd2d/crystal-heads.log). Provider integration corrected
+to mod.find exports rather than nonexistent Game.mods facade access.
+Shared pixel font/UI refinement in progress; final reruns under
+crystal-heads-final and battle-ui-final. Independent projected pairs/mirroring,
+behind-camera and whole-object clearing tests PASS. Full doubles native QA
+and Gen1 native overhead-card QA remain outstanding.
+
+# Battle reference correction — 2026-09-22 (UNCOMMITTED)
+
+Authoritative latest reference: user attachment /home/admin/Downloads/lbDmiO.png.
+Silver status cards must stay ABOVE EACH POKEMON with downward pointers.
+Four colored commands at lower right: Fight/PKMN above Items/Run. No red
+screen borders or edge-anchored cards. NO species-dependent sprite scaling.
+Keep native sprite artwork; HD-2D vegetation, 3D architecture/street props.
+
+New FireRed Gen3Battle/Gen3BattleHud stage runs behind native sprites using
+ordinary engine draw seams. High-resolution cards follow native sprite alpha
+bounds; commands preserve native selection with presentation-only direction
+mapping. Native special prompts and animations retain their owner. This is
+NOT yet world-space/depth-tested FireRed battlers or exact Gamma parity.
+Whole-object battle-area/camera-corridor hiding replaces fragment clipping
+that left sliced building fragments. Field restoration rebuilds geometry.
+Native 0.2.73 1440p QA PASS: /tmp/firered-hd2d/battle-whole-clear.log,
+commands, moves, HP damage, stage during actions, unchanged player position,
+return to field. Screens in matching battle-whole-clear directory.
+
+Shared BattleTheme, projected BattleHudAnchors and public battlePresentation
+hudAnchor export added for Gen1/2. double-battles-gen2 companion owns its own
+HUD changes and consumes these public exports. Cross-generation head anchors
+and companion theme still await native QA at this checkpoint. No release,
+version bump, commit, push or cart re-pin. User profile untouched.
+
+Street prop native QA: /tmp/firered-hd2d/street-props-final.log PASS18 views
+of Pallet/Saffron mailboxes, Pallet/Fuchsia/Safari fences and signs. Flat-native
+Crystal flora QA PASS8 scenes255 flower cells18 views. Extended FireRed flat
+flora views need rerun after Route1 fixture correction. Broad all-map scenery
+and native tree art parity remain incomplete; source census is not approval.
+
+# Native HD-2D plant correction — 2026-09-22 (UNCOMMITTED)
+
+User rejected the experimental rounded flower/grass/shrub relief: they want
+FLAT HD-2D, and specifically like FireRed's original assets. Respect this
+steering in the continuing scenery audit. Do not restore SceneryRelief or
+invent replacement flower heads. Gen3Outdoor now emits ONE intact native
+16x16 card for each flower/grass/shrub tile. Source under/over layers are
+composited with only border-connected ground removed; native flower updates
+still refresh this texture. Crystal flowers use ONE 8x8 native animated card;
+grass uses coplanar native outline runs, preserving the shared opaque atlas
+slot for decorative floor uses. SceneryMask owns the shared alpha flood.
+All cards carry the existing canopy shader anchor: fixed static-view angle,
+face first/rotating third/battle views. No crossed cards, domes or side skirts.
+
+The rejected new Gen3FieldProps/SceneryRelief files were removed. FireRed live
+rocks/boulders/items still use native sprites via the existing actor renderer;
+no gameplay owner was changed. ItemPokeballs.lua has no new diff this batch.
+Crystal material work from the interrupted scenery turn remains: preserve
+native grass/path/water/stone/cave/paving RGB and patterns, with small grain;
+flowers no longer reserve invented pink/white swatches. Shoreline material
+now uses its native sand donor's colour. Existing tree illustrations remain;
+this correction does NOT finish native-tree or all-map scenery parity.
+
+ChunkMesher's indexed auxiliary builder now retains optional canopy anchors.
+Crystal auxiliary meshes bypass the legacy six-float disk stream rather than
+silently losing these anchors. Terrain/other generations retain their cache
+paths. Immediate Cut blanking determines six/nine-float stride from the mesh
+and clears the complete vertex. Cache revision67. No release, version bump,
+ZIP, push, cart re-pin or changes to the user's running profile.
+
+Native QA and current verification recorded below after runs finish.
+
+# In-progress exterior rebuild — 2026-09-22 (UNCOMMITTED)
+
+Latest user approved Lavender Tower's TOP SHAPE and requests a square base
+that fills its footprint and touches elevated FireRed terrain. Implemented:
+Gen3TowerExterior now has a full 112-wide square podium, height48; native door
+stays front-only. Windowed upper volume, green dome and antenna are unchanged.
+Gen3Terrain raises 23 reviewed General cliff/cap/corner IDs to32-unit rock
+masses, with continuous4-unit steep bevels and native cap/face materials.
+Tower-contact edges stay full-height; consumed source dome rows behind its
+actual base are NOT treated as solid podium. Walkable floors, jump ledges,
+collision and source map cells remain unchanged. This is a cliff presentation
+pass, not complete multi-level walkable terrain or cave-mouth support.
+
+No new release/version bump/ZIP/cart pin. All runtime changes since beta3
+remain uncommitted on Legendary-Additions. Stable Crystal cart/user profile
+untouched. All-building/Gamma Emerald parity is NOT complete.
+
+Gen2Exteriors runs before generic columns. Whole roof/facade patterns cover
+244 source placements across77 outdoor maps: Johto colored square brick and
+plaster buildings, brown timber roofs, Kanto masonry and small houses. Crystal
+Centers have square slab roofs, source brick colors and native front signs.
+Kanto small houses now put the upper window band in the roof, not an extra
+storey (roofRows4). Side/rear walls repeat masonry, not window tiles. Cache65.
+Fallback Gen2RoofShell straight pitches/thin tiles and aligned ridges remain.
+
+Gen3Civic plus data/gen3_exteriors.lua now cover103 whole drawing placements
+across76 outdoor maps.38 data families, plus shared gyms/Centers/Marts.
+Includes town houses, Viridian chimneys, Saffron Mart, One Island Center.
+Gyms flat with narrow bevel; correct wall/roof/entry separation; no doubled
+under/over walls; native-derived side/rear siding/windows. Lavender Tower
+matches its8 upper rows in connected Route10 as well as7 Lavender rows:
+the dome is actual native architecture, not an invented flat lid. First
+claim removes source art from the ground. The native per-map census cannot
+attribute this connected-map continuation without extra context.
+
+TreePresentation adds TREE TRUNKS flat/solid, defaultflat; live invalidation
+on both generations. Flat trunks share canopy pivot with depth separation.
+TreeIllustrations isolates the largest alpha component per crown quadrant,
+removing floating neighboring fragments. All owned art unchanged.
+
+Native QA is actual0.2.73 AppImage payload /tmp/johto-hd/appimage-0273-qa.love,
+not the stale source helper checkout. Runner /tmp/firered-hd2d/run-native.sh
+accepts GAME DRIVER SHOT_DIR LOG [IDENTITY], QA_NATIVE_TIMEOUT default200.
+Crystal identity battle-art-crossgen-qa; FireRed firered-hd2d-qa. Both QA mods
+source-symlink repo. Never run same identity concurrently. No running QA jobs
+at this handoff update. Native art/fixtures/screenshots stay outside repo.
+
+Completed native evidence under /tmp/firered-hd2d/:
+- exterior-turntables-crystal-all/:244 placements /976 views (initial timeout
+  then resume). Older Kanto house roof corrected later, see kanto-roof-final/.
+- exterior-turntables-firered-all/:93 placements /372 views, before new tower
+  and8 extra city/route matches. extra-civics/22 placements88 views;
+  extra-civics-final/13 placements52 views after chimney/emblem fixes.
+- lavender-terrain-final/:11 placements44 front/right/back/left captures,
+  includes final square tower base and corrected cliff UV tangent.
+- terrain-normal/:12 normal first/third-person views, no inspection override,
+  lavender/route10/viridian; native map cells unchanged. PASS.
+- exterior-normal-crystal/:27 normal static/first/third-person views across
+  Ecruteak/Pallet/Olivine. PASS. Turntables override the inspection camera;
+  actor sizes/orientations in them are NOT normal player-camera verification.
+- Source inventory exteriors-{crystal,firered}/:77+76 original outdoor maps.
+  source-sheets-* contact sheets created; ONLY Crystal sheets1-4 inspected
+  so far in the broad catalogue pass. Do not claim every image reviewed.
+- Current inventories: crystal-exterior-final-audit.log (388 maps),
+  firered-terrain-final-audit.log (425 maps). Summarizer passes all388,012cells.
+- Pure tests: gen2_exteriors, gen2_roof_shell, gen3_civic, gen3_terrain,
+  gen3_adapter, gen3_gym, tree_illustrations pass.105/105 shapes and181/181
+  support pass against current0.2.73 source with old helper tests on LUA_PATH.
+ Changed Lua compilation and targeted tests pass; validator on actual0.2.73
+ retains the same6 MK301 findings. Old Apps validator with default repo falsely
+ rejects gen3: pass --repo /tmp/johto-hd/engine-0273 and old tests on LUA_PATH.
+ QA inventory JSON export is now local/pure (no networking-module dependency).
+
+Private authoring helper /tmp/firered-hd2d/author-exterior-families.py rebuilds
+native-ID-only family data from source-reviewed rectangles. Private
+model-count.lua outputs244/103 and per-map review queue; pure fixtures and
+native PNGs must not be packaged. Source/map catalogue is NOT visual approval.
+
+Docs/ledgers updated for current unreleased snapshot, including153-map
+exterior queue (all whole-map visual signoffs still pending).
+
+Remaining work: specialty landmarks, gatehouses, omitted roof variants,
+all-map visual review, full connected-map/streaming edges, unsupported interior
+families, native fallback scenes. No all-building perfection or finished
+Gamma Emerald parity claim. Review docs before packaging. Use gh with explicit
+--repo notquiteog/DramaticShapeVoxelMod if later publishing. New runtime/data
+files must be included in candidate ZIP and exact-package native tests.
+
 # Published beta3 verification — 2026-09-22
 
 Published https://github.com/notquiteog/DramaticShapeVoxelMod/releases/tag/v1.21.0-beta.3

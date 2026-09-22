@@ -102,6 +102,8 @@ local SHADER = [[
   uniform vec3 eye;
   uniform float pull;
   uniform vec3 curve;         // xy = the focus in world XZ, z = k; 0 = off
+  uniform vec4 fogBounds;     // FULL: actual loaded rectangle with scenery margin
+  uniform vec3 fogOrigin;     // optional ground-centred distance budget
   uniform vec4 fogInfo;       // density, start, heightK; density 0 = clear
   attribute float VertexShade;
   vec4 position(mat4 transform_projection, vec4 vertex_position) {
@@ -140,7 +142,13 @@ local SHADER = [[
     // bending with the camera trick.
     vFog = 0.0;
     if (fogInfo.x > 0.0) {
-      float fogRun = max(0.0, length(w.xyz - eye) - fogInfo.y);
+      float fogDistance = fogInfo.w > 0.5 ? length(w.xz - fogOrigin.xz) : length(w.xyz - eye);
+      if (fogInfo.w > 1.5) {
+        vec2 side = mix(fogOrigin.xz - fogBounds.xy, fogBounds.zw - fogOrigin.xz, step(fogOrigin.xz,w.xz));
+        vec2 progress = abs(w.xz - fogOrigin.xz) / max(side,vec2(1.0));
+        fogDistance = max(progress.x,progress.y);
+      }
+      float fogRun = max(0.0, fogDistance - fogInfo.y);
       vFog = (1.0 - exp(-fogInfo.x * fogRun))
              * exp(-max(w.y, 0.0) * fogInfo.z);
     }
@@ -297,6 +305,10 @@ local SHADER = [[
     float f=max(0.0,1.0-length(delta)/max(radius,0.001));
     return f*f*fireLightPower;
   }
+  uniform float interiorOn;
+  uniform float interiorCut;
+  uniform vec4 interiorBounds; // x/z bounds relative to the camera eye
+  uniform float interiorFloor;
   uniform float streetLampOn;
   uniform vec3 streetLampA;
   uniform vec3 streetLampB;
@@ -341,6 +353,8 @@ local SHADER = [[
   }
 ]] .. V.require("BattleOcclusion").shader .. [[
   vec4 effect(vec4 color, Image tex, vec2 tc, vec2 sc) {
+    if (interiorCut > 0.5 && (vFoliageRay.x < interiorBounds.x+0.03 || vFoliageRay.z < interiorBounds.y+0.03
+      || vFoliageRay.x > interiorBounds.z-0.03 || vFoliageRay.z > interiorBounds.w-0.03)) discard;
     if (battleCutOn > 0.5 && vFoliageRay.y > battleCutFloor
         && (battleBlocked(vFoliageRay,battleCutA) || battleBlocked(vFoliageRay,battleCutB))) discard;
     if (foliageCutOn > 0.5) {
@@ -388,6 +402,17 @@ local SHADER = [[
     vec3 litRgb = p.rgb * faceLight * sunFill
                 * modelSunlight(vModelSun) * dayTint;
     vec3 rgb = litRgb;
+    if (interiorOn > 0.5) {
+      vec2 edge=min(vFoliageRay.xz-interiorBounds.xy,interiorBounds.zw-vFoliageRay.xz);
+      float ground=1.0-smoothstep(0.0,14.0,vFoliageRay.y-interiorFloor);
+      float contact=(1.0-smoothstep(0.0,12.0,max(0.0,min(edge.x,edge.y))))*ground;
+      // Broad indirect fill, soft perimeter contact, and warm side-window
+      // light. Pixel artwork stays sharp; only the illumination is smooth.
+      rgb=mix(rgb,p.rgb*faceLight*vec3(0.88,0.86,0.80),0.24);
+      rgb*=1.0-0.22*contact;
+      float side=1.0-smoothstep(0.0,55.0,max(0.0,edge.x));
+      rgb+=p.rgb*vec3(0.15,0.105,0.045)*side;
+    }
     if (fireLightPower > 0.001) {
       rgb += p.rgb * vec3(1.65,0.90,0.23) * breathLight();
     }
@@ -1162,8 +1187,10 @@ function Voxel3D.beginScene(w, h, cx, cy, vw, vh, sky, slot, modelShadow, borrow
   pcall(sh.send, sh, "weatherAdd", weather.tint and weather.tint.additive or {0,0,0})
   local fog = Voxel3D.fog
   pcall(sh.send, sh, "fogColor", (fog and fog.color) or { 0, 0, 0 })
+  pcall(sh.send, sh, "fogBounds", (fog and fog.bounds) or {0,0,0,0})
+  pcall(sh.send, sh, "fogOrigin", (fog and fog.origin) or {0,0,0})
   pcall(sh.send, sh, "fogInfo", fog and
-        { fog.density or 0, fog.start or 0, fog.heightK or 0, 0 }
+        { fog.density or 0, fog.start or 0, fog.heightK or 0, fog.bounds and 2 or fog.origin and 1 or 0 }
         or { 0, 0, 0, 0 })
   -- the window glass: the tileset's mask (or the blank -- the sampler is
   -- declared either way, and unbound is a driver-dependent crash), how lit
@@ -1181,6 +1208,14 @@ function Voxel3D.beginScene(w, h, cx, cy, vw, vh, sky, slot, modelShadow, borrow
   for _,item in ipairs({{"fireLightA",fire and fire.a},{"fireLightB",fire and fire.b}}) do
     local p=item[2]
     pcall(sh.send,sh,item[1],p and {p[1]-fireEye[1],p[2]-fireEye[2],p[3]-fireEye[3],p[4]} or {0,0,0,1})
+  end
+  local room=Voxel3D.interior
+  pcall(sh.send,sh,"interiorOn",room and 1 or 0)
+  pcall(sh.send,sh,"interiorCut",room and 1 or 0)
+  if room then
+    local b,e=room.bounds,Voxel3D.eye
+    pcall(sh.send,sh,"interiorBounds",{b[1]-e[1],b[2]-e[3],b[3]-e[1],b[4]-e[3]})
+    pcall(sh.send,sh,"interiorFloor",-e[2])
   end
   local lamps=Voxel3D.streetLamps
   pcall(sh.send,sh,"streetLampOn",lamps and (Voxel3D.glassNight or 0) or 0)
@@ -1874,7 +1909,12 @@ function Voxel3D.endOverlay()
 end
 
 -- End the pass and hand back the rendered canvas.
+function Voxel3D.interiorClip(on)
+  if activeShader then pcall(activeShader.send,activeShader,"interiorCut",on and Voxel3D.interior and 1 or 0)end
+end
+
 function Voxel3D.endScene()
+  Voxel3D.interior = nil
   -- Map-local lamps are configured by the next world pass. Do not carry
   -- Lavender lighting into a battle or a companion-owned scene.
   Voxel3D.streetLamps = nil

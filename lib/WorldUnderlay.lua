@@ -125,6 +125,13 @@ end
 -- authored room boundary and a perspective camera can see beyond it.
 function WorldUnderlay.resolve(state, colors)
   if not WorldUnderlay.enabled() then return nil, "world:off" end
+  -- The unlit backing plane cannot receive the scene shader's haze. Use
+  -- its endpoint colour beneath contextual fill so the horizon has no cyan
+  -- seam. Explicit BLACK/OFF preferences retain their original behaviour.
+  local fog=Voxel3D.fog
+  if fog and fog.origin and (WorldUnderlay.selected()=="cyan" or WorldUnderlay.selected()=="nature") then
+    return fog.color, "distance:sky"
+  end
   local map = state and state.map
   local mapId = map and (map.id or (map.def and map.def.id))
   if map and map.tileset and map.tileset.id == "CAVERN" then

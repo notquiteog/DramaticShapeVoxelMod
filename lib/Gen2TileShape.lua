@@ -322,6 +322,11 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
   end
   if map.tileset and (map.tileset.id == "TILESET_JOHTO" or map.tileset.id == "TILESET_JOHTO_MODERN") then
     local ids = drawing(map,cx,cy)
+    -- The complete native mailbox/sign drawing is unambiguous even beside
+    -- a house. The generic isolated-prop test otherwise treats it as wall.
+    if perm==Permissions.WALL and ids[1]==78 and ids[2]==79 and ids[3]==94 and ids[4]==95 then
+      return "signpost"
+    end
     if ids[1]==88 and ids[2]==88 and ids[3]==88 and ids[4]==88 then
       return "oceanrock"
     end

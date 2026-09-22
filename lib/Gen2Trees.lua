@@ -7,6 +7,34 @@ function Trees.family(seed,lift)
 end
 -- Retain the original trunk and boughs. Their negative anchor tag asks the
 -- shared shader to keep the upper wood behind this tree's foliage plane.
+-- A tapered, bark-shaded illustration in the same plane as its leaves.
+-- Ground anchor is positive but nonzero so the common billboard transform
+-- keeps the roots grounded and uses the same camera-facing basis.
+function Trees.appendFlatTrunk(v,indices,q,x,y,z,lift,seed)
+  local phase=(math.sin(seed*12.9898)*43758.5453)%1
+  local h=(lift==20 and 42 or 34)*(.92+phase*.14)
+  local sapling=lift<=4
+  local base=sapling and 2.5 or h*.24
+  local top=sapling and 10 or h*.56
+  local width=sapling and .65 or 1.5
+  local layer=0
+  local function face(points,shade)
+    local k=#v;layer=layer+1
+    for j,p in ipairs(points)do
+      v[#v+1]={x+p[1],y+p[2],z-.12+layer*.01,.4,.5,shade,x,z,y+.001}
+    end
+    for _,j in ipairs({1,2,3,1,3,4})do indices[#indices+1]=k+j end
+    q=q+1
+  end
+  face({{-width*1.9,0},{width*1.7,0},{width,base},{-width,base}},.88)
+  face({{-width,base},{width,base},{width*.32,top},{-width*.42,top}},.92)
+  face({{-width*.22,0},{width*.45,0},{width*.16,top},{-width*.14,top}},1.1)
+  if not sapling then
+    face({{0,base},{width*.6,base},{5,top*.82},{4.3,top*.85}},.86)
+    face({{-width*.6,base},{0,base},{-3.8,top*.94},{-4.5,top*.92}},.78)
+  end
+  return q
+end
 function Trees.appendTrunk(v,indices,q,x,y,z,lift,seed)
   local first=#v+1
   q=Trees.append(v,indices,q,{},{},0,x,y,z,lift,seed)

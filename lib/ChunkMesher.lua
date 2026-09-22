@@ -3469,18 +3469,22 @@ local function quadsMesh(quads, uScale, vScale)
   uScale, vScale = uScale or 1, vScale or 1
   local spans = quadListSpans(quads, 4)
   local verts, indices, n = {}, {}, 0
+  local anchored=false
   for _, q in ipairs(quads) do
     for i = 1, 4 do
       local c = q[i]
       local uv = q.uv and q.uv[i] or { q.u, q.v }
-      verts[#verts + 1] = {
-        c[1], c[2], c[3], uv[1] * uScale, uv[2] * vScale, q.shade,
-      }
+      local vertex={c[1], c[2], c[3], uv[1] * uScale, uv[2] * vScale, q.shade}
+      if q.canopy then
+        anchored=true
+        vertex[7],vertex[8],vertex[9]=q.canopy[1],q.canopy[2],q.canopy[3]
+      end
+      verts[#verts+1]=vertex
     end
     Voxel3D.pushQuad(indices, n)
     n = n + 1
   end
-  return Voxel3D.newMesh(verts, indices), spans
+  return Voxel3D.newMesh(verts, indices, anchored and Voxel3D.TREE_FORMAT or nil), spans
 end
 
 -- Flatten auxiliary quads into the same unindexed six-float stream terrain
@@ -3832,7 +3836,10 @@ local function runJob(job)
   if c.grass == nil or c.flowers == nil or c.figures == nil
      or (c.stale and c.stale.aux) then
     local grass, flowers, figures, grassSpans, flowerSpans
-    if MeshDisk.available() then
+    -- Crystal's flat plant cards carry per-card camera anchors. The legacy
+    -- auxiliary disk stream stores only six floats; use the small indexed
+    -- card builder here so cache loading cannot drop those anchors.
+    if MeshDisk.available() and not CommunityVisuals.crystalDepth(map) then
       local aux = MeshDisk.loadAux(map)
       if not aux then
         CacheTrace.log("build-aux", job.id, "cache miss")
@@ -4351,10 +4358,16 @@ local function blankMesh(mesh, spans, px0, pz0, px1, pz1)
           and love and love.data and love.data.newByteData) then
     return 0
   end
+  local stride=BLANK_VERTEX_BYTES
+  if mesh.getVertexFormat then
+    for _,attribute in ipairs(mesh:getVertexFormat())do
+      if attribute[1]=="VertexCanopy" then stride=9*4;break end
+    end
+  end
   local dropped = 0
   for _, r in ipairs(ChunkMesher.blockRanges(spans, px0, pz0, px1, pz1)) do
     local ok, data = pcall(love.data.newByteData,
-                           zeroBytes(r[2] * BLANK_VERTEX_BYTES))
+                           zeroBytes(r[2] * stride))
     if ok and data then
       -- setVertices takes a 1-based start vertex; runs are recorded 0-based
       if pcall(mesh.setVertices, mesh, data, r[1] + 1) then

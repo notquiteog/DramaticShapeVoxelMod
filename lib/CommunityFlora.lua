@@ -897,7 +897,8 @@ function MOUND.treeCacheSignature(key, registry, history, nbRects, cfg, snapshot
   table.sort(rects)
   local text = table.concat({ table.concat(cells, ";"), table.concat(rects, ";"),
                               cfg and cfg.bouldertrees == true and "b1" or "b0",
-                              cfg and cfg.shadows == false and "s0" or "s1" }, "|")
+                              cfg and cfg.shadows == false and "s0" or "s1",
+                              V.require("TreePresentation").setting:get() }, "|")
   local a, b = 104729, 130363
   for i = 1, #text do
     local byte = text:byte(i)
@@ -1497,7 +1498,8 @@ function MOUND.detailImg()
   if T.dimg ~= nil then return T.dimg or nil end
   local ok, img = pcall(function()
     if V.require("Generation").isGen2() and V.mod and V.mod.read then
-      local name=style=="depth" and "depth-crowns-v2.png" or "foliage-sprays-v2.png"
+      if style=="depth" then return V.require("TreeIllustrations").image(V) end
+      local name="foliage-sprays-v2.png"
       local bytes = assert(V.mod:read("assets/crystal/"..name))
       local file = love.filesystem.newFileData(bytes, name)
       -- Larger individual leaves define the outer silhouette. Mip levels
@@ -2085,10 +2087,11 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         -- Keep the full trunk behind its own illustrated foliage plane.
         -- Its grounded base retains ordinary world geometry.
         if lift ~= 3 then
-          tQ=trees.appendTrunk(tV,tI,tQ,mx,base,mz,lift,seed)
+          local append=V.require("TreePresentation").flat() and trees.appendFlatTrunk or trees.appendTrunk
+          tQ=append(tV,tI,tQ,mx,base,mz,lift,seed)
         end
         dQ=V.require("Gen2DepthTrees").append(dV,dI,dQ,
-          mx,base,mz,lift,seed,trees.family(seed,lift))
+          mx,base,mz,lift,seed,trees.family(seed,lift),V.require("TreePresentation").flat() and lift~=3)
       elseif sapling then
         -- TEST47 CITY-SUPPORTED SAPLING:
         -- The cuttable prop is deliberately NOT the smallest mature tree any

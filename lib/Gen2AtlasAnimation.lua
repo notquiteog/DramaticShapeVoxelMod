@@ -57,6 +57,10 @@ function M.apply(map,base,pixels)
           elseif kind=="tower" then row=({1,2,3,4,5,4,3,2})[timer+1]
           elseif kind=="lava1" then row=(math.floor(timer/2)+2)%4+1
           elseif kind=="lava2" then row=math.floor(timer/2)+1 end
+          local flowerMask
+          if kind=="flower" and hd and rec.data then
+            flowerMask=V.require("Gen2Flowers").mask(rec.data,0,(row-1)*8)
+          end
           local attr=Attrs.forTile(map.tileset,tile)
           local colors=bg and bg[attr.palette]
           local mapped
@@ -79,7 +83,11 @@ function M.apply(map,base,pixels)
                 -- The native frame's luma breaks up the moving HD ripples.
                 local light=.90+(r+g+b)/3*.1
                 r,g,b=V.require("Gen2Materials").color("water",(x+(row-1)*scale)%(8*scale),y,r,g,b,light)
-              elseif hd and attr.palette==3 then r,g,b=r*.64,g*.76,b*.72 end
+              end
+              if flowerMask then
+                -- Use the same native, flipped source coordinates as the art.
+                if not flowerMask[py*8+px] then a=0 end
+              end
             end
             out:setPixel(dx+x,dy+y,r,g,b,a)
           end end

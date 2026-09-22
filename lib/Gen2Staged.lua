@@ -176,6 +176,10 @@ function Gen2Staged.sideTexture(game, side)
   -- The native back slot already faces up-field. Gen 1's staged front-pic
   -- mirror would turn this back sprite away from its opponents a second time.
   return { canvas = canvas, ax = ax, ay = ay, trainer = false,
+    hudAnchors={
+      [side]={pimage and ax-iw/2 or ax,ay-ih},
+      [side..'2']=pimage and {ax+iw2/2,ay-ih2}or nil,
+    },
     noMirror=back, modernFraming=true,contentWidth=iw+iw2,contentHeight=math.max(ih,ih2) }
 end
 

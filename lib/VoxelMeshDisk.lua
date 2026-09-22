@@ -88,7 +88,7 @@ local STATIC_PLAYTHROUGH = "bavc_static_mesh_v2"
 -- Revision 38 refreshes Crystal tree material UVs, the horizontal healing
 -- bed and the open bin. Old geometry must not mask these visual corrections.
 -- Flat foliage cards replace crown shells; metadata now stores anchor X/Z/Y.
-Disk.CACHE_REVISION = 58
+Disk.CACHE_REVISION = 68
 -- Patch releases which do not change emitted vertices must keep the existing
 -- world cache usable. This token matches the first static-mesh-cache-v2 build;
 -- CACHE_REVISION, not the public mod version, owns geometry compatibility.
@@ -537,7 +537,7 @@ function Disk.fingerprint(map, slot, masks, kind)
     "trueColor", tileset.trueColor and "1" or "0",
   }
   if type(map.cellCollision) == "function" then
-    parts[#parts + 1] = "gen2-crystal-hd2d-2"
+    parts[#parts + 1] = "gen2-crystal-hd2d-3:" .. V.require("TreePresentation").setting:get()
   end
   -- PR51 changed shrub vertices/UVs; only Safari needs its meshes rebuilt.
   if map.id=='SAFARI_ZONE_CENTER' or map.id=='SAFARI_ZONE_EAST'

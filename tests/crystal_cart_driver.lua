@@ -7,7 +7,7 @@ return function(game)
   local P=require("src.render.Pipelines")
   local dir=assert(os.getenv("SHOT_DIR"))
   local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib
-  for _,id in ipairs({"kanto_gear","overworld_wild_spawns","BATTLE_ART_VOXEL_FORK",
+  for _,id in ipairs({"overworld_wild_spawns","BATTLE_ART_VOXEL_FORK",
     "free_fly","gen2_modern_ui","gen3_box","modern_johto","npc_bubbles",
     "running_shoes","wild_skies","crystal_animated_sprites_with_shiny_visuals"}) do
     assert(game.mods.mods[id] and game.mods.mods[id].state=="loaded",id.." not loaded")

@@ -6,21 +6,22 @@ local function face(emit,p,uv,shade,reverse)
   emit(p,uv,shade)
 end
 function M.corners(run,tx,ty,heightAt)
-  local mid=run.extent/2
+  local extent=run.roofExtent or run.extent
+  local mid=extent/2
   local function height(d)
-    local t=d<=mid and d/mid or (run.extent-d)/(run.extent-mid)
+    local t=d<=mid and d/mid or (extent-d)/(extent-mid)
     t=math.max(0,math.min(1,t))
-    -- A restrained kawara profile: flatter at the eaves, steeper near the
-    -- ridge. Keep the original facade and peak; adjoining cells share it.
-    return run.h+run.rise*(.65*t+.35*t*t)
+    -- Straight roof planes keep the source silhouette legible. The old
+    -- nonlinear bow plus deep corrugation made ordinary houses look melted.
+    return run.h+run.rise*t
   end
-  local south,north=height(run.front-ty),height(run.front-ty+1)
+  local south,north=height((run.roofFront or run.front)-ty),height((run.roofFront or run.front)-ty+1)
   local c={south,south,north,north} -- SW, SE, NE, NW
   if heightAt(tx-1,ty)<run.h then
-    c[1],c[4]=math.max(run.h,south-8),math.max(run.h,north-8)
+    c[1],c[4]=math.max(run.h,south-3),math.max(run.h,north-3)
   end
   if heightAt(tx+1,ty)<run.h then
-    c[2],c[3]=math.max(run.h,south-8),math.max(run.h,north-8)
+    c[2],c[3]=math.max(run.h,south-3),math.max(run.h,north-3)
   end
   return c
 end
@@ -49,38 +50,31 @@ function M.append(run,tx,ty,c,runAt,heightAt,emit,uvRect,tile)
     end
   end
 end
--- Concave pans and raised rolled seams follow the sealed roof plane. Their
--- overlap lips are real geometry, so the finish also reads at eye level.
+-- Thin overlapping tile courses. Fine joints live in the material; broad
+-- corrugated ribs must not distort the entire roof into repeated waves.
 function M.courses(c,tx,ty,emit,uvRect,tile,west,east)
   local x,z=tx*8,ty*8
   local u0,u1,v0,v1=uvRect(tile,0,8)
   local downSouth=c[1]+c[2]<=c[3]+c[4]
   local function height(t,u)
-    local n,south=c[4]+(c[3]-c[4])*u,c[1]+(c[2]-c[1])*u
-    return n+(south-n)*t
+    local n,s=c[4]+(c[3]-c[4])*u,c[1]+(c[2]-c[1])*u
+    return n+(s-n)*t
   end
-  local rib={.42,.10,.025,.10,.42}
-  local function uv(u,t)return {u0+(u1-u0)*u,v0+(v1-v0)*t} end
+  local function uv(u,t)return {u0+(u1-u0)*u,v0+(v1-v0)*t}end
   for row=0,3 do
     local a,b=row/4,(row+1)/4
-    local liftA,liftB=downSouth and .015 or .20,downSouth and .20 or .015
-    for col=0,7 do
-      local u,v=col/8,(col+1)/8
-      local ra,rb=rib[col%4+1],rib[col%4+2]
-      local A,B={x+u*8,height(a,u)+liftA+ra,z+a*8},
-        {x+v*8,height(a,v)+liftA+rb,z+a*8}
-      local C,D={x+v*8,height(b,v)+liftB+rb,z+b*8},
-        {x+u*8,height(b,u)+liftB+ra,z+b*8}
-      emit({D,C,B,A},{uv(u,b),uv(v,b),uv(v,a),uv(u,a)},.96)
-      local t=downSouth and b or a
-      local p,q=downSouth and D or A,downSouth and C or B
-      face(emit,{{x+u*8,height(t,u),z+t*8},{x+v*8,height(t,v),z+t*8},q,p},
-        {uv(u,t),uv(v,t),uv(v,t),uv(u,t)},.72,not downSouth)
-      if west and col==0 then emit({{x,height(a,0),z+a*8},
-        {x,height(b,0),z+b*8},D,A},{uv(0,a),uv(0,b),uv(0,b),uv(0,a)},.78) end
-      if east and col==7 then emit({{x+8,height(b,1),z+b*8},
-        {x+8,height(a,1),z+a*8},B,C},{uv(1,b),uv(1,a),uv(1,a),uv(1,b)},.78) end
-    end
+    local la,lb=downSouth and .02 or .12,downSouth and .12 or .02
+    local A,B={x,height(a,0)+la,z+a*8},{x+8,height(a,1)+la,z+a*8}
+    local C,D={x+8,height(b,1)+lb,z+b*8},{x,height(b,0)+lb,z+b*8}
+    emit({D,C,B,A},{uv(0,b),uv(1,b),uv(1,a),uv(0,a)},.96)
+    local t=downSouth and b or a
+    local p,q=downSouth and D or A,downSouth and C or B
+    face(emit,{{x,height(t,0),z+t*8},{x+8,height(t,1),z+t*8},q,p},
+      {uv(0,t),uv(1,t),uv(1,t),uv(0,t)},.82,not downSouth)
+    if west then emit({{x,height(a,0),z+a*8},{x,height(b,0),z+b*8},D,A},
+      {uv(0,a),uv(0,b),uv(0,b),uv(0,a)},.82)end
+    if east then emit({{x+8,height(b,1),z+b*8},{x+8,height(a,1),z+a*8},B,C},
+      {uv(1,b),uv(1,a),uv(1,a),uv(1,b)},.82)end
   end
 end
 
@@ -94,9 +88,9 @@ function M.trim(run,tx,ty,c,runAt,emit,uvRect,tile)
     local other=runAt(tx,ty+side[2])
     if not (other and other.rise>0) then
       local a,b=c[side[3]],c[side[4]]
-      local edge,out=side[5],side[5]+side[2]*.9
-      local A,B,C,D={x,a+.42,edge},{x+8,b+.42,edge},
-        {x+8,b+.58,out},{x,a+.58,out}
+      local edge,out=side[5],side[5]+side[2]*.6
+      local A,B,C,D={x,a+.14,edge},{x+8,b+.14,edge},
+        {x+8,b+.22,out},{x,a+.22,out}
       local E,F,G,H={x,a-.25,edge},{x+8,b-.25,edge},
         {x+8,b-.09,out},{x,a-.09,out}
       local reverse=side[2]<0
@@ -110,15 +104,15 @@ function M.trim(run,tx,ty,c,runAt,emit,uvRect,tile)
   end
   -- One rounded ridge cap per column. The south half owns the ridge seam,
   -- including odd-depth roofs where it falls inside a cell.
-  local mid=run.extent/2
-  local d=run.front-ty
+  local extent=run.roofExtent or run.extent
+  local mid=extent/2
+  local d=(run.roofFront or run.front)-ty
   if d<mid and d+1>=mid then
     local t=d+1-mid
     local za=z+t*8
     local left=c[4]+(c[1]-c[4])*t
     local right=c[3]+(c[2]-c[3])*t
-    local section={{-1.15,.18},{-.95,.75},{-.5,1.12},{0,1.24},
-      {.5,1.12},{.95,.75},{1.15,.18}}
+    local section={{-.65,.08},{-.45,.30},{0,.45},{.45,.30},{.65,.08}}
     for i=1,#section-1 do
       local a,b=section[i],section[i+1]
       emit({{x,left+b[2],za+b[1]},{x+8,right+b[2],za+b[1]},
@@ -127,7 +121,8 @@ function M.trim(run,tx,ty,c,runAt,emit,uvRect,tile)
     for _,edge in ipairs({{tx-1,x,left},{tx+1,x+8,right}}) do
       local other=runAt(edge[1],ty)
       if not (other and other.rise==run.rise and other.h==run.h
-        and other.front==run.front and other.extent==run.extent) then
+        and (other.roofFront or other.front)==(run.roofFront or run.front)
+        and (other.roofExtent or other.extent)==(run.roofExtent or run.extent)) then
         for i=1,#section-1 do
           local a,b=section[i],section[i+1]
           face(emit,{{edge[2],edge[3],za+a[1]},{edge[2],edge[3],za+b[1]},

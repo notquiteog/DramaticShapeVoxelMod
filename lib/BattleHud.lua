@@ -261,7 +261,15 @@ function BattleHud.panel(rect, box, dark, world)
   -- Fully transparent means absent, not a zero-alpha draw. Avoid touching the
   -- destination canvas or blend state at all; premultiplied driver paths can
   -- otherwise retain RGB from a transparent sample as a dim veil.
-  if BattleHud.FROST <= 0 and BattleHud.TINT <= 0 then return true end
+  if BattleHud.FROST <= 0 and BattleHud.TINT <= 0 then
+    if rect.head and V.require('UiBackplates').hudUsesColor() then
+      local G=love.graphics;local scale=math.max(1,(box and box.scale or 1)-1)
+      G.push('all');G.translate(rect[1],rect[2]);G.scale(scale)
+      V.require('BattleTheme').statusCard(0,0,rect[3]/scale,rect[4]/scale,(rect.head-rect[1])/scale)
+      G.pop()
+    end
+    return true
+  end
   if not (frost and box and box.scale and box.scale > 0) then return false end
   local fx, fy, fw, fh = mapper(world)(rect, box)
   local ok = pcall(function()

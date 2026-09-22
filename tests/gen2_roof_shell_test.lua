@@ -26,7 +26,7 @@ local seam=0
 R.append(run,0,3,R.corners(run,0,3,h),at,h,function(p)
   if p[1][1]==8 and p[2][1]==8 then
     seam=seam+1
-    assert(p[1][2]==32 and math.abs(p[2][2]-29.475)<1e-6,'adjoining curved roof edge mismatch')
+    assert(p[1][2]==32 and math.abs(p[2][2]-30)<1e-6,'adjoining straight roof edge mismatch')
   end
 end,function()return 0,1,0,1 end,27)
 assert(seam==1,'different roof heights leave an open step')
@@ -45,11 +45,11 @@ R.courses({24,24,32,32},0,0,function(p,uv)
  end
 end,function()return 0,1,0,1 end,13,true,true)
 assert(courseCount<=80,'ceramic tile detail exceeded the per-cell budget')
-assert(maxRelief-minRelief>.3,'tiles lost their curved channels')
-print('ceramic channels follow base slope with bounded relief and closed ends')
+assert(maxRelief-minRelief>.05,'tiles lost their shallow overlap')
+print('thin tile courses follow base slope with bounded relief and closed ends')
 
 local middle=R.corners(run,2,5,h)
-assert(middle[1]>24 and middle[1]<36,'eave should flatten below the old straight slope')
+assert(middle[1]==36,'roof should retain a straight slope')
 local function checkTrim(x,z)
  local n,cap,eave=0,false,false
  R.trim(run,x,z,R.corners(run,x,z,h),at,function(p,uv)
@@ -72,7 +72,7 @@ assert(checkTrim(2,3)==0,'ridge emitted twice')
 local _,_,frontEave=checkTrim(2,7)
 local _,_,backEave=checkTrim(2,0)
 assert(frontEave and backEave,'front/back ceramic eaves missing')
-print('curved slope, single rounded ridge and bounded front/back eaves pass')
+print('straight slope, small ridge and bounded front/back eaves pass')
 
 -- Check visible face winding: backface culling must not eat the reverse
 -- eave, reverse-slope lips or the top of the ridge in first person.
@@ -86,7 +86,7 @@ for _,south in ipairs({true,false}) do
  R.courses(c,0,0,function(p,uv,shade)
   local n=normal(p)
   if shade==.96 then assert(n[2]>0,'tile pan faces into the roof') end
-  if shade==.72 then assert(n[3]*(south and 1 or -1)>0,'tile lip faces inward') end
+  if shade==.82 and math.abs(n[3])>0 and math.abs(n[1])<.001 then assert(n[3]*(south and 1 or -1)>0,'tile lip faces inward') end
  end,function()return 0,1,0,1 end,14,true,true)
 end
 for _,z in ipairs({0,4,7}) do

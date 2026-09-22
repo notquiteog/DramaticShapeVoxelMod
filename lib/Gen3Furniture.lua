@@ -2,6 +2,8 @@
 -- or bed consumes its entire drawing once; no cell is folded into a wall.
 local M={}
 local recipes={
+ {name='pallet_mailbox',primary='general',pair='pallet_outdoor',rows={{0x2A5},{0x2AD}},kind='mailbox',h=20,ground=0x296,depth=7},
+ {name='saffron_mailbox',primary='general',pair='general__rom_082d4b9c',rows={{0x327},{0x32F}},kind='mailbox',h=20,ground=0x2E9,depth=7},
  {name='saffron_gym_notice_board',primary='general',scopeField='gymNotice',rows={{0x304},{0x30C}},kind='sign',h=19,ground=0x2E9,cutout=true},
  {name='gym_notice_board',primary='general',rows={{0x160},{0x168}},kind='sign',h=19,ground=1,cutout=true},
  {name='checked_table',rows={{0x4C,0x4D},{0x54,0x55}},kind='table',h=9,ground=0x45,top=26},
@@ -21,15 +23,47 @@ local recipes={
  {name='lab_computer',secondary='lab',rows={{0x75,0x76},{0x285,0x286}},kind='cabinet',h=23,ground=0x289,depth=12,facade={1,3,30,24}},
 
 }
+-- Shops and Centers use their own secondary IDs, not the house vocabulary.
+local function recipe(name,pair,rows,kind,h,ground,extra)
+ local r={name=name,pair=pair,rows=rows,kind=kind,h=h,ground=ground,depth=11}
+ for k,v in pairs(extra or {})do r[k]=v end
+ recipes[#recipes+1]=r
+end
+local mart='building__rom_082d4bcc'
+recipe('mart_rear_display',mart,{{0x287},{0x28F}},'cabinet',24,0x281,{facade={0,16,16,16}})
+recipe('mart_rear_books',mart,{{0x292,0x293,0x294},{0x29A,0x29B,0x29C},{0x2A2,0x2A3,0x2A4}},'cabinet',30,0x281,{facade={0,16,48,32}})
+recipe('mart_checkout',mart,{{0x2A8,0x2A9,0x2AA},{0x2B0,0x2B1,0x2B2}},'counter',12,0x281,{top=16})
+recipe('mart_checkout_end',mart,{{0x2A5},{0x2AD}},'counter',12,0x281,{top=16})
+recipe('mart_checkout_return',mart,{{0x295},{0x29D}},'cabinet',12,0x281,{depth=14})
+for _,r in ipairs({{0x296,0x29E},{0x297,0x29F},{0x2A6,0x2AE},{0x2A7,0x2AF}})do
+ recipe('mart_stock_'..r[1],mart,{{r[1]},{r[2]}},'cabinet',19,0x281,{depth=20,facade={0,0,16,29}})
+end
+recipe('mart_bench',mart,{{0x2B7,0x2BC},{0x2C1,0x2C2}},'table',6,0x281,{top=26})
+local center='network'
+recipe('center_vending',center,{{0x2C9,0x2CA},{0x2CB,0x2CC},{0x2CD,0x2CE}},'cabinet',29,0x281,{depth=13,facade={0,8,32,39}})
+recipe('center_screen',center,{{0x286,0x287},{0x28E,0x28F}},'cabinet',32,0x281,{depth=3,frontOffset=19,facade={0,10,32,22}})
+recipe('center_terminal',center,{{0x285},{0x62},{0x295}},'cabinet',28,0x281,{depth=11,facade={0,8,16,39}})
+recipe('center_map',center,{{0x296,0x297},{0x29E,0x29F}},'cabinet',30,0x281,{depth=2,frontOffset=19})
+recipe('center_healer',center,{{0x2AA,0x2AB},{0x2B2,0x2B3}},'counter',13,0x281,{top=25})
+recipe('center_medical_cabinet',center,{{0x2AD},{0x2B5}},'cabinet',22,0x281,{facade={0,0,16,16},depth=10})
+for _,mid in ipairs({0x2B9,0x2BC,0x298,0x2BD})do
+ recipe('center_counter_'..mid,center,{{mid}},'counter',12,0x281,{top=10,depth=14,single=true})
+end
+recipe('center_table',center,{{0x29C,0x29D},{0x2A4,0x2A5}},'table',7,0x281,{top=26})
+for _,mid in ipairs({0x2F5,0x2FD})do recipe('center_seat_'..mid,center,{{mid}},'seat',6,0x281,{top=13})end
+recipe('house_plant', 'player_house',{{0x47},{0x4F}},'plant',24,1,{cutout=true})
+recipe('common_house_plant','house',{{0x47},{0x4F}},'plant',24,1,{cutout=true})
+recipe('mart_plant',mart,{{0x2B5},{0x2B6}},'plant',24,0x281,{cutout=true})
+recipe('center_plant',center,{{0x28D},{0x294}},'plant',26,0x281,{cutout=true})
 function M.extract(cells)
  local out,ordered={},{}
- for _,c in pairs(cells)do if c.primary=='building' or (c.primary=='general' and (c.mid==0x160 or c.gymNotice)) then ordered[#ordered+1]=c end end
+ for _,c in pairs(cells)do if c.primary=='building' or c.primary=='general' then ordered[#ordered+1]=c end end
  table.sort(ordered,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
  -- Longest recipes win: the computer's top is also a cabinet top.
  table.sort(recipes,function(a,b)return #a.rows>#b.rows end)
  for _,c in ipairs(ordered)do if not c.prop then
   for _,r in ipairs(recipes)do
-   if c.primary==(r.primary or 'building') and c.mid==r.rows[1][1] and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) then
+   if c.primary==(r.primary or 'building') and c.mid==r.rows[1][1] and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
     local match=true;local parts={}
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
@@ -60,7 +94,7 @@ function M.append(p,emit,uvFor)
    local uv=uvFor(p.ts,r.rows[ty+1][tx+1]);assert(uv,'missing furniture source')
    local function tex(px,py)return {uv[1][1]+(uv[2][1]-uv[1][1])*(px-tx*16)/16,uv[1][2]+(uv[3][2]-uv[1][2])*(py-ty*16)/16}end
    emit({point((l-sx)/sw,(t-sy)/sh),point((rr-sx)/sw,(t-sy)/sh),point((rr-sx)/sw,(bb-sy)/sh),point((l-sx)/sw,(bb-sy)/sh)},
-    {tex(l,t),tex(rr,t),tex(rr,bb),tex(l,bb)},1)
+    {tex(l,t),tex(rr,t),tex(rr,bb),tex(l,bb)},1,r.kind=='plant' and {x+p.w/2,z+p.d-6,.001} or nil)
   end end
  end
  local uv=uvFor(p.ts,r.rows[1][1]);local u,v=uv[1][1]+(uv[2][1]-uv[1][1])*.08,uv[1][2]+(uv[3][2]-uv[1][2])*.1
@@ -73,7 +107,38 @@ function M.append(p,emit,uvFor)
   emit({{x0,y1,z0},{x0,y1,z1},{x0,y0,z1},{x0,y0,z0}},material,.7)
   emit({{x1,y1,z1},{x1,y1,z0},{x1,y0,z0},{x1,y0,z1}},material,.7)
  end
- if r.kind=='sign' then
+ if r.kind=='plant' then
+  source(0,0,p.w,p.d,{x,r.h,z+p.d-6},{x+p.w,r.h,z+p.d-6},{x+p.w,0,z+p.d-6},{x,0,z+p.d-6})
+ elseif r.kind=='mailbox' then
+  -- The source mailbox spans two metatiles but only its bottom twenty
+  -- drawing rows belong to the object. A closed, bevelled postal box keeps
+  -- that rounded lid and front mail slot, without lifting the surrounding
+  -- grass/paving into its sides. Feet sit in the lower native cell.
+  local back,front=z+21,z+28
+  local shell=uvFor(p.ts,r.rows[2][1]);local top=uvFor(p.ts,r.rows[1][1])
+  local function sample(tex,px,py)
+   local u=tex[1][1]+(tex[2][1]-tex[1][1])*px/16
+   local v=tex[1][2]+(tex[3][2]-tex[1][2])*py/16
+   return {{u,v},{u,v},{u,v},{u,v}}
+  end
+  local side,light,dark=sample(shell,5,5),sample(top,7,13),sample(shell,5,11)
+  -- One enclosed six-sided profile, extruded along its native depth.
+  local profile={{3,3},{13,3},{13,16},{10,20},{6,20},{3,16}}
+  for i,a in ipairs(profile)do local b=profile[i%#profile+1]
+   emit({{x+a[1],a[2],back},{x+b[1],b[2],back},{x+b[1],b[2],front},{x+a[1],a[2],front}},i>=3 and i<=5 and light or side,.86)
+   emit({{x+8,10,back},{x+a[1],a[2],back},{x+b[1],b[2],back},{x+8,10,back}},side,.8)
+  end
+  -- The narrow front preserves the ROM's postal slot, trim and feet.
+  for sy=12,28 do
+   local inset=math.max(0,15-sy)
+   local left,right=3+inset,13-inset
+   source(left,sy,right-left,1,
+    {x+left,32-sy,front+.015},{x+right,32-sy,front+.015},
+    {x+right,31-sy,front+.015},{x+left,31-sy,front+.015})
+  end
+  box(x+4,0,back+1,x+6,3,front-1,dark)
+  box(x+10,0,back+1,x+12,3,front-1,dark)
+ elseif r.kind=='sign' then
   local board=uvFor(p.ts,r.rows[2][1])
   local bu,bv=board[1][1]+(board[2][1]-board[1][1])*.5,board[1][2]+(board[3][2]-board[1][2])*.5
   local frame={{bu,bv},{bu,bv},{bu,bv},{bu,bv}}
@@ -104,16 +169,23 @@ function M.append(p,emit,uvFor)
   box(x+3,7,back-.8,x+12,13,back+.8,blue)
  else
   local inset=r.kind=='bed' and 2 or 1
-  local depth=r.kind=='counter' and 22 or p.d-2
+  local depth=r.kind=='counter' and math.min(22,p.d-2) or p.d-2
   local z0,z1=z+1,z+depth
   box(x+inset,r.h-2,z0,x+p.w-inset,r.h,z1)
   for _,dx in ipairs({inset+1,p.w-inset-3})do for _,dz in ipairs({2,depth-3})do box(x+dx,0,z+dz,x+dx+2,r.h-2,z+dz+2)end end
   local top=r.top or p.d-2
   source(inset,0,p.w-inset*2,top,{x+inset,r.h+.02,z0},{x+p.w-inset,r.h+.02,z0},{x+p.w-inset,r.h+.02,z1},{x+inset,r.h+.02,z1})
   if r.kind=='counter' then
-   source(0,16,p.w,16,{x,r.h,z1+.02},{x+p.w,r.h,z1+.02},{x+p.w,0,z1+.02},{x,0,z1+.02})
+   source(0,r.single and 10 or 16,p.w,r.single and 6 or 16,{x,r.h,z1+.02},{x+p.w,r.h,z1+.02},{x+p.w,0,z1+.02},{x,0,z1+.02})
   elseif r.kind=='bed' then box(x+2,0,z,x+p.w-2,r.h+3,z+1)end
  end
+end
+function M.cutouts(pair)
+ local out={}
+ for _,r in ipairs(recipes)do if r.kind=='plant' and r.pair==pair then
+  for _,row in ipairs(r.rows)do for _,mid in ipairs(row)do out[mid]=r.ground end end
+ end end
+ return out
 end
 M.recipes=recipes
 return M

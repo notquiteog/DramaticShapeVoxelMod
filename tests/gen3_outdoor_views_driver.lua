@@ -11,7 +11,7 @@ return function(game)
  local Collision=require('src.core.game3.collision')
  local Types=V.require('Gen3Tilesets');local Shapes=V.require('Gen3TileShape')
  local Versions=require('src.import.gba.versions')
- for _,case in ipairs({{'FR_PALLET_TOWN','flowers'},{'FR_PALLET_TOWN','sign'},{'FR_ROUTE_1','ledge'},{'FR_VIRIDIAN_CITY','fence'},{'FR_VIRIDIAN_CITY','shrub'},{'FR_FUCHSIA_CITY','fence',0xFC},{'FR_FUCHSIA_CITY','fence',0xF5},{'FR_ROUTE_18','fence',0xF2},{'FR_ROUTE_18','fence',0xF3}})do
+ for _,case in ipairs({{'FR_PALLET_TOWN','flowers'},{'FR_PALLET_TOWN','sign'},{'FR_ROUTE_1','ledge'},{'FR_VIRIDIAN_CITY','fence'},{'FR_VIRIDIAN_CITY','shrub'},{'FR_ROUTE_1','grass'},{'FR_FUCHSIA_CITY','fence',0xFC},{'FR_FUCHSIA_CITY','fence',0xF5},{'FR_ROUTE_18','fence',0xF2},{'FR_ROUTE_18','fence',0xF3}})do
   assert(Map.load(nil,game,case[1],{x=8,y=12,facing='up'}))
   local def=Map.currentDef();local spec=Types.resolve(def.midLayout.pair,Versions.TILESET_PAIRS)
   local target,best
@@ -46,6 +46,7 @@ return function(game)
    assert(Outdoor.image(ts,math.floor(Anim.counter/16))~=before,'plant atlas froze its first frame')
   end
  end
- print('[outdoor QA] PASS 27 native prop views, unchanged map cells, native flower clock and derived-atlas refresh')
+ dofile('/home/admin/Projects/DramaticShapeVoxelMod/tests/canopy_billboard_gpu.lua')(V)
+ print('[outdoor QA] PASS 30 native prop views, unchanged map cells, native flower clock and derived-atlas refresh')
  love.event.quit()
 end

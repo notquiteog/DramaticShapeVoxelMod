@@ -392,6 +392,12 @@ do
   S.runs={};Structures.buildVolume(S,m,tiles)
   T.eq(at(1,0).front,7,"roof-coloured bricks below windows never start a roof")
   T.eq(G2.roofStartsAt(m,1,3),false,"brick is not a ridge")
+  -- A recessed entrance must not shift the ridge two rows north.
+  local inset={};for x=0,2 do for y=0,(x==0 and 5 or 7) do inset[#inset+1]={x,y} end end
+  S.runs={};Structures.buildVolume(S,m,inset)
+  T.eq(at(0,0).front,5,"inset facade retains its source footprint")
+  T.eq(at(0,0).roofFront,7,"inset entrance shares the main roof ridge")
+  T.eq(at(0,0).roofExtent,at(1,0).roofExtent,"adjacent roof slopes share depth")
   m.tileset.id="TILESET_KANTO"
   T.eq(G2.roofStartsAt(m,1,0),false,"Johto ridge IDs do not classify Kanto")
 end

@@ -494,6 +494,10 @@ precision highp float;
 #endif
 uniform mat4 vp;
 uniform vec3 eye;
+uniform vec3 fogColor;
+uniform vec4 fogBounds;
+uniform vec3 fogOrigin;
+uniform vec4 fogInfo;
 uniform vec2 screen;         // the canvas, in pixels
 uniform float cell;          // one diorama pixel, in canvas pixels
 uniform float pxAngle;       // radians of view one screen pixel subtends
@@ -1159,6 +1163,17 @@ vec4 effect(mediump vec4 color, Image tex, mediump vec2 tc, mediump vec2 sc) {
 #ifdef VOXEL_GRID
   rgb *= 1.0 - gridDark * columnSeam(hit, sheet, axis);
 #endif
+  if (fogInfo.x > 0.0) {
+    float distance = fogInfo.w > 0.5 ? length(hit.xz - fogOrigin.xz) : length(hit - eye);
+    if (fogInfo.w > 1.5) {
+      vec2 side = mix(fogOrigin.xz - fogBounds.xy,fogBounds.zw - fogOrigin.xz,step(fogOrigin.xz,hit.xz));
+      vec2 progress = abs(hit.xz - fogOrigin.xz) / max(side,vec2(1.0));
+      distance = max(progress.x,progress.y);
+    }
+    float haze = (1.0 - exp(-fogInfo.x * max(0.0, distance - fogInfo.y)))
+                 * exp(-max(hit.y, 0.0) * fogInfo.z);
+    rgb = mix(rgb, fogColor, haze);
+  }
   return vec4(rgb, 1.0) * color;
 }
 #endif
@@ -1344,6 +1359,11 @@ function Water.begin(ctx, skyOnly)
   local texel = 1 / ShadowMap.res
   send("sunTexel", { texel, texel })
   send("dayTint", Voxel3D.tint or { 1, 1, 1 })
+  local fog=Voxel3D.fog
+  send("fogColor", fog and fog.color or {0,0,0})
+  send("fogBounds", fog and fog.bounds or {0,0,0,0})
+  send("fogOrigin", fog and fog.origin or {0,0,0})
+  send("fogInfo", fog and {fog.density or 0,fog.start or 0,fog.heightK or 0,fog.bounds and 2 or fog.origin and 1 or 0} or {0,0,0,0})
 
   -- the cast's planar reflection. The sampler is bound whatever happens --
   -- an unbound one is a driver-dependent crash, not a fallback -- so where

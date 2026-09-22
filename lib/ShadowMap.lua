@@ -119,13 +119,16 @@ ShadowMap.slack = ShadowMap.BIAS
 
 local SHADER = [[
   varying float vDepth;
+  varying vec2 roomPosition;
 #ifdef VERTEX
 ]] .. V.require("CanopyBillboard").shader .. [[
   uniform vec3 canopyEye;
   uniform mat4 lightVP;
   uniform mat4 model;
   vec4 position(mat4 transform_projection, vec4 vertex_position) {
-    vec4 c = lightVP * faceCanopy(model,vertex_position,canopyEye);
+    vec4 world = faceCanopy(model,vertex_position,canopyEye);
+    roomPosition=world.xz;
+    vec4 c = lightVP * world;
     // the projection is orthographic (w is 1) and fit() maps clip z onto
     // [0,1] directly (see Z01 there), so clip z IS the stored depth,
     // linear in world units along the sun line -- under every clip-range
@@ -135,8 +138,12 @@ local SHADER = [[
   }
 #endif
 #ifdef PIXEL
+  uniform float roomCut;
+  uniform vec4 roomBounds;
   uniform float sprite;   // 1 while the CAST is being drawn; see ShadowMap.sprites
   vec4 effect(vec4 color, Image tex, vec2 tc, vec2 sc) {
+    if (roomCut>0.5 && (roomPosition.x<roomBounds.x+0.03 || roomPosition.y<roomBounds.y+0.03
+      || roomPosition.x>roomBounds.z-0.03 || roomPosition.y>roomBounds.w-0.03)) discard;
     // the same alpha discard the main pass uses: a sprite card casts its
     // silhouette, not its 16x16 bounding box
     if (Texel(tex, tc).a < 0.5) discard;
@@ -297,6 +304,7 @@ local function probeVSign()
           Mat4.mul(Z01, Mat4.scale(1, -1, 1)))
     pcall(sh.send, sh, "model", "row", IDENTITY)
     pcall(sh.send, sh, "sprite", 0)
+    pcall(sh.send, sh, "roomCut", 0)
     love.graphics.draw(mesh)
     love.graphics.setShader()
     love.graphics.setCanvas()
@@ -574,10 +582,22 @@ function ShadowMap.begin(cx, cy, vw, vh)
   -- the world until a cast pass says otherwise, reset per pass so one that
   -- forgot to put it back cannot leak into the next map's terrain
   pcall(sh.send, sh, "sprite", 0)
+  pcall(sh.send, sh, "roomCut", 0)
   drawing = true
   ready = false
   return true
 end
+
+-- Match the visible interior bounds for terrain and actor casters.
+function ShadowMap.roomClip(bounds)
+  if not drawing then return end
+  local sh=getShader()
+  if sh then
+    pcall(sh.send,sh,"roomCut",bounds and 1 or 0)
+    if bounds then pcall(sh.send,sh,"roomBounds",bounds)end
+  end
+end
+
 
 -- Draw one caster. Same signature as Voxel3D.draw minus the camera-ward
 -- pull, which is a trick for the VIEW's depth buffer and would drag a

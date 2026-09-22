@@ -40,6 +40,23 @@ fence(0xF0,true,4);fence(0xF1,true,12)
 fence(0xF2,true,12,nil,true);fence(0xF3,true,4,nil,true)
 fence(0xF4,false,4);fence(0xF5,false,12)
 fence(0xFC,false,4,'north');fence(0xFD,false,12,'north')
+-- Standalone metal endpoints use the opposite hand to their source neighbour.
+fence(0xEE,false,4,nil,true);fence(0xEF,false,12,nil,true)
+local localProps={
+ pallet_town={
+  [0x284]={kind='fence',ground=0x285,axis=4,turn='south'},
+  [0x287]={kind='fence',ground=0x285,axis=4,turn='south'},
+ },
+ rom_082d4b54={
+  [0x296]={kind='sign',height=12,ground=1},
+  [0x308]={kind='fence',ground=0x300,wood=true,material=0x308},
+  [0x309]={kind='fence',ground=0x301,wood=true,material=0x308},
+  [0x30A]={kind='fence',ground=0x302,wood=true,material=0x308},
+ },
+ rom_082d4b9c={
+  [0x33C]={kind='sign',height=12,ground=0x2E9},
+ },
+}
 local ledges={
  [0x87]={ground=1},[0x97]={ground=0xDC},
  [0xB0]={ground=1,left=true},[0xB1]={ground=1,right=true},
@@ -47,13 +64,26 @@ local ledges={
  [0xC8]={ground=0xDC,left=true},[0xC9]={ground=0xDC,right=true},
 }
 for _,s in pairs(ledges)do s.kind='ledge' end
+-- Native General mountain cap, cliff-face and rounded corner drawings.
+-- These are independent of jumpable grass ledges and walkable sand/paths.
+local cliffs={}
+for _,mid in ipairs({104,105,106,107,108,109,112,113,114,115,117,120,121,122,123,124,125,178,179,180,181,186,187})do cliffs[mid]=true end
 local plants={ [4]={kind='flowers',ground=1,height=6},[5]={kind='shrub',ground=1,height=10},
  [0xD]={kind='grass',ground=1,height=4} }
 -- Reviewed surfaces are intentionally flat, not missing scenery models.
 local surfaces={}
 for _,id in ipairs({1,8,9,0x10,0x11,0xD3,0xD4,0xD5,0xDB,0xDC,0xDD,0xE3,0xE4,0xE5,0xD0,0xE0,0x102,0x103,0x104,0x105,0x114,0x115,0x119,0x11C,0x11D,0x125,0x126,0x12A,0x12B,0x12C,0x12D,0x12E,0x130,0x131,0x1D0,0x1D1,0x1D2,0x1D4,0x1D8,0x1D9,0x1DA})do surfaces[id]=true end
+-- Viridian Forest uses a separate three-cell tree drawing in its secondary
+-- tileset. The trunk metatile owns one model; all canopy cells keep ground.
+local forestTrees={}
+for _,mid in ipairs({641,648,649,650,654,655,656,657,658,662,664,665,666,670,672,673,674,675,676,677})do forestTrees[mid]=true end
 function M.of(primary,secondary,mid)
+ if primary=='general' and (secondary=='rom_082d4dc4' or secondary=='viridian_forest') and forestTrees[mid] then
+  return {kind='tree',ground=1,root=mid==676,spacing=3,anchorX=8,anchorZ=8,treeScale=1.5}
+ end
  if primary=='general' then
+  if localProps[secondary] and localProps[secondary][mid] then return localProps[secondary][mid]end
+  if cliffs[mid] then return {kind='cliff',height=32,ground=1}end
   if fences[mid] or ledges[mid] or plants[mid] then return fences[mid] or ledges[mid] or plants[mid] end
   if trees[mid] then return {kind='tree',root=roots[mid],ground=1} end
   if mid==2 then return {kind='sign',height=12,ground=1} end
@@ -64,6 +94,14 @@ function M.of(primary,secondary,mid)
  end
  if secondary=='pallet_town' and pallet[mid] then
   return {kind=pallet[mid],ground=0x296,roofType=mid>=0x2A8 and 'flat' or 'gable'}
+ end
+ if primary=='building' and (secondary=='pokemon_center' or secondary=='rom_082d4bcc')then
+  local corners=secondary=='pokemon_center' and {0x2A0,0x2A8,0x2B0,0x2B8,0x2A6,0x2AE,0x2B6,0x2BE,0x2A1,0x2A2}
+   or {0x290,0x291,0x298,0x299,0x2A0,0x2A1,0x2BD,0x2BE}
+  for _,tile in ipairs(corners)do if mid==tile then return {kind='interiorFloor',ground=0x281}end end
+  if secondary=='pokemon_center' and mid==0x284 or secondary=='rom_082d4bcc' and (mid==0x285 or mid==0x286)then
+   return {kind='roomWall',ground=0x281}
+  end
  end
  if primary=='building' and secondary=='lab' then
   if mid>=0x68 and mid<=0x6E then return {kind='roomWall',ground=0x289} end
@@ -106,6 +144,10 @@ function M.layout(cells)
   c.column=col
   if col then
    if col.indoor then
+    -- The north wall is one two-row drawing even when a cabinet consumes
+    -- the lower row. Do not stretch its remaining cornice to a whole wall
+    -- or move it a cell behind the neighboring window.
+    if col.first<=1 and col.last<=1 then col.first=0;col.last=1;col.walls=2 end
     col.height=32;col.front=(col.last+1)*16;col.back=col.front-4
    else
     local k=c.pair..':'..col.first..':'..col.roofType
@@ -128,11 +170,13 @@ function M.layout(cells)
     if votes[col.height]>n or (votes[col.height]==n and col.height>h)then h,n=col.height,votes[col.height] end
     front=math.max(front,col.front)
    end
+   local group={left=xs[i]*16,right=(xs[j]+1)*16,front=front,back=math.huge}
+   for a=i,j do group.back=math.min(group.back,band[xs[a]].back)end
    for a=i,j do
     local col=band[xs[a]]
     for y=col.first,col.last do
      local c=cells[xs[a]..':'..y]
-     if c.column then c.column.height=h;c.column.front=front end
+     if c.column then c.column.height=h;c.column.front=front;c.column.group=group end
     end
    end
    i=j+1

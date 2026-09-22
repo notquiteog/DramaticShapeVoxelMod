@@ -19,7 +19,7 @@ for _,case in ipairs({{7,'standard'},{8,'standard'},{6,'viridian'},{7,'fuchsia'}
  local count=0
  for _,c in pairs(cells)do
   assert(c.gym==gyms[1],'gym left a flat facade or roof strip')
-  local col=Buildings.column(c.gym);assert(col.height==32 and col.roofs==3 and col.walls==2 and col.roofInset==12)
+  local col=Buildings.column(c.gym);assert(col.height==28 and col.roofs==3 and col.walls==2 and col.roofInset==12)
   assert(c.shape.kind==(c.cy<=3 and 'roof' or 'wall'));count=count+1
  end
  assert(count==case[1]*5)

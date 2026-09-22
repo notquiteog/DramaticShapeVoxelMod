@@ -717,7 +717,9 @@ local function stagedBattles()
   return OverworldBattle.enabled()
 end
 
+local TreePresentation=V.require("TreePresentation")
 local SETTINGS = {
+  { TreePresentation.setting, "Flat illustrated trunks follow their leaf billboards. SOLID restores the physical trunk and boughs. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
   { LegendaryVisualsPreset.setting,
     "One master profile for Legendary world visuals. OFF preserves Battle Art, "
     .. "CUSTOM restores the exact individual choices you last made, AUTO enables "
@@ -870,9 +872,9 @@ local SETTINGS = {
     full = true },
   { RenderDistance.setting,
     "Limit connected-map terrain, water, figures and characters outside the "
-    .. "camera neighborhood. MEDIUM is the balanced default for the current "
-    .. "sandboxed engine's pure-Lua mesh path; FULL preserves the uncapped "
-    .. "legacy draw distance.",
+    .. "camera neighborhood. AUTO adapts to your platform; LOW, MEDIUM and FAR "
+    .. "set an explicit range. FULL includes the loaded connected maps. "
+    .. "Distant outdoor scenery fades into the sky.",
     full = true },
   { RamPrecache.setting,
     "Maximum compressed voxel cache eagerly loaded after CONTINUE, in MiB. "
@@ -1796,6 +1798,7 @@ mod.events:on("mod.options_changed", function(payload)
   for _, entry in ipairs(SETTINGS) do
     if payload.key == entry[1].key then entry[1]:sync(payload.value) end
   end
+  TreePresentation.changed(payload.key)
   local presetHandled = LegendaryVisualsPreset.changed(payload.key)
   if not presetHandled then CommunityVisuals.changed(payload.key) end
   LegendaryPokeballs.changed()
@@ -2313,6 +2316,7 @@ end)
 -- (src/mods/Loader.lua), so the two can no longer disagree.
 mod.exports.version = mod.version
 mod.exports.battlePresentation = BattlePresentation.export()
+mod.exports.battleTheme = V.require('BattleTheme')
 mod.exports.battleStage = BattleStage.export(OverworldBattle)
 mod.exports.voxel_companion = Companion.provider
 mod.exports.characterRenderers = CharacterRenderers.export()

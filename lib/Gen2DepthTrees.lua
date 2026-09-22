@@ -1,7 +1,7 @@
 -- One complete illustrated foliage card per tree. The physical trunk and
 -- ground shadow are separate; there are no caps, cheeks or stacked crowns.
 local M={}
-function M.append(v,indices,q,x,y,z,lift,seed,family)
+function M.append(v,indices,q,x,y,z,lift,seed,family,flatTrunk)
   local shrub=lift==3
   local sapling=lift<=4 and not shrub
   local phase=(math.sin(seed*12.9898)*43758.5453)%1
@@ -21,7 +21,7 @@ function M.append(v,indices,q,x,y,z,lift,seed,family)
     -- The last three fields are the card's bottom anchor X/Z/Y. A positive
     -- anchor height enables billboarding; ordinary solid meshes use zero.
     v[#v+1]={x+dx*wide,y+base+t*tall,z,
-      (col+.01+(dx+1)*.49)*.5,bottom+(top-bottom)*t,.96,x,z,y+base}
+      (col+.01+(dx+1)*.49)*.5,bottom+(top-bottom)*t,.96,x,z,flatTrunk and y+.001 or y+base}
   end
   for _,i in ipairs({1,2,3,1,3,4}) do indices[#indices+1]=k+i end
   return q+1

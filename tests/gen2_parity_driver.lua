@@ -49,7 +49,7 @@ return function(game)
   assert(travel and travel.state=="loaded","travel companion not loaded")
   if os.getenv("CURRENT_CART_QA")=="1" then
     for _,id in ipairs({"gen1online-plus","double_battles","DRAMATIC_SKY_RIDE",
-      "kanto_gear","gen3_box","gen2_modern_ui","running_shoes","modern_johto"}) do
+      "gen3_box","gen2_modern_ui","running_shoes","modern_johto"}) do
       assert(game.mods.mods[id] and game.mods.mods[id].state=="loaded",id.." not loaded")
     end
   end

@@ -5,6 +5,10 @@ furniture profiles. Specialty interiors and battles retain native presentation. 
 port, not full Crystal/Gamma Emerald parity. [Scope and controls](docs/FIRERED_SUPPORT.md).
 The sealed Johto cart remains Crystal-only on its stable release.
 
+**Unreleased interior pass:** shared cutaway room framing, warm lighting and
+compact-room camera fitting across Gen 1, Crystal and FireRed. FireRed Marts
+and Centers now have native-art furniture depth. [Coverage and remaining work](docs/INTERIOR_DIORAMAS.md).
+
 **Upstream 1.11.0 integration:** includes capture-contact recoil, scoped battle
 fire lighting/effects and optional trainer-shadow provider support. Existing
 Crystal and FireRed features are retained.

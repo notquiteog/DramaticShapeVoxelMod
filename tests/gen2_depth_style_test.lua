@@ -49,14 +49,16 @@ for _,lift in ipairs({4,16,20}) do
   assert(p[9]==-foliage[1][9],'upper wood must share its foliage anchor')
  end
 end
-local q={};assert(Grass.append(q,map,0,0))
-assert(#q==16,'unexpected grass density')
+local pixels={getPixel=function(_,x,y) local v=(x%8>=2 and x%8<=5 and y%8>=2) and .3 or 1;return v,v,v,1 end}
+local q={};assert(Grass.append(q,map,0,0,pixels,7,{}))
+assert(#q>0,'native grass blades missing')
 assert(Grass.groundTile(map)==5,'standing grass underlay must use meadow art')
 for _,quad in ipairs(q) do
  assert(type(quad.shade)=='number','auxiliary mesh requires scalar shade')
  for i=1,4 do local p=quad[i]
-  assert(p[1]>=0 and p[1]<=8 and p[3]>=0 and p[3]<=8)
-  assert(p[2]>=0 and p[2]<8,'grass hides full player')
+  assert(p[1]>=0 and p[1]<=8 and p[3]==4,'grass illustration is no longer flat')
+  assert(quad.canopy and quad.canopy[3]>0,'grass has no camera anchor')
+  assert(p[2]>=0 and p[2]<=8,'grass hides full player')
  end
 end
 map.tileset.id='TILESET_LAB';assert(not Grass.append({},map,0,0),'indoor art used as grass')

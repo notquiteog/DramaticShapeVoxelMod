@@ -96,6 +96,14 @@ end
 function BattlePresentation.export()
   return {
     apiVersion = BattlePresentation.API_VERSION,
+    theme = V.require('BattleTheme'),
+    hudAnchor = function(slot)
+      local shot=V.require('OverworldBattle').shot()
+      local p=shot and shot.heads and shot.heads[slot]
+      if not p then return end
+      local r=require('src.render.Renderer'):frameRects()
+      return r.vux+p[1]*r.vuw,r.vuy+p[2]*r.vuh
+    end,
     drawHostedUI = function(ctx)
       return V.require("OverworldBattle").drawHostedUI(ctx)
     end,

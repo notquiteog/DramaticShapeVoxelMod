@@ -908,6 +908,7 @@ function Structures.forMap(map)
   local TileRenderer = require("src.render.TileRenderer")
   local borderId = TileRenderer.borderBlockFor(map)
   local borderBlk = borderId and tileset.blocks[borderId + 1] or nil
+  if V.require("Gen2Boundary").enabled(map) then borderBlk=nil end
   -- TREES fill stops at ROUND_RING instead of running the full RING.
   -- Only that far out does a tree cell get carved into a hull; past it
   -- the cells fall through to the mesher's plain box, and a slab of
@@ -1004,6 +1005,7 @@ function Structures.forMap(map)
   V.require("SafariStatues").build(S,map)
   V.require("TowerGarden").prepare(S,map,keyOf)
   V.require("GameCorner").build(S,map)
+  V.require("Gen2Exteriors").build(S,map)
   Buildings.build(S, map, pixels(tileset), perRow)
   V.require("Gen2Ledges").build(S,map)
   if tileset.id == "PLATEAU" then
@@ -3468,7 +3470,16 @@ function Structures.buildVolume(S, map, tiles)
           local h=band[j].run.unit*8;votes[h]=(votes[h] or 0)+1
           if votes[h]>count or (votes[h]==count and h>height) then height,count=h,votes[h] end
         end
-        for j=first,last do roofHeights[band[j].run]=height end
+        -- Inset doors shorten their facade columns, not the main roof.
+        -- Share the ridge coordinate across the whole contiguous roof band.
+        local front=band[first].run.front
+        for j=first,last do front=math.max(front,band[j].run.front) end
+        for j=first,last do
+          local run=band[j].run
+          roofHeights[run]=height
+          run.roofFront=front
+          run.roofExtent=front-run.north+1
+        end
         first=last+1
       end
     end
@@ -4804,7 +4815,7 @@ function Structures.buildGrass(S, map, x0, x1, y0, y1, data)
       if s and s.art == "grass"
          and map:isGrassCell(math.floor(tx / 2), math.floor(ty / 2)) then
         local layered=CommunityVisuals.crystalDepth(map)
-          and V.require("Gen2DepthGrass").append(quads,map,tx,ty)
+          and V.require("Gen2DepthGrass").append(quads,map,tx,ty,data,S.tileAt[k],templates)
         if layered then
           -- The raised blades replace the ROM tuft drawing, including its
           -- flat copy. Keep the native collision/classification unchanged.
@@ -4996,7 +5007,10 @@ function Structures.buildFlowers(S, map, tw, th, x0, x1, y0, y1, data)
       local s = S.shapeAt[k]
       if crystal and S.tileAt[k]==3 and s then
         S.skip[k],S.ground[k]=true,crystal.ground
-        if tx>=0 and ty>=0 and tx<tw and ty<th then flowers.append(quads,map,tx,ty) end
+        if tx>=0 and ty>=0 and tx<tw and ty<th then
+          templates[3]=templates[3] or flowers.template(map,data)
+          flowers.append(quads,map,tx,ty,data,templates[3])
+        end
       elseif s and s.art == "flower" then
         -- the tile's atlas slot carries only the standing cutout now, so
         -- EVERY flower position -- ring included -- paints synthesized

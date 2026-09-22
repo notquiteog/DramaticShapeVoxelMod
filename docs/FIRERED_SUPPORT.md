@@ -6,7 +6,28 @@ the Johto sealed cart still targets Crystal and stays on stable Battle Art.
 Supply/import your own FireRed ROM through the engine. No ROM or imported art
 is included in this repository or mod ZIP.
 
-## Beta3 additions and corrected scope
+## Unreleased checkout changes
+
+Shared interior dioramas now frame supported houses, labs, Marts and Centers.
+Shop/Center recipes add native-art furniture depth; compact rooms fit the
+static camera, with side-window lighting and enclosed eye-level views.
+Native healing/shop/special effects retain their fallback. Other specialty
+interiors still need separate adapters. See [interior coverage](INTERIOR_DIORAMAS.md).
+
+Shared Auto/Low/Medium/Far/Full render distance, per-boundary water/rock/tree
+continuation and stable sky fading are implemented. Connected maps remain
+authoritative. See [render-distance scope and checks](RENDER_DISTANCE.md).
+
+The working tree now uses flat gym roofs with beveled edges, complete civic
+buildings and38 reviewed house/landmark families. Lavender Tower joins its
+Route10 dome to its town facade; its square base meets newly raised General
+cliff masses. The top shape is retained. These are presentation changes;
+walkable terrain/collisions remain native. TREE TRUNKS defaults to FLAT HD-2D.
+
+This work is not in the beta3 ZIP and has not been pinned into the sealed cart.
+See [exterior coverage and remaining work](EXTERIOR_COVERAGE.md).
+
+## Published beta3 additions and corrected scope
 
 - Complete exteriors for all eight main Kanto gyms plus Saffron's Fighting Dojo.
   Whole drawings cover 6–8-column widths, missing back roof strips, wider facade
@@ -66,9 +87,14 @@ Healing, door animations, shops, battle transitions and active special field eff
 native presentation. They must not disappear for the sake of a 3D screenshot.
 Camera rotation therefore does not turn those fallback scenes into 3D.
 
-FireRed battles remain entirely native. This update does not port Crystal's
-staged battles, full-body battle providers, double-battle mod, riding, followers,
-multiplayer companions or optional post-processing controls. Do not install
+The unreleased 3D BATTLE STAGE now renders a cleared terrain scene behind
+FireRed's native battle sprites. Overhead status cards follow each sprite's
+visible head; lower-right commands use the shared silver/pixel UI theme.
+Native battle mechanics, animation, messages and special prompts retain their
+owners, with native fallback when the scene cannot render. FireRed battlers
+are still native screen sprites, not depth-tested world-space cards. Crystal's
+full-body providers, double-battle mod, riding, followers, multiplayer
+companions and optional post-processing controls are not ported. Do not install
 Crystal-only companions on FireRed on the basis of this mod's compatibility.
 
 Other city-specific buildings and their architecture, rocks, cliff faces, remaining fence/ledge variants and decorations still need FireRed-specific recipes. Unclassified
@@ -107,3 +133,10 @@ Drivers: `tests/gen3_views_driver.lua`, `tests/gen3_roof_views_driver.lua`,
 Local evidence: `/tmp/firered-hd2d/{candidate-views,roof-1440p,crystal-city-views}`.
 
 Beta3 adds native checks for all eight gym exteriors plus the Fighting Dojo (32 camera captures), outdoor details and flower-clock/material refresh (27 captures), and Crystal radio desk priority (nine captures). These are focused scene checks; gym puzzles and battles were not re-certified.
+
+Unreleased battle QA on the actual 0.2.73 AppImage at 2560×1440 verifies
+head-card rendering, command directions, move selection, native HP damage,
+stage lifetime through actions and return to the overworld without moving
+the player. Full FireRed doubles, multiplayer, capture, fainting and level-up
+sequences have not been certified by this test. Exact reference parity remains
+in progress.

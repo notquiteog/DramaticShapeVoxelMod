@@ -786,6 +786,7 @@ local function monCards(arena, groundY, textures)
       end
       out[#out + 1] = { tex = tex.canvas,
                         side = side,
+                        hudAnchors=tex.hudAnchors or (not tex.trainer and {[side]={tex.ax,tex.ay-(tex.contentHeight or 56)}}or nil),
                         noDayTint = tex.noDayTint,
                         model = model }
     end
@@ -840,10 +841,12 @@ local function castShadows(state, arena, terrain, nbMesh, cx, cy, vw, vh,
     .. CommunityFlora.shadowSignature(state, arena.mid[1], arena.mid[2])
   sig = sig .. "|trainer:" .. tostring(CharacterRenderers.battleActive())
     .. ":" .. tostring(CharacterRenderers.revision())
+  sig = sig .. "|distance:" .. tostring(V.require("RenderDistance").radius())
   if not ShadowMap.stale(sig) then return end
   if not ShadowMap.begin(cx, cy, vw, vh) then return end
 
   ShadowMap.draw(terrain, atlasFor(host), nil)
+  V.require("Gen2Boundary").draw({map=host,neighbors=neighbors},cx,cy,vw,vh,atlasFor,ShadowMap.draw)
   V.require("GameCorner").draw(host, ShadowMap)
   LegendaryTowerExterior.drawMap(host,nil,ShadowMap)
   for _,nb in ipairs(neighbors)do V.require("LegendaryGarden").draw(nb.map,ShadowMap,Mat4.translate(nb.ox,0,nb.oy))end
@@ -1354,7 +1357,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
   -- and this staged battle shot. Reading the setting through Voxel3D leaves
   -- the player's choice untouched.
   local out = nil
-  Voxel3D.fog = battleFog
+  Voxel3D.fog = battleFog or V.require("Gen2Boundary").haze({map=host,neighbors=neighbors},cx,cy,VoxelScene.skyColor(host,1))
   local ok, err = pcall(function()
     -- its own canvas slot: this renders at the window's pixel size and the
     -- free-roam pass does too, but the two are alive at different moments
@@ -1402,6 +1405,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
         WorldUnderlay.draw({ map = host }, cx, cy, battleUnderlay)
       end
       Voxel3D.draw(terrain, atlasFor(host), nil)
+      V.require("Gen2Boundary").draw({map=host,neighbors=neighbors},cx,cy,vw,vh,atlasFor)
       V.require("GameCorner").draw(host)
       LegendaryTowerExterior.drawMap(host)
       for _,nb in ipairs(neighbors)do V.require("LegendaryGarden").draw(nb.map,nil,Mat4.translate(nb.ox,0,nb.oy))end
@@ -1640,6 +1644,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
     if not (pl and pr and el and er) then return end
     out = {
       canvas = canvas,
+      heads=V.require('BattleHudAnchors').project(cards,vp),
       trainerDrawn = providerTrainer,
       player = { pmx, pmy },
       enemy = { emx, emy },

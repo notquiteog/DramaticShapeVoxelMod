@@ -13,7 +13,7 @@ function M.forTileset(ts)
  for _,b in pairs(ts.blocks or {}) do for _,t in ipairs(b) do used[t]=true end end
  for _,f in ipairs(ts.anim and ts.anim.frames or {}) do if f.tile then used[f.tile]=true end end
  local flower=V.require('Gen2Flowers').forTileset(ts)
- if flower then used[flower.slot]=true end
+ if flower and flower.slot then used[flower.slot]=true end
  local capacity=(ts.tilesPerRow or 16)*math.floor((ts.imageHeight or 128)/8)
  for t=128,capacity-1 do if not used[t] then
   local p={tile=tile,slot=t};cache[ts]=p;return p

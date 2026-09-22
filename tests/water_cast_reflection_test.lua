@@ -262,6 +262,16 @@ T.eq(sent.castOn[1], 0, "castOn is clear when there is no cast canvas")
 T.check(sent.castTex ~= nil,
   "but the sampler is bound anyway, so the draw cannot fault on it")
 
+-- Distance haze must cover reflected water as well as terrain, and reset
+-- on the next indoor/clear pass instead of carrying an outdoor horizon in.
+fakes.Voxel3D.fog={color={.6,.7,.8},origin={120,0,80},density=.03,start=220,heightK=0}
+T.check(begin(nil), "water starts with distance haze")
+T.same(sent.fogOrigin[1], {120,0,80}, "water uses the same ground origin")
+T.same(sent.fogInfo[1], {.03,220,0,1}, "water receives the planar distance range")
+fakes.Voxel3D.fog=nil
+T.check(begin(nil), "water returns to an unfogged pass")
+T.same(sent.fogInfo[1], {0,0,0,0}, "outdoor fade cannot leak indoors")
+
 -- ------- the canvas is owned, not leaked
 
 local vox = io.open(root .. "/lib/Voxel3D.lua")

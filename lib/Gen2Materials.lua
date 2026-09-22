@@ -59,34 +59,13 @@ local function meadow(x,y)
   return (n(0,0)*(1-u)+n(1,0)*u)*(1-v)+(n(0,1)*(1-u)+n(1,1)*u)*v
 end
 function M.color(kind,x,y,r,g,b,light,depth)
-  if kind=="caveFloor" then
-    local broad=math.floor(meadow(x,y)*6)/6
-    local chip=noise(math.floor(x/2),math.floor(y/2),81)>.94 and -.035 or 0
-    return (.34+broad*.11+chip)*light,(.32+broad*.09+chip)*light,(.27+broad*.07+chip)*light
-  elseif kind=="caveRock" then
-    local seam=math.abs(math.sin(x*.22+math.sin(y*.21)*1.6))<.12 and -.055 or 0
-    local facet=math.floor(meadow(x,y)*5)/5
-    return .30+facet*.12+seam,.31+facet*.11+seam,.30+facet*.10+seam
-  elseif depth and kind=="grass" then
-    local patch=math.floor(meadow(x,y)*5)/5
-    return (.31+patch*.09)*light,(.47+patch*.13)*light,(.16+patch*.06)*light
-  elseif depth and kind=="path" then
-    local patch=math.floor(meadow(x,y)*4)/4
-    local chip=noise(math.floor(x/3),math.floor(y/3),37)>.97 and -.06 or 0
-    return (.62+patch*.10+chip)*light,(.53+patch*.09+chip)*light,(.34+patch*.08+chip)*light
-  end
   local grain=noise(x,y,19)-.5
-  if kind=="grass" then
-    local field=(meadow(x,y)-.5)*.095+grain*.018
-    local blade=(noise(math.floor(x/2),math.floor(y/3),7)>.84) and .024 or 0
-    return (.37+field+blade)*light,(.56+field+blade)*light,(.24+field*.65)*light
-  elseif kind=="path" then
-    local speck=noise(x,y,37)>.976 and -.09 or 0
-    local v=grain*.035+speck
-    return (.69+v)*light,(.65+v)*light,(.51+v)*light
-  elseif kind=="water" then
-    local wave=math.sin(x*math.pi/16+math.sin(y*math.pi/16))*.023+grain*.008
-    return (.15+wave)*light,(.39+wave)*light,(.53+wave)*light
+  if kind=="grass" or kind=="path" or kind=="water" or kind=="stone"
+    or kind=="caveFloor" or kind=="caveRock" or kind=="paving" then
+    -- Keep native palette, markings and light/dark relationships. Fine grain
+    -- adds surface detail without repainting routes, water or cave geology.
+    local tone=1+grain*.035
+    return math.min(1,r*tone),math.min(1,g*tone),math.min(1,b*tone)
   elseif kind=="floor" then
     local grout=(x==0 or y==0) and .86 or 1
     local tone=(r+g+b)/3
@@ -97,9 +76,6 @@ function M.color(kind,x,y,r,g,b,light,depth)
     local knot=math.sin(math.sqrt((x-19)^2+(y-15)^2)*1.5)*.016
     local v=strand+knot+grain*.025
     return (.40+v)*light,(.285+v*.8)*light,(.17+v*.55)*light
-  elseif kind=="stone" then
-    local v=.38+(r+g+b)/3*.25+grain*.065
-    return v*.99,v,v*.96
   elseif kind=="paving" or kind=="brick" then
     local row=math.floor(y/8)
     local stagger=(x+(row%2)*8)%16
@@ -109,22 +85,20 @@ function M.color(kind,x,y,r,g,b,light,depth)
     if kind=="paving" then
       return (.62+variation)*light,(.51+variation)*light,(.44+variation)*light
     end
-    return .67+variation,.61+variation,.48+variation
+    local gray=(r+g+b)/3
+    return (r*.78+gray*.22)+variation,(g*.78+gray*.22)+variation,(b*.78+gray*.22)+variation
   elseif kind=="roof" then
     local row=math.floor(y/8)
-    local joint=x%16
-    local tileNoise=noise(math.floor(x/16),row,3)
-    -- Aligned rolled seams and concave pans, not staggered brick courses.
-    -- Their scale matches the two four-world-unit channels in each cell.
-    local roll=math.cos(joint/16*math.pi*2)
-    local seam=(y%8==7) and .80 or 1
-    local tone=(.82+tileNoise*.08+roll*.09)*seam
+    local joint=(x+(row%2)*4)%8
+    local variation=(noise(math.floor((x+(row%2)*4)/8),row,3)-.5)*.045
+    local tone=.94+variation
+    if y%8==7 then tone=tone-.12
+    elseif joint==0 then tone=tone-.07
+    elseif y%8==0 then tone=tone+.025 end
     local gray=(r+g+b)/3
-    -- Weathered glazed tiles retain the town's roof hue, with a softer
-    -- saturation and irregular mineral flecks instead of bright brick grids.
-    local fleck=(noise(x,y,83)-.5)*.014
-    return (r*.48+gray*.52)*tone+fleck,
-      (g*.48+gray*.52)*tone+fleck,(b*.48+gray*.52)*tone+fleck
+    -- Small, defined tile joints and restrained highlights; no sinusoidal
+    -- rolls, horizontal dark waves or noisy all-over mineral texture.
+    return (r*.78+gray*.22)*tone,(g*.78+gray*.22)*tone,(b*.78+gray*.22)*tone
   elseif kind=="plaster" then
     local v=grain*.024
     return .76+v,.73+v,.64+v
@@ -172,17 +146,24 @@ function M.apply(map,base,source)
   local floorFinish=floorModule and floorModule.forTileset(map.tileset)
   local flowers=V.require("Gen2Flowers")
   local flowerMaterial=flowers.forTileset(map.tileset)
+  local flowerMask
+  if flowerMaterial then
+    local raw=require('src.render.Assets').imageData(map.tileset.image)
+    flowerMask=flowers.mask(raw,3%(map.tileset.tilesPerRow or 16)*8,math.floor(3/(map.tileset.tilesPerRow or 16))*8)
+  end
   local shore=depth and V.require("Gen2Shoreline")
   local shoreMaterial=shore and shore.forTileset(map.tileset)
   local sandLight=1
+  local sandR,sandG,sandB=0,0,0
   if shoreMaterial then
     local tile=shoreMaterial.tile;local n=0
     local pr=map.tileset.tilesPerRow or 16
     for y=0,7 do for x=0,7 do
       local r,g,b=source:getPixel(tile%pr*8+x,math.floor(tile/pr)*8+y)
-      n=n+math.max(r,g,b)
+      n=n+math.max(r,g,b);sandR,sandG,sandB=sandR+r,sandG+g,sandB+b
     end end
     sandLight=math.max(.35,math.min(1,n/64/.83))
+    sandR,sandG,sandB=sandR/64,sandG/64,sandB/64
   end
   local pr=map.tileset.tilesPerRow or 16
   -- All roof drawings share one glaze. Sampling only the light ceramic
@@ -214,10 +195,10 @@ function M.apply(map,base,source)
     for y=0,31 do for x=0,31 do
       local r,g,b,a=source:getPixel(tx*8+math.floor(x/4),ty*8+math.floor(y/4))
       if shoreMaterial and tile==shoreMaterial.slot then
-        r,g,b=M.color("path",x,0,0,0,0,sandLight,true)
+        r,g,b=M.color("path",x,0,sandR,sandG,sandB,sandLight,true)
         r,g,b=shore.color(x,y,r,g,b);a=1
-      elseif flowerMaterial and tile==flowerMaterial.slot then
-        r,g,b=flowers.color(x,y);a=1
+      elseif flowerMask and tile==3 then
+        if not flowerMask[math.floor(y/4)*8+math.floor(x/4)] then a=0 end
       elseif floorFinish and floorFinish.quadrants[tile]~=nil then
         r,g,b=floorModule.color(floorFinish,floorFinish.quadrants[tile],x,y)
         a=1
@@ -225,14 +206,8 @@ function M.apply(map,base,source)
       elseif kind then r,g,b=M.color(kind,x,y,r,g,b,light,depth)
       elseif architecture=="roof" then
         r,g,b=M.color("roof",x,y,roofR,roofG,roofB,1)
-      elseif architecture then r,g,b=M.color(architecture,x,y,r,g,b,1)
-      elseif attr.palette==3 then
-        -- Preserve the drawn leaf/flower silhouette while taking fluorescent
-        -- yellow out of the grass palette. This includes mixed edge tiles.
-        r,g,b=r*.64,g*.76,b*.72
-      elseif attr.palette==7 then
-        local grain=(noise(x,y,tile)-.5)*.023
-        r,g,b=math.max(0,r*.78+grain),math.max(0,g*.78+grain),math.max(0,b*.78+grain)
+      elseif architecture then r,g,b=M.color(architecture,x,y,architecture=="brick" and ar/64 or r,architecture=="brick" and ag/64 or g,architecture=="brick" and ab/64 or b,1)
+
       end
       data:setPixel(tx*32+x,ty*32+y,r,g,b,a)
     end end

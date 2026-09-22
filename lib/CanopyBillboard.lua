@@ -31,7 +31,9 @@ M.shader=[[
     float sx=length((transform*vec4(1.0,0.0,0.0,0.0)).xyz);
     float sy=length((transform*vec4(0.0,1.0,0.0,0.0)).xyz);
     vec3 d=vertex.xyz-localAnchor;
-    w.xyz=anchor+right*d.x*sx+up*d.y*sy;
+    // A small local depth offset keeps the flat trunk behind its leaf art.
+    float sz=length((transform*vec4(0.0,0.0,1.0,0.0)).xyz);
+    w.xyz=anchor+right*d.x*sx+up*d.y*sy+forward*d.z*sz;
     return w;
   }
 ]]

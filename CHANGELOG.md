@@ -1,3 +1,74 @@
+## 1.21.0 — 2026-09-22
+
+Includes upstream absol89 through 1.11.0, preserving the fork’s independent
+HD-2D presentation and Gen 2/3 adapters. Requires Gen1Recomp 0.2.73+.
+
+### interior dioramas across three generations
+
+Add shared open-front room framing, finished wall edges, side windows, warm
+indirect light and camera fitting for compact rooms. Close the room around
+first-person cameras; retain free-camera controls and large-hall scrolling.
+Clip the old void border in both visible and shadow passes. Add native-art
+FireRed Mart/Center furniture and flat, camera-aware indoor plants.
+See [interior scope and verification](docs/INTERIOR_DIORAMAS.md).
+
+### shared render distance and contextual boundaries
+
+Add Auto / Low / Medium / Far / Full to both Crystal and FireRed, preserving
+saved settings. Real connected maps take precedence over scenery. Extend coast
+water, raised rock and nearby tree families across each boundary; retain stable
+placement while rotating. Include Ilex and FireRed's larger Viridian trees.
+Share shadows, trunk settings and distance haze, including reflected water.
+Full follows the loaded region's bounds; remove the cyan backing-plane seam.
+See [render distance details and verification](docs/RENDER_DISTANCE.md).
+
+### overhead battle cards and FireRed terrain stages
+
+Follow the user's battle reference with silver status cards above Pokémon,
+pixel text and four colored commands at the lower right. FireRed gets a 3D
+terrain background with whole-object clearing around the stage and camera;
+native battle mechanics/sprites/animations retain their existing owners.
+Head anchors use visible sprite bounds, without species-dependent scaling.
+Gen1/2 expose projected card anchors and a shared theme for companion HUDs;
+the separate Double Battles package consumes these public exports.
+
+Native 1440p FireRed and Crystal checks cover commands, head anchors and HP
+damage. FireRed battlers are still native screen sprites, and full cross-gen
+UI, doubles/multiplayer and reference-art parity remain unfinished.
+
+### native HD-2D plants, exterior fidelity and raised FireRed cliffs
+
+Use original FireRed flower, grass and shrub drawings as single flat HD-2D
+cutouts, with native colours, silhouettes and flower animation. Crystal's
+flowers and encounter grass likewise use their own native drawings. Keep
+plants fixed in static third person and facing free/battle cameras; remove
+the rejected rounded relief geometry and retain native FireRed rock sprites.
+Preserve Crystal's native scenery palettes instead of procedural recolouring.
+Cut clears camera anchors as well as vertex positions, and Crystal plant
+meshes bypass the older disk format that cannot retain those anchors.
+
+Crystal Centers and shared brick buildings now use square bodies and slab
+roofs, preserving their original front signs and native masonry colors.
+Rebuild whole Johto/Kanto facade drawings with closed sides and backs. Keep
+Kanto house dormers within their roofs instead of making an extra storey.
+
+FireRed gyms use flat roof centers with narrow bevels. Separate native roof,
+facade and entry art for Centers, Marts and38 reviewed exterior families;
+continue wall finishes/windows around the sides and back. Restore Viridian
+chimneys and alternate One Island/Saffron service buildings.
+
+Join Lavender Tower's drawing across Route10 and Lavender. Preserve its green
+dome and antenna above faceted window bays. A square48-unit masonry base fills
+the complete footprint and meets the surrounding raised cliffs. Reviewed
+General cliff masses have32-unit caps and continuous steep edges; walkable
+ground, small jump ledges, collision and warps stay engine-owned. This is not
+yet a complete multi-level terrain or cave-portal implementation.
+
+Add TREE TRUNKS: FLAT HD-2D (default) or SOLID. Separate trunk/leaf depth and
+remove detached neighboring fragments from the owned canopy illustrations at
+runtime. Cache67. All-exterior visual review and specialty models remain in
+progress; no new release or sealed-cart pin yet.
+
 ## 1.21.0-beta.3 — 2026-09-22
 
 Reconstruct complete FireRed gym exteriors across all eight Kanto gym towns,

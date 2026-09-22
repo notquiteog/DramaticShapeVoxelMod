@@ -16,9 +16,9 @@ local RenderDistance = {}
 -- legacy behavior for screenshots or unusually wide survey views.
 RenderDistance.setting = ModSetting.new(
   "renderDistance", "R.DIST",
-  { 16, 32, 64, false, "auto" },
-  { "LOW", "MEDIUM", "FAR", "FULL", "AUTO" },
-  2)
+  { "auto", 16, 32, 64, false },
+  { "AUTO", "LOW", "MEDIUM", "FAR", "FULL" },
+  1)
 
 function RenderDistance.radius()
   local ok, cells = pcall(RenderDistance.setting.get, RenderDistance.setting)
@@ -76,4 +76,14 @@ function RenderDistance.section(x, y, extent, player)
   return dx * dx + dy * dy <= (radius + (extent or 0)) ^ 2
 end
 
+-- Fade the finite draw budget into the same sky colour before its edge.
+-- Reserve one build chunk so stepping does not expose a hard cutoff.
+function RenderDistance.haze(color,extent,origin,bounds)
+ if not RenderDistance.radius() and bounds and origin then
+  return {color=color,start=.55,density=16,heightK=0,origin=origin,bounds=bounds}
+ end
+ local radius=RenderDistance.radius() or extent or 1536
+ local edge=math.max(96,radius-96)
+ return {color=color,start=edge*.48,density=7/(edge*.52),heightK=0,origin=origin}
+end
 return RenderDistance

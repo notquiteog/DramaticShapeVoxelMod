@@ -12,7 +12,7 @@ return function(game)
  love.window.setMode(1920,1080,{resizable=true})
  game.world.trySceneScript=function()return false end
  game.world.rollEncounter=function()return nil end
- game.mods.modOptions.overworld_wild_spawns.catch_hud_size=0
+ if game.mods.modOptions.overworld_wild_spawns then game.mods.modOptions.overworld_wild_spawns.catch_hud_size=0 end
  require('src.render.Pipelines').setLevel('voxel',3)
  assert(V.require('CommunityVisuals').crystalDepth(game.world.map),'HD-2D must be default')
  V.require('DayNight').setting:sync('day')
@@ -82,13 +82,27 @@ return function(game)
      claimed=claimed+1
     end
    end end
-   assert(#S.flowerQuads==claimed*30,'flower model missing or duplicated')
+   assert(#S.flowerQuads==claimed,'expected one flat native card per flower tile')
    assert(mesher.flowers(game.world.map),'flower mesh never uploaded')
    flowerCount=flowerCount+claimed
   end
   local n=0
   for y=0,def.height*4-1 do for x=0,def.width*4-1 do n=n+1;assert(before[n]==game.world.map:tileAt(x,y),'source map mutated') end end
   assert(U.shot(game,dir..'/'..c.name..'.png'))
+  if c.count then
+   for _,level in ipairs({6,7})do
+    require('src.render.Pipelines').setLevel('voxel',level);U.wait(20)
+    local F=V.require('FirstPerson');F.lookBy(.45-F.yaw,.25-F.pitch);U.wait(8)
+    assert(V.require('Voxel3D').canopyFacing,'plant camera facing disabled')
+    assert(U.shot(game,dir..'/'..c.name..'_'..level..'.png'))
+   end
+   require('src.render.Pipelines').setLevel('voxel',3);U.wait(8)
+   local q=S.flowerQuads[1];local mesh=assert(mesher.flowers(game.world.map))
+   local vertex={mesh:getVertex(1)}
+   assert(#vertex==9 and vertex[9]>0,'GPU flower lost its camera anchor')
+   assert(mesher.dropBlock(c.id,math.floor(q[1][1]/32),math.floor(q[1][3]/32))>0,'Cut did not clear the plant mesh')
+   for i=1,4 do for _,v in ipairs({mesh:getVertex(i)})do assert(v==0,'Cut left an anchored vertex visible')end end
+  end
   print('[flowers/rocks]',c.id,c.name,px,py,#S.flowerQuads)
  end
  assert(flowerCount>0,'no native flowers exercised')

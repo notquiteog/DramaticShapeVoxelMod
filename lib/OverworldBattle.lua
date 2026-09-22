@@ -504,7 +504,7 @@ function OverworldBattle.snapRects(shot)
                p[3] * hs, p[4] * hs },
   }
   local playerBand = OverworldBattle.HUD_BAND.player
-  return rects, {
+  local placement = {
     enemy = { x = ex, y = shot.ly, scale = hs },
     -- Preserve the HUD's original top row while shrinking its internal
     -- distance from the band boundary. This leaves clear world between its
@@ -515,6 +515,18 @@ function OverworldBattle.snapRects(shot)
       scale = hs,
     },
   }
+  for _,side in ipairs({'enemy','player'})do
+    local head=shot.heads and shot.heads[side]
+    if head then
+      local r=rects[side];local source=OverworldBattle.HUD_RECT[side]
+      local hx,hy=head[1]*shot.pw,head[2]*shot.ph
+      r[1]=math.max(2,math.min(shot.pw-r[3]-2,hx-r[3]/2))
+      r[2]=math.max(2,hy-r[4]-8*hs);r.head=hx
+      placement[side].x=r[1]-source[1]*hs
+      placement[side].y=r[2]-(source[2]-OverworldBattle.HUD_BAND[side][2])*hs
+    end
+  end
+  return rects,placement
 end
 
 -- A rect measured in the GB frame, in WORLD-canvas pixels: where the letterbox

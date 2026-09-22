@@ -159,7 +159,7 @@ end
 -- void to wants -- the overworld battle's arena shot is one of those. The
 -- gradient is added on top of this by skyFor, for the free-roam camera alone.
 function VoxelScene.skyColor(map, t)
-  if not (map and map.def and (Map.isOutdoor(map.def) or map.id == 'SAFARI_ZONE_CENTER')) then return nil end
+  if not (map and map.def and (Map.isOutdoor(map.def) or map.id == 'SAFARI_ZONE_CENTER' or V.require('Gen2Boundary').enabled(map))) then return nil end
   if not t or t <= 0 then return nil end
   local sky = VoxelScene.skyShade(SKY_SHADE, t)
   -- outdoors the flat fill follows the CLOCK: it becomes the hour's haze --
@@ -685,6 +685,7 @@ local function heldFrame(w, h, mapId)
 end
 
 function VoxelScene.invalidate()
+  V.require("Gen2Boundary").clear()
   ItemPokeballs.invalidate()
   Gen2Rocks.invalidate()
   Gen2FruitTrees.invalidate()
@@ -1237,7 +1238,7 @@ local function castShadows(state, terrain, nbMesh, posed, cx, cy, vw, vh,
   if not Timings.call("shadow_setup", ShadowMap.available) then return end
   local function signature()
     local sig = shadowSignature(state, terrain, nbMesh, posed, cx, cy, vw, vh)
-    return sig .. "|community-tree:" .. CommunityFlora.shadowSignature(state)
+    return sig .. "|community-tree:" .. CommunityFlora.shadowSignature(state) .. "|distance:" .. tostring(RenderDistance.radius())
   end
   local sig = Timings.call("shadow_keys", signature)
   if not ShadowMap.stale(sig) then return end
@@ -1246,6 +1247,8 @@ local function castShadows(state, terrain, nbMesh, posed, cx, cy, vw, vh,
   end
 
   local function castWorld()
+  local room=V.require("InteriorDiorama").forMap(state.map,V.require("Generation").number())
+  ShadowMap.roomClip(room and room.bounds)
   ShadowMap.draw(terrain, atlasFor(state.map), nil)
   ShipHull.draw(state, atlasFor(state.map), true)
   for _, visual in ipairs(visualShadows or {}) do
@@ -1288,6 +1291,7 @@ local function castShadows(state, terrain, nbMesh, posed, cx, cy, vw, vh,
   end
   end
   Timings.call("shadow_world", castWorld)
+  V.require("Gen2Boundary").draw(state,cx,cy,vw,vh,atlasFor,ShadowMap.draw)
   pcall(Timings.call, "shadow_trees", CommunityFlora.castShadows,
         state, ShadowMap, Mat4)
   -- From here down it is the CAST, marked as such in the map (see
@@ -1413,7 +1417,7 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   Voxel3D.glassPhase, Voxel3D.glassGlint = g.phase, g.amp
   local atmos = CommunityVisuals.customForest()
                 and ForestAtmos.frame(state.map) or nil
-  Voxel3D.fog = atmos and atmos.fog or nil
+  Voxel3D.fog = atmos and atmos.fog or V.require("Gen2Boundary").haze(state,cx,cy,VoxelScene.skyColor(state.map,1))
 
   renderGeneration = renderGeneration + 1
   local generation = renderGeneration
@@ -1469,8 +1473,14 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   -- exactly what it always was. The scene centre it returns walks from
   -- the orbit's view centre into the head, so the curve's focus and the
   -- depth reference follow the camera actually in charge.
+  local Interior=V.require("InteriorDiorama")
+  local room=Interior.forMap(state.map,V.require("Generation").number())
   local fpRig, fpCx, fpCy = FirstPerson.frame(me, cx, cy, vw, vh)
-  if fpRig then cx, cy = fpCx, fpCy end
+  if fpRig then cx, cy = fpCx, fpCy
+  elseif room then
+    local camera=Interior.camera(room,Voxel.angle,vw/vh)
+    if camera then Voxel3D.camera=camera;cx,cy=camera.focus[1],camera.focus[3]end
+  end
 
   -- The host camera remains authoritative. A companion can return only a
   -- finite additive delta, which Voxel3D copies and bounds before projection.
@@ -1501,8 +1511,10 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
               water, nbWater, visualShadows, nbVisualShadows)
 
   V.require("StreetLights").configure(state)
-  if not Voxel3D.beginScene(w, h, cx, cy, vw, vh, skyFor(state.map)) then
+  Interior.configure(room)
+  if not Voxel3D.beginScene(w, h, cx, cy, vw, vh, room and Interior.background or skyFor(state.map)) then
     Voxel3D.setCompanionCameraDelta(nil)
+    Voxel3D.interior = nil
     Voxel3D.fog = nil
     return nil
   end
@@ -1525,8 +1537,10 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   -- One material-coloured plane below the whole loaded neighborhood closes
   -- literal terrain holes without obscuring a single valid world fragment.
   -- Drawn before terrain, depth alone decides where it remains visible.
-  V.require("Gen2InteriorShell").draw(state.map)
-  WorldUnderlay.draw(state, cx, cy, underlayColor)
+  if room then Interior.draw(room) else
+    V.require("Gen2InteriorShell").draw(state.map)
+    WorldUnderlay.draw(state, cx, cy, underlayColor)
+  end
   Voxel3D.draw(terrain, atlasFor(state.map), nil)
   CavePerimeter.draw(state.map, atlasFor(state.map))
   ShipHull.draw(state, atlasFor(state.map), false)
@@ -1582,7 +1596,9 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   -- Trees or rocks continue the authored route beyond its finite mesh. They
   -- stand only on world cells outside the root/connected-map rectangles,
   -- so no billboard can poke through valid terrain or block the player.
-  WorldFillProps.draw(state, cx, cy, vw, vh)
+  if not V.require("Gen2Boundary").draw(state,cx,cy,vw,vh,atlasFor) then
+    WorldFillProps.draw(state, cx, cy, vw, vh)
+  end
 
   -- The first additive world seam: base terrain and distant host props are
   -- complete, while actors, water, and translucent work have not drawn.

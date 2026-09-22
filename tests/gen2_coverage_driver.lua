@@ -69,6 +69,12 @@ return function(game)
    local shapes=Shape.forMap(map)
    local list=templates(ts)
    local claimed,placed=placements(map,list)
+   local exteriorCells={}
+   if Map.isOutdoor(def) then
+    for _,g in ipairs(V.require('Gen2Exteriors').placements(map))do
+     for y=g.y,g.y+g.depth-1 do for x=g.x,g.x+g.width-1 do exteriorCells[y*def.width*4+x]=true end end
+    end
+   end
    local generic=0
    for cy=0,map.heightCells-1 do for cx=0,map.widthCells-1 do
     local tx,ty=cx*2,cy*2
@@ -76,11 +82,12 @@ return function(game)
     local fullProp=claimed[ty*def.width*4+tx] and claimed[ty*def.width*4+tx+1] and claimed[(ty+1)*def.width*4+tx] and claimed[(ty+1)*def.width*4+tx+1]
     local drawing=table.concat({map:tileAt(tx,ty),map:tileAt(tx+1,ty),map:tileAt(tx,ty+1),map:tileAt(tx+1,ty+1)},':')
     local collision=map:cellCollision(cx,cy)
-    local treatment=fullProp and 'modeled_prop' or shape.class=='wall' and 'generic_wall_review' or 'classified_'..shape.class
+    local fullExterior=exteriorCells[ty*def.width*4+tx] and exteriorCells[ty*def.width*4+tx+1] and exteriorCells[(ty+1)*def.width*4+tx] and exteriorCells[(ty+1)*def.width*4+tx+1]
+    local treatment=fullExterior and 'modeled_exterior' or fullProp and 'modeled_prop' or shape.class=='wall' and 'generic_wall_review' or 'classified_'..shape.class
     local tileKey=def.tileset..':'..drawing..':'..tostring(collision)..':'..treatment
     local row=tileRows[tileKey] or {tileset=def.tileset,drawing=drawing,collision=collision,treatment=treatment,cells=0,maps={},example=id,x=cx,y=cy}
     tileRows[tileKey]=row;row.cells=row.cells+1;row.maps[id]=true
-    if shape.class=='wall' and not (claimed[ty*def.width*4+tx] and claimed[ty*def.width*4+tx+1]
+    if shape.class=='wall' and not fullExterior and not (claimed[ty*def.width*4+tx] and claimed[ty*def.width*4+tx+1]
       and claimed[(ty+1)*def.width*4+tx] and claimed[(ty+1)*def.width*4+tx+1]) then
      generic=generic+1
      local sig=table.concat({map:tileAt(tx,ty),map:tileAt(tx+1,ty),map:tileAt(tx,ty+1),map:tileAt(tx+1,ty+1)},':')

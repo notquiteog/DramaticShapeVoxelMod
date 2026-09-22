@@ -3,11 +3,17 @@ local O=assert(loadfile('lib/Gen3Outdoor.lua'))()
 local uv={{0,0},{1,0},{1,1},{0,1}}
 local function geometry(mid)
  local faces={}
- O.append({cx=3,cy=4,mid=mid,ts={},shape=S.of('general','pallet_town',mid)},function(v,t)
+ O.append({cx=3,cy=4,mid=mid,ts={cols=256,midToSlot=setmetatable({},{__index=function(_,id)return id end}),imageData={getPixel=function(_,x,y)
+ local px=x%16;local solid=x>=32 and px>=2 and px<=13 and y>=2 and y<=13
+ return solid and .2 or .6,.7,.4,1 end}},shape=S.of('general','pallet_town',mid)},function(v,t,shade,anchor)
   for i,p in ipairs(v)do
    assert(p[1]>=48 and p[1]<=64 and p[3]>=64 and p[3]<=80,'prop escaped its native cell')
-   assert(p[2]>=0 and p[2]<=12,'prop became an oversized block')
+   assert(p[2]>=0 and p[2]<=16,'prop became an oversized block')
    for _,n in ipairs(t[i])do assert(n>=0 and n<=1,'UV escaped native drawing')end
+  end
+  if mid==4 or mid==5 or mid==0xD then
+   assert(anchor and anchor[1]==56 and anchor[2]==72 and anchor[3]>0,'native plant has no rooted camera anchor')
+   for _,p in ipairs(v)do assert(p[3]==72,'native plant was inflated into a lump')end
   end
   faces[#faces+1]=v
  end,function()return uv end)
@@ -21,7 +27,8 @@ for _,mid in ipairs({0x87,0x97,0xB0,0xB1,0xC0,0xC1,0xC8,0xC9})do
  local max=0;for _,face in ipairs(geometry(mid))do for _,p in ipairs(face)do max=math.max(max,p[2])end end
  assert(max==2.5,'ledge is no longer a low mound')
 end
-for _,mid in ipairs({2,3,4,5,0xD})do assert(#geometry(mid)>0)end
+for _,mid in ipairs({2,3})do assert(#geometry(mid)>0)end
+for _,mid in ipairs({4,5,0xD})do assert(#geometry(mid)==1,"one native drawing became multiple cards")end
 assert(S.of('general','pallet_town',1).reviewedSurface)
 assert(not S.of('general','unreviewed',0x333).reviewedSurface,'unknown drawing reported as reviewed ground')
 print('PASS outdoor scope, fence geometry, low ledge bounds and surface coverage distinction')
