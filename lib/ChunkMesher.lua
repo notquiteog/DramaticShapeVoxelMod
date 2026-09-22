@@ -2822,6 +2822,12 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
           local idx = math.min(run.roofRows - 1,
                                math.floor((1 - rel) * run.roofRows))
           local roofTile = map:tileAt(tx, run.north + idx)
+          if S.gen2 then
+            -- Edge drawings include black bands and facade pixels. The
+            -- ceramic shell supplies its own ridge/eaves; use a whole pan
+            -- material across every column, including short annex roofs.
+            roofTile=V.require("Gen2Materials").roofTile(map.tileset.id) or roofTile
+          end
           local swY, seY, neY, nwY = hS, hS, hN, hN
           if heightAt(tx - 1, ty) < run.h then     -- west flank: hip
             swY = math.max(run.h, hS - 8)
@@ -2849,6 +2855,8 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
             V.require("Gen2RoofShell").append(run,tx,ty,{swY,seY,neY,nwY},
               function(nx,ny)return S.runs[keyOf(nx,ny)] end,
               heightAt,push,uvRect,wallTile)
+            V.require("Gen2RoofShell").trim(run,tx,ty,{swY,seY,neY,nwY},
+              function(nx,ny)return S.runs[keyOf(nx,ny)] end,push,uvRect,roofTile)
           end
         elseif run then
           local topTile = s.topTile

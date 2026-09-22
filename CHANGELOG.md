@@ -1,3 +1,24 @@
+## 1.20.3 — 2026-09-21
+
+Give Crystal pitched roofs a restrained Japanese ceramic-tile treatment:
+concave pans and raised seams, overlapping tile lips, a rounded ridge cap,
+gently curved slopes and projecting eaves with closed, shaded undersides.
+Johto and Kanto roof surfaces use coherent ceramic materials instead of
+stretching old ridge/eave drawings over the slope. Keep each town's roof hue
+in a less saturated glaze. Facade collision and native paths remain unchanged;
+flat rooftops retain their geometry. Cache56 rebuilds older roof meshes.
+
+Geometry checks cover shared and stepped roof boundaries, bounded tile relief,
+front/back eaves, ridge ownership and outward face winding for free-camera
+views. The native 0.2.73 roof review covers five towns and 45 static/first/
+rotating-third-person views. Foliage mode assertions remain in the driver.
+
+The full Crystal inventory covers388 maps/35 tilesets and1,549 furniture
+placements. It does not establish visual perfection: ordinary walls and
+unfinished props both remain in the generic-cell census. See
+[the visual coverage report](docs/CRYSTAL_VISUAL_COVERAGE.md) for scope and
+remaining work. Existing six MK301 ROM-cache findings are unchanged.
+
 ## 1.20.2 — 2026-09-21
 
 Keep trees and bushes at a fixed orientation in static third-person/diorama

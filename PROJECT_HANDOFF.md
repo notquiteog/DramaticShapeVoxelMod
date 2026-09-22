@@ -1,3 +1,37 @@
+# Roof update and fresh coverage — 2026-09-21
+
+Current batch BA1.20.3 / cart1.13.1; release status/hashes will be recorded
+below after the exact archive boot. User asked whether EVERYTHING was perfect:
+answered NO. Never claim complete visual parity or exhaustive verification.
+
+Gen2RoofShell now curves the existing pitched slope, adds ceramic pans/rolled
+seams, overlapping lips, a rounded ridge and modest projecting eaves with
+closed soffits. Original facade collision/footprints stay native. Gen2Materials
+uses a coherent muted town glaze, tile14 for Johto/JohtoModern pitched roofs,
+tile5 for Kanto. Flat rooftop geometry unchanged. Cache56. Static/free-camera
+foliage modes from1.20.2 are unchanged and asserted in the new roof driver.
+
+Native actual0.2.73/1440p evidence:
+- /tmp/johto-hd/roofs-final-1203:45 views,5 towns,3 static+6 free angles each.
+- /tmp/johto-hd/coverage-1203: census388 maps,35 tilesets,1,549 furniture
+  matches;81/82 recipes placed. Generic wall cells31,353 in1,236 signatures
+  include normal walls, not just missing models.
+- /tmp/johto-hd/tileset-review-1203.log:35 representative native scenes built,
+  none lacked walkable cameras; screenshots2560x1440. Coverage driver now sets
+  window size, clears dialogue and resets the mode per map. Earlier
+  tileset-views-1203 screenshots had stale-frame/dialogue artifacts and are NOT
+  the visual review set. Kanto material finalization is in this second survey.
+- Geometry tests cover closed stepped seams, ceramic relief, eave/ridge bounds,
+  one ridge per column, outward winding on both roof halves, material scope.
+- Style isolation, cache40, tile-shapes95, support181 pass. Six existing MK301
+  ROM-cache findings unchanged; validation is not clean.
+
+See docs/CRYSTAL_VISUAL_COVERAGE.md for visible work still required: irregular
+large/joined building proportions, vivid/repeated city walls/paving, specialty
+interiors, and the unmatched radio-terminal recipe. Roof finish does not fix
+those building-volume decisions. No native gameplay, multiplayer or companion
+logic changed. Only disposable QA profile modified; live user game untouched.
+
 # Latest correction — static vs free-camera foliage — 2026-09-21
 
 User's final mode rule: static third-person/diorama levels1–5 keep ALL trees

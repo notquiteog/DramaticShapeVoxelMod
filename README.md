@@ -1,5 +1,11 @@
 # Battle Art Voxel Fork
 
+**Crystal 1.20.3:** Japanese-inspired ceramic pitched roofs with curved tile
+channels, capped ridges and shaded eaves. Static-view foliage stays fixed;
+first-person, rotating-third-person and battle foliage faces the camera.
+[Visual coverage and remaining work](docs/CRYSTAL_VISUAL_COVERAGE.md) records
+what has actually been checked; all-map visual perfection is not claimed.
+
 **1.17.2 — Layered Crystal HD-2D:** illustrated curved tree canopies, low shrubs with separate cuttable saplings, small flowers, irregular reef stones, softened wet-sand shores, expanded furniture and floors, and optional lighting/Depth of Field. HD-2D is the default Crystal style; the previous style selector is removed. [Settings, coverage and verification](docs/CRYSTAL_1_17.md).
 
 **TEST137 Tower master and wall finishes:** adds a true **TOWER VISUALS** A/B switch as the first row in **LEGENDARY VISUALS → POKEMON TOWER**. `BATTLE ART` restores the original Tower atlas, wall height, floor, counter, graves and stairs and disables the added fog/details; `LEGENDARY VISUALS` restores the complete Tower conversion. A new **TOWER WALL** row selects the existing dark `SMOKE BLACK` granite or the new 2048px `STORM WHITE` and `PEARL WHITE` reference-matched slabs. TEST137 also closes claimed grave-floor gaps in staged battles so the blue scene void cannot show between monuments. Keep **Grass and Flowers TEST4** and **Battle Cinematics TEST5** as the companion mods. See [TEST137 notes](docs/TEST137.md).

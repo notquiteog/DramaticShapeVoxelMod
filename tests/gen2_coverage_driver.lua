@@ -104,6 +104,7 @@ return function(game)
  out:close()
  print('[coverage] inventoried maps',count)
  if os.getenv('QA_INVENTORY_ONLY')=='1' then love.event.quit();return end
+ love.window.setMode(2560,1440,{resizable=true})
  game.world.trySceneScript=function()return false end
  game.world.rollEncounter=function()return nil end
  game.mods.modOptions.overworld_wild_spawns.catch_hud_size=0
@@ -137,12 +138,14 @@ return function(game)
   end end
   if px then
    print('[coverage view]',i,#views,ts,group.id,group.maps,'maps')
+   game.stack:clear()
    assert(game.world:setMap(group.id,px,py,'down'))
-   visuals.invalidate()
+   require('src.render.Pipelines').setLevel('voxel',3)
    U.wait(8)
    for _=1,2400 do if mesher.pending()==0 and voxel.ready then break end U.wait(1) end
    assert(mesher.pending()==0 and voxel.ready,'coverage scene failed: '..group.id)
    U.wait(140)
+   game.stack:clear()
    game.world.mapSign=nil
    local S=V.require('Structures').forMap(game.world.map)
    for _,f in ipairs(S.furniture or {}) do

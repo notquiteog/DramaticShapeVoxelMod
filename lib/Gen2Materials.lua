@@ -18,6 +18,10 @@ local floorKinds={
 local woodSlots=setmetatable({},{__mode="k"})
 local labWood={[3]=true,[4]=true,[5]=true,[6]=true,[7]=true,
   [19]=true,[20]=true,[21]=true,[22]=true,[23]=true,[37]=true,[38]=true,[39]=true}
+function M.roofTile(id)
+  if id=="TILESET_JOHTO" or id=="TILESET_JOHTO_MODERN" then return 14 end
+  if id=="TILESET_KANTO" then return 5 end
+end
 function M.architectureKind(id,tile)
   if id=="TILESET_JOHTO" or id=="TILESET_JOHTO_MODERN" then
     if tile>=13 and tile<=18 then return "roof" end
@@ -27,6 +31,7 @@ function M.architectureKind(id,tile)
     if tile==1 or tile==22 or tile==26 or tile==28 or (tile>=55 and tile<=58) then
       return "timberTrim"
     end
+  elseif id=="TILESET_KANTO" and tile==5 then return "roof"
   elseif id=="TILESET_LAB" and labWood[tile] then return "furnitureWood" end
 end
 function M.woodTile(map)
@@ -96,17 +101,19 @@ function M.color(kind,x,y,r,g,b,light,depth)
     return v*.99,v,v*.96
   elseif kind=="roof" then
     local row=math.floor(y/8)
-    local joint=(x+(row%2)*8)%16
-    local tileNoise=noise(math.floor((x+(row%2)*8)/16),row,3)
-    local bevel=(y%8)/7
-    local seam=(y%8==7 or joint==0) and .78 or 1
-    local tone=(.88+tileNoise*.14+.12*math.sin(bevel*math.pi))*seam
+    local joint=x%16
+    local tileNoise=noise(math.floor(x/16),row,3)
+    -- Aligned rolled seams and concave pans, not staggered brick courses.
+    -- Their scale matches the two four-world-unit channels in each cell.
+    local roll=math.cos(joint/16*math.pi*2)
+    local seam=(y%8==7) and .80 or 1
+    local tone=(.82+tileNoise*.08+roll*.09)*seam
     local gray=(r+g+b)/3
     -- Weathered glazed tiles retain the town's roof hue, with a softer
     -- saturation and irregular mineral flecks instead of bright brick grids.
     local fleck=(noise(x,y,83)-.5)*.014
-    return (r*.78+gray*.22)*tone+fleck,
-      (g*.78+gray*.22)*tone+fleck,(b*.78+gray*.22)*tone+fleck
+    return (r*.48+gray*.52)*tone+fleck,
+      (g*.48+gray*.52)*tone+fleck,(b*.48+gray*.52)*tone+fleck
   elseif kind=="plaster" then
     local v=grain*.024
     return .76+v,.73+v,.64+v
@@ -167,6 +174,21 @@ function M.apply(map,base,source)
     sandLight=math.max(.35,math.min(1,n/64/.83))
   end
   local pr=map.tileset.tilesPerRow or 16
+  -- All roof drawings share one glaze. Sampling only the light ceramic
+  -- pixels avoids baking the old black ridge/eave stripes into the new
+  -- sloping surface; geometry now supplies those edges and their shadows.
+  local roofR,roofG,roofB,roofN=0,0,0,0
+  local roofTile=M.roofTile(map.tileset.id)
+  if roofTile then
+    local first,last=roofTile==14 and 13 or 5,roofTile==14 and 18 or 9
+    for tile=first,last do for sy=0,7 do for sx=0,7 do
+      local r,g,b=source:getPixel(tile%pr*8+sx,math.floor(tile/pr)*8+sy)
+      if math.max(r,g,b)>.20 then
+        roofR,roofG,roofB,roofN=roofR+r,roofG+g,roofB+b,roofN+1
+      end
+    end end end
+    if roofN>0 then roofR,roofG,roofB=roofR/roofN,roofG/roofN,roofB/roofN end
+  end
   for ty=0,h/8-1 do for tx=0,w/8-1 do
     local tile=ty*pr+tx
     local attr=attrs.forTile(map.tileset,tile)
@@ -191,11 +213,7 @@ function M.apply(map,base,source)
       elseif kind=="floor" then r,g,b=M.color(kind,x,y,ar/64,ag/64,ab/64,light)
       elseif kind then r,g,b=M.color(kind,x,y,r,g,b,light,depth)
       elseif architecture=="roof" then
-        -- Keep dark eaves and edge outlines; replace the drawn stripes with
-        -- staggered courses using this map's own roof palette.
-        if math.max(r,g,b)>.20 then
-          r,g,b=M.color("roof",x,y,ar/64*.84,ag/64*.84,ab/64*.84,1)
-        end
+        r,g,b=M.color("roof",x,y,roofR,roofG,roofB,1)
       elseif architecture then r,g,b=M.color(architecture,x,y,r,g,b,1)
       elseif attr.palette==3 then
         -- Preserve the drawn leaf/flower silhouette while taking fluorescent
