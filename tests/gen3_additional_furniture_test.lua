@@ -42,4 +42,17 @@ assert(profiles.rom_082d4c2c.surfaces[0x109] and profiles.rom_082d4c2c.surfaces[
  'museum wooden floor inherited generic room wall')
 for _,p in pairs(profiles)do for mid in pairs(p.surfaces)do assert(not p.walls[mid],'floor is also wall')end end
 assert(not profiles.rom_082d4f2c.walls[0x314],'Mansion statue treated as room shell')
+local Shapes=dofile('lib/Gen3TileShape.lua')
+package.loaded['src.core.game3.collision']={isSurfable=function()return false end}
+-- Native Museum1F corner: (15,6) has behavior128/collision144, while the
+-- artwork directly below at (15,7) is solid7. Both belong to one low counter.
+local counter={}
+for y,tile in pairs({[6]={0x29E,128,144},[7]={0x2AC,0,7}})do
+ local shape=Shapes.of('building','rom_082d4c2c',tile[1],tile[2],tile[3])
+ assert(shape.kind=='flat' and not shape.reviewedSurface,'counter became a wall or falsely approved floor')
+ counter['15:'..y]={cx=15,cy=y,mid=tile[1],shape=shape,pair='building__rom_082d4c2c'}
+end
+Shapes.layout(counter)
+assert(not counter['15:7'].column,'counter bend generated a room-height slab')
+assert(Shapes.of('building','rom_082d4c2c',0x287,0,7).kind=='roomWall','museum north wall lost depth')
 print('PASS '..count..' complete interior drawings, partial/pair isolation, native UVs and explicit floor exemptions')

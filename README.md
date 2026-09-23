@@ -1,3 +1,11 @@
+## Museum counter classification — 1.23.0-test.11
+
+Stops one museum counter bend from rising into a room-height slab. The native counter artwork remains in place; a complete counter model is still a coverage gap. Native collision and scripts are unchanged.
+
+Exact published test.10 captures on official native0.3.1 were inspected: noon/low-moon player and HGSS follower grounding, explicit raised-actor height, eight Oak lab approach views, three Pewter rock views, and fifteen cave views across five palettes. The large actor shadow gap and detached Pewter rock caps are resolved in those fixtures. Full native option/scenery parity and exhaustive movement/companion coverage remain unfinished.
+
+**TEST PRERELEASE — the museum correction still needs exact published-archive visual verification.** Its classification/column regression, the 15-object furniture checks and LuaJIT compilation pass. The earlier complete map censuses remain classification evidence, not a full visual pass.
+
 ## Animated BW fronts, actor contact and rock silhouettes — 1.23.0-test.10
 
 Aligns native FireRed actors and provider sprites to one visible baseline across their animation frames, including Canvas-backed followers and furniture-supported items. Authored provider baselines, jump/hop differences and explicit ride/flight heights remain intact. Native actor shadows now use the existing shared contact correction and matching light lookup; terrain shadow bias is unchanged. Rock geometry uses the largest connected foreground silhouette, preventing disconnected floor stripes and grit from forming floating caps in Pewter gym.
