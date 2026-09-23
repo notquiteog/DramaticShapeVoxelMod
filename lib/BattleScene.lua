@@ -1284,6 +1284,14 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
       local wide=math.max(0,math.min(.6,pw/ph-4/3))
       cam.fov=2*math.atan(math.tan(cam.fov/2)*(1.25+wide*.45))
     end
+    -- A paired sprite canvas extends past the lead's world anchor. Widen
+    -- our own rig so the near partner is not cropped off the window edge.
+    local paired = false
+    for _,tex in pairs(textures or {}) do
+      local heads = type(tex)=="table" and tex.hudAnchors
+      if heads and (heads.player2 or heads.enemy2) then paired = true end
+    end
+    if paired then cam.fov=2*math.atan(math.tan(cam.fov/2)*1.4) end
   end
 
   local cx, cy = arena.mid[1], arena.mid[2]

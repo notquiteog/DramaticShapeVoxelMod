@@ -1,3 +1,11 @@
+## Four-battler framing and complete animated backs — 1.23.0-test.8
+
+Four Gen 1 double-battle cards follow the actual composed sprite heads, and the camera widens to keep both near-side Pokemon in view. FireRed/LeafGreen modern commands preserve full-body sprite pixels beneath the old command window; status anchors use the selected artwork. Fixes the packaged animated BW back atlas path (dex 1–251). Includes the shared modern UI toggle and functional Gen 3 shadow/world-curve/wireframe controls from test.7.
+
+Verified using isolated scripted profiles on latest official Gen1Recomp 0.3.1: four-card Yellow online doubles, normal battle completion with matching state hashes and intact owned parties; Crystal integrated sprite/settings checks; FireRed 1440p UI toggle, native directional input, animated back frame changes, damage, attack-stage lifetime and field return. Inspected native rendered captures, including complete FireRed back sprites and all four Yellow battlers. Final archive checks follow publication.
+
+These remain test releases. Full cross-generation feature parity, complete animation coverage, Gen 3 shiny-context handling and exhaustive multiplayer move/disconnect scenarios are unfinished. User saves and live profiles were not touched.
+
 ## Shared modern battle HUD and bundled animated backs — 1.23.0-test.7
 
 Gen 1 staged battles now have separate projected status cards for all four double battlers and compact commands drawn after attack effects. MODERN BATTLE UI is a live shared setting across all three generations; OFF retains native UI. Gen 3 exposes the existing shadow, world-curve and wireframe controls. The selected-art renderer can reuse the bundled animated BW back atlases for dex 1–251; missing species retain static fallback. Custom installed atlases remain first priority. Crystal remains the default Gen 1/2 sprite pack.

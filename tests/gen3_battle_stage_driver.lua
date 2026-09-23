@@ -1,7 +1,7 @@
 -- Native presentation/command/HP checks, isolated from the user's save.
 return function(game)
  local U=dofile('tests/drivers/util.lua');local dir=assert(os.getenv('SHOT_DIR'))
- assert(love.filesystem.getIdentity()=='firered-hd2d-qa')
+ assert(love.filesystem.getIdentity():match('qa$'),'use an isolated QA identity')
  love.window.setMode(2560,1440,{resizable=true})
  local E=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK)
  local C,S=E.firered.camera,E.firered.battles
@@ -19,7 +19,23 @@ return function(game)
  local bounds=E.lib.require('SpriteHeadBounds').get(Pokemon.frontPic(19).image)
  print('[FR stage] Rattata native bounds',unpack(bounds))
  assert(bounds[2]>0,'head anchor fell back to empty sprite padding')
+ local V=E.lib;local mode=V.require('ModernBattleUI')
+ local art=V.require('AnimatedBattleArt');local def=assert(art.definitionFor({mon={species='BULBASAUR'}},'back'))
+ assert(def.image=='assets/crystal/full_body/normal/1.png' and def.frames>1,'bundled back not selected')
+ local first=assert(art.picture({species='BULBASAUR'},'back'));local changed=false
+ for _=1,50 do U.wait(2);if art.picture({species='BULBASAUR'},'back')~=first then changed=true;break end end
+ assert(changed,'bundled BW back animation frozen')
  assert(U.shot(game,dir..'/commands-1440p.png'))
+ mode.setting:sync(false);U.wait(4)
+ assert(not next(S.hud.cards) and not S.hud.menu,'OFF retained modern HUD')
+ U.tap(game,'right');assert(Ui._menuIndex==2,'OFF retained modern input remap')
+ U.tap(game,'left');assert(Ui._menuIndex==1)
+ assert(U.shot(game,dir..'/native-ui-1440p.png'))
+ mode.setting:sync(true);U.wait(4)
+ local schemas={};for _,row in ipairs(game.mods.optionSchemas.BATTLE_ART_VOXEL_FORK)do schemas[row.key]=row end
+ for _,setting in ipairs({mode.setting,V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting})do
+  local row=assert(schemas[setting.key]);assert(row.type=='choice' or row.type=='toggle',setting.key..' read only')
+ end
  -- Right from FIGHT is PKMN in the requested layout, down is ITEMS. The
  -- original controller still owns selection/confirmation and all actions.
  U.tap(game,'right');assert(Ui._menuIndex==3,'right did not select PKMN')

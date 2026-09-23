@@ -294,7 +294,7 @@ local function bundledBack(key, shiny)
   if not row then return nil end
   local durations = {}
   for i,seconds in ipairs(row.durations) do durations[i] = seconds * 1000 end
-  local def = {image="crystal/full_body/"..id..".png", width=row.w,
+  local def = {image="assets/crystal/full_body/"..id..".png", width=row.w,
     height=row.h, columns=row.columns, frames=#durations,
     durations=durations, stableAnchor=true}
   bundledBacks[id] = def

@@ -32,6 +32,13 @@ function M.install()
    if not r[1]then error(r[2],0)end;return unpack(r,2)
   end
   undo[#undo+1]=function()UI.draw=draw end
+  -- HUD head bounds must read the same selected image as the native draw.
+  local battlerPic=UI.battlerPic
+  UI.battlerPic=function(...)
+   local prior=active;active=true;local r={pcall(battlerPic,...)};active=prior
+   if not r[1]then error(r[2],0)end;return unpack(r,2)
+  end
+  undo[#undo+1]=function()UI.battlerPic=battlerPic end
   for _,side in ipairs({'front','back'})do
    local key=side..'Pic';local original=P[key]
    P[key]=function(species,form,...)

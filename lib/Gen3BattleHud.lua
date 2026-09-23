@@ -29,7 +29,31 @@ function M.install(stage)
   return input(keys)
  end
  local capturing=false
- function M.reset()M.cards={};M.menu=nil;M.covered=false;capturing=false end
+ local Chrome=require('src.ui.game3.battle_chrome')
+ local panel=Chrome.drawPanel
+ local underlay,underlayReady
+ -- Preserve the actors before the native command window covers their feet.
+ -- Erasing this strip used to cut a full-body back at y=112.
+ Chrome.drawPanel=function(mode,...)
+  if capturing and stage.active and (mode=='menu' or mode=='moves') then
+   local G=love.graphics;local source=G.getCanvas()
+   if source then
+    underlay=underlay or G.newCanvas(240,48,{dpiscale=1})
+    underlay:setFilter('nearest','nearest')
+    G.push('all')
+    local ok,err=pcall(function()
+     G.setCanvas(underlay);G.origin();G.setShader();G.setScissor();G.setDepthMode()
+     G.setBlendMode('replace','premultiplied');G.setColor(1,1,1,1)
+     G.clear(0,0,0,0);G.draw(source,0,-112)
+    end)
+    G.pop()
+    if not ok then error(err,0)end
+    underlayReady=true
+   end
+  end
+  return panel(mode,...)
+ end
+ function M.reset()M.cards={};M.menu=nil;M.covered=false;capturing=false;underlayReady=false end
  function M.begin()M.reset();capturing=Mode.enabled() end
  function M.finish()
   capturing=false
@@ -65,7 +89,9 @@ function M.install(stage)
   -- attack frames, party/bag, evolution and special prompts keep their owner.
   local G=love.graphics;G.push('all');G.origin();G.setShader();G.setScissor()
   G.setBlendMode('replace','premultiplied');G.setColor(0,0,0,0)
-  G.rectangle('fill',0,112,240,48);G.pop()
+  G.rectangle('fill',0,112,240,48)
+  if underlayReady then G.setColor(1,1,1,1);G.draw(underlay,0,112)end
+  G.pop()
  end
  Health.draw=function(side,battler,opts)
   local st=Battle._st
@@ -152,6 +178,9 @@ function M.install(stage)
   end
   return result
  end)
- return function()Health.draw=original;Ui.handleInput=input;M.reset()end
+ return function()
+  Health.draw=original;Ui.handleInput=input;Chrome.drawPanel=panel;M.reset()
+  if underlay then underlay:release();underlay=nil end
+ end
 end
 return M
