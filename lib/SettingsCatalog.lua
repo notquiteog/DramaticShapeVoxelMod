@@ -1,5 +1,13 @@
--- Generated from ModSetting declarations; unsupported adapters remain visible, read-only.
+-- Declaration inventory. Per-generation consumers/status live in OptionSupport;
+-- declaring a setting or listing a row is never evidence that it works.
 return {
+ {key="modernBattleUI",label="MODERN BATTLE UI",module="ModernBattleUI"},
+ {key="tiltshift",label="T-SHIFT",module="TiltShift"},
+ {key="crystalFront",label="CRYSTAL PLAYER FRONT",module="CrystalSprites"},
+ {key="crystalTrainers",label="CRYSTAL CUSTOM SPRITES",module="CrystalSprites"},
+ {key="crystalPlayerSprite",label="CRYSTAL PLAYER PORTRAIT",module="CrystalSprites"},
+ {key="crystalBattlePic",label="CRYSTAL TRAINER VIEW",module="CrystalSprites"},
+ {key="crystalAnimations",label="CRYSTAL ANIMATIONS",module="CrystalSprites"},
  {key="aa",label="AA",module="AntiAlias"},
  {key="arenaFill",label="ARENA FILL",module="UiBackplates"},
  {key="atmos",label="FOREST FX",module="ForestAtmos"},

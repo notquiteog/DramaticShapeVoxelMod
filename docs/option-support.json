@@ -1,0 +1,2681 @@
+{
+  "generations": {
+    "1": [
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "modernBattleUI",
+        "verification": "source audit",
+        "module": "ModernBattleUI",
+        "status": "implemented",
+        "consumer": "lib/ModernBattleUI.lua",
+        "label": "MODERN BATTLE UI"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "tiltshift",
+        "verification": "source audit",
+        "module": "TiltShift",
+        "status": "implemented",
+        "consumer": "lib/TiltShift.lua",
+        "label": "T-SHIFT"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "crystalFront",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua",
+        "label": "CRYSTAL PLAYER FRONT"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "crystalTrainers",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua",
+        "label": "CRYSTAL CUSTOM SPRITES"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "crystalPlayerSprite",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua",
+        "label": "CRYSTAL PLAYER PORTRAIT"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "crystalBattlePic",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua",
+        "label": "CRYSTAL TRAINER VIEW"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "crystalAnimations",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua",
+        "label": "CRYSTAL ANIMATIONS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "aa",
+        "verification": "source audit",
+        "module": "AntiAlias",
+        "status": "implemented",
+        "consumer": "lib/AntiAlias.lua",
+        "label": "AA"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "arenaFill",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/UiBackplates.lua",
+        "label": "ARENA FILL"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "atmos",
+        "verification": "source audit",
+        "module": "ForestAtmos",
+        "status": "implemented",
+        "consumer": "lib/ForestAtmos.lua",
+        "label": "FOREST FX"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "backAnimatedSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/BattleArt.lua",
+        "label": "BACK ART SET"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "backPlacement",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/BattleArt.lua",
+        "label": "BACK PLACEMENT"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "backdropOffset",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/UiBackplates.lua",
+        "label": "BG Y-OFFSET"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "battleArt",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/BattleArt.lua",
+        "label": "BATTLE ART"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "battleUi",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/UiBackplates.lua",
+        "label": "BATTLE ART UI"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "battles",
+        "verification": "source audit",
+        "module": "OverworldBattle",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua",
+        "label": "3D-BTL"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "bossBg",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/UiBackplates.lua",
+        "label": "BOSS BG"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityCasino",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "CASINO"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityCaveDetails",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "CAVE DETAILS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityCaveSound",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "CAVE SOUND"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityCaves",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "CAVES"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityCityGround",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "CITY GROUND"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityCourtyards",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "FENCES & COURTS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityCutTrees",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "CUT TREES"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityElevator",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "ROCKET ELEVATOR"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityForest",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "VIRIDIAN FOREST"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityGrass",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "GRASS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityMasonry",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "WALL & LEDGE COLOR"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityPillars",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "LEGENDARY PILLARS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityPrizeRoom",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "PRIZE ROOM"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityRoads",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "ROADS & BRIDGES"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityRocket",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "ROCKET HIDEOUT"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communitySigns",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "SIGNS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communitySky",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "SKY & BACKGROUND"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityTower",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "TOWER VISUALS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityTowerWall",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "TOWER WALL"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityTreeDetail",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "TREE DETAIL"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityTrees",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "TREES"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityTunnels",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "TUNNELS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "communityWalls",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/CommunityVisuals.lua",
+        "label": "WALLS & LEDGES"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "curve",
+        "verification": "source audit",
+        "module": "WorldCurve",
+        "status": "implemented",
+        "consumer": "lib/WorldCurve.lua",
+        "label": "V-CURVE"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "daytime",
+        "verification": "source audit",
+        "module": "DayNight",
+        "status": "implemented",
+        "consumer": "lib/DayNight.lua",
+        "label": "DAYTIME"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "duplicateFix",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/BattleArt.lua",
+        "label": "DUPLICATE FIX"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "emberLegacyAudio",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "EMBER LEGACY AUDIO"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "emberLegacyVolume",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "EMBER LEGACY VOLUME"
+      },
+      {
+        "generation": 1,
+        "detail": "Native Gen3 camera/battle settings; Gen1 uses its voxel pipeline and 3D-BTL.",
+        "key": "fireredBattleStage",
+        "verification": "source audit",
+        "module": "Gen3Battle",
+        "status": "not_applicable",
+        "consumer": false,
+        "label": "3D BATTLE STAGE"
+      },
+      {
+        "generation": 1,
+        "detail": "Native Gen3 camera/battle settings; Gen1 uses its voxel pipeline and 3D-BTL.",
+        "key": "fireredCamera",
+        "verification": "source audit",
+        "module": "Gen3Integration",
+        "status": "not_applicable",
+        "consumer": false,
+        "label": "2.5D CAMERA"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "frontAnimatedSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/BattleArt.lua",
+        "label": "ANIM FRONT GEN"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "frontFlip",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/BattleArt.lua",
+        "label": "FLIP FRONT SPRITE"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "full_body_backs",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua",
+        "label": "FULL-BODY BATTLE BACKS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "grid",
+        "verification": "source audit",
+        "module": "VoxelGrid",
+        "status": "implemented",
+        "consumer": "lib/VoxelGrid.lua",
+        "label": "V-GRID"
+      },
+      {
+        "generation": 1,
+        "detail": "Native Gen2/3 scenery controls; Gen1 uses the Legendary scenery families.",
+        "key": "hdTreeTrunks",
+        "verification": "source audit",
+        "module": "TreePresentation",
+        "status": "not_applicable",
+        "consumer": false,
+        "label": "TREE TRUNKS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "hudColor",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/UiBackplates.lua",
+        "label": "HUD COLOR"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "hudScale",
+        "verification": "source audit",
+        "module": "OverworldBattle",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua",
+        "label": "HUD SCALE"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "interfaceScaling",
+        "verification": "source audit",
+        "module": "InterfaceSprites",
+        "status": "implemented",
+        "consumer": "lib/InterfaceSprites.lua",
+        "label": "INTERFACE SCALING"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "interfaceSprites",
+        "verification": "source audit",
+        "module": "InterfaceSprites",
+        "status": "implemented",
+        "consumer": "lib/InterfaceSprites.lua",
+        "label": "INTERFACE SPRITES"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "invertY",
+        "verification": "source audit",
+        "module": "FirstPerson",
+        "status": "implemented",
+        "consumer": "lib/FirstPerson.lua",
+        "label": "Y-CONTROL INVERT"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "legendaryPokeballs",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "EMBER LEGACY"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "legendaryVisualsMode",
+        "verification": "source audit",
+        "module": "LegendaryVisualsPreset",
+        "status": "implemented",
+        "consumer": "lib/LegendaryVisualsPreset.lua",
+        "label": "LEGENDARY VISUALS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "playerAnimatedSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/BattleArt.lua",
+        "label": "PLAYER ANIM"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "playerArtSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/BattleArt.lua",
+        "label": "PLAYER ART"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "playerView",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/BattleArt.lua",
+        "label": "PLAYER"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "pokeballBeam",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "BEAM STRENGTH"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "pokeballCapturePreset",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "CAPTURE FX PRESET"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "pokeballCaptureSpeed",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "CAPTURE SPEED"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "pokeballFxScale",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "FX SCALE"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "pokeballOpenTime",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "BALL OPEN TIME"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "pokeballPokemonGlow",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "POKEMON GLOW"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "pokeballSize",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "BALL SIZE"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "pokeballStreamers",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "STREAMERS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "pokeballSuction",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "SUCTION FX"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "pokeballSuctionParticles",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "implemented",
+        "consumer": "lib/PokeballSettings.lua",
+        "label": "SUCTION PARTICLES"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "ramPrecacheMb",
+        "verification": "source audit",
+        "module": "RamPrecache",
+        "status": "implemented",
+        "consumer": "lib/RamPrecache.lua",
+        "label": "RAM PRECACHE MB"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "renderDistance",
+        "verification": "source audit",
+        "module": "RenderDistance",
+        "status": "implemented",
+        "consumer": "lib/RenderDistance.lua",
+        "label": "R.DIST"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "shadowQuality",
+        "verification": "source audit",
+        "module": "Shadows",
+        "status": "implemented",
+        "consumer": "lib/Shadows.lua",
+        "label": "SHADOWS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "spriteLight",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/UiBackplates.lua",
+        "label": "SPRITE LIGHT"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "spritePack",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua",
+        "label": "SPRITE PACK (RESTART)"
+      },
+      {
+        "generation": 1,
+        "detail": "Requires the optional compatible Stadium scene provider; no provider means no consumer.",
+        "key": "stadiumCircle",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "provider",
+        "consumer": "lib/StadiumBackground.lua",
+        "label": "STADIUM CIRCLE"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "standingTrainer",
+        "verification": "source audit",
+        "module": "OverworldBattle",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua",
+        "label": "STANDING TRAINER"
+      },
+      {
+        "generation": 1,
+        "detail": "Native Gen2/3 scenery controls; Gen1 uses the Legendary scenery families.",
+        "key": "surfaceArtwork",
+        "verification": "source audit",
+        "module": "TreePresentation",
+        "status": "not_applicable",
+        "consumer": false,
+        "label": "SCENERY TEXTURES"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "textboxFill",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/UiBackplates.lua",
+        "label": "TEXTBOX FILL"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "towerDetails",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "implemented",
+        "consumer": "lib/TowerFogSettings.lua",
+        "label": "TOWER DETAILS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "towerFog",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "implemented",
+        "consumer": "lib/TowerFogSettings.lua",
+        "label": "TOWER FOG"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "towerFogSpeed",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "implemented",
+        "consumer": "lib/TowerFogSettings.lua",
+        "label": "FOG SPEED"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "towerFogThickness",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "implemented",
+        "consumer": "lib/TowerFogSettings.lua",
+        "label": "FOG THICKNESS"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "trainerArtSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/BattleArt.lua",
+        "label": "TRAINER ART"
+      },
+      {
+        "generation": 1,
+        "detail": "Native Gen2/3 scenery controls; Gen1 uses the Legendary scenery families.",
+        "key": "treeArtwork",
+        "verification": "source audit",
+        "module": "TreePresentation",
+        "status": "not_applicable",
+        "consumer": false,
+        "label": "TREE ART"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "water",
+        "verification": "source audit",
+        "module": "Water",
+        "status": "implemented",
+        "consumer": "lib/Water.lua",
+        "label": "WATER"
+      },
+      {
+        "generation": 1,
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "key": "worldFill",
+        "verification": "source audit",
+        "module": "WorldUnderlay",
+        "status": "implemented",
+        "consumer": "lib/WorldUnderlay.lua",
+        "label": "WORLD FILL"
+      }
+    ],
+    "2": [
+      {
+        "generation": 2,
+        "detail": "Native singles status/commands, visibility, textbox fill and ink. Native doubles companions retain their renderer and public preference.",
+        "key": "modernBattleUI",
+        "verification": "source audit",
+        "module": "ModernBattleUI",
+        "status": "implemented",
+        "consumer": "lib/Gen2BattleUI.lua; lib/Gen2Battle.lua",
+        "label": "MODERN BATTLE UI"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared GB render pipeline, including native Gen2 tile atlas.",
+        "key": "tiltshift",
+        "verification": "source audit",
+        "module": "TiltShift",
+        "status": "implemented",
+        "consumer": "lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua",
+        "label": "T-SHIFT"
+      },
+      {
+        "generation": 2,
+        "detail": "Integrated native Crystal provider, selected at restart.",
+        "key": "crystalFront",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua; lib/Crystal/main.lua",
+        "label": "CRYSTAL PLAYER FRONT"
+      },
+      {
+        "generation": 2,
+        "detail": "Integrated native Crystal provider, selected at restart.",
+        "key": "crystalTrainers",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua; lib/Crystal/main.lua",
+        "label": "CRYSTAL CUSTOM SPRITES"
+      },
+      {
+        "generation": 2,
+        "detail": "Integrated native Crystal provider, selected at restart.",
+        "key": "crystalPlayerSprite",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua; lib/Crystal/main.lua",
+        "label": "CRYSTAL PLAYER PORTRAIT"
+      },
+      {
+        "generation": 2,
+        "detail": "Integrated native Crystal provider, selected at restart.",
+        "key": "crystalBattlePic",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua; lib/Crystal/main.lua",
+        "label": "CRYSTAL TRAINER VIEW"
+      },
+      {
+        "generation": 2,
+        "detail": "Integrated native Crystal provider, selected at restart.",
+        "key": "crystalAnimations",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua; lib/Crystal/main.lua",
+        "label": "CRYSTAL ANIMATIONS"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared GB render pipeline, including native Gen2 tile atlas.",
+        "key": "aa",
+        "verification": "source audit",
+        "module": "AntiAlias",
+        "status": "implemented",
+        "consumer": "lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua",
+        "label": "AA"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared stage consumes the controls; generation-specific location/boss routing is incomplete.",
+        "key": "arenaFill",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "partial",
+        "consumer": "lib/BattleScene.lua; lib/Gen6Backdrop.lua; lib/BossBackdrop.lua",
+        "label": "ARENA FILL"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "atmos",
+        "verification": "source audit",
+        "module": "ForestAtmos",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "FOREST FX"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen2 battle side adapter feeds the shared stage and UI path.",
+        "key": "backAnimatedSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua",
+        "label": "BACK ART SET"
+      },
+      {
+        "generation": 2,
+        "detail": "OG UI restores the native player slot; AUTO/WORLD keep the player on the stage.",
+        "key": "backPlacement",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/Gen2Staged.lua; lib/Gen2Battle.lua",
+        "label": "BACK PLACEMENT"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared stage consumes the controls; generation-specific location/boss routing is incomplete.",
+        "key": "backdropOffset",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "partial",
+        "consumer": "lib/BattleScene.lua; lib/Gen6Backdrop.lua; lib/BossBackdrop.lua",
+        "label": "BG Y-OFFSET"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen2 battle side adapter feeds the shared stage and UI path.",
+        "key": "battleArt",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua",
+        "label": "BATTLE ART"
+      },
+      {
+        "generation": 2,
+        "detail": "Native singles status/commands, visibility, textbox fill and ink. Native doubles companions retain their renderer and public preference.",
+        "key": "battleUi",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/Gen2BattleUI.lua; lib/Gen2Battle.lua",
+        "label": "BATTLE ART UI"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen2 battle side adapter feeds the shared stage and UI path.",
+        "key": "battles",
+        "verification": "source audit",
+        "module": "OverworldBattle",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua",
+        "label": "3D-BTL"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared stage consumes the controls; generation-specific location/boss routing is incomplete.",
+        "key": "bossBg",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "partial",
+        "consumer": "lib/BattleScene.lua; lib/Gen6Backdrop.lua; lib/BossBackdrop.lua",
+        "label": "BOSS BG"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityCasino",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "CASINO"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityCaveDetails",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "CAVE DETAILS"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityCaveSound",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "CAVE SOUND"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityCaves",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "CAVES"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityCityGround",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "CITY GROUND"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityCourtyards",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "FENCES & COURTS"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityCutTrees",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "CUT TREES"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityElevator",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "ROCKET ELEVATOR"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityForest",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "VIRIDIAN FOREST"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityGrass",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "GRASS"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityMasonry",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "WALL & LEDGE COLOR"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityPillars",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "LEGENDARY PILLARS"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityPrizeRoom",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "PRIZE ROOM"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityRoads",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "ROADS & BRIDGES"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityRocket",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "ROCKET HIDEOUT"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communitySigns",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "SIGNS"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared sky renderer consumes the selected sky style.",
+        "key": "communitySky",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/Sky.lua",
+        "label": "SKY & BACKGROUND"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityTower",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "TOWER VISUALS"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityTowerWall",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "TOWER WALL"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityTreeDetail",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "TREE DETAIL"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityTrees",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "TREES"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityTunnels",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "TUNNELS"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "communityWalls",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "WALLS & LEDGES"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared GB render pipeline, including native Gen2 tile atlas.",
+        "key": "curve",
+        "verification": "source audit",
+        "module": "WorldCurve",
+        "status": "implemented",
+        "consumer": "lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua",
+        "label": "V-CURVE"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared GB render pipeline, including native Gen2 tile atlas.",
+        "key": "daytime",
+        "verification": "source audit",
+        "module": "DayNight",
+        "status": "implemented",
+        "consumer": "lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua",
+        "label": "DAYTIME"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen2 battle side adapter feeds the shared stage and UI path.",
+        "key": "duplicateFix",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua",
+        "label": "DUPLICATE FIX"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "emberLegacyAudio",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "EMBER LEGACY AUDIO"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "emberLegacyVolume",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "EMBER LEGACY VOLUME"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen3 settings; Gen2 uses its voxel pipeline and 3D-BTL.",
+        "key": "fireredBattleStage",
+        "verification": "source audit",
+        "module": "Gen3Battle",
+        "status": "not_applicable",
+        "consumer": false,
+        "label": "3D BATTLE STAGE"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen3 settings; Gen2 uses its voxel pipeline and 3D-BTL.",
+        "key": "fireredCamera",
+        "verification": "source audit",
+        "module": "Gen3Integration",
+        "status": "not_applicable",
+        "consumer": false,
+        "label": "2.5D CAMERA"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen2 battle side adapter feeds the shared stage and UI path.",
+        "key": "frontAnimatedSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua",
+        "label": "ANIM FRONT GEN"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen2 battle side adapter feeds the shared stage and UI path.",
+        "key": "frontFlip",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua",
+        "label": "FLIP FRONT SPRITE"
+      },
+      {
+        "generation": 2,
+        "detail": "Integrated native Crystal provider, selected at restart.",
+        "key": "full_body_backs",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua; lib/Crystal/main.lua",
+        "label": "FULL-BODY BATTLE BACKS"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared GB render pipeline, including native Gen2 tile atlas.",
+        "key": "grid",
+        "verification": "source audit",
+        "module": "VoxelGrid",
+        "status": "implemented",
+        "consumer": "lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua",
+        "label": "V-GRID"
+      },
+      {
+        "generation": 2,
+        "detail": "Native scenery rebuilds on option changes.",
+        "key": "hdTreeTrunks",
+        "verification": "source audit",
+        "module": "TreePresentation",
+        "status": "implemented",
+        "consumer": "lib/TreePresentation.lua; lib/ChunkMesher.lua",
+        "label": "TREE TRUNKS"
+      },
+      {
+        "generation": 2,
+        "detail": "Native singles status/commands, visibility, textbox fill and ink. Native doubles companions retain their renderer and public preference.",
+        "key": "hudColor",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/Gen2BattleUI.lua; lib/Gen2Battle.lua",
+        "label": "HUD COLOR"
+      },
+      {
+        "generation": 2,
+        "detail": "Changes the modern HUD scale; original native HUD scale is still engine-owned.",
+        "key": "hudScale",
+        "verification": "source audit",
+        "module": "OverworldBattle",
+        "status": "partial",
+        "consumer": "lib/Gen2BattleUI.lua",
+        "label": "HUD SCALE"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Summary/Dex selected frames and FIT/FULL consume these controls. Eggs/Unown keep native art, Crystal retains ownership; other screens need dedicated coverage.",
+        "key": "interfaceScaling",
+        "verification": "source audit",
+        "module": "InterfaceSprites",
+        "status": "partial",
+        "consumer": "lib/Gen2InterfaceArt.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
+        "label": "INTERFACE SCALING"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Summary/Dex selected frames and FIT/FULL consume these controls. Eggs/Unown keep native art, Crystal retains ownership; other screens need dedicated coverage.",
+        "key": "interfaceSprites",
+        "verification": "source audit",
+        "module": "InterfaceSprites",
+        "status": "partial",
+        "consumer": "lib/Gen2InterfaceArt.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
+        "label": "INTERFACE SPRITES"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen2 camera-relative walking and shared look input.",
+        "key": "invertY",
+        "verification": "source audit",
+        "module": "FirstPerson",
+        "status": "implemented",
+        "consumer": "lib/FirstPerson.lua; lib/Gen2CameraWalk.lua",
+        "label": "Y-CONTROL INVERT"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "legendaryPokeballs",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "EMBER LEGACY"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "legendaryVisualsMode",
+        "verification": "source audit",
+        "module": "LegendaryVisualsPreset",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "LEGENDARY VISUALS"
+      },
+      {
+        "generation": 2,
+        "detail": "Native trainer scenes consume static/animated selected art and real slide progress, with Crystal pack and missing-art fallback retained.",
+        "key": "playerAnimatedSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/NativeBattleArt.lua; lib/AnimatedBattleArt.lua",
+        "label": "PLAYER ANIM"
+      },
+      {
+        "generation": 2,
+        "detail": "Native trainer scenes consume static/animated selected art and real slide progress, with Crystal pack and missing-art fallback retained.",
+        "key": "playerArtSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/NativeBattleArt.lua; lib/AnimatedBattleArt.lua",
+        "label": "PLAYER ART"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen2 battle side adapter feeds the shared stage and UI path.",
+        "key": "playerView",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua",
+        "label": "PLAYER"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballBeam",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "BEAM STRENGTH"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballCapturePreset",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "CAPTURE FX PRESET"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballCaptureSpeed",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "CAPTURE SPEED"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballFxScale",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "FX SCALE"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballOpenTime",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "BALL OPEN TIME"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballPokemonGlow",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "POKEMON GLOW"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballSize",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "BALL SIZE"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballStreamers",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "STREAMERS"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballSuction",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "SUCTION FX"
+      },
+      {
+        "generation": 2,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballSuctionParticles",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "SUCTION PARTICLES"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared GB mesh cache budget and persistence path.",
+        "key": "ramPrecacheMb",
+        "verification": "source audit",
+        "module": "RamPrecache",
+        "status": "implemented",
+        "consumer": "lib/RamPrecache.lua; lib/VoxelMeshDisk.lua",
+        "label": "RAM PRECACHE MB"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared GB render pipeline, including native Gen2 tile atlas.",
+        "key": "renderDistance",
+        "verification": "source audit",
+        "module": "RenderDistance",
+        "status": "implemented",
+        "consumer": "lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua",
+        "label": "R.DIST"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared GB render pipeline, including native Gen2 tile atlas.",
+        "key": "shadowQuality",
+        "verification": "source audit",
+        "module": "Shadows",
+        "status": "implemented",
+        "consumer": "lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua",
+        "label": "SHADOWS"
+      },
+      {
+        "generation": 2,
+        "detail": "Native Gen2 battle side adapter feeds the shared stage and UI path.",
+        "key": "spriteLight",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua",
+        "label": "SPRITE LIGHT"
+      },
+      {
+        "generation": 2,
+        "detail": "Integrated native Crystal provider, selected at restart.",
+        "key": "spritePack",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "implemented",
+        "consumer": "lib/CrystalSprites.lua; lib/Crystal/main.lua",
+        "label": "SPRITE PACK (RESTART)"
+      },
+      {
+        "generation": 2,
+        "detail": "Requires the optional compatible Stadium scene provider; no provider means no consumer.",
+        "key": "stadiumCircle",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "provider",
+        "consumer": "lib/StadiumBackground.lua",
+        "label": "STADIUM CIRCLE"
+      },
+      {
+        "generation": 2,
+        "detail": "Requires a compatible character renderer; native Gen2 trainer staging still needs a dedicated adapter.",
+        "key": "standingTrainer",
+        "verification": "source audit",
+        "module": "OverworldBattle",
+        "status": "provider",
+        "consumer": "lib/OverworldBattle.lua",
+        "label": "STANDING TRAINER"
+      },
+      {
+        "generation": 2,
+        "detail": "Native scenery rebuilds on option changes.",
+        "key": "surfaceArtwork",
+        "verification": "source audit",
+        "module": "TreePresentation",
+        "status": "implemented",
+        "consumer": "lib/TreePresentation.lua; lib/ChunkMesher.lua",
+        "label": "SCENERY TEXTURES"
+      },
+      {
+        "generation": 2,
+        "detail": "Native singles status/commands, visibility, textbox fill and ink. Native doubles companions retain their renderer and public preference.",
+        "key": "textboxFill",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/Gen2BattleUI.lua; lib/Gen2Battle.lua",
+        "label": "TEXTBOX FILL"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "towerDetails",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "TOWER DETAILS"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "towerFog",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "TOWER FOG"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "towerFogSpeed",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "FOG SPEED"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "key": "towerFogThickness",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "partial",
+        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "label": "FOG THICKNESS"
+      },
+      {
+        "generation": 2,
+        "detail": "Native trainer scenes consume static/animated selected art and real slide progress, with Crystal pack and missing-art fallback retained.",
+        "key": "trainerArtSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/NativeBattleArt.lua; lib/AnimatedBattleArt.lua",
+        "label": "TRAINER ART"
+      },
+      {
+        "generation": 2,
+        "detail": "Native scenery rebuilds on option changes.",
+        "key": "treeArtwork",
+        "verification": "source audit",
+        "module": "TreePresentation",
+        "status": "implemented",
+        "consumer": "lib/TreePresentation.lua; lib/ChunkMesher.lua",
+        "label": "TREE ART"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared GB render pipeline, including native Gen2 tile atlas.",
+        "key": "water",
+        "verification": "source audit",
+        "module": "Water",
+        "status": "implemented",
+        "consumer": "lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua",
+        "label": "WATER"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared GB render pipeline, including native Gen2 tile atlas.",
+        "key": "worldFill",
+        "verification": "source audit",
+        "module": "WorldUnderlay",
+        "status": "implemented",
+        "consumer": "lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua",
+        "label": "WORLD FILL"
+      }
+    ],
+    "3": [
+      {
+        "generation": 3,
+        "detail": "Native battle status cards and command overlay.",
+        "key": "modernBattleUI",
+        "verification": "source audit",
+        "module": "ModernBattleUI",
+        "status": "implemented",
+        "consumer": "lib/Gen3BattleHud.lua",
+        "label": "MODERN BATTLE UI"
+      },
+      {
+        "generation": 3,
+        "detail": "Native scene supersampling, day clock/light/sky, underlay and postprocess.",
+        "key": "tiltshift",
+        "verification": "source audit",
+        "module": "TiltShift",
+        "status": "implemented",
+        "consumer": "lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua",
+        "label": "T-SHIFT"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "crystalFront",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "missing",
+        "consumer": false,
+        "label": "CRYSTAL PLAYER FRONT"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "crystalTrainers",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "missing",
+        "consumer": false,
+        "label": "CRYSTAL CUSTOM SPRITES"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "crystalPlayerSprite",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "missing",
+        "consumer": false,
+        "label": "CRYSTAL PLAYER PORTRAIT"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "crystalBattlePic",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "missing",
+        "consumer": false,
+        "label": "CRYSTAL TRAINER VIEW"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "crystalAnimations",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "missing",
+        "consumer": false,
+        "label": "CRYSTAL ANIMATIONS"
+      },
+      {
+        "generation": 3,
+        "detail": "Native scene supersampling, day clock/light/sky, underlay and postprocess.",
+        "key": "aa",
+        "verification": "source audit",
+        "module": "AntiAlias",
+        "status": "implemented",
+        "consumer": "lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua",
+        "label": "AA"
+      },
+      {
+        "generation": 3,
+        "detail": "WHITE/GEN6/PNG and native location routing; missing image fails open. BLUE still needs a compatible Stadium provider.",
+        "key": "arenaFill",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "partial",
+        "consumer": "lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua",
+        "label": "ARENA FILL"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "atmos",
+        "verification": "source audit",
+        "module": "ForestAtmos",
+        "status": "missing",
+        "consumer": false,
+        "label": "FOREST FX"
+      },
+      {
+        "generation": 3,
+        "detail": "Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.",
+        "key": "backAnimatedSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/NativeBattleArt.lua; lib/BattleArt.lua",
+        "label": "BACK ART SET"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "backPlacement",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "missing",
+        "consumer": false,
+        "label": "BACK PLACEMENT"
+      },
+      {
+        "generation": 3,
+        "detail": "Native location/boss identity, source-pixel crop and frozen battle day phase, using installed optional art.",
+        "key": "backdropOffset",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua",
+        "label": "BG Y-OFFSET"
+      },
+      {
+        "generation": 3,
+        "detail": "Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.",
+        "key": "battleArt",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/NativeBattleArt.lua; lib/BattleArt.lua",
+        "label": "BATTLE ART"
+      },
+      {
+        "generation": 3,
+        "detail": "Staged native HUD/text visibility, panel fill and matching ink; unrelated menus keep native ownership.",
+        "key": "battleUi",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/Gen3BattleOptions.lua; lib/Gen3BattleHud.lua",
+        "label": "BATTLE ART UI"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "battles",
+        "verification": "source audit",
+        "module": "OverworldBattle",
+        "status": "missing",
+        "consumer": false,
+        "label": "3D-BTL"
+      },
+      {
+        "generation": 3,
+        "detail": "Native location/boss identity, source-pixel crop and frozen battle day phase, using installed optional art.",
+        "key": "bossBg",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua",
+        "label": "BOSS BG"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityCasino",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "CASINO"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityCaveDetails",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "CAVE DETAILS"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityCaveSound",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "CAVE SOUND"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityCaves",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "CAVES"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityCityGround",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "CITY GROUND"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityCourtyards",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "FENCES & COURTS"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityCutTrees",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "CUT TREES"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityElevator",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "ROCKET ELEVATOR"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityForest",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "VIRIDIAN FOREST"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityGrass",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "GRASS"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityMasonry",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "WALL & LEDGE COLOR"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityPillars",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "LEGENDARY PILLARS"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityPrizeRoom",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "PRIZE ROOM"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityRoads",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "ROADS & BRIDGES"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityRocket",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "ROCKET HIDEOUT"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communitySigns",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "SIGNS"
+      },
+      {
+        "generation": 3,
+        "detail": "Native scene supersampling, day clock/light/sky, underlay and postprocess.",
+        "key": "communitySky",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "implemented",
+        "consumer": "lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua",
+        "label": "SKY & BACKGROUND"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityTower",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "TOWER VISUALS"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityTowerWall",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "TOWER WALL"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityTreeDetail",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "TREE DETAIL"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityTrees",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "TREES"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityTunnels",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "TUNNELS"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "communityWalls",
+        "verification": "source audit",
+        "module": "CommunityVisuals",
+        "status": "missing",
+        "consumer": false,
+        "label": "WALLS & LEDGES"
+      },
+      {
+        "generation": 3,
+        "detail": "Native scene uses the shared geometry and shadow passes.",
+        "key": "curve",
+        "verification": "source audit",
+        "module": "WorldCurve",
+        "status": "implemented",
+        "consumer": "lib/Voxel3D.lua; lib/ShadowMap.lua",
+        "label": "V-CURVE"
+      },
+      {
+        "generation": 3,
+        "detail": "Native scene supersampling, day clock/light/sky, underlay and postprocess.",
+        "key": "daytime",
+        "verification": "source audit",
+        "module": "DayNight",
+        "status": "implemented",
+        "consumer": "lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua",
+        "label": "DAYTIME"
+      },
+      {
+        "generation": 3,
+        "detail": "Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.",
+        "key": "duplicateFix",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/NativeBattleArt.lua; lib/BattleArt.lua",
+        "label": "DUPLICATE FIX"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "emberLegacyAudio",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "EMBER LEGACY AUDIO"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "emberLegacyVolume",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "EMBER LEGACY VOLUME"
+      },
+      {
+        "generation": 3,
+        "detail": "Native battle background seam, preserving native actors/attacks/UI.",
+        "key": "fireredBattleStage",
+        "verification": "source audit",
+        "module": "Gen3Battle",
+        "status": "implemented",
+        "consumer": "lib/Gen3Battle.lua",
+        "label": "3D BATTLE STAGE"
+      },
+      {
+        "generation": 3,
+        "detail": "Native field camera and rotated directional intent.",
+        "key": "fireredCamera",
+        "verification": "source audit",
+        "module": "Gen3Integration",
+        "status": "implemented",
+        "consumer": "lib/Gen3Integration.lua; lib/Gen3Scene.lua",
+        "label": "2.5D CAMERA"
+      },
+      {
+        "generation": 3,
+        "detail": "Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.",
+        "key": "frontAnimatedSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/NativeBattleArt.lua; lib/BattleArt.lua",
+        "label": "ANIM FRONT GEN"
+      },
+      {
+        "generation": 3,
+        "detail": "Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.",
+        "key": "frontFlip",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/NativeBattleArt.lua; lib/BattleArt.lua",
+        "label": "FLIP FRONT SPRITE"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "full_body_backs",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "missing",
+        "consumer": false,
+        "label": "FULL-BODY BATTLE BACKS"
+      },
+      {
+        "generation": 3,
+        "detail": "Native scene uses the shared geometry and shadow passes.",
+        "key": "grid",
+        "verification": "source audit",
+        "module": "VoxelGrid",
+        "status": "implemented",
+        "consumer": "lib/Voxel3D.lua; lib/ShadowMap.lua",
+        "label": "V-GRID"
+      },
+      {
+        "generation": 3,
+        "detail": "Native tree material/geometry selection with live rebuild.",
+        "key": "hdTreeTrunks",
+        "verification": "source audit",
+        "module": "TreePresentation",
+        "status": "implemented",
+        "consumer": "lib/Gen3Scene.lua; lib/TreePresentation.lua",
+        "label": "TREE TRUNKS"
+      },
+      {
+        "generation": 3,
+        "detail": "Live modern status-card palette/scale; original native HUD art remains engine-owned.",
+        "key": "hudColor",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "partial",
+        "consumer": "lib/Gen3BattleOptions.lua; lib/Gen3BattleHud.lua",
+        "label": "HUD COLOR"
+      },
+      {
+        "generation": 3,
+        "detail": "Live modern status-card palette/scale; original native HUD art remains engine-owned.",
+        "key": "hudScale",
+        "verification": "source audit",
+        "module": "OverworldBattle",
+        "status": "partial",
+        "consumer": "lib/Gen3BattleOptions.lua; lib/Gen3BattleHud.lua",
+        "label": "HUD SCALE"
+      },
+      {
+        "generation": 3,
+        "detail": "Native Summary/Pokedex scoped draw; animation-wide FIT/FULL and mon-aware Summary shininess. Other native screens keep their own art.",
+        "key": "interfaceScaling",
+        "verification": "source audit",
+        "module": "InterfaceSprites",
+        "status": "implemented",
+        "consumer": "lib/NativeInterfaceArt.lua",
+        "label": "INTERFACE SCALING"
+      },
+      {
+        "generation": 3,
+        "detail": "Native Summary/Pokedex scoped draw; animation-wide FIT/FULL and mon-aware Summary shininess. Other native screens keep their own art.",
+        "key": "interfaceSprites",
+        "verification": "source audit",
+        "module": "InterfaceSprites",
+        "status": "implemented",
+        "consumer": "lib/NativeInterfaceArt.lua",
+        "label": "INTERFACE SPRITES"
+      },
+      {
+        "generation": 3,
+        "detail": "Shared preference changes mouse and right-stick vertical look.",
+        "key": "invertY",
+        "verification": "source audit",
+        "module": "FirstPerson",
+        "status": "implemented",
+        "consumer": "lib/Gen3Integration.lua: look",
+        "label": "Y-CONTROL INVERT"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "legendaryPokeballs",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "EMBER LEGACY"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "legendaryVisualsMode",
+        "verification": "source audit",
+        "module": "LegendaryVisualsPreset",
+        "status": "missing",
+        "consumer": false,
+        "label": "LEGENDARY VISUALS"
+      },
+      {
+        "generation": 3,
+        "detail": "Selected native opponent fronts and player five-frame send-out sheets. Missing user art and scripted trainer roles retain native pictures.",
+        "key": "playerAnimatedSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/Gen3TrainerArt.lua; lib/AnimatedBattleArt.lua",
+        "label": "PLAYER ANIM"
+      },
+      {
+        "generation": 3,
+        "detail": "Selected native opponent fronts and player five-frame send-out sheets. Missing user art and scripted trainer roles retain native pictures.",
+        "key": "playerArtSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/Gen3TrainerArt.lua; lib/AnimatedBattleArt.lua",
+        "label": "PLAYER ART"
+      },
+      {
+        "generation": 3,
+        "detail": "Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.",
+        "key": "playerView",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/NativeBattleArt.lua; lib/BattleArt.lua",
+        "label": "PLAYER"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballBeam",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "BEAM STRENGTH"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballCapturePreset",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "CAPTURE FX PRESET"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballCaptureSpeed",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "CAPTURE SPEED"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballFxScale",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "FX SCALE"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballOpenTime",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "BALL OPEN TIME"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballPokemonGlow",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "POKEMON GLOW"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballSize",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "BALL SIZE"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballStreamers",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "STREAMERS"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballSuction",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "SUCTION FX"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "pokeballSuctionParticles",
+        "verification": "source audit",
+        "module": "PokeballSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "SUCTION PARTICLES"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "ramPrecacheMb",
+        "verification": "source audit",
+        "module": "RamPrecache",
+        "status": "missing",
+        "consumer": false,
+        "label": "RAM PRECACHE MB"
+      },
+      {
+        "generation": 3,
+        "detail": "Native world refresh/build budget and horizon fade.",
+        "key": "renderDistance",
+        "verification": "source audit",
+        "module": "RenderDistance",
+        "status": "implemented",
+        "consumer": "lib/Gen3Scene.lua: prepare",
+        "label": "R.DIST"
+      },
+      {
+        "generation": 3,
+        "detail": "Native scene uses the shared geometry and shadow passes.",
+        "key": "shadowQuality",
+        "verification": "source audit",
+        "module": "Shadows",
+        "status": "implemented",
+        "consumer": "lib/Voxel3D.lua; lib/ShadowMap.lua",
+        "label": "SHADOWS"
+      },
+      {
+        "generation": 3,
+        "detail": "World day tint multiplies native sprite flash/fade in staged battles; native UI-plane actors do not yet cast world shadows.",
+        "key": "spriteLight",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "partial",
+        "consumer": "lib/Gen3SpriteLight.lua",
+        "label": "SPRITE LIGHT"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "spritePack",
+        "verification": "source audit",
+        "module": "CrystalSprites",
+        "status": "missing",
+        "consumer": false,
+        "label": "SPRITE PACK (RESTART)"
+      },
+      {
+        "generation": 3,
+        "detail": "Requires the optional compatible Stadium scene provider; no provider means no consumer.",
+        "key": "stadiumCircle",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "provider",
+        "consumer": "lib/StadiumBackground.lua",
+        "label": "STADIUM CIRCLE"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "standingTrainer",
+        "verification": "source audit",
+        "module": "OverworldBattle",
+        "status": "missing",
+        "consumer": false,
+        "label": "STANDING TRAINER"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "surfaceArtwork",
+        "verification": "source audit",
+        "module": "TreePresentation",
+        "status": "missing",
+        "consumer": false,
+        "label": "SCENERY TEXTURES"
+      },
+      {
+        "generation": 3,
+        "detail": "Staged native HUD/text visibility, panel fill and matching ink; unrelated menus keep native ownership.",
+        "key": "textboxFill",
+        "verification": "source audit",
+        "module": "UiBackplates",
+        "status": "implemented",
+        "consumer": "lib/Gen3BattleOptions.lua; lib/Gen3BattleHud.lua",
+        "label": "TEXTBOX FILL"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "towerDetails",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "TOWER DETAILS"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "towerFog",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "TOWER FOG"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "towerFogSpeed",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "FOG SPEED"
+      },
+      {
+        "generation": 3,
+        "detail": "No complete native generation adapter audited for this option.",
+        "key": "towerFogThickness",
+        "verification": "source audit",
+        "module": "TowerFogSettings",
+        "status": "missing",
+        "consumer": false,
+        "label": "FOG THICKNESS"
+      },
+      {
+        "generation": 3,
+        "detail": "Selected native opponent fronts and player five-frame send-out sheets. Missing user art and scripted trainer roles retain native pictures.",
+        "key": "trainerArtSet",
+        "verification": "source audit",
+        "module": "BattleArt",
+        "status": "implemented",
+        "consumer": "lib/Gen3TrainerArt.lua; lib/AnimatedBattleArt.lua",
+        "label": "TRAINER ART"
+      },
+      {
+        "generation": 3,
+        "detail": "Native tree material/geometry selection with live rebuild.",
+        "key": "treeArtwork",
+        "verification": "source audit",
+        "module": "TreePresentation",
+        "status": "implemented",
+        "consumer": "lib/Gen3Scene.lua; lib/TreePresentation.lua",
+        "label": "TREE ART"
+      },
+      {
+        "generation": 3,
+        "detail": "Native surfable cells use shared FULL/SKY/OFF shaders with flat fallback.",
+        "key": "water",
+        "verification": "source audit",
+        "module": "Water",
+        "status": "implemented",
+        "consumer": "lib/WaterSurfacePass.lua; lib/Gen3Scene.lua",
+        "label": "WATER"
+      },
+      {
+        "generation": 3,
+        "detail": "Native scene supersampling, day clock/light/sky, underlay and postprocess.",
+        "key": "worldFill",
+        "verification": "source audit",
+        "module": "WorldUnderlay",
+        "status": "implemented",
+        "consumer": "lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua",
+        "label": "WORLD FILL"
+      }
+    ]
+  },
+  "verification": "source audit; gameplay pending"
+}

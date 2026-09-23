@@ -9,6 +9,38 @@ local full={0,0,4,4}
 local left={0,0,2,4}
 local top={0,0,4,2}
 return {
+ -- Reviewed from the original Crystal atlases and isolated map inventory.
+ -- Only complete solid object drawings are claimed. Puzzle floor patterns,
+ -- whirlpools, holes, stairs and continuous room/sea walls are left native.
+ TILESET_ELITE_FOUR_ROOM={
+  prop('gym_orb_plinth',38,left,'orb_plinth',2),
+  prop('gym_potted_shrub',11,{0,2,2,2},'planter',2),
+ },
+ TILESET_CHAMPIONS_ROOM={
+  prop('champion_sculpted_column',53,left,'monument',49),
+  prop('champion_orb_plinth',26,left,'orb_plinth',16),
+  prop('bike_shop_display',12,top,'bicycle',18),
+  prop('champion_cave_boulder',17,{0,0,2,2},'boulder',16),
+ },
+ TILESET_PORT={
+  prop('harbor_gym_plinth',50,left,'monument',4),
+ },
+ TILESET_TOWER={
+  prop('tower_gym_plinth',18,left,'orb_plinth',9),
+  prop('tower_guardian',25,left,'monument',9),
+  prop('tower_round_brazier',48,left,'orb_plinth',9),
+  prop('tower_stone',50,{0,0,2,2},'boulder',9),
+ },
+ TILESET_CAVE={
+  prop('cave_boulder',40,{0,0,2,2},'boulder',36),
+ },
+ TILESET_DARK_CAVE={
+  prop('dark_cave_boulder',40,{0,0,2,2},'boulder',36),
+ },
+ TILESET_ICE_PATH={
+  prop('ice_path_rounded_rock',32,{0,0,2,2},'boulder',2),
+  prop('ice_path_faceted_rock',34,{2,0,2,2},'boulder',2),
+ },
  TILESET_PARK={
   prop('park_bench',14,{0,0,4,3},'bench',1),
   prop('park_bin',15,{0,0,2,2},'bin',1),

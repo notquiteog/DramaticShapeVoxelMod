@@ -1,3 +1,11 @@
+## Native option consumers and reviewed depth scenery — 1.23.0-test.9
+
+Adds native Gen2/Gen3 renderer, battle HUD, trainer, selected-art interface, lighting and arena-background consumers. Expands reviewed Crystal furniture and FireRed gyms, caves and interiors, including 15 complete furniture recipes matching 137 native objects. Fixes the reported Oak lab table overlap by keeping its solid geometry out of the walkable approach row. Native mon identity preserves same-species shiny variants.
+
+All 89 controls remain visible with an explicit support inventory. Full parity is **not complete**: the source audit records 13 missing Gen2 controls and 53 missing Gen3 controls, plus partial/provider-dependent features. Missing optional artwork retains native presentation.
+
+**TEST PRERELEASE — published before gameplay verification as requested.** LuaJIT compilation, focused source/mock tests and official0.3.1 SDK checks pass; exact packaged visual/gameplay checks and the lab screenshot regression follow publication. See [implementation and limitations](docs/NATIVE_PARITY_2026-09-22.md) and [complete option inventory](docs/option-support.json).
+
 ## Four-battler framing and complete animated backs — 1.23.0-test.8
 
 Four Gen 1 double-battle cards follow the actual composed sprite heads, and the camera widens to keep both near-side Pokemon in view. FireRed/LeafGreen modern commands preserve full-body sprite pixels beneath the old command window; status anchors use the selected artwork. Fixes the packaged animated BW back atlas path (dex 1–251). Includes the shared modern UI toggle and functional Gen 3 shadow/world-curve/wireframe controls from test.7.

@@ -4,9 +4,12 @@
 local V=...
 local Theme=V.require('BattleTheme')
 local Mode=V.require('ModernBattleUI')
+local Options=V.require('Gen3BattleOptions')
+local UI=Options.ui
 local M={cards={},drawn=0}
 local Bounds=V.require('SpriteHeadBounds')
 function M.install(stage)
+ local uninstallOptions=Options.install(stage)
  local Health=require('src.core.game3.battle.healthbox')
  local Anim=require('src.core.game3.battle.anim')
  local Battle=require('src.core.game3.battle')
@@ -53,9 +56,10 @@ function M.install(stage)
   end
   return panel(mode,...)
  end
- function M.reset()M.cards={};M.menu=nil;M.covered=false;capturing=false;underlayReady=false end
- function M.begin()M.reset();capturing=Mode.enabled() end
+ function M.reset()M.cards={};M.menu=nil;M.covered=false;capturing=false;underlayReady=false;Options.drawing=false end
+ function M.begin()M.reset();capturing=Mode.enabled();Options.drawing=true end
  function M.finish()
+  Options.drawing=false
   capturing=false
   if not stage.active or not Mode.enabled() then return end
   for _,name in ipairs({'bag_menu','party_menu','summary_menu','help_system'})do
@@ -94,6 +98,7 @@ function M.install(stage)
   G.pop()
  end
  Health.draw=function(side,battler,opts)
+  if stage.active and UI.uiHidden('hud') then return end
   local st=Battle._st
   if not capturing or not stage.active or not st or st.safari or not battler then
    return original(side,battler,opts)
@@ -130,9 +135,9 @@ function M.install(stage)
    ox=((hb and hb.ox)or 0)+((opts and opts.ox)or 0),oy=((hb and hb.oy)or 0)+((opts and opts.oy)or 0)}
  end
  local function paint()
-  local G=love.graphics;local w,h=G.getDimensions();local k=Theme.scale(w,h)
+  local G=love.graphics;local w,h=G.getDimensions();local k=Options.hudScale(w,h)
   G.origin();G.scale(k);w,h=w/k,h/k
-  local function label(value,x,y,width)return Theme.text(value,x,y,width)end
+  local function label(value,x,y,width)return Theme.text(value,x,y,width,Options.ink())end
   local items={}
   for id=0,3 do local c=M.cards[id];if c then
    items[#items+1]={id=id,x=c.anchor[1]/k,y=c.anchor[2]/k,w=76,h=id%2==0 and 27 or 22}
@@ -142,7 +147,7 @@ function M.install(stage)
    local ally=id%2==0
    local cardH=ally and 27 or 22
    local x,y=layout[id].x,layout[id].y
-   Theme.statusCard(x,y,76,cardH,c.anchor[1]/k,Ui._mode=='target' and Ui.targetCursor()==id)
+   Options.card(x,y,76,cardH,c.anchor[1]/k,Ui._mode=='target' and Ui.targetCursor()==id)
    label(c.name,x+3,y+2,49);label('Lv.'..c.level,x+53,y+2,21)
    label(c.status or 'HP',x+3,y+11,19)
    local fraction=math.min(1,c.hp/c.maximum)
@@ -153,7 +158,7 @@ function M.install(stage)
     G.setColor(.24,.57,.81,1);G.rectangle('fill',x+3,y+25,70*math.max(0,math.min(1,c.exp or 0)),1)
    end
   end end
-  if M.menu then
+  if M.menu and not UI.uiHidden('text') then
    local x,y=w-168,h-62
    local title=M.menu.target and ('TARGET: '..M.menu.target)or nil
    if title then label(title,x+4,y-10,152)end
@@ -179,7 +184,7 @@ function M.install(stage)
   return result
  end)
  return function()
-  Health.draw=original;Ui.handleInput=input;Chrome.drawPanel=panel;M.reset()
+  Health.draw=original;Ui.handleInput=input;Chrome.drawPanel=panel;M.reset();uninstallOptions()
   if underlay then underlay:release();underlay=nil end
  end
 end

@@ -62,6 +62,8 @@ function M.install()
    camera.yaw=M.openYaw(math.floor(camera.center[1]/16),math.floor(camera.center[2]/16),Collision.isWalkable)
    battleState=Battle._st
   end
+  local Map=require('src.core.game3.map')
+  camera.plate=V.require('Gen3BattleBackdrop').frame(Map.current,Map.currentDef(),Battle._st)
   local G=love.graphics
   local ui=G.getCanvas()
   local ok,ready=pcall(function()

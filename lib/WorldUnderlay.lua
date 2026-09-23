@@ -10,13 +10,9 @@
 
 local V = ...
 
-local Map = require("src.world.Map")
-local TileRenderer = require("src.render.TileRenderer")
-
 local Voxel3D = V.require("Voxel3D")
 local Mat4 = V.require("Mat4")
 local ModSetting = V.require("ModSetting")
-local TerrainAtlas = V.require("TerrainAtlas")
 local biomes = V.data("world_fill_biomes")
 
 local WorldUnderlay = {}
@@ -124,6 +120,11 @@ end
 -- map's own border block, because the engine's three-block void ring is the
 -- authored room boundary and a perspective camera can see beyond it.
 function WorldUnderlay.resolve(state, colors)
+  -- Only the GB resolver needs the GB map/atlas facade. The geometry and
+  -- materials are also used by Game3, which supplies its native map colour.
+  local Map = require("src.world.Map")
+  local TileRenderer = require("src.render.TileRenderer")
+  local TerrainAtlas = V.require("TerrainAtlas")
   if not WorldUnderlay.enabled() then return nil, "world:off" end
   -- The unlit backing plane cannot receive the scene shader's haze. Use
   -- its endpoint colour beneath contextual fill so the horizon has no cyan

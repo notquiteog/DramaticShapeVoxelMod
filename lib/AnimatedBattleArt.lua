@@ -279,6 +279,24 @@ local function restore(battler)
   states[battler] = nil
 end
 
+-- Native-generation trainer intro adapters consume the same five authored
+-- poses without pretending to own a Gen1 BattleState. Progress is the actual
+-- native trainer's slide in world/UI pixels, not an independent animation.
+function AnimatedBattleArt.playerTrainerPicture(progress)
+ local mode=BattleArt.setting:get()
+ if mode=='rom' then return nil end
+ if mode=='static'then return BattleArt.playerTrainerImage()end
+ local selected=BattleArt.effectivePlayerAnimationSet()
+ if selected=='png'then return BattleArt.namedImage('player','back')end
+ local def=selected~='rom' and PLAYER_SETS[selected] or nil
+ local frames=def and loadFrames(def,BattleArt.displayMode())
+ if not frames or #frames==0 then return nil end
+ progress=math.max(0,math.min(72,tonumber(progress)or 0))
+ local index=progress<=0 and 1 or math.min(#frames,
+  2+math.floor(math.max(0,progress-1)*math.max(1,#frames-1)/72))
+ return frames[index]
+end
+
 -- Share the bundled animated BW backs with every generation adapter. Keep
 -- installed custom atlases first, and retain static fallback beyond dex 251.
 local bundledBacks, dexBySpecies, installedAtlases = {}, {}, {}
@@ -348,8 +366,8 @@ function AnimatedBattleArt.picture(mon,side)
     if frames and #frames>0 then
       local total=0;for i=1,#frames do total=total+math.max(1,tonumber((def.durations or {})[i])or 100)end
       local t=(love.timer.getTime()*1000)%total
-      for i,frame in ipairs(frames)do t=t-math.max(1,tonumber((def.durations or {})[i])or 100);if t<0 then return frame end end
-      return frames[1]
+      for i,frame in ipairs(frames)do t=t-math.max(1,tonumber((def.durations or {})[i])or 100);if t<0 then return frame,frames end end
+      return frames[1],frames
     end
   end
   if BattleArt.setting:get()=='static' then return BattleArt.image(species,side,battler)end

@@ -80,6 +80,7 @@ local function releaseGeometry()
   if part.under then part.under:release() end
   if part.roof then part.roof:release() end
   if part.plants then part.plants:release() end
+  if part.water then part.water:release() end
  end
  for _,part in ipairs(cache.civics or {})do part.mesh:release();part.image:release()end
  for _,name in ipairs({'wood','leaves'})do if cache[name] then cache[name]:release() end end
@@ -104,11 +105,11 @@ local function prepare(game,vw,vh,cam)
  for cy=z0,z1 do for cx=x0,x1 do
   local mid,pair,isVoid=Map.worldMidAt(cx,cy,def)
   local fillShape,biome
-  if isVoid and def.environment~='INDOOR' and def.mapType~=8 then
+  if isVoid and Pairs.outdoor(def) then
    local m,p,shape,kind=Boundary.resolve(regions,cx,cy)
    if m then mid,pair,fillShape,biome=m,p,shape,kind;M.fillCounts[kind]=M.fillCounts[kind]+1 end
   end
-  if mid and pair and not (isVoid and (def.environment=='INDOOR' or def.mapType==8)) then
+  if mid and pair and not (isVoid and not Pairs.outdoor(def)) then
    local ts=groups[pair]
    if not ts then
     -- get() also rebinds the native animation clock. Reuse the provider's
@@ -117,10 +118,16 @@ local function prepare(game,vw,vh,cam)
    end
    if ts and ts.midToSlot[mid] then
     local spec=Pairs.resolve(pair,Versions.TILESET_PAIRS)
-    local c={mid=mid,pair=Pairs.canonical(pair),nativePair=pair,cx=cx,cy=cy,ts=ts,primary=spec.primary,secondary=spec.secondary,
-     shape=fillShape or Shapes.of(spec.primary,spec.secondary,mid),boundary=biome}
+    local collision
+    for _,region in ipairs(regions)do
+     local lx,ly=cx-region.x,cy-region.y
+     if lx>=0 and ly>=0 and lx<region.w and ly<region.h then collision=region.def.midLayout:collAt(lx,ly);break end
+    end
+    local c={mid=mid,collision=collision,pair=Pairs.canonical(pair),nativePair=pair,cx=cx,cy=cy,ts=ts,primary=spec.primary,secondary=spec.secondary,
+     shape=fillShape or Shapes.of(spec.primary,spec.secondary,mid,
+      (require('src.core.game3.scripting.interaction_scripts').behaviors[pair] or {})[mid],collision),boundary=biome}
     cells[cx..':'..cy]=c
-    signature[#signature+1]=pair..'/'..mid..(biome or '')
+    signature[#signature+1]=pair..'/'..mid..'/'..tostring(collision)..(biome or '')
    else signature[#signature+1]='?' end
   else signature[#signature+1]='-' end
  end end
@@ -151,13 +158,21 @@ local function prepare(game,vw,vh,cam)
  for _,c in pairs(cells)do
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
   local b=batches[c.pair]
-  if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},roofMids={}};batches[c.pair]=b end
+  if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
   if c.civic then
    plane(b.v,b.i,x,z,uvFor(ts,c.civic.variant=='saffron' and 0x2E5 or 1) or uv)
+  elseif shape.kind=='water' then
+   plane(b.wv,b.wi,x,z,uv,.05)
   elseif shape.kind=='interiorFloor' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+  elseif shape.kind=='caveWall' then
+   plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+   if not c.stageHidden then V.require('Gen3Cave').wall(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
+  elseif shape.kind=='rock' then
+   plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+   if not c.stageHidden then V.require('Gen3Cave').rock(c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
   elseif shape.kind=='cliff' then
    M.cliffCount=M.cliffCount+1
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
@@ -296,7 +311,7 @@ local function prepare(game,vw,vh,cam)
   Roof.appendChimney(p,function(vertices,uv,shade)quad(b.rv,b.ri,vertices,uv,shade)end,uvFor)
  end end
  for _,b in pairs(batches)do cache.parts[#cache.parts+1]={pair=b.pair,secondary=b.secondary,roofMids=b.roofMids,
-  under=assert(R.newMesh(b.v,b.i),'field mesh creation failed'),roof=R.newMesh(b.rv,b.ri),plants=R.newMesh(b.pv,b.pi,R.TREE_FORMAT)} end
+  under=assert(R.newMesh(b.v,b.i),'field mesh creation failed'),roof=R.newMesh(b.rv,b.ri),plants=R.newMesh(b.pv,b.pi,R.TREE_FORMAT),water=R.newMesh(b.wv,b.wi)} end
  cache.wood=R.newMesh(wood,wi);cache.leaves=R.newMesh(leaf,li)
  M.builds=M.builds+1
  return true
@@ -321,6 +336,39 @@ local function terrain(draw)
  for _,part in ipairs(cache.civics or {})do draw(part.mesh,part.image)end
  draw(cache.wood,bark);draw(cache.leaves,TreeStyle.original() and V.require('NativeTreeArt').image() or foliage)
 end
+local function waterMeshes()
+ local out={}
+ for _,p in ipairs(cache.parts)do
+  local ts=Tiles._pairs[p.pair]
+  if p.water and ts then out[#out+1]={p.water,ts.image}end
+ end
+ return out
+end
+local reflectPlane
+local dustMesh,dustImage
+local function rideDust(game,cam)
+ local exports=game and game.mods and game.mods.exports
+ local ride=exports and exports.DRAMATIC_SKY_RIDE
+ if not (ride and type(ride.groundParticles)=='function')then return end
+ local ok,particles=pcall(ride.groundParticles)
+ if not ok or type(particles)~='table' or #particles==0 then return end
+ if not dustMesh then
+  local v,i={},{}
+  quad(v,i,{{-1,2,0},{1,2,0},{1,0,0},{-1,0,0}},{{0,0},{1,0},{1,1},{0,1}})
+  dustMesh=R.newMesh(v,i)
+  local data=love.image.newImageData(1,1);data:setPixel(0,0,.72,.62,.43,1)
+  dustImage=love.graphics.newImage(data)
+ end
+ if not dustMesh then return end
+ for _,p in ipairs(particles)do
+  if type(p.x)=='number' and type(p.z)=='number' then
+   local t=math.max(0,math.min(1,(tonumber(p.age)or 0)/math.max(.001,tonumber(p.life)or .4)))
+   local model=Mat.mul(Mat.translate(p.x,.3+t*3,p.z),
+    Mat.mul(Mat.rotateY(cam.level>=6 and -cam.yaw or 0),Mat.scale(1-t,1-t,1)))
+   R.draw(dustMesh,dustImage,model)
+  end
+ end
+end
 local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  -- Neighbor snapshots may cover much farther than the rendered terrain.
  -- Do not leave those actors floating in the sky beyond its visible edge.
@@ -342,7 +390,10 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  end
  local yaw=cam.level>=6 and -cam.yaw or 0
  local lean=(cam.level>=6 or opts.upright) and 0 or -.4
- local model=Mat.mul(Mat.translate(x+8,opts.lift or 0,z+16+(opts.depthOffset or 0)),Mat.mul(Mat.rotateY(yaw),Mat.rotateX(lean)))
+ local height=opts.lift or 0
+ if reflectPlane then height=2*reflectPlane-height+V.require('Water').CAST_RAISE end
+ local model=Mat.mul(Mat.translate(x+8,height,z+16+(opts.depthOffset or 0)),Mat.mul(Mat.rotateY(yaw),Mat.rotateX(lean)))
+ if reflectPlane then model=Mat.mul(model,Mat.scale(1,-1,1))end
  draw(mesh,spr.image,model)
 end
 local function actors(game,cam,draw)
@@ -424,6 +475,8 @@ function M.restore()
  R.battleOcclusion(nil)
  R.fog=nil
  R.interior=nil
+ R.tint={1,1,1}
+ reflectPlane=nil
  if saved then
   pcall(R.endScene);love.graphics.pop();love.graphics.setCanvas(savedCanvas)
   saved,savedCanvas=false,nil
@@ -445,6 +498,16 @@ function M.draw(game,vw,vh,cam)
   height=math.max(1,math.floor(rect.vuh*rect.dpiY+.5))
  end
  M.renderWidth,M.renderHeight=width,height
+ local Options=V.require('Gen3SceneOptions')
+ local renderWidth,renderHeight=Options.expand(width,height)
+ local def=Map.currentDef()
+ local indoor
+ if Pairs.outdoor then indoor=not Pairs.outdoor(def)
+ else indoor=def.environment=='INDOOR' or def.mapType==8 or def.mapType==4 end
+ local nativeBackground=def.mapType==4 and {.045,.030,.034,1} or Interior.background
+ local background=Options.environment(indoor,indoor and nativeBackground or {.60,.79,.82,1})
+ local plate=cam.battle and cam.plate
+ if plate then background=plate.color end
  local S=V.require('VoxelState')
  S.level=cam.level;S.angle=math.rad(S.ANGLES_DEG[cam.level+1] or 35)
  R.canopyFacing=cam.battle or cam.level>=6
@@ -452,6 +515,12 @@ function M.draw(game,vw,vh,cam)
   local dist=cam.level==6 and 0 or 75
   local dx,dz=math.sin(cam.yaw),-math.cos(cam.yaw)
   local ey=cam.level==6 and 23 or 48
+  local exports=game and game.mods and game.mods.exports
+  local ride=exports and exports.DRAMATIC_SKY_RIDE
+  if not cam.battle and ride and type(ride.currentAltitude)=='function' then
+   local ok,height=pcall(ride.currentAltitude)
+   if ok and type(height)=='number' then ey=ey+math.max(0,math.min(512,height))end
+  end
   R.camera={eye={cx-dx*dist,ey,cz-dz*dist},focus={cx+dx*70,ey-70*math.tan(cam.pitch),cz+dz*70},fov=math.rad(62)}
   if cam.battle then
    R.camera={eye={cx-dx*75,32,cz-dz*75},focus={cx+dx*16,0,cz+dz*16},fov=math.rad(50)}
@@ -462,25 +531,43 @@ function M.draw(game,vw,vh,cam)
  end
  R.viewProjection(cx,cz,vw,vh)
  savedCanvas=love.graphics.getCanvas();love.graphics.push('all');saved=true
- if Shadow.begin(cx,cz,vw,vh) then
+ if not plate and Shadow.begin(cx,cz,vw,vh) then
   local room=not cam.battle and Interior.forMap(Map.currentDef(),3) or nil
   Shadow.roomClip(room and room.bounds)
-  terrain(Shadow.draw);if not cam.battle then actors(game,cam,Shadow.draw)end;Shadow.finish('firered')
+  terrain(Shadow.draw)
+  for _,d in ipairs(waterMeshes())do Shadow.draw(d[1],d[2])end
+  if not cam.battle then actors(game,cam,Shadow.draw)end;Shadow.finish('firered')
  end
- local indoor=Map.currentDef().environment=='INDOOR' or Map.currentDef().mapType==8
  local room=not cam.battle and Interior.forMap(Map.currentDef(),3) or nil
  Interior.configure(room)
- local background=indoor and Interior.background or {.60,.79,.82,1}
  local bounds=M.distance.bounds
  R.fog=not indoor and Distance.haze(background,M.fadeExtent,{(Player.px or 0)+8,0,(Player.py or 0)+8},
   {bounds[1]*16,bounds[2]*16,(bounds[3]+1)*16,(bounds[4]+1)*16})or nil
- if not R.beginScene(width,height,cx,cz,vw,vh,background,'firered') then M.restore();return false end
+ if not R.beginScene(renderWidth,renderHeight,cx,cz,vw,vh,background,'firered') then M.restore();return false end
  R.battleOcclusion(nil)
- Interior.draw(room)
- terrain(R.draw);if not cam.battle then actors(game,cam,R.draw);fieldEffects(R.draw)end
+ if plate then
+  if plate.image then R.backdrop(plate.image,plate.offset)end
+ else
+  Options.underlay(indoor,cx,cz,background)
+  Interior.draw(room)
+  terrain(R.draw)
+ end
+ local water=not plate and waterMeshes()or {}
+ if cam.battle then
+  for _,d in ipairs(water)do R.draw(d[1],d[2])end
+ else
+  V.require('WaterSurfacePass').draw(water,function()actors(game,cam,R.draw)end,function()
+   reflectPlane=.05 -- native water surface authored by prepare()
+   local ok,err=pcall(actors,game,cam,R.draw)
+   reflectPlane=nil
+   if not ok then error(err,0)end
+  end)
+  actors(game,cam,R.draw);rideDust(game,cam);fieldEffects(R.draw)
+ end
  R.battleOcclusion(nil)
- local canvas=R.endScene()
+ local canvas=Options.finish(R.endScene(),width,height)
  R.fog=nil
+ R.tint={1,1,1}
  love.graphics.pop();love.graphics.setCanvas(savedCanvas);saved=false;savedCanvas=nil
  -- Use the same public world-image handoff as Battle Art's Gen1/2 pipeline.
  -- Otherwise an HD scene is squeezed into Game3's low-resolution field
@@ -494,6 +581,8 @@ function M.draw(game,vw,vh,cam)
 end
 function M.invalidate()Boundary.clear();releaseGeometry()end
 function M.release()
+ if dustMesh then dustMesh:release();dustMesh=nil end
+ if dustImage then dustImage:release();dustImage=nil end
  for _,c in pairs(effectCanvases)do c:release()end;effectCanvases={}
  releaseGeometry()
  for _,mesh in pairs(spriteMeshes)do if mesh then mesh:release() end end
@@ -502,5 +591,6 @@ function M.release()
  if bark then bark:release();bark=nil end
  Roof.release();Outdoor.release()
  R.invalidate();Shadow.invalidate()
+ V.require('Gen3SceneOptions').release()
 end
 return M

@@ -191,8 +191,9 @@ function Gen2Battle.install()
       local okFont, BoxFont = pcall(require, "src.render.Font")
       local ownsHud=type(self.usesModernDoublesHud)=="function" and self:usesModernDoublesHud()
       if not ownsHud and okFont and BoxFont and type(BoxFont.drawBox) == "function" then
-        BoxFont.drawBox(0, 0, 12, 4)
-        BoxFont.drawBox(9, 6, 11, 7)
+        local UI=V.require('Gen2BattleUI')
+        if not UI.backplate(self,0,0,12,4)then BoxFont.drawBox(0, 0, 12, 4)end
+        if not UI.backplate(self,9,6,11,7)then BoxFont.drawBox(9, 6, 11, 7)end
       end
     end
     -- drawPanel's own body, minus the Chrome.clear() that would paint over

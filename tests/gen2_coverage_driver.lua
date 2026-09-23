@@ -3,7 +3,7 @@
 -- finished models or claim visual parity from classification alone.
 return function(game)
  local identity=love.filesystem.getIdentity()
- assert(identity=='johto-appimage-qa' or identity=='battle-art-crossgen-qa','refusing non-QA profile')
+ assert(identity:match('%-qa$'),'refusing non-QA profile')
  local U=dofile('tests/drivers/util.lua')
  local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib
  local Map=require('src.world.gen2.Map')

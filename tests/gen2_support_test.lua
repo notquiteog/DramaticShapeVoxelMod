@@ -270,8 +270,9 @@ for _, cart in ipairs(carts) do
       label .. ": MomHealFlash says why it stood down")
     T.check(lib("PoisonFlash").skipped,
       label .. ": PoisonFlash says why it stood down")
-    T.check(lib("InterfaceSprites").screenPatchesSkipped,
-      label .. ": InterfaceSprites says why its screen patches stood down")
+    T.check(lib("InterfaceSprites").screenPatchesSkipped
+      or (lib("CrystalSprites").setting:get() == "crystal" and exports.crystalSprites),
+      label .. ": selected-art screens stand down or Crystal owns the native screens")
     T.eq(lib("MomHealFlash").installed, false,
       label .. ": MomHealFlash did not take the script.command hook")
   end

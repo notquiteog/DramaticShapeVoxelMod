@@ -95,7 +95,7 @@ local FOOT_PAD = 1
 -- without replacing the original engine screen or reaching into its files.
 local function picFor(game,screen,mon,back)
   local owned=V.require('NativeBattleArt').image(mon,back)
-  if owned then local w,h=owned:getDimensions();return owned,w,h end
+  if owned then local w,h=owned:getDimensions();return owned,w,h,nil,true end
   local providers=game and game.mods and game.mods.exports
   local provider=V.crystalSpritesActive and V.mod.exports.crystalSprites
     or (providers and providers.crystal_animated_sprites_with_shiny_visuals)
@@ -120,9 +120,13 @@ function Gen2Staged.sideTexture(game, side)
   local screen = screenFor(game)
   if not screen then return nil end
   local back = (side == "player" or side == "player2")
+  if (back and screen.showPlayerTrainer) or (not back and screen.showEnemyTrainer)then return nil end
+  -- The native back slot remains the owner in OG UI mode. Leaving this side
+  -- out of drawn lets Gen2Battle's ordinary drawPic run exactly once.
+  if back and V.require('BattleArt').backPlacementSetting:get()=='ui' then return nil end
   local okMon, mon = pcall(screen.activeMon, screen, side)
   if not (okMon and mon) then return nil end
-  local image,iw,ih,quad=picFor(game,screen,mon,back)
+  local image,iw,ih,quad,selectedArt=picFor(game,screen,mon,back)
   if not image then return nil end
 
   -- A 2v2 round fields a partner beside the lead (the doubles layer keeps
@@ -183,7 +187,9 @@ function Gen2Staged.sideTexture(game, side)
       [side]={pimage and ax-iw/2 or ax,ay-ih},
       [side..'2']=pimage and {ax+iw2/2,ay-ih2}or nil,
     },
-    noMirror=back, modernFraming=true,contentWidth=iw+iw2,contentHeight=math.max(ih,ih2) }
+    noMirror=back and not (selectedArt and V.require('BattleArt').playerSide()=='front'
+      and V.require('BattleArt').flipsPlayerFront()),
+    modernFraming=true,contentWidth=iw+iw2,contentHeight=math.max(ih,ih2) }
 end
 
 -- The same shape OverworldBattle.textures returns, so BattleScene cannot tell

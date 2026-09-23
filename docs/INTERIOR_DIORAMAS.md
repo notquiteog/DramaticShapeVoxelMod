@@ -1,8 +1,14 @@
-# Interior dioramas — unreleased
+# Interior dioramas — 1.23.0-test.9, QA pending
 
 The two interior references supplied on September 22 guide this pass: open
 fronts, closed room edges, shallow furniture, readable pixel artwork and warm
-light. This is an implementation in the working tree, not a published cart.
+light. This implementation is prepared for test.9; exact packaged visual verification follows publication.
+
+## Test.9 reviewed additions and overlap correction
+
+Adds15 whole-object furniture recipes matching137 native museum, Silph, Power Plant and Mansion objects, with independent reviewed wall/floor profiles. Museum wooden floors0x109/0x111 explicitly stay flat. The list of complete native source fixtures is in [the current checkpoint](NATIVE_PARITY_2026-09-22.md).
+
+Oak's starter table consumes its complete two-row native drawing, but its solid footprint now occupies only the blocked first row. Its modeled front ends at worldz79, before the walkable row5 where the player and rival stand; starter-ball supports move3px back onto that tabletop. This fixes the source cause of the reported body/table intersection without lowering other furniture or changing actor lean/collision/scripts. Geometry tests pass; exact screenshot verification remains pending.
 
 ## Shared presentation
 

@@ -105,8 +105,7 @@ FirstPerson.STICK_DEAD = 0.18
 FirstPerson.TOUCH_TURN = 2.2 * math.pi
 FirstPerson.MOVE_DEAD = 0.25
 
-FirstPerson.invertYSetting = ModSetting.new(
-  "invertY", "Y-CONTROL INVERT", { false, true }, { "OFF", "ON" })
+FirstPerson.invertYSetting = V.require('CameraSettings').invertY
 
 -- ------- state
 --

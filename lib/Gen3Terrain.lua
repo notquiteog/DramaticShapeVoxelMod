@@ -3,7 +3,7 @@
 -- Only reviewed cliff artwork is raised; this is not a collision heightmap.
 local M={}
 local function solid(c)
- if not c or c.shape and c.shape.kind=='cliff' then return true end
+ if not c or c.shape and (c.shape.kind=='cliff' or c.shape.kind=='caveWall') then return true end
  local g=c.civic
  return g and g.custom and g.custom.geometry=='tower' and c.cy>=g.cy+(g.northRows or 0)
 end
@@ -21,7 +21,7 @@ function M.height(cells,x,z,height)
 end
 function M.append(cells,c,emit,uvFor)
  local x,z=c.cx*16,c.cy*16;local height=c.shape.height or 32
- local cap=assert(uvFor(c.ts,113));local cliff=assert(uvFor(c.ts,121))
+ local cap=assert(uvFor(c.ts,c.shape.cap or 113));local cliff=assert(uvFor(c.ts,c.shape.side or 121))
  local function sub(uv,a,b,u,v)
   local l,r=uv[1][1],uv[2][1];local t,d=uv[1][2],uv[3][2]
   local function p(xx,zz)return {l+(r-l)*xx/16,t+(d-t)*zz/16}end

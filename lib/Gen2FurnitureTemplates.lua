@@ -6,7 +6,7 @@ function M.resolve(ts,spec)
  if not block or not floor then return nil end
  local crop=spec.crop
  local x,y,w,h=crop[1],crop[2],crop[3],crop[4]
- if x<0 or y<0 or x+w>4 or y+h>4 then return nil end
+ if x<0 or y<0 or w<=0 or h<=0 or x+w>4 or y+h>4 then return nil end
  local tiles,ground={},{}
  for dy=0,h-1 do
   tiles[dy+1]={}
@@ -33,7 +33,31 @@ function M.resolve(ts,spec)
  local kind=spec.kind
  if kind=='bench' or kind=='bin' then t.model=kind;return t end
  if kind=='planter' then t.model='planter';return t end
- if kind=='bed' or kind=='table' then
+ if kind=='boulder' then
+  -- The source's rounded upper outline becomes the real plan silhouette;
+  -- its shaded lower band folds down once instead of repeating as a wall.
+  local rock=upright(0,width-1,0,height-8,height-7,height-1,2,height-4)
+  rock.silhouette=true;rock.topFront=height-8
+  t.parts={rock}
+ elseif kind=='orb_plinth' then
+  -- Separate the round cap from its square pedestal. Both use their own
+  -- complete drawn bands and keep a shallow footprint inside the source.
+  local pedestal=upright(1,width-2,16,18,19,height-1,height-12,10)
+  local orb=upright(0,width-1,0,8,9,15,height-14,12,height-19)
+  orb.silhouette=true;orb.topFront=8
+  t.parts={pedestal,orb}
+ elseif kind=='monument' then
+  local plinth=upright(1,width-2,height-8,height-6,height-5,height-1,height-14,13)
+  local body=upright(0,width-1,0,5,6,height-9,height-13,11,5)
+  body.silhouette=true
+  t.parts={plinth,body}
+ elseif kind=='bicycle' then
+  -- Keep both wheels and the frame in a narrow display rack; the floor
+  -- between the wheels is cut away by the complete drawing's source mask.
+  local bike=upright(0,width-1,0,2,3,height-1,5,6)
+  bike.silhouette=true
+  t.parts={bike}
+ elseif kind=='bed' or kind=='table' then
   t.support=6
   t.parts={upright(0,width-1,0,height-5,height-4,height-2,0,height,3),
    {kind='upright',x={0,width-1},top={height-1,height-1},

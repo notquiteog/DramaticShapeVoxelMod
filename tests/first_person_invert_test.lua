@@ -14,6 +14,7 @@ local modules = {
   Mat4 = {}, VoxelState = {}, Voxel3D = {}, WorldCurve = {},
   ThirdPerson = { showsPlayer = function() return false end },
   ModSetting = ModSetting,
+  CameraSettings = {invertY=ModSetting.new("invertY","Y-CONTROL INVERT",{false,true},{"OFF","ON"})},
 }
 local namespace = { mod = settingNamespace.mod }
 function namespace.require(name)

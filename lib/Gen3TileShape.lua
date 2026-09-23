@@ -2,7 +2,9 @@
 -- These are presentation recipes, never collision or movement permissions.
 -- General tree identifiers also appear in pret/pokefirered metatile_labels.h.
 -- Unmapped art is kept flat; never infer a wall from a blocked floor alone.
+local V=...
 local M={}
+local profiles=V and V.require('Gen3InteriorProfiles') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3InteriorProfiles.lua')
 local trees={ [0x00A]=true,[0x00B]=true,[0x00C]=true,[0x00E]=true,[0x00F]=true,[0x013]=true }
 for _,start in ipairs({0x014,0x01C,0x024}) do for i=0,3 do trees[start+i]=true end end
 local roots={ [0x014]=true,[0x016]=true,[0x024]=true,[0x026]=true }
@@ -77,7 +79,44 @@ for _,id in ipairs({1,8,9,0x10,0x11,0xD3,0xD4,0xD5,0xDB,0xDC,0xDD,0xE3,0xE4,0xE5
 -- tileset. The trunk metatile owns one model; all canopy cells keep ground.
 local forestTrees={}
 for _,mid in ipairs({641,648,649,650,654,655,656,657,658,662,664,665,666,670,672,673,674,675,676,677})do forestTrees[mid]=true end
-function M.of(primary,secondary,mid)
+-- Rock wall art shared by the five reviewed cave palettes. Collision is a
+-- veto on raised geometry, not the source of its identity: ladders, holes and
+-- walkable copies of the cap remain at the native floor level.
+local caveWalls={}
+for _,id in ipairs({0x288,0x289,0x28A,0x28B,0x28C,0x28E,0x28F,0x290,0x291,0x292,
+ 0x295,0x298,0x299,0x29A,0x29B,0x29C,0x29D,0x29E,0x29F,0x2A0,0x2A1,0x2A2,0x2A3,0x2A4,0x2A5,0x2A6,0x2A7,
+ 0x2C3,0x2C4,0x2C5,0x2C6,0x2C7,0x2CE,0x2CF,0x2D7,0x2DF,0x2E3,0x2E4,0x2E5,0x2E6,0x2E7,
+ 0x2EA,0x2EB,0x2EC,0x2ED,0x2EE,0x2EF,0x2F0,0x2F1})do caveWalls[id]=true end
+local caves={rom_082d4bfc=true,rom_082d4df4=true,rom_082d4e0c=true,rom_082d4e24=true,rom_082d501c=true}
+local gymWalls={}
+for _,id in ipairs({0x280,0x281,0x282,0x286,0x287,0x288,0x28A,0x290,0x291,0x292,
+ 0x2C1,0x2C5,0x2C6,0x2C7,0x2CD,0x2CE,0x2CF})do gymWalls[id]=true end
+function M.of(primary,secondary,mid,behavior,collision)
+ -- The native behavior table identifies actual surfable pixels independently
+ -- of edition-specific metatile IDs. Keep their original animated artwork.
+ if behavior and require('src.core.game3.collision').isSurfable(behavior) then
+  return {kind='water',reviewedSurface=true,behavior=behavior}
+ end
+ if primary=='general' and caves[secondary] and mid>=0x280 then
+  if mid==0x282 or mid==0x283 then return {kind='rock',ground=0x281,height=mid==0x282 and 14 or 10} end
+  if collision==7 and caveWalls[mid] then
+   return {kind='caveWall',height=28,ground=0x281,cap=0x291,side=0x299}
+  end
+  -- Only known floor/warp artwork is reviewed here. Unlisted cave drawings
+  -- remain visible and stay in the coverage backlog.
+  local floor=collision~=7 and (mid==0x281 or mid==0x291 or mid>=0x2D0 and mid<=0x305)
+  return {kind='flat',reviewedSurface=floor or nil}
+ end
+ if primary=='building' and profiles[secondary] and (profiles[secondary].surfaces or {})[mid] then
+  return {kind='flat',reviewedSurface=true}
+ end
+ if primary=='building' and profiles[secondary] and profiles[secondary].walls[mid] and collision==7 then
+  return {kind='roomWall',ground=profiles[secondary].floor}
+ end
+ if primary=='building' and secondary=='pewter_gym' then
+  if gymWalls[mid] then return {kind='roomWall',ground=mid>=0x2C0 and 0x2C0 or 0x294} end
+  if mid==0x2A2 or mid==0x2A3 or mid==0x2A4 then return {kind='rock',ground=0x294,height=14} end
+ end
  if primary=='general' and (secondary=='rom_082d4dc4' or secondary=='viridian_forest') and forestTrees[mid] then
   return {kind='tree',ground=1,root=mid==676,spacing=3,anchorX=8,anchorZ=8,treeScale=1.5}
  end

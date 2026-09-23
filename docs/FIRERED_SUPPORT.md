@@ -1,12 +1,12 @@
-# FireRed 2.5D preview
+# FireRed/LeafGreen native presentation — 1.23.0-test.9
 
-Version **1.21.0-beta.3**, tested with the actual Linux **Gen1Recomp 0.2.73**
-AppImage payload. Requires 0.2.73+. Import the mod ZIP into FireRed separately;
-the Johto sealed cart still targets Crystal and stays on stable Battle Art.
-Supply/import your own FireRed ROM through the engine. No ROM or imported art
-is included in this repository or mod ZIP.
+Prepared against official **Gen1Recomp0.3.1**; exact packaged gameplay/visual verification follows publication. Import your own compatible ROM through the engine. No ROM or imported native artwork is included in this repository or mod ZIP.
 
-## Unreleased checkout changes
+The current source adds reviewed gym, cave and specialty-interior depth profiles, native water surfaces,15 exact additional furniture recipes, and a bounded Oak starter-table footprint fix. Native renderer, battle HUD/trainer/background and Summary/Dex options have concrete consumers and an auditable full option inventory. Full option/model coverage remains incomplete; a visible setting or classified tile does not prove functional or visual parity. Gen3 world-positioned battlers, cast shadows for native UI-plane actors, Stadium provider integration and many environment/capture options remain unfinished.
+
+See [current implementation, tests and limitations](NATIVE_PARITY_2026-09-22.md), [all89 controls](option-support.json), and [interior geometry](INTERIOR_DIORAMAS.md). The earlier beta3 scope/evidence below is historical and does not describe test.9's complete current state. Publication and archive hashes are recorded by the release task.
+
+## Earlier checkout notes (before test.9)
 
 Shared interior dioramas now frame supported houses, labs, Marts and Centers.
 Shop/Center recipes add native-art furniture depth; compact rooms fit the

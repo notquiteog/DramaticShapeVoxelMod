@@ -79,6 +79,12 @@ local SHINY_ATTACK = {
 
 function BattleArt.isShiny(battler)
   local mon = battler and (battler.mon or battler)
+  -- Native Gen3 mon-aware callers carry PID/OT data, not GB DVs. A
+  -- species-only Pokedex preview deliberately remains the regular form.
+  if mon and (mon.personality~=nil or mon.isShiny~=nil)
+      and V.require('Generation').isGen3() then
+    return require('src.core.game3.summary_data').isShiny(mon)
+  end
   local dvs = mon and mon.dvs
   if type(dvs) ~= "table" then return false end
   local attack = tonumber(dvs.attack)

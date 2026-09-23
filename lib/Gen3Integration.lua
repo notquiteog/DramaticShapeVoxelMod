@@ -16,7 +16,14 @@ function M.worldDirection(dir,yaw)
  return dir
 end
 function M.look(dx,dy)
+ if V.require('CameraSettings').invertY:get() then dy=-dy end
  M.yaw=(M.yaw+dx)%(math.pi*2);M.pitch=math.max(-.6,math.min(.65,M.pitch+dy))
+end
+function M.isActive()return M.active and free()end
+function M.moveVector(forward,right)
+ forward,right=tonumber(forward) or 0,tonumber(right) or 0
+ return math.sin(M.yaw)*forward+math.cos(M.yaw)*right,
+  -math.cos(M.yaw)*forward+math.sin(M.yaw)*right
 end
 function M.setLevel(level,game)
  mode:setIndex(level+1,game);M.level=mode:get()
@@ -29,23 +36,29 @@ function M.install()
  local Battle=require('src.core.game3.battle')
  local Tilt=require('src.render.Tilt')
  local Scene=V.require('Gen3Scene')
+ local SceneOptions=V.require('Gen3SceneOptions')
  local BattleStage=V.require('Gen3Battle')
  local uninstallBattle=BattleStage.install()
  local draw,present,update=FieldView.draw,Display.present,Player.update
  local failed=false
  mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original FireRed battle background.'),Trees.art:schema('Original game tree drawings or optional illustrated replacements.'),Trees.setting:schema('Flat illustrated trunks follow their leaf billboards; SOLID restores physical trunks.'),mode:schema('FireRed 2.5D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
  local nativeArt=V.require('NativeBattleArt');nativeArt.install()
+ local interfaceArt=V.require('NativeInterfaceArt')
+ local uninstallInterface=interfaceArt.install()
  local sharedSettings={V.require('ModernBattleUI').setting,
   V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting}
+ for _,setting in ipairs(SceneOptions.settings)do sharedSettings[#sharedSettings+1]=setting end
+ for _,setting in ipairs(interfaceArt.settings)do sharedSettings[#sharedSettings+1]=setting end
+ for _,setting in ipairs(V.require('Gen3BattleOptions').settings)do sharedSettings[#sharedSettings+1]=setting end
+ for _,setting in ipairs(V.require('Gen3BattleBackdrop').settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(sharedSettings)do
   schema[#schema+1]=setting:schema('Shared renderer option; applies immediately to the native Gen 3 presentation.')
  end
  for _,setting in ipairs(nativeArt.settings())do schema[#schema+1]=setting:schema('Shared Battle Art sprite settings. ANIMATED uses installed atlases or bundled BW backs (dex 1–251); missing art falls back to static full-body images. ROM/MODDED preserves native/provider art.')end
  mod.options:define(schema)
- local visible={};local seen={}
- for _,s in ipairs(schema)do visible[#visible+1]=s;seen[s.key]=true end
- for _,s in ipairs(V.require('SettingsCatalog'))do if not seen[s.key]then visible[#visible+1]={key=s.key,label=s.label,type='choice',readOnly=true,unavailable='ADAPTER PENDING'}end end
- V.require('InGameOptions').install(mod,visible,'BATTLE ART')
+ local Support=V.require('OptionSupport')
+ V.require('InGameOptions').install(mod,Support.rows(schema,3),'BATTLE ART')
+ mod.exports.optionSupport=Support.inventory(3)
  local function field(game)return game and game.phase=='field' and game.session and not Battle.isActive() end
  FieldView.draw=function(game,w,h,opts)
   M.active=false
@@ -103,6 +116,7 @@ function M.install()
   return next(game,ev)
  end)
  mod.hooks:wrap('core.update',function(next,game,dt,...)
+  SceneOptions.update(dt)
   if field(game) and free() then
    local function axis(v)return math.abs(v)>.18 and (v-(v>0 and .18 or -.18))/.82 or 0 end
    local elapsed=math.min(tonumber(dt)or 0,.1)
@@ -110,6 +124,10 @@ function M.install()
   end
   return next(game,dt,...)
  end)
+ for _,event in ipairs({'save.loaded','save.created'})do
+  mod.events:on(event,function()V.require('DayNight').restore()end)
+ end
+ mod.events:on('save.writing',function()V.require('DayNight').store()end)
  local dragging=false
  mod.hooks:wrap('input.pointer',function(next,game,ev)
   if ev.source=='mouse' and field(game) and free() then
@@ -134,10 +152,13 @@ function M.install()
  end)
  mod.hooks:wrap('core.quit_to_launcher',function(next,...)
   FieldView.draw,Display.present,Player.update=draw,present,update
-  uninstallBattle();Scene.release();return next(...)
+  uninstallInterface();uninstallBattle();Scene.release();return next(...)
  end)
  mod.exports.version=mod.version;mod.exports.lib=V
+ mod.exports.gen3Camera=M
  mod.exports.battleTheme=V.require('BattleTheme')
+ mod.exports.battlePresentation={modernUIEnabled=V.require('ModernBattleUI').enabled,
+  nativeHudOwned=function()return BattleStage.active and V.require('ModernBattleUI').enabled()end}
  mod.exports.firered={camera=M,outdoor=true,battles=BattleStage,presentation='beta'}
  print('[Battle Art FireRed] native field and battle background adapters installed')
 end

@@ -13,7 +13,7 @@ function M.install(mod,schema,title)
      for i,c in ipairs(choices)do if c[2]==value then return i end end
      return 1
     end
-    out[#out+1]={id=mod.id..':'..s.key,label=s.label or s.key,
+    out[#out+1]={id=mod.id..':'..s.key,label=s.label or s.key,supportOnly=s.supportOnly,
      value=function()if s.readOnly then return s.unavailable or 'ADAPTER PENDING' end;return s.type=='number' and tostring(mod.options:get(s.key) or s.default or 0) or choices[index()][1]end,
      step=function(g,dir)
       if s.readOnly then return false end
@@ -57,12 +57,18 @@ function M.install(mod,schema,title)
   end
   Rows.group=function(all,openPage)
    if not active then return group(all,openPage)end
-   local kept,members={},{}
-   for _,r in ipairs(all)do local dst=owned(r.id) and members or kept;dst[#dst+1]=r end
+   local kept,members,support={}, {}, {}
+   for _,r in ipairs(all)do
+    local dst=owned(r.id) and (r.supportOnly and support or members) or kept
+    dst[#dst+1]=r
+   end
    local out=group(kept,openPage)
    if #members>0 then out[#out+1]={id=mod.id..':settings',label=title or mod.id,group=true,
     value=function()return #members..' OPTIONS'end,
     activate=function()openPage(title or mod.id,members)end}end
+   if #support>0 then out[#out+1]={id=mod.id..':support',label=(title or mod.id)..' SUPPORT',group=true,
+    value=function()return #support..' OPTIONS'end,
+    activate=function()openPage('OPTION SUPPORT',support)end}end
    return out
   end
  else

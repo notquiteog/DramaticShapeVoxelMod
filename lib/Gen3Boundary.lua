@@ -42,7 +42,7 @@ function M.resolve(rs,x,y)
  elseif donor.biome=='mountain' then
   return 113,donor.pair,{kind='cliff',height=32,ground=1},'mountain'
  elseif donor.biome=='water' then
-  return donor.mid,donor.pair,{kind='flat',reviewedSurface=true},'water'
+  return donor.mid,donor.pair,{kind='water',reviewedSurface=true},'water'
  end
  -- Never propagate a facade, decoration or door into the void.
  return 1,donor.pair,{kind='flat',reviewedSurface=true},'ground'

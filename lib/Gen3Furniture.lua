@@ -1,5 +1,6 @@
 -- Whole-object recipes for the reviewed Building primary art. A sink, table
 -- or bed consumes its entire drawing once; no cell is folded into a wall.
+local V=...
 local M={}
 local recipes={
  {name='pallet_mailbox',primary='general',pair='pallet_outdoor',rows={{0x2A5},{0x2AD}},kind='mailbox',h=20,ground=0x296,depth=7},
@@ -25,7 +26,7 @@ local recipes={
  {name='lab_books_free_left',secondary='lab',rows={{0x28B},{0x73},{0x283}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
  {name='lab_books_free_right',secondary='lab',rows={{0x28C},{0x74},{0x284}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
  {name='lab_books_free_corner',secondary='lab',rows={{0x2BA},{0x73},{0x287}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
- {name='lab_work_table',secondary='lab',rows={{0x2A8,0x2A9,0x2AA},{0x2B0,0x2B1,0x2B2}},kind='table',h=9,ground=0x289,top=20},
+ {name='lab_work_table',secondary='lab',rows={{0x2A8,0x2A9,0x2AA},{0x2B0,0x2B1,0x2B2}},kind='table',h=9,ground=0x289,top=20,footprintDepth=15,topRect={1,3,46,20},material={1,4},supportOffset=-3,supportRows=1},
  {name='lab_pokedex_desk',secondary='lab',rows={{0x85,0x86},{0x285,0x286}},kind='desk',h=12,ground=0x289},
  {name='lab_computer',secondary='lab',rows={{0x75,0x76},{0x285,0x286}},kind='cabinet',h=23,ground=0x289,depth=12,facade={1,3,30,24}},
 
@@ -64,6 +65,13 @@ recipe('house_plant', 'player_house',{{0x47},{0x4F}},'plant',24,1,{cutout=true})
 recipe('common_house_plant','house',{{0x47},{0x4F}},'plant',24,1,{cutout=true})
 recipe('mart_plant',mart,{{0x2B5},{0x2B6}},'plant',24,0x281,{cutout=true})
 recipe('center_plant',center,{{0x28D},{0x294}},'plant',26,0x281,{cutout=true})
+local profiles=V and V.require('Gen3InteriorProfiles') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3InteriorProfiles.lua')
+for secondary,p in pairs(profiles)do for _,prop in ipairs(p.props)do
+ recipes[#recipes+1]={name=secondary..'_prop_'..prop[1],primary='building',secondary=secondary,
+  rows={{prop[1]}},kind=prop[2],h=prop[3],ground=p.floor,depth=8}
+end end
+local additional=V and V.require('Gen3AdditionalFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3AdditionalFurniture.lua')
+for _,r in ipairs(additional)do recipes[#recipes+1]=r end
 function M.extract(cells)
  local out,ordered={},{}
  for _,c in pairs(cells)do if c.primary=='building' or c.primary=='general' then ordered[#ordered+1]=c end end
@@ -107,6 +115,14 @@ function M.append(p,emit,uvFor)
   end end
  end
  local uv=uvFor(p.ts,r.rows[1][1]);local u,v=uv[1][1]+(uv[2][1]-uv[1][1])*.08,uv[1][2]+(uv[3][2]-uv[1][2])*.1
+ -- Some complete drawings include wall above the object. Sample the frame
+ -- itself for closed sides, rather than repeating that surrounding wall.
+ if r.material then
+  local sx,sy=r.material[1],r.material[2]
+  local t=uvFor(p.ts,r.rows[math.floor(sy/16)+1][math.floor(sx/16)+1])
+  u=t[1][1]+(t[2][1]-t[1][1])*(sx%16+.5)/16
+  v=t[1][2]+(t[3][2]-t[1][2])*(sy%16+.5)/16
+ end
  local solid={{u,v},{u,v},{u,v},{u,v}}
  local function box(x0,y0,z0,x1,y1,z1,material)
   material=material or solid
@@ -116,7 +132,26 @@ function M.append(p,emit,uvFor)
   emit({{x0,y1,z0},{x0,y1,z1},{x0,y0,z1},{x0,y0,z0}},material,.7)
   emit({{x1,y1,z1},{x1,y1,z0},{x1,y0,z0},{x1,y0,z1}},material,.7)
  end
- if r.kind=='plant' then
+ if r.kind=='relief' or r.kind=='bin' or r.kind=='plaque' then
+  -- A closed relief follows the original pixel silhouette from every angle.
+  -- Keep the source outline; never turn surrounding floor into its backing.
+  local mask=V.require('Gen3Outdoor').mask(p.ts,r.rows[1][1],r.ground)
+  if not mask then return end
+  local function tex(px,py)
+   local u=uv[1][1]+(uv[2][1]-uv[1][1])*(px+.5)/16
+   local v=uv[1][2]+(uv[3][2]-uv[1][2])*(py+.5)/16
+   return {{u,v},{u,v},{u,v},{u,v}}
+  end
+  local first,last
+  for sy=0,15 do for sx=0,15 do if mask[sy*16+sx]then first=first or sy;last=sy end end end
+  if not first then return end
+  local rise=r.h/(last-first+1)
+  for sy=first,last do for sx=0,15 do if mask[sy*16+sx]then
+   local y0,y1=(last-sy)*rise,(last-sy+1)*rise
+   local depth=r.kind=='plaque' and 2 or r.kind=='bin' and 7 or 5+3*math.sin((sy-first)/(last-first+1)*math.pi)
+   box(x+sx,y0,z+8-depth/2,x+sx+1,y1,z+8+depth/2,tex(sx,sy))
+  end end end
+ elseif r.kind=='plant' then
   source(0,0,p.w,p.d,{x,r.h,z+p.d-6},{x+p.w,r.h,z+p.d-6},{x+p.w,0,z+p.d-6},{x,0,z+p.d-6})
  elseif r.kind=='mailbox' then
   -- The source mailbox spans two metatiles but only its bottom twenty
@@ -237,12 +272,15 @@ function M.append(p,emit,uvFor)
   box(x+3,7,back-.8,x+12,13,back+.8,blue)
  else
   local inset=r.kind=='bed' and 2 or 1
-  local depth=r.kind=='counter' and math.min(22,p.d-2) or p.d-2
+  -- The source drawing can contain a walkable perspective apron. Its
+  -- art is still consumed whole, but only the authored footprint is solid.
+  local depth=r.footprintDepth or (r.kind=='counter' and math.min(22,p.d-2) or p.d-2)
   local z0,z1=z+1,z+depth
   box(x+inset,r.h-2,z0,x+p.w-inset,r.h,z1)
   for _,dx in ipairs({inset+1,p.w-inset-3})do for _,dz in ipairs({2,depth-3})do box(x+dx,0,z+dz,x+dx+2,r.h-2,z+dz+2)end end
   local top=r.top or p.d-2
-  source(inset,0,p.w-inset*2,top,{x+inset,r.h+.02,z0},{x+p.w-inset,r.h+.02,z0},{x+p.w-inset,r.h+.02,z1},{x+inset,r.h+.02,z1})
+  local t=r.topRect or {inset,0,p.w-inset*2,top}
+  source(t[1],t[2],t[3],t[4],{x+inset,r.h+.02,z0},{x+p.w-inset,r.h+.02,z0},{x+p.w-inset,r.h+.02,z1},{x+inset,r.h+.02,z1})
   if r.kind=='counter' then
    source(0,r.single and 10 or 16,p.w,r.single and 6 or 16,{x,r.h,z1+.02},{x+p.w,r.h,z1+.02},{x+p.w,0,z1+.02},{x,0,z1+.02})
   elseif r.kind=='bed' then box(x+2,0,z,x+p.w-2,r.h+3,z+1)end
@@ -255,7 +293,8 @@ function M.support(cells,gid,px,py)
  local c=cells and cells[math.floor(px/16)..':'..math.floor(py/16)]
  local p=c and c.prop;local r=p and p.recipe
  if r and (r.kind=='table' or r.kind=='counter' or r.kind=='desk') then
-  return r.h+.12,r.kind=='desk' and 5 or .4
+  if r.supportRows and math.floor(py/16)>=p.cy+r.supportRows then return 0 end
+  return r.h+.12,r.supportOffset or (r.kind=='desk' and 5 or .4)
  end
  return 0
 end

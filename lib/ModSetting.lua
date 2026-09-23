@@ -76,7 +76,8 @@ function ModSetting:setIndex(i, game)
   i = ((i - 1) % n + n) % n + 1
   self.index = i
   local value, id = self.values[i], modId()
-  local opts = game and game.save and game.save.options
+  -- Game3 owns options directly; Gen1/2 keep them on the live save.
+  local opts = game and ((game.save and game.save.options) or game.options)
   if opts then
     opts.modOptions = opts.modOptions or {}
     opts.modOptions[id] = opts.modOptions[id] or {}
@@ -88,7 +89,8 @@ function ModSetting:setIndex(i, game)
     loader.modOptions[id] = loader.modOptions[id] or {}
     loader.modOptions[id][self.key] = value
   end
-  if game and game.writeOptions then pcall(game.writeOptions, game) end
+  if game and game.writeOptions then pcall(game.writeOptions, game)
+  elseif game and game.persistOptions then pcall(game.persistOptions, game) end
   return value
 end
 

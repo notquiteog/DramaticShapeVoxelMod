@@ -1162,11 +1162,12 @@ for _, entry in ipairs(SETTINGS) do
 end
 for _,row in ipairs(V.require('CrystalSprites').schemas()) do schema[#schema+1]=row end
 mod.options:define(schema)
--- Complete settings list, independent of conditional/preset pages.
-local allSettings,knownSettings={},{}
-for _,row in ipairs(schema)do allSettings[#allSettings+1]=row;knownSettings[row.key]=true end
-for _,row in ipairs(V.require('SettingsCatalog'))do if not knownSettings[row.key]then allSettings[#allSettings+1]={key=row.key,label=row.label,type='choice',readOnly=true,unavailable='ADAPTER PENDING'}end end
-V.require('InGameOptions').install(mod,allSettings,'ALL BATTLE ART OPTIONS')
+-- Complete declared schema, independent of conditional/preset pages. The
+-- cross-generation support catalog is diagnostic data, never a source of
+-- pretend controls (including another generation's camera and missing providers).
+local OptionSupport=V.require('OptionSupport')
+V.require('InGameOptions').install(mod,OptionSupport.rows(schema,Generation.number()),'ALL BATTLE ART OPTIONS')
+mod.exports.optionSupport=OptionSupport.inventory(Generation.number())
 
 -- Read the raw pre-1.7.7 keys before duplicateFix's schema default can be
 -- mistaken for an explicit choice. The same helper runs again when a real
@@ -2085,6 +2086,10 @@ OverworldBattle.install()
 -- The Gen 2 arm of the same row. Its own file argues why it is a different
 -- implementation rather than a port; on Gen 1 it declines and does nothing.
 Gen2Battle.install()
+if Generation.isGen2() then
+ local uninstallGen2UI=V.require('Gen2BattleUI').install()
+ mod.hooks:wrap('core.quit_to_launcher',function(next,...)uninstallGen2UI();return next(...)end)
+end
 V.require("NativeBattleArt").install()
 if Generation.isGen1() then V.require('Gen1BattleHud').install() end
 StadiumBackground.install()
@@ -2222,6 +2227,10 @@ end)
 -- image over Crystal's newly advanced frame on every summary/dex draw.
 if V.require('CrystalSprites').setting:get() ~= 'crystal' then
   InterfaceSprites.install()
+  if Generation.isGen2() then
+    local undo=V.require('Gen2InterfaceArt').install()
+    mod.hooks:wrap('core.quit_to_launcher',function(next,...)undo();return next(...)end)
+  end
 end
 
 -- Every ending path emits this, including a battle skipped before it drew,

@@ -5,6 +5,10 @@ local screen={battle={doubles={},enemy2=second}}
 function screen:activeMon()return first end
 function screen:pic(mon)return mon==first and pic(56,56) or pic(64,48) end
 local target
+local placement='world'
+local selected=false
+local front=false
+local flip=true
 love={graphics={
  newCanvas=function(w,h)return {getWidth=function()return w end,getHeight=function()return h end,setFilter=function()end} end,
  getCanvas=function()return target end,setCanvas=function(v)target=v end,
@@ -14,6 +18,9 @@ love={graphics={
 local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
  if name=='Generation' then return {isGen2=function()return true end} end
  if name=='BattleScene' then return {GB_W=160,GB_H=144} end
+ if name=='NativeBattleArt'then return {image=function()return selected and pic(56,56) or nil end}end
+ if name=='BattleArt'then return {backPlacementSetting={get=function()return placement end},
+  playerSide=function()return front and 'front' or 'back'end,flipsPlayerFront=function()return flip end}end
  error(name)
 end})
 local game={stack={states={screen}}}
@@ -26,4 +33,9 @@ assert(target==nil,'previous render target not restored')
 local back=assert(M.sideTexture(game,'player'))
 assert(back.noMirror==true,'native back sprites must not receive the Gen 1 front-pic mirror')
 assert(back.modernFraming,'Crystal enables wider scene framing')
+placement='ui';assert(M.sideTexture(game,'player')==nil,'OG UI must release the native back slot')
+placement='world';selected=true;front=true
+assert(M.sideTexture(game,'player').noMirror==false,'selected player fronts honor front flip')
+flip=false;assert(M.sideTexture(game,'player').noMirror==true,'DEFAULT retains player-front orientation')
+screen.showPlayerTrainer=true;assert(M.sideTexture(game,'player')==nil,'intro trainer owns the native slot before sending out')
 print('staged pair dimensions, separation, ground line and ownership passed')

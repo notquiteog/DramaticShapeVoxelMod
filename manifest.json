@@ -1,7 +1,7 @@
 {
   "id": "BATTLE_ART_VOXEL_FORK",
   "name": "BATTLE ART VOXEL FORK",
-  "version": "1.23.0-test.8",
+  "version": "1.23.0-test.9",
   "api": 2,
   "entry": "main.lua",
   "profile": "content",
@@ -29,6 +29,6 @@
     "engine_internals"
   ],
   "affects_link": false,
-  "description": "2.5D environments and battle presentation for Gen 1, Crystal and FireRed on Gen1Recomp 0.2.73+. Native-art plants, modeled exteriors and furniture, open-front interior dioramas, first-person and rotating cameras, shared render distance, contextual boundary scenery, optional lighting and depth of field. FireRed includes reviewed exterior families, home/lab/Mart/Center interiors and native battles over 3D scenery; specialty interiors and full depth-positioned FireRed battlers remain in progress. See docs/FIRERED_SUPPORT.md and docs/INTERIOR_DIORAMAS.md.",
+  "description": "2.5D environments and native battle presentation for Gen 1, Crystal and FireRed/LeafGreen. Reviewed native-art scenery, furniture, gym/cave/interior profiles, lighting and water effects; shared settings inventory with functional native renderer, battle and interface adapters. Cross-generation feature parity remains incomplete; unsupported options stay visible with explicit limitations. See docs/NATIVE_PARITY_2026-09-22.md and docs/option-support.json.",
   "github": "notquiteog/DramaticShapeVoxelMod"
 }

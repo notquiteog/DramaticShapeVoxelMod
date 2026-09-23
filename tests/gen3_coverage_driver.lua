@@ -1,7 +1,7 @@
 -- Reproducible source-art coverage inventory, not an all-map visual approval.
 -- CSV contains identifiers/counts only; never export imported art to the repo.
 return function(game)
- assert(love.filesystem.getIdentity()=='firered-hd2d-qa','refusing a non-QA profile')
+ assert(love.filesystem.getIdentity():match('%-qa$'),'refusing a non-QA profile')
  local U=dofile('tests/drivers/util.lua')
  game:_handleBootAction({action='new_game',start={map='FR_PALLET_TOWN',x=10,y=9,facing='down'}})
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
@@ -10,6 +10,9 @@ return function(game)
  local file=assert(io.open(assert(os.getenv('SHOT_DIR'))..'/firered-coverage.csv','w'))
  file:write('map,pair,primary,environment,hd_scene,cells,flat,trees,building_cells,room_walls,props\n')
  local ids={};for id in pairs(game.data.maps)do ids[#ids+1]=id end;table.sort(ids)
+ for i,id in ipairs(ids)do Map.ensureMidLayout(game,id,game.data.maps[id]);if i%30==0 then U.wait(1)end end
+ Pairs.bind(game.data.maps)
+ local I=require('src.core.game3.scripting.interaction_scripts')
  local pairsSeen,enabled,propMaps,propsTotal,recipeCounts={},0,0,0,{}
  local tileRows={}
  for index,id in ipairs(ids)do
@@ -19,8 +22,8 @@ return function(game)
   pairsSeen[pair]=true
   local cells={};local n,flat,trees,buildings,walls=0,0,0,0,0
   for y=0,def.height-1 do for x=0,def.width-1 do
-   local mid=def.midLayout:midAt(x,y);local shape=Shapes.of(spec.primary,spec.secondary,mid)
-   cells[x..':'..y]={cx=x,cy=y,mid=mid,pair=pair,primary=spec.primary,secondary=spec.secondary,shape=shape}
+   local mid=def.midLayout:midAt(x,y);local shape=Shapes.of(spec.primary,spec.secondary,mid,(I.behaviors[pair] or {})[mid],def.midLayout:collAt(x,y))
+   cells[x..':'..y]={cx=x,cy=y,mid=mid,pair=Pairs.canonical(pair),primary=spec.primary,secondary=spec.secondary,shape=shape}
   end end
   local Buildings=V.require('Gen3Buildings')
   if supported then local gyms=Buildings.prepare(cells);V.require('Gen3Civic').prepare(cells,gyms,V.data("gen3_exteriors"))end
@@ -60,6 +63,6 @@ return function(game)
  print('[FR tile ledger]',#keys,'distinct tile/treatment rows')
  local np=0;for _ in pairs(pairsSeen)do np=np+1 end
  for name,count in pairs(recipeCounts)do print('[FR recipe]',name,count)end
- print('[FR coverage] PASS',#ids,'maps',np,'pairs',enabled,'HD scenes',propMaps,'furnished maps',propsTotal,'objects')
+ print('[FR coverage inventory]',#ids,'maps',np,'pairs',enabled,'enabled scenes',propMaps,'furnished maps',propsTotal,'objects')
  love.event.quit()
 end
