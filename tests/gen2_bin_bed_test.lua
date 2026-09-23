@@ -1,10 +1,22 @@
 local recipes=assert(loadfile('data/gen2_furniture.lua'))()
 local bed,bin
 for _,r in ipairs(recipes.TILESET_LAB) do if r.id=='crystal_healing_machine' then bed=r elseif r.id=='crystal_lab_bin' then bin=r end end
-assert(bed.support==6 and bed.parts[1].depth==32 and bed.parts[1].top[2]==27,'healing bed must be horizontal at six-pixel height')
 local center
 for _,r in ipairs(recipes.TILESET_POKECENTER) do if r.id=='crystal_center_healer' then center=r end end
-assert(center.support==6 and center.parts[1].depth==32 and center.parts[1].top[2]==27,'Center bed must also lie down')
+local geometry=dofile('lib/InteriorFurniture.lua')
+local V={require=function(n)assert(n=='InteriorFurniture');return geometry end}
+local builder=assert(loadfile('lib/Gen2DesignedFurniture.lua'))(V)
+for _,r in ipairs({bed,center})do
+ assert(r.support==6,'healing balls must retain tray support')
+ local trayArea,maxHeight=0,0
+ for _,q in ipairs(builder.build(r,{},16,128,128))do
+  for i=1,4 do maxHeight=math.max(maxHeight,q[i][2])end
+  if q[1][2]>6 and q[1][2]<6.1 and q[1][2]==q[2][2] and q[1][2]==q[3][2]then
+   trayArea=trayArea+math.abs((q[2][1]-q[1][1])*(q[3][3]-q[1][3]))
+  end
+ end
+ assert(trayArea>500 and maxHeight<=12,'healer needs a broad horizontal tray, not an upright slab')
+end
 local data={getPixel=function(_,x,y)local c=(x+y)%4/3;return c,c,c,1 end}
 local q=assert(loadfile('lib/Gen2Bin.lua'))().build(bin,data,16,128,128)
 assert(#q==50,'bin must include all outer, rim, inner and base faces')

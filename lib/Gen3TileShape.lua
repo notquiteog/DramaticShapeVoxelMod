@@ -62,8 +62,8 @@ local localProps={
 local ledges={
  [0x87]={ground=1},[0x97]={ground=0xDC},
  [0xB0]={ground=1,left=true},[0xB1]={ground=1,right=true},
- [0xC0]={ground=0xDC,left=true},[0xC1]={ground=0xDC,right=true},
- [0xC8]={ground=0xDC,left=true},[0xC9]={ground=0xDC,right=true},
+ [0xC0]={ground=0xDC},[0xC1]={ground=0xDC},
+ [0xC8]={ground=0xDC},[0xC9]={ground=0xDC},
 }
 for _,s in pairs(ledges)do s.kind='ledge' end
 -- Native General mountain cap, cliff-face and rounded corner drawings.

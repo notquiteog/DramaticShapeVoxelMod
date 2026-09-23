@@ -59,6 +59,12 @@ local function materials()
   bark=love.graphics.newImage(data);data:release()
  end
 end
+-- Landing dust uses the native effect painter on a small world-space card.
+-- Unsupported full-screen effects still retain their native presentation.
+function M.nativeEffects(anims)
+ for _,a in ipairs(anims or {})do if type(a)~='table' or a.kind~='dust' then return true end end
+ return false
+end
 function M.nativeRequired(game)
  -- Door and healing frames are projected into the scene below. Other special
  -- field presentations retain their native renderer.
@@ -76,7 +82,7 @@ function M.nativeRequired(game)
  local Warp=require('src.core.game3.warp')
  local escalator=Warp.isEscalatorActive and Warp.isEscalatorActive()
  return (Transition and Transition.isActive and Transition.isActive())
-  or (Special.isActive and Special.isActive() and not (escalator or Special.isEscalatorMoving and Special.isEscalatorMoving())) or #(Fx._anims or {})>0
+  or (Special.isActive and Special.isActive() and not (escalator or Special.isEscalatorMoving and Special.isEscalatorMoving())) or M.nativeEffects(Fx._anims)
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
 local function releaseGeometry()
@@ -329,6 +335,23 @@ local function prepare(game,vw,vh,cam)
    quad(b.v,b.i,{{x,16,32},{x+16,16,32},{x+16,0,32},{x,0,32}},{{u,t},{u,t},{u,t},{u,t}})
   end
  end end
+ -- Complete native wallpaper behind claimed furniture. The drawing's
+ -- window/poster faces remain just in front; object claims must not leave
+ -- rectangular holes in the wall finish.
+ for _,c in pairs(cells)do if c.cy==0 and c.mid~=0 and c.mid~=8 then
+  local house=c.pair=='player_house'
+  local shop=c.pair=='building__rom_082d4bcc'
+  if house or shop then
+   local b=batches[c.pair];local x=c.cx*16;local f=31.92
+   local upper=uvFor(c.ts,house and 0x20 or 0x285)
+   local lower=uvFor(c.ts,house and 0x28 or 0x285)
+   if upper and lower then
+    quad(b.v,b.i,{{x,32,f},{x+16,32,f},{x+16,16,f},{x,16,f}},upper)
+    if shop then local u,v=lower[1][1],lower[3][2]-.001;lower={{u,v},{u,v},{u,v},{u,v}}end
+    quad(b.v,b.i,{{x,16,f},{x+16,16,f},{x+16,0,f},{x,0,f}},lower)
+   end
+  end
+ end end
  for _,p in ipairs(props)do if not p.stageHidden then
   local b=batches[p.pair]
   local cutout=p.recipe.cutout
@@ -493,13 +516,13 @@ local function actors(game,cam,draw)
  if cam.level~=6 and Player.isVisible() then
   actor(Sprites.playerGraphicsId(game),(Player.px or 0)+(Player.spriteXOffset or 0),Player.py or 0,
    Player.facing,Player.walkPhase(),Player.drawFlip(),
-   {fieldMove=(Player.fieldMoveAnim or 0)>0,lift=-(Player.spriteYOffset or 0)},cam,draw)
+   {fieldMove=(Player.fieldMoveAnim or 0)>0,lift=-(Player.spriteYOffset or 0)-(Player.jumpSpriteY and Player.jumpSpriteY()or 0)},cam,draw)
  end
 end
 -- Project the engine-owned door/healing frames into the existing 3D room.
 -- Reading/drawing these effects never advances their timers or script state.
 local effectCanvases={}
-local function fieldEffects(draw)
+local function fieldEffects(draw,cam)
  local g=love.graphics
  local function effect(name,w,h,paint,verts)
   local c=effectCanvases[name]
@@ -509,6 +532,14 @@ local function fieldEffects(draw)
   local v,i={},{};quad(v,i,verts,{{0,0},{1,0},{1,1},{0,1}})
   local mesh=R.newMesh(v,i);draw(mesh,c);mesh:release()
  end
+ local fx=require('src.core.game3.field_effects')
+ for i,a in ipairs(fx._anims or {})do if a.kind=='dust' then
+  local x,z=a.cx*16,a.cy*16
+  local yaw=cam and cam.level>=6 and cam.yaw or 0
+  local dx,dz=8*math.cos(yaw),8*math.sin(yaw)
+  effect('landing-dust-'..i,16,8,function()fx.drawFront(x,z+8,nil)end,
+   {{x+8-dx,8,z+16-dz},{x+8+dx,8,z+16+dz},{x+8+dx,0,z+16+dz},{x+8-dx,0,z+16-dz}})
+ end end
  local doors=require('src.core.game3.doors');local a=doors._activeAnim
  if a then
   local x,z=a.x*16,a.y*16+16.15
@@ -579,7 +610,7 @@ function M.draw(game,vw,vh,cam)
  if cam.level>=6 then
   local dist=cam.level==6 and 0 or 75
   local dx,dz=math.sin(cam.yaw),-math.cos(cam.yaw)
-  local ey=cam.level==6 and 23 or 48
+  local ey=cam.level==6 and (23-(Player.jumpSpriteY and Player.jumpSpriteY()or 0)) or 48
   local exports=game and game.mods and game.mods.exports
   local ride=exports and exports.DRAMATIC_SKY_RIDE
   if not cam.battle and not cam.replay and ride and type(ride.currentAltitude)=='function' then
@@ -632,7 +663,7 @@ function M.draw(game,vw,vh,cam)
    if not ok then error(err,0)end
   end)
   actors(game,cam,R.draw)
-  if not cam.replay then rideDust(game,cam);fieldEffects(R.draw)end
+  if not cam.replay then rideDust(game,cam);fieldEffects(R.draw,cam)end
  end
  R.battleOcclusion(nil)
  local canvas=Options.finish(R.endScene(),width,height)

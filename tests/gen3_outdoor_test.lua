@@ -38,3 +38,12 @@ assert(S.of('general','city',0xFD).turn=='north' and S.of('general','city',0xFD)
 assert(S.of('general','city',0xF0).wood and S.of('general','city',0xF0).axis==4)
 assert(S.of('general','city',0xF5).axis==12 and not S.of('general','city',0xF5).wood)
 assert(S.of('general','city',0xF2).stop and S.of('general','city',0xF2).wood)
+
+for _,mid in ipairs({0xC0,0xC1,0xC8,0xC9})do
+ local sides={}
+ for _,face in ipairs(geometry(mid))do for _,v in ipairs(face)do
+  if v[3]==80 and (v[1]==48 or v[1]==64)then sides[v[1]]=math.max(sides[v[1]]or 0,v[2])end
+ end end
+ assert(sides[48]==2.5 and sides[64]==2.5,'sand/grass transition was tapered into a false end')
+end
+print('PASS sand/grass ledge joins retain continuous height and native caps')

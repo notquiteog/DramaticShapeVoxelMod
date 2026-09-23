@@ -101,6 +101,8 @@ local mart={
     {upright(0,15,0,11,12,15,0,16,4)},8),
 }
 local center={
+  {id='crystal_link_controls',tiles={{8,9,34,35},{24,25,50,51}},groundTiles={{17}},design='gb_link_controls',parts={},support=0},
+  {id='crystal_trade_controls',tiles={{38,39,34,35},{40,41,50,51}},groundTiles={{17}},design='gb_link_controls',parts={},support=0},
   item("crystal_center_healer",{{28,29,30,31},{44,45,46,47},{60,61,61,63},{76,77,78,79}},17,
     {upright(0,31,0,27,28,31,0,32,2)},6),
   item("crystal_center_terminal",{{32,33},{48,49},{64,65}},17,
@@ -118,6 +120,8 @@ local center={
   {id="crystal_center_bin",tiles={{68,69},{84,85}},groundTiles={{17}},model="bin",parts={},support=0},
 }
 local bedroom={
+  {id='crystal_bedroom_picture',tiles={{68,69},{84,85}},groundTiles={{1}},design='gb_picture',parts={},support=0},
+  {id='crystal_actual_bed',tiles={{3,4},{19,20},{35,36},{51,52}},groundTiles={{1}},design='gb_bed',parts={},support=0},
   {id="crystal_bedroom_workstation",model="room_desk",support=6,
    tiles={{11,12,2,2},{27,28,66,67},{43,44,82,83},{48,49,49,50}},
    groundTiles={{1}},parts={}},
@@ -130,6 +134,41 @@ local bedroom={
   item("crystal_bed",{{59,60},{75,76},{91,92}},1,
     {upright(0,15,0,19,20,23,0,24,2)},6),
 }
+local designs={
+ crystal_kitchen='gb_kitchen',crystal_bedroom_workstation='gb_desk',
+ crystal_television='gb_tv',crystal_books='gb_short_books',crystal_bed='gb_tv',crystal_bedroom_pc='gb_pc',crystal_center_terminal='gb_pc',
+ crystal_bedroom_books='gb_books',crystal_lab_shelves='gb_books',
+ crystal_lab_computer='gb_lab_pc',crystal_elm_desk='gb_elm_desk',
+ crystal_mart_shelf='gb_mart_shelf',crystal_mart_cooler='gb_mart_cooler',
+ crystal_mart_display='gb_mart_display',crystal_center_seat='gb_seat',
+ crystal_center_receiver='gb_receiver',crystal_bedroom_table='gb_table',
+ crystal_center_counter='gb_counter',crystal_center_counter_ball='gb_counter',crystal_center_counter_balls='gb_counter',
+ crystal_healing_machine='gb_healer',crystal_center_healer='gb_healer',
+}
+for _,list in ipairs({house,lab,commonHouse,mart,center,bedroom})do
+ for _,t in ipairs(list)do
+  if designs[t.id]then t.design=designs[t.id];t.parts={} end
+  if t.id=='crystal_bed' then t.id='crystal_bedroom_tv';t.support=0 end
+  if t.design=='gb_seat' then t.support=2.5 end
+  if t.design=='gb_counter'then t.support=7;t.supportBounds={0,8.5,16,15.5}end
+  if t.design=='gb_table' or t.design=='gb_desk' or t.design=='gb_healer'then
+   t.supportBounds={0,8,32,24}
+  end
+ end
+end
+-- Only unclaimed native wall rows become a thin backing. Identical tile IDs
+-- elsewhere (floors, furniture, other tilesets) retain their authored role.
+local function wall(list,tile,row,front,floor)
+ local t=item('wall_'..tile..'_'..row,{{tile}},floor,{},0)
+ t.design='wall';t.tileRow=row;t.wallFront=front-row*8
+ t.wallHigh=front==24 and (32-row*8) or (24-row*12)
+ t.wallLow=row==(front==24 and 2 or 1) and 0 or t.wallHigh-(front==24 and 8 or 12)
+ list[#list+1]=t
+end
+wall(house,17,0,16,1);wall(house,17,1,16,1)
+wall(bedroom,2,0,16,1);wall(bedroom,2,1,16,1)
+wall(lab,1,0,16,16);wall(lab,17,1,16,16)
+wall(center,2,0,16,17);wall(center,2,1,16,17)
 return {TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
   TILESET_HOUSE=commonHouse,TILESET_MART=mart,TILESET_POKECENTER=center,
   TILESET_PLAYERS_ROOM=bedroom}

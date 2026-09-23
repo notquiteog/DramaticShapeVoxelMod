@@ -1,4 +1,10 @@
-## 1.23.0 — 2026-09-22
+## 1.25.0 — 2026-09-23
+
+Rebuilds the reviewed Crystal and FireRed/LeafGreen player houses, labs, Centers and Marts with native-art furniture components: recessed CRT screens, keyboards, console/controllers, legged desks and chairs, horizontal beds, kitchen fittings, shelf frames, stock trays and shallow cushions. Adds complete runtime Crystal bedroom decorations and link-room control panels. Native back walls continue behind furniture; Crystal carpet borders stay on the floor. Retains low reception counters, native collision, interaction cells and item supports.
+
+FireRed/LeafGreen ledge jumps and their landing dust now remain in the selected 3D camera; player and first-person eye height follow the native hop arc. Sand/grass path transitions retain their original cap artwork and continuous ledge height instead of tapering into false ends. Adjacent Mart checkout sections meet without inset seams.
+
+Checked in official Gen1Recomp 0.3.2 in static, rotating, reverse and first-person views. This is a targeted interior pass; exhaustive all-map/all-option parity remains unfinished. See `docs/INTERIOR_QA_2026-09-23.md`.
 
 ## 1.24.0
 
@@ -7,6 +13,8 @@ Pokémon Centers in FireRed and LeafGreen now have complete up/down escalators, 
 Crystal gains a complete kitchen and bedroom workstation, with separate monitor, keyboard and console. Pewter Museum gains its full L-shaped counter and fossil displays. Roof eaves close their exposed corners across the shared Gen 2/3 builders. Includes the earlier tested upright foliage, actor grounding, stairs and recap-camera changes.
 
 Verified on official Gen1Recomp 0.3.2 using isolated imported profiles. This is a focused scenery release, not exhaustive all-tile visual parity. See docs/SCENERY_QA_2026-09-23.md for checks and remaining limits.
+
+## 1.23.0 — 2026-09-22
 
 Includes the verified FireRed/LeafGreen actor grounding, shadow contact, animated BW battle fronts, lab table/item fixes, rock silhouettes and museum counter correction. Generation-specific settings and scenery coverage remain incomplete.
 

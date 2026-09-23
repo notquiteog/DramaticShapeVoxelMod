@@ -474,6 +474,9 @@ function Gen2TileShape.at(map, shapes, tile, tx, ty)
     if tile==1 or tile==3 then return classes.ground end
     return {class="gardenrim",h=3,art="block",authored=true,derived=true}
   end
+  -- The red carpet edge runs under blocked reception cells as well as
+  -- walkable floor. Collision controls access, not this drawing's height.
+  if map.tileset.id=='TILESET_POKECENTER' and (tile==1 or tile==17) then return classes.ground end
   local cx, cy = math.floor(tx / 2), math.floor(ty / 2)
   local tileset = map.tileset
   local okT, top = pcall(map.tileAt, map, cx * 2, cy * 2)
@@ -504,8 +507,9 @@ function Gen2TileShape.install(shapes, map)
         x0,x1=math.min(x0,p.x[1]),math.max(x1,p.x[2]+1)
         z0,z1=math.min(z0,p.z or 0),math.max(z1,(p.z or 0)+(p.depth or 0))
       end
+      if t.supportBounds then x0,z0,x1,z1=unpack(t.supportBounds) end
       for ty=0,th-bh do for tx=0,tw-bw do
-        if map:tileAt(tx,ty)==t.tiles[1][1] then
+        if (not t.tileRow or t.tileRow==ty) and map:tileAt(tx,ty)==t.tiles[1][1] then
           local match=true
           for r=1,bh do for c=1,bw do
             if map:tileAt(tx+c-1,ty+r-1)~=t.tiles[r][c] then match=false end

@@ -104,13 +104,12 @@ function M.append(p,source,box,sample,emit,uvFor)
   source(3,26,26,5,{x+3,13,z+30.02},{x+29,13,z+30.02},{x+29,6,z+30.02},{x+3,6,z+30.02})
   return true
  elseif r.kind=='centerSeat' then
-  local frame=sample(4,13);local cushion=sample(8,5)
-  box(x+2,0,z+3,x+14,3,z+14,frame)
-  box(x+2,3,z+2,x+14,6,z+13,cushion)
-  for sy=1,11 do local inset=(sy==1 or sy==11)and 2 or 1
-   source(inset,sy,16-2*inset,1,{x+inset,6.02,z+sy+1},{x+16-inset,6.02,z+sy+1},
-    {x+16-inset,6.02,z+sy+2},{x+inset,6.02,z+sy+2})
-  end
+  local frame,cushion=sample(4,13),sample(8,5)
+  box(x+3,0,z+3,x+13,.7,z+13,frame)
+  box(x+2,.7,z+2,x+14,1.8,z+13,cushion)
+  box(x+3,1.8,z+3,x+13,2.5,z+12,cushion)
+  source(2,2,12,10,{x+3,2.52,z+3},{x+13,2.52,z+3},
+   {x+13,2.52,z+12},{x+3,2.52,z+12})
   return true
  elseif r.kind=='centerCounter' then
   -- Nurse Joy's feet are at the previous cell boundary. Leave her complete

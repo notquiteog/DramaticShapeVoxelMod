@@ -1,3 +1,11 @@
+## 1.25.0 — 2026-09-23
+
+Rebuilds the reviewed Crystal and FireRed/LeafGreen player houses, labs, Centers and Marts with native-art furniture components: recessed CRT screens, keyboards, console/controllers, legged desks and chairs, horizontal beds, kitchen fittings, shelf frames, stock trays and shallow cushions. Adds complete runtime Crystal bedroom decorations and link-room control panels. Native back walls continue behind furniture; Crystal carpet borders stay on the floor. Retains low reception counters, native collision, interaction cells and item supports.
+
+FireRed/LeafGreen ledge jumps and their landing dust now remain in the selected 3D camera; player and first-person eye height follow the native hop arc. Sand/grass path transitions retain their original cap artwork and continuous ledge height instead of tapering into false ends. Adjacent Mart checkout sections meet without inset seams.
+
+Checked in official Gen1Recomp 0.3.2 in static, rotating, reverse and first-person views. This is a targeted interior pass; exhaustive all-map/all-option parity remains unfinished. See `docs/INTERIOR_QA_2026-09-23.md`.
+
 ## 1.24.0 — 2026-09-23
 
 Pokémon Centers in FireRed and LeafGreen now have complete up/down escalators, recessed stairwells, joined native back walls, a horizontal healing tray, low seats, reception counters, upstairs terminals and gates. Counters leave room for Nurse Joy and the upstairs workers, including rotating views. Healing balls and the monitor align with the modeled equipment. Escalator travel retains the chosen camera between animation phases.

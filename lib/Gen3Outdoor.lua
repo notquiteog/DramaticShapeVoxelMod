@@ -74,14 +74,17 @@ function M.append(c,emit,uvFor)
   end
  elseif s.kind=='ledge' then
   -- A low turf mound with a thin exposed dirt edge, never a tall block.
-  local ground=uvFor(c.ts,s.ground) or uv
+  -- The sand/grass transition is painted into each native cap. C0/C1
+  -- and C8/C9 are material transitions along a continuous ledge, not ends.
+  -- Keep those pixels on both the approach and the raised cap.
+  emit({{x,.01,z},{x+16,.01,z},{x+16,.01,z+9},{x,.01,z+9}},sub(uv,0,0,16,7),1)
   local function height(u,v)
    local endScale=(s.left and math.min(1,u/5) or s.right and math.min(1,(16-u)/5) or 1)
    return 2.5*math.sin(math.min(1,math.max(0,(v-9)/7))*math.pi*.5)*endScale
   end
   for ix=0,3 do for iz=0,2 do
    local a,b=ix*4,(ix+1)*4;local p,q=9+iz*7/3,9+(iz+1)*7/3
-   emit({{x+a,height(a,p),z+p},{x+b,height(b,p),z+p},{x+b,height(b,q),z+q},{x+a,height(a,q),z+q}},sub(ground,a,p,b,q),1)
+   emit({{x+a,height(a,p),z+p},{x+b,height(b,p),z+p},{x+b,height(b,q),z+q},{x+a,height(a,q),z+q}},sub(uv,a,(p-9),b,(q-9)),1)
   end end
   for ix=0,3 do local a,b=ix*4,(ix+1)*4
    emit({{x+a,height(a,16),z+16},{x+b,height(b,16),z+16},{x+b,0,z+16},{x+a,0,z+16}},sub(uv,a,10,b,16),.85)

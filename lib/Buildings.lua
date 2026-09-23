@@ -150,6 +150,7 @@ local models = {}          -- "<tileset>:<index>" -> prebuilt local quads
 -- is built from the complete drawing and the tower rises to its real
 -- height instead of folding as two half-buildings.
 local function read(t, data, perRow, backTiles)
+  if t.tileRow and ty~=t.tileRow then return false end
   local tiles = t.tiles
   if t.topRows then
     tiles = {}
@@ -1482,7 +1483,9 @@ function Buildings.build(S, map, data, perRow)
             if not built then
               local key = tileset.id .. ":" .. index
               if not models[key] then
-                if S.gen2 and t.model=="room_desk" then
+                if S.gen2 and t.design then
+                  models[key]=V.require("Gen2DesignedFurniture").build(t,data,perRow,atlasW,atlasH)
+                elseif S.gen2 and t.model=="room_desk" then
                   models[key]=V.require("Gen2RoomDesk").build(t,data,perRow,atlasW,atlasH)
                 elseif S.gen2 and t.model=="bin" then
                   models[key]=V.require("Gen2Bin").build(t,data,perRow,atlasW,atlasH)
@@ -1544,6 +1547,7 @@ function Buildings.build(S, map, data, perRow)
       end
     end
   end
+  if S.gen2 then V.require("Gen2DesignedFurniture").backing(S,map,perRow,atlasW,atlasH)end
 end
 
 -- One placement: claim its tiles (so the detector leaves them alone and

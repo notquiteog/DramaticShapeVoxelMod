@@ -74,6 +74,8 @@ local additional=V and V.require('Gen3AdditionalFurniture') or dofile((os.getenv
 for _,r in ipairs(additional)do recipes[#recipes+1]=r end
 local Center=V and V.require('Gen3CenterFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3CenterFurniture.lua')
 for _,r in ipairs(Center.recipes)do recipes[#recipes+1]=r end
+local Designed=V and V.require('Gen3DesignedFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3DesignedFurniture.lua')
+Designed.install(recipes)
 local function matched(mid,expected,r)
  return (r.kind=='escalator' and Center.canonical(mid) or mid)==expected
 end
@@ -147,6 +149,7 @@ function M.append(p,emit,uvFor)
   local v=t[1][2]+(t[3][2]-t[1][2])*(sy%16+.5)/16
   return {{u,v},{u,v},{u,v},{u,v}}
  end
+ if Designed.append(p,source,box,sample,emit)then return end
  if Center.append(p,source,box,sample,emit,uvFor)then return end
  if r.kind=='relief' or r.kind=='bin' or r.kind=='plaque' then
   -- A closed relief follows the original pixel silhouette from every angle.
@@ -318,7 +321,7 @@ function M.append(p,emit,uvFor)
   box(x+2,6,back-.7,x+13,14,back+.7,frame)
   box(x+3,7,back-.8,x+12,13,back+.8,blue)
  else
-  local inset=r.kind=='bed' and 2 or 1
+  local inset=r.join and 0 or r.kind=='bed' and 2 or 1
   -- The source drawing can contain a walkable perspective apron. Its
   -- art is still consumed whole, but only the authored footprint is solid.
   local depth=r.footprintDepth or (r.kind=='counter' and math.min(22,p.d-2) or p.d-2)
