@@ -35,7 +35,12 @@ function M.install()
  local failed=false
  mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original FireRed battle background.'),Trees.art:schema('Original game tree drawings or optional illustrated replacements.'),Trees.setting:schema('Flat illustrated trunks follow their leaf billboards; SOLID restores physical trunks.'),mode:schema('FireRed 2.5D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
  local nativeArt=V.require('NativeBattleArt');nativeArt.install()
- for _,setting in ipairs(nativeArt.settings())do schema[#schema+1]=setting:schema('Shared Battle Art sprite settings. ANIMATED uses installed atlases; missing BW atlases fall back to packaged static full-body art. ROM/MODDED preserves native/provider art.')end
+ local sharedSettings={V.require('ModernBattleUI').setting,
+  V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting}
+ for _,setting in ipairs(sharedSettings)do
+  schema[#schema+1]=setting:schema('Shared renderer option; applies immediately to the native Gen 3 presentation.')
+ end
+ for _,setting in ipairs(nativeArt.settings())do schema[#schema+1]=setting:schema('Shared Battle Art sprite settings. ANIMATED uses installed atlases or bundled BW backs (dex 1–251); missing art falls back to static full-body images. ROM/MODDED preserves native/provider art.')end
  mod.options:define(schema)
  local visible={};local seen={}
  for _,s in ipairs(schema)do visible[#visible+1]=s;seen[s.key]=true end
@@ -119,6 +124,7 @@ function M.install()
   if payload and payload.mod==mod.id and payload.key==Distance.setting.key then Distance.setting:sync(payload.value);Scene.invalidate()end
   if payload and payload.mod==mod.id and payload.key==BattleStage.setting.key then BattleStage.setting:sync(payload.value) end
   if payload and payload.mod==mod.id then
+   for _,setting in ipairs(sharedSettings)do if payload.key==setting.key then setting:sync(payload.value)end end
    for _,setting in ipairs(nativeArt.settings())do if payload.key==setting.key then setting:sync(payload.value)end end
    for _,setting in ipairs({Trees.setting,Trees.art})do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
   end

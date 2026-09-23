@@ -279,6 +279,36 @@ local function restore(battler)
   states[battler] = nil
 end
 
+-- Share the bundled animated BW backs with every generation adapter. Keep
+-- installed custom atlases first, and retain static fallback beyond dex 251.
+local bundledBacks, dexBySpecies, installedAtlases = {}, {}, {}
+for dex,name in pairs(V.data("battle_species_dex_386")) do
+  dexBySpecies[tostring(BattleArt.speciesAlias(name)):upper()] = dex
+end
+local bundledIndex = V.data("crystal_full_body")
+local function bundledBack(key, shiny)
+  local dex = dexBySpecies[key]
+  local id = (shiny and "shiny/" or "normal/") .. tostring(dex)
+  if bundledBacks[id] then return bundledBacks[id] end
+  local row = bundledIndex[id]
+  if not row then return nil end
+  local durations = {}
+  for i,seconds in ipairs(row.durations) do durations[i] = seconds * 1000 end
+  local def = {image="crystal/full_body/"..id..".png", width=row.w,
+    height=row.h, columns=row.columns, frames=#durations,
+    durations=durations, stableAnchor=true}
+  bundledBacks[id] = def
+  return def
+end
+local function installed(def)
+  if not def then return false end
+  if installedAtlases[def] == nil then
+    local path = atlasPath(def)
+    installedAtlases[def] = path and love.filesystem.getInfo(path,"file") ~= nil or false
+  end
+  return installedAtlases[def]
+end
+
 local function definition(battler, side)
   -- MODDED owns presentation, not Pokemon art: capture the image selected by
   -- the provider chain (or ROM) without installing any Battle Art frame.
@@ -299,7 +329,11 @@ local function definition(battler, side)
     selected = SHINY_SETS[generation]
   end
   local bySide = selected and key and selected[key]
-  return bySide and bySide[side] or nil
+  local def = bySide and bySide[side] or nil
+  if side == "back" and generation == "gen5" and not installed(def) then
+    return bundledBack(key, shiny) or def
+  end
+  return def
 end
 AnimatedBattleArt.definitionFor = definition
 -- Shared frame access for native Gen 2/3 renderers, using this same decoder.

@@ -1248,6 +1248,22 @@ function OverworldBattle.sideTexture(battle, side)
   texturingMetric = metric
   texturingAx, texturingAy = ax, ay
 
+  local heads,slotOf={},{}
+  for _,key in ipairs({side,side..'2'})do
+    if battle[key]then slotOf[battle[key]]=key end
+  end
+  local ownPic=rawget(battle,'drawBattlerPic')
+  local drawPic=battle.drawBattlerPic
+  battle.drawBattlerPic=function(self,mon,x,y,scale,sx,sy)
+    local slot=slotOf[mon]
+    if slot and not showingTrainer then
+      local img=self:picImage(mon.sprite)
+      local bounds=V.require('SpriteHeadBounds').get(img)
+      heads[slot]={x+(sx or 0)+(bounds[1]+bounds[3])*.5*scale,
+        y+(sy or 0)+bounds[2]*scale}
+    end
+    return drawPic(self,mon,x,y,scale,sx,sy)
+  end
   local ok, err = pcall(function()
     g.setCanvas(canvas)
     g.clear(0, 0, 0, 0)
@@ -1265,6 +1281,7 @@ function OverworldBattle.sideTexture(battle, side)
     end
   end)
 
+  battle.drawBattlerPic=ownPic
   texturing = nil
   texturingMetric = nil
   texturingAx, texturingAy = TEX_AX, TEX_AY
@@ -1285,6 +1302,7 @@ function OverworldBattle.sideTexture(battle, side)
   local playerNoMirror = side == "player"
                          and OverworldBattle.playerCardNoMirror()
   return { canvas = canvas, ax = ax, ay = ay, trainer = trainer,
+           hudAnchors = next(heads) and heads or nil,
            noDayTint = BattleArt.isStaticFront(shownImage),
            -- Opponent trainer cards are authored for a compact intro slot.
            -- Enlarge only those cards in world space, whichever generation

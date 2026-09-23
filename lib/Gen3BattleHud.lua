@@ -3,6 +3,7 @@
 -- those cards after the complete frame. Never bake modern text into an attack.
 local V=...
 local Theme=V.require('BattleTheme')
+local Mode=V.require('ModernBattleUI')
 local M={cards={},drawn=0}
 local Bounds=V.require('SpriteHeadBounds')
 function M.install(stage)
@@ -19,7 +20,7 @@ function M.install(stage)
  local Pokemon=require('src.core.game3.pokemon')
  local original,input=Health.draw,Ui.handleInput
  Ui.handleInput=function(keys)
-  if stage.active and Ui._mode=='menu' and M.menu and M.menu.mode=='menu' and keys and keys.wasPressed then
+  if Mode.enabled() and stage.active and Ui._mode=='menu' and M.menu and M.menu.mode=='menu' and keys and keys.wasPressed then
    local swap={up='left',down='right',left='up',right='down'}
    local proxy=setmetatable({},{__index=keys})
    proxy.wasPressed=function(_,key)return keys:wasPressed(swap[key]or key)end
@@ -29,10 +30,10 @@ function M.install(stage)
  end
  local capturing=false
  function M.reset()M.cards={};M.menu=nil;M.covered=false;capturing=false end
- function M.begin()M.reset();capturing=true end
+ function M.begin()M.reset();capturing=Mode.enabled() end
  function M.finish()
   capturing=false
-  if not stage.active then return end
+  if not stage.active or not Mode.enabled() then return end
   for _,name in ipairs({'bag_menu','party_menu','summary_menu','help_system'})do
    local owner=package.loaded['src.ui.game3.'..name]
    if owner and owner.isOpen and owner.isOpen()then M.covered=true;return end

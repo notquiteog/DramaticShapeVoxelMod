@@ -97,6 +97,7 @@ function BattlePresentation.export()
   return {
     apiVersion = BattlePresentation.API_VERSION,
     theme = V.require('BattleTheme'),
+    modernUIEnabled = V.require('ModernBattleUI').enabled,
     hudAnchor = function(slot)
       local shot=V.require('OverworldBattle').shot()
       local p=shot and shot.heads and shot.heads[slot]

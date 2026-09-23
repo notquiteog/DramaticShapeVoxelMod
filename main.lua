@@ -719,6 +719,7 @@ end
 
 local TreePresentation=V.require("TreePresentation")
 local SETTINGS = {
+  { V.require('ModernBattleUI').setting, "Compact status cards above every battler and window-resolution commands. Native menus return when disabled.", full=true },
   { V.require("CrystalSprites").setting, "Crystal animation, shiny effects and portraits in Gen 1/2. SELECTED ART uses the existing Battle Art collections. Restart the game after changing this pack.", full=true },
   { V.require("CrystalSprites").fullBody, "Animated Gen 5 full-body backs on 2.5D battle stages with the Crystal pack. Normal menus retain Crystal art.", full=true },
   { TreePresentation.surfaces, "Original game scenery textures, or optional detailed materials. Geometry is preserved.", full=true, when=function()return Generation.isGen2()end },
@@ -2085,6 +2086,7 @@ OverworldBattle.install()
 -- implementation rather than a port; on Gen 1 it declines and does nothing.
 Gen2Battle.install()
 V.require("NativeBattleArt").install()
+if Generation.isGen1() then V.require('Gen1BattleHud').install() end
 StadiumBackground.install()
 
 -- ------- the first-person rung's inputs and its walk

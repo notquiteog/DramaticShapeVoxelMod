@@ -1,3 +1,9 @@
+## Shared modern battle HUD and bundled animated backs — 1.23.0-test.7
+
+Gen 1 staged battles now have separate projected status cards for all four double battlers and compact commands drawn after attack effects. MODERN BATTLE UI is a live shared setting across all three generations; OFF retains native UI. Gen 3 exposes the existing shadow, world-curve and wireframe controls. The selected-art renderer can reuse the bundled animated BW back atlases for dex 1–251; missing species retain static fallback. Custom installed atlases remain first priority. Crystal remains the default Gen 1/2 sprite pack.
+
+TEST PRERELEASE: published before gameplay testing as requested. Full cross-generation parity, Gen 3 shiny-context handling, animated front coverage and advanced multiplayer scenarios remain unfinished.
+
 ## Crystal interface ownership — 1.23.0-test.6
 
 Fixes the inherited Gen 1 summary/dex/title ownership conflict: the selected-art interface renderer no longer restores its cached first image over Crystal animation. Gen 1 evolution also retains the mon’s shiny variant. Includes the integrated Crystal sprite pack (Gen 1/2 default), shared manager/in-game controls, full-body staged backs and removal of the separate cart dependency.
