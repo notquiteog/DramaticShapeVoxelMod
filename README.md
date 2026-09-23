@@ -1,3 +1,5 @@
+> Test build 1.23.0-test.1: Complete in-game settings inventory across generations; options without a generation adapter are explicitly read-only. FireRed/LeafGreen right-stick look and world-space door/healing effect presentation preserve the 2.5D view. Gameplay verification pending.
+
 **1.22.0: Original-art scenery and Oak lab models.** Original tree artwork is now the default in Crystal and FireRed/LeafGreen, with optional illustrated trees and flat or modeled trunks. Adds closed roof eaves, LeafGreen tileset aliases, modeled Oak lab furniture, supported starter balls and Pokédex items, and native in-game settings. Keeps native battle cards separated.
 
 Specialty interiors, forest gates and broader visual coverage remain unfinished.

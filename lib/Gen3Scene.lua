@@ -58,8 +58,8 @@ local function materials()
  end
 end
 function M.nativeRequired(game)
- -- Keep native healing balls, door animation, darkness and shop framing until
- -- those owners expose depth-aware effects. Do not hide their presentations.
+ -- Door and healing frames are projected into the scene below. Other special
+ -- field presentations retain their native renderer.
  Pairs.bind(game and game.data and game.data.maps)
  local def=Map.currentDef()
  if not (def and def.midLayout) then return true end
@@ -71,8 +71,7 @@ function M.nativeRequired(game)
  local Fx=require('src.core.game3.field_effects')
  local Special=require('src.core.game3.special_field_anim')
  local Transition=package.loaded['src.core.game3.battle_transition']
- return (Heal.isActive and Heal.isActive()) or (Doors.isBusy and Doors.isBusy())
-  or (Transition and Transition.isActive and Transition.isActive())
+ return (Transition and Transition.isActive and Transition.isActive())
   or (Special.isActive and Special.isActive()) or #(Fx._anims or {})>0
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
@@ -389,6 +388,38 @@ local function actors(game,cam,draw)
    {fieldMove=(Player.fieldMoveAnim or 0)>0,lift=-(Player.spriteYOffset or 0)},cam,draw)
  end
 end
+-- Project the engine-owned door/healing frames into the existing 3D room.
+-- Reading/drawing these effects never advances their timers or script state.
+local effectCanvases={}
+local function fieldEffects(draw)
+ local g=love.graphics
+ local function effect(name,w,h,paint,verts)
+  local c=effectCanvases[name]
+  if not c then c=g.newCanvas(w,h);c:setFilter('nearest','nearest');effectCanvases[name]=c end
+  g.push('all');g.setCanvas(c);g.origin();g.setShader();g.setScissor();g.setDepthMode();g.setBlendMode('alpha');g.clear(0,0,0,0);g.setColor(1,1,1,1)
+  local ok,err=pcall(paint);g.pop();if not ok then error(err,0)end
+  local v,i={},{};quad(v,i,verts,{{0,0},{1,0},{1,1},{0,1}})
+  local mesh=R.newMesh(v,i);draw(mesh,c);mesh:release()
+ end
+ local doors=require('src.core.game3.doors');local a=doors._activeAnim
+ if a then
+  local x,z=a.x*16,a.y*16+16.15
+  effect('door',32,48,function()doors.draw(x,a.y*16-32,32,48)end,
+   {{x,48,z},{x+32,48,z},{x+32,0,z},{x,0,z}})
+ end
+ local heal=require('src.core.game3.pokecenter_heal')
+ if heal.isActive()then
+  local prop
+  for _,c in pairs(cache.cells or {})do if c.prop and c.prop.recipe.name=='center_healer'then prop=c.prop;break end end
+  if prop then
+   local x,z,h=prop.cx*16,prop.cy*16,prop.recipe.h+.18
+   effect('heal-balls',32,24,function()g.translate(-80,-28);heal.drawBalls()end,
+    {{x,h,z+2},{x+32,h,z+2},{x+32,h,z+22},{x,h,z+22}})
+   effect('heal-monitor',32,16,function()g.translate(-112,-16);heal.drawMonitor()end,
+    {{x+32,28,z+1},{x+64,28,z+1},{x+64,12,z+1},{x+32,12,z+1}})
+  end
+ end
+end
 function M.restore()
  R.battleOcclusion(nil)
  R.fog=nil
@@ -446,7 +477,7 @@ function M.draw(game,vw,vh,cam)
  if not R.beginScene(width,height,cx,cz,vw,vh,background,'firered') then M.restore();return false end
  R.battleOcclusion(nil)
  Interior.draw(room)
- terrain(R.draw);if not cam.battle then actors(game,cam,R.draw)end
+ terrain(R.draw);if not cam.battle then actors(game,cam,R.draw);fieldEffects(R.draw)end
  R.battleOcclusion(nil)
  local canvas=R.endScene()
  R.fog=nil
@@ -463,6 +494,7 @@ function M.draw(game,vw,vh,cam)
 end
 function M.invalidate()Boundary.clear();releaseGeometry()end
 function M.release()
+ for _,c in pairs(effectCanvases)do c:release()end;effectCanvases={}
  releaseGeometry()
  for _,mesh in pairs(spriteMeshes)do if mesh then mesh:release() end end
  spriteMeshes={}

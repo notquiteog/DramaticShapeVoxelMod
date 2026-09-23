@@ -1,3 +1,32 @@
+# Test release checkpoint — 2026-09-22 (gameplay verification pending)
+
+User explicitly requested publication before gameplay testing to conserve their
+remaining account budget. Test artifacts and publication records are under
+/tmp/test-round-20260922. Stable releases are not replaced.
+
+Gen 1 online doubles implemented via an optional native cloned-party provider,
+paired actions/targets, host-first turn ordering, queued-turn hashes and bench
+refill. Native two-client gameplay validation is still required; advanced move
+contexts, simultaneous faints and disconnect/cancellation require scrutiny.
+
+Wilds now imports user-provided PKMN.NET SR4 HGSS walking frames. Gen 3 defaults
+to these for wilds/followers, Ride reuses them and carries an independent fallback.
+Gen 1/2 keep their existing defaults and opt in through the HGSS sprite choice.
+New independent gen3-bw-battle-sprites mod uses the supplied STATIC BW fronts and
+backs only during native battle drawing. The provided 96x96 PNGs are not animated.
+Crystal's Gen 2 animated companion remains untouched. No HGSS battle artwork.
+
+Battle Art Gen 3 adds right-stick input through public hooks, projects native
+healing/door frames into world space, and keeps its camera selected. All settings
+from the generated ModSetting catalog are visible in-game; missing generation
+adapters are READ-ONLY / ADAPTER PENDING, not claimed functional. Gen 1/2 expose
+the complete declared schema regardless of conditional preset pages.
+
+Only build compilation/package validation performed before publishing. No live
+profile/save modifications. The referenced X post could not be read; local fork
+source confirmed the existing Gen 1 BattleArt/AnimatedBattleArt machinery, but
+it is not connected to the native Gen 3 renderer. New native provider is separate.
+
 # Release checkpoint — 2026-09-22
 
 Prepared for publication at the user's request: Online 0.7.0, Wilds 2.3.1,

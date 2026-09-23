@@ -34,7 +34,10 @@ function M.install()
  local draw,present,update=FieldView.draw,Display.present,Player.update
  local failed=false
  mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original FireRed battle background.'),Trees.art:schema('Original game tree drawings or optional illustrated replacements.'),Trees.setting:schema('Flat illustrated trunks follow their leaf billboards; SOLID restores physical trunks.'),mode:schema('FireRed 2.5D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
- V.require('InGameOptions').install(mod,schema,'BATTLE ART')
+ local visible={};local seen={}
+ for _,s in ipairs(schema)do visible[#visible+1]=s;seen[s.key]=true end
+ for _,s in ipairs(V.require('SettingsCatalog'))do if not seen[s.key]then visible[#visible+1]={key=s.key,label=s.label,type='choice',readOnly=true,unavailable='ADAPTER PENDING'}end end
+ V.require('InGameOptions').install(mod,visible,'BATTLE ART')
  local function field(game)return game and game.phase=='field' and game.session and not Battle.isActive() end
  FieldView.draw=function(game,w,h,opts)
   M.active=false
@@ -83,6 +86,21 @@ function M.install()
    return true
   end
   return next(game,ev)
+ end)
+ local stick={x=0,y=0}
+ mod.hooks:wrap('input.gamepad',function(next,game,ev)
+  if ev.phase=='axis' then
+   if ev.axis=='rightx'then stick.x=tonumber(ev.value)or 0 elseif ev.axis=='righty'then stick.y=tonumber(ev.value)or 0 end
+  elseif ev.phase=='removed'then stick.x,stick.y=0,0 end
+  return next(game,ev)
+ end)
+ mod.hooks:wrap('core.update',function(next,game,dt,...)
+  if field(game) and free() then
+   local function axis(v)return math.abs(v)>.18 and (v-(v>0 and .18 or -.18))/.82 or 0 end
+   local elapsed=math.min(tonumber(dt)or 0,.1)
+   M.look(axis(stick.x)*elapsed*2.2,axis(stick.y)*elapsed*1.5)
+  end
+  return next(game,dt,...)
  end)
  local dragging=false
  mod.hooks:wrap('input.pointer',function(next,game,ev)

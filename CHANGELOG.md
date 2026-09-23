@@ -1,3 +1,9 @@
+## 1.23.0-test.1 — 2026-09-22
+
+Complete in-game settings inventory across generations; options without a generation adapter are explicitly read-only. FireRed/LeafGreen right-stick look and world-space door/healing effect presentation preserve the 2.5D view.
+
+**TEST PRERELEASE — published before gameplay testing at the user’s request.** Build/compile validation only at publication. Gen 1 online doubles and the new door/healing projection require native gameplay verification; advanced move effects and disconnect combinations may need corrections. Existing stable releases remain unchanged.
+
 ## 1.22.0 — 2026-09-22
 
 Original tree artwork is now the default in Crystal and FireRed/LeafGreen, with optional illustrated trees and flat or modeled trunks. Adds closed roof eaves, LeafGreen tileset aliases, modeled Oak lab furniture, supported starter balls and Pokédex items, and native in-game settings. Keeps native battle cards separated.

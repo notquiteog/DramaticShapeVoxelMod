@@ -1158,6 +1158,11 @@ for _, entry in ipairs(SETTINGS) do
   end
 end
 mod.options:define(schema)
+-- Complete settings list, independent of conditional/preset pages.
+local allSettings,knownSettings={},{}
+for _,row in ipairs(schema)do allSettings[#allSettings+1]=row;knownSettings[row.key]=true end
+for _,row in ipairs(V.require('SettingsCatalog'))do if not knownSettings[row.key]then allSettings[#allSettings+1]={key=row.key,label=row.label,type='choice',readOnly=true,unavailable='ADAPTER PENDING'}end end
+V.require('InGameOptions').install(mod,allSettings,'ALL BATTLE ART OPTIONS')
 
 -- Read the raw pre-1.7.7 keys before duplicateFix's schema default can be
 -- mistaken for an explicit choice. The same helper runs again when a real

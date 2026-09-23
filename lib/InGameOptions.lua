@@ -14,8 +14,9 @@ function M.install(mod,schema,title)
      return 1
     end
     out[#out+1]={id=mod.id..':'..s.key,label=s.label or s.key,
-     value=function()return s.type=='number' and tostring(mod.options:get(s.key) or s.default or 0) or choices[index()][1]end,
+     value=function()if s.readOnly then return s.unavailable or 'ADAPTER PENDING' end;return s.type=='number' and tostring(mod.options:get(s.key) or s.default or 0) or choices[index()][1]end,
      step=function(g,dir)
+      if s.readOnly then return false end
       g=g or game
       local value
       if s.type=='number' then
