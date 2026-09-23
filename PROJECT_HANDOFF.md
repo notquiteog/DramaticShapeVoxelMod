@@ -1,3 +1,7 @@
+## Coordinated numbered releases — 2026-09-22
+
+User requested releases for every active mod and cart. Promoted the six verified mod builds to numbered versions and refreshed all three cart pins. Runtime/assets are unchanged except version metadata. See docs/RELEASE_QA_2026-09-22.md for carried-forward evidence and remaining limitations. Packaging compilation, runtime equivalence, release digests and exact cart pins are checked for this release batch.
+
 ## Final published test.11 checkpoint
 
 All three carts and their six core mods are published and pushed on main. Exact FireRed/LeafGreen single and wild-double animations, four visible battlers, native-authored trainer doubles, and the museum correction passed. Actor grounding and lab/rock fixes were visually verified in test.10 and remain included. See [verification and remaining limits](docs/RELEASE_QA_2026-09-22.md). No runtime source changed after publication.

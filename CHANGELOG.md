@@ -1,3 +1,9 @@
+## 1.23.0 — 2026-09-22
+
+Includes the verified FireRed/LeafGreen actor grounding, shadow contact, animated BW battle fronts, lab table/item fixes, rock silhouettes and museum counter correction. Generation-specific settings and scenery coverage remain incomplete.
+
+Numbered release of the tested 1.23.0-test.11 build. Runtime and assets are unchanged except version metadata; packaging and cart pins are refreshed. Validation from the prior exact releases remains applicable: official Gen1Recomp 0.3.1, isolated profiles, targeted native rendering/integration checks. This release does not claim complete cross-generation feature or visual parity.
+
 ## Museum counter classification — 1.23.0-test.11
 
 Stops one museum counter bend from rising into a room-height slab. The native counter artwork remains in place; a complete counter model is still a coverage gap. Native collision and scripts are unchanged.
