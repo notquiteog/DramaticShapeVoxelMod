@@ -451,6 +451,7 @@ local function drawEntity(sprite, px, py, facing, phase, flip, gh, colors,
     tex = TerrainAtlas.forSprite(def.image, colors) or tex
   end
   local y = gh + (lift or 0)
+  if not reflectPlane then V.require("ActorContact").draw(px+8,py+8,gh,lift,def.frameWidth or 16)end
 
   -- Use the native frame and visible foot baseline in every camera mode.
   local frame, mirror = frameFor(def, facing, phase, flip)

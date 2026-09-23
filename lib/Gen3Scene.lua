@@ -407,6 +407,9 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  end
  local yaw=cam.level>=6 and -cam.yaw or 0
  local height=opts.lift or 0
+ if draw~=Shadow.draw and not reflectPlane and (opts.depthOffset or 0)==0 then
+  V.require("ActorContact").draw(x+8,z+16,0,height,spr.width)
+ end
  local pose=Mat.rotateY(yaw)
  local base=Mat.mul(Mat.translate(x+8,height,z+16+(opts.depthOffset or 0)),pose)
  -- Use the shared GB actor contact correction. Terrain retains its full
@@ -536,7 +539,7 @@ function M.draw(game,vw,vh,cam)
  M.renderWidth,M.renderHeight=width,height
  local Options=V.require('Gen3SceneOptions')
  local renderWidth,renderHeight=Options.expand(width,height)
- local def=Map.currentDef()
+ local def=M.sceneDef
  local indoor
  if Pairs.outdoor then indoor=not Pairs.outdoor(def)
  else indoor=def.environment=='INDOOR' or def.mapType==8 or def.mapType==4 end

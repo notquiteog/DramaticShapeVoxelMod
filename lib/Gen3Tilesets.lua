@@ -92,7 +92,7 @@ function M.resolve(pair,known)
  end
  return {}
 end
-local caves={rom_082d4bfc=true,rom_082d4df4=true,rom_082d4e0c=true,rom_082d4e24=true,rom_082d501c=true}
+local caves={rom_082d4bfc=true,rom_082d4df4=true,rom_082d4e0c=true,rom_082d4e24=true,rom_082d501c=true,rom_082d4e54=true,rom_082d4fec=true,rom_082d4f84=true}
 function M.cave(spec)return spec and spec.primary=='general' and caves[spec.secondary] or false end
 function M.outdoor(def)
  local kind=tonumber(def and def.mapType)
@@ -105,7 +105,7 @@ function M.supports(def,spec)
  -- vocabulary and furniture recipes. Unclassified secondary drawings stay
  -- native artwork, not a reason to switch the entire room back to 2D.
  if M.cave(spec) or spec.primary=='building' then return true end
- if spec.primary=='general' then return M.outdoor(def) end
+ if spec.primary=='general' then return true end
  return spec.primary=='building' and
   (M.canonical(def.midLayout.pair)=='player_house' or M.canonical(def.midLayout.pair)=='house' or M.canonical(def.midLayout.pair)=='oak_lab'
     or M.canonical(def.midLayout.pair)=='network' or M.canonical(def.midLayout.pair)=='building__rom_082d4bcc'

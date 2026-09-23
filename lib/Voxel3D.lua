@@ -189,7 +189,9 @@ local SHADER = [[
   // the two-channel pack ShadowMap writes: high byte, then low
   float sunDepth(vec2 uv) {
     vec4 c = Texel(sunMap, uv);
-    return c.r + c.g * (1.0 / 255.0);
+    // Soft scenery uses extra acne bias, but thin actor casters were already
+    // snugged to the foot plane. Applying it again detaches their shadows.
+    return c.r + c.g * (1.0 / 255.0) - step(0.5,c.b)*sunBias*crystalLight*0.7;
   }
 
   // 1.0 in full sun, 1.0 - sunDark in full shadow. Four taps half a texel

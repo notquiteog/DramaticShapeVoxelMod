@@ -1,3 +1,9 @@
+## 1.24.0-test.2 — 2026-09-23
+
+Follow-up to test.1: cover the two additional apartment stair assemblies and ship/cave scene fallbacks found by the complete map census. Keep Quest Log sky/lighting tied to its recorded map. Correct extra soft-light bias on character shadows and add small ground-contact shadows that fade with real jump/flight height.
+
+Test.1 passed all 354 Lua compile checks, sprite anchor regressions, 52 stair assembly geometry cases, and recorded-map camera isolation on engine 0.3.1. This follow-up is published before its own tests by request. Visual inspection and full scenery parity remain ongoing.
+
 ## 1.24.0-test.1 — 2026-09-23
 
 Cylindrical foliage and upright character cards in all cameras; visible per-frame foot anchors across GB and GBA, retaining explicit jumps, flight, masks and furniture support. Source-matched Crystal stairs, Gen 1 cave ladder models, and FireRed/LeafGreen complete stair assemblies, terrace steps and ladder shafts. Quest Log recap uses recorded tiles/actors with the selected camera; dialogue keeps camera input. Shared native building scenes extend to all Building palettes.

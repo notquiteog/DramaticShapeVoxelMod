@@ -53,4 +53,6 @@ return {
  {pair='player_house',rows={{0xB0,0xEB},{0xF2,0xF3}},east=true,down=false},
  {pair='player_house',rows={{0x28,0x16},{0x1D,0x1E}},east=true,down=false},
  {pair='player_house',rows={{0x28,0x28},{0x6,0x7}},east=false,down=true},
+ {pair='building__rom_082d4f8c',rows={{0x291,0x2F9},{0x30B,0x30C}},east=true,down=true},
+ {pair='building__rom_082d4f8c',rows={{0x2F9,0x291},{0x2A3,0x2F0}},east=false,down=true},
 }
