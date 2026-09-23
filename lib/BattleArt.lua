@@ -56,7 +56,7 @@ BattleArt.frontFlipSetting = ModSetting.new(
   { "battle_art", "default" }, { "BATTLE ART", "DEFAULT" })
 
 function BattleArt.prefersModded()
-  return BattleArt.duplicateSetting:get() == "modded"
+  return V.crystalSpritesActive or BattleArt.duplicateSetting:get() == "modded"
 end
 
 function BattleArt.ownsSpeciesArt()
@@ -178,6 +178,10 @@ end
 BattleArt.slug = slug
 
 function BattleArt.playerSide()
+  local crystal = V.crystalSpritesActive and V.mod.exports.crystalSprites
+  if crystal and crystal.frontPrefEnabled then
+    return crystal.frontPrefEnabled() and "front" or "back"
+  end
   return BattleArt.viewSetting:get() == "back" and "back" or "front"
 end
 
@@ -644,6 +648,7 @@ local function replaceTrainerField(battle, field, img)
 end
 
 function BattleArt.applyTrainers(battle)
+  if V.crystalSpritesActive then return end
   if not battle then return end
   local enemy = battle.showEnemyTrainer and trainerKey(battle) or nil
   replaceTrainerField(battle, "trainerPic",

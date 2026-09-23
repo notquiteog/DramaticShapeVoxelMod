@@ -1,7 +1,7 @@
 {
   "id": "BATTLE_ART_VOXEL_FORK",
   "name": "BATTLE ART VOXEL FORK",
-  "version": "1.23.0-test.3",
+  "version": "1.23.0-test.4",
   "api": 2,
   "entry": "main.lua",
   "profile": "content",
@@ -21,7 +21,9 @@
     "DRAMATIC_SHAPE",
     "DRAMALESS_SHAPE",
     "potato_voxel",
-    "VOXEL_ASCENDANT"
+    "VOXEL_ASCENDANT",
+    "crystal_animated_sprites_with_shiny_visuals",
+    "crystal_animated_sprites"
   ],
   "permissions": [
     "engine_internals"

@@ -201,6 +201,7 @@ function OverworldBattle.backPinned()
   if placement == "ui" then return true end
 
   local artMode = BattleArt.setting:get()
+  if V.crystalSpritesActive then artMode = "animated" end
   if artMode == "static" then return false end
   if artMode == "rom" then return true end
 

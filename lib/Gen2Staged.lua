@@ -97,7 +97,8 @@ local function picFor(game,screen,mon,back)
   local owned=V.require('NativeBattleArt').image(mon,back)
   if owned then local w,h=owned:getDimensions();return owned,w,h end
   local providers=game and game.mods and game.mods.exports
-  local provider=providers and providers.crystal_animated_sprites_with_shiny_visuals
+  local provider=V.crystalSpritesActive and V.mod.exports.crystalSprites
+    or (providers and providers.crystal_animated_sprites_with_shiny_visuals)
   if provider and type(provider.stagedPokemonSprite)=="function" then
     local ok,pic=pcall(provider.stagedPokemonSprite,mon,back)
     if ok and pic and pic.image and type(pic.width)=="number"

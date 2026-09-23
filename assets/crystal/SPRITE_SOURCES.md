@@ -1,0 +1,3 @@
+Crystal sprite pack imported from https://github.com/notquiteog/crystal_animated_sprites_with_shiny_visuals commit c4857687bd665a56d7dd59698bd860216d545492, src/assets. Original project by distilledorion-sketch. Normal and shiny Crystal battle frames, trainer and overworld art, and sparkle audiovisual assets are preserved byte-for-byte. Pokémon artwork belongs to its respective owners.
+
+Optional full-body backs are Gen V artwork from PokeAPI/sprites; full_body/sources.json retains source URLs and hashes, and full_body/README.md documents the atlas importer. This does not change the Crystal front/back pack into Gen V artwork.

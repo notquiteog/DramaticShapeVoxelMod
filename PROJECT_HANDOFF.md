@@ -1,3 +1,11 @@
+## Integrated Crystal sprite pack — 1.23.0-test.4
+
+Battle Art integrates Crystal Animated Sprites with Shiny Visuals 2.1.0: Crystal normal/shiny frames, sparkles and reveal audio, cry timing, trainer portraits, overworld skins, menus, evolution and move-effect presentation. Crystal is the default sprite pack for Gen 1/2; Gen 3 retains its selected Battle Art collection. Optional animated Gen 5 full-body staged backs are included and enabled. The separate Crystal sprite mod is no longer required.
+
+SPRITE PACK (RESTART) switches between CRYSTAL and SELECTED ART; restart after changing it because the pack installs native menu and battle adapters. Existing Crystal preferences are preserved in the save options. CRYSTAL SPRITES retains its five presentation controls; FULL-BODY BATTLE BACKS is now a Battle Art option. Gen 1 doubles animate both enemy slots and can use both full-body player backs. One renderer owns species and trainer art.
+
+TEST PRERELEASE, published before gameplay verification as requested. Prior camera regression fixture reproduced the old failure, then passed with test.3 in Yellow, Crystal and FireRed (lab-to-town transition and movement). Full feature/visual parity across generations remains unfinished; adapter-pending settings are not claimed functional.
+
 ## 1.23.0-test.3 — camera and sprite regression fixes
 
 Fixes the fixed indoor camera leaking into outdoor static views in Gen 1/2. Removes the redundant Gen 1 draw-time sprite override, retaining the original Battle Art owner and shared static/animated asset loading. Gen 3 already resets the room camera to nil outdoors.

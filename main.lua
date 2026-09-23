@@ -719,6 +719,8 @@ end
 
 local TreePresentation=V.require("TreePresentation")
 local SETTINGS = {
+  { V.require("CrystalSprites").setting, "Crystal animation, shiny effects and portraits in Gen 1/2. SELECTED ART uses the existing Battle Art collections. Restart the game after changing this pack.", full=true },
+  { V.require("CrystalSprites").fullBody, "Animated Gen 5 full-body backs on 2.5D battle stages with the Crystal pack. Normal menus retain Crystal art.", full=true },
   { TreePresentation.surfaces, "Original game scenery textures, or optional detailed materials. Geometry is preserved.", full=true, when=function()return Generation.isGen2()end },
   { TreePresentation.art, "Original game tree drawings by default; ILLUSTRATED selects the replacement artwork. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
   { TreePresentation.setting, "Flat illustrated trunks follow their leaf billboards. SOLID restores the physical trunk and boughs. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
@@ -2338,3 +2340,6 @@ mod.exports.lib = V
 -- TEST103 measures the live scene at its call sites: Stadium's later source
 -- rebuild cannot detach the probes, and actor-provider upvalues stay visible.
 V.require("LoadTimings").install(mod)
+
+-- Install after the stage so its original sprite ownership remains intact.
+V.require("CrystalSprites").install()

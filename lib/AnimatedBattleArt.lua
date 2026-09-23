@@ -456,6 +456,7 @@ local function updateFront(battler, generation, dt, mode)
 end
 
 function AnimatedBattleArt.update(battle, dt)
+  if V.crystalSpritesActive then return end
   if not battle then return end
   if BattleArt.setting:get() ~= "animated" then
     AnimatedBattleArt.finish(battle)
@@ -491,6 +492,9 @@ end
 -- world; no managed image means the selected file/atlas was absent or bad,
 -- so the untouched ROM backsprite remains attached to the UI.
 function AnimatedBattleArt.hasWorldBack(battler)
+  if V.crystalSpritesActive and battler and battler.__crystalFullBodyImage then
+    return battler.sprite == battler.__crystalFullBodyImage
+  end
   local state = battler and states[battler]
   return state and state.side == "back"
          and battler.sprite == currentImage(state) or false
