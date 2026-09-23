@@ -4,7 +4,9 @@ Stops one museum counter bend from rising into a room-height slab. The native co
 
 Exact published test.10 captures on official native0.3.1 were inspected: noon/low-moon player and HGSS follower grounding, explicit raised-actor height, eight Oak lab approach views, three Pewter rock views, and fifteen cave views across five palettes. The large actor shadow gap and detached Pewter rock caps are resolved in those fixtures. Full native option/scenery parity and exhaustive movement/companion coverage remain unfinished.
 
-**TEST PRERELEASE — the museum correction still needs exact published-archive visual verification.** Its classification/column regression, the 15-object furniture checks and LuaJIT compilation pass. The earlier complete map censuses remain classification evidence, not a full visual pass.
+**TEST PRERELEASE — museum correction visually verified in the exact published archive.** Its classification/column regression, the 15-object furniture checks and LuaJIT compilation pass. The earlier complete map censuses remain classification evidence, not a full visual pass.
+
+Exact test.11 FireRed/LeafGreen single and double captures confirm animated enemy sprites, distinct normal/shiny art and four visible battlers. All final carts passed pin/default/settings checks. [Verification and limits](docs/RELEASE_QA_2026-09-22.md).
 
 ## Animated BW fronts, actor contact and rock silhouettes — 1.23.0-test.10
 

@@ -1,4 +1,8 @@
-## Museum counter follow-up and exact test.10 visual evidence — 1.23.0-test.11 (awaiting publication)
+## Final published test.11 checkpoint
+
+All three carts and their six core mods are published and pushed on main. Exact FireRed/LeafGreen single and wild-double animations, four visible battlers, native-authored trainer doubles, and the museum correction passed. Actor grounding and lab/rock fixes were visually verified in test.10 and remain included. See [verification and remaining limits](docs/RELEASE_QA_2026-09-22.md). No runtime source changed after publication.
+
+## Museum counter follow-up and exact test.10 visual evidence — 1.23.0-test.11 (published; verification below)
 
 Exact test.10 museum rotating/first-person captures exposed a bright yellow room-height slab at Museum1F(15,7). Native pair `building__rom_082d4c2c`, metatile `0x2AC`, collision7 is the lower-left bend of the L-counter. Adjacent counter art uses behavior128/collision144 and remains native/flat, so the wall list incorrectly raised this single solid tile. Removed only0x2AC from `Gen3AdditionalInteriors.walls`; retained honest unreviewed native art rather than classifying this object as an approved floor. A complete counter model remains missing. Regression uses exact(15,6)/(15,7) metadata, asserts no room column, and preserves the museum north wall. The15-object furniture test, LuaJIT compile and diff checks pass. Source fixed; no test.11 gameplay or subtask commit/publication.
 
