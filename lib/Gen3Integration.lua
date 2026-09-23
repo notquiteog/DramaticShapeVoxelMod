@@ -60,6 +60,8 @@ function M.install()
  V.require('InGameOptions').install(mod,Support.rows(schema,3),'BATTLE ART')
  mod.exports.optionSupport=Support.inventory(3)
  local function field(game)return game and game.phase=='field' and game.session and not Battle.isActive() end
+ local function looking(game)return field(game) or game and game.phase=='quest_log' end
+ local uninstallRecap=V.require('Gen3Recap').install(M)
  FieldView.draw=function(game,w,h,opts)
   M.active=false
   if failed or M.level==0 or not field(game) or Scene.nativeRequired(game) then return draw(game,w,h,opts) end
@@ -102,7 +104,7 @@ function M.install()
   return update(game,input)
  end
  mod.hooks:wrap('input.key',function(next,game,ev)
-  if ev.key=='3' and field(game) then
+  if ev.key=='3' and looking(game) then
    if ev.phase=='pressed' then M.setLevel((M.level+1)%8,game) end
    return true
   end
@@ -117,7 +119,7 @@ function M.install()
  end)
  mod.hooks:wrap('core.update',function(next,game,dt,...)
   SceneOptions.update(dt)
-  if field(game) and free() then
+  if looking(game) and free() then
    local function axis(v)return math.abs(v)>.18 and (v-(v>0 and .18 or -.18))/.82 or 0 end
    local elapsed=math.min(tonumber(dt)or 0,.1)
    M.look(axis(stick.x)*elapsed*2.2,axis(stick.y)*elapsed*1.5)
@@ -130,7 +132,7 @@ function M.install()
  mod.events:on('save.writing',function()V.require('DayNight').store()end)
  local dragging=false
  mod.hooks:wrap('input.pointer',function(next,game,ev)
-  if ev.source=='mouse' and field(game) and free() then
+  if ev.source=='mouse' and looking(game) and free() then
    if ev.button==2 then
     dragging=ev.phase=='pressed';return true
    end
@@ -152,7 +154,7 @@ function M.install()
  end)
  mod.hooks:wrap('core.quit_to_launcher',function(next,...)
   FieldView.draw,Display.present,Player.update=draw,present,update
-  uninstallInterface();uninstallBattle();Scene.release();return next(...)
+  uninstallInterface();uninstallBattle();uninstallRecap();Scene.release();return next(...)
  end)
  mod.exports.version=mod.version;mod.exports.lib=V
  mod.exports.gen3Camera=M

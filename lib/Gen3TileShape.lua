@@ -92,6 +92,11 @@ local gymWalls={}
 for _,id in ipairs({0x280,0x281,0x282,0x286,0x287,0x288,0x28A,0x290,0x291,0x292,
  0x2C1,0x2C5,0x2C6,0x2C7,0x2CD,0x2CE,0x2CF})do gymWalls[id]=true end
 function M.of(primary,secondary,mid,behavior,collision)
+ -- Native semantic stairs survive every tileset pair, including LeafGreen.
+ if behavior==0x2A then return {kind='steps',height=6} end
+ if behavior==0x61 then
+  return {kind='ladder',down=(mid==0x285 or mid==0x2AF),ground=0x281}
+ end
  -- The native behavior table identifies actual surfable pixels independently
  -- of edition-specific metatile IDs. Keep their original animated artwork.
  if behavior and require('src.core.game3.collision').isSurfable(behavior) then

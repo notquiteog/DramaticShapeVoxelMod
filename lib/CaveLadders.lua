@@ -12,7 +12,7 @@ function M.rim(map,cx,cy)
   for _,d in ipairs(neighbors)do
     local x,z=cx+d[1],cy+d[2]
     if map:inBounds(x,z) and map:isWalkableCell(x,z)then
-      local tile=map:cellTile(x,z);local s=shapes[tile]
+      local tile=map:tileAt(x*2,z*2);local s=Shape.at(map,shapes,tile,x*2,z*2)
       if s and s.class=='ground' and s.h==0 then return 0,tile end
       if s and s.art=='stair' then zero=true end
       if s and s.class=='ledge' and s.h==6 then shelf=shelf or tile end

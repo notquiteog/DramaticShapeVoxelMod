@@ -1,6 +1,6 @@
 -- Camera-facing foliage, anchored where it meets the independent trunk.
--- Share the exact transform with the shadow pass. Pitch support keeps a
--- flat illustration readable in overhead, first-person and battle views.
+-- Share the exact upright transform with the shadow pass. Camera altitude
+-- and distance must never tip a plant away from its physical ground anchor.
 local M={}
 M.shader=[[
   uniform float canopyFacing;
@@ -10,10 +10,10 @@ M.shader=[[
     if (abs(VertexCanopy.z) < 0.0001) return w;
     vec3 localAnchor=vec3(VertexCanopy.x,abs(VertexCanopy.z),VertexCanopy.y);
     vec3 anchor=(transform*vec4(localAnchor,1.0)).xyz;
-    // Static diorama trees share a fixed authored lean. Only free cameras
-    // and battle cameras orient the illustration toward their current eye.
-    vec3 toward=canopyFacing>0.5?camera-anchor:vec3(0.0,0.6,0.8);
-    if (dot(toward,toward)<0.0001) return w;
+    // Cylindrical billboarding: yaw only. A close eye below the canopy must
+    // not rotate its top backwards or lift its roots out of the ground.
+    vec3 toward=canopyFacing>0.5?vec3(camera.x-anchor.x,0.0,camera.z-anchor.z):vec3(0.0,0.0,1.0);
+    if (dot(toward,toward)<0.0001) toward=vec3(0.0,0.0,1.0);
     vec3 forward=normalize(toward);
     if (VertexCanopy.z < 0.0) {
       // Root stays physical. Only wood above the foliage anchor is put
@@ -27,7 +27,7 @@ M.shader=[[
     vec3 right=vec3(toward.z,0.0,-toward.x);
     if (dot(right,right)<0.0001) right=vec3(1.0,0.0,0.0);
     right=normalize(right);
-    vec3 up=normalize(cross(normalize(toward),right));
+    vec3 up=vec3(0.0,1.0,0.0);
     float sx=length((transform*vec4(1.0,0.0,0.0,0.0)).xyz);
     float sy=length((transform*vec4(0.0,1.0,0.0,0.0)).xyz);
     vec3 d=vertex.xyz-localAnchor;

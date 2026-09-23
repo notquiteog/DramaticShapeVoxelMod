@@ -615,7 +615,8 @@ return {
                  47, 34 },         -- $2F over $22, the drop hole
       -- PR #41: stand the original dark ladder artwork up as a thin
       -- per-pixel prop. Both warp directions use the same standee path.
-      ladder = { 10, 11, 26, 27, 8, 9, 24, 25 },
+      ladder_up = { 10, 11, 26, 27 },
+      ladder_down = { 8, 9, 24, 25 },
       -- ---- 3: the boulder switches ----
       --
       -- Victory Road's four plates ($2B/$2C over $2D/$2E, on 1F, 2F and

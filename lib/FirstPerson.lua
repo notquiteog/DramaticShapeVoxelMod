@@ -205,17 +205,17 @@ function FirstPerson.looking()
   local ok, allowed = pcall(function()
     local Game = require("src.core.Game")
     local world = Game.world
-    if not (world and world == Game.overworld) then return FirstPerson.onTop() end
-    if not world.map or world.battleActive then return false end
+    world=world or Game.overworld
+    if not world or not world.map or world.battleActive then return false end
     local stack = Game.stack
     if not stack then return false end
     -- Inspect the complete stack: a battle's own text box must not hand its
     -- controls to the overworld. Other menus retain their cursor and inputs.
     for _, state in ipairs(stack.states or {}) do
-      if not state.isTextBox then return false end
+      if state~=world and not state.isTextBox then return false end
     end
     local top=stack:top()
-    return not top or top.isTextBox == true
+    return not top or top==world or top.isTextBox == true
   end)
   return ok and allowed == true
 end

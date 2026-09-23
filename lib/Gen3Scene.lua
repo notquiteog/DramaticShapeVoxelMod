@@ -8,6 +8,7 @@ local Mat=V.require('Mat4')
 local Shapes=V.require('Gen3TileShape')
 local Pairs=V.require('Gen3Tilesets')
 local Furniture=V.require('Gen3Furniture')
+local Stairs=V.require('Gen3Stairs')
 local SpriteAnchor=V.require('Gen3SpriteAnchor')
 local Roof=V.require('Gen3RoofDetails')
 local Buildings=V.require('Gen3Buildings')
@@ -88,23 +89,31 @@ local function releaseGeometry()
  cache={}
 end
 local function prepare(game,vw,vh,cam)
- local def=Map.currentDef();if not def or not def.midLayout then return false end
- local px,pz=Player.px or 0,Player.py or 0
+ local replay=cam and cam.replay
+ local def=replay and replay.def or Map.currentDef();if not def or not def.midLayout then return false end
+ M.sceneDef=def
+ local px,pz=replay and replay.frame.x or Player.px or 0,replay and replay.frame.y or Player.py or 0
  local bx,bz=math.floor(px/96)*6,math.floor(pz/96)*6
  local budget=Distance.radius()
  local radius=budget and math.ceil(budget/16)or 64
  -- FULL keeps at least FAR's connected-map frontier, then draws each
  -- loaded rectangle completely rather than shrinking back to two hops.
- Map.refreshWorld(game,radius*2+12,radius*2+12,Map.current)
- local regions=Boundary.regions(def,Map.world)
+ if not replay then Map.refreshWorld(game,radius*2+12,radius*2+12,Map.current)end
+ local regions=replay and {{def=def,x=0,y=0,w=def.midLayout.width,h=def.midLayout.height}} or Boundary.regions(def,Map.world)
  local x0,z0,x1,z1=bx-radius,bz-radius,bx+radius+6,bz+radius+6
  if not budget then x0,z0,x1,z1=BoundarySelect.bounds(regions,16)end
  M.distance={radius=radius,full=not budget,regions=#regions,bounds={x0,z0,x1,z1}}
  M.fadeExtent=budget or math.max(math.abs(x0*16-px),math.abs(x1*16-px),math.abs(z0*16-pz),math.abs(z1*16-pz))
- local cells,groups,signature={}, {}, {Map.current,x0,z0,x1,z1}
+ local cells,groups,signature={}, {}, {replay and replay.scene.map or Map.current,x0,z0,x1,z1}
  M.fillCounts={forest=0,water=0,mountain=0,ground=0}
  for cy=z0,z1 do for cx=x0,x1 do
-  local mid,pair,isVoid=Map.worldMidAt(cx,cy,def)
+  local mid,pair,isVoid
+  if replay then
+   local tile=replay.scene.tiles and replay.scene.tiles[cx..','..cy]
+   isVoid=cx<0 or cy<0 or cx>=def.midLayout.width or cy>=def.midLayout.height
+   if tile then mid,pair,isVoid=tile[1],tile[2],false
+   elseif not isVoid then mid,pair=def.midLayout:midAt(cx,cy),def.midLayout.pair end
+  else mid,pair,isVoid=Map.worldMidAt(cx,cy,def)end
   local fillShape,biome
   if isVoid and Pairs.outdoor(def) then
    local m,p,shape,kind=Boundary.resolve(regions,cx,cy)
@@ -141,6 +150,7 @@ local function prepare(game,vw,vh,cam)
  releaseGeometry();M.builds=(M.builds or 0)+1;cache.signature=sig;cache.parts={};cache.cells=cells
  local gyms=Buildings.prepare(cells);M.gymCount=#gyms
  local civics=Civic.prepare(cells,gyms,V.data("gen3_exteriors"));M.civicCount=#civics
+ M.stairCount=Stairs.prepare(cells)
  local props=Furniture.extract(cells)
  Shapes.layout(cells)
  for _,c in pairs(cells)do if c.gym then c.column=Buildings.column(c.gym)end end
@@ -162,7 +172,10 @@ local function prepare(game,vw,vh,cam)
   if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
-  if c.civic then
+  if c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
+   if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
+   Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
+  elseif c.civic then
    plane(b.v,b.i,x,z,uvFor(ts,c.civic.variant=='saffron' and 0x2E5 or 1) or uv)
   elseif shape.kind=='water' then
    plane(b.wv,b.wi,x,z,uv,.05)
@@ -380,7 +393,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  facing=V.require('Gen3Integration').worldDirection(facing,-(cam.level>=6 and cam.yaw or 0))
  local frame,mirror=Sprites.pose(spr,facing,phase,flip,opts)
  local q=spr.quads[frame];if not q then return end
- local padding=SpriteAnchor.groundPadding(spr)
+ local padding=SpriteAnchor.framePadding(spr,frame)
  local key=tostring(spr)..':'..tostring(spr.image)..':'..frame..':'..tostring(mirror)..':'..padding
  local mesh=spriteMeshes[key]
  if not mesh then
@@ -388,14 +401,13 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
   local l,r=qx/iw,(qx+qw)/iw;if mirror then l,r=r,l end
   local v,i={},{}
   -- Shift in local card space so lean, free-camera yaw and reflection all
-  -- share the same visible baseline. Animation padding is a frame union.
+  -- share the same visible baseline. Transparent padding belongs to this displayed frame.
   quad(v,i,{{-qw/2,qh-padding,0},{qw/2,qh-padding,0},{qw/2,-padding,0},{-qw/2,-padding,0}},{{l,qy/ih},{r,qy/ih},{r,(qy+qh)/ih},{l,(qy+qh)/ih}})
   mesh=R.newMesh(v,i);spriteMeshes[key]=mesh
  end
  local yaw=cam.level>=6 and -cam.yaw or 0
- local lean=(cam.level>=6 or opts.upright) and 0 or -.4
  local height=opts.lift or 0
- local pose=Mat.mul(Mat.rotateY(yaw),Mat.rotateX(lean))
+ local pose=Mat.rotateY(yaw)
  local base=Mat.mul(Mat.translate(x+8,height,z+16+(opts.depthOffset or 0)),pose)
  -- Use the shared GB actor contact correction. Terrain retains its full
  -- acne margin; the visible lookup must use the identical snugged caster.
@@ -407,6 +419,18 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  else draw(mesh,spr.image,model,nil,caster) end
 end
 local function actors(game,cam,draw)
+ if cam.replay then
+  local frame=cam.replay.frame
+  for _,a in ipairs(frame.actors or {})do
+   if a.graphicsId and not (a.id==255 and cam.level==6) then
+    local support,offset=Furniture.support(cache.cells,a.graphicsId,a.x,a.y)
+    local z=a.id==255 and frame.y or a.y
+    actor(a.graphicsId,a.x,z,a.facing,a.walkPhase,a.stepFlip,
+     {frame=a.frame,bow=a.bow,fieldMove=a.fieldMove,depthOffset=offset or 0,lift=support+(z-a.y)},cam,draw)
+   end
+  end
+  return
+ end
  local space=package.loaded['src.core.game3.scripting.space']
  for _,eo in ipairs(Objects.forDraw())do
   local gid=eo.graphicsId or (eo.def and (eo.def.graphicsId or eo.def.graphics))
@@ -495,8 +519,10 @@ end
 function M.draw(game,vw,vh,cam)
  if not prepare(game,vw,vh,cam) then return false end
  materials()
- local view=require('src.core.game3.field_view')
- local cx,cz=(Player.px or 0)+8+(view.cameraPanX or 0),(Player.py or 0)+8+(view.cameraPanY or 0)
+ -- Script camera panning belongs to the flat renderer. It must not move the
+ -- first-person eye or pull the user's orbit away during dialogue/replays.
+ local focus=cam.replay and cam.replay.frame or Player
+ local cx,cz=(focus.px or focus.x or 0)+8,(focus.py or focus.y or 0)+8
  if cam.battle and cam.center then cx,cz=cam.center[1],cam.center[2]end
  local width,height=love.graphics.getCanvas():getDimensions()
  local Renderer=require('src.render.Renderer')
@@ -527,7 +553,7 @@ function M.draw(game,vw,vh,cam)
   local ey=cam.level==6 and 23 or 48
   local exports=game and game.mods and game.mods.exports
   local ride=exports and exports.DRAMATIC_SKY_RIDE
-  if not cam.battle and ride and type(ride.currentAltitude)=='function' then
+  if not cam.battle and not cam.replay and ride and type(ride.currentAltitude)=='function' then
    local ok,height=pcall(ride.currentAltitude)
    if ok and type(height)=='number' then ey=ey+math.max(0,math.min(512,height))end
   end
@@ -536,13 +562,13 @@ function M.draw(game,vw,vh,cam)
    R.camera={eye={cx-dx*75,32,cz-dz*75},focus={cx+dx*16,0,cz+dz*16},fov=math.rad(50)}
   end
  else
-  R.camera=Interior.camera(Interior.forMap(Map.currentDef(),3),S.angle,vw/vh)
+  R.camera=Interior.camera(Interior.forMap(M.sceneDef,3),S.angle,vw/vh)
   if R.camera then cx,cz=R.camera.focus[1],R.camera.focus[3]end
  end
  R.viewProjection(cx,cz,vw,vh)
  savedCanvas=love.graphics.getCanvas();love.graphics.push('all');saved=true
  if not plate and Shadow.begin(cx,cz,vw,vh) then
-  local room=not cam.battle and Interior.forMap(Map.currentDef(),3) or nil
+  local room=not cam.battle and Interior.forMap(M.sceneDef,3) or nil
   Shadow.roomClip(room and room.bounds)
   terrain(Shadow.draw)
   for _,d in ipairs(waterMeshes())do Shadow.draw(d[1],d[2])end
@@ -551,10 +577,10 @@ function M.draw(game,vw,vh,cam)
   end
   Shadow.finish('firered')
  end
- local room=not cam.battle and Interior.forMap(Map.currentDef(),3) or nil
+ local room=not cam.battle and Interior.forMap(M.sceneDef,3) or nil
  Interior.configure(room)
  local bounds=M.distance.bounds
- R.fog=not indoor and Distance.haze(background,M.fadeExtent,{(Player.px or 0)+8,0,(Player.py or 0)+8},
+ R.fog=not indoor and Distance.haze(background,M.fadeExtent,{cx,0,cz},
   {bounds[1]*16,bounds[2]*16,(bounds[3]+1)*16,(bounds[4]+1)*16})or nil
  if not R.beginScene(renderWidth,renderHeight,cx,cz,vw,vh,background,'firered') then M.restore();return false end
  R.battleOcclusion(nil)
@@ -575,7 +601,8 @@ function M.draw(game,vw,vh,cam)
    reflectPlane=nil
    if not ok then error(err,0)end
   end)
-  actors(game,cam,R.draw);rideDust(game,cam);fieldEffects(R.draw)
+  actors(game,cam,R.draw)
+  if not cam.replay then rideDust(game,cam);fieldEffects(R.draw)end
  end
  R.battleOcclusion(nil)
  local canvas=Options.finish(R.endScene(),width,height)

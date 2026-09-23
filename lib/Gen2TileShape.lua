@@ -57,6 +57,7 @@ local V = ...
 local Generation = V.require("Generation")
 
 local Gen2TileShape = {}
+local stairDrawings=V.data("gen2_stairs")
 
 -- GSC's eight BG palette slots, 1-based the way TileAttrs reports them
 -- (constants/palette_constants.asm; PAL_BG_YELLOW is $04 and this engine
@@ -313,6 +314,8 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
   local perm = Permissions.of(coll)
 
   local tsid=map.tileset and map.tileset.id
+  local stair=stairDrawings[(tsid or "")..":"..table.concat(drawing(map,cx,cy),",")]
+  if stair then return stair end
   if perm==Permissions.WALL and (tsid=="TILESET_FOREST" or tsid=="TILESET_PARK") then
     local grid={{12,13,14,15},{28,29,30,31},{44,45,46,47},{60,61,62,63}}
     local offsets={["12,13,28,29"]={0,0},["14,15,30,31"]={1,0},

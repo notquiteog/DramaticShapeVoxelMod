@@ -373,7 +373,7 @@ local function billboardMatrix(px, py, y, mirror)
   local Voxel = V.require("VoxelState")
   local b = FirstPerson.cardBlend()
   local yaw = b > 0 and (FirstPerson.cardYaw(px + 8, py + 8) * b) or 0
-  local pitch = (Voxel.angle - math.pi / 2) * (1 - b)
+  local pitch = 0 -- Cylindrical cards: pitch never lifts feet or leans figures.
   if reflectPlane then
     -- the mesh stands on its own y = 0, so scaling local y by -1 hangs it
     -- from the anchor instead of standing it on it. CAST_RAISE lifts the
@@ -412,7 +412,7 @@ local function figureMatrix(f, offX, offZ)
   local wx, wz = f.wx + (offX or 0), f.wz + (offZ or 0)
   local half = (b > 0 and f.w and f.w > 0) and (f.w / 2) or 0
   local yaw = half > 0 and (FirstPerson.cardYaw(wx + half, wz) * b) or 0
-  local pitch = (Voxel.angle - math.pi / 2) * (1 - b)
+  local pitch = 0 -- Cylindrical cards: pitch never lifts feet or leans figures.
   return Mat4.figure(wx, f.y, wz, yaw, pitch, half)
 end
 
@@ -452,11 +452,7 @@ local function drawEntity(sprite, px, py, facing, phase, flip, gh, colors,
   end
   local y = gh + (lift or 0)
 
-  -- pick the very frame the 2D path would draw (same tables). The card
-  -- always faces SOUTH -- the direction the 2D game implies -- and only
-  -- LEANS BACK, pivoting at its feet, by exactly the camera's pitch, so
-  -- at every tilt level the sprite reads face-on like the flat game.
-  -- No camera-tracking yaw: every sprite leans in parallel.
+  -- Use the native frame and visible foot baseline in every camera mode.
   local frame, mirror = frameFor(def, facing, phase, flip)
   local mesh = SpriteBillboards.mesh(def, frame, visualAnchorY)
   if not mesh then return false end

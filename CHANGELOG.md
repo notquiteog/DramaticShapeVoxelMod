@@ -1,3 +1,9 @@
+## 1.24.0-test.1 — 2026-09-23
+
+Cylindrical foliage and upright character cards in all cameras; visible per-frame foot anchors across GB and GBA, retaining explicit jumps, flight, masks and furniture support. Source-matched Crystal stairs, Gen 1 cave ladder models, and FireRed/LeafGreen complete stair assemblies, terrace steps and ladder shafts. Quest Log recap uses recorded tiles/actors with the selected camera; dialogue keeps camera input. Shared native building scenes extend to all Building palettes.
+
+Published before tests at the user’s request. This is an unverified test build at publication time; stair appearance and camera/grounding regressions require engine checks. This does not claim every tile or interior is finished. Special native field effects still use their engine presentation.
+
 ## 1.23.0 — 2026-09-22
 
 Includes the verified FireRed/LeafGreen actor grounding, shadow contact, animated BW battle fronts, lab table/item fixes, rock silhouettes and museum counter correction. Generation-specific settings and scenery coverage remain incomplete.

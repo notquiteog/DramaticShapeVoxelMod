@@ -101,7 +101,10 @@ function M.outdoor(def)
 end
 function M.supports(def,spec)
  if not (def and def.midLayout) then return false end
- if M.cave(spec) or spec.primary=='building' and profiles[spec.secondary] then return true end
+ -- Every native building tileset can use the shared camera, primary room
+ -- vocabulary and furniture recipes. Unclassified secondary drawings stay
+ -- native artwork, not a reason to switch the entire room back to 2D.
+ if M.cave(spec) or spec.primary=='building' then return true end
  if spec.primary=='general' then return M.outdoor(def) end
  return spec.primary=='building' and
   (M.canonical(def.midLayout.pair)=='player_house' or M.canonical(def.midLayout.pair)=='house' or M.canonical(def.midLayout.pair)=='oak_lab'

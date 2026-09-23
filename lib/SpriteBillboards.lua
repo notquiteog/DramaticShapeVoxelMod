@@ -12,7 +12,7 @@
 -- carved visual hull -- reconstructs a body the artist never drew and the
 -- game never implied. It also had the mod ship a description of the ROM
 -- art. One quad wearing the real frame is both more faithful and cheaper:
--- it needs no pixel access at all, only the sheet's dimensions.
+-- its baseline uses the visible pixels of the displayed frame.
 --
 -- Vanilla figures all read that dimension as a fixed 16, but a mod's
 -- registered sprite (furniture, decor placed as an overworld entity) can
@@ -20,13 +20,9 @@
 -- buildCard below. The card stays a flat drawing either way; only its
 -- size changes.
 --
--- The card always faces SOUTH -- the direction the 2D game implies -- and
--- only LEANS BACK, pivoting at its feet, by exactly the camera's pitch
--- (VoxelScene's billboardMatrix), so at every tilt level it reads face-on
--- like the flat game. Right-facing and the alternating walk step are
--- matrix mirrors, not extra meshes. UVs point into the live sheet image,
--- so RED++ OBP bakes, SGB palette bakes and sprite-replacing mods all
--- texture it with no rebuild.
+-- Cards remain upright. Free cameras turn their yaw only; shadows and visible
+-- figures use the same grounded mesh. Mirrors and palette replacements retain
+-- the original native sprite artwork.
 
 -- the mod namespace (see main.lua): V.require loads a sibling module
 local V = ...
@@ -38,6 +34,7 @@ local SpriteBillboards = {}
 
 local meshes = {}
 local tableAnchors = {}
+local footAnchors = {}
 
 -- Oak's original item card has two transparent rows below its visible ball.
 -- Measure the source before offering a per-pose 3D anchor; replacement art,
@@ -79,6 +76,35 @@ function SpriteBillboards.tableAnchor(def)
   return tableAnchors[path] or nil
 end
 
+-- Default frames sometimes have transparent rows below their feet. Scan each
+-- frame once; explicit provider/furniture anchors always win, including masks
+-- used to immerse Pokémon in grass. Color-zero follows the native OBJ key.
+function SpriteBillboards.frameAnchor(def, frame)
+  local fh,fw=def.frameHeight or 16,def.frameWidth or 16
+  local key=def.image..":"..fw..":"..fh..":"..tostring(def.trueColor)
+  local frames=footAnchors[key]
+  if not frames then
+    frames={};footAnchors[key]=frames
+    local ok,data=pcall(Assets.imageData,def.image)
+    if ok and data and data.getDimensions and data.getPixel then
+      local w,h=data:getDimensions()
+      for f=0,math.floor(h/fh)-1 do
+        local anchor
+        for row=fh-1,0,-1 do
+          for x=0,math.min(fw,w)-1 do
+            local r,g,b,a=data:getPixel(x,f*fh+row)
+            if a>=.5 and (def.trueColor or r<=.83) then anchor=row+1;break end
+          end
+          if anchor then break end
+        end
+        frames[f]=anchor or fh
+      end
+      if data.release then data:release() end
+    end
+  end
+  return frames[frame] or frames[0] or fh
+end
+
 -- One flat quad -- 16x16 for every vanilla figure, or the def's own
 -- frameWidth x frameHeight for a mod sprite registered bigger than that --
 -- UV-mapped to a whole frame. A hair of inset keeps the sampler inside
@@ -103,7 +129,7 @@ local function buildCard(def, frame, visualAnchorY)
   local fw = def.frameWidth or 16
   local fh = def.frameHeight or 16
   local anchorX = def.anchorX or fw / 2
-  local anchorY = def.anchorY or visualAnchorY or fh
+  local anchorY = def.anchorY or visualAnchorY or SpriteBillboards.frameAnchor(def,frame)
   local fy = frame * fh
   if fy + fh > ih then fy = 0 end
   local u0, u1 = 0.02 / iw, (fw - 0.02) / iw
@@ -151,6 +177,7 @@ SpriteBillboards.shadowQuad = SpriteBillboards.mesh
 function SpriteBillboards.invalidate()
   meshes = {}
   tableAnchors = {}
+  footAnchors = {}
 end
 
 Assets.register(SpriteBillboards.invalidate)
