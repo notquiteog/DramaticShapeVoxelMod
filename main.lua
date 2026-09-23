@@ -2081,6 +2081,7 @@ OverworldBattle.install()
 -- The Gen 2 arm of the same row. Its own file argues why it is a different
 -- implementation rather than a port; on Gen 1 it declines and does nothing.
 Gen2Battle.install()
+V.require("NativeBattleArt").install()
 StadiumBackground.install()
 
 -- ------- the first-person rung's inputs and its walk

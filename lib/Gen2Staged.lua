@@ -94,6 +94,8 @@ local FOOT_PAD = 1
 -- Companions own art. A staged provider may supply full-body animation
 -- without replacing the original engine screen or reaching into its files.
 local function picFor(game,screen,mon,back)
+  local owned=V.require('NativeBattleArt').image(mon,back)
+  if owned then local w,h=owned:getDimensions();return owned,w,h end
   local providers=game and game.mods and game.mods.exports
   local provider=providers and providers.crystal_animated_sprites_with_shiny_visuals
   if provider and type(provider.stagedPokemonSprite)=="function" then

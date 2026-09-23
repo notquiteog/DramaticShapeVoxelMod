@@ -302,6 +302,31 @@ local function definition(battler, side)
   return bySide and bySide[side] or nil
 end
 AnimatedBattleArt.definitionFor = definition
+-- Shared frame access for native Gen 2/3 renderers, using this same decoder.
+function AnimatedBattleArt.picture(mon,side)
+  if not BattleArt.ownsSpeciesArt() or BattleArt.setting:get()=='rom' then return nil end
+  local battler=mon and mon.mon and mon or {mon=mon}
+  local species=BattleArt.speciesFor(battler)
+  local generation=(side=='back'and BattleArt.backAnimationSetting or BattleArt.frontAnimationSetting):get()
+  if BattleArt.setting:get()=='animated' then
+    local def=definition(battler,side)
+    local frames=def and loadFrames(def,BattleArt.displayMode())
+    if frames and #frames>0 then
+      local total=0;for i=1,#frames do total=total+math.max(1,tonumber((def.durations or {})[i])or 100)end
+      local t=(love.timer.getTime()*1000)%total
+      for i,frame in ipairs(frames)do t=t-math.max(1,tonumber((def.durations or {})[i])or 100);if t<0 then return frame end end
+      return frames[1]
+    end
+  end
+  if BattleArt.setting:get()=='static' then return BattleArt.image(species,side,battler)end
+  local kinds=side=='back'and BACK_SOURCE_KIND or FRONT_SOURCE_KIND
+  if kinds[generation]=='static' then
+    if side=='back'then return BattleArt.generationBackImage(species,generation,battler)end
+    return BattleArt.generationFrontImage(species,generation,battler)
+  end
+  return BattleArt.bundledImage(species,side,battler,generation)
+end
+
 
 -- Prepared frames for non-battle interfaces. Mon-aware screens pass the caught
 -- Pokemon so shiny DVs select the shiny atlas; species-only screens omit it and
@@ -342,7 +367,12 @@ local function updateBattler(battler, side, dt, mode)
   end
   if not state then
     local frames = loadFrames(def, mode)
-    if not frames then return end -- missing/malformed atlas: retain ROM art
+    if not frames then
+      local fallback=BattleArt.bundledImage(BattleArt.speciesFor(battler),side,battler,
+        (side=='back'and BattleArt.backAnimationSetting or BattleArt.frontAnimationSetting):get())
+      if not fallback then return end
+      frames={fallback}
+    end
     state = { kind = "animated", side = side, def = def, mode = mode,
               original = battler.sprite,
               frames = frames, frame = 1, elapsed = 0 }
@@ -439,16 +469,20 @@ function AnimatedBattleArt.update(battle, dt)
   updatePlayerTrainer(battle, mode)
   local frontGeneration = BattleArt.frontAnimationSetting:get()
   updateFront(battle.enemy, frontGeneration, dt, mode)
+  updateFront(battle.enemy2, frontGeneration, dt, mode)
   local playerSide = BattleArt.playerSide()
   if playerSide == "back" then
     local generation = BattleArt.backAnimationSetting:get()
     if BACK_SOURCE_KIND[generation] == "animated" then
       updateBattler(battle.player, "back", dt, mode)
+      updateBattler(battle.player2, "back", dt, mode)
     else
       updateStaticBack(battle.player, generation, mode)
+      updateStaticBack(battle.player2, generation, mode)
     end
   else
     updateFront(battle.player, frontGeneration, dt, mode)
+    updateFront(battle.player2, frontGeneration, dt, mode)
   end
 end
 
@@ -475,7 +509,9 @@ function AnimatedBattleArt.finish(battle)
   if not battle then return end
   restoreTrainer(battle)
   restore(battle.enemy)
+  restore(battle.enemy2)
   restore(battle.player)
+  restore(battle.player2)
 end
 
 -- Transform has already put the target's ROM picture on the battler. Drop the

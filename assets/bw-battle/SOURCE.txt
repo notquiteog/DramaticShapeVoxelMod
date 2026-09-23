@@ -1,0 +1,1 @@
+Static Black/White battle artwork from the user-supplied PKMN.NET Sprite Resource 4 Pokémon/BW and BW/back folders. Pokémon artwork belongs to its respective owners. These are full-body single frames, not animated atlases. Existing user-installed Battle Art atlases take priority in ANIMATED mode.

@@ -279,6 +279,7 @@ local function rgbaKey(data, w, h)
 end
 
 local function displayMode()
+  if V.require("Generation").isGen3() then return "gbc" end
   local ok, fx = pcall(require, "src.render.PaletteFX")
   return ok and fx and fx.mode or "gbc"
 end
@@ -387,11 +388,22 @@ local function prepare(path, mode)
   return made
 end
 
+-- Packaged single-frame fallback is separate from optional authoring atlases.
+function BattleArt.bundledImage(species,side,battler,generation)
+  if generation~='gen5' or not BattleArt.ownsSpeciesArt() then return nil end
+  local variant=BattleArt.isShiny(battler)and'shiny'or'normal'
+  local rel=('assets/bw-battle/%s/%s/%s.png'):format(side,variant,slug(species))
+  return prepare(V.mod.assets:path(rel),displayMode())
+end
+
 function BattleArt.image(species, side, battler)
   if not BattleArt.ownsSpeciesArt() then return nil end
   local shiny = BattleArt.isShiny(battler)
   local path = pathFor(species, side, shiny)
   local image = path and prepare(path, displayMode()) or nil
+  if not image and BattleArt.setting:get()=="static" then
+    image=BattleArt.bundledImage(species,side,battler,(side=="back"and BattleArt.backAnimationSetting or BattleArt.frontAnimationSetting):get())
+  end
   -- Authored static species fronts preserve their illustration brightness in
   -- the battle scene. BattleScene reads this tag to omit only the clock tint;
   -- ordinary world lighting, shadows, depth and display filtering remain.
@@ -412,7 +424,7 @@ function BattleArt.generationBackImage(species, generation, battler)
     species, generation, "back", shiny)
   if not rel then return nil end
   local path = V.mod.assets:path(rel)
-  return prepare(path, displayMode())
+  return prepare(path, displayMode()) or BattleArt.bundledImage(species,"back",battler,generation)
 end
 
 -- Gen 1 has no animated front atlas. ANIMATED mode still offers it as a
@@ -429,7 +441,7 @@ function BattleArt.generationFrontImage(species, generation, battler)
   local rel = generationRelativePath(
     species, generation, "front", shiny)
   local path = V.mod.assets:path(rel)
-  return prepare(path, displayMode())
+  return prepare(path, displayMode()) or BattleArt.bundledImage(species,"front",battler,generation)
 end
 
 -- Non-battle interfaces have their own ownership setting. Mon-aware callers
@@ -695,7 +707,9 @@ function BattleArt.apply(battle)
     end -- otherwise retain the ROM image
   end
   applyOne(battle.enemy, "front")
+  applyOne(battle.enemy2, "front")
   applyOne(battle.player, BattleArt.playerSide())
+  applyOne(battle.player2, BattleArt.playerSide())
   BattleArt.applyTrainers(battle)
 end
 

@@ -1,3 +1,9 @@
+## Unified Battle Art test release — 1.23.0-test.2
+
+Battle Art now uses its existing ownership settings and animated-atlas decoder across Gen 1, Crystal and native FireRed/LeafGreen. Working shared controls: BATTLE ART, ANIM FRONT GEN, BACK ART SET, PLAYER and DUPLICATE FIX. Gen 5 animation uses user-installed atlases; the supplied BW images are STATIC full-body fallbacks, never decoded as animation sheets. All four double battlers use the selected art. HGSS remains overworld-only. No separate BW sprite mod is needed.
+
+**TEST PRERELEASE — published before gameplay testing at the user’s request.** Includes the preceding right-stick, door/healing projection, settings inventory and Gen 1 online-double work. Unsupported generation-specific settings are read-only, explicitly marked ADAPTER PENDING. Native gameplay and advanced doubles verification remain pending.
+
 # Test release checkpoint — 2026-09-22 (gameplay verification pending)
 
 User explicitly requested publication before gameplay testing to conserve their
