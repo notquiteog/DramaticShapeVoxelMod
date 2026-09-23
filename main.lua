@@ -1159,6 +1159,7 @@ for _, entry in ipairs(SETTINGS) do
     schema[#schema + 1] = entry[1]:schema(entry[2])
   end
 end
+for _,row in ipairs(V.require('CrystalSprites').schemas()) do schema[#schema+1]=row end
 mod.options:define(schema)
 -- Complete settings list, independent of conditional/preset pages.
 local allSettings,knownSettings={},{}

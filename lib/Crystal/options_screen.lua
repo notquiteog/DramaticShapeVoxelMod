@@ -12,7 +12,10 @@
 -- row by main.lua).  The dedicated screen is Gen 1-only -- it is drawn
 -- with Gen 1's OptionRows, which the Gen 2 adapter does not serve.
 
-local okOptionRows, OptionRows = pcall(require, "src.ui.OptionRows")
+local okOptionRows, OptionRows
+if require('src.core.GameVersion').generation() == 1 then
+  okOptionRows, OptionRows = pcall(require, "src.ui.OptionRows")
+end
 
 local CrystalOptions = {}
 CrystalOptions.__index = CrystalOptions

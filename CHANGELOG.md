@@ -1,3 +1,9 @@
+## Crystal settings integration — 1.23.0-test.5
+
+Crystal presentation controls now share the Battle Art mod settings and inherited in-game submenu, with migration of existing preferences. Avoids requiring Gen 1 OptionRows on Gen 2. Includes the integrated Crystal sprite pack, default in Gen 1/2, and optional animated full-body staged backs.
+
+Test.4 packaged Yellow/Crystal fixtures passed single-owner selection, animated full-body frames, shiny variants, animated fronts, in-game controls and opt-out. Both battle captures inspected: one sprite per Pokemon. FireRed cart boot/lab/field checks passed. Prior static camera exit regression passed all three generations. This update receives its own follow-up checks after publication. Menus/evolution, shiny reveal timing and advanced battle scenarios still need visual coverage; full all-mod cross-generation parity remains unfinished.
+
 ## Integrated Crystal sprite pack — 1.23.0-test.4
 
 Battle Art integrates Crystal Animated Sprites with Shiny Visuals 2.1.0: Crystal normal/shiny frames, sparkles and reveal audio, cry timing, trainer portraits, overworld skins, menus, evolution and move-effect presentation. Crystal is the default sprite pack for Gen 1/2; Gen 3 retains its selected Battle Art collection. Optional animated Gen 5 full-body staged backs are included and enabled. The separate Crystal sprite mod is no longer required.
