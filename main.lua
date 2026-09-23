@@ -2215,7 +2215,12 @@ end)
 -- interfaces (title, dex, status/party, hall of fame). Registered after the
 -- battle wrap above; it ignores battle contexts and only substitutes for
 -- interface ones.
-InterfaceSprites.install()
+-- Crystal owns its menu/title animation fields as well as its battle art.
+-- Installing the selected-art draw wrapper would restore its cached first
+-- image over Crystal's newly advanced frame on every summary/dex draw.
+if V.require('CrystalSprites').setting:get() ~= 'crystal' then
+  InterfaceSprites.install()
+end
 
 -- Every ending path emits this, including a battle skipped before it drew,
 -- so this is where the map's cast comes back.

@@ -4748,7 +4748,7 @@ return function()
         local function evoFrames(species)
           local dex = dexFor(species)
           if not dex then return nil end
-          local frames = menuFrames(self, species, "normal")
+          local frames = menuFrames(self, species, variant(self.mon))
           if not frames then return nil end
           return {
             images = trimFrames(frames.images, "front"),

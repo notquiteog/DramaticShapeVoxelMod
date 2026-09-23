@@ -1,3 +1,11 @@
+## Crystal interface ownership — 1.23.0-test.6
+
+Fixes the inherited Gen 1 summary/dex/title ownership conflict: the selected-art interface renderer no longer restores its cached first image over Crystal animation. Gen 1 evolution also retains the mon’s shiny variant. Includes the integrated Crystal sprite pack (Gen 1/2 default), shared manager/in-game controls, full-body staged backs and removal of the separate cart dependency.
+
+Verified on official Gen1Recomp 0.3.1 with isolated scripted profiles: Yellow/Crystal packaged test.5 sprite/settings checks; shiny reveal lifecycle; full-body frame changes and shiny variants; option opt-out; no duplicate sprites in inspected battle captures. A native two-client Gen 1 double battle rendered four animated battlers, completed with matching state hashes/results, preserved the owned parties and kept both players connected. FireRed test.5 exact cart boot/lab/field checks passed. The corrected Gen 1 summary animation passed a local regression fixture. Broader visual/mechanical parity remains unfinished (including Gen 1 partner HUD layout and unsupported generation adapters).
+
+TEST PRERELEASE; final packaged follow-up checks follow publication. Select SPRITE PACK (RESTART) > SELECTED ART and restart to use the other Battle Art collections. HGSS remains overworld-only. Crystal’s optional full-body staged backs are Gen 5 artwork, distinct from its Crystal front/menu art.
+
 ## Crystal settings integration — 1.23.0-test.5
 
 Crystal presentation controls now share the Battle Art mod settings and inherited in-game submenu, with migration of existing preferences. Avoids requiring Gen 1 OptionRows on Gen 2. Includes the integrated Crystal sprite pack, default in Gen 1/2, and optional animated full-body staged backs.
