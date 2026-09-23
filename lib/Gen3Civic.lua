@@ -270,8 +270,15 @@ function M.append(g,emit)
  end
  -- Continue the facade's horizontal siding and real window art around
  -- the closed shell. The back never repeats the shop sign or doorway.
+ local boarded=g.kind=='house' and not(g.custom and g.custom.geometry=='tower')
+ if boarded then
+  local boards=V and V.require('HouseCladding') or dofile('lib/HouseCladding.lua')
+  boards.side(x+2,z+p.back,z+p.front,p.wall,p.wall,-1,wall,face)
+  boards.side(x+p.w-2,z+p.back,z+p.front,p.wall,p.wall,1,wall,face)
+  boards.back(x+2,x+p.w-2,z+p.back,p.wall,wall,face)
+ end
  local window=M.window(g)
- for yy=5,p.wall-3,6 do
+ for yy=5,(boarded and 0 or p.wall-3),6 do
   for _,sx in ipairs({1.94,p.w-1.94})do
    face({{x+sx,yy+.22,z+p.back},{x+sx,yy+.22,z+p.front},{x+sx,yy,z+p.front},{x+sx,yy,z+p.back}},wall,.78)
   end
@@ -283,18 +290,18 @@ function M.append(g,emit)
   local low=math.max(4,(p.wall-wh)*.58);local top=low+wh
   for _,fraction in ipairs({.30,.70})do
    local center=z+p.back+(p.front-p.back)*fraction
-   for _,sx in ipairs({1.90,p.w-1.90})do
+   for _,sx in ipairs({boarded and 1.55 or 1.90,p.w-(boarded and 1.55 or 1.90)})do
     face({{x+sx,top+.6,center-ww/2-.6},{x+sx,top+.6,center+ww/2+.6},{x+sx,low-.6,center+ww/2+.6},{x+sx,low-.6,center-ww/2-.6}},trim)
     local offset=sx<p.w/2 and -.02 or .02
     face({{x+sx+offset,top,center-ww/2},{x+sx+offset,top,center+ww/2},{x+sx+offset,low,center+ww/2},{x+sx+offset,low,center-ww/2}},glass)
    end
    local centerX=x+p.w*fraction
-   face({{centerX+ww/2+.6,top+.6,z+p.back-.04},{centerX-ww/2-.6,top+.6,z+p.back-.04},{centerX-ww/2-.6,low-.6,z+p.back-.04},{centerX+ww/2+.6,low-.6,z+p.back-.04}},trim)
-   face({{centerX+ww/2,top,z+p.back-.06},{centerX-ww/2,top,z+p.back-.06},{centerX-ww/2,low,z+p.back-.06},{centerX+ww/2,low,z+p.back-.06}},glass)
+   face({{centerX+ww/2+.6,top+.6,z+p.back-(boarded and .45 or .04)},{centerX-ww/2-.6,top+.6,z+p.back-(boarded and .45 or .04)},{centerX-ww/2-.6,low-.6,z+p.back-(boarded and .45 or .04)},{centerX+ww/2+.6,low-.6,z+p.back-(boarded and .45 or .04)}},trim)
+   face({{centerX+ww/2,top,z+p.back-(boarded and .47 or .06)},{centerX-ww/2,top,z+p.back-(boarded and .47 or .06)},{centerX-ww/2,low,z+p.back-(boarded and .47 or .06)},{centerX+ww/2,low,z+p.back-(boarded and .47 or .06)}},glass)
   end
  end
  -- Thin foundation/eave courses and side windows continue the facade.
- for _,sx in ipairs({1.95,p.w-1.95})do
+ for _,sx in ipairs({boarded and 1.72 or 1.95,p.w-(boarded and 1.72 or 1.95)})do
   for _,y in ipairs({1,p.wall-1})do
    face({{x+sx,y+1,z+p.back},{x+sx,y+1,z+p.front},{x+sx,y,z+p.front},{x+sx,y,z+p.back}},trim,.88)
   end

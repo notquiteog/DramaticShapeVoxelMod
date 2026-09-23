@@ -52,7 +52,7 @@ function M.install()
  for _,setting in ipairs(V.require('Gen3BattleOptions').settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(V.require('Gen3BattleBackdrop').settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(sharedSettings)do
-  schema[#schema+1]=setting:schema('Shared renderer option; applies immediately to the native Gen 3 presentation.')
+  schema[#schema+1]=setting:schema(setting.key=='spatialUpscale' and V.require('SpatialUpscale').description or 'Shared renderer option; applies immediately to the native Gen 3 presentation.')
  end
  for _,setting in ipairs(nativeArt.settings())do schema[#schema+1]=setting:schema('Shared Battle Art sprite settings. ANIMATED uses installed atlases or bundled BW backs (dex 1–251); missing art falls back to static full-body images. ROM/MODDED preserves native/provider art.')end
  mod.options:define(schema)

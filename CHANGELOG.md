@@ -1,3 +1,13 @@
+## 1.26.0 — 2026-09-23
+
+Restores overlapping native Viridian Forest tree rows in FireRed/LeafGreen, lowers tall grass to seven world pixels, and reuses unchanged terrain geometry without rebuilding tile records every frame. Live metatile overrides, palette/provider replacement, map boundaries and battle/replay changes still invalidate appropriately.
+
+Adds optional AMD FSR 1 EASU + RCAS upscaling across all three generations (OFF, Ultra Quality, Quality, Balanced, Performance). Scene resolution changes independently of crisp native-resolution UI. OFF remains the default; FSR takes priority over supersampling AA. Shader failure preserves native rendering. Includes AMD's MIT reference kernels and GLSL 330 integration.
+
+Corrects shadow receiver-plane sampling on steep foliage/walls, adds stable depth ordering for coplanar foliage, and gives ordinary Pallet and matched native house side/back walls modeled siding courses. This is a focused improvement, not complete building/setting parity. DLSS, DLSS 5 neural rendering and temporal frame generation are not implemented: they require native engine/backend integration.
+
+Checked with isolated official Gen1Recomp 0.3.2 profiles on an RTX 5060 Ti, including 1440p FireRed/LeafGreen scenes and Yellow/Crystal FSR quality controls. See `docs/FOREST_PERFORMANCE_QA_2026-09-23.md` for evidence and limits.
+
 ## 1.25.0 — 2026-09-23
 
 Rebuilds the reviewed Crystal and FireRed/LeafGreen player houses, labs, Centers and Marts with native-art furniture components: recessed CRT screens, keyboards, console/controllers, legged desks and chairs, horizontal beds, kitchen fittings, shelf frames, stock trays and shallow cushions. Adds complete runtime Crystal bedroom decorations and link-room control panels. Native back walls continue behind furniture; Crystal carpet borders stay on the floor. Retains low reception counters, native collision, interaction cells and item supports.

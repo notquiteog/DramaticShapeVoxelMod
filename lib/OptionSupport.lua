@@ -51,6 +51,7 @@ set(3,'spriteLight','partial','lib/Gen3SpriteLight.lua','World day tint multipli
 set(3,'playerArtSet playerAnimatedSet trainerArtSet','implemented','lib/Gen3TrainerArt.lua; lib/AnimatedBattleArt.lua','Selected native opponent fronts and player five-frame send-out sheets. Missing user art and scripted trainer roles retain native pictures.')
 set(3,'interfaceSprites interfaceScaling','implemented','lib/NativeInterfaceArt.lua','Native Summary/Pokedex scoped draw; animation-wide FIT/FULL and mon-aware Summary shininess. Other native screens keep their own art.')
 for gen=1,3 do
+ set(gen,'spatialUpscale','implemented','lib/SpatialUpscale.lua; lib/AntiAlias.lua','Shared full-precision FSR 1 EASU/RCAS postprocess; native resolution UI. Shader availability checked; no temporal/frame generation.')
  set(gen,'stadiumCircle','provider','lib/StadiumBackground.lua','Requires the optional compatible Stadium scene provider; no provider means no consumer.')
 end
 function M.inventory(gen)

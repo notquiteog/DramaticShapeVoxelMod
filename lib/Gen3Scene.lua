@@ -19,6 +19,9 @@ local BattleClear=V.require('Gen3BattleClear')
 local Distance=V.require('RenderDistance')
 local Boundary=V.require('Gen3Boundary')
 local BoundarySelect=V.require('BoundaryScenery')
+local SceneCache=V.require('Gen3SceneCache')
+local Forest=V.require('Gen3Forest')
+local Cladding=V.require('HouseCladding')
 local Interior=V.require('InteriorDiorama')
 local Trees=V.require('Gen2Trees')
 local Leaves=V.require('Gen2DepthTrees')
@@ -110,6 +113,9 @@ local function prepare(game,vw,vh,cam)
  local regions=replay and {{def=def,x=0,y=0,w=def.midLayout.width,h=def.midLayout.height}} or Boundary.regions(def,Map.world)
  local x0,z0,x1,z1=bx-radius,bz-radius,bx+radius+6,bz+radius+6
  if not budget then x0,z0,x1,z1=BoundarySelect.bounds(regions,16)end
+ local key=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam)
+ if key and key==cache.terrainKey then M.cacheHits=(M.cacheHits or 0)+1;return true end
+ M.prepares=(M.prepares or 0)+1
  M.distance={radius=radius,full=not budget,regions=#regions,bounds={x0,z0,x1,z1}}
  M.fadeExtent=budget or math.max(math.abs(x0*16-px),math.abs(x1*16-px),math.abs(z0*16-pz),math.abs(z1*16-pz))
  local cells,groups,signature={}, {}, {replay and replay.scene.map or Map.current,x0,z0,x1,z1}
@@ -154,8 +160,9 @@ local function prepare(game,vw,vh,cam)
  for pair,ts in pairs(groups)do signature[#signature+1]=pair..tostring(ts) end
  if cam and cam.battle then signature[#signature+1]=table.concat({'battle',cam.center[1],cam.center[2],cam.yaw},':')end
  local sig=table.concat(signature,';')
- if cache.signature==sig then return true end
+ if cache.signature==sig then cache.terrainKey=key;return true end
  releaseGeometry();M.builds=(M.builds or 0)+1;cache.signature=sig;cache.parts={};cache.cells=cells
+ M.forestTrees=Forest.prepare(cells)
  local gyms=Buildings.prepare(cells);M.gymCount=#gyms
  local civics=Civic.prepare(cells,gyms,V.data("gen3_exteriors"));M.civicCount=#civics
  M.stairCount=Stairs.prepare(cells)
@@ -309,10 +316,14 @@ local function prepare(game,vw,vh,cam)
       if Roof.sideVisible(cells,c,dx) then
        local sx=dx<0 and x or x+16
        quad(b.v,b.i,{{sx,roofY(a),a},{sx,roofY(bz),bz},{sx,0,bz},{sx,0,a}},solid,.82)
+       if c.secondary=='pallet_town' then
+        Cladding.side(sx,a,bz,roofY(a),roofY(bz),dx,solid,function(v,t,shade)quad(b.v,b.i,v,t,shade)end)
+       end
       end
      end
      if row==0 and j==math.floor((column.roofInset or 0)/4) then
       quad(b.v,b.i,{{x+16,roofY(a),a},{x,roofY(a),a},{x,0,a},{x+16,0,a}},solid,.74)
+      if c.secondary=='pallet_town' then Cladding.back(x,x+16,a,roofY(a),solid,function(v,t,shade)quad(b.v,b.i,v,t,shade)end)end
      end
     end
    end
@@ -370,7 +381,7 @@ local function prepare(game,vw,vh,cam)
  for _,b in pairs(batches)do cache.parts[#cache.parts+1]={pair=b.pair,secondary=b.secondary,roofMids=b.roofMids,
   under=assert(R.newMesh(b.v,b.i),'field mesh creation failed'),roof=R.newMesh(b.rv,b.ri),plants=R.newMesh(b.pv,b.pi,R.TREE_FORMAT),water=R.newMesh(b.wv,b.wi)} end
  cache.wood=R.newMesh(wood,wi);cache.leaves=R.newMesh(leaf,li)
- M.builds=M.builds+1
+ cache.terrainKey=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam)
  return true
 end
 local function terrain(draw)

@@ -1,3 +1,16 @@
+## 1.26.0 release follow-up
+
+Publishing now at user request.
+Known visual gap: final Pallet reverse-angle captures still show noisy house gable/siding pixels, and some close civic walls retain shadow bands. These are not signed off as fixed. The complete 1.26 package has compile/packaging validation; the runtime checks above used the same working source, not a final archive reinstall.
+
+## Forest/performance/FSR — 1.26.0
+
+Completed native overlapping-crown placement, lower grass, sparse-layout dependency cache, optional shared FSR 1 EASU/RCAS, receiver-plane shadow correction and stable foliage clip-depth ties. Added modeled side/back house siding. Before/after forest captures and shadow ON/OFF isolation inspected. Source-consumer settings audit remains incomplete for many original Gen 1 options; unavailable rows are diagnostics, not implemented adapters.
+
+Official0.3.2 + RTX5060Ti/615.71.09. QA is isolated under `/tmp/interior-studio-20260923/qa`; package/audit workspace `/tmp/forest-performance-20260923`. Source/header provenance and detailed limitations are in `docs/FOREST_PERFORMANCE_QA_2026-09-23.md`. CPU scene submission dropped from15.4ms to about0.63ms in the short720p fixture, but the separate1440p run remained about37–39ms per frame across Native/FSR; no broad FPS claim. FSR works on actual GPU in all three generations. Native metatile changes invalidate immediately. Shared foliage GPU cases retain static headings and upright first/free geometry.
+
+DLSS, DLSS5 neural rendering and temporal frame generation are not implemented: native engine/render backend and motion-vector/presentation support are absent. Final archive checks and release audit follow below.
+
 ## Designed interior furniture — 1.25.0
 
 Replaced reviewed Crystal and FR/LG furniture extrusions with source-part models: CRTs/keys/pedestals, consoles/controllers, legged desks/chairs, beds, kitchen fixtures, shelf frames, stock islands and low Center cushions. Complete native pair matches cover both player-house floors, labs, Centers and Marts. Crystal runtime bedroom bed/TV/picture and link controls are explicitly modeled. Corrected raised Center carpet borders, incomplete back-wall finishes and monitor occlusion; kept staff-safe reception footprints. Closed component undersides and incremented static mesh revision to 69. No collision/scripts/warps or source assets changed.

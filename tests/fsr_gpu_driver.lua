@@ -1,0 +1,10 @@
+return function(game)
+ local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib;local up=V.require('SpatialUpscale');up.setting:setIndex(3,game)
+ assert(up.factor()>1,up.error)
+ local g=love.graphics;local src=g.newCanvas(64,48);g.push('all');g.setCanvas(src);g.clear(.2,.4,.6,1);g.setColor(1,0,0,1);g.rectangle('fill',0,0,32,24);g.setCanvas();g.pop()
+ local out=up.resolve(src,128,96,'test');assert(not up.error,up.error);assert(out~=src and out:getWidth()==128)
+ local data=out:newImageData();local r,gg,b,a=data:getPixel(10,10);assert(r>.9 and gg<.1 and b<.1,'FSR image orientation/color changed')
+ local r2,g2,b2=data:getPixel(110,80);assert(math.abs(r2-.2)<.04 and math.abs(g2-.4)<.04 and math.abs(b2-.6)<.04,'FSR flat colors changed')
+ print('[FSR1 GPU] PASS actual EASU/RCAS shaders, image dimensions, orientation and flat colors')
+ love.event.quit()
+end

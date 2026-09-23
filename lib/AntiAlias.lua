@@ -47,6 +47,7 @@ local V = ...
 local ModSetting = V.require("ModSetting")
 
 local AntiAlias = {}
+local Upscale=V.require('SpatialUpscale')
 
 -- the key under options.modOptions.BATTLE_ART_VOXEL_FORK, shared by the row in
 -- OPTIONS and the mod manager's own settings page for this mod
@@ -98,6 +99,11 @@ end
 -- multiplied up into canvas ones, and the honest multiplier is the one this
 -- returned rather than the one the row asked for.
 function AntiAlias.expand(w, h)
+  local up=Upscale.factor()
+  if up>1 then
+    local ew,eh=math.max(1,math.floor(w/up+.5)),math.max(1,math.floor(h/up+.5))
+    live=ew/math.max(1,w);return ew,eh
+  end
   local s = wanted()
   local max = textureLimit()
   if max and max > 0 then
@@ -200,6 +206,7 @@ function AntiAlias.resolve(canvas, w, h, slot)
   if not canvas then return canvas end
   local ok, cw, ch = pcall(canvas.getDimensions, canvas)
   if not ok or (cw == w and ch == h) then return canvas end
+  if cw<w or ch<h then return Upscale.resolve(canvas,w,h,slot)end
   local target = targetFor(slot or "world", w, h)
   if not target then return canvas end
 
@@ -231,6 +238,7 @@ end
 
 -- Drop the GPU objects (window resize, hot reload).
 function AntiAlias.invalidate()
+  Upscale.invalidate()
   for slot, t in pairs(targets) do
     if t.canvas and t.canvas.release then pcall(t.canvas.release, t.canvas) end
     targets[slot] = nil

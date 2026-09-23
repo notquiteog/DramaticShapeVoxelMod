@@ -172,7 +172,14 @@ local SHADER = [[
     if (pull > 0.0) {
       w.xyz += normalize(eye - w.xyz) * pull;
     }
-    return vp * w;
+    vec4 clip=vp*w;
+    // Overlapping cards in a static tree row can be exactly coplanar.
+    // A stable anchor-based depth tie-break leaves their geometry/feet intact.
+    if (VertexCanopy.z > 0.0001) {
+      float layer=fract(dot(VertexCanopy.xy,vec2(0.1031,0.11369)));
+      clip.z-=(0.25+layer)*0.000001*clip.w;
+    }
+    return clip;
   }
 #endif
 #ifdef PIXEL
@@ -197,7 +204,17 @@ local SHADER = [[
   // 1.0 in full sun, 1.0 - sunDark in full shadow. Four taps half a texel
   // out on the diagonals: a 2x2 box filter, which is what turns the
   // shadow map's texel staircase into a one-pixel soft edge.
+  float receiverTap(vec3 p,float z,vec2 offset,vec2 slope) {
+    vec2 uv=(floor((p.xy+offset)/sunTexel)+vec2(0.5))*sunTexel;
+    return step(z+dot(slope,uv-p.xy),sunDepth(uv));
+  }
   float sunlight(vec3 p) {
+    // Correct each PCF tap to the receiving plane. Camera-facing leaves
+    // can graze the sun at slopes far beyond the old fixed roof allowance.
+    vec3 dx=dFdx(p),dy=dFdy(p);
+    float det=dx.x*dy.y-dx.y*dy.x;
+    vec2 slope=abs(det)>0.0000000001 ? vec2(dx.z*dy.y-dx.y*dy.z,dx.x*dy.z-dx.z*dy.x)/det : vec2(0.0);
+    slope=clamp(slope,vec2(-32.0),vec2(32.0));
     if (sunDark <= 0.0) return 1.0;
     // outside the sun's frustum nothing was recorded, so nothing occludes
     if (p.x < 0.0 || p.x > 1.0 || p.y < 0.0 || p.y > 1.0 || p.z > 1.0) {
@@ -220,15 +237,15 @@ local SHADER = [[
       for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
           float weight = (x == 0 ? 2.0 : 1.0) * (y == 0 ? 2.0 : 1.0);
-          sum += weight * step(z, sunDepth(p.xy + sunTexel * vec2(float(x), float(y))));
+          sum += weight * receiverTap(p,z,sunTexel*vec2(float(x),float(y)),slope);
         }
       }
       return 1.0 - sunDark * edge * (1.0 - sum / 16.0);
     }
-    float lit = step(z, sunDepth(p.xy + sunTexel * vec2(-0.5, -0.5)))
-              + step(z, sunDepth(p.xy + sunTexel * vec2( 0.5, -0.5)))
-              + step(z, sunDepth(p.xy + sunTexel * vec2(-0.5,  0.5)))
-              + step(z, sunDepth(p.xy + sunTexel * vec2( 0.5,  0.5)));
+    float lit = receiverTap(p,z,sunTexel*vec2(-0.5, -0.5),slope)
+              + receiverTap(p,z,sunTexel*vec2( 0.5, -0.5),slope)
+              + receiverTap(p,z,sunTexel*vec2(-0.5,  0.5),slope)
+              + receiverTap(p,z,sunTexel*vec2( 0.5,  0.5),slope);
     return 1.0 - sunDark * edge * (1.0 - lit * 0.25);
   }
 

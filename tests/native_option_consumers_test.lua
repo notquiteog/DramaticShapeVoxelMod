@@ -28,7 +28,7 @@ check(x==1 and z==0,'north-facing strafe intent')
 local calls={}
 local function hit(name,value)calls[#calls+1]={name,value};return value end
 local fakeSetting=function()return {get=function()return 2 end}end
-local modules={ModSetting=Setting,CameraSettings={invertY=s},
+local modules={SpatialUpscale={setting=s},ModSetting=Setting,CameraSettings={invertY=s},
  DayNight={setting=s,update=function(dt)hit('clock',dt)end,
  applyRig=function(out)hit('rig',out)end,tint=function(out)return out and {1,.4,.2}or{1,1,1}end},
  Sky={dress=function(bg)bg.bands={{1,2,3}};return bg end},

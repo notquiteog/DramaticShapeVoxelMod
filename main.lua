@@ -1141,6 +1141,7 @@ local SETTINGS = {
   -- machine it happens to be running on, so it neither sets this nor takes
   -- the row away -- the player decides what their hardware can carry, from
   -- inside FULL like anywhere else.
+  { V.require("SpatialUpscale").setting,V.require("SpatialUpscale").description,full=true },
   { AntiAlias.setting,
     "Smooth the stair-stepped edges of the 3D world -- roof ridges, ledge "
     .. "lips, a tree against the sky -- by rendering the diorama larger than "
@@ -1283,7 +1284,7 @@ local OPTION_CATEGORIES = {
   } },
   { id = "performance", label = "PERFORMANCE", settings = {
     RenderDistance.setting, RamPrecache.setting,
-    Shadows.setting, AntiAlias.setting,
+    Shadows.setting, AntiAlias.setting,V.require("SpatialUpscale").setting,
   } },
   { id = "pokemon", label = "POKEMON ART", settings = {
     InterfaceSprites.setting, InterfaceSprites.scalingSetting,
