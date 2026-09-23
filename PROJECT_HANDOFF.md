@@ -1,3 +1,9 @@
+## Verified final stair/grounding test build — 2026-09-23
+
+Published BAV **1.24.0-test.3**, Wilds **2.4.1-test.1** and all three repinned test carts before testing. Final exact archives booted on official **0.3.1** in isolated Yellow/Crystal/FireRed/LeafGreen profiles. Both native editions cover all traversable stair behaviors across425 maps each; Crystal classifies322 stair/terrace/ladder cells across388 maps. LuaJIT, targeted geometry/grounding/input tests and production GPU checks pass. Ground contacts, upright plants, stairs and recorded-map recap were inspected in rendered captures. No runtime edits follow the published test.3 archive.
+
+See [commands, fixtures, counts and limits](docs/RELEASE_QA_2026-09-23.md). All-tile visual parity remains unfinished; physical-controller/normal-transition gameplay and the user's exact save were not retested. Earlier “no tests before release” entries below describe publication order, not current verification status.
+
 # 2026-09-23 camera, grounding and stair batch
 
 Complete three-row S.S. Anne staircase with deterministic whole-assembly priority and landing behavior checks. Exclude reused underground wall flags. Add short source-textured Crystal cave steps and remaining shared indoor stair drawings. Includes upright foliage, per-frame grounding, contact shadows and recorded-map camera ownership from test.2.

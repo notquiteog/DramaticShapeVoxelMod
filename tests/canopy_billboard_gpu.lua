@@ -49,7 +49,8 @@ return function(V)
   for _,angle in ipairs({0,math.pi/2,math.pi,-math.pi/2}) do
     assert(render(angle,true)>1500,'leaf layer turned edge-on')
   end
-  assert(render(0,true,nil,math.pi/2)>1500,'flat tree disappears overhead')
+  assert(render(0,true,nil,math.rad(75))>400,'upright tree disappears at highest exposed angle')
+  assert(render(0,true,nil,math.pi/2)<10,'tree tilted into the overhead camera')
   assert(render(math.pi/2,false)<10,'fixed geometry unexpectedly billboarded')
   local _,front=render(0,false,0)
   local _,side=render(math.pi/2,false,0)
@@ -57,7 +58,7 @@ return function(V)
   local _,staticA=render(0,true,0,0,true)
   local _,staticB=render(math.pi/2,true,0,0,true)
   assert(staticA==staticB,'static-view tree turns as the eye moves')
-  assert(render(0,true,nil,math.pi/2,true)>900,'fixed tree disappears overhead')
+  assert(render(0,true,nil,math.rad(75),true)>400,'fixed tree disappears at highest exposed angle')
   shader:release()
   -- Report which side of the foliage plane the production transform puts
   -- each trunk fragment on. Upper wood must be behind; roots remain physical.
@@ -69,7 +70,7 @@ return function(V)
     vec4 position(mat4 ignored,vec4 vertex) {
       vec4 wood=vertex;wood.y-=rootOffset;
       vec4 w=faceCanopy(mat4(1.0),wood,vec3(20.0,20.0,130.0));
-      inFront=dot(w.xyz-vec3(20.0,8.0,30.0),normalize(vec3(0.0,12.0,100.0)));
+      inFront=dot(w.xyz-vec3(20.0,8.0,30.0),vec3(0.0,0.0,1.0));
       return vec4((vertex.x-20.0)/24.0,(vertex.y-18.0)/24.0,0.0,1.0);
     }
     #endif
@@ -93,5 +94,5 @@ return function(V)
     data:release()
   end
   wood:release();canvas:release();shader:release()
-  print('[canopy GPU] PASS static orientation, free-camera headings, overhead, rooted foliage, upper-wood occlusion')
+  print('[canopy GPU] PASS static orientation, free-camera headings, upright high-angle foliage, upper-wood occlusion')
 end
