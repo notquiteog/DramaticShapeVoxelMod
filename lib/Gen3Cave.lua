@@ -2,12 +2,36 @@
 -- is presentation-only; a wall recipe also needs the cell's solid collision.
 local V=...
 local M={}
+local function boulderMask(mask)
+ -- One metatile contains one boulder. Its source drawing may also include
+ -- disconnected floor stripes or grit whose colours differ from the ground
+ -- swatch; those are not extra rings of the rock's silhouette.
+ local visited,best={},{}
+ for start=0,255 do if mask[start] and not visited[start] then
+  local component,queue={}, {start};visited[start]=true
+  local at=1
+  while queue[at] do
+   local k=queue[at];at=at+1;component[#component+1]=k
+   local x,y=k%16,math.floor(k/16)
+   for _,d in ipairs({{1,0},{-1,0},{0,1},{0,-1}})do
+    local nx,ny=x+d[1],y+d[2];local nextKey=ny*16+nx
+    if nx>=0 and nx<16 and ny>=0 and ny<16 and mask[nextKey] and not visited[nextKey] then
+     visited[nextKey]=true;queue[#queue+1]=nextKey
+    end
+   end
+  end
+  if #component>#best then best=component end
+ end end
+ local out={};for _,k in ipairs(best)do out[k]=true end
+ return out
+end
 function M.wall(cells,c,emit,uvFor)
  return V.require('Gen3Terrain').append(cells,c,emit,uvFor)
 end
 function M.rock(c,emit,uvFor)
  local mask=V.require('Gen3Outdoor').mask(c.ts,c.mid,c.shape.ground)
  if not mask then return end
+ mask=boulderMask(mask)
  local uv=assert(uvFor(c.ts,c.mid))
  local function tex(x,y)
   return {uv[1][1]+(uv[2][1]-uv[1][1])*x/16,

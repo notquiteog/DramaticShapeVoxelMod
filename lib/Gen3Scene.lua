@@ -8,6 +8,7 @@ local Mat=V.require('Mat4')
 local Shapes=V.require('Gen3TileShape')
 local Pairs=V.require('Gen3Tilesets')
 local Furniture=V.require('Gen3Furniture')
+local SpriteAnchor=V.require('Gen3SpriteAnchor')
 local Roof=V.require('Gen3RoofDetails')
 local Buildings=V.require('Gen3Buildings')
 local Civic=V.require('Gen3Civic')
@@ -379,22 +380,31 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  facing=V.require('Gen3Integration').worldDirection(facing,-(cam.level>=6 and cam.yaw or 0))
  local frame,mirror=Sprites.pose(spr,facing,phase,flip,opts)
  local q=spr.quads[frame];if not q then return end
- local key=tostring(spr)..':'..frame..':'..tostring(mirror)
+ local padding=SpriteAnchor.groundPadding(spr)
+ local key=tostring(spr)..':'..tostring(spr.image)..':'..frame..':'..tostring(mirror)..':'..padding
  local mesh=spriteMeshes[key]
  if not mesh then
   local qx,qy,qw,qh=q:getViewport();local iw,ih=spr.image:getDimensions()
   local l,r=qx/iw,(qx+qw)/iw;if mirror then l,r=r,l end
   local v,i={},{}
-  quad(v,i,{{-qw/2,qh,0},{qw/2,qh,0},{qw/2,0,0},{-qw/2,0,0}},{{l,qy/ih},{r,qy/ih},{r,(qy+qh)/ih},{l,(qy+qh)/ih}})
+  -- Shift in local card space so lean, free-camera yaw and reflection all
+  -- share the same visible baseline. Animation padding is a frame union.
+  quad(v,i,{{-qw/2,qh-padding,0},{qw/2,qh-padding,0},{qw/2,-padding,0},{-qw/2,-padding,0}},{{l,qy/ih},{r,qy/ih},{r,(qy+qh)/ih},{l,(qy+qh)/ih}})
   mesh=R.newMesh(v,i);spriteMeshes[key]=mesh
  end
  local yaw=cam.level>=6 and -cam.yaw or 0
  local lean=(cam.level>=6 or opts.upright) and 0 or -.4
  local height=opts.lift or 0
+ local pose=Mat.mul(Mat.rotateY(yaw),Mat.rotateX(lean))
+ local base=Mat.mul(Mat.translate(x+8,height,z+16+(opts.depthOffset or 0)),pose)
+ -- Use the shared GB actor contact correction. Terrain retains its full
+ -- acne margin; the visible lookup must use the identical snugged caster.
+ local caster=Shadow.snug(base)
  if reflectPlane then height=2*reflectPlane-height+V.require('Water').CAST_RAISE end
- local model=Mat.mul(Mat.translate(x+8,height,z+16+(opts.depthOffset or 0)),Mat.mul(Mat.rotateY(yaw),Mat.rotateX(lean)))
+ local model=reflectPlane and Mat.mul(Mat.translate(x+8,height,z+16+(opts.depthOffset or 0)),pose) or base
  if reflectPlane then model=Mat.mul(model,Mat.scale(1,-1,1))end
- draw(mesh,spr.image,model)
+ if draw==Shadow.draw then draw(mesh,spr.image,caster)
+ else draw(mesh,spr.image,model,nil,caster) end
 end
 local function actors(game,cam,draw)
  local space=package.loaded['src.core.game3.scripting.space']
@@ -536,7 +546,10 @@ function M.draw(game,vw,vh,cam)
   Shadow.roomClip(room and room.bounds)
   terrain(Shadow.draw)
   for _,d in ipairs(waterMeshes())do Shadow.draw(d[1],d[2])end
-  if not cam.battle then actors(game,cam,Shadow.draw)end;Shadow.finish('firered')
+  if not cam.battle then
+   Shadow.sprites(true);actors(game,cam,Shadow.draw);Shadow.sprites(false)
+  end
+  Shadow.finish('firered')
  end
  local room=not cam.battle and Interior.forMap(Map.currentDef(),3) or nil
  Interior.configure(room)

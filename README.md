@@ -1,3 +1,11 @@
+## Animated BW fronts, actor contact and rock silhouettes — 1.23.0-test.10
+
+Aligns native FireRed actors and provider sprites to one visible baseline across their animation frames, including Canvas-backed followers and furniture-supported items. Authored provider baselines, jump/hop differences and explicit ride/flight heights remain intact. Native actor shadows now use the existing shared contact correction and matching light lookup; terrain shadow bias is unchanged. Rock geometry uses the largest connected foreground silhouette, preventing disconnected floor stripes and grit from forming floating caps in Pewter gym.
+
+Bundles real timed BW front animation for normal and shiny dex1–386:772 atlases, with no missing/static-only entries in that range. Installed custom atlases remain first priority; Gen1/Gen2 Crystal defaults are preserved. Source, timing and asset-audit details: [BW fronts](docs/BW_FRONT_ANIMATION.md).
+
+**TEST PRERELEASE — visual verification follows publication.** Focused anchor, disconnected-rock-silhouette and cave-profile regressions plus LuaJIT compilation pass. All772 BW front atlas hashes/dimensions/timings and782 decoder contracts pass; rendered native enemy animation still awaits packaged verification. Test.9 rendered inspection confirms the reported player/rival table clipping is fixed in all eight approach views; the actor-contact and rock-silhouette follow-ups still need their exact packaged captures. Full native option and scenery parity remains unfinished; see the support inventory and test.9 notes below.
+
 ## Native option consumers and reviewed depth scenery — 1.23.0-test.9
 
 Adds native Gen2/Gen3 renderer, battle HUD, trainer, selected-art interface, lighting and arena-background consumers. Expands reviewed Crystal furniture and FireRed gyms, caves and interiors, including 15 complete furniture recipes matching 137 native objects. Fixes the reported Oak lab table overlap by keeping its solid geometry out of the walkable approach row. Native mon identity preserves same-species shiny variants.

@@ -299,11 +299,24 @@ end
 
 -- Share the bundled animated BW backs with every generation adapter. Keep
 -- installed custom atlases first, and retain static fallback beyond dex 251.
-local bundledBacks, dexBySpecies, installedAtlases = {}, {}, {}
+local bundledBacks, bundledFronts, dexBySpecies, installedAtlases = {}, {}, {}, {}
 for dex,name in pairs(V.data("battle_species_dex_386")) do
   dexBySpecies[tostring(BattleArt.speciesAlias(name)):upper()] = dex
 end
 local bundledIndex = V.data("crystal_full_body")
+local bundledFrontIndex = V.data("bundled_bw_fronts")
+local function bundledFront(key, shiny)
+  local dex = dexBySpecies[key]
+  local id = (shiny and "shiny/" or "normal/") .. tostring(dex)
+  if bundledFronts[id] then return bundledFronts[id] end
+  local row = bundledFrontIndex and bundledFrontIndex[id]
+  if not row then return nil end
+  local def = { image="assets/bw-front-animated/"..id..".png",
+    width=row.width, height=row.height, columns=row.columns, frames=row.frames,
+    durations=row.durations, stableAnchor=true }
+  bundledFronts[id] = def
+  return def
+end
 local function bundledBack(key, shiny)
   local dex = dexBySpecies[key]
   local id = (shiny and "shiny/" or "normal/") .. tostring(dex)
@@ -350,6 +363,9 @@ local function definition(battler, side)
   local def = bySide and bySide[side] or nil
   if side == "back" and generation == "gen5" and not installed(def) then
     return bundledBack(key, shiny) or def
+  end
+  if side == "front" and generation == "gen5" and not installed(def) then
+    return bundledFront(key, shiny) or def
   end
   return def
 end
@@ -581,6 +597,7 @@ end
 
 function AnimatedBattleArt.invalidate()
   loaded, loadOrder = {}, {}
+  installedAtlases = {}
   trainerStates = setmetatable({}, { __mode = "k" })
 end
 
