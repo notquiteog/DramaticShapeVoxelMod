@@ -1477,9 +1477,12 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   local room=Interior.forMap(state.map,V.require("Generation").number())
   local fpRig, fpCx, fpCy = FirstPerson.frame(me, cx, cy, vw, vh)
   if fpRig then cx, cy = fpCx, fpCy
-  elseif room then
-    local camera=Interior.camera(room,Voxel.angle,vw/vh)
-    if camera then Voxel3D.camera=camera;cx,cy=camera.focus[1],camera.focus[3]end
+  else
+    -- The room rig is a per-frame override. On exit, nil restores the
+    -- ordinary player-following orbit instead of retaining the room's focus.
+    local camera=room and Interior.camera(room,Voxel.angle,vw/vh) or nil
+    Voxel3D.camera=camera
+    if camera then cx,cy=camera.focus[1],camera.focus[3]end
   end
 
   -- The host camera remains authoritative. A companion can return only a

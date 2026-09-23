@@ -51,23 +51,11 @@ function M.install()
    return pic(self,mon,back,...)
   end
   undo[#undo+1]=function()State.pic=pic end
- else
-  local State=require('src.battle.BattleState');local draw=State.draw
-  State.draw=function(self,...)
-   local swapped={}
-   for _,key in ipairs({'player','player2','enemy','enemy2'})do
-    local b=self[key]
-    if b and b.mon then
-     local image=M.image({species=Art.speciesFor(b),dvs=b.mon.dvs},key:sub(1,6)=='player')
-     if image then image=M.fit(image,key:sub(1,6)=='player'and 48 or 56);swapped[#swapped+1]={b,b.sprite,image};b.sprite=image end
-    end
-   end
-   local r={pcall(draw,self,...)}
-   for _,row in ipairs(swapped)do if row[1].sprite==row[3]then row[1].sprite=row[2]end end
-   if not r[1]then error(r[2],0)end;return unpack(r,2)
-  end
-  undo[#undo+1]=function()State.draw=draw end
  end
+ -- Gen 1 already owns battler images through BattleArt.apply and
+ -- AnimatedBattleArt.update. A second draw-time replacement breaks ownership
+ -- checks and makes the original UI back render over the staged sprite.
+
  V.mod.hooks:wrap('core.quit_to_launcher',function(next,...)
   for i=#undo,1,-1 do undo[i]()end
   for _,sizes in pairs(fitted)do for _,c in pairs(sizes)do c:release()end end;fitted=setmetatable({},{__mode='k'})

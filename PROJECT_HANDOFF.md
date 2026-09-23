@@ -1,3 +1,9 @@
+## 1.23.0-test.3 — camera and sprite regression fixes
+
+Fixes the fixed indoor camera leaking into outdoor static views in Gen 1/2. Removes the redundant Gen 1 draw-time sprite override, retaining the original Battle Art owner and shared static/animated asset loading. Gen 3 already resets the room camera to nil outdoors.
+
+The preceding test.2 carts passed boot/lab/field checks; a native two-client Gen 1 double battle passed completion, mirrored state hashes, owned-party restoration and room retention. This targeted camera/sprite correction is a test build; visual regression verification follows publication. Supplied BW artwork is static fallback; actual animation requires matching existing Battle Art atlases. Unsupported generation-specific settings remain explicitly read-only.
+
 ## Unified Battle Art test release — 1.23.0-test.2
 
 Battle Art now uses its existing ownership settings and animated-atlas decoder across Gen 1, Crystal and native FireRed/LeafGreen. Working shared controls: BATTLE ART, ANIM FRONT GEN, BACK ART SET, PLAYER and DUPLICATE FIX. Gen 5 animation uses user-installed atlases; the supplied BW images are STATIC full-body fallbacks, never decoded as animation sheets. All four double battlers use the selected art. HGSS remains overworld-only. No separate BW sprite mod is needed.
