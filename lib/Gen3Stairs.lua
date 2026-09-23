@@ -4,20 +4,27 @@
 local V=...
 local recipes=V.data('gen3_stairs')
 local M={}
+table.sort(recipes,function(a,b)return #a.rows>#b.rows end)
 function M.prepare(cells)
  local count=0
- for _,c in pairs(cells)do
+ local ordered={}
+ for _,c in pairs(cells)do ordered[#ordered+1]=c end
+ table.sort(ordered,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
+ for _,c in ipairs(ordered)do
   if not c.stairs then for _,r in ipairs(recipes)do
    if c.pair==r.pair and c.mid==r.rows[1][1] then
     local group={r=r,cx=c.cx,cy=c.cy,ts=c.ts,cells={}}
     local match=true
-    for z=0,1 do for x=0,1 do
+    for z=0,#r.rows-1 do for x=0,1 do
      local q=cells[(c.cx+x)..':'..(c.cy+z)]
      if not q or q.pair~=c.pair or q.mid~=r.rows[z+1][x+1] or q.stairs or q.prop then match=false end
      group.cells[z*2+x+1]=q
     end end
+    local landing=group.cells[(#r.rows-1)*2+(r.east and 1 or 2)]
+    local expected=r.down and (r.east and 0x6E or 0x6F)or(r.east and 0x6C or 0x6D)
+    if landing and (landing.collision==7 or landing.behavior and landing.behavior~=expected)then match=false end
     if match then
-     group.landing=group.cells[r.east and 3 or 4]
+     group.landing=landing
      for _,q in ipairs(group.cells)do q.stairs=group end
      group.owner=c;count=count+1;break
     end
@@ -58,6 +65,7 @@ function M.append(c,emit,uvFor)
  if g then
   if g.owner~=c then return end
   local r=g.r
+  local depth=#r.rows*16
   local function source(x,y)
    local q=g.cells[math.floor(y/16)*2+math.floor(x/16)+1]
    return q.mid,x%16,y%16
@@ -73,9 +81,9 @@ function M.append(c,emit,uvFor)
    end end
   end
   horizontal(0,32,0,8,0,floor)
-  horizontal(0,32,24,32,0,floor)
-  if x0>0 then horizontal(0,x0,8,24,0,floor)end
-  if x1<32 then horizontal(x1,32,8,24,0,floor)end
+  horizontal(0,32,depth-8,depth,0,floor)
+  if x0>0 then horizontal(0,x0,8,depth-8,0,floor)end
+  if x1<32 then horizontal(x1,32,8,depth-8,0,floor)end
   for i=0,5 do
    local a=r.east and x0+i*4 or x1-(i+1)*4
    local h=(i+1)*20/6*(r.down and -1 or 1)
@@ -83,27 +91,27 @@ function M.append(c,emit,uvFor)
    local sy=r.down and 18+i*2 or 29-i*3
    local material=solid(source(sx,sy))
    if r.down then
-    horizontal(a,a+4,8,24,h,material)
+    horizontal(a,a+4,8,depth-8,h,material)
     -- Well walls and each vertical drop leave the center unobstructed.
-    box(a,h,7,a+4,0,8,material);box(a,h,24,a+4,0,25,material)
+    box(a,h,7,a+4,0,8,material);box(a,h,depth-8,a+4,0,depth-7,material)
     local edge=r.east and a or a+4
-    face({{ox+edge,h,oz+8},{ox+edge,h,oz+24},{ox+edge,h+20/6,oz+24},{ox+edge,h+20/6,oz+8}},material,.8)
+    face({{ox+edge,h,oz+8},{ox+edge,h,oz+depth-8},{ox+edge,h+20/6,oz+depth-8},{ox+edge,h+20/6,oz+8}},material,.8)
    else
-    for z=8,23,8 do box(a,0,z,a+4,h,z+8,material)end
+    for z=8,depth-9,8 do box(a,0,z,a+4,h,z+8,material)end
    end
   end
   local rail=solid(source(r.east and 29 or 2,15))
   if not r.down then
    for i=0,5 do
     local a=r.east and x0+i*4 or x1-(i+1)*4;local h=(i+1)*20/6
-    for _,z in ipairs({7,24})do
+    for _,z in ipairs({7,depth-8})do
      box(a,h,z,a+1,h+5,z+1,rail)
      box(a,h+4,z,a+4,h+5,z+1,rail)
     end
    end
   else
    local edge=r.east and x1 or x0
-   face({{ox+edge,-20,oz+24},{ox+edge,-20,oz+8},{ox+edge,0,oz+8},{ox+edge,0,oz+24}},rail,.5)
+   face({{ox+edge,-20,oz+depth-8},{ox+edge,-20,oz+8},{ox+edge,0,oz+8},{ox+edge,0,oz+depth-8}},rail,.5)
   end
   return
  end

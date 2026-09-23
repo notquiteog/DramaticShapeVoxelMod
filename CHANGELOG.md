@@ -1,3 +1,9 @@
+## 1.24.0-test.3 — 2026-09-23
+
+Complete three-row S.S. Anne staircase with deterministic whole-assembly priority and landing behavior checks. Exclude reused underground wall flags. Add short source-textured Crystal cave steps and remaining shared indoor stair drawings. Includes upright foliage, per-frame grounding, contact shadows and recorded-map camera ownership from test.2.
+
+Preceding packages passed sprite/geometry regressions and rendered Yellow, Crystal, FireRed and LeafGreen captures on official engine 0.3.1. LeafGreen covered all traversable native stair behaviors; the FireRed ship variant prompted this follow-up. Published before testing by request. Full scenery parity and exhaustive visual sign-off are still unfinished.
+
 ## 1.24.0-test.2 — 2026-09-23
 
 Follow-up to test.1: cover the two additional apartment stair assemblies and ship/cave scene fallbacks found by the complete map census. Keep Quest Log sky/lighting tied to its recorded map. Correct extra soft-light bias on character shadows and add small ground-contact shadows that fade with real jump/flight height.

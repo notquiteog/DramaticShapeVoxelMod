@@ -4,7 +4,7 @@ local function uv()return{{0,0},{1,0},{1,1},{0,1}}end
 local counts={up=0,down=0}
 for _,r in ipairs(recipes)do
  local cells={}
- for z=0,1 do for x=0,1 do cells[x..':'..z]={cx=x,cy=z,pair=r.pair,mid=r.rows[z+1][x+1],ts={},shape={kind='flat'}}end end
+ for z=0,#r.rows-1 do for x=0,1 do cells[x..':'..z]={cx=x,cy=z,pair=r.pair,mid=r.rows[z+1][x+1],ts={},shape={kind='flat'}}end end
  assert(S.prepare(cells)==1,'missing complete native flight')
  local n,lo,hi=0,math.huge,-math.huge
  for _,c in pairs(cells)do S.append(c,function(p,t)

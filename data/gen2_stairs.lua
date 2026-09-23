@@ -1,6 +1,11 @@
 -- Complete Crystal stair drawings, scoped by tileset. Doors and elevators
 -- share warp flags but are not stairs. Geometry never changes collision.
 return {
+ ["TILESET_CAVE:54,55,54,55"]="terrace_n",
+ ["TILESET_DARK_CAVE:54,55,54,55"]="terrace_n",
+ ["TILESET_FACILITY:50,51,67,68"]="stair_n",
+ ["TILESET_GATE:12,13,28,29"]="stair_n",
+ ["TILESET_GATE:10,11,26,27"]="stair_down_n",
  ["TILESET_POKECENTER:68,69,84,85"]="stair_w",
  ["TILESET_ELITE_FOUR_ROOM:44,45,60,61"]="stair_e",
  ["TILESET_ELITE_FOUR_ROOM:64,65,66,67"]="stair_down_e",

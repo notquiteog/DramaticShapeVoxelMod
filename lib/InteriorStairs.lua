@@ -16,7 +16,7 @@ function Stairs.build(S,map,data,cx,cy,s)
   assert(s.class=="stair_n" or s.class=="stair_down_n","interior stair direction")
   local down=s.class=="stair_down_n"
   local h=s.h or 16
-  assert(h==16,"Mansion source has four four-pixel flights")
+  local rise=h/4 -- Full-storey stairs and short native cave terraces share four treads.
   local mx,mz=cx*16,cy*16
   local perRow=map.tileset.tilesPerRow or 16
   local aw,ah=map.tileset.imageWidth or 128,map.tileset.imageHeight or 48
@@ -76,27 +76,27 @@ function Stairs.build(S,map,data,cx,cy,s)
   end
   for band=0,3 do
     local z0,z1=band*4,(band+1)*4
-    local height=16-band*4
+    local height=h-band*rise
     if down then
       horizontal(-height,z0,z1,"tread-down")
       sides(z0,z1,-height,0)
       -- Each drop continues the actual shade of its own source tread.
-      zface(z1,-height,-height+4,false,7,z0+2,.82,"riser-down")
+      zface(z1,-height,-height+rise,false,7,z0+2,.82,"riser-down")
     else
       horizontal(height,z0,z1,"tread-up")
       sides(z0,z1,0,height)
       -- The drawn black edge stays one pixel tall; the recessed riser
       -- continues the original shaded right edge instead of a stretched
       -- copy of all four tread drawings.
-      zface(z1,height-4,height-1,true,14,1,.82,"riser-up")
+      zface(z1,height-rise,height-1,true,14,1,.82,"riser-up")
       zface(z1,height-1,height,true,0,4,.82,"edge-up")
     end
   end
   if down then
     -- Dark far opening closes the pit; no floor sheet plugs the cell.
-    zface(0,-16,0,true,7,1,.2,"well-end")
+    zface(0,-h,0,true,7,1,.2,"well-end")
   else
-    zface(0,0,16,false,14,1,.68,"back-up")
+    zface(0,0,h,false,14,1,.68,"back-up")
   end
 end
 return Stairs

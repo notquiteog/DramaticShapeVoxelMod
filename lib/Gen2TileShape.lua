@@ -263,6 +263,7 @@ local function classTable(shapes, outdoors)
                   authored = true, derived = true }
   out.oceanrock = { class = "oceanrock", art = "oceanrock", h = 4,
                     authored = true, derived = true }
+  out.terrace_n={class="stair_n",art="stair",h=6,authored=true,derived=true}
   out.fence.art = "post"
   if not outdoors then
     -- Confine texture folding to the object's own 16px collision cell.

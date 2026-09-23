@@ -1,5 +1,13 @@
 # 2026-09-23 camera, grounding and stair batch
 
+Complete three-row S.S. Anne staircase with deterministic whole-assembly priority and landing behavior checks. Exclude reused underground wall flags. Add short source-textured Crystal cave steps and remaining shared indoor stair drawings. Includes upright foliage, per-frame grounding, contact shadows and recorded-map camera ownership from test.2.
+
+Preceding packages passed sprite/geometry regressions and rendered Yellow, Crystal, FireRed and LeafGreen captures on official engine 0.3.1. LeafGreen covered all traversable native stair behaviors; the FireRed ship variant prompted this follow-up. Published before testing by request. Full scenery parity and exhaustive visual sign-off are still unfinished.
+
+Implementation and regression fixtures are written. No engine or automated tests have run before this release. Source-art inspection is recorded outside the repository in /tmp/voxel-polish-20260923. Latest official engine confirmed: 0.3.1.
+
+# 2026-09-23 camera, grounding and stair batch
+
 Follow-up to test.1: cover the two additional apartment stair assemblies and ship/cave scene fallbacks found by the complete map census. Keep Quest Log sky/lighting tied to its recorded map. Correct extra soft-light bias on character shadows and add small ground-contact shadows that fade with real jump/flight height.
 
 Test.1 passed all 354 Lua compile checks, sprite anchor regressions, 52 stair assembly geometry cases, and recorded-map camera isolation on engine 0.3.1. This follow-up is published before its own tests by request. Visual inspection and full scenery parity remain ongoing.

@@ -1,6 +1,7 @@
 -- Reviewed native stair assemblies including their landing. Exact four-cell
 -- matches prevent borrowing floors/walls from unrelated furniture drawings.
 return {
+ {pair='general__rom_082d4d94',rows={{0x354,0x2E8},{0x3A2,0x2F0},{0x355,0x3A0}},east=true,down=false},
  {pair='building__rom_082d4c2c',rows={{0x281,0x2B8},{0x2E4,0x2C0}},east=true,down=false},
  {pair='building__rom_082d4c2c',rows={{0x2B3,0x2B4},{0x2BB,0x2E5}},east=false,down=true},
  {pair='building__rom_082d4cec',rows={{0x289,0x289},{0x29D,0x29E}},east=true,down=true},
