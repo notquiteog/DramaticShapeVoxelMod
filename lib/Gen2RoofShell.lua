@@ -93,6 +93,15 @@ function M.trim(run,tx,ty,c,runAt,emit,uvRect,tile)
       Eaves.edge(points[e[3]],points[e[4]],e[1]*1.5,e[2]*1.5,uv,emit,.5)
     end
   end
+  local function boundary(dx,dz)
+    local other=runAt(tx+dx,ty+dz)
+    return not (other and other.rise>0 and other.h==run.h)
+  end
+  for _,v in ipairs({{1,-1,1},{2,1,1},{3,1,-1},{4,-1,-1}})do
+    if boundary(v[2],0) and boundary(0,v[3]) then
+      Eaves.corner(points[v[1]],v[2]*1.5,v[3]*1.5,uv,emit,.5)
+    end
+  end
   -- One rounded ridge cap per column. The south half owns the ridge seam,
   -- including odd-depth roofs where it falls inside a cell.
   local extent=run.roofExtent or run.extent

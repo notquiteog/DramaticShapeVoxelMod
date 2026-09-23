@@ -32,7 +32,7 @@ for _,r in ipairs(added)do
  if r.kind=='plant' then
   local cutouts=Furniture.cutouts(r.pair)
   for _,row in ipairs(r.rows)do for _,mid in ipairs(row)do assert(cutouts[mid]==r.ground)end end
- else
+ elseif r.kind=='cabinet' then
   assert(r.facade[2]>0 and r.facade[2]+r.facade[4]<#r.rows*16,
    'cabinet facade contains the wall above or floor below its native drawing')
  end
@@ -56,3 +56,9 @@ Shapes.layout(counter)
 assert(not counter['15:7'].column,'counter bend generated a room-height slab')
 assert(Shapes.of('building','rom_082d4c2c',0x287,0,7).kind=='roomWall','museum north wall lost depth')
 print('PASS '..count..' complete interior drawings, partial/pair isolation, native UVs and explicit floor exemptions')
+
+-- Stair drawings own shared museum wall tiles before furniture extraction.
+for _,r in ipairs(added)do if r.name=='museum_reception_south' then
+ local cells=cellsFor(r);cells['4:6'].stairs={}
+ assert(#Furniture.extract(cells)==0,'furniture stole a native stair assembly')
+end end

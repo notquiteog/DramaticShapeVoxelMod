@@ -143,7 +143,7 @@ function M.of(primary,secondary,mid,behavior,collision)
   local corners=secondary=='pokemon_center' and {0x2A0,0x2A8,0x2B0,0x2B8,0x2A6,0x2AE,0x2B6,0x2BE,0x2A1,0x2A2}
    or {0x290,0x291,0x298,0x299,0x2A0,0x2A1,0x2BD,0x2BE}
   for _,tile in ipairs(corners)do if mid==tile then return {kind='interiorFloor',ground=0x281}end end
-  if secondary=='pokemon_center' and mid==0x284 or secondary=='rom_082d4bcc' and (mid==0x285 or mid==0x286)then
+  if secondary=='pokemon_center' and (mid==0x284 or mid==0x28C) or secondary=='rom_082d4bcc' and (mid==0x285 or mid==0x286)then
    return {kind='roomWall',ground=0x281}
   end
  end

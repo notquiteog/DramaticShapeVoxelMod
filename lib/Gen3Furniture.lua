@@ -49,16 +49,16 @@ end
 recipe('mart_bench',mart,{{0x2B7,0x2BC},{0x2C1,0x2C2}},'table',6,0x281,{top=26})
 local center='network'
 recipe('center_vending',center,{{0x2C9,0x2CA},{0x2CB,0x2CC},{0x2CD,0x2CE}},'cabinet',29,0x281,{depth=13,facade={0,8,32,39}})
-recipe('center_screen',center,{{0x286,0x287},{0x28E,0x28F}},'cabinet',32,0x281,{depth=3,frontOffset=19,facade={0,10,32,22}})
+recipe('center_screen',center,{{0x286,0x287},{0x28E,0x28F}},'cabinet',28,0x281,{base=12,depth=1.5,frontOffset=32.2,facade={2,10,28,16}})
 recipe('center_terminal',center,{{0x285},{0x62},{0x295}},'cabinet',28,0x281,{depth=11,facade={0,8,16,39}})
-recipe('center_map',center,{{0x296,0x297},{0x29E,0x29F}},'cabinet',30,0x281,{depth=2,frontOffset=19})
-recipe('center_healer',center,{{0x2AA,0x2AB},{0x2B2,0x2B3}},'counter',13,0x281,{top=25})
+recipe('center_map',center,{{0x296,0x297},{0x29E,0x29F}},'cabinet',27,0x281,{base=11,depth=1.5,frontOffset=32.2,facade={0,13,32,17}})
+recipe('center_healer',center,{{0x2AA,0x2AB},{0x2B2,0x2B3}},'centerHealer',13,0x281)
 recipe('center_medical_cabinet',center,{{0x2AD},{0x2B5}},'cabinet',22,0x281,{facade={0,0,16,16},depth=10})
 for _,mid in ipairs({0x2B9,0x2BC,0x298,0x2BD})do
- recipe('center_counter_'..mid,center,{{mid}},'counter',12,0x281,{top=10,depth=14,single=true})
+ recipe('center_counter_'..mid,center,{{mid}},'counter',7,0x281,{top=10,depth=6,single=true})
 end
 recipe('center_table',center,{{0x29C,0x29D},{0x2A4,0x2A5}},'table',7,0x281,{top=26})
-for _,mid in ipairs({0x2F5,0x2FD})do recipe('center_seat_'..mid,center,{{mid}},'seat',6,0x281,{top=13})end
+for _,mid in ipairs({0x2F5,0x2FD})do recipe('center_seat_'..mid,center,{{mid}},'centerSeat',6,0x281,{top=13})end
 recipe('lab_plant_left','oak_lab',{{0x293},{0x29B}},'plant',26,0x289,{cutout=true})
 recipe('lab_plant_right','oak_lab',{{0x294},{0x29C}},'plant',26,0x289,{cutout=true})
 recipe('house_plant', 'player_house',{{0x47},{0x4F}},'plant',24,1,{cutout=true})
@@ -72,19 +72,28 @@ for secondary,p in pairs(profiles)do for _,prop in ipairs(p.props)do
 end end
 local additional=V and V.require('Gen3AdditionalFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3AdditionalFurniture.lua')
 for _,r in ipairs(additional)do recipes[#recipes+1]=r end
+local Center=V and V.require('Gen3CenterFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3CenterFurniture.lua')
+for _,r in ipairs(Center.recipes)do recipes[#recipes+1]=r end
+local function matched(mid,expected,r)
+ return (r.kind=='escalator' and Center.canonical(mid) or mid)==expected
+end
 function M.extract(cells)
  local out,ordered={},{}
  for _,c in pairs(cells)do if c.primary=='building' or c.primary=='general' then ordered[#ordered+1]=c end end
  table.sort(ordered,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
  -- Longest recipes win: the computer's top is also a cabinet top.
- table.sort(recipes,function(a,b)return #a.rows>#b.rows end)
- for _,c in ipairs(ordered)do if not c.prop then
+ table.sort(recipes,function(a,b)
+  local aa,bb=#a.rows*#a.rows[1],#b.rows*#b.rows[1]
+  if aa~=bb then return aa>bb end
+  return a.name<b.name
+ end)
+ for _,c in ipairs(ordered)do if not c.prop and not c.stairs then
   for _,r in ipairs(recipes)do
-   if c.primary==(r.primary or 'building') and c.mid==r.rows[1][1] and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
+   if c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
     local match=true;local parts={}
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
-     if not n or n.prop or n.pair~=c.pair or n.mid~=mid then match=false else parts[#parts+1]=n end
+     if not n or n.prop or n.stairs or n.pair~=c.pair or not matched(n.mid,mid,r) then match=false else parts[#parts+1]=n end
     end end
     if match then
      local p={recipe=r,cx=c.cx,cy=c.cy,pair=c.pair,ts=c.ts,w=#r.rows[1]*16,d=#r.rows*16}
@@ -132,6 +141,13 @@ function M.append(p,emit,uvFor)
   emit({{x0,y1,z0},{x0,y1,z1},{x0,y0,z1},{x0,y0,z0}},material,.7)
   emit({{x1,y1,z1},{x1,y1,z0},{x1,y0,z0},{x1,y0,z1}},material,.7)
  end
+ local function sample(sx,sy)
+  local t=uvFor(p.ts,r.rows[math.floor(sy/16)+1][math.floor(sx/16)+1])
+  local u=t[1][1]+(t[2][1]-t[1][1])*(sx%16+.5)/16
+  local v=t[1][2]+(t[3][2]-t[1][2])*(sy%16+.5)/16
+  return {{u,v},{u,v},{u,v},{u,v}}
+ end
+ if Center.append(p,source,box,sample,emit,uvFor)then return end
  if r.kind=='relief' or r.kind=='bin' or r.kind=='plaque' then
   -- A closed relief follows the original pixel silhouette from every angle.
   -- Keep the source outline; never turn surrounding floor into its backing.
@@ -189,6 +205,37 @@ function M.append(p,emit,uvFor)
   box(x+6.5,0,z+23,x+9.5,7,z+26,frame)
   -- The native rounded board is a cutout, not an opaque rectangular slab.
   source(1,8,14,20,{x+1,r.h,z+25.53},{x+15,r.h,z+25.53},{x+15,5,z+25.53},{x+1,5,z+25.53})
+ elseif r.kind=='reception' then
+  local function sample(s)
+   local t=uvFor(p.ts,r.rows[math.floor(s[2]/16)+1][math.floor(s[1]/16)+1])
+   local u=t[1][1]+(t[2][1]-t[1][1])*(s[1]%16+.5)/16
+   local v=t[1][2]+(t[3][2]-t[1][2])*(s[2]%16+.5)/16
+   return {{u,v},{u,v},{u,v},{u,v}}
+  end
+  local wood=sample(r.trim)
+  for _,s in ipairs(r.segments)do
+   box(x+s[1],0,z+s[2],x+s[3],r.h-2,z+s[4],wood)
+   box(x+s[1],r.h-2,z+s[2],x+s[3],r.h,z+s[4],solid)
+   -- A recessed kickboard and narrow timber ribs read from both sides.
+   for xx=s[1]+2,s[3]-2,4 do
+    box(x+xx,2,z+s[2]-.08,x+xx+.6,r.h-3,z+s[4]+.08,wood)
+   end
+  end
+ elseif r.kind=='displayCase' then
+  -- The drawing's upper floor and lower cast shadow remain on the floor.
+  -- Fossils stay under their native blue glass; frame and plinth have depth.
+  local back,front=z+12,z+34
+  box(x+2,0,back+2,x+p.w-2,4,front-2)
+  box(x+1,4,back,x+p.w-1,6,front)
+  box(x+1,6,back,x+p.w-1,r.h,front)
+  source(1,12,p.w-2,15,{x+1,r.h+.02,back},{x+p.w-1,r.h+.02,back},
+   {x+p.w-1,r.h+.02,front},{x+1,r.h+.02,front})
+  source(1,27,p.w-2,10,{x+1,r.h,front+.02},{x+p.w-1,r.h,front+.02},
+   {x+p.w-1,5,front+.02},{x+1,5,front+.02})
+  -- Glass sides use a glass-only strip, never repeated fossil faces.
+  source(2,20,1,7,{x+.98,r.h,back},{x+.98,r.h,front},{x+.98,6,front},{x+.98,6,back})
+  source(p.w-3,20,1,7,{x+p.w-.98,r.h,front},{x+p.w-.98,r.h,back},
+   {x+p.w-.98,6,back},{x+p.w-.98,6,front})
  elseif r.kind=='cabinet' then
   local front=z+(r.frontOffset or p.d-2);local back=front-r.depth
   box(x+1,r.base or 0,back,x+p.w-1,r.h,front)

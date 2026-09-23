@@ -16,6 +16,18 @@ cabinet('museum_bookcase',museum,{{0x2CD,0x2CE},{0x2D5,0x2D6},{0x2DD,0x2DE}},
  0x281,{0,12,32,27},27,39,{1,12})
 plant('museum_potted_tree',museum,{{0x2AE},{0x2B6}},0x281)
 plant('museum_edge_potted_tree',museum,{{0x2CA},{0x2CB}},0x282)
+recipes[#recipes+1]={name='museum_fossil_case',primary='building',pair='building__'..museum,
+ rows={{0x283,0x284,0x285,0x286},{0x28B,0x28C,0x28D,0x28E},{0x288,0x296,0x289,0x28A}},
+ kind='displayCase',ground=0x281,h=14,material={8,37}}
+local function reception(name,rows,segments,material,trim)
+ recipes[#recipes+1]={name='museum_reception_'..name,primary='building',pair='building__'..museum,
+  rows=rows,kind='reception',ground=0x282,h=12,segments=segments,material=material,trim=trim}
+end
+reception('north',{{0x297},{0x293},{0x293},{0x293},{0x293}},
+ {{3,14,16,80}},{8,24},{4,14})
+reception('bend',{{0x29E,0x2A6,0x294},{0x2AC,0x29C,0x2A4}},
+ {{3,0,16,22},{16,14,48,22},{32,22,48,32}},{8,5},{24,26})
+reception('south',{{0x293},{0x29B}},{{0,0,16,27}},{8,5},{4,30})
 local office='rom_082d4ecc'
 cabinet('silph_server',office,{{0x37D},{0x385},{0x37E}},0x334,{0,12,16,28},28,40,{1,13})
 cabinet('silph_tape_terminal',office,{{0x37B},{0x383}},0x334,{0,2,16,22},22,24,{1,3})

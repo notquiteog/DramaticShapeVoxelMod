@@ -61,5 +61,6 @@ end end
 assert(objects>=20)
 assert(Shapes.of('general','pokemon_center',0x2A0).kind~='interiorFloor','interior profile escaped primary scope')
 assert(Pairs.supports({midLayout={pair='network'},mapType=8},{primary='building'}))
-assert(not Pairs.supports({midLayout={pair='unknown'},mapType=8},{primary='building'}))
+-- Shared Building scenes retain the camera; unreviewed art stays flat.
+assert(Pairs.supports({midLayout={pair='unknown'},mapType=8},{primary='building'}))
 print('PASS interior generation isolation, padding, cutaway bounds and '..objects..' native-art furniture recipes')

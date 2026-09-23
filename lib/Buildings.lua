@@ -1482,7 +1482,9 @@ function Buildings.build(S, map, data, perRow)
             if not built then
               local key = tileset.id .. ":" .. index
               if not models[key] then
-                if S.gen2 and t.model=="bin" then
+                if S.gen2 and t.model=="room_desk" then
+                  models[key]=V.require("Gen2RoomDesk").build(t,data,perRow,atlasW,atlasH)
+                elseif S.gen2 and t.model=="bin" then
                   models[key]=V.require("Gen2Bin").build(t,data,perRow,atlasW,atlasH)
                 elseif S.gen2 and t.model=="bench" then
                   models[key]=V.require("Gen2Bench").build(t,data,perRow,atlasW,atlasH)

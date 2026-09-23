@@ -253,6 +253,10 @@ function M.append(g,emit)
   edge({x+p.w,height(p.w,p.front),z+p.front},{x,height(0,p.front),z+p.front},0,1.5)
   edge({x,height(0,p.front),z+p.front},{x,height(0,p.back),z+p.back},-1,0)
   edge({x+p.w,height(p.w,p.back),z+p.back},{x+p.w,height(p.w,p.front),z+p.front},1,0)
+  for _,s in ipairs({{0,p.back,-1,-1.5},{p.w,p.back,1,-1.5},
+    {0,p.front,-1,1.5},{p.w,p.front,1,1.5}})do
+   Eaves.corner({x+s[1],height(s[1],s[2]),z+s[2]},s[3],s[4],trim,face)
+  end
  end
  local chimney=g.custom and g.custom.chimney
  if chimney then

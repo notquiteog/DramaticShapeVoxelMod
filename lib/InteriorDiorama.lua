@@ -45,13 +45,14 @@ function M.profile(def,gen)
   end end
   if x1<=x0 or z1<=z0 then return end
   b={x0*16,z0*16,x1*16,z1*16}
-  if V.require('Gen3Tilesets').resolve(def.midLayout.pair,require('src.import.gba.versions').TILESET_PAIRS).secondary=='lab' then
+  local secondary=V.require('Gen3Tilesets').resolve(def.midLayout.pair,require('src.import.gba.versions').TILESET_PAIRS).secondary
+  if secondary=='lab' or secondary=='pokemon_center' then
    -- The first two rows are the north wall drawing, not extra floor behind
    -- the cabinets. Its continuous backing sits just behind the native facade.
    b[2]=math.min(b[4]-16,(z0+2)*16)-.12
   end
  end
- return {bounds=b,height=gen==3 and theme=='lab' and 32 or 40,theme=theme,gen=gen}
+ return {bounds=b,height=gen==3 and (theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen}
 end
 local function texture(theme)
  if materials[theme]then return materials[theme]end
@@ -78,7 +79,20 @@ function M.geometry(p,side,opened)
   face({{d,y1,f},{d,y1,c},{d,y0,c},{d,y0,f}},swatch,.85)
  end
  if side==5 then
-  box(x0-3,-4,z0-3,x1+3,-.25,z1+3,3)
+  -- The diorama plinth must not seal modeled stairs/escalators below floor.
+  local xs,zs={x0-3,x1+3},{z0-3,z1+3}
+  for _,q in ipairs(p.openings or {})do
+   xs[#xs+1]=math.max(x0-3,math.min(x1+3,q[1]));xs[#xs+1]=math.max(x0-3,math.min(x1+3,q[3]))
+   zs[#zs+1]=math.max(z0-3,math.min(z1+3,q[2]));zs[#zs+1]=math.max(z0-3,math.min(z1+3,q[4]))
+  end
+  table.sort(xs);table.sort(zs)
+  for i=1,#xs-1 do for j=1,#zs-1 do
+   local a,c,d,f=xs[i],zs[j],xs[i+1],zs[j+1];local cut=false
+   for _,q in ipairs(p.openings or {})do
+    if (a+d)/2>q[1] and (a+d)/2<q[3] and (c+f)/2>q[2] and (c+f)/2<q[4]then cut=true;break end
+   end
+   if not cut and d>a and f>c then box(a,-4,c,d,-.25,f,3)end
+  end end
  elseif side==6 then
   face({{x0,h,z0},{x1,h,z0},{x1,h,z1},{x0,h,z1}},1)
  else
@@ -128,6 +142,14 @@ function M.forMap(map,gen)
  local p=M.profile(def,gen)
  if not p then cache[def]=false;return end
  p.meshes={};cache[def]=p;return p
+end
+function M.setOpenings(p,openings)
+ if not p then return end
+ local keys={};for _,q in ipairs(openings or {})do keys[#keys+1]=table.concat(q,',')end;table.sort(keys)
+ local signature=table.concat(keys,';')
+ if signature==p.openingSignature then return end
+ p.openingSignature=signature;p.openings=openings
+ for key,mesh in pairs(p.meshes or {})do if key:match('^5:')then mesh:release();p.meshes[key]=nil end end
 end
 function M.camera(p,angle,aspect)
  if not p then return end

@@ -22,4 +22,8 @@ function M.edge(a,b,dx,dz,uv,emit,thickness)
  emit({D,C,G,H},uv,.78)
  emit({A,D,H,E},uv,.7);emit({C,B,F,G},uv,.7)
 end
+function M.corner(p,dx,dz,uv,emit,thickness)
+ assert(dx~=0 and dz~=0,'corner requires two outward offsets')
+ M.edge(p,{p[1]+dx,p[2],p[3]},0,dz,uv,emit,thickness)
+end
 return M

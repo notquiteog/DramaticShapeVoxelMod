@@ -1,3 +1,11 @@
+## 1.24.0 — 2026-09-23
+
+Pokémon Centers in FireRed and LeafGreen now have complete up/down escalators, recessed stairwells, joined native back walls, a horizontal healing tray, low seats, reception counters, upstairs terminals and gates. Counters leave room for Nurse Joy and the upstairs workers, including rotating views. Healing balls and the monitor align with the modeled equipment. Escalator travel retains the chosen camera between animation phases.
+
+Crystal gains a complete kitchen and bedroom workstation, with separate monitor, keyboard and console. Pewter Museum gains its full L-shaped counter and fossil displays. Roof eaves close their exposed corners across the shared Gen 2/3 builders. Includes the earlier tested upright foliage, actor grounding, stairs and recap-camera changes.
+
+Verified on official Gen1Recomp 0.3.2 using isolated imported profiles. This is a focused scenery release, not exhaustive all-tile visual parity. See docs/SCENERY_QA_2026-09-23.md for checks and remaining limits.
+
 ## 1.24.0-test.3 — 2026-09-23
 
 Complete three-row S.S. Anne staircase with deterministic whole-assembly priority and landing behavior checks. Exclude reused underground wall flags. Add short source-textured Crystal cave steps and remaining shared indoor stair drawings. Includes upright foliage, per-frame grounding, contact shadows and recorded-map camera ownership from test.2.

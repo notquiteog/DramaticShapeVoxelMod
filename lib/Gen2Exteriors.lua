@@ -179,6 +179,15 @@ function M.build(S,map)
     if dz==g.depth-1 then edge({xx+8,c,zz+8},{xx,d,zz+8},0,2)end
     if bx==0 then edge({xx,d,zz+8},{xx,a,zz},-2,0)end
     if bx==g.width-1 then edge({xx+8,b,zz},{xx+8,c,zz+8},2,0)end
+    for _,corner in ipairs({{0,0,xx,a,zz,-2,-2},
+      {g.width-1,0,xx+8,b,zz,2,-2},{0,g.depth-1,xx,d,zz+8,-2,2},
+      {g.width-1,g.depth-1,xx+8,c,zz+8,2,2}})do
+     if bx==corner[1] and dz==corner[2] then
+      Eaves.corner({corner[3],corner[4],corner[5]},corner[6],corner[7],uv(roofTile),function(p,t,shade)
+       p.uv=t;p.shade=shade;S.objectQuads[#S.objectQuads+1]=p
+      end)
+     end
+    end
     if dz==0 then face({{x0+x+8,b,z0},{x0+x,a,z0},{x0+x,H,z0},{x0+x+8,H,z0}},g.roofTile,.7)end
     if dz==g.depth-1 and g.style~='kanto_hip' then face({{x0+x,d,z0+D},{x0+x+8,c,z0+D},{x0+x+8,H,z0+D},{x0+x,H,z0+D}},g.roofTile,.8)end
     if bx==0 then face({{x0,a,z0+z},{x0,d,z0+z+8},{x0,H,z0+z+8},{x0,H,z0+z}},g.roofTile,.75)end

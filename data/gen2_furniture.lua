@@ -11,6 +11,12 @@ local function upright(x0,x1,t0,t1,f0,f1,z,depth,rise)
     z=z,depth=depth,rise=rise,stretch=true}
 end
 local house = {
+  -- Claim the wall apron above the hob/sink together with the refrigerator;
+  -- otherwise those half-cells become unrelated full-height wall blocks.
+  item("crystal_kitchen", {{17,17,17,17,10,11},{80,81,67,69,26,27},{82,83,24,25,42,43}},1,
+    {upright(0,15,8,15,16,23,8,16),
+     upright(16,31,8,15,16,23,8,16),
+     upright(32,47,0,6,7,23,8,12)},8),
   item("crystal_dining_table", {
     {35,34,34,36},{37,21,21,53},{37,21,21,53},{51,50,50,52},
     {28,64,64,29},{1,1,1,1}}, 1, {
@@ -27,7 +33,7 @@ local house = {
     {upright(0,15,0,7,8,15,0,16)},8),
   item("crystal_sink", {{67,69},{24,25}},1,
     {upright(0,15,0,7,8,15,0,16)},8),
-  item("crystal_kitchen_counter", {{37,53},{37,53},{37,53},{37,53},{37,53},{51,52}},1,
+  item("crystal_kitchen_counter", {{37,53},{37,53},{37,53},{37,53},{37,53},{51,52},{17,17},{17,17}},1,
     {upright(0,15,0,43,44,47,0,48,4)},8),
   item("crystal_television", {{6,7},{22,23},{8,9}},1,
     {upright(0,15,0,5,6,23,8,12)}),
@@ -80,7 +86,7 @@ local commonHouse={
     {upright(0,15,0,3,4,23,12,12)}),
   item("crystal_house_radio",{{12,13},{28,29},{30,31}},1,
     {upright(0,15,0,3,4,23,12,12)}),
-  house[8], -- same complete stool drawing, including floor and leg zones
+  house[#house], -- same complete stool drawing, including floor and leg zones
 }
 local mart={
   item("crystal_mart_cooler",{{12,13},{86,87},{88,89},{90,91}},72,
@@ -112,6 +118,9 @@ local center={
   {id="crystal_center_bin",tiles={{68,69},{84,85}},groundTiles={{17}},model="bin",parts={},support=0},
 }
 local bedroom={
+  {id="crystal_bedroom_workstation",model="room_desk",support=6,
+   tiles={{11,12,2,2},{27,28,66,67},{43,44,82,83},{48,49,49,50}},
+   groundTiles={{1}},parts={}},
   item("crystal_bedroom_table",{{16,17,17,18},{32,33,33,34},{48,49,49,50}},1,
     {upright(0,31,0,17,18,20,0,24,3)},6),
   item("crystal_bedroom_books",{{5,6},{21,22},{37,38},{53,54}},1,

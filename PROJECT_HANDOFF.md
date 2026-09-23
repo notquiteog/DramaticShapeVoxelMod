@@ -1,3 +1,7 @@
+## Native Center and scenery polish — 1.24.0 (2026-09-23)
+
+Complete native Center escalators, floor openings, joined walls, low staff-safe reception counters, upstairs desks/gates, healing tray/monitor alignment. Crystal kitchen/desk and museum fixtures; closed roof corners. Wild Skies1.13.1 excludes native indoor flocks. Both native editions tested on official0.3.2 with isolated profiles; FireRed freshly imported from the user-provided ROM path. No gameplay/collision/NPC-position changes. See [evidence and remaining limits](docs/SCENERY_QA_2026-09-23.md). All-tile parity remains unfinished.
+
 ## Verified final stair/grounding test build — 2026-09-23
 
 Published BAV **1.24.0-test.3**, Wilds **2.4.1-test.1** and all three repinned test carts before testing. Final exact archives booted on official **0.3.1** in isolated Yellow/Crystal/FireRed/LeafGreen profiles. Both native editions cover all traversable stair behaviors across425 maps each; Crystal classifies322 stair/terrace/ladder cells across388 maps. LuaJIT, targeted geometry/grounding/input tests and production GPU checks pass. Ground contacts, upright plants, stairs and recorded-map recap were inspected in rendered captures. No runtime edits follow the published test.3 archive.

@@ -73,8 +73,10 @@ function M.nativeRequired(game)
  local Fx=require('src.core.game3.field_effects')
  local Special=require('src.core.game3.special_field_anim')
  local Transition=package.loaded['src.core.game3.battle_transition']
+ local Warp=require('src.core.game3.warp')
+ local escalator=Warp.isEscalatorActive and Warp.isEscalatorActive()
  return (Transition and Transition.isActive and Transition.isActive())
-  or (Special.isActive and Special.isActive()) or #(Fx._anims or {})>0
+  or (Special.isActive and Special.isActive() and not (escalator or Special.isEscalatorMoving and Special.isEscalatorMoving())) or #(Fx._anims or {})>0
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
 local function releaseGeometry()
@@ -152,6 +154,13 @@ local function prepare(game,vw,vh,cam)
  local civics=Civic.prepare(cells,gyms,V.data("gen3_exteriors"));M.civicCount=#civics
  M.stairCount=Stairs.prepare(cells)
  local props=Furniture.extract(cells)
+ cache.openings={}
+ for _,p in ipairs(props)do if p.recipe.noGround and p.recipe.down then
+  cache.openings[#cache.openings+1]={p.cx*16,p.cy*16,(p.cx*16)+p.w,(p.cy*16)+p.d}
+ end end
+ for _,c in pairs(cells)do if c.stairs and c.stairs.owner==c and c.stairs.r.down then
+  local s=c.stairs;cache.openings[#cache.openings+1]={s.cx*16,s.cy*16,(s.cx+2)*16,(s.cy+#s.r.rows)*16}
+ end end
  Shapes.layout(cells)
  for _,c in pairs(cells)do if c.gym then c.column=Buildings.column(c.gym)end end
  local chimneys=Roof.prepare(cells)
@@ -192,7 +201,9 @@ local function prepare(game,vw,vh,cam)
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    Terrain.append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)
   elseif c.prop then
-   plane(b.v,b.i,x,z,uvFor(ts,c.prop.recipe.ground) or uvFor(ts,1) or uv)
+   if not c.prop.recipe.noGround then
+    plane(b.v,b.i,x,z,uvFor(ts,c.prop.recipe.ground) or uvFor(ts,1) or uv)
+   end
   elseif shape.kind=='tree' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    if shape.root and not c.stageHidden then
@@ -269,6 +280,15 @@ local function prepare(game,vw,vh,cam)
      if Roof.sideVisible(cells,c,1)then eave({x+16,roofY(a),a},{x+16,roofY(bz),bz},2,0)end
      if row==0 and j==math.floor((column.roofInset or 0)/4)then eave({x,roofY(a),a},{x+16,roofY(a),a},0,-2)end
      if row==column.roofs-1 and j==3 then eave({x+16,roofY(bz),bz},{x,roofY(bz),bz},0,2)end
+     local north=row==0 and j==math.floor((column.roofInset or 0)/4)
+     local south=row==column.roofs-1 and j==3
+     for _,side in ipairs({-1,1})do if Roof.sideVisible(cells,c,side)then
+      local xx=side<0 and x or x+16
+      for _,endcap in ipairs({{north,a,-2},{south,bz,2}})do if endcap[1]then
+       V.require('RoofEaves').corner({xx,roofY(endcap[2]),endcap[2]},side*2,endcap[3],q,
+        function(v,t,shade)quad(b.rv,b.ri,v,t,shade)end)
+      end end
+     end end
      -- Close the exposed shell, including gables, without internal dividers.
      local wallCell=cells[c.cx..':'..column.last]
      local sideMid=wallCell.mid
@@ -497,14 +517,20 @@ local function fieldEffects(draw)
  end
  local heal=require('src.core.game3.pokecenter_heal')
  if heal.isActive()then
-  local prop
-  for _,c in pairs(cache.cells or {})do if c.prop and c.prop.recipe.name=='center_healer'then prop=c.prop;break end end
+  local prop,screen
+  for _,c in pairs(cache.cells or {})do if c.prop then
+   if c.prop.recipe.name=='center_healer'then prop=c.prop end
+   if c.prop.recipe.name=='center_screen'then screen=c.prop end
+  end end
   if prop then
    local x,z,h=prop.cx*16,prop.cy*16,prop.recipe.h+.18
    effect('heal-balls',32,24,function()g.translate(-80,-28);heal.drawBalls()end,
-    {{x,h,z+2},{x+32,h,z+2},{x+32,h,z+22},{x,h,z+22}})
-   effect('heal-monitor',32,16,function()g.translate(-112,-16);heal.drawMonitor()end,
-    {{x+32,28,z+1},{x+64,28,z+1},{x+64,12,z+1},{x+32,12,z+1}})
+    {{x+3,h,z+12},{x+29,h,z+12},{x+29,h,z+28},{x+3,h,z+28}})
+   if screen then
+    local sx,sz=screen.cx*16,screen.cy*16+(screen.recipe.frontOffset or 32.2)+.04
+    effect('heal-monitor',32,16,function()g.translate(-112,-16);heal.drawMonitor()end,
+     {{sx+2,28,sz},{sx+30,28,sz},{sx+30,12,sz},{sx+2,12,sz}})
+   end
   end
  end
 end
@@ -581,6 +607,7 @@ function M.draw(game,vw,vh,cam)
   Shadow.finish('firered')
  end
  local room=not cam.battle and Interior.forMap(M.sceneDef,3) or nil
+ Interior.setOpenings(room,cache.openings)
  Interior.configure(room)
  local bounds=M.distance.bounds
  R.fog=not indoor and Distance.haze(background,M.fadeExtent,{cx,0,cz},
