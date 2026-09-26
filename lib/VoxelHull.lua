@@ -2,14 +2,17 @@
 -- solid masses and native palette samples; sculpture drawings use row hulls.
 -- Only boundary faces exist; equal-colour coplanar faces are merged once per
 -- template. No billboard anchors, cubes under the object, or per-frame work.
+local V=...
+local Trees=V and V.require('NativeTreeModels') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/NativeTreeModels.lua')
 local M={}
-function M.build(w,h,sample,step,bottom,depthLimit,organic)
+function M.build(w,h,sample,step,bottom,depthLimit,organic,family)
  step=step or 1;bottom=bottom or 0
  local nx,ny=math.ceil(w/step),math.ceil(h/step)
  local depth=w
  local nz=math.ceil(depth/step)
  local vox,paints={},{}
  local foliage,wood,all={},{},{}
+ local nativeRows={}
  local function key(x,y,z)return (y*nx+x)*nz+z end
  for y=0,ny-1 do
   local sy=math.min(h-1,h-1-y*step)
@@ -24,7 +27,10 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic)
      all[#all+1]=k
      -- Ink outlines belong to the 2D drawing; distributing them across a
      -- solid crown makes black blocks. Lighting supplies the 3D shadows.
-     if sy<h*.76 and g>r*1.12 and g>b*1.08 then foliage[#foliage+1]=k end
+     if (family or sy<h*.76) and g>r*1.12 and g>b*1.08 then
+      foliage[#foliage+1]=k
+      local leafRow=nativeRows[y] or {};nativeRows[y]=leafRow;leafRow[x]=k
+     end
      if sy>h*.65 and r>=g*.9 then wood[#wood+1]=k end
     end
    end
@@ -45,6 +51,19 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic)
  end
  if organic and #all>0 then
   if #foliage==0 then foliage=all end;if #wood==0 then wood=all end
+  local nativePaint={}
+  if family then for y=0,ny-1 do
+   local row=nativeRows[y]
+   if not row then for d=1,ny do row=nativeRows[y+d] or nativeRows[y-d];if row then break end end end
+   if row then
+    local paint={};nativePaint[y]=paint
+    for sx=0,nx-1 do
+     local color=row[sx]
+     if not color then for d=1,nx do color=row[sx-d] or row[sx+d];if color then break end end end
+     paint[sx]=color
+    end
+   end
+  end end
   local height=h-bottom
   local function oval(x,y,z,cx,cy,cz,rx,ry,rz)
    return ((x-cx)/rx)^2+((y-cy)/ry)^2+((z-cz)/rz)^2<=1
@@ -54,7 +73,10 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic)
    local stemZ=((z+.5)*step-depth/2)/w
    local pool
    if yy>=0 then
-    if organic=='tree' then
+    if organic=='tree' and family then
+     local part=Trees.part(family,xx,yy,zz)
+     if part then pool=part=='foliage' and foliage or wood end
+    elseif organic=='tree' then
      -- Overlapping canopy lobes surround real trunk/branch volumes. The
      -- source image supplies colors only, never a front-facing solid slab.
      -- Each tree has a round footprint. Multi-row drawings are populated
@@ -81,9 +103,22 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic)
    if pool then
     -- Native palette patches vary in all three axes; no repeated 2D bands
     -- through the middle. Coherent two-voxel patches retain greedy merging.
-    local a,b,c=math.floor(x/2),math.floor(y/2),math.floor(z/2)
-    local n=math.sin(a*12.9898+b*78.233+c*37.719)*43758.5453
-    vox[key(x,y,z)]=pool[math.floor((n-math.floor(n))*#pool)+1]
+    local color
+    if family and pool==foliage then
+     -- Carry the drawing's leaf bands around the solid crown. Palette-only
+     -- random noise erased the characteristic light/dark native leaf tiers.
+     local row=nativePaint[y]
+     if row then
+      local azimuth=math.atan2(zz,xx)/(2*math.pi)+.5
+      color=row[math.min(nx-1,math.floor(azimuth*nx))]
+     end
+    end
+    if not color then
+     local a,b,c=math.floor(x/2),math.floor(y/2),math.floor(z/2)
+     local n=math.sin(a*12.9898+b*78.233+c*37.719)*43758.5453
+     color=pool[math.floor((n-math.floor(n))*#pool)+1]
+    end
+    vox[key(x,y,z)]=color
    end
   end end end
  end

@@ -3,6 +3,11 @@
 -- and distance must never tip a plant away from its physical ground anchor.
 local M={}
 M.shader=[[
+  uniform float sceneryInstances;
+  attribute vec3 VertexInstanceOffset;
+  vec4 placedVertex(vec4 vertex) {
+    return vec4(vertex.xyz+VertexInstanceOffset*sceneryInstances,vertex.w);
+  }
   uniform float canopyFacing;
   attribute vec3 VertexCanopy; // local anchor X/Z/Y; negative Y marks trunk, zero is ordinary geometry
   vec4 faceCanopy(mat4 transform, vec4 vertex, vec3 camera) {

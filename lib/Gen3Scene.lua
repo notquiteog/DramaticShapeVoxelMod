@@ -105,6 +105,7 @@ local function releaseGeometry()
   if part.water then part.water:release() end
  end
  for _,part in ipairs(cache.civics or {})do part.mesh:release();part.image:release()end
+ for _,batch in ipairs(cache.treeInstances or {})do batch:release()end
  for _,name in ipairs({'wood','leaves'})do if cache[name] then cache[name]:release() end end
  cache={}
 end
@@ -171,6 +172,7 @@ local function prepare(game,vw,vh,cam)
  local sig=table.concat(signature,';')
  if cache.signature==sig then cache.terrainKey=key;return true end
  releaseGeometry();M.builds=(M.builds or 0)+1;cache.signature=sig;cache.parts={};cache.cells=cells
+ local treeGroups={}
  M.forestTrees=Forest.prepare(cells)
  local gyms=Buildings.prepare(cells);M.gymCount=#gyms
  local civics=Civic.prepare(cells,gyms,V.data("gen3_exteriors"));M.civicCount=#civics
@@ -232,7 +234,9 @@ local function prepare(game,vw,vh,cam)
     if TreeStyle.original() then
      local native=V.require('NativeTreeArt')
      local tx,tz=x+(shape.anchorX or 16),z+(shape.anchorZ or 12)
-     if TreeStyle.voxel() then native.appendModel(native.gen3(c),leaf,li,0,tx,0,tz)
+     if TreeStyle.voxel() then
+      local card=native.gen3(c)
+      if not native.addInstance(card,treeGroups,tx,0,tz)then native.appendModel(card,leaf,li,0,tx,0,tz)end
      else native.append(native.gen3(c),leaf,li,0,tx,0,tz,TreeStyle.flat()) end
      if not TreeStyle.voxel() and not TreeStyle.flat() then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,c.cx*73+c.cy*139) end
     else
@@ -390,6 +394,7 @@ local function prepare(game,vw,vh,cam)
  end end
  for _,b in pairs(batches)do cache.parts[#cache.parts+1]={pair=b.pair,secondary=b.secondary,roofMids=b.roofMids,
   under=assert(R.newMesh(b.v,b.i),'field mesh creation failed'),roof=R.newMesh(b.rv,b.ri),plants=R.newMesh(b.pv,b.pi,R.TREE_FORMAT),water=R.newMesh(b.wv,b.wi)} end
+ cache.treeInstances=V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li)
  cache.wood=R.newMesh(wood,wi);cache.leaves=R.newMesh(leaf,li)
  cache.terrainKey=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam)
  return true
@@ -421,6 +426,7 @@ local function terrain(draw)
  end
  for _,part in ipairs(cache.civics or {})do draw(part.mesh,part.image)end
  draw(cache.wood,bark);draw(cache.leaves,TreeStyle.original() and V.require('NativeTreeArt').image() or foliage)
+ for _,batch in ipairs(cache.treeInstances or {})do draw(batch,V.require('NativeTreeArt').image())end
 end
 local function waterMeshes()
  local out={}

@@ -79,3 +79,11 @@ assert(gb.gen2(map,1,1,3).modelShape=='bush','Headbutt bush gained a tree trunk'
 assert(gb.gen2(map,1,1,17).modelRows==2,'narrow border lost its second tree')
 assert(gb.gen2(map,1,1,20).modelRows==1,'wide crown split into several trees')
 print('PASS Crystal Cut/Headbutt presentation and wide/narrow footprints')
+
+assert(c.modelFamily=='conifer' and forest.modelFamily=='tiered','GBA tree families share one crown')
+local cut=gb.gen2(map,1,1,4);local bush=gb.gen2(map,1,1,3)
+assert(cut~=bush and cut.modelShape=='tree' and bush.modelShape=='bush','shared pixels mutate another geometry variant')
+local wide=gb.gen2(map,1,1,20);assert(wide.modelFamily=='broad')
+map.tileset.id='TILESET_KANTO'
+assert(gb.gen2(map,1,1,17).modelFamily=='round','Kanto round crown became a conifer')
+print('PASS native family routing and independent shared-art geometry variants')

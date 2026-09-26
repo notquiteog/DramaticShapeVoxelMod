@@ -107,6 +107,7 @@ local SHADER = [[
   uniform vec4 fogInfo;       // density, start, heightK; density 0 = clear
   attribute float VertexShade;
   vec4 position(mat4 transform_projection, vec4 vertex_position) {
+    vertex_position=placedVertex(vertex_position);
     vShade = abs(VertexShade);
 #ifdef VOXEL_GRID
     // MODEL space, deliberately: every mesh here is built a unit per
@@ -511,6 +512,7 @@ local backdropShader = nil    -- optional soft focus for low-res flat plates
 local effectLightOn = 1
 local activeShader = nil      -- the shader draws are currently sent to
 local sceneShader = nil       -- the lit variant this pass opened with
+local drawUniforms = V.require('DrawUniforms').new()
 local flattenColor = nil      -- tightly scoped hit-flash state for shader swaps
 local flattenAmount = 0
 
@@ -1069,6 +1071,7 @@ end
 -- `slot` names which cached canvas to render into (see `slots` above);
 -- omitted is the free-roam world pass.
 function Voxel3D.beginScene(w, h, cx, cy, vw, vh, sky, slot, modelShadow, borrowed)
+  drawUniforms.reset()
   Voxel3D.atmosphereCameraCandidate=nil
   Sky.resetDeferredBody()
   Sky.allowDeferredBody = not borrowed and sky and sky.bands ~= nil
@@ -1719,13 +1722,15 @@ end
 -- upright transform or it reads its own shadow as falling on itself.
 function Voxel3D.draw(mesh, texture, model, pull, sunModel)
   if not (active and mesh) then return end
+  local Instances=V.require('ModelInstances')
+  local batch=mesh;mesh=Instances.mesh(mesh)
   -- the variant beginScene actually bound, not whichever one is default:
   -- sending a uniform to the other shader would go nowhere
   local sh = activeShader
   if not sh then return end
-  pcall(sh.send,sh,"surfaceDetail",Voxel3D.surfaceDetail and 1 or 0)
-  pcall(sh.send,sh,"canopyFacing",Voxel3D.canopyFacing and 1 or 0)
-  pcall(sh.send,sh,"battleCutOn",battleCutScope and 1 or 0)
+  drawUniforms.send(sh,"surfaceDetail",Voxel3D.surfaceDetail and 1 or 0)
+  drawUniforms.send(sh,"canopyFacing",Voxel3D.canopyFacing and 1 or 0)
+  drawUniforms.send(sh,"battleCutOn",battleCutScope and 1 or 0)
   if battleCutScope then
     pcall(sh.send,sh,"battleCutFloor",battleCutScope.floor)
     pcall(sh.send,sh,"battleCutA",battleCutScope[1])
@@ -1735,8 +1740,8 @@ function Voxel3D.draw(mesh, texture, model, pull, sunModel)
   -- LOVE defaults matrix uniforms to column-major; Mat4 is row-major
   pcall(sh.send, sh, "model", "row", model or IDENTITY)
   pcall(sh.send, sh, "sunModel", "row", sunModel or model or IDENTITY)
-  pcall(sh.send, sh, "pull", pull or 0)
-  love.graphics.draw(mesh)
+  drawUniforms.send(sh,"pull",pull or 0)
+  Instances.draw(batch,sh)
 end
 
 function Voxel3D.battleOcclusion(arena,ground,textures)

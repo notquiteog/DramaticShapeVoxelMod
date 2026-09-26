@@ -776,11 +776,18 @@ function MOUND.treeSectionOrder(reg, focusX, focusZ, bw, bh)
 end
 
 function MOUND.publishTreePart(p, rawParts, parts)
+  if p.nativeGroups then
+    p.nativeInstances=V.require('NativeTreeArt').buildInstances(p.nativeGroups,p.dV,p.dI)
+    p.nativeGroups=nil
+    local ctx=MOUND.treeContext()
+    for _,batch in ipairs(p.nativeInstances)do if ctx.resources then ctx.resources[batch]=true end end
+  end
   local total = #p.tI + #p.sI + #p.cI + #p.dI + #p.shI
   if total > MOUND.TREE_SECTION_VERTEX_BUDGET then
     local piece, used = nil, 0
     local function fresh()
-      return { x=p.x, y=p.y, z=p.z, radius=p.radius, apron=p.apron,
+      local instances=p.nativeInstances;p.nativeInstances=nil
+      return { x=p.x, y=p.y, z=p.z, radius=p.radius, apron=p.apron,nativeInstances=instances,
         essentialFoliage=p.essentialFoliage,
         tV=p.tV, tI={}, sV=p.sV, sI={}, cV=p.cV, cI={},
         dV=p.dV, dI={}, shV=p.shV, shI={} }
@@ -871,7 +878,7 @@ function MOUND.publishTreePart(p, rawParts, parts)
   end
   p.tV, p.tI, p.sV, p.sI, p.cV, p.cI = nil, nil, nil, nil, nil, nil
   p.dV, p.dI, p.shV, p.shI = nil, nil, nil, nil
-  if p.trunks or p.stones or p.hoods or p.detail or p.shadows then
+  if p.trunks or p.stones or p.hoods or p.detail or p.shadows or p.nativeInstances and #p.nativeInstances>0 then
     parts[#parts + 1] = p
     MOUND.treeBuildYield(true)
   end
@@ -2087,7 +2094,11 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         if style.original() then
           local native=V.require("NativeTreeArt")
           local card=native.gen2(map,cx,cy,lift)
-          if (lift==3 and style.props:get()=="modeled") or (lift~=3 and style.voxel()) then dQ=native.appendModel(card,dV,dI,dQ,mx,base,mz)
+          if (lift==3 and style.props:get()=="modeled") or (lift~=3 and style.voxel()) then
+            spatialPart.nativeGroups=spatialPart.nativeGroups or {}
+            if not MOUND.treeContext().nativeInstances or not native.addInstance(card,spatialPart.nativeGroups,mx,base,mz)then
+              dQ=native.appendModel(card,dV,dI,dQ,mx,base,mz)
+            end
           else dQ=native.append(card,dV,dI,dQ,mx,base,mz,style.flat() or lift<=4) end
           if card and lift>4 and not style.voxel() and not style.flat() then
             -- Keep the source crown and add a short physical stem behind it.
@@ -3617,6 +3628,10 @@ end
 
 function MOUND.releaseTreeParts(parts)
   for _, part in ipairs(parts or {}) do
+    for _,batch in ipairs(part.nativeInstances or {})do
+      pcall(batch.release,batch)
+      local ctx=MOUND.treeContext();if ctx.resources then ctx.resources[batch]=nil end
+    end
     for _, name in ipairs({ "trunks", "stones", "hoods", "detail", "shadows" }) do
       local mesh = part[name]
       if mesh and mesh.release then
@@ -3664,6 +3679,9 @@ function MOUND.drawTreeParts(parts, ox, oz, px, pz, model, treeSway, current,
   local detailModel = treeSway and model and Mat4.mul(model, treeSway)
                       or treeSway or model
   for _, part in ipairs(visibleParts) do
+    for _,batch in ipairs(part.nativeInstances or {})do
+      Voxel3D.drawFoliage(batch,MOUND.detailImg(),detailModel)
+    end
     if part.detail and MOUND.detailImg() then
       if part.detail.setDrawRange then
         local dx, dz = part.x + (ox or 0) - px, part.z + (oz or 0) - pz
@@ -7702,7 +7720,7 @@ function Flora.nearestShadowPart(state, wx, wz)
     for _, part in ipairs(parts or {}) do
       -- A section can contain granite posts but no tree geometry. Never let
       -- a nearer post-only section consume the single tree-shadow budget.
-      if part.trunks or part.hoods then
+      if part.trunks or part.hoods or part.nativeInstances and #part.nativeInstances>0 then
         local dx, dz = part.x + ox - px, part.z + oz - pz
         local d = dx * dx + dz * dz
         if not bestD or d < bestD then
@@ -7736,6 +7754,9 @@ function Flora.castShadows(state, ShadowMap, Mat4x, wx, wz)
   local part, ox, oz = Flora.nearestShadowPart(state, wx, wz)
   if not part then return end
   local model = (ox ~= 0 or oz ~= 0) and Mat4x.translate(ox, 0, oz) or nil
+  for _,batch in ipairs(part.nativeInstances or {})do
+    pcall(ShadowMap.draw,batch,MOUND.detailImg(),model)
+  end
   if part.trunks and MOUND.barkImg() then
     pcall(ShadowMap.draw, part.trunks, MOUND.barkImg(), model)
   end

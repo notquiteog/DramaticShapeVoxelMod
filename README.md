@@ -1,4 +1,12 @@
-Current 1.28.1: complete shared interior furniture, native floor routing and wall-row fixes. [Validation and remaining coverage](docs/SHARED_INTERIORS_QA_2026-09-26.md).
+## 1.28.2 — Native trees and forest performance
+
+Native modeled trees retain distinct source families: pointed conifers, Viridian layered crowns, wide Ilex/Park trees, compact Crystal Kanto crowns and Cut saplings. Colors follow the original artwork around closed 3D crowns. Separate border trees and single wide trees retain their footprints; original 2.5D choices remain available. Shared source images no longer overwrite bush/tree model metadata. Mesh revision 75 refreshes stored models.
+
+Crystal and FireRed/LeafGreen reuse GPU tree models and uploads only placement coordinates when the scenery window moves. Unsupported devices keep merged geometry. All generations reuse unchanged scalar draw state and set shadow camera uniforms once per pass. Gen 1 retains its authored procedural trees and existing map/chunk reuse. Shadows OFF now prevents shadow rendering, including direct native-adapter calls. A 2560×1440 LeafGreen forest traversal on RTX 5060 Ti reduced the largest sampled rebuild frame from about 1,300 ms to 64 ms; steady frames remained similar. This is a targeted short benchmark, not an all-game FPS claim. [Evidence and limits](docs/TREE_PERFORMANCE_QA_2026-09-26.md).
+
+All-map scenery, cross-generation feature parity and completely hitch-free streaming remain unfinished.
+
+Previous 1.28.1: complete shared interior furniture, native floor routing and wall-row fixes. [Validation and remaining coverage](docs/SHARED_INTERIORS_QA_2026-09-26.md).
 
 House and office plants use curved solid leaves, a raised midrib, closed undersides, and a tapered pot with a rim and inset soil; the native 2.5D alternative remains selectable. LeafGreen ship room styling now resolves edition-specific tileset aliases.
 

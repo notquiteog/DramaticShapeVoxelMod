@@ -69,6 +69,18 @@ function M.append(c,v,i,q,x,y,z,flat)
  for _,n in ipairs({1,2,3,1,3,4})do i[#i+1]=base+n end
  return q+1
 end
+-- Atlas entries are shared by pixel content; geometry variants must not
+-- overwrite each other when identical artwork serves a bush and a Cut tree.
+local function variant(c,family,rows,shape)
+ if not c then return end
+ local id=family..':'..rows..':'..shape
+ c.variants=c.variants or {}
+ if not c.variants[id]then
+  c.variants[id]={w=c.w,h=c.h,bottom=c.bottom,u0=c.u0,u1=c.u1,v0=c.v0,v1=c.v1,
+   modelFamily=family,modelRows=rows,modelShape=shape}
+ end
+ return c.variants[id]
+end
 function M.appendModel(c,v,i,q,x,y,z)
  if not c then return q end
  local Hull=V.require('VoxelHull')
@@ -80,7 +92,7 @@ function M.appendModel(c,v,i,q,x,y,z)
   c.models[step]=Hull.build(c.w,c.h,function(px,py)
    local r,g,b,a=data:getPixel(x0+px,y0+py)
    return r,g,b,a,(x0+px+.5)/size,(y0+py+.5)/size
-  end,step,c.bottom,nil,c.modelShape or 'tree')
+  end,step,c.bottom,nil,c.modelShape or 'tree',c.modelFamily)
  end
  local rows=c.modelRows or 1
  local span=(rows-1)*c.w
@@ -89,6 +101,33 @@ function M.appendModel(c,v,i,q,x,y,z)
   q=Hull.append(c.models[step],v,i,q,x,y,z+dz)
  end
  return q
+end
+function M.addInstance(c,groups,x,y,z)
+ local Instances=V.require('ModelInstances')
+ if not c or not Instances.available()then return false end
+ local detail=V.require('CommunityVisuals').treeDetail:get()
+ -- Scene batches hold live prototypes strongly. Unused detail/palette
+ -- variants can be collected after maps are evicted instead of accumulating.
+ c.meshes=c.meshes or setmetatable({},{__mode='v'})
+ local mesh=c.meshes[detail]
+ if mesh==nil then
+  local v,i={},{};M.appendModel(c,v,i,0,0,0,0)
+  mesh=V.require('Voxel3D').newMesh(v,i) or false;c.meshes[detail]=mesh
+ end
+ if not mesh then return false end
+ local group=groups[mesh]
+ if not group then group={mesh=mesh,card=c,positions={}};groups[mesh]=group end
+ group.positions[#group.positions+1]={x,y,z}
+ return true
+end
+function M.buildInstances(groups,v,i)
+ local out={}
+ for _,group in pairs(groups)do
+  local batch=V.require('ModelInstances').new(group.mesh,group.positions)
+  if batch then out[#out+1]=batch
+  else for _,p in ipairs(group.positions)do M.appendModel(group.card,v,i,0,p[1],p[2],p[3])end end
+ end
+ return out
 end
 function M.gen2(map,cx,cy,lift,donor)
  local pixels=V.require('TerrainAtlas').originalPixels(map);if not pixels then return end
@@ -110,8 +149,8 @@ function M.gen2(map,cx,cy,lift,donor)
  end,ground)
  -- Narrow Johto border art covers two successive cells. Broad 2x2 crowns
  -- (Ilex) are one bushy tree; portrait height is not ground footprint.
- if c then c.modelRows=not wide and not short and 2 or 1;c.modelShape=lift==3 and "bush" or "tree" end
- return c
+ local family=wide and 'broad' or map.tileset.id=='TILESET_KANTO' and lift>4 and 'round' or short and 'sapling' or 'conifer'
+ return variant(c,family,not wide and not short and 2 or 1,lift==3 and 'bush' or 'tree')
 end
 function M.gen3(c)
  local ts=c.ts;local forest=c.shape.spacing==3
@@ -133,8 +172,9 @@ function M.gen3(c)
  end
  local ground=background(16,16,function(x,y)return pixel(c.shape.ground or 1,x,y)end)
  local signature={};for _,row in ipairs(rows)do signature[#signature+1]=table.concat(row,',')end
- return card(tostring(ts.imageData)..':'..table.concat(signature,';'),#rows[1]*16,#rows*16,function(x,y)
+ local result=card(tostring(ts.imageData)..':'..table.concat(signature,';'),#rows[1]*16,#rows*16,function(x,y)
   return pixel(rows[math.floor(y/16)+1][math.floor(x/16)+1],x%16,y%16)
  end,ground,forest and 16 or 8)
+ return variant(result,forest and 'tiered' or 'conifer',1,'tree')
 end
 return M

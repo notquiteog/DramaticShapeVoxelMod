@@ -126,6 +126,7 @@ local SHADER = [[
   uniform mat4 lightVP;
   uniform mat4 model;
   vec4 position(mat4 transform_projection, vec4 vertex_position) {
+    vertex_position=placedVertex(vertex_position);
     vec4 world = faceCanopy(model,vertex_position,canopyEye);
     roomPosition=world.xz;
     vec4 c = lightVP * world;
@@ -551,6 +552,12 @@ end
 -- Begin the sun pass. Returns false when it could not start, in which case
 -- the caller must not draw into it or call finish.
 function ShadowMap.begin(cx, cy, vw, vh)
+  -- Native adapters can call begin directly without available(). OFF must
+  -- skip allocation and submission as well as sampling in the scene shader.
+  if Shadows.off() then
+    ShadowMap.discard()
+    return false
+  end
   local sh = getShader()
   if not sh then return false end
   -- the runtime's storage orientation, measured once before the first map
@@ -583,6 +590,9 @@ function ShadowMap.begin(cx, cy, vw, vh)
   -- forgot to put it back cannot leak into the next map's terrain
   pcall(sh.send, sh, "sprite", 0)
   pcall(sh.send, sh, "roomCut", 0)
+  local scene=V.require('Voxel3D')
+  pcall(sh.send,sh,'canopyEye',scene.eye or {0,0,1})
+  pcall(sh.send,sh,'canopyFacing',scene.canopyFacing and 1 or 0)
   drawing = true
   ready = false
   return true
@@ -623,13 +633,12 @@ end
 
 function ShadowMap.draw(mesh, texture, model)
   if not (drawing and mesh) then return end
+  local Instances=V.require('ModelInstances')
+  local batch=mesh;mesh=Instances.mesh(mesh)
   local sh = getShader()
   if texture then mesh:setTexture(texture) end
   pcall(sh.send, sh, "model", "row", model or IDENTITY)
-  local scene=V.require("Voxel3D")
-  pcall(sh.send,sh,"canopyEye",scene.eye or {0,0,1})
-  pcall(sh.send,sh,"canopyFacing",scene.canopyFacing and 1 or 0)
-  love.graphics.draw(mesh)
+  Instances.draw(batch,sh)
 end
 
 -- Close the pass and stamp it with the signature it was drawn for.
