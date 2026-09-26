@@ -144,6 +144,8 @@ local designs={
  crystal_center_receiver='gb_receiver',crystal_bedroom_table='gb_table',
  crystal_center_counter='gb_counter',crystal_center_counter_ball='gb_counter',crystal_center_counter_balls='gb_counter',
  crystal_healing_machine='gb_healer',crystal_center_healer='gb_healer',
+ crystal_house_tv='gb_tv',crystal_house_radio='gb_radio',
+ crystal_house_bookcase='gb_house_books',crystal_house_table='gb_table',
 }
 for _,list in ipairs({house,lab,commonHouse,mart,center,bedroom})do
  for _,t in ipairs(list)do

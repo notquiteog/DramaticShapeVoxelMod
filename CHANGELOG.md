@@ -1,3 +1,11 @@
+## 1.27.1 — 2026-09-26
+
+Makes grass lower across all three generations while retaining sprite artwork. Crystal and FireRed/LeafGreen also retain the native grass pattern on the ground, so low tufts form complete patches instead of thin separated stripes. Flowers retain their upright native sprite presentation. Refreshes stored geometry to discard taller cached grass.
+
+Prioritizes complete room-specific furniture models over generic matches: the FireRed/LeafGreen bedroom console no longer becomes a cabinet column. The rival's house gains the existing authored CRT, cupboard/telephone, shelving and plant models, a recessed framed wall picture, and matching wall backing. Crystal's common-house TV, radio, bookcase and table use authored components. Shared neighboring-house room enclosures align with their native north walls.
+
+Surveyed Pallet plus both player-house floors, the rival's house and Oak's lab in both native editions; New Bark plus both player-house floors, Elm's lab, Elm's house and the neighboring house in Crystal. Captures cover overview, reverse and first-person views. Targeted model/grass regressions pass; the reported 1.27.0 HUD and camera fixes remain included. This is a further starting-area pass; exhaustive scenery/settings and Gen3 world-space battle-camera parity remain unfinished.
+
 ## 1.27.0 — 2026-09-26
 
 Fixes duplicate Crystal status cards and command menus when Double Battles owns a single battle's HUD. FireRed/LeafGreen scene failures now retry twice, then quarantine only the failing map; entering another area or selecting a camera permits rendering again. The same bounded recovery applies to native battle stages. The original reported Pallet failure was not reproduced on engine 0.3.20, so its underlying trigger remains unconfirmed.

@@ -92,6 +92,12 @@ function M.draw(id,A)
   local case,dark=T(1,19),T(9,33)
   shelves(2,27,28,10,10,{{2,8,{3,34,26,6}}},case,dark)
   crt(2,26,28,12,29,{3,13,26,16},case,dark)
+ elseif id=='fr_wall_picture' then
+  B(1,9,31.92,15,23,32.6,T(1,9))
+  local rim=T(2,10)
+  B(1,9,32.6,2,23,32.9,rim);B(14,9,32.6,15,23,32.9,rim)
+  B(2,9,32.6,14,10,32.9,rim);B(2,22,32.6,14,23,32.9,rim)
+  front({2,10,12,12},2,10,14,22,32.62)
  elseif id=='fr_living_tv' then
   local case,dark=T(1,25),T(4,31)
   B(1,0,27,15,6,39,case);front({1,34,14,7},1,0,15,6,39.02)
@@ -201,6 +207,14 @@ function M.draw(id,A)
   local case,dark=T(2,1),T(3,12)
   B(2,0,14,14,5,23,case);front({2,18,12,5},2,0,14,5,23.02)
   crt(1,13,14,6.5,20,{2,5,12,12},case,dark)
+ elseif id=='gb_radio' then
+  local case,wood,dark=T(1,3),T(2,20),T(5,7)
+  B(2,0,14,14,5,23,wood);front({2,18,12,5},2,0,14,5,23.02)
+  B(1,5,14,15,16,22,case);B(2,16,15,14,17,21,case)
+  front({1,3,14,13},1,5,15,16,22.02)
+  B(11,7,22,13,9,22.6,dark);B(3,6,22,8,6.6,22.4,dark)
+ elseif id=='gb_house_books' then
+  shelves(1,13,14,10,21,{{2,9,{1,9,14,6}},{11,19,{1,1,14,6}}},T(1,1),T(3,8))
  elseif id=='gb_pc' then
   local case,dark=T(2,2),T(4,10)
   B(2,0,13,14,7,23,case);front({2,18,12,5},2,0,14,7,23.02)

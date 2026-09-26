@@ -1,0 +1,19 @@
+# Starting-area and low-grass review — 2026-09-26
+
+Continues the [1.27.0 scene/UI recovery work](SCENE_RECOVERY_QA_2026-09-26.md) on official Gen1Recomp0.3.20. Same isolated profiles, original user ROM art and six companion mods. No game collision, warps, NPCs, encounters or saves are changed by this patch.
+
+## Review and changes
+
+Native survey includes `FR_PALLET_TOWN`, `FR_PLAYERS_HOUSE_1F`, `FR_PLAYERS_HOUSE_2F`, `FR_RIVALS_HOUSE`, `FR_OAKS_LAB`, in FireRed and LeafGreen. Crystal survey includes `NEW_BARK_TOWN`, `PLAYERS_HOUSE_1F`, `PLAYERS_HOUSE_2F`, `ELMS_LAB`, `ELMS_HOUSE`, `PLAYERS_NEIGHBORS_HOUSE`. Drivers `starting-gen3.lua` and `starting-crystal.lua` render overview, reverse and first-person views. Pixel-native source references and metatile inventories are captured by `starting-flat.lua`; `starting-coverage.lua` records matched models and potentially unclassified solid cells. Perimeter void, stair trim, door mats and connected-map boundary cells require interpretation rather than labeling every unclassified cell a missing prop.
+
+The review exposed a real recipe-priority bug: the same complete console drawing also matched a generic cabinet with an alphabetically earlier name. Equal-area matches now prefer an exact tileset pair over a general secondary-only recipe. Whole-drawing matching still rejects incomplete objects. The console therefore uses its existing CRT, cabinet, low console and controller components. The rival's house now shares the authored appliance/plant recipes for identical native drawings, instead of getting incomplete cabinets and flat floor plants. A remaining native framed picture gets a shallow closed backing and raised rim at the actual wall face. Its source crop was inspected directly before modeling. The shared room enclosure includes this house family's north wall offset.
+
+Crystal's common-house vocabulary now uses a recessed CRT, radio cabinet with controls, inset shelves and a supported table. Original native palettes/drawings remain the source. The common-house enclosure follows the source wall line.
+
+Grass blades are four pixels tall in the native adapters; Gen1's existing thin slabs are half-height and half a pixel deep, and optional extra tufts are three to five pixels high. Native Gen2/3 ground art is restored below the low cards, preventing the stripe-like gaps produced by simply shrinking them. Flowers and shrubs retain their existing dimensions and card presentation. Static cache revision70 prevents old grass geometry from masking the patch.
+
+## Evidence
+
+Persistent source/captures: `/home/admin/Projects/.scratch/ascendant-20260926/results`. Initial and corrected model captures were inspected, including the bedroom console from behind and neighboring-house furniture from first person. FireRed low grass and unchanged flower patches were inspected; Crystal grass was inspected with a fixture dialogue covering the lower screen. Original Crystal survey initially retained boot dialogue and used the opposite yaw convention to Game3. The corrected fixture clears its script/text state after teleport and uses yaw pi for north-facing first person. Some fixtures stand near NPCs or furniture and do not prove all real walking positions. No claim of exhaustive all-angle perfection follows from the survey.
+
+Focused suites pass: low grass, native starting furniture ownership, designed interiors (58 objects), interior dioramas (44 recipes), additional furniture (19 drawings), Center furniture (31 fixtures), Crystal source crops (62), native outdoor/fences/ledges, and mesh cache migration (40 checks). All261 main/lib/data Lua files compile. Yellow's updated source boot at Pallet rendered successfully after replacing the stale test launch; the earlier smoke attempt timed out. Gen3 full single/double battle camera parity, all setting consumers, and every non-starting map remain ongoing work. No new multiplayer or physical-controller verification is claimed.

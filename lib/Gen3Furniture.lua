@@ -87,6 +87,11 @@ function M.extract(cells)
  table.sort(recipes,function(a,b)
   local aa,bb=#a.rows*#a.rows[1],#b.rows*#b.rows[1]
   if aa~=bb then return aa>bb end
+  -- Identical drawings can have a generic cabinet and a room-specific
+  -- component model. Give the verified room recipe ownership of the tie.
+  local as=(a.pair and 2 or 0)+(a.secondary and 1 or 0)
+  local bs=(b.pair and 2 or 0)+(b.secondary and 1 or 0)
+  if as~=bs then return as>bs end
   return a.name<b.name
  end)
  for _,c in ipairs(ordered)do if not c.prop and not c.stairs then

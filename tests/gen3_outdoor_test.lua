@@ -12,8 +12,12 @@ local function geometry(mid)
    for _,n in ipairs(t[i])do assert(n>=0 and n<=1,'UV escaped native drawing')end
   end
   if mid==4 or mid==5 or mid==0xD then
-   assert(anchor and anchor[1]==56 and anchor[2]==72 and anchor[3]>0,'native plant has no rooted camera anchor')
-   for _,p in ipairs(v)do assert(p[3]==72,'native plant was inflated into a lump')end
+   if anchor then
+    assert(anchor[1]==56 and anchor[2]==72 and anchor[3]>0,'native plant has no rooted camera anchor')
+    for _,p in ipairs(v)do assert(p[3]==72,'native plant was inflated into a lump')end
+   else
+    assert(mid==0xD,'flower lost its upright root');for _,p in ipairs(v)do assert(p[2]==.025,'grass ground layer was raised')end
+   end
   end
   faces[#faces+1]=v
  end,function()return uv end)
@@ -28,7 +32,8 @@ for _,mid in ipairs({0x87,0x97,0xB0,0xB1,0xC0,0xC1,0xC8,0xC9})do
  assert(max==2.5,'ledge is no longer a low mound')
 end
 for _,mid in ipairs({2,3})do assert(#geometry(mid)>0)end
-for _,mid in ipairs({4,5,0xD})do assert(#geometry(mid)==1,"one native drawing became multiple cards")end
+for _,mid in ipairs({4,5})do assert(#geometry(mid)==1,"one native drawing became multiple cards")end
+assert(#geometry(0xD)==2,'grass requires its complete ground art and one low upright tuft')
 assert(S.of('general','pallet_town',1).reviewedSurface)
 assert(not S.of('general','unreviewed',0x333).reviewedSurface,'unknown drawing reported as reviewed ground')
 print('PASS outdoor scope, fence geometry, low ledge bounds and surface coverage distinction')

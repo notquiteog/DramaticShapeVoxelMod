@@ -185,7 +185,7 @@ local FOG_MAPS = { LAVENDER_TOWN = true, POKEMONTOWER = true,
 
 local LIP_H = 1.5            -- how far the lip stands proud of the top
 local LIP_SHADE = 1.35       -- brighter than the surface it sits on
-local BLADE_MIN, BLADE_MAX = 7, 20                 -- pixel heights
+local BLADE_MIN, BLADE_MAX = 3, 5                  -- low sprite tufts, not tall walls
 local BLADE_W = 7
 
 -- ------- particles

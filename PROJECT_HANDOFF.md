@@ -1,3 +1,7 @@
+## 1.27.1 — lower sprite grass and starting-area furniture
+
+Source grass is lower across Gen1/2/3; native Gen2/3 ground-pattern layers retain complete patches and flowers stay upright. Fixed generic furniture stealing the FRLG bedroom console; added neighboring-house appliance/plant matches, framed wall picture and continuous backing; authored Crystal common-house TV/radio/books/table components. North enclosure alignment includes both house vocabularies. Cache revision70. Focused model/grass suites and LuaJIT compile pass. See [starting-area review](docs/STARTING_AREA_QA_2026-09-26.md). Existing all-map/settings/battle-camera limits remain.
+
 ## 1.27.0 — native voxel scenery and reported regressions
 
 Crystal duplicate UI fixed via public companion ownership, including singles. Gen3 session-wide camera/battle failure latches replaced by bounded scene recovery; real Route1→Pallet transitions and injected transient/persistent faults pass in FireRed/LeafGreen0.3.20. The user's original exception has not reproduced. Native original-art voxel trees, tree detail controls, cave boulders, wall texel-center sampling and shared 3D-BTL legacy migration are included. Source captures inspected; all 261 production Lua files compile and 13 focused suites pass. See [fixtures and limits](docs/SCENE_RECOVERY_QA_2026-09-26.md). Full all-map/settings/Gen3 battle-camera parity remains unfinished. Persistent QA is in `/home/admin/Projects/.scratch/ascendant-20260926` (previous /tmp runs were lost on reboot).

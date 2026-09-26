@@ -360,7 +360,7 @@ local function prepare(game,vw,vh,cam)
  -- window/poster faces remain just in front; object claims must not leave
  -- rectangular holes in the wall finish.
  for _,c in pairs(cells)do if c.cy==0 and c.mid~=0 and c.mid~=8 then
-  local house=c.pair=='player_house'
+  local house=c.pair=='player_house' or c.pair=='house'
   local shop=c.pair=='building__rom_082d4bcc'
   if house or shop then
    local b=batches[c.pair];local x=c.cx*16;local f=31.92

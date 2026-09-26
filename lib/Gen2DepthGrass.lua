@@ -28,7 +28,9 @@ function M.append(out,map,tx,ty,data,tileId,templates)
           local right=x+1
           while right<8 and mask[y*8+right] do right=right+1 end
           local function uv(px,py)return {(ox+px)/(ts.imageWidth or 128),(oy+py)/(ts.imageHeight or 128)}end
-          tpl[#tpl+1]={{x,8-y,4},{right,8-y,4},{right,7-y+.001,4},{x,7-y+.001,4},
+          tpl[#tpl+1]={{x,.025,y},{right,.025,y},{right,.025,y+1},{x,.025,y+1},
+            uv={uv(x,y),uv(right,y),uv(right,y+1),uv(x,y+1)},shade=1,flat=true}
+          tpl[#tpl+1]={{x,(8-y)*.5,4},{right,(8-y)*.5,4},{right,(7-y)*.5+.001,4},{x,(7-y)*.5+.001,4},
             uv={uv(x,y),uv(right,y),uv(right,y+1),uv(x,y+1)},shade=1}
           x=right
         else x=x+1 end
@@ -37,7 +39,7 @@ function M.append(out,map,tx,ty,data,tileId,templates)
     templates[tileId]=tpl
   end
   for _,q in ipairs(tpl)do
-    local f={uv=q.uv,shade=q.shade,canopy={tx*8+4,ty*8+4,.001}}
+    local f={uv=q.uv,shade=q.shade,canopy=not q.flat and {tx*8+4,ty*8+4,.001} or nil}
     for i=1,4 do f[i]={q[i][1]+tx*8,q[i][2],q[i][3]+ty*8}end
     out[#out+1]=f
   end

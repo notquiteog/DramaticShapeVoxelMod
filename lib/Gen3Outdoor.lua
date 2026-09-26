@@ -35,7 +35,12 @@ function M.plant(c,emit,uv)
  -- authored angle in static views and face free/battle cameras without
  -- bending, inflating, or duplicating the artwork.
  local x,z=c.cx*16,c.cy*16
- local h=c.mid==0xD and 7 or 16
+ local h=c.shape.kind=='grass' and 4 or 16
+ if c.shape.kind=='grass' then
+  -- Keep the original patch spread across its full ground area; lowering
+  -- only the upright card collapses a meadow into separated green stripes.
+  emit({{x,.025,z},{x+16,.025,z},{x+16,.025,z+16},{x,.025,z+16}},uv,1)
+ end
  emit({{x,h,z+8},{x+16,h,z+8},{x+16,.001,z+8},{x,.001,z+8}},uv,1,{x+8,z+8,.001})
  return true
 end

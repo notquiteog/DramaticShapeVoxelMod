@@ -4706,7 +4706,7 @@ end
 -- two different depths, which cut every blade that runs down the tile
 -- clean in half -- the two halves ended up 4px tall and 4px apart in
 -- depth, so a clump read as two stubs rather than one tuft.
-local GRASS_THICK = 2
+local GRASS_THICK = .5
 
 local function grassTemplate(map, data, tileId)
   local perRow = map.tileset.tilesPerRow or 16
@@ -4727,8 +4727,8 @@ local function grassTemplate(map, data, tileId)
   local zMid = 4
   local zB, zF = zMid - GRASS_THICK / 2, zMid + GRASS_THICK / 2
   for iy = 0, 7 do
-    local yTop = 8 - iy
-    local yBot = yTop - 1
+    local yTop = (8 - iy) * .5
+    local yBot = yTop - .5
     local ix = 0
     while ix < 8 do
       if opaque(ix, iy) then

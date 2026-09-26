@@ -12,10 +12,23 @@ function M.install(recipes)
  add('room_television','player_house',{{0x2b,0x2c},{0x33,0x34},{0x3b,0x3c}},'fr_television')
  add('living_television','player_house',{{0x2d},{0x35},{0x3d}},'fr_living_tv')
  add('living_cupboard','player_house',{{0x2e,0x2f},{0x36,0x37},{0x3e,0x3f}},'fr_cupboard')
+ add('neighbor_wall_picture','house',{{0x184},{0x185}},'fr_wall_picture')
  add('lab_complete_books','oak_lab',{{0x73,0x74},{0x283,0x284}},'fr_lab_books',0x289)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
+ add('house_right_plant','player_house',{{0x47},{0x4f}},nil)
+ recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
+ -- The rival's house shares the complete living-room drawings but has a
+ -- different secondary atlas. Match all source cells before reusing models.
+ local count=#recipes
+ for i=1,count do
+  local r=recipes[i]
+  if r.pair=='player_house' and (r.name:match('^living_') or r.name=='room_television' or r.kind=='plant')then
+   local other={};for k,v in pairs(r)do other[k]=v end
+   other.name='neighbor_'..r.name;other.pair='house';recipes[#recipes+1]=other
+  end
+ end
  add('mart_edge_island','building__rom_082d4bcc',{{0x296},{0x29e},{0x2a6},{0x2ae}},'fr_mart_sidecase',0x281)
  add('lab_free_books','oak_lab',{{0x28b,0x28c},{0x73,0x74},{0x283,0x284}},'fr_lab_free_books',0x289)
  local designs={kitchen_sink_hob='fr_kitchen',center_terminal='fr_center_pc',
