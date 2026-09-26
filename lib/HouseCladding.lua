@@ -10,8 +10,9 @@ function M.side(x,z0,z1,h0,h1,sign,uv,emit)
   if h1<y then b=z0+(z1-z0)*(y-h0)/(h1-h0)end
   if b>a then
    local ta,tb=math.min(y+3.9,at(a)),math.min(y+3.9,at(b));local outer=x+sign*.24
-   emit({{outer,ta-.25,a},{outer,tb-.25,b},{outer,y,b},{outer,y,a}},uv,.86)
-   emit({{x,ta,a},{x,tb,b},{outer,tb-.25,b},{outer,ta-.25,a}},uv,1)
+   local fa,fb=math.max(y,ta-.25),math.max(y,tb-.25)
+   emit({{outer,fa,a},{outer,fb,b},{outer,y,b},{outer,y,a}},uv,.86)
+   emit({{x,ta,a},{x,tb,b},{outer,fb,b},{outer,fa,a}},uv,1)
    emit({{outer,y,a},{outer,y,b},{x,y,b},{x,y,a}},uv,.66)
   end
  end

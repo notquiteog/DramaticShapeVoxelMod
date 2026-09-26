@@ -58,6 +58,14 @@ local game={stack={top=function()return s end}}
 hooks['render.hud'](function()return 'native' end,game,{})
 check(cards==2 and buttons==4,'modern displays both status cards and native command choices')
 check(texts[#texts]=='RUN','modern choices preserve native labels/order')
+local ownedCards=cards
+s.usesModernDoublesHud=function()return true end
+hooks['render.hud'](function()end,game,{})
+check(cards==ownedCards,'companion-owned singles must not draw a second modern HUD')
+s.usesModernDoublesHud=function()return false end
+hooks['render.hud'](function()end,game,{})
+check(cards==ownedCards+2,'disabling companion HUD returns ownership to Battle Art')
+s.usesModernDoublesHud=nil
 local oldcards=cards;game.stack.top=function()return {}end
 hooks['render.hud'](function()end,game,{})
 check(cards==oldcards,'covering menu retains frame ownership')

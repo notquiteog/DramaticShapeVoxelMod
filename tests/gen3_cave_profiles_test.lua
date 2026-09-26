@@ -9,14 +9,16 @@ for _,secondary in ipairs(palettes)do
  assert(S.of('general',secondary,0x291,8,7).kind=='caveWall')
  assert(S.of('general',secondary,0x291,8,43).kind=='flat','walkable rock cap raised')
  for _,mid in ipairs({0x285,0x286,0x287,0x294,0x296,0x297,0x2AF})do
-  assert(S.of('general',secondary,mid,0x61,114).kind=='flat','ladder/entrance obstructed')
+  local ladder=S.of('general',secondary,mid,0x61,114)
+  assert(ladder.kind=='ladder' and ladder.ground==0x281,'semantic ladder lost its floor opening')
  end
  assert(S.of('general',secondary,0x282,0,7).kind=='rock')
  assert(S.of('general',secondary,0x281,8,43).reviewedSurface)
  assert(S.of('general',secondary,0x2CB,0x11,41).kind=='water')
  assert(S.of('general',secondary,0x3FF,0,7).kind=='flat','unknown blocked art guessed as wall')
 end
-assert(not P.supports({midLayout={},mapType=4},{primary='general',secondary='unreviewed'}))
+assert(P.supports({midLayout={},mapType=4},{primary='general',secondary='unreviewed'}),'unknown art disabled the entire camera')
+assert(S.of('general','unreviewed',0x3FF,0,7).kind=='flat','unknown art gained invented geometry')
 local cells={}
 for y=-1,2 do for x=-1,2 do
  local raised=x>=0 and x<=1 and y>=0 and y<=1

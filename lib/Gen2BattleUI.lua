@@ -13,8 +13,9 @@ end
 local function modern(state)
  if not active(state) or not Mode.enabled() then return false end
  if not Stage.shot().heads then return false end
- -- A native doubles companion may already draw all four battlers. Leave
- -- its ownership intact; it reads the same public modernUIEnabled export.
+ -- The doubles companion can own singles as well. Ask its public seam;
+ -- inspecting battle.doubles alone permits two complete UIs in singles.
+ if type(state.usesModernDoublesHud)=='function' and state:usesModernDoublesHud() then return false end
  return not (state.battle and state.battle.doubles)
 end
 function M.backplate(state,x,y,w,h)

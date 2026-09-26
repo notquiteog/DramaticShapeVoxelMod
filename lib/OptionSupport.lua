@@ -34,7 +34,8 @@ set(2,'playerArtSet playerAnimatedSet trainerArtSet','implemented','lib/NativeBa
 set(2,'communitySky','implemented','lib/Sky.lua','Shared sky renderer consumes the selected sky style.')
 set(2,'legendaryVisualsMode communityTrees communityTreeDetail communityGrass communityCutTrees communitySigns communityCityGround communityRoads communityWalls communityCourtyards communityPillars communityMasonry communityCaves communityCaveDetails communityCaveSound communityTower communityTowerWall communityForest communityCasino communityPrizeRoom communityTunnels communityRocket communityElevator atmos towerDetails towerFog towerFogSpeed towerFogThickness','partial','lib/CommunityVisuals.lua; lib/ChunkMesher.lua','Shared profiles exist, but complete native Gen2 map-family parity is not established.')
 set(3,'fireredCamera','implemented','lib/Gen3Integration.lua; lib/Gen3Scene.lua','Native field camera and rotated directional intent.')
-set(3,'fireredBattleStage','implemented','lib/Gen3Battle.lua','Native battle background seam, preserving native actors/attacks/UI.')
+set(3,'battles','implemented','lib/Gen3Battle.lua','Shared 3D-BTL control, preserving native actors/attacks/UI and legacy FireRed OFF preferences.')
+set(3,'fireredBattleStage','alias','lib/Gen3Battle.lua','Legacy saved key, migrated to the shared 3D-BTL control.')
 set(3,'aa daytime worldFill communitySky tiltshift','implemented','lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua','Native scene supersampling, day clock/light/sky, underlay and postprocess.')
 set(3,'invertY','implemented','lib/Gen3Integration.lua: look','Shared preference changes mouse and right-stick vertical look.')
 set(3,'curve grid shadowQuality','implemented','lib/Voxel3D.lua; lib/ShadowMap.lua','Native scene uses the shared geometry and shadow passes.')
@@ -50,6 +51,7 @@ set(3,'backdropOffset bossBg','implemented','lib/Gen3BattleBackdrop.lua; lib/Gen
 set(3,'spriteLight','partial','lib/Gen3SpriteLight.lua','World day tint multiplies native sprite flash/fade in staged battles; native UI-plane actors do not yet cast world shadows.')
 set(3,'playerArtSet playerAnimatedSet trainerArtSet','implemented','lib/Gen3TrainerArt.lua; lib/AnimatedBattleArt.lua','Selected native opponent fronts and player five-frame send-out sheets. Missing user art and scripted trainer roles retain native pictures.')
 set(3,'interfaceSprites interfaceScaling','implemented','lib/NativeInterfaceArt.lua','Native Summary/Pokedex scoped draw; animation-wide FIT/FULL and mon-aware Summary shininess. Other native screens keep their own art.')
+set(3,'communityTreeDetail','implemented','lib/NativeTreeArt.lua; lib/VoxelHull.lua','FULL/BALANCED/HANDHELD change native voxel tree resolution, with live geometry rebuild.')
 for gen=1,3 do
  set(gen,'spatialUpscale','implemented','lib/SpatialUpscale.lua; lib/AntiAlias.lua','Shared full-precision FSR 1 EASU/RCAS postprocess; native resolution UI. Shader availability checked; no temporal/frame generation.')
  set(gen,'stadiumCircle','provider','lib/StadiumBackground.lua','Requires the optional compatible Stadium scene provider; no provider means no consumer.')
@@ -67,7 +69,7 @@ function M.rows(schema,gen)
  local out,seen={},{}
  for _,row in ipairs(schema)do out[#out+1]=row;seen[row.key]=true end
  for _,row in ipairs(M.inventory(gen))do
-  if not seen[row.key]then
+  if not seen[row.key] and row.status~='alias' then
    local labels={implemented='SUPPORTED',partial='PARTIAL',missing='UNAVAILABLE',
     not_applicable='OTHER ENGINE',provider='PROVIDER'}
    local label=row.key=='tiltshift' and gen<3 and 'PIPELINE' or labels[row.status]

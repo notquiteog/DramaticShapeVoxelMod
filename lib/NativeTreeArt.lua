@@ -69,6 +69,21 @@ function M.append(c,v,i,q,x,y,z,flat)
  for _,n in ipairs({1,2,3,1,3,4})do i[#i+1]=base+n end
  return q+1
 end
+function M.appendModel(c,v,i,q,x,y,z)
+ if not c then return q end
+ local Hull=V.require('VoxelHull')
+ local detail=V.require('CommunityVisuals').treeDetail:get()
+ local step=detail=='full' and 1 or detail=='handheld' and 4 or 2
+ c.models=c.models or {}
+ if not c.models[step] then
+  local x0,y0=c.u0*size,c.v0*size
+  c.models[step]=Hull.build(c.w,c.h,function(px,py)
+   local r,g,b,a=data:getPixel(x0+px,y0+py)
+   return r,g,b,a,(x0+px+.5)/size,(y0+py+.5)/size
+  end,step,c.bottom)
+ end
+ return Hull.append(c.models[step],v,i,q,x,y,z)
+end
 function M.gen2(map,cx,cy,lift,donor)
  local pixels=V.require('TerrainAtlas').originalPixels(map);if not pixels then return end
  local wide=lift==20;local short=lift<=4 or map.tileset.id=='TILESET_KANTO'

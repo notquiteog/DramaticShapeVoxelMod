@@ -1,3 +1,7 @@
+## 1.27.0
+
+Crystal battle UI ownership and FireRed/LeafGreen camera recovery fixes; native-art voxel trees with card alternatives and three detail levels; closed cave boulders; clean house-side texture sampling. Tested with Gen1Recomp 0.3.20. Full scenery/settings parity remains in progress. See [validation and limits](docs/SCENE_RECOVERY_QA_2026-09-26.md).
+
 ## 1.26.0 — 2026-09-23
 
 Restores overlapping native Viridian Forest tree rows in FireRed/LeafGreen, lowers tall grass to seven world pixels, and reuses unchanged terrain geometry without rebuilding tile records every frame. Live metatile overrides, palette/provider replacement, map boundaries and battle/replay changes still invalidate appropriately.

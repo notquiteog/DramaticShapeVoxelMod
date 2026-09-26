@@ -33,6 +33,7 @@ local Player=require('src.core.game3.player')
 local Objects=require('src.core.game3.objects')
 local Versions=require('src.import.gba.versions')
 local M={builds=0}
+function M.context()return Map.currentDef()end
 local cache,foliage,bark,spriteMeshes={ },nil,nil,{}
 local savedCanvas,saved=false,false
 local function quad(v,i,p,uv,shade,anchor)
@@ -53,6 +54,14 @@ local function uvFor(ts,mid)
 end
 local function plane(v,i,x,z,uv,h)
  quad(v,i,{{x,h or 0,z},{x+16,h or 0,z},{x+16,h or 0,z+16},{x,h or 0,z+16}},uv)
+end
+local function swatch(ts,u,v)
+ -- A constant UV exactly BETWEEN texels interpolates to either side by a
+ -- rounding ULP across a triangle. At nearest filtering that becomes noisy
+ -- siding even with shadows disabled. Always sample the texel centre.
+ u=(math.floor(u*ts.cols*16)+.5)/(ts.cols*16)
+ v=(math.floor(v*ts.rows*16)+.5)/(ts.rows*16)
+ return {{u,v},{u,v},{u,v},{u,v}}
 end
 local function materials()
  if not foliage then
@@ -223,8 +232,9 @@ local function prepare(game,vw,vh,cam)
     if TreeStyle.original() then
      local native=V.require('NativeTreeArt')
      local tx,tz=x+(shape.anchorX or 16),z+(shape.anchorZ or 12)
-     native.append(native.gen3(c),leaf,li,0,tx,0,tz,TreeStyle.flat())
-     if not TreeStyle.flat() then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,c.cx*73+c.cy*139) end
+     if TreeStyle.voxel() then native.appendModel(native.gen3(c),leaf,li,0,tx,0,tz)
+     else native.append(native.gen3(c),leaf,li,0,tx,0,tz,TreeStyle.flat()) end
+     if not TreeStyle.voxel() and not TreeStyle.flat() then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,c.cx*73+c.cy*139) end
     else
     local seed=c.cx*73+c.cy*139
     local append=TreeStyle.flat() and Trees.appendFlatTrunk or Trees.appendTrunk
@@ -257,14 +267,14 @@ local function prepare(game,vw,vh,cam)
     quad(b.v,b.i,{{x,top,front},{x+16,top,front},{x+16,top-step,front},{x,top-step,front}},uv)
     if portal then
      local u,t=uv[1][1]+(uv[2][1]-uv[1][1])*.12,uv[1][2]+(uv[3][2]-uv[1][2])*.12
-     local trim={{u,t},{u,t},{u,t},{u,t}}
+     local trim=swatch(ts,u,t)
      if row==0 then quad(b.v,b.i,{{x,top,column.front},{x+16,top,column.front},{x+16,top,front},{x,top,front}},trim,.9)end
      local side=c.cx==c.gym.cx+3 and x or x+16
      quad(b.v,b.i,{{side,top,column.front},{side,top,front},{side,top-step,front},{side,top-step,column.front}},trim,.8)
     end
     if column.indoor then
      local u,t=(uv[1][1]+uv[2][1])*.5,uv[1][2]
-     local solid={{u,t},{u,t},{u,t},{u,t}}
+     local solid=swatch(ts,u,t)
      for _,dx in ipairs({-1,1})do
       if Roof.sideVisible(cells,c,dx)then local sx=dx<0 and x or x+16
        quad(b.v,b.i,{{sx,top,column.back},{sx,top,column.front},{sx,top-step,column.front},{sx,top-step,column.back}},solid,.82)
@@ -311,7 +321,7 @@ local function prepare(game,vw,vh,cam)
      -- artwork down the building's entire side.
      local u=(side[1][1]+side[2][1])*.5
      local t=side[1][2]+(side[3][2]-side[1][2])*.2
-     local solid={{u,t},{u,t},{u,t},{u,t}}
+     local solid=swatch(ts,u,t)
      for _,dx in ipairs({-1,1})do
       if Roof.sideVisible(cells,c,dx) then
        local sx=dx<0 and x or x+16
@@ -343,7 +353,7 @@ local function prepare(game,vw,vh,cam)
    labWall[c.cx]=true;local x=c.cx*16
    quad(b.v,b.i,{{x,32,32},{x+16,32,32},{x+16,16,32},{x,16,32}},uv)
    local u,t=(uv[1][1]+uv[2][1])*.5,uv[1][2]+(uv[3][2]-uv[1][2])*.8
-   quad(b.v,b.i,{{x,16,32},{x+16,16,32},{x+16,0,32},{x,0,32}},{{u,t},{u,t},{u,t},{u,t}})
+   quad(b.v,b.i,{{x,16,32},{x+16,16,32},{x+16,0,32},{x,0,32}},swatch(c.ts,u,t))
   end
  end end
  -- Complete native wallpaper behind claimed furniture. The drawing's
@@ -358,7 +368,7 @@ local function prepare(game,vw,vh,cam)
    local lower=uvFor(c.ts,house and 0x28 or 0x285)
    if upper and lower then
     quad(b.v,b.i,{{x,32,f},{x+16,32,f},{x+16,16,f},{x,16,f}},upper)
-    if shop then local u,v=lower[1][1],lower[3][2]-.001;lower={{u,v},{u,v},{u,v},{u,v}}end
+    if shop then local u,v=lower[1][1],lower[3][2]-.001;lower=swatch(c.ts,u,v)end
     quad(b.v,b.i,{{x,16,f},{x+16,16,f},{x+16,0,f},{x,0,f}},lower)
    end
   end

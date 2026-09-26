@@ -81,7 +81,7 @@ CommunityVisuals.trees = ModSetting.new(
 CommunityVisuals.treeDetail = ModSetting.new(
   "communityTreeDetail", "TREE DETAIL",
   { "full", "balanced", "handheld" },
-  { "FULL", "BALANCED", "HANDHELD" }
+  { "FULL", "BALANCED", "HANDHELD" }, 2
 )
 
 if CommunityVisuals.treeDetail.read then

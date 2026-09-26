@@ -723,7 +723,7 @@ local SETTINGS = {
   { V.require("CrystalSprites").setting, "Crystal animation, shiny effects and portraits in Gen 1/2. SELECTED ART uses the existing Battle Art collections. Restart the game after changing this pack.", full=true },
   { V.require("CrystalSprites").fullBody, "Animated Gen 5 full-body backs on 2.5D battle stages with the Crystal pack. Normal menus retain Crystal art.", full=true },
   { TreePresentation.surfaces, "Original game scenery textures, or optional detailed materials. Geometry is preserved.", full=true, when=function()return Generation.isGen2()end },
-  { TreePresentation.art, "Original game tree drawings by default; ILLUSTRATED selects the replacement artwork. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
+  { TreePresentation.art, "Solid voxel trees use the original game art. ORIGINAL CARD and ILLUSTRATED CARD retain flat alternatives. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
   { TreePresentation.setting, "Flat illustrated trunks follow their leaf billboards. SOLID restores the physical trunk and boughs. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
   { LegendaryVisualsPreset.setting,
     "One master profile for Legendary world visuals. OFF preserves Battle Art, "

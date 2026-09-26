@@ -10,6 +10,7 @@ function M.install(mod,schema,title)
     local choices=s.choices or {{'OFF',false},{'ON',true}}
     local function index()
      local value=mod.options:get(s.key)
+     if value==nil then value=s.default end
      for i,c in ipairs(choices)do if c[2]==value then return i end end
      return 1
     end

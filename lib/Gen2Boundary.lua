@@ -72,7 +72,7 @@ function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
  local x0,y0,x1,y1=bx-cells,bz-cells,bx+cells+6,bz+cells+6
  if not radius then x0,y0,x1,y1=Select.bounds(rs,16)end
  local flat=V.require('TreePresentation').flat()
- local parts={x0,y0,x1,y1,tostring(flat),V.require('TreePresentation').art:get()}
+ local parts={x0,y0,x1,y1,tostring(flat),V.require('TreePresentation').art:get(),V.require('CommunityVisuals').treeDetail:get()}
  for _,r in ipairs(rs)do parts[#parts+1]=tostring(r.map)..':'..r.x..':'..r.y end
  local key=table.concat(parts,';')
  if cache.key~=key then
@@ -119,8 +119,9 @@ function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
         local native=V.require('NativeTreeArt')
         local card=native.gen2(map,donor.x,donor.y,lift,true)
         -- Donor artwork and palette are shared with the neighboring map.
-        native.append(card,leaves,li,0,tx,0,tz,flat)
-        if card and not flat then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,seed)end
+        if V.require('TreePresentation').voxel() then native.appendModel(card,leaves,li,0,tx,0,tz)
+        else native.append(card,leaves,li,0,tx,0,tz,flat) end
+        if card and not V.require('TreePresentation').voxel() and not flat then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,seed)end
        else
        local append=flat and Trees.appendFlatTrunk or Trees.appendTrunk
        append(wood,wi,0,tx,0,tz,lift,seed)

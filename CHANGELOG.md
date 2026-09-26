@@ -1,3 +1,11 @@
+## 1.27.0 — 2026-09-26
+
+Fixes duplicate Crystal status cards and command menus when Double Battles owns a single battle's HUD. FireRed/LeafGreen scene failures now retry twice, then quarantine only the failing map; entering another area or selecting a camera permits rendering again. The same bounded recovery applies to native battle stages. The original reported Pallet failure was not reproduced on engine 0.3.20, so its underlying trigger remains unconfirmed.
+
+Adds closed, source-colored voxel trees in Crystal and FireRed/LeafGreen, including matching boundary trees. TREE ART selects ORIGINAL MODEL (new-install default), ORIGINAL CARD or ILLUSTRATED CARD; TREE DETAIL selects FULL/BALANCED/HANDHELD mesh resolution. Saved art choices remain respected. Native cave boulders use closed voxel contours without a square support slab. Snaps constant wall texture samples to pixel centers, removing the noisy FireRed house-side artifact, and closes inverted siding tips.
+
+FireRed now uses the shared 3D-BTL option, retaining legacy OFF preferences. Native option pages respect declared defaults. Checked on official Gen1Recomp 0.3.20 with isolated Crystal, FireRed and LeafGreen profiles; see `docs/SCENE_RECOVERY_QA_2026-09-26.md`. Full all-tile/settings parity and Gen 1-style world-space Gen 3 battle actors/camera remain unfinished.
+
 ## 1.26.0 — 2026-09-23
 
 Restores overlapping native Viridian Forest tree rows in FireRed/LeafGreen, lowers tall grass to seven world pixels, and reuses unchanged terrain geometry without rebuilding tile records every frame. Live metatile overrides, palette/provider replacement, map boundaries and battle/replay changes still invalidate appropriately.

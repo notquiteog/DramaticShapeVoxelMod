@@ -82,7 +82,7 @@ for gen=1,3 do
  end
 end
 local rows=Support.rows({{key='aa',type='choice'}},3)
-check(#rows==#catalog,'support rows preserve every declared option')
+check(#rows==#catalog-1,'support rows omit the migrated duplicate 3D-BTL alias')
 check(rows[1].readOnly~=true,'actual control remains editable')
 local unsupported;for _,row in ipairs(rows)do if row.key=='pokeballSuction'then unsupported=row end end
 check(unsupported and unsupported.readOnly and unsupported.supportOnly,'missing adapter is diagnostic, never fake writable control')

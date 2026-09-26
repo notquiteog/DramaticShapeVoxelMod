@@ -8,7 +8,7 @@ love={image={newImageData=data},graphics={newImage=function(d)
  return {setFilter=function()end,replacePixels=function()uploads=uploads+1 end,data=d}
 end}}
 local Mask=dofile('lib/SceneryMask.lua')
-local native=assert(loadfile('lib/NativeTreeArt.lua'))({require=function(n)assert(n=='SceneryMask');return Mask end})
+local native=assert(loadfile('lib/NativeTreeArt.lua'))({require=function(n)if n=='VoxelHull'then return dofile('lib/VoxelHull.lua')end;if n=='CommunityVisuals'then return {treeDetail={get=function()return 'balanced'end}}end;assert(n=='SceneryMask');return Mask end})
 local ts={cols=16,rows=3,midToSlot={}}
 for _,id in ipairs({1,14,15,28,29,36,37})do ts.midToSlot[id]=id end
 local reads=0
@@ -42,4 +42,7 @@ local forest=native.gen3({ts=ts,mid=676,shape={ground=1,spacing=3}})
 assert(forest~=c and forest.w==48 and forest.h==80,'forest lost its crown row or reused the general atlas key')
 local fv,fi={},{};native.append(forest,fv,fi,0,0,0,0,true)
 assert(fv[1][2]+forest.bottom==0,'transparent shadow padding made the tree float')
+local mv,mi={},{};native.appendModel(c,mv,mi,0,12,3,18)
+assert(#mv>24 and #mi>36,'native tree was left a card')
+for _,p in ipairs(mv)do assert(p[9]==0,'voxel tree billboards');assert(p[2]>=3,'voxel tree below ground')end
 print('PASS original tree proportions, transparent ground, preserved highlights, camera anchors and palette-content deduplication')

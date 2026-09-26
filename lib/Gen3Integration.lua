@@ -3,6 +3,8 @@
 -- in charge. This file is deliberately loaded before any Gen1/2 patches.
 local V=...
 local M={yaw=0,pitch=.16,level=3,rendered=0,active=false}
+local recovery=V.require('RenderRecovery').new()
+M.recovery=recovery
 local ModSetting=V.require('ModSetting')
 local Trees=V.require('TreePresentation')
 local Distance=V.require('RenderDistance')
@@ -26,6 +28,7 @@ function M.moveVector(forward,right)
   -math.cos(M.yaw)*forward+math.sin(M.yaw)*right
 end
 function M.setLevel(level,game)
+ recovery:reset()
  mode:setIndex(level+1,game);M.level=mode:get()
 end
 function M.install()
@@ -40,12 +43,12 @@ function M.install()
  local BattleStage=V.require('Gen3Battle')
  local uninstallBattle=BattleStage.install()
  local draw,present,update=FieldView.draw,Display.present,Player.update
- local failed=false
- mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original FireRed battle background.'),Trees.art:schema('Original game tree drawings or optional illustrated replacements.'),Trees.setting:schema('Flat illustrated trunks follow their leaf billboards; SOLID restores physical trunks.'),mode:schema('FireRed 2.5D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
+ local function ready(game)return recovery:ready(Scene.context and Scene.context()or game.session)end
+ mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original FireRed battle background.'),Trees.art:schema('Solid voxel trees carved from the original game art (default), original flat cards, or illustrated cards.'),Trees.setting:schema('For card trees: flat trunks follow the crown, or use modeled trunks. Original model trees are fully solid.'),mode:schema('FireRed 2.5D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
  local nativeArt=V.require('NativeBattleArt');nativeArt.install()
  local interfaceArt=V.require('NativeInterfaceArt')
  local uninstallInterface=interfaceArt.install()
- local sharedSettings={V.require('ModernBattleUI').setting,
+ local sharedSettings={V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,
   V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting}
  for _,setting in ipairs(SceneOptions.settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(interfaceArt.settings)do sharedSettings[#sharedSettings+1]=setting end
@@ -64,12 +67,13 @@ function M.install()
  local uninstallRecap=V.require('Gen3Recap').install(M)
  FieldView.draw=function(game,w,h,opts)
   M.active=false
-  if failed or M.level==0 or not field(game) or Scene.nativeRequired(game) then return draw(game,w,h,opts) end
+  if M.level==0 or not field(game) or not ready(game) or Scene.nativeRequired(game) then return draw(game,w,h,opts) end
   local ok,result=pcall(Scene.draw,game,w,h,M)
   if not ok then
-   failed=true;Scene.restore();print('[Battle Art FireRed] native fallback: '..tostring(result))
+   recovery:failed(result);Scene.restore();Scene.invalidate()
+   print('[Battle Art FireRed] scene fallback: '..tostring(result))
   end
-  if ok and result then M.active=true;M.rendered=M.rendered+1;return end
+  if ok and result then recovery:succeeded();M.active=true;M.rendered=M.rendered+1;return end
   return draw(game,w,h,opts)
  end
  -- Disable only the native tilt surrounding OUR field pass. The saved tilt
@@ -77,7 +81,7 @@ function M.install()
  Display.present=function(game,...)
   if not field(game) then M.active=false end
   local battle=Battle.isActive() and BattleStage.enabled()
-  if not battle and (M.level==0 or failed or not field(game) or Scene.nativeRequired(game)) then return present(game,...) end
+  if not battle and (M.level==0 or not field(game) or not ready(game) or Scene.nativeRequired(game)) then return present(game,...) end
   local level,angle=Tilt.level,Tilt.angle
   Tilt.level,Tilt.angle=0,0
   local ok,result=pcall(present,game,...)
@@ -86,7 +90,7 @@ function M.install()
   return result
  end
  Player.update=function(game,input)
-  if M.active and free() and not failed and field(game) and not Scene.nativeRequired(game) and input and input.isDown then
+  if M.active and free() and field(game) and ready(game) and not Scene.nativeRequired(game) and input and input.isDown then
    local proxy=setmetatable({}, {__index=input})
    -- Game3 prefers freshly pressed directions over held directions. Rotate
    -- both views of the SAME intent, or each new press defeats the camera.
@@ -118,6 +122,7 @@ function M.install()
   return next(game,ev)
  end)
  mod.hooks:wrap('core.update',function(next,game,dt,...)
+  recovery:update(dt)
   SceneOptions.update(dt)
   if looking(game) and free() then
    local function axis(v)return math.abs(v)>.18 and (v-(v>0 and .18 or -.18))/.82 or 0 end
@@ -144,11 +149,12 @@ function M.install()
   if payload and payload.mod==mod.id and payload.key==Distance.setting.key then Distance.setting:sync(payload.value);Scene.invalidate()end
   if payload and payload.mod==mod.id and payload.key==BattleStage.setting.key then BattleStage.setting:sync(payload.value) end
   if payload and payload.mod==mod.id then
-   for _,setting in ipairs(sharedSettings)do if payload.key==setting.key then setting:sync(payload.value)end end
+   for _,setting in ipairs(sharedSettings)do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
    for _,setting in ipairs(nativeArt.settings())do if payload.key==setting.key then setting:sync(payload.value)end end
    for _,setting in ipairs({Trees.setting,Trees.art})do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
   end
   if payload and payload.mod==mod.id and payload.key==mode.key then
+   recovery:reset()
    mode:sync(payload.value);M.level=mode:get()
   end
  end)

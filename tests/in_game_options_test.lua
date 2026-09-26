@@ -34,4 +34,8 @@ local hook=mods.A.callbacks['ui.options.rows']
 local out=hook(function(_,r)return r end,game,{{label='no id'},{id='cancel',label='BACK'}})
 assert(#out==5 and out[5].id=='cancel','GB settings appeared below BACK')
 local again=hook(function(_,r)return r end,game,out);assert(#again==5,'duplicate settings')
+local get=mods.A.options.get;mods.A.options.get=function()return nil end
+local fallback=hook(function(_,r)return r end,game,{{id='cancel'}})
+assert(fallback[1].value()=='ON','unset toggle ignored true schema default')
+mods.A.options.get=get
 print('PASS independent native pages, false/choice/number persistence, events, unload composition and GB placement')
