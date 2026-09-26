@@ -1,4 +1,4 @@
--- Closed native-art rock volumes shared by Crystal cave and ice families.
+-- Closed native-art volumes for Crystal rocks, sculptures and narrow displays.
 local V=...
 local M={}
 function M.build(t,data,pr,aw,ah)
@@ -21,10 +21,13 @@ function M.build(t,data,pr,aw,ah)
  end,h)
  local bottom=h
  for y=0,h-1 do for x=0,w-1 do if mask[y*w+x] then bottom=math.min(bottom,h-y-1)end end end
- local faces=V.require('VoxelHull').build(w,h,function(x,y)
+ local H=V.require('VoxelHull')
+ local sample=function(x,y)
   local sx,sy,r,g,b,a=at(x,y)
   return r,g,b,mask[y*w+x]and a or 0,(sx+.5)/aw,(sy+.5)/ah
- end,1,bottom)
+ end
+ local cards=t.modelShape=="rock" and V.require("TreePresentation").props:get()=="cards"
+ local faces=cards and H.card(w,h,sample,bottom) or H.build(w,h,sample,1,bottom,t.modelDepth,t.modelShape)
  for _,q in ipairs(faces)do
   local uv={q.u,q.v};q.uv={uv,uv,uv,uv}
   for i=1,4 do q[i][1]=q[i][1]+w/2;q[i][3]=q[i][3]+h/2 end

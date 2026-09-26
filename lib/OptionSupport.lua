@@ -15,8 +15,11 @@ for _,row in ipairs(V.require('SettingsCatalog'))do
   support[gen][row.key]={status='missing',consumer=false,detail='No complete native generation adapter audited for this option.'}
  end
 end
+for gen=2,3 do
+ set(gen,'sceneryProps','implemented','lib/TreePresentation.lua; lib/NativeTreeArt.lua; lib/Gen2Rocks.lua; lib/Gen2VoxelRock.lua; lib/Gen3Cave.lua; lib/Gen3Outdoor.lua','Native solid rocks/bushes or source-art cutouts. Terrain/collision unchanged; actors, grass and flowers remain sprites.')
+end
 set(1,'fireredCamera fireredBattleStage','not_applicable',false,'Native Gen3 camera/battle settings; Gen1 uses its voxel pipeline and 3D-BTL.')
-set(1,'hdTreeTrunks treeArtwork surfaceArtwork','not_applicable',false,'Native Gen2/3 scenery controls; Gen1 uses the Legendary scenery families.')
+set(1,'hdTreeTrunks treeArtwork surfaceArtwork sceneryProps','not_applicable',false,'Native Gen2/3 scenery controls; Gen1 uses the Legendary scenery families.')
 set(2,'fireredCamera fireredBattleStage','not_applicable',false,'Native Gen3 settings; Gen2 uses its voxel pipeline and 3D-BTL.')
 set(2,'aa curve daytime grid renderDistance shadowQuality water worldFill tiltshift','implemented','lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua','Shared GB render pipeline, including native Gen2 tile atlas.')
 set(2,'invertY','implemented','lib/FirstPerson.lua; lib/Gen2CameraWalk.lua','Native Gen2 camera-relative walking and shared look input.')
@@ -51,8 +54,16 @@ set(3,'backdropOffset bossBg','implemented','lib/Gen3BattleBackdrop.lua; lib/Gen
 set(3,'spriteLight','partial','lib/Gen3SpriteLight.lua','World day tint multiplies native sprite flash/fade in staged battles; native UI-plane actors do not yet cast world shadows.')
 set(3,'playerArtSet playerAnimatedSet trainerArtSet','implemented','lib/Gen3TrainerArt.lua; lib/AnimatedBattleArt.lua','Selected native opponent fronts and player five-frame send-out sheets. Missing user art and scripted trainer roles retain native pictures.')
 set(3,'interfaceSprites interfaceScaling','implemented','lib/NativeInterfaceArt.lua','Native Summary/Pokedex scoped draw; animation-wide FIT/FULL and mon-aware Summary shininess. Other native screens keep their own art.')
+set(3,'surfaceArtwork','implemented','lib/Gen3Scene.lua; lib/Voxel3D.lua','Native-palette surface grain on scenery only; camera-stable world coordinates, distance filtering and unchanged actor/UI art.')
 set(3,'communityTreeDetail','implemented','lib/NativeTreeArt.lua; lib/VoxelHull.lua','FULL/BALANCED/HANDHELD change native voxel tree resolution, with live geometry rebuild.')
+for gen=2,3 do
+ set(gen,'atmos communityForest','implemented','lib/NativeAtmosphere.lua; lib/ForestAtmos.lua','Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.')
+ set(gen,'towerFog towerFogThickness','implemented','lib/NativeAtmosphere.lua','Native ghost/tower maps consume fog visibility/thickness, gated by TOWER VISUALS.')
+ set(gen,'towerFogSpeed','partial','lib/NativeAtmosphere.lua','Changes native tower particle speed; animated ground mist has not been ported.')
+ set(gen,'communityCaves communityCaveDetails communityTower towerDetails','partial','lib/NativeAtmosphere.lua','Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.')
+end
 for gen=1,3 do
+ set(gen,'weather','implemented','lib/Weather.lua; lib/VoxelScene.lua; lib/BattleScene.lua; lib/Gen3Scene.lua','Optional deterministic outdoor rain/snow/fog/storms on the world canvas, below UI. Does not change battle weather rules.')
  set(gen,'spatialUpscale','implemented','lib/SpatialUpscale.lua; lib/AntiAlias.lua','Shared full-precision FSR 1 EASU/RCAS postprocess; native resolution UI. Shader availability checked; no temporal/frame generation.')
  set(gen,'stadiumCircle','provider','lib/StadiumBackground.lua','Requires the optional compatible Stadium scene provider; no provider means no consumer.')
 end

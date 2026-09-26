@@ -11,10 +11,12 @@ local Community=V.require('CommunityVisuals')
 M.tilt=V.require('ModSetting').new('tiltshift','T-SHIFT',{0,1,2,3},{'OFF','1','2','3'})
 M.invert=V.require('CameraSettings').invertY
 M.settings={V.require("SpatialUpscale").setting,AA.setting,Day.setting,Underlay.setting,Community.sky,M.invert,M.tilt,
- V.require('Water').setting}
+ V.require('Water').setting,V.require('Weather').setting}
 
 function M.update(dt)
  Day.update(dt)
+ V.require("Weather").update(dt)
+ V.require("ForestAtmos").update(dt)
  TiltShift.setLevel(M.tilt:get())
 end
 

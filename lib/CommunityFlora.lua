@@ -898,7 +898,7 @@ function MOUND.treeCacheSignature(key, registry, history, nbRects, cfg, snapshot
   local text = table.concat({ table.concat(cells, ";"), table.concat(rects, ";"),
                               cfg and cfg.bouldertrees == true and "b1" or "b0",
                               cfg and cfg.shadows == false and "s0" or "s1",
-                              V.require("TreePresentation").setting:get(), V.require("TreePresentation").art:get(), V.require("CommunityVisuals").treeDetail:get() }, "|")
+                              V.require("TreePresentation").setting:get(), V.require("TreePresentation").art:get(), V.require("TreePresentation").props:get(), V.require("CommunityVisuals").treeDetail:get() }, "|")
   local a, b = 104729, 130363
   for i = 1, #text do
     local byte = text:byte(i)
@@ -2087,9 +2087,9 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         if style.original() then
           local native=V.require("NativeTreeArt")
           local card=native.gen2(map,cx,cy,lift)
-          if style.voxel() then dQ=native.appendModel(card,dV,dI,dQ,mx,base,mz)
-          else dQ=native.append(card,dV,dI,dQ,mx,base,mz,style.flat() or lift==3) end
-          if card and not style.voxel() and not style.flat() and lift~=3 then
+          if (lift==3 and style.props:get()=="modeled") or (lift~=3 and style.voxel()) then dQ=native.appendModel(card,dV,dI,dQ,mx,base,mz)
+          else dQ=native.append(card,dV,dI,dQ,mx,base,mz,style.flat() or lift<=4) end
+          if card and lift>4 and not style.voxel() and not style.flat() then
             -- Keep the source crown and add a short physical stem behind it.
             tQ=V.require("Gen2Trees").appendTrunk(tV,tI,tQ,mx,base,mz,4,cx*31+cy*17)
           end
@@ -2102,8 +2102,12 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
           local append=V.require("TreePresentation").flat() and trees.appendFlatTrunk or trees.appendTrunk
           tQ=append(tV,tI,tQ,mx,base,mz,lift,seed)
         end
+        if lift==3 and style.props:get()=="modeled" then
+          dQ=V.require("Gen2DepthTrees").appendBush(dV,dI,dQ,mx,base,mz)
+        else
         dQ=V.require("Gen2DepthTrees").append(dV,dI,dQ,
           mx,base,mz,lift,seed,trees.family(seed,lift),V.require("TreePresentation").flat() and lift~=3)
+        end
         end
       elseif sapling then
         -- TEST47 CITY-SUPPORTED SAPLING:

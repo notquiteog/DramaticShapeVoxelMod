@@ -5,6 +5,11 @@ function M.install(recipes)
  local function add(name,pair,rows,design,ground)
   recipes[#recipes+1]={name=name,pair=pair,rows=rows,kind='designed',design=design,ground=ground or 1}
  end
+ -- Complete single-cell grave drawings, including the boundary variants.
+ -- Pair-local matching leaves identical numeric IDs in other rooms alone.
+ for _,mid in ipairs({0x291,0x293,0x2be,0x2bf,0x2d8,0x2d9})do
+  add('tower_grave_'..mid,'building__rom_082d4efc',{{mid}},'fr_tower_grave',0x282)
+ end
  add('room_bed','player_house',{{0x283,0x284,0x285},{0x28b,0x28c,0x28d},{0x293,0x294,0x295}},'fr_bed')
  add('room_computer','player_house',{{0x287,0x20},{0x28f,0x86},{0x297,0x5a}},'fr_room_pc')
  add('room_wood_chair','player_house',{{0x30},{0x38}},'fr_wood_chair')
@@ -36,6 +41,12 @@ function M.install(recipes)
   lab_terminal='fr_lab_terminal',lab_server='fr_lab_server',mart_rear_books='fr_mart_cooler'}
  for _,r in ipairs(recipes)do
   if designs[r.name]then r.design=designs[r.name]end
+  if r.kind=='cabinet' and not r.design then r.design='fr_native_cabinet' end
+  if r.design=='fr_native_cabinet' then
+   if r.name:find('books') or r.name:find('stock') or r.name=='museum_bookcase' or r.name=='cabinet' then r.design='fr_native_books'
+   elseif r.name:find('monitor_terminal') then r.design='fr_native_monitor'
+   elseif r.name:find('server') or r.name:find('tape_terminal') then r.design='fr_native_rack' end
+  end
   if r.kind=='centerUpperTerminal'then r.design='fr_upper_pc'end
   if r.name=='kitchen_sink_hob'then r.h=8 end
   if r.name=='mart_rear_display'then r.depth=1.5;r.frontOffset=32.2;r.base=12 end
@@ -47,7 +58,7 @@ function M.append(p,source,box,sample,emit)
  local x,z=p.cx*16,p.cy*16
  local function point(a)return {a[1]+x,a[2],a[3]+z}end
  return Geometry.draw(p.recipe.design,{
-  sample=sample,
+  sample=sample,recipe=p.recipe,width=p.w,height=p.d,
   box=function(l,b,n,r,h,s,uv)
    box(l+x,b,n+z,r+x,h,s+z,uv)
    emit({{l+x,b,s+z},{r+x,b,s+z},{r+x,b,n+z},{l+x,b,n+z}},uv,.65)

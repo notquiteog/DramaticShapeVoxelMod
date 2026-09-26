@@ -3,6 +3,36 @@
     "1": [
       {
         "generation": 1,
+        "key": "sceneryProps",
+        "label": "ROCKS & BUSHES",
+        "module": "TreePresentation",
+        "status": "not_applicable",
+        "consumer": false,
+        "detail": "Native Gen2/3 scenery controls; Gen1 uses the Legendary scenery families.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
+        "key": "weather",
+        "label": "WEATHER",
+        "module": "Weather",
+        "status": "implemented",
+        "consumer": "lib/Weather.lua; lib/VoxelScene.lua; lib/BattleScene.lua; lib/Gen3Scene.lua",
+        "detail": "Optional deterministic outdoor rain/snow/fog/storms on the world canvas, below UI. Does not change battle weather rules.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
+        "detail": "Shared full-precision FSR 1 EASU/RCAS postprocess; native resolution UI. Shader availability checked; no temporal/frame generation.",
+        "key": "spatialUpscale",
+        "verification": "source audit",
+        "module": "SpatialUpscale",
+        "status": "implemented",
+        "consumer": "lib/SpatialUpscale.lua; lib/AntiAlias.lua",
+        "label": "FSR 1"
+      },
+      {
+        "generation": 1,
         "detail": "Gen1 source consumer; device validation is separate.",
         "key": "modernBattleUI",
         "verification": "source audit",
@@ -895,6 +925,36 @@
     "2": [
       {
         "generation": 2,
+        "key": "sceneryProps",
+        "label": "ROCKS & BUSHES",
+        "module": "TreePresentation",
+        "status": "implemented",
+        "consumer": "lib/TreePresentation.lua; lib/NativeTreeArt.lua; lib/Gen2Rocks.lua; lib/Gen2VoxelRock.lua; lib/Gen3Cave.lua; lib/Gen3Outdoor.lua",
+        "detail": "Native solid rocks/bushes or source-art cutouts. Terrain/collision unchanged; actors, grass and flowers remain sprites.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
+        "key": "weather",
+        "label": "WEATHER",
+        "module": "Weather",
+        "status": "implemented",
+        "consumer": "lib/Weather.lua; lib/VoxelScene.lua; lib/BattleScene.lua; lib/Gen3Scene.lua",
+        "detail": "Optional deterministic outdoor rain/snow/fog/storms on the world canvas, below UI. Does not change battle weather rules.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
+        "detail": "Shared full-precision FSR 1 EASU/RCAS postprocess; native resolution UI. Shader availability checked; no temporal/frame generation.",
+        "key": "spatialUpscale",
+        "verification": "source audit",
+        "module": "SpatialUpscale",
+        "status": "implemented",
+        "consumer": "lib/SpatialUpscale.lua; lib/AntiAlias.lua",
+        "label": "FSR 1"
+      },
+      {
+        "generation": 2,
         "detail": "Native singles status/commands, visibility, textbox fill and ink. Native doubles companions retain their renderer and public preference.",
         "key": "modernBattleUI",
         "verification": "source audit",
@@ -985,12 +1045,12 @@
       },
       {
         "generation": 2,
-        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "detail": "Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.",
         "key": "atmos",
         "verification": "source audit",
         "module": "ForestAtmos",
-        "status": "partial",
-        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "status": "implemented",
+        "consumer": "lib/NativeAtmosphere.lua; lib/ForestAtmos.lua",
         "label": "FOREST FX"
       },
       {
@@ -1075,12 +1135,12 @@
       },
       {
         "generation": 2,
-        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "detail": "Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.",
         "key": "communityCaveDetails",
         "verification": "source audit",
         "module": "CommunityVisuals",
         "status": "partial",
-        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "CAVE DETAILS"
       },
       {
@@ -1095,12 +1155,12 @@
       },
       {
         "generation": 2,
-        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "detail": "Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.",
         "key": "communityCaves",
         "verification": "source audit",
         "module": "CommunityVisuals",
         "status": "partial",
-        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "CAVES"
       },
       {
@@ -1145,12 +1205,12 @@
       },
       {
         "generation": 2,
-        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "detail": "Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.",
         "key": "communityForest",
         "verification": "source audit",
         "module": "CommunityVisuals",
-        "status": "partial",
-        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "status": "implemented",
+        "consumer": "lib/NativeAtmosphere.lua; lib/ForestAtmos.lua",
         "label": "VIRIDIAN FOREST"
       },
       {
@@ -1235,12 +1295,12 @@
       },
       {
         "generation": 2,
-        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "detail": "Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.",
         "key": "communityTower",
         "verification": "source audit",
         "module": "CommunityVisuals",
         "status": "partial",
-        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "TOWER VISUALS"
       },
       {
@@ -1705,42 +1765,42 @@
       },
       {
         "generation": 2,
-        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "detail": "Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.",
         "key": "towerDetails",
         "verification": "source audit",
         "module": "TowerFogSettings",
         "status": "partial",
-        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "TOWER DETAILS"
       },
       {
         "generation": 2,
-        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "detail": "Native ghost/tower maps consume fog visibility/thickness, gated by TOWER VISUALS.",
         "key": "towerFog",
         "verification": "source audit",
         "module": "TowerFogSettings",
-        "status": "partial",
-        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "status": "implemented",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "TOWER FOG"
       },
       {
         "generation": 2,
-        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "detail": "Changes native tower particle speed; animated ground mist has not been ported.",
         "key": "towerFogSpeed",
         "verification": "source audit",
         "module": "TowerFogSettings",
         "status": "partial",
-        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "FOG SPEED"
       },
       {
         "generation": 2,
-        "detail": "Shared profiles exist, but complete native Gen2 map-family parity is not established.",
+        "detail": "Native ghost/tower maps consume fog visibility/thickness, gated by TOWER VISUALS.",
         "key": "towerFogThickness",
         "verification": "source audit",
         "module": "TowerFogSettings",
-        "status": "partial",
-        "consumer": "lib/CommunityVisuals.lua; lib/ChunkMesher.lua",
+        "status": "implemented",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "FOG THICKNESS"
       },
       {
@@ -1785,6 +1845,36 @@
       }
     ],
     "3": [
+      {
+        "generation": 3,
+        "key": "sceneryProps",
+        "label": "ROCKS & BUSHES",
+        "module": "TreePresentation",
+        "status": "implemented",
+        "consumer": "lib/TreePresentation.lua; lib/NativeTreeArt.lua; lib/Gen2Rocks.lua; lib/Gen2VoxelRock.lua; lib/Gen3Cave.lua; lib/Gen3Outdoor.lua",
+        "detail": "Native solid rocks/bushes or source-art cutouts. Terrain/collision unchanged; actors, grass and flowers remain sprites.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 3,
+        "key": "weather",
+        "label": "WEATHER",
+        "module": "Weather",
+        "status": "implemented",
+        "consumer": "lib/Weather.lua; lib/VoxelScene.lua; lib/BattleScene.lua; lib/Gen3Scene.lua",
+        "detail": "Optional deterministic outdoor rain/snow/fog/storms on the world canvas, below UI. Does not change battle weather rules.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 3,
+        "detail": "Shared full-precision FSR 1 EASU/RCAS postprocess; native resolution UI. Shader availability checked; no temporal/frame generation.",
+        "key": "spatialUpscale",
+        "verification": "source audit",
+        "module": "SpatialUpscale",
+        "status": "implemented",
+        "consumer": "lib/SpatialUpscale.lua; lib/AntiAlias.lua",
+        "label": "FSR 1"
+      },
       {
         "generation": 3,
         "detail": "Native battle status cards and command overlay.",
@@ -1877,12 +1967,12 @@
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.",
         "key": "atmos",
         "verification": "source audit",
         "module": "ForestAtmos",
-        "status": "missing",
-        "consumer": false,
+        "status": "implemented",
+        "consumer": "lib/NativeAtmosphere.lua; lib/ForestAtmos.lua",
         "label": "FOREST FX"
       },
       {
@@ -1937,12 +2027,12 @@
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Shared 3D-BTL control, preserving native actors/attacks/UI and legacy FireRed OFF preferences.",
         "key": "battles",
         "verification": "source audit",
         "module": "OverworldBattle",
-        "status": "missing",
-        "consumer": false,
+        "status": "implemented",
+        "consumer": "lib/Gen3Battle.lua",
         "label": "3D-BTL"
       },
       {
@@ -1967,12 +2057,12 @@
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.",
         "key": "communityCaveDetails",
         "verification": "source audit",
         "module": "CommunityVisuals",
-        "status": "missing",
-        "consumer": false,
+        "status": "partial",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "CAVE DETAILS"
       },
       {
@@ -1987,12 +2077,12 @@
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.",
         "key": "communityCaves",
         "verification": "source audit",
         "module": "CommunityVisuals",
-        "status": "missing",
-        "consumer": false,
+        "status": "partial",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "CAVES"
       },
       {
@@ -2037,12 +2127,12 @@
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.",
         "key": "communityForest",
         "verification": "source audit",
         "module": "CommunityVisuals",
-        "status": "missing",
-        "consumer": false,
+        "status": "implemented",
+        "consumer": "lib/NativeAtmosphere.lua; lib/ForestAtmos.lua",
         "label": "VIRIDIAN FOREST"
       },
       {
@@ -2127,12 +2217,12 @@
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.",
         "key": "communityTower",
         "verification": "source audit",
         "module": "CommunityVisuals",
-        "status": "missing",
-        "consumer": false,
+        "status": "partial",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "TOWER VISUALS"
       },
       {
@@ -2147,12 +2237,12 @@
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "FULL/BALANCED/HANDHELD change native voxel tree resolution, with live geometry rebuild.",
         "key": "communityTreeDetail",
         "verification": "source audit",
         "module": "CommunityVisuals",
-        "status": "missing",
-        "consumer": false,
+        "status": "implemented",
+        "consumer": "lib/NativeTreeArt.lua; lib/VoxelHull.lua",
         "label": "TREE DETAIL"
       },
       {
@@ -2237,11 +2327,11 @@
       },
       {
         "generation": 3,
-        "detail": "Native battle background seam, preserving native actors/attacks/UI.",
+        "detail": "Legacy saved key, migrated to the shared 3D-BTL control.",
         "key": "fireredBattleStage",
         "verification": "source audit",
         "module": "Gen3Battle",
-        "status": "implemented",
+        "status": "alias",
         "consumer": "lib/Gen3Battle.lua",
         "label": "3D BATTLE STAGE"
       },
@@ -2577,12 +2667,12 @@
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Native-palette surface grain on scenery only; camera-stable world coordinates, distance filtering and unchanged actor/UI art.",
         "key": "surfaceArtwork",
         "verification": "source audit",
         "module": "TreePresentation",
-        "status": "missing",
-        "consumer": false,
+        "status": "implemented",
+        "consumer": "lib/Gen3Scene.lua; lib/Voxel3D.lua",
         "label": "SCENERY TEXTURES"
       },
       {
@@ -2597,42 +2687,42 @@
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.",
         "key": "towerDetails",
         "verification": "source audit",
         "module": "TowerFogSettings",
-        "status": "missing",
-        "consumer": false,
+        "status": "partial",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "TOWER DETAILS"
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Native ghost/tower maps consume fog visibility/thickness, gated by TOWER VISUALS.",
         "key": "towerFog",
         "verification": "source audit",
         "module": "TowerFogSettings",
-        "status": "missing",
-        "consumer": false,
+        "status": "implemented",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "TOWER FOG"
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Changes native tower particle speed; animated ground mist has not been ported.",
         "key": "towerFogSpeed",
         "verification": "source audit",
         "module": "TowerFogSettings",
-        "status": "missing",
-        "consumer": false,
+        "status": "partial",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "FOG SPEED"
       },
       {
         "generation": 3,
-        "detail": "No complete native generation adapter audited for this option.",
+        "detail": "Native ghost/tower maps consume fog visibility/thickness, gated by TOWER VISUALS.",
         "key": "towerFogThickness",
         "verification": "source audit",
         "module": "TowerFogSettings",
-        "status": "missing",
-        "consumer": false,
+        "status": "implemented",
+        "consumer": "lib/NativeAtmosphere.lua",
         "label": "FOG THICKNESS"
       },
       {
@@ -2677,5 +2767,5 @@
       }
     ]
   },
-  "verification": "source audit; gameplay pending"
+  "verification": "Source-consumer audit on 2026-09-26. Individual runtime checks are documented separately; this inventory is not full gameplay verification."
 }

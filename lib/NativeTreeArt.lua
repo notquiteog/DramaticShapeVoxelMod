@@ -80,9 +80,15 @@ function M.appendModel(c,v,i,q,x,y,z)
   c.models[step]=Hull.build(c.w,c.h,function(px,py)
    local r,g,b,a=data:getPixel(x0+px,y0+py)
    return r,g,b,a,(x0+px+.5)/size,(y0+py+.5)/size
-  end,step,c.bottom)
+  end,step,c.bottom,nil,c.modelShape or 'tree')
  end
- return Hull.append(c.models[step],v,i,q,x,y,z)
+ local rows=c.modelRows or 1
+ local span=(rows-1)*c.w
+ for row=1,rows do
+  local dz=rows==1 and 0 or -span/2+(row-1)*span/(rows-1)
+  q=Hull.append(c.models[step],v,i,q,x,y,z+dz)
+ end
+ return q
 end
 function M.gen2(map,cx,cy,lift,donor)
  local pixels=V.require('TerrainAtlas').originalPixels(map);if not pixels then return end
@@ -99,9 +105,13 @@ function M.gen2(map,cx,cy,lift,donor)
  local function sample(tile,x,y)return pixels:getPixel(tile%pr*8+x,math.floor(tile/pr)*8+y)end
  local gt=V.require('Gen2DepthGrass').groundTile(map) or 5
  local ground=background(8,8,function(x,y)return sample(gt,x,y)end)
- return card(tostring(pixels)..':'..table.concat(ids,','),w,h,function(x,y)
+ local c=card(tostring(pixels)..':'..table.concat(ids,','),w,h,function(x,y)
   return sample(ids[math.floor(y/8)*(w/8)+math.floor(x/8)+1],x%8,y%8)
  end,ground)
+ -- Narrow Johto border art covers two successive cells. Broad 2x2 crowns
+ -- (Ilex) are one bushy tree; portrait height is not ground footprint.
+ if c then c.modelRows=not wide and not short and 2 or 1;c.modelShape=lift==3 and "bush" or "tree" end
+ return c
 end
 function M.gen3(c)
  local ts=c.ts;local forest=c.shape.spacing==3

@@ -1710,12 +1710,14 @@ function Buildings.stamp(S, map, quads, tx, ty, bw, bh, t)
         shade = -math.abs(shade)
       end
     end
-    out[#out + 1] = {
+    local dest=q.card and S.flowerQuads or out
+    dest[#dest + 1] = {
       { q[1][1] + mx, q[1][2], q[1][3] + mz },
       { q[2][1] + mx, q[2][2], q[2][3] + mz },
       { q[3][1] + mx, q[3][2], q[3][3] + mz },
       { q[4][1] + mx, q[4][2], q[4][3] + mz },
       uv = q.uv, shade = shade,
+      canopy = q.card and {mx+bw/2,mz+bh/2,.001} or nil,
       -- placements only ever scan the BODY, so a building is always this
       -- map's own structure: the mesher's edge keep-rules must not eat
       -- the parts that poke past the boundary (an edge-row house's eave

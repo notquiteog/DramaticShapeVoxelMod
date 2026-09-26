@@ -21,4 +21,20 @@ local sides=0;for _ in pairs(seen)do sides=sides+1 end;assert(sides==6,'hull mis
 local v,i={},{};H.append(q,v,i,0,10,4,20)
 assert(#v==#q*4 and #i==#q*6)
 for _,p in ipairs(v)do assert(p[9]==0,'solid geometry would rotate toward camera')end
-print('PASS closed grounded voxel volume, native contour, merged surfaces and fixed orientation')
+local thin=H.build(8,8,function(x,y)return .4,.3,.2,1,.5,.5 end,1,0,3)
+local near,far=math.huge,-math.huge
+for _,f in ipairs(thin)do for _,p in ipairs(f)do near=math.min(near,p[3]);far=math.max(far,p[3])end end
+assert(far-near==3,'narrow displays exceeded their authored depth after voxel rounding')
+for _,kind in ipairs({'tree','rock'})do
+ -- Even a narrow color source must make a complete 3D body, not extrude
+ -- its front silhouette into a thin card. Native cards use a separate path.
+ local body=H.build(32,48,function(x,y)return .2,.4,.1,(x==16 or x==17) and 1 or 0,.5,.5 end,2,0,nil,kind)
+ local near,far,left,right=math.huge,-math.huge,math.huge,-math.huge
+ for _,f in ipairs(body)do for _,p in ipairs(f)do
+  near=math.min(near,p[3]);far=math.max(far,p[3]);left=math.min(left,p[1]);right=math.max(right,p[1])
+  assert(p[2]>=0 and p[2]<=48,'organic body lost its ground/height bounds')
+ end end
+ assert(far-near>20 and right-left>20,kind..' collapsed into a slab')
+ assert(#body<3000,'balanced organic volume exceeded mesh budget')
+end
+print('PASS closed grounded voxel volume, native contour, merged surfaces, depth cap and fixed orientation')

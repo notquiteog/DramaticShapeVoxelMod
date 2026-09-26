@@ -1,3 +1,15 @@
+Trees use normal round crowns: separate narrow border rows, one broad tree for a 2x2 drawing. Native TREE ART retains model/card choices. ROCKS & BUSHES adds solid/native-cutout choices in Gen2/3; default models leave people, Pokemon, grass and flowers as sprites. Mesh revision 73 invalidates older geometry. Adds Voxel Ascendant's MIT-licensed optional weather across all three engines (CLEAR/AUTO/RAIN/SNOW/FOG/STORM), with source attribution. Native battle mechanics are unchanged.
+
+## 1.28.0 — 2026-09-26
+
+Replaces flat-looking source-column tree/rock extrusion with intersecting 3D canopy/stone masses using each game's native palette. Tree cards remain optional. Shelves now have individually projecting contents, while terminal/rack recipes get separate CRTs, keyboards and equipment modules. Six FireRed/LeafGreen Pokémon Tower grave drawings gain closed plinths and upright headstones, scoped to their original tileset.
+
+Adds closed native-art Crystal sculptures, monuments and thin bicycle displays, plus timber-house side/back siding. Thirty-one more FireRed/LeafGreen cabinet recipes receive closed frames, recessed source facades, kickboards and separate storage bays. Existing authored consoles, appliances and lab models retain priority. Cache revision 72 refreshes stored scenery.
+
+Connects native forest, cave and tower atmosphere controls to both later generations, including fog visibility/thickness, separate subtle/full particle levels and speed. Fixes the full-particle pass calling a nonexistent renderer API. FireRed/LeafGreen SCENERY TEXTURES now controls optional world-stable grain on scenery without affecting actor or UI art.
+
+Verified focused geometry/settings tests, LuaJIT compilation and representative rendered scenes on Gen1Recomp 0.3.20. The native options menu changes, persists and restores the new controls. See [evidence and limits](docs/NATIVE_SCENERY_QA_2026-09-26.md). This is an incremental release: full city/route/interior coverage, specialty scenery settings and Gen3 world-space battle actors remain unfinished. Tower speed currently affects particles, not animated ground mist.
+
 ## 1.27.2 — 2026-09-26
 
 Crystal shared scenery pass: 36 existing complete-object recipes now use component furniture—recessed shelving and machine displays, keyboard trays, legged tables, chairs and horizontal beds. Covers facilities, stations, Radio Tower, Game Corners, gates, mansions, ship cabins and Battle Tower. Six native rock drawings use closed source-colored voxel volumes, covering 2,048 placements in the imported map census. No collision, scripts or encounter behavior changes. Cache revision71 refreshes previous geometry.
@@ -151,7 +163,7 @@ what has actually been checked; all-map visual perfection is not claimed.
 
 Battle Art Voxel Fork turns the overworld of the [Pokémon Gen 1 Recompilation Project](https://github.com/bryanthaboi/pokemon-gen1-recomp-project) into a 3D voxel diorama and stages battles inside that world. It also provides configurable static and animated battle sprites, arena backdrops, trainer art, first-person exploration, water reflections, lighting, and compatibility hooks for other presentation mods.
 
-The stable line supports **Pokémon Red, Blue, Yellow, Gold, Silver and Crystal**; the 1.21 preview also enables **FireRed**. Current native verification uses Gen1Recomp 0.2.73. Gen 2 supports the diorama, staged battles and 1ST/3RD camera-relative native grid walking. Gen 1 keeps its existing free-movement path. The [Gen 2 support notes](docs/GEN1_GEN2_DIFFERENCES.md) distinguish current support from historical limitations.
+The stable line supports **Pokémon Red, Blue, Yellow, Gold, Silver and Crystal**; the native path also supports **FireRed and LeafGreen**. Current native verification uses Gen1Recomp 0.3.20. Gen 2 supports the diorama, staged battles and 1ST/3RD camera-relative native grid walking. Gen 1 keeps its existing free-movement path. The [Gen 2 support notes](docs/GEN1_GEN2_DIFFERENCES.md) distinguish current support from historical limitations.
 
 ## Provenance
 
@@ -195,7 +207,7 @@ Some older engine builds exposed enough filesystem functionality for the cache b
 
 On recent engines, `R.DIST: MEDIUM` is the default. It bounds connected-map work to 32 Gen 1 cells (512 world pixels) while the current map remains complete. `SHORT`, `FAR`, and `FULL` are available for lower-end hardware, wider views, or comparison.
 
-The manifest accepts the development build identifier and stable versions in the range `>=0.1.69 <2.0.0`.
+The manifest accepts the development build identifier and stable versions in the range `>=0.2.73 <3.0.0`.
 
 ## Installation
 

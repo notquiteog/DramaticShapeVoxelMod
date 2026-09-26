@@ -44,17 +44,20 @@ function M.rock(c,emit,uvFor)
   local any=false;for x=0,15 do if mask[y*16+x]then any=true;break end end
   if any then break end;bottom=bottom+1
  end
- local hull=V.require('VoxelHull').build(16,16,function(x,y)
+ local H=V.require('VoxelHull')
+ local sample=function(x,y)
   local r,g,b,a=c.ts.imageData:getPixel(px+x,py+y)
   -- Merged source colour only selects coplanar merges; draw uses the live
   -- native atlas (including its native BG2 pass) through the sampled UV.
   local uvx,uvy=unpack(tex(x+.5,y+.5))
   return r,g,b,mask[y*16+x]and a or 0,uvx,uvy
- end,1,bottom)
+ end
+ local card=V.require('TreePresentation').props:get()=='cards'
+ local hull=card and H.card(16,16,sample,bottom,c.shape.height or 16) or H.build(16,16,sample,1,bottom,nil,'rock')
  for _,q in ipairs(hull)do
   local points={};local t={q.u,q.v}
-  for _,p in ipairs(q)do points[#points+1]={c.cx*16+8+p[1],p[2]*(c.shape.height or 16)/16,c.cy*16+8+p[3]}end
-  emit(points,{t,t,t,t},q.shade)
+  for _,p in ipairs(q)do points[#points+1]={c.cx*16+8+p[1],p[2]*(card and 1 or (c.shape.height or 16)/16),c.cy*16+8+p[3]}end
+  emit(points,{t,t,t,t},q.shade,card and {c.cx*16+8,c.cy*16+8,.001} or nil)
  end
 end
 return M

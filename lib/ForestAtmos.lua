@@ -185,8 +185,8 @@ ForestAtmos.RAMP = {
 -- The frame's atmosphere for `map` at clock `t` (defaulting to now), or
 -- nil -- no entry, or the row is OFF -- in which case nothing is drawn
 -- and Voxel3D.fog should be left nil.
-function ForestAtmos.frame(map, t)
-  if ForestAtmos.setting:get() == "off" then return nil end
+function ForestAtmos.frame(map, t, options)
+  if (options and options.level or ForestAtmos.setting:get()) == "off" then return nil end
   local cfg = configFor(map and map.id)
   if not cfg then return nil end
   local mix = DayNight.mix(t or DayNight.time())
@@ -762,15 +762,15 @@ end
 -- geometry like the Stadium flames. Anything missing -- no entry, OFF, a
 -- refused shader, no readable depth, no shadow map -- subtracts only
 -- itself.
-function ForestAtmos.draw(map)
-  local rung = ForestAtmos.setting:get()
+function ForestAtmos.draw(map, options)
+  local rung = options and options.level or ForestAtmos.setting:get()
   if rung == "off" then return end
-  local f = ForestAtmos.frame(map)
+  local f = ForestAtmos.frame(map,nil,options)
   if not f then return end
   local Voxel3D = V.require("Voxel3D")
   local ShadowMap = V.require("ShadowMap")
 
-  if f.rayAlpha > 0.01 then
+  if f.rayAlpha > 0.01 and f.rayStrength > 0 then
     if not Voxel3D.depthReadable() then
       say("depth", "no readable depth this frame -- beams off, fog stays")
       return
@@ -821,7 +821,7 @@ function ForestAtmos.draw(map)
         pcall(sh.send, sh, "strength", f.rayStrength * f.rayAlpha)
         pcall(sh.send, sh, "sunward", { -kx / kl, 1 / kl, -kz / kl })
         pcall(sh.send, sh, "wind", { 0.016, 0.009 })
-        pcall(sh.send, sh, "time", ForestAtmos.time)
+        pcall(sh.send, sh, "time", ForestAtmos.time*(options and options.speed or 1))
         pcall(love.graphics.draw, quad)
         love.graphics.setShader()
         love.graphics.setBlendMode("alpha")
@@ -836,8 +836,8 @@ function ForestAtmos.draw(map)
     local psh = partShader()
     local axisR, axisU = billboardAxes(Voxel3D)
     if M and psh and axisR then
-      Voxel3D.blend("add")
-      if Voxel3D.beginEffect(psh) then
+      Voxel3D.withEffect("add",function()
+        love.graphics.setShader(psh)
         pcall(psh.send, psh, "vp", "row", Voxel3D.vp)
         pcall(psh.send, psh, "curve",
               { Voxel3D.curveX or 0, Voxel3D.curveZ or 0,
@@ -847,13 +847,13 @@ function ForestAtmos.draw(map)
         pcall(psh.send, psh, "cullRect", cullRect())
         pcall(psh.send, psh, "axisR", axisR)
         pcall(psh.send, psh, "axisU", axisU)
-        pcall(psh.send, psh, "time", ForestAtmos.time)
+        pcall(psh.send, psh, "time", ForestAtmos.time*(options and options.speed or 1))
         if M.motes and f.moteLevel > 0.02 then
           pcall(psh.send, psh, "size", 1.4)
           pcall(psh.send, psh, "sway", { 5, 2.5 })
           pcall(psh.send, psh, "blinky", 0)
           pcall(psh.send, psh, "dotColor", MOTE_COLOR)
-          pcall(psh.send, psh, "level", f.moteLevel * 0.5)
+          pcall(psh.send, psh, "level", f.moteLevel * 0.5 * (options and options.particleLevel or 1))
           pcall(love.graphics.draw, M.motes)
         end
         if M.flies and f.fireflyLevel > 0.02 then
@@ -861,12 +861,10 @@ function ForestAtmos.draw(map)
           pcall(psh.send, psh, "sway", { 10, 4 })
           pcall(psh.send, psh, "blinky", 1)
           pcall(psh.send, psh, "dotColor", FLY_COLOR)
-          pcall(psh.send, psh, "level", f.fireflyLevel * 0.85)
+          pcall(psh.send, psh, "level", f.fireflyLevel * 0.85 * (options and options.particleLevel or 1))
           pcall(love.graphics.draw, M.flies)
         end
-        Voxel3D.endEffect()
-      end
-      Voxel3D.blend(nil)
+      end)
     end
   end
 end

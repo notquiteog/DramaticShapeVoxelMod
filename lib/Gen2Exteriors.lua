@@ -3,6 +3,7 @@
 local V=...
 local M={}
 local Eaves=V and V.require("RoofEaves") or assert(loadfile("lib/RoofEaves.lua"))()
+local Cladding=V and V.require("HouseCladding") or dofile("lib/HouseCladding.lua")
 local function key(x,y)return (y+64)*4096+x+64 end
 local function row(map,x,y,w,left,middle,right)
  for dx=0,w-1 do
@@ -131,6 +132,17 @@ function M.build(S,map)
     for bx=0,g.width-1 do local x=x0+bx*8
      face({{x+8,top,z0},{x,top,z0},{x,top-8,z0},{x+8,top-8,z0}},tile,.8)
     end
+   end
+   -- Timber siding has real shallow courses on the unseen sides/back.
+   -- Keep brick/plaster shells and their native masonry artwork intact.
+   if g.style=='timber_eaves' then
+    local tile=g.wallTile
+    local sample={(tile%per*8+3.5)/aw,(math.floor(tile/per)*8+3.5)/ah}
+    local material={sample,sample,sample,sample}
+    local function emit(p,t,shade)p.uv=t;p.shade=shade;S.objectQuads[#S.objectQuads+1]=p end
+    Cladding.side(x0,z0,z0+D,H,H,-1,material,emit)
+    Cladding.side(x0+W,z0,z0+D,H,H,1,material,emit)
+    Cladding.back(x0,x0+W,z0,H,material,emit)
    end
    if g.style=='kanto_hip' then
     -- The two rows below the roof cap are the dormer and eave, not another

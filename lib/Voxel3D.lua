@@ -303,6 +303,7 @@ local SHADER = [[
   uniform vec3 ghostColor;    // the flat silhouette colour
   uniform float ghost;        // 0 = shade normally, 1 = flatten to it
   uniform float effectSurface; // scoped translucent VFX; zero for normal world
+  uniform float surfaceDetail; // optional native scenery grain, never UI/actors
   uniform float lightOn;      // 1 = scene lighting, 0 = texture true-colour
   uniform float weatherHaze;
   uniform vec3 weatherHazeColor;
@@ -389,6 +390,12 @@ local SHADER = [[
     // ordinary positive shade values and remain double-sided.
     if (vFacadeBack > 0.5) discard;
     vec4 p = Texel(tex, tc);
+    if (surfaceDetail > 0.5) {
+      vec3 cell=floor(vFoliageRay.xyz*2.0);
+      float grain=fract(sin(dot(cell,vec3(12.9898,78.233,37.719)))*43758.5453)-0.5;
+      float fade=1.0/(1.0+length(fwidth(vFoliageRay.xyz))*2.0);
+      p.rgb*=1.0+grain*0.06*fade;
+    }
     // Effects carry continuous coverage, independently of their emissive RGB.
     // Keep this ahead of the world sprite cutout and all scene illumination.
     if (effectSurface > 0.5) return p * color;
@@ -1716,6 +1723,7 @@ function Voxel3D.draw(mesh, texture, model, pull, sunModel)
   -- sending a uniform to the other shader would go nowhere
   local sh = activeShader
   if not sh then return end
+  pcall(sh.send,sh,"surfaceDetail",Voxel3D.surfaceDetail and 1 or 0)
   pcall(sh.send,sh,"canopyFacing",Voxel3D.canopyFacing and 1 or 0)
   pcall(sh.send,sh,"battleCutOn",battleCutScope and 1 or 0)
   if battleCutScope then

@@ -389,6 +389,7 @@ mod.content.render_pipelines:register("voxel", {
     -- Viridian's leaf shimmer, haze and optional volumetric pass use their
     -- own clock so animations continue smoothly through dialogue and battles.
     ForestAtmos.update(dt)
+    V.require("Weather").update(dt)
     -- The overworld battle rides this hook rather than owning a pipeline of
     -- its own, because it owns no pass of the FRAME: it draws under a battle
     -- screen the engine composites, which is not a stage the registry has.
@@ -719,9 +720,11 @@ end
 
 local TreePresentation=V.require("TreePresentation")
 local SETTINGS = {
+  { V.require("Weather").setting, "Optional outdoor rain, snow, drifting fog and storms. AUTO uses a deterministic map schedule. Visual only; native battle weather and gameplay stay unchanged.", full=true },
   { V.require('ModernBattleUI').setting, "Compact status cards above every battler and window-resolution commands. Native menus return when disabled.", full=true },
   { V.require("CrystalSprites").setting, "Crystal animation, shiny effects and portraits in Gen 1/2. SELECTED ART uses the existing Battle Art collections. Restart the game after changing this pack.", full=true },
   { V.require("CrystalSprites").fullBody, "Animated Gen 5 full-body backs on 2.5D battle stages with the Crystal pack. Normal menus retain Crystal art.", full=true },
+  { TreePresentation.props, "Native rocks and bushes as solid models (default) or original cutout sprites. People, Pokemon, grass and flowers keep their sprite art.", full=true, when=function()return Generation.isGen2()end },
   { TreePresentation.surfaces, "Original game scenery textures, or optional detailed materials. Geometry is preserved.", full=true, when=function()return Generation.isGen2()end },
   { TreePresentation.art, "Solid voxel trees use the original game art. ORIGINAL CARD and ILLUSTRATED CARD retain flat alternatives. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
   { TreePresentation.setting, "Flat illustrated trunks follow their leaf billboards. SOLID restores the physical trunk and boughs. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },

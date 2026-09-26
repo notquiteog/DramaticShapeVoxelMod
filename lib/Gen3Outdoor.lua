@@ -35,6 +35,21 @@ function M.plant(c,emit,uv)
  -- authored angle in static views and face free/battle cameras without
  -- bending, inflating, or duplicating the artwork.
  local x,z=c.cx*16,c.cy*16
+ if c.shape.kind=='shrub' and V.require('TreePresentation').props:get()=='modeled' then
+  local mask=M.mask(c.ts,c.mid,c.shape.ground);local slot=c.ts.midToSlot[c.mid]
+  if mask and slot then
+   local faces=V.require('VoxelHull').build(16,16,function(px,py)
+    local r,g,b,a=pixel(c.ts,slot%c.ts.cols*16+px,math.floor(slot/c.ts.cols)*16+py)
+    local t=sub(uv,px+.5,py+.5,px+.5,py+.5)[1]
+    return r,g,b,mask[py*16+px] and a or 0,t[1],t[2]
+   end,1,0,nil,'bush')
+   for _,q in ipairs(faces)do
+    local p={};for _,v in ipairs(q)do p[#p+1]={x+8+v[1],v[2],z+8+v[3]}end
+    local t={q.u,q.v};emit(p,{t,t,t,t},q.shade)
+   end
+   return true
+  end
+ end
  local h=c.shape.kind=='grass' and 4 or 16
  if c.shape.kind=='grass' then
   -- Keep the original patch spread across its full ground area; lowering

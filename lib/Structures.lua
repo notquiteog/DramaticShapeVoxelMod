@@ -1415,6 +1415,19 @@ function Structures.forMap(map)
     if g == false then S.ground[k] = best end
   end
 
+  -- Optional native rock cards share the upright foliage pass, so free
+  -- cameras turn them around a ground anchor without pitch-induced leaning.
+  for _,st in ipairs(S.roundStamps)do
+    local solid={}
+    for _,q in ipairs(st.quads)do
+      if q.card then
+        local out={u=q.u,v=q.v,shade=q.shade,canopy={st.mx,st.mz,.001}}
+        for _,p in ipairs(q)do out[#out+1]={p[1]+st.mx,p[2],p[3]+st.mz}end
+        S.flowerQuads[#S.flowerQuads+1]=out
+      else solid[#solid+1]=q end
+    end
+    st.quads=solid
+  end
   cache[map.id] = S
   return S
 end
@@ -2445,13 +2458,15 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
         if data then
           local rocks=V.require("Gen2Rocks")
           local layout=rocks.shoreClusterLayout(cx,cy)
-          local sig=tsid.."|reef|"..layout.seed
+          local cards=V.require("TreePresentation").props:get()=="cards"
+          local sig=tsid.."|reef|"..layout.seed..tostring(cards)
           local tpl=roundCache[sig]
           if not tpl then
             local tq={}
-            for _,stone in ipairs(layout) do
+            if cards then tq=rocks.terrain(S,map,cx*2,cy*2,16,4)
+            else for _,stone in ipairs(layout) do
               for _,q in ipairs(rocks.terrain(S,map,cx*2,cy*2,8,4,stone)) do tq[#tq+1]=q end
-            end
+            end end
             tpl={quads=tq};roundCache[sig]=tpl
           end
           S.roundStamps[#S.roundStamps+1]={quads=tpl.quads,mx=cx*16+8,mz=cy*16+8,r=8}

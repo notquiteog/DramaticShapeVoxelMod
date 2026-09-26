@@ -29,6 +29,8 @@ local calls={}
 local function hit(name,value)calls[#calls+1]={name,value};return value end
 local fakeSetting=function()return {get=function()return 2 end}end
 local modules={SpatialUpscale={setting=s},ModSetting=Setting,CameraSettings={invertY=s},
+ Weather={setting=s,update=function(dt)hit('weather',dt)end},
+ ForestAtmos={update=function(dt)hit('atmosphere',dt)end},
  DayNight={setting=s,update=function(dt)hit('clock',dt)end,
  applyRig=function(out)hit('rig',out)end,tint=function(out)return out and {1,.4,.2}or{1,1,1}end},
  Sky={dress=function(bg)bg.bands={{1,2,3}};return bg end},
@@ -41,7 +43,9 @@ local modules={SpatialUpscale={setting=s},ModSetting=Setting,CameraSettings={inv
 local Options=load('Gen3SceneOptions',{require=function(name)return assert(modules[name],name)end})
 Options.tilt:setIndex(3);Options.update(.25)
 check(calls[1][1]=='clock' and calls[1][2]==.25,'clock advances on native update')
-check(calls[2][1]=='tilt' and calls[2][2]==2,'tilt option reaches postprocess')
+check(calls[2][1]=='weather' and calls[2][2]==.25,'weather clock advances')
+check(calls[3][1]=='atmosphere' and calls[3][2]==.25,'atmosphere advances on native update')
+check(calls[4][1]=='tilt' and calls[4][2]==2,'tilt option reaches postprocess')
 local bg=Options.environment(false,{.1,.2,.3,1})
 check(bg.bands and modules.Voxel3D.tint[2]==.4,'outdoor sky/tint')
 Options.environment(true,{0,0,0,1})

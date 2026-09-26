@@ -33,15 +33,29 @@ function M.draw(id,A)
   -- Raised rear gives the keys a shallow typing angle.
   S(r[1],r[2],r[3],r[4],{l,h+.6,n},{l+w,h+.6,n},{l+w,h+.05,n+d},{l,h+.05,n+d})
  end
- local function shelves(l,n,w,d,h,rows,mat,dark)
+ local function shelves(l,n,w,d,h,rows,mat,dark,items)
+  items=items or id:find('books',1,true) or id=='gb_mart_shelf'
   local f=n+d
   B(l,0,n,l+w,h,n+1,mat)
   B(l,0,n,l+1,h,f,mat);B(l+w-1,0,n,l+w,h,f,mat)
   B(l,0,n,l+w,1.5,f,mat);B(l,h-1,n,l+w,h,f+.3,mat)
   for _,q in ipairs(rows)do
    local y0,y1,rect=q[1],q[2],q[3]
-   B(l+1,y0,n+1,l+w-1,y1,f-1.2,dark)
-   front(rect,l+1,y0,l+w-1,y1,f-1.18)
+   if items then
+    -- Separate contents with visible tops/sides and empty shelf space.
+    -- Each spine retains its own portion of the original shelf artwork.
+    local count=math.max(2,math.floor((w-2)/3));local span=(w-2)/count
+    for j=0,count-1 do
+     local x=l+1+j*span;local height=y1-((j%3)*.35)
+     local face=f-1-(j%3)*.65;local sx=rect[1]+rect[3]*j/count
+     local sw=rect[3]/count
+     B(x,y0,n+2,x+span-.3,height,face,T(sx+sw/2,rect[2]+rect[4]/2))
+     front({sx,rect[2],sw,rect[4]},x,y0,x+span-.3,height,face+.02)
+    end
+   else
+    B(l+1,y0,n+2,l+w-1,y1,f-3.2,dark)
+    front(rect,l+1,y0,l+w-1,y1,f-3.18)
+   end
    B(l+.5,y0-.7,n+1,l+w-.5,y0,f+.2,mat)
   end
  end
@@ -60,14 +74,64 @@ function M.draw(id,A)
   B(l+9,.04,n+5,l+9.3,.3,n+10,dark)
   B(l+6,.04,n+9.7,l+9.3,.3,n+10,dark)
  end
- if id:match('^gb_native_') then
+ if id=='fr_tower_grave' then
+  local stone,dark,cap=T(6,4),T(3,10),T(7,1)
+  -- A low foot, recessed upright inscription and stepped stone crown.
+  -- Closed backs and undersides remain visible from first-person/orbit views.
+  B(2,0,4,14,1.5,15,dark)
+  B(3,1.5,6,13,10.5,13,stone)
+  B(4,10.5,7,12,12,12,cap)
+  B(3.5,1.5,12.8,12.5,2.5,13.3,dark)
+  front({3,2,10,11},3,2.5,13,10.5,13.02)
+ elseif id=='fr_native_books' or id=='fr_native_monitor' or id=='fr_native_rack' then
+  local r=A.recipe;local w,h=A.width,A.height;local face=r.facade or {0,0,w,h}
+  local z=r.frontOffset or h-1;local height=r.h or h-2;local rear=z-(r.depth or 11)
+  local mat=T((r.material or {1,1})[1],(r.material or {1,1})[2]);local dark=T(face[1]+1,face[2]+face[4]-.5)
+  if id=='fr_native_books' then
+   local half=face[4]/2
+   shelves(1,rear,w-2,z-rear,height,{{2,height/2-1,{face[1],face[2]+half,face[3],half}},
+    {height/2+1,height-2,{face[1],face[2],face[3],half}}},mat,dark,true)
+  elseif id=='fr_native_monitor' then
+   B(2,0,rear,w-2,5,z,mat)
+   crt(1,rear,w-2,7,height,{face[1]+1,face[2],face[3]-2,face[4]*.65},mat,dark)
+   keyboard({face[1]+1,face[2]+face[4]*.65,face[3]-2,face[4]*.35},2,z-3,w-4,3,5.1,mat)
+  else
+   B(1,0,rear,w-1,height,rear+1,mat)
+   B(1,0,rear,2,height,z,mat);B(w-2,0,rear,w-1,height,z,mat)
+   local count=height>25 and 3 or 2;local span=(height-2)/count
+   for j=0,count-1 do
+    local base=1+j*span;local f=z-1.5-(j%2)*.7
+    B(2,base,rear+1,w-2,base+span-1,f,mat)
+    front({face[1],face[2]+face[4]*(count-j-1)/count,face[3],face[4]/count},2,base,w-2,base+span-1,f+.02)
+    B(w-4,base+1,f,w-3,base+2,f+.8,dark)
+   end
+   B(1,height-1,rear,w-1,height,z,mat)
+  end
+ elseif id=='fr_native_cabinet' then
+  local r=A.recipe;local w,h=A.width,A.height
+  local face=r.facade or {0,0,w,h}
+  local z=r.frontOffset or h-1
+  local height=r.h or h-2;local base=r.base or 0
+  local depth=r.depth or 11;local rear=z-depth
+  local mat=T((r.material or {1,1})[1],(r.material or {1,1})[2])
+  -- Complete native facade inset into a closed cabinet, with real side
+  -- panels, a raised cornice, kickboard and recessed front equipment.
+  B(1,base,rear,w-1,height,rear+1,mat)
+  B(1,base,rear,2,height,z,mat);B(w-2,base,rear,w-1,height,z,mat)
+  B(1,height-1,rear,w-1,height,z,mat);B(1,base,rear,w-1,base+1.5,z,mat)
+  B(2,base+1.5,rear,w-2,height-1,z-1,mat)
+  front(face,2,base+1.5,w-2,height-1,z-.98)
+  -- Wide shelves retain every item in the source facade while central
+  -- uprights divide physically separate storage bays.
+  if w>=32 then for x=16,w-8,16 do B(x-.4,base+1.5,z-.8,x+.4,height-1,z,mat)end end
+ elseif id:match('^gb_native_') then
   local w,h=A.width,A.height
   local mat,dark=T(1,1),T(math.min(3,w-1),math.min(8,h-1))
   local rear=math.max(1,h-13);local f=h-1
   if id=='gb_native_cabinet' then
    -- Source upper and lower racks occupy distinct recessed shelves.
    shelves(1,rear,w-2,11,h-2,{{2,h/2-1,{1,h/2,w-2,h/2-1}},
-    {h/2+1,h-3,{1,1,w-2,h/2-2}}},mat,dark)
+    {h/2+1,h-3,{1,1,w-2,h/2-2}}},mat,dark,true)
   elseif id=='gb_native_machine' then
    B(2,0,rear,w-2,5,f,mat)
    front({1,h-6,w-2,5},2,0,w-2,5,f+.02)

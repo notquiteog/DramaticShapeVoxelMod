@@ -45,4 +45,37 @@ assert(fv[1][2]+forest.bottom==0,'transparent shadow padding made the tree float
 local mv,mi={},{};native.appendModel(c,mv,mi,0,12,3,18)
 assert(#mv>24 and #mi>36,'native tree was left a card')
 for _,p in ipairs(mv)do assert(p[9]==0,'voxel tree billboards');assert(p[2]>=3,'voxel tree below ground')end
+local function bounds(c)
+ local v,i={},{};native.appendModel(c,v,i,0,0,0,0)
+ local loX,hiX,loZ,hiZ=math.huge,-math.huge,math.huge,-math.huge
+ for _,p in ipairs(v)do loX=math.min(loX,p[1]);hiX=math.max(hiX,p[1]);loZ=math.min(loZ,p[3]);hiZ=math.max(hiZ,p[3])end
+ assert(hiX-loX>=c.w-4,'canopy lost original columns')
+ assert(hiZ-loZ>=c.w*(c.modelRows or 1)-4,'canopy lost source footprint')
+ assert(hiZ-loZ<=c.w*(c.modelRows or 1)+2,'portrait height elongated the tree')
+ assert(math.abs(loZ+hiZ)<=2,'tree group drifted')
+ -- There must be two distinct grounded stems, not an elongated canopy.
+ local stems={}
+ for _,p in ipairs(v)do if p[2]==0 then stems[math.floor(p[3]/4+.5)]=true end end
+ local lo,hi=math.huge,-math.huge
+ for z in pairs(stems)do lo=math.min(lo,z);hi=math.max(hi,z)end
+ if c.modelRows==2 then assert((hi-lo)*4>=c.w,'border rows need separate stems')
+ else assert((hi-lo)*4<c.w*.5,'wide tree was split into separate stems')end
+end
+bounds(c);bounds(forest)
+local border={};for k,v in pairs(c)do border[k]=v end;border.modelRows=2;bounds(border)
 print('PASS original tree proportions, transparent ground, preserved highlights, camera anchors and palette-content deduplication')
+
+-- Crystal's collision classifier uses 4 for Cut and 3 for Headbutt bushes.
+local pixels={getPixel=function(_,x,y)if x<8 then return .8,.9,.6,1 end;return .1,.4,.1,1 end}
+local gb=assert(loadfile('lib/NativeTreeArt.lua'))({require=function(name)
+ if name=='SceneryMask' then return Mask end
+ if name=='TerrainAtlas' then return {originalPixels=function()return pixels end} end
+ if name=='Gen2DepthGrass' then return {groundTile=function()return 0 end} end
+ error(name)
+end})
+local map={tileset={id='TILESET_JOHTO',tilesPerRow=16},tileAt=function()return 1 end}
+assert(gb.gen2(map,1,1,4).modelShape=='tree','Cut tree turned into a low bush')
+assert(gb.gen2(map,1,1,3).modelShape=='bush','Headbutt bush gained a tree trunk')
+assert(gb.gen2(map,1,1,17).modelRows==2,'narrow border lost its second tree')
+assert(gb.gen2(map,1,1,20).modelRows==1,'wide crown split into several trees')
+print('PASS Crystal Cut/Headbutt presentation and wide/narrow footprints')

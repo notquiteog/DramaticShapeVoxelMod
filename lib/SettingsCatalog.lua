@@ -1,6 +1,8 @@
 -- Declaration inventory. Per-generation consumers/status live in OptionSupport;
 -- declaring a setting or listing a row is never evidence that it works.
 return {
+ {key="sceneryProps",label="ROCKS & BUSHES",module="TreePresentation"},
+ {key="weather",label="WEATHER",module="Weather"},
  {key="spatialUpscale",label="FSR 1",module="SpatialUpscale"},
  {key="modernBattleUI",label="MODERN BATTLE UI",module="ModernBattleUI"},
  {key="tiltshift",label="T-SHIFT",module="TiltShift"},

@@ -1630,6 +1630,9 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
     end
     local canvas = AntiAlias.resolve(Voxel3D.endScene(), pw, ph, "battle")
     if not canvas then return end
+    if not whiteFill and not artImage then
+      V.require("Weather").applyBattle(canvas,pw,ph,state.map,math.max(1,pw/640))
+    end
 
     local vp = Voxel3D.vp
     local pmx, pmy = BattleScene.toGB(vp, arena.player[1], groundY,

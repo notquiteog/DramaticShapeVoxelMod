@@ -10,6 +10,7 @@ for _,r in ipairs(F.recipes)do if r.design then
   count=count+1;for i,p in ipairs(q)do assert(p[1]==p[1] and p[2]>=0);hi=math.max(hi,p[2]);assert(uv[i][1]>=0 and uv[i][1]<=1 and uv[i][2]>=0 and uv[i][2]<=1,'UV '..r.name)end
  end,function()return{{0,0},{1,0},{1,1},{0,1}}end)
  assert(count>10,r.name);if r.design=='fr_bed'then assert(hi<=8,'bed upright')end
+ if r.design=='fr_tower_grave'then assert(hi==12,'grave must have an upright headstone')end
  n=n+1
 end end
 local recipes=dofile('data/gen2_furniture.lua');local GB=V.require('Gen2DesignedFurniture')

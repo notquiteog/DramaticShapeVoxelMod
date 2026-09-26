@@ -1,9 +1,27 @@
 -- One complete illustrated foliage card per tree. The physical trunk and
 -- ground shadow are separate; there are no caps, cheeks or stacked crowns.
+local V=...
 local M={}
+local bushModel
+function M.appendBush(v,indices,q,x,y,z)
+  local Hull=V.require('VoxelHull')
+  if not bushModel then
+    local file=love.filesystem.newFileData(assert(V.mod:read('assets/crystal/depth-crowns-v2.png')),'depth-crowns-v2.png')
+    local data=love.image.newImageData(file);file:release()
+    V.require('TreeIllustrations').isolate(data)
+    local w,h=data:getDimensions()
+    bushModel=Hull.build(16,16,function(px,py)
+      local u,v=.51+(px+.5)/16*.48,.686+(py+.5)/16*.26
+      local r,g,b,a=data:getPixel(math.floor(u*w),math.floor(v*h))
+      return r,g,b,a,u,v
+    end,1,0,nil,'bush')
+    data:release()
+  end
+  return Hull.append(bushModel,v,indices,q,x,y,z)
+end
 function M.append(v,indices,q,x,y,z,lift,seed,family,flatTrunk)
   local shrub=lift==3
-  local sapling=lift<=4 and not shrub
+  local sapling=lift==4
   local phase=(math.sin(seed*12.9898)*43758.5453)%1
   local height=(lift==20 and 42 or 34)*(.92+phase*.14)
   local spread=lift==20 and 1.18 or 1

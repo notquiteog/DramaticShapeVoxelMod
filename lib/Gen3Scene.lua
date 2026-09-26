@@ -217,7 +217,7 @@ local function prepare(game,vw,vh,cam)
    if not c.stageHidden then V.require('Gen3Cave').wall(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
   elseif shape.kind=='rock' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
-   if not c.stageHidden then V.require('Gen3Cave').rock(c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
+   if not c.stageHidden then V.require('Gen3Cave').rock(c,function(v,t,shade,anchor)quad(anchor and b.pv or b.v,anchor and b.pi or b.i,v,t,shade,anchor)end,uvFor)end
   elseif shape.kind=='cliff' then
    M.cliffCount=M.cliffCount+1
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
@@ -395,6 +395,14 @@ local function prepare(game,vw,vh,cam)
  return true
 end
 local function terrain(draw)
+ local original=draw
+ local function draw(...)
+  local previous=R.surfaceDetail
+  R.surfaceDetail=TreeStyle.surfaces:get()=='detailed'
+  local ok,err=pcall(original,...)
+  R.surfaceDetail=previous
+  if not ok then error(err,0)end
+ end
  for _,p in ipairs(cache.parts)do
   -- Always bind the current native image: animations and palette updates stay live.
   local ts=Tiles._pairs[p.pair]
@@ -646,6 +654,9 @@ function M.draw(game,vw,vh,cam)
   R.camera=Interior.camera(Interior.forMap(M.sceneDef,3),S.angle,vw/vh)
   if R.camera then cx,cz=R.camera.focus[1],R.camera.focus[3]end
  end
+ local atmosphere=V.require("NativeAtmosphere")
+ local atmosphereMap=atmosphere.gen3(M.sceneDef,Map.current)
+ if atmosphere.kind(atmosphereMap)=="forest" then V.require("DayNight").applyRig(false) end
  R.viewProjection(cx,cz,vw,vh)
  savedCanvas=love.graphics.getCanvas();love.graphics.push('all');saved=true
  if not plate and Shadow.begin(cx,cz,vw,vh) then
@@ -664,6 +675,7 @@ function M.draw(game,vw,vh,cam)
  local bounds=M.distance.bounds
  R.fog=not indoor and Distance.haze(background,M.fadeExtent,{cx,0,cz},
   {bounds[1]*16,bounds[2]*16,(bounds[3]+1)*16,(bounds[4]+1)*16})or nil
+ R.fog=atmosphere.fog(atmosphereMap) or R.fog
  if not R.beginScene(renderWidth,renderHeight,cx,cz,vw,vh,background,'firered') then M.restore();return false end
  R.battleOcclusion(nil)
  if plate then
@@ -687,7 +699,13 @@ function M.draw(game,vw,vh,cam)
   if not cam.replay then rideDust(game,cam);fieldEffects(R.draw,cam)end
  end
  R.battleOcclusion(nil)
+ if not plate then atmosphere.draw(atmosphereMap) end
  local canvas=Options.finish(R.endScene(),width,height)
+ if not plate then
+  local weather=V.require('Weather')
+  local apply=cam.battle and weather.applyBattle or weather.apply
+  apply(canvas,width,height,{id=Map.current,def={outdoor=not indoor}},math.max(1,width/640))
+ end
  R.fog=nil
  R.tint={1,1,1}
  love.graphics.pop();love.graphics.setCanvas(savedCanvas);saved=false;savedCanvas=nil

@@ -48,8 +48,9 @@ function M.install()
  local nativeArt=V.require('NativeBattleArt');nativeArt.install()
  local interfaceArt=V.require('NativeInterfaceArt')
  local uninstallInterface=interfaceArt.install()
- local sharedSettings={V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,
+ local sharedSettings={Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,
   V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting}
+ for _,setting in ipairs(V.require("NativeAtmosphere").settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(SceneOptions.settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(interfaceArt.settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(V.require('Gen3BattleOptions').settings)do sharedSettings[#sharedSettings+1]=setting end

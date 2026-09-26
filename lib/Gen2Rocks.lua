@@ -107,6 +107,23 @@ function M.terrain(S,map,tx,ty,size,height,customLayout)
   local aw,ah=map.tileset.imageWidth or 128,map.tileset.imageHeight or 128
   local function key(x,y)return (y+64)*4096+x+64 end
   local data=require("src.render.Assets").imageData(map.tileset.image)
+  if V.require('TreePresentation').props:get()=='cards' and not customLayout then
+    local ground=M.ground(map,math.floor(tx/2),math.floor(ty/2),math.max(1,size/16),S)
+    local colors={}
+    local function color(r,g,b)return math.floor(r*255+.5)*65536+math.floor(g*255+.5)*256+math.floor(b*255+.5)end
+    if ground then for y=0,7 do for x=0,7 do
+      colors[color(data:getPixel(ground%pr*8+x,math.floor(ground/pr)*8+y))]=true
+    end end end
+    local function at(x,y)
+      local tile=S.tileAt[key(tx+math.floor(x/8),ty+math.floor(y/8))]
+      if not tile then return 0,0,0,0,0,0 end
+      local ax,ay=tile%pr*8+x%8,math.floor(tile/pr)*8+y%8
+      local r,g,b,a=data:getPixel(ax,ay);return r,g,b,a,(ax+.5)/aw,(ay+.5)/ah
+    end
+    local mask=V.require('SceneryMask').mask(size,function(x,y)local r,g,b,a=at(x,y);return a==0 or colors[color(r,g,b)]end,size)
+    local faces=V.require('VoxelHull').card(size,size,function(x,y)local r,g,b,a,u,v=at(x,y);return r,g,b,mask[y*size+x] and a or 0,u,v end,0,height)
+    data:release();return faces
+  end
   local donor=size==32 and 60 or S.tileAt[key(tx,ty)]
   local tones={}
   for y=1,6 do for x=1,6 do
@@ -150,7 +167,7 @@ function M.accepts(c)
       or (d.id=="SPRITE_ROCK" and d.image=="assets/generated/sprites/rock.png"))
 end
 function M.draw(c,shadow)
-  if not M.accepts(c) then return false end
+  if not M.accepts(c) or V.require("TreePresentation").props:get()=="cards" then return false end
   local d=c.sprite.def
   local mesh=meshes[d.image]
   local tex=c.sprite:resolveImage()

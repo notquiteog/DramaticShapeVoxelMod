@@ -434,7 +434,7 @@ end
 -- which is all that ever filtered through the leaves -- but not a sealed
 -- room either: night still FALLS in them. Of everything the clock does,
 -- exactly one thing reaches a canopy map: the hour's tint.
-DayNight.CANOPY = { VIRIDIAN_FOREST = true }
+DayNight.CANOPY = { VIRIDIAN_FOREST = true, ILEX_FOREST = true }
 
 function DayNight.isCanopy(map)
   return (map and map.id and DayNight.CANOPY[map.id]) and true or false

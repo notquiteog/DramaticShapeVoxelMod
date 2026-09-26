@@ -1414,7 +1414,7 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   Voxel3D.glassPhase, Voxel3D.glassGlint = g.phase, g.amp
   local atmos = CommunityVisuals.customForest()
                 and ForestAtmos.frame(state.map) or nil
-  Voxel3D.fog = atmos and atmos.fog or V.require("Gen2Boundary").haze(state,cx,cy,VoxelScene.skyColor(state.map,1))
+  Voxel3D.fog = V.require("NativeAtmosphere").fog(state.map) or (atmos and atmos.fog) or V.require("Gen2Boundary").haze(state,cx,cy,VoxelScene.skyColor(state.map,1))
 
   renderGeneration = renderGeneration + 1
   local generation = renderGeneration
@@ -1780,9 +1780,11 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
 
   -- Viridian's depth-aware atmosphere is last among world visuals, matching
   -- the donor build: terrain, trees, leaves and actors occlude its light.
-  if CommunityVisuals.customForest() then
+  if CommunityVisuals.customForest() and not V.require("NativeAtmosphere").kind(state.map) then
     pcall(ForestAtmos.draw, state.map)
   end
+
+  V.require("NativeAtmosphere").draw(state.map)
 
   -- The second additive world seam: host actors, water, grass, and flowers
   -- are complete. The companion may add bounded blended packets before the
@@ -1796,6 +1798,10 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   end
   if state.map.id == "MUSEUM_1F" then V.require("MuseumFossils").drawGlass(state.map) end
   local finished = Voxel3D.endScene()
+  if finished then
+    local fw,fh=finished:getDimensions()
+    V.require("Weather").apply(finished,fw,fh,state.map,math.max(1,fw/640))
+  end
   if finished and companion and companion.completeAtmosphereCamera then companion:completeAtmosphereCamera(state) end
   -- The delta belongs only to this overworld render. Do not let it reach a
   -- later battle or another owner of Voxel3D's placed-camera seam.
