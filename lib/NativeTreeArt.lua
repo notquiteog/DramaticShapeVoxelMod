@@ -1,6 +1,7 @@
 -- Original, palette-baked game art on grounded cards. One padded atlas keeps
 -- batching and the existing free-camera billboard/shadow pass intact.
 local V=...
+local Budget=V.require('BuildBudget')
 local M={}
 local size,cell=2048,128
 local data,image,dirty
@@ -120,11 +121,12 @@ function M.addInstance(c,groups,x,y,z)
  group.positions[#group.positions+1]={x,y,z}
  return true
 end
-function M.buildInstances(groups,v,i)
- local out={}
+function M.buildInstances(groups,v,i,out,onBatch)
+ out=out or {}
  for _,group in pairs(groups)do
+  Budget.check()
   local batch=V.require('ModelInstances').new(group.mesh,group.positions)
-  if batch then out[#out+1]=batch
+  if batch then out[#out+1]=batch;if onBatch then onBatch(batch)end
   else for _,p in ipairs(group.positions)do M.appendModel(group.card,v,i,0,p[1],p[2],p[3])end end
  end
  return out
@@ -143,10 +145,14 @@ function M.gen2(map,cx,cy,lift,donor)
  local pr=map.tileset.tilesPerRow or 16
  local function sample(tile,x,y)return pixels:getPixel(tile%pr*8+x,math.floor(tile/pr)*8+y)end
  local gt=V.require('Gen2DepthGrass').groundTile(map) or 5
+ local id=tostring(pixels)..':'..table.concat(ids,',')..':'..gt
+ local c=entries[id]
+ if not c then
  local ground=background(8,8,function(x,y)return sample(gt,x,y)end)
- local c=card(tostring(pixels)..':'..table.concat(ids,','),w,h,function(x,y)
+ c=card(id,w,h,function(x,y)
   return sample(ids[math.floor(y/8)*(w/8)+math.floor(x/8)+1],x%8,y%8)
  end,ground)
+ end
  -- Narrow Johto border art covers two successive cells. Broad 2x2 crowns
  -- (Ilex) are one bushy tree; portrait height is not ground footprint.
  local family=wide and 'broad' or map.tileset.id=='TILESET_KANTO' and lift>4 and 'round' or short and 'sapling' or 'conifer'
@@ -154,6 +160,8 @@ function M.gen2(map,cx,cy,lift,donor)
 end
 function M.gen3(c)
  local ts=c.ts;local forest=c.shape.spacing==3
+ local id=tostring(ts.imageData)..':'..tostring(ts.overImageData)..':'..tostring(forest)..':'..(c.shape.ground or 1)
+ if entries[id]then return variant(entries[id],forest and 'tiered' or 'conifer',1,'tree')end
  -- Complete General drawings, not cropped root tiles. Forest has its own
  -- three-column family. Source IDs are scoped by the resolved tileset.
  -- Dense map borders use cropped overlap cells (20/22, 664, etc.).
@@ -171,8 +179,7 @@ function M.gen3(c)
   return r,g,b,a
  end
  local ground=background(16,16,function(x,y)return pixel(c.shape.ground or 1,x,y)end)
- local signature={};for _,row in ipairs(rows)do signature[#signature+1]=table.concat(row,',')end
- local result=card(tostring(ts.imageData)..':'..table.concat(signature,';'),#rows[1]*16,#rows*16,function(x,y)
+ local result=card(id,#rows[1]*16,#rows*16,function(x,y)
   return pixel(rows[math.floor(y/16)+1][math.floor(x/16)+1],x%16,y%16)
  end,ground,forest and 16 or 8)
  return variant(result,forest and 'tiered' or 'conifer',1,'tree')

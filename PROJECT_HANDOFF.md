@@ -1,3 +1,13 @@
+## 1.28.4 — Cooperative scenery streaming and higher first-person view
+
+FireRed/LeafGreen builds moving scenery windows cooperatively while continuing to draw the last complete window. Reversals, warps and invalidation cancel unfinished work and release its GPU resources. Model generation and shared uploads gain budget checkpoints; Crystal/FRLG reuse tree source pixels and Gen3 furniture matching skips unrelated recipes.
+
+Raised first-person framing in all three generations: native GB height 12 world pixels, FRLG 13.5, retaining sprite foot anchors and authored provider overrides.
+
+In one isolated 2560×1440 LeafGreen forest benchmark on Gen1Recomp 0.3.20 / RTX 5060 Ti, maximum traversal frame time fell from 53.28 ms to 10.57 ms. Mean was similar (4.56 → 4.61 ms); p95 increased (5.20 → 7.03 ms) as work was spread across frames. Both replacement windows completed. This is a targeted hitch reduction, not an all-game FPS claim. Cold map loads and individual GPU calls remain synchronous.
+
+Native Yellow, Crystal, FireRed and LeafGreen checks covered forest/lab rendering, first-person height, and house exits. Focused scheduler, resource, geometry and furniture regressions pass. Full all-map quality and companion feature parity remain unfinished. Evidence: docs/STREAMING_QA_2026-09-26.md.
+
 ## 1.28.3 — House stairs, seating and first-person placement
 
 Fixes FireRed/LeafGreen losing the selected 3D camera when leaving the player’s house with FAR/FULL render distance: connected tilesets with no ground triangles are valid empty batches. Genuine upload failures retain actionable diagnostics and bounded recovery.

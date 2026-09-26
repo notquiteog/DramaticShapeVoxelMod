@@ -777,10 +777,12 @@ end
 
 function MOUND.publishTreePart(p, rawParts, parts)
   if p.nativeGroups then
-    p.nativeInstances=V.require('NativeTreeArt').buildInstances(p.nativeGroups,p.dV,p.dI)
-    p.nativeGroups=nil
     local ctx=MOUND.treeContext()
-    for _,batch in ipairs(p.nativeInstances)do if ctx.resources then ctx.resources[batch]=true end end
+    p.nativeInstances={}
+    V.require('NativeTreeArt').buildInstances(p.nativeGroups,p.dV,p.dI,p.nativeInstances,function(batch)
+      if ctx.resources then ctx.resources[batch]=true end
+    end)
+    p.nativeGroups=nil
   end
   local total = #p.tI + #p.sI + #p.cI + #p.dI + #p.shI
   if total > MOUND.TREE_SECTION_VERTEX_BUDGET then

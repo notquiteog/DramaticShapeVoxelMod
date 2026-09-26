@@ -4,6 +4,7 @@
 -- template. No billboard anchors, cubes under the object, or per-frame work.
 local V=...
 local Trees=V and V.require('NativeTreeModels') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/NativeTreeModels.lua')
+local Budget=V and V.require("BuildBudget") or {tick=function()end,check=function()end}
 local M={}
 function M.build(w,h,sample,step,bottom,depthLimit,organic,family)
  step=step or 1;bottom=bottom or 0
@@ -15,6 +16,7 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic,family)
  local nativeRows={}
  local function key(x,y,z)return (y*nx+x)*nz+z end
  for y=0,ny-1 do
+  Budget.check()
   local sy=math.min(h-1,h-1-y*step)
   local row,left,right={},nx,-1
   for x=0,nx-1 do
@@ -68,7 +70,7 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic,family)
   local function oval(x,y,z,cx,cy,cz,rx,ry,rz)
    return ((x-cx)/rx)^2+((y-cy)/ry)^2+((z-cz)/rz)^2<=1
   end
-  for y=0,ny-1 do for x=0,nx-1 do for z=0,nz-1 do
+  for y=0,ny-1 do for x=0,nx-1 do Budget.tick();for z=0,nz-1 do
    local xx=(x+.5)*step/w-.5;local yy=((y+.5)*step-bottom)/height;local zz=(z+.5)*step/depth-.5
    local stemZ=((z+.5)*step-depth/2)/w
    local pool
@@ -128,6 +130,7 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic,family)
  for axis=1,3 do for _,sign in ipairs({-1,1})do
   local limits={nx,ny,nz};local uaxis=axis%3+1;local vaxis=(axis+1)%3+1
   for plane=0,limits[axis]-1 do
+   Budget.check()
    local grid={};local nw,nh=limits[uaxis],limits[vaxis]
    for v=0,nh-1 do for u=0,nw-1 do
     local p={};p[axis]=plane;p[uaxis]=u;p[vaxis]=v
@@ -177,6 +180,7 @@ function M.card(w,h,sample,bottom,height)
 end
 function M.append(quads,v,i,count,x,y,z)
  for _,q in ipairs(quads)do
+  Budget.tick()
   local base=#v
   for _,p in ipairs(q)do v[#v+1]={x+p[1],y+p[2],z+p[3],q.u,q.v,q.shade,0,0,0} end
   for _,k in ipairs({1,2,3,1,3,4})do i[#i+1]=base+k end

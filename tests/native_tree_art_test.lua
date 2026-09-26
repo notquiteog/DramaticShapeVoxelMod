@@ -8,7 +8,7 @@ love={image={newImageData=data},graphics={newImage=function(d)
  return {setFilter=function()end,replacePixels=function()uploads=uploads+1 end,data=d}
 end}}
 local Mask=dofile('lib/SceneryMask.lua')
-local native=assert(loadfile('lib/NativeTreeArt.lua'))({require=function(n)if n=='VoxelHull'then return dofile('lib/VoxelHull.lua')end;if n=='CommunityVisuals'then return {treeDetail={get=function()return 'balanced'end}}end;assert(n=='SceneryMask');return Mask end})
+local native=assert(loadfile('lib/NativeTreeArt.lua'))({require=function(n)if n=='BuildBudget'then return dofile('lib/BuildBudget.lua')end;if n=='VoxelHull'then return dofile('lib/VoxelHull.lua')end;if n=='CommunityVisuals'then return {treeDetail={get=function()return 'balanced'end}}end;assert(n=='SceneryMask');return Mask end})
 local ts={cols=16,rows=3,midToSlot={}}
 for _,id in ipairs({1,14,15,28,29,36,37})do ts.midToSlot[id]=id end
 local reads=0
@@ -32,7 +32,7 @@ assert(#v==4 and #i==6 and v[1][2]+c.bottom==3 and v[3][2]==51-c.bottom)
 for _,p in ipairs(v)do assert(p[7]==12 and p[8]==18 and p[9]==3.001,'billboard lost its ground anchor')end
 assert(native.gen3({ts=ts,mid=36,shape={ground=1}})==c,'dense cropped tree and complete tree used different art')
 local old=reads;assert(native.gen3({ts=ts,mid=20,shape={ground=1}})==c)
-assert(reads-old==256,'cached tree re-read its sprite pixels')
+assert(reads==old,'cached tree re-read its ground or sprite pixels')
 local copied={cols=16,rows=3,midToSlot=ts.midToSlot,imageData={getPixel=tsPixel}}
 assert(native.gen3({ts=copied,mid=20,shape={ground=1}})==c,'identical maps consumed duplicate atlas slots')
 native.image();assert(uploads==0,'identical source art forced an atlas upload')
@@ -68,6 +68,7 @@ print('PASS original tree proportions, transparent ground, preserved highlights,
 -- Crystal's collision classifier uses 4 for Cut and 3 for Headbutt bushes.
 local pixels={getPixel=function(_,x,y)if x<8 then return .8,.9,.6,1 end;return .1,.4,.1,1 end}
 local gb=assert(loadfile('lib/NativeTreeArt.lua'))({require=function(name)
+ if name=='BuildBudget' then return dofile('lib/BuildBudget.lua')end
  if name=='SceneryMask' then return Mask end
  if name=='TerrainAtlas' then return {originalPixels=function()return pixels end} end
  if name=='Gen2DepthGrass' then return {groundTile=function()return 0 end} end

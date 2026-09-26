@@ -20,7 +20,7 @@ return function(game)
  end
  V.require('RenderDistance').setting:sync(false);S.invalidate();U.wait(90)
  assert(C.active and C.recovery.failures==0,'FULL distance lost camera')
- assert(math.abs(R.camera.eye[2]-9.5)<.01 and R.curveK==0,'first person above native eyes or curved ground')
+ assert(math.abs(R.camera.eye[2]-13.5)<.01 and R.curveK==0,'first person height mismatch or curved ground')
  local _,y=R.project(unpack(R.camera.focus));local _,height=R.size();assert(math.abs(y/height-.5)<.01,'level eye not centered on horizon')
  -- Real GPU validation: a failed index upload must not leak a corrupt mesh.
  local mesh=assert(R.newMesh({{0,0,0,0,0,1},{1,0,0,1,0,1},{0,1,0,0,1,1}},{1,2,3}));mesh:release()

@@ -25,6 +25,7 @@
 -- the mod namespace (see main.lua): V.require loads a sibling module
 local V = ...
 
+local BuildBudget = V.require("BuildBudget")
 local Mat4 = V.require("Mat4")
 local Voxel = V.require("VoxelState")
 local ShadowMap = V.require("ShadowMap")
@@ -710,6 +711,7 @@ end
 -- which the callers treat the same way they treat a missing model.
 function Voxel3D.newMesh(verts, map, format)
   if #verts == 0 then return nil end
+  BuildBudget.check()
   if not format and verts[1][9] then format=Voxel3D.TREE_FORMAT end
   if format==Voxel3D.TREE_FORMAT then
     for _,v in ipairs(verts) do v[7],v[8],v[9]=v[7] or 0,v[8] or 0,v[9] or 0 end

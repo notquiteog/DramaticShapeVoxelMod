@@ -20,6 +20,8 @@ local Distance=V.require('RenderDistance')
 local Boundary=V.require('Gen3Boundary')
 local BoundarySelect=V.require('BoundaryScenery')
 local SceneCache=V.require('Gen3SceneCache')
+local Budget=V.require('BuildBudget')
+local SceneStream=V.require('SceneStream')
 local Forest=V.require('Gen3Forest')
 local Cladding=V.require('HouseCladding')
 local Interior=V.require('InteriorDiorama')
@@ -37,6 +39,7 @@ function M.context()return Map.currentDef()end
 local cache,foliage,bark,spriteMeshes={ },nil,nil,{}
 local savedCanvas,saved=false,false
 local function quad(v,i,p,uv,shade,anchor)
+ Budget.tick()
  local base=#v
  for k,a in ipairs(p)do
   local vertex={a[1],a[2],a[3],uv[k][1],uv[k][2],shade or 1}
@@ -97,22 +100,24 @@ function M.nativeRequired(game)
   or (Special.isActive and Special.isActive() and not (escalator or Special.isEscalatorMoving and Special.isEscalatorMoving())) or M.nativeEffects(Fx._anims)
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
-local function releaseGeometry()
+local function releaseGeometry(cache)
  for _,part in ipairs(cache.parts or {})do
   if part.under then part.under:release() end
   if part.roof then part.roof:release() end
   if part.plants then part.plants:release() end
   if part.water then part.water:release() end
  end
- for _,part in ipairs(cache.civics or {})do part.mesh:release();part.image:release()end
+ for _,part in ipairs(cache.civics or {})do
+  if part.mesh then part.mesh:release()end;if part.image then part.image:release()end
+ end
  for _,batch in ipairs(cache.treeInstances or {})do batch:release()end
  for _,name in ipairs({'wood','leaves'})do if cache[name] then cache[name]:release() end end
- cache={}
 end
-local function prepare(game,vw,vh,cam)
+local stream=SceneStream.new(releaseGeometry)
+M.streaming=stream.stats
+local function request(game,cam)
  local replay=cam and cam.replay
  local def=replay and replay.def or Map.currentDef();if not def or not def.midLayout then return false end
- M.sceneDef=def
  local px,pz=replay and replay.frame.x or Player.px or 0,replay and replay.frame.y or Player.py or 0
  local bx,bz=math.floor(px/96)*6,math.floor(pz/96)*6
  local budget=Distance.radius()
@@ -123,14 +128,25 @@ local function prepare(game,vw,vh,cam)
  local regions=replay and {{def=def,x=0,y=0,w=def.midLayout.width,h=def.midLayout.height}} or Boundary.regions(def,Map.world)
  local x0,z0,x1,z1=bx-radius,bz-radius,bx+radius+6,bz+radius+6
  if not budget then x0,z0,x1,z1=BoundarySelect.bounds(regions,16)end
+ local context=SceneCache.key(regions,0,0,0,0,Tiles._pairs,cam)
  local key=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam)
- if key and key==cache.terrainKey then M.cacheHits=(M.cacheHits or 0)+1;return true end
- M.prepares=(M.prepares or 0)+1
- M.distance={radius=radius,full=not budget,regions=#regions,bounds={x0,z0,x1,z1}}
- M.fadeExtent=budget or math.max(math.abs(x0*16-px),math.abs(x1*16-px),math.abs(z0*16-pz),math.abs(z1*16-pz))
+ return {game=game,cam=cam,replay=replay,def=def,regions=regions,key=key,
+  -- Replays and battle culling need immediate, camera-exact geometry. A
+  -- warp, Cut/door edit or provider replacement also bypasses retained art.
+  context=not (replay or cam.battle) and context or nil,
+  x0=x0,z0=z0,x1=x1,z1=z1,px=px,pz=pz,radius=radius,budget=budget}
+end
+local function build(req,cache,previous)
+ local cam,replay,def,regions=req.cam,req.replay,req.def,req.regions
+ local x0,z0,x1,z1=req.x0,req.z0,req.x1,req.z1
+ local M=cache -- Publish geometry and its metadata together, never halfway.
+ M.sceneDef=def
+ M.distance={radius=req.radius,full=not req.budget,regions=#regions,bounds={x0,z0,x1,z1}}
+ M.fadeExtent=req.budget or math.max(math.abs(x0*16-req.px),math.abs(x1*16-req.px),math.abs(z0*16-req.pz),math.abs(z1*16-req.pz))
  local cells,groups,signature={}, {}, {replay and replay.scene.map or Map.current,x0,z0,x1,z1}
  M.fillCounts={forest=0,water=0,mountain=0,ground=0}
  for cy=z0,z1 do for cx=x0,x1 do
+  Budget.tick()
   local mid,pair,isVoid
   if replay then
    local tile=replay.scene.tiles and replay.scene.tiles[cx..','..cy]
@@ -169,9 +185,9 @@ local function prepare(game,vw,vh,cam)
  -- Provider replacement (palette reload) invalidates meshes even if IDs match.
  for pair,ts in pairs(groups)do signature[#signature+1]=pair..tostring(ts) end
  if cam and cam.battle then signature[#signature+1]=table.concat({'battle',cam.center[1],cam.center[2],cam.yaw},':')end
- local sig=table.concat(signature,';')
- if cache.signature==sig then cache.terrainKey=key;return true end
- releaseGeometry();M.builds=(M.builds or 0)+1;cache.signature=sig;cache.parts={};cache.cells=cells
+ local sig=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam) or table.concat(signature,';')
+ if previous and previous.signature==sig then return previous end
+ cache.signature=sig;cache.parts={};cache.cells=cells
  local treeGroups={}
  M.forestTrees=Forest.prepare(cells)
  local gyms=Buildings.prepare(cells);M.gymCount=#gyms
@@ -193,6 +209,7 @@ local function prepare(game,vw,vh,cam)
  for _,g in ipairs(civics)do g.stageHidden=BattleClear.hits(cam,g.cx*16,g.cy*16,(g.cx+g.width)*16,(g.cy+g.depth)*16)end
  for _,p in ipairs(props)do p.stageHidden=BattleClear.hits(cam,p.cx*16,p.cy*16,p.cx*16+p.w,p.cy*16+p.d)end
  for _,c in pairs(cells)do
+  Budget.tick()
   local col=c.column;local group=col and col.group
   c.stageHidden=BattleClear.hits(cam,c.cx*16,c.cy*16,c.cx*16+(c.shape.kind=='tree' and 32 or 16),c.cy*16+32)
   if col then col.stageHidden=group and BattleClear.hits(cam,group.left,group.back,group.right,group.front)or c.stageHidden end
@@ -200,6 +217,7 @@ local function prepare(game,vw,vh,cam)
  M.cliffCount=0
  local batches={};local wood,wi,leaf,li={},{},{},{}
  for _,c in pairs(cells)do
+  Budget.tick()
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
   local b=batches[c.pair]
   if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},roofMids={}};batches[c.pair]=b end
@@ -386,7 +404,9 @@ local function prepare(game,vw,vh,cam)
  for _,g in ipairs(civics)do if not g.stageHidden then
   local vertices,indices={},{}
   Civic.append(g,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
-  cache.civics[#cache.civics+1]={mesh=assert(R.newMesh(vertices,indices)),image=Civic.material(g)}
+  local part={};cache.civics[#cache.civics+1]=part
+  part.mesh=assert(R.newMesh(vertices,indices));part.image=Civic.material(g)
+  Budget.check()
  end end
  for _,p in ipairs(chimneys)do if not BattleClear.hits(cam,p.cx*16,p.cy*16,p.cx*16+16,p.cy*16+16)then
   local b=batches[p.pair]
@@ -403,13 +423,25 @@ local function prepare(game,vw,vh,cam)
    local mesh,err=R.newMesh(vertices,indices,format)
    assert(mesh,('field mesh %s/%s (%d vertices): %s'):format(b.pair,name,#vertices,tostring(err or 'unavailable')))
    part[name]=mesh
+   Budget.check()
   end
   upload('under',b.v,b.i);upload('roof',b.rv,b.ri)
   upload('plants',b.pv,b.pi,R.TREE_FORMAT);upload('water',b.wv,b.wi)
  end
- cache.treeInstances=V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li)
- cache.wood=R.newMesh(wood,wi);cache.leaves=R.newMesh(leaf,li)
+ cache.treeInstances={}
+ V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li,cache.treeInstances)
+ cache.wood=R.newMesh(wood,wi);Budget.check();cache.leaves=R.newMesh(leaf,li)
  cache.terrainKey=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam)
+ return cache
+end
+local function prepare(game,vw,vh,cam)
+ local req=request(game,cam);if not req then return false end
+ cache=stream:update(req.key,req.context,function(candidate,previous)return build(req,candidate,previous)end,.002)
+ -- Native tileset construction binds its animation clock. Restore the live
+ -- map after EVERY slice, including suspended scans of connected tilesets.
+ Tiles.get(req.def.midLayout.pair)
+ M.prepares=stream.stats.started;M.builds=stream.stats.completed;M.cacheHits=stream.stats.hits
+ for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount'})do M[name]=cache[name]end
  return true
 end
 local function terrain(draw)
@@ -743,12 +775,12 @@ function M.draw(game,vw,vh,cam)
  love.graphics.pop()
  return true
 end
-function M.invalidate()Boundary.clear();releaseGeometry()end
+function M.invalidate()Boundary.clear();stream:clear();cache={}end
 function M.release()
  if dustMesh then dustMesh:release();dustMesh=nil end
  if dustImage then dustImage:release();dustImage=nil end
  for _,c in pairs(effectCanvases)do c:release()end;effectCanvases={}
- releaseGeometry()
+ stream:clear();cache={}
  for _,mesh in pairs(spriteMeshes)do if mesh then mesh:release() end end
  spriteMeshes={}
  if foliage then foliage:release();foliage=nil end

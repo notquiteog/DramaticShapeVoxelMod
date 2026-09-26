@@ -7,6 +7,7 @@ l.overrides[3]={mid=1,coll=0,elev=0};local b=key();assert(a~=b,'cut tree would s
 l.overrides[3].mid=2;assert(key()~=b,'in-place override would stay stale')
 l.overrides={};assert(key()==a,'cleared override should restore identity')
 ts.forest={imageData={}};assert(key()~=a,'replaced atlas not invalidated')
+local layer=key();ts.forest.overImageData={};assert(key()~=layer,'upper atlas replacement ignored')
 local c=key();rs[1].x=1;assert(key()~=c,'connected-map placement stale')
 assert(key({replay={}})==nil,'replay edits must not reuse layout shortcut')
 l.overrides=nil;assert(key()==nil,'unknown provider must retain full scan')

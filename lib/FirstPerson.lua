@@ -65,7 +65,7 @@ FirstPerson.supportsGen2World = true
 -- ------- the rig's numbers
 --
 -- EYE_HEIGHT is the fallback for native 16px players. The live card's foot
--- anchor and front-facing eye row place it above the same ground-plus-lift
+-- anchor and upper-face framing place it above the same ground-plus-lift
 -- the character stands on, so surfing bobs and ledge hops carry the view with them.
 --
 -- FOV is wider than the diorama's ~53 degrees: inside the world, the
@@ -76,7 +76,7 @@ FirstPerson.supportsGen2World = true
 -- near plane from |eye - focus| (dist * 0.05), and the eye walks within
 -- 2-3 world pixels of a wall face when sliding along it -- a far focus
 -- would push the near plane through the wall and clip a hole in it.
-FirstPerson.EYE_HEIGHT = 8
+FirstPerson.EYE_HEIGHT = 12
 FirstPerson.FOV = math.rad(65)
 FirstPerson.FOCUS_DIST = 24
 

@@ -81,10 +81,7 @@ Designed.install(recipes)
 local function matched(mid,expected,r)
  return (r.kind=='escalator' and Center.canonical(mid) or mid)==expected
 end
-function M.extract(cells)
- local out,ordered={},{}
- for _,c in pairs(cells)do if c.primary=='building' or c.primary=='general' then ordered[#ordered+1]=c end end
- table.sort(ordered,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
+local Budget=V and V.require('BuildBudget') or {tick=function()end}
  -- Longest recipes win: the computer's top is also a cabinet top.
  table.sort(recipes,function(a,b)
   local aa,bb=#a.rows*#a.rows[1],#b.rows*#b.rows[1]
@@ -96,8 +93,24 @@ function M.extract(cells)
   if as~=bs then return as>bs end
   return a.name<b.name
  end)
- for _,c in ipairs(ordered)do if not c.prop and not c.stairs then
-  for _,r in ipairs(recipes)do
+local candidates,aliases={},{}
+for _,r in ipairs(recipes)do
+ local mid=r.rows[1][1];local list=candidates[mid] or {};candidates[mid]=list;list[#list+1]=r
+end
+local function choices(mid)
+ if aliases[mid]then return aliases[mid]end
+ local canonical=Center.canonical(mid)
+ if canonical==mid or not candidates[canonical] then return candidates[mid] or {} end
+ -- Animated escalator aliases must retain the same recipe priority.
+ local out={};for _,r in ipairs(recipes)do if matched(mid,r.rows[1][1],r)then out[#out+1]=r end end
+ aliases[mid]=out;return out
+end
+function M.extract(cells)
+ local out,ordered={},{}
+ for _,c in pairs(cells)do if (c.primary=='building' or c.primary=='general') and #choices(c.mid)>0 then ordered[#ordered+1]=c end;Budget.tick()end
+ table.sort(ordered,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
+ for _,c in ipairs(ordered)do Budget.tick();if not c.prop and not c.stairs then
+  for _,r in ipairs(choices(c.mid))do
    if c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
     local match=true;local parts={}
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do

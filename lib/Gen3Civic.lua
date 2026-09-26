@@ -1,6 +1,7 @@
 -- Complete public-service buildings. Roof, facade and entrance are separate
 -- source rectangles: ground below the wall is never folded upright.
 local V=...
+local Budget=V and V.require('BuildBudget') or {tick=function()end,check=function()end}
 local M={}
 local function claim(cells,g,rows)
  local parts={}
@@ -21,7 +22,7 @@ function M.prepare(cells,gyms,families)
   for y=0,4 do rows[y+1]={};for x=0,g.width-1 do rows[y+1][x+1]=cells[(b.cx+x)..':'..(b.cy+y)].mid end end
   if claim(cells,b,rows)then out[#out+1]=b end
  end
- for _,c in pairs(cells)do if c.primary=='general' and not c.civic then
+ for _,c in pairs(cells)do Budget.tick();if c.primary=='general' and not c.civic then
   local rows,kind,cy
   if c.mid==760 and c.pair=='general__rom_082d4b9c' then
    kind,cy='mart',c.cy
@@ -56,7 +57,7 @@ function M.prepare(cells,gyms,families)
  -- variants without classifying unrelated secondary metatile IDs globally.
  for _,r in ipairs(families or {})do
   local h,w=#r.rows,#r.rows[1]
-  for _,c in pairs(cells)do if not c.civic and c.pair==r.pair and c.mid==r.rows[1][1] then
+  for _,c in pairs(cells)do Budget.tick();if not c.civic and c.pair==r.pair and c.mid==r.rows[1][1] then
    local rows,match={},true
    for dy=1,h do rows[dy]={};for dx=1,w do
     local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
@@ -128,7 +129,7 @@ local function sourcePixel(g,x,y)
 end
 function M.material(g)
  local p=M.profile(g);local data=love.image.newImageData(p.w*2+4,p.h)
- for y=0,p.h-1 do for x=0,p.w-1 do
+ for y=0,p.h-1 do Budget.check();for x=0,p.w-1 do
   local r,gr,b,a=sourcePixel(g,x,y)
   -- Ground-colour removal is restricted to the outside of this complete
   -- known drawing. Window glass/roof colours inside it remain intact.

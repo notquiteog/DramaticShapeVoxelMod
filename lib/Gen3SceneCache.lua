@@ -8,7 +8,7 @@ function M.key(regions,x0,z0,x1,z1,tiles,cam)
   local l=r.def.midLayout
   if not(l and type(l.cells)=='table' and type(l.overrides)=='table')then return nil end
   local ts=tiles[l.pair]
-  parts[#parts+1]=table.concat({tostring(l),tostring(l.cells),l.pair,r.x,r.y,r.w,r.h,tostring(ts),tostring(ts and ts.imageData)},':')
+  parts[#parts+1]=table.concat({tostring(l),tostring(l.cells),l.pair,r.x,r.y,r.w,r.h,tostring(ts),tostring(ts and ts.imageData),tostring(ts and ts.overImageData)},':')
   parts[#parts+1]=table.concat(l.borderMids or {},',')
   local keys={};for k in pairs(l.overrides)do keys[#keys+1]=k end;table.sort(keys)
   for _,k in ipairs(keys)do local c=l.overrides[k];parts[#parts+1]=table.concat({k,c.mid or 0,c.coll or 255,c.elev or 0},',')end
