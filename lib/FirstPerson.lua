@@ -64,9 +64,9 @@ FirstPerson.supportsGen2World = true
 
 -- ------- the rig's numbers
 --
--- EYE_HEIGHT stands the eye near the top of the 16px sprite -- the head,
--- not the hat tip -- above the same ground-plus-lift the character card
--- stands on, so surfing bobs and ledge hops carry the view with them.
+-- EYE_HEIGHT is the fallback for native 16px players. The live card's foot
+-- anchor and front-facing eye row place it above the same ground-plus-lift
+-- the character stands on, so surfing bobs and ledge hops carry the view with them.
 --
 -- FOV is wider than the diorama's ~53 degrees: inside the world, the
 -- diorama's lens reads as a keyhole. 65 vertical is the modern-shooter
@@ -76,7 +76,7 @@ FirstPerson.supportsGen2World = true
 -- near plane from |eye - focus| (dist * 0.05), and the eye walks within
 -- 2-3 world pixels of a wall face when sliding along it -- a far focus
 -- would push the near plane through the wall and clip a hole in it.
-FirstPerson.EYE_HEIGHT = 13
+FirstPerson.EYE_HEIGHT = 8
 FirstPerson.FOV = math.rad(65)
 FirstPerson.FOCUS_DIST = 24
 
@@ -655,8 +655,10 @@ function FirstPerson.frame(me, cx, cy, vw, vh)
 
   local head
   if me then
+    local def=me.sprite and me.sprite.def
+    local eyeHeight=def and V.require('SpriteBillboards').eyeHeight(def) or FirstPerson.EYE_HEIGHT
     head = { me.px + 8,
-             (me.gh or 0) + (me.lift or 0) + FirstPerson.EYE_HEIGHT,
+             (me.gh or 0) + (me.lift or 0) + eyeHeight,
              me.py + 8 }
     lastEye = head
   else

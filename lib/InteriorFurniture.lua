@@ -242,12 +242,16 @@ function M.draw(id,A)
   B(3,0,44,5,4,48,wood);B(11,0,44,13,4,48,wood)
   B(3,3,43,13,4,47,T(7,40));top({3,38,10,6},3,43,13,47,4.02)
   B(3,4,47,13,9,48,T(7,40))
- elseif id=='fr_wood_chair' then
-  local wood=T(2,7)
-  for _,x in ipairs({2,12})do for _,z in ipairs({19,26})do B(x,0,z,x+1,4,z+1,wood)end end
-  B(2,3,18,13,4.5,27,wood);top({2,16,11,6},2,18,13,27,4.52)
-  B(2,4,18,3,13,19,wood);B(12,4,18,13,13,19,wood)
-  B(2,10,18,13,13,19,wood);front({2,8,11,4},2,10,13,13,19.02)
+ elseif id=='fr_room_dresser' then
+  local wood,dark=T(3,12),T(2,24)
+  for _,x in ipairs({2,12})do for _,z in ipairs({18,28})do B(x,0,z,x+2,3,z+2,dark)end end
+  B(1,2,17,15,15,30,wood)
+  B(1,15,16,15,16.2,31,wood);top({3,3,10,7},2,17,14,30,16.22)
+  for _,q in ipairs({{3,8,19},{9,14,12}})do
+   B(3,q[1],29.6,13,q[2],30.4,dark)
+   front({4,q[3],8,5},3.4,q[1]+.3,12.6,q[2]-.3,30.42)
+   B(7,(q[1]+q[2])/2,30.4,9,(q[1]+q[2])/2+.7,31,dark)
+  end
  elseif id=='fr_console' then
   local mat,dark=T(2,7),T(2,23)
   B(1,0,7,15,6,17,mat);front({1,17,14,6},1,0,15,6,17.02)

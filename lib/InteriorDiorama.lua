@@ -106,9 +106,30 @@ function M.geometry(p,side,opened)
   local line=side==1 and z0 or side==3 and z1 or side==2 and x1 or x0
   local outward=(side==1 or side==4)and -1 or 1
   local function part(a,y0,c,y1,swatch,depth)
-   local near,far=line-outward*math.max(0,(depth or 3)-3),line+outward*(depth or 3)
-   if horizontal then box(a,y0,math.min(near,far),c,y1,math.max(near,far),swatch)
-   else box(math.min(near,far),y0,a,math.max(near,far),y1,c,swatch)end
+   local function strip(l,r,at)
+    local near,far=at-outward*math.max(0,(depth or 3)-3),at+outward*(depth or 3)
+    if horizontal then box(l,y0,math.min(near,far),r,y1,math.max(near,far),swatch)
+    else box(math.min(near,far),y0,l,math.max(near,far),y1,r,swatch)end
+   end
+   if side==1 and p.northFront then
+    local cuts={a,c}
+    for _,q in ipairs(p.northRecesses)do
+     for _,x in ipairs({q[1],q[2]})do if x>a and x<c then cuts[#cuts+1]=x end end
+    end
+    table.sort(cuts)
+    for i=1,#cuts-1 do
+     local l,r=cuts[i],cuts[i+1];local at=p.northFront
+     for _,q in ipairs(p.northRecesses)do if (l+r)/2>q[1] and (l+r)/2<q[2]then at=q[3]end end
+     if r>l then strip(l,r,at)end
+    end
+   else strip(a,c,line)end
+  end
+  if side==1 and p.northFront then
+   -- Closed returns around the stair bay, with backing behind the flight.
+   -- Keeping the original front across this cell hid the entire staircase.
+   for _,q in ipairs(p.northRecesses)do for _,x in ipairs({q[1],q[2]})do
+    if x>start and x<finish then box(x-.3,opened and -3 or 0,q[3]-3,x+.3,opened and 0 or h,p.northFront,2)end
+   end end
   end
   if opened then
    -- A low continuous foundation presents a finished cut edge without
@@ -146,6 +167,26 @@ function M.forMap(map,gen)
  if entry~=nil then return entry or nil end
  local p=M.profile(def,gen)
  if not p then cache[def]=false;return end
+ if gen~=3 and type(map.tileAt)=='function' and type(map.tileset)=='table' then
+  -- The room's foundation used to seal GB stairwells at y=-.25, hiding
+  -- every descending tread. Use the same semantic openings as the mesher.
+  local Shapes=V.require('TileShape');local shapes=Shapes.forMap(map)
+  p.openings={};p.northRecesses={}
+  for y=0,(map.heightCells or def.height*2)-1 do for x=0,(map.widthCells or def.width*2)-1 do
+   local s=Shapes.at(map,shapes,map:tileAt(x*2,y*2),x*2,y*2)
+   local c=s and s.class or ''
+   if c:match('^stair_') and y*16<p.bounds[2]then
+    p.northRecesses[#p.northRecesses+1]={x*16,(x+1)*16,y*16-.3}
+   end
+   if c=='ladder_down' or c:match('^stair_down_')then
+    p.openings[#p.openings+1]={x*16,y*16,(x+1)*16,(y+1)*16}
+   end
+  end end
+  if #p.northRecesses>0 then
+   p.northFront=p.bounds[2]
+   for _,q in ipairs(p.northRecesses)do p.bounds[2]=math.min(p.bounds[2],q[3])end
+  end
+ end
  p.meshes={};cache[def]=p;return p
 end
 function M.setOpenings(p,openings)

@@ -12,7 +12,7 @@ function M.install(recipes)
  end
  add('room_bed','player_house',{{0x283,0x284,0x285},{0x28b,0x28c,0x28d},{0x293,0x294,0x295}},'fr_bed')
  add('room_computer','player_house',{{0x287,0x20},{0x28f,0x86},{0x297,0x5a}},'fr_room_pc')
- add('room_wood_chair','player_house',{{0x30},{0x38}},'fr_wood_chair')
+ add('room_dresser','player_house',{{0x30},{0x38}},'fr_room_dresser')
  add('room_console','player_house',{{0x35},{0x28e},{0x296}},'fr_console',0x45)
  add('room_television','player_house',{{0x2b,0x2c},{0x33,0x34},{0x3b,0x3c}},'fr_television')
  add('living_television','player_house',{{0x2d},{0x35},{0x3d}},'fr_living_tv')

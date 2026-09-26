@@ -13,8 +13,8 @@ local recipes={
  {name='cabinet',rows={{0x35},{0x3D}},kind='cabinet',h=24,ground=1,depth=10},
  {name='bed',secondary='pretty_petals_flower_shop',rows={{0x28C,0x28D},{0x294,0x295}},kind='bed',h=5,ground=1},
  {name='computer_desk',secondary='pretty_petals_flower_shop',rows={{0x35},{0x28E},{0x296}},kind='cabinet',h=28,ground=0x45,depth=12},
- {name='chair_back',rows={{0x4B}},kind='chair',h=6,ground=0x45},
- {name='chair_front',rows={{0x4E}},kind='chair',h=6,ground=0x45},
+ {name='chair_back',rows={{0x4B}},kind='chair',h=6,ground=0x45,seat={height=6.8,hips=4,z=9}},
+ {name='chair_front',rows={{0x4E}},kind='chair',h=6,ground=0x45,seat={height=6.8,hips=4,z=9}},
  {name='lab_wall_display',secondary='lab',rows={{0x28D},{0x295}},kind='cabinet',h=30,base=12,ground=0x289,depth=1.5,frontOffset=32.2,facade={1,9,14,22}},
  {name='lab_pokemon_machine',secondary='lab',rows={{0x2A3,0x2A4},{0x2AB,0x2AC},{0x2B3,0x2B4}},kind='labMachine',h=25,ground=0x289},
  {name='lab_server',secondary='lab',rows={{0x29D},{0x2AD},{0x2B5}},kind='cabinet',h=30,ground=0x289,depth=12,facade={0,10,15,36}},
@@ -350,9 +350,11 @@ function M.append(p,emit,uvFor)
   box(x+2,4,z+4,x+13,6,z+14,frame)
   box(x+3,6,z+5,x+12,6.8,z+13,blue)
   for _,dx in ipairs({3,11})do for _,dz in ipairs({5,12})do box(x+dx,0,z+dz,x+dx+1,5,z+dz+1,frame)end end
-  local back=r.name=='chair_back' and z+4 or z+14
-  box(x+2,6,back-.7,x+13,14,back+.7,frame)
-  box(x+3,7,back-.8,x+12,13,back+.8,blue)
+  -- These drawings sit to the LEFT/RIGHT of the dining table. Put the
+  -- backs on the outside so occupants face inward, not across a side rail.
+  local back=r.name=='chair_back' and x+2 or x+14
+  box(back-.7,6,z+3,back+.7,14,z+14,frame)
+  box(back-.8,7,z+4,back+.8,13,z+13,blue)
  else
   local inset=r.join and 0 or r.kind=='bed' and 2 or 1
   -- The source drawing can contain a walkable perspective apron. Its
@@ -369,12 +371,17 @@ function M.append(p,emit,uvFor)
   elseif r.kind=='bed' then box(x+2,0,z,x+p.w-2,r.h+3,z+1)end
  end
 end
--- Only stationary item props rest on furniture. Characters/NPCs retain
--- native ground and animation offsets; this never changes interaction cells.
-function M.support(cells,gid,px,py)
- if tonumber(gid)~=92 and tonumber(gid)~=94 then return 0 end
+-- Presentation support only: item feet sit on tables; the native seated
+-- Mom drawing meets the chair at her hips, with her feet below the cushion.
+-- Never alter native interaction cells, scripted motion or collision.
+function M.support(cells,gid,px,py,stationary)
+ gid=tonumber(gid)
  local c=cells and cells[math.floor(px/16)..':'..math.floor(py/16)]
  local p=c and c.prop;local r=p and p.recipe
+ if gid==88 and stationary~=false and r and r.seat then
+  return r.seat.height-r.seat.hips,r.seat.z-16
+ end
+ if gid~=92 and gid~=94 then return 0 end
  if r and (r.kind=='table' or r.kind=='counter' or r.kind=='desk') then
   if r.supportRows and math.floor(py/16)>=p.cy+r.supportRows then return 0 end
   return r.h+.12,r.supportOffset or (r.kind=='desk' and 5 or .4)

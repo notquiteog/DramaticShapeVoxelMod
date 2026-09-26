@@ -1,5 +1,7 @@
 -- Ground visible feet in each frame. Gameplay supplies jumps/flight separately;
 -- transparent animation padding is not a world-space height.
+local V=...
+local Eye=V and V.require('CameraEye') or dofile((os.getenv('DS_MOD_PATH')or '.')..'/lib/CameraEye.lua')
 local M={}
 local cache=setmetatable({},{__mode='k'})
 local function padding(data,q)
@@ -53,5 +55,13 @@ function M.framePadding(spr,frame)
  n=valid(spr and spr.groundPadding);if n then return n end
  local entry=scan(spr)
  return entry.frames[frame] or entry.padding
+end
+function M.eyeHeight(spr)
+ local q=spr and spr.quads and spr.quads[0]
+ local h=32
+ if q then local _,_,_,height=q:getViewport();h=height end
+ -- Frame-zero anchoring remains stable
+ -- through running, turns and attack/field poses. No extra pixel readback.
+ return Eye.height(3,h,h-M.framePadding(spr,0),spr and spr.firstPersonEyeRow)
 end
 return M

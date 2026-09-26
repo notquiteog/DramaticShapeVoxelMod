@@ -183,7 +183,7 @@ local function prepare(game,vw,vh,cam)
   cache.openings[#cache.openings+1]={p.cx*16,p.cy*16,(p.cx*16)+p.w,(p.cy*16)+p.d}
  end end
  for _,c in pairs(cells)do if c.stairs and c.stairs.owner==c and c.stairs.r.down then
-  local s=c.stairs;cache.openings[#cache.openings+1]={s.cx*16,s.cy*16,(s.cx+2)*16,(s.cy+#s.r.rows)*16}
+  local s=c.stairs;cache.openings[#cache.openings+1]={s.cx*16,s.cy*16,(s.cx+s.width)*16,(s.cy+#s.r.rows)*16}
  end end
  Shapes.layout(cells)
  for _,c in pairs(cells)do if c.gym then c.column=Buildings.column(c.gym)end end
@@ -392,8 +392,21 @@ local function prepare(game,vw,vh,cam)
   local b=batches[p.pair]
   Roof.appendChimney(p,function(vertices,uv,shade)quad(b.rv,b.ri,vertices,uv,shade)end,uvFor)
  end end
- for _,b in pairs(batches)do cache.parts[#cache.parts+1]={pair=b.pair,secondary=b.secondary,roofMids=b.roofMids,
-  under=assert(R.newMesh(b.v,b.i),'field mesh creation failed'),roof=R.newMesh(b.rv,b.ri),plants=R.newMesh(b.pv,b.pi,R.TREE_FORMAT),water=R.newMesh(b.wv,b.wi)} end
+ for _,b in pairs(batches)do
+  local part={pair=b.pair,secondary=b.secondary,roofMids=b.roofMids}
+  -- A connected tileset can contribute only water, roofs or foliage at the
+  -- edge of FAR/FULL range. Empty ground is valid, not a failed GPU upload.
+  -- Transfer each successful upload immediately so recovery can release it.
+  cache.parts[#cache.parts+1]=part
+  local function upload(name,vertices,indices,format)
+   if #vertices==0 then return end
+   local mesh,err=R.newMesh(vertices,indices,format)
+   assert(mesh,('field mesh %s/%s (%d vertices): %s'):format(b.pair,name,#vertices,tostring(err or 'unavailable')))
+   part[name]=mesh
+  end
+  upload('under',b.v,b.i);upload('roof',b.rv,b.ri)
+  upload('plants',b.pv,b.pi,R.TREE_FORMAT);upload('water',b.wv,b.wi)
+ end
  cache.treeInstances=V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li)
  cache.wood=R.newMesh(wood,wi);cache.leaves=R.newMesh(leaf,li)
  cache.terrainKey=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam)
@@ -504,7 +517,7 @@ local function actors(game,cam,draw)
   local frame=cam.replay.frame
   for _,a in ipairs(frame.actors or {})do
    if a.graphicsId and not (a.id==255 and cam.level==6) then
-    local support,offset=Furniture.support(cache.cells,a.graphicsId,a.x,a.y)
+    local support,offset=Furniture.support(cache.cells,a.graphicsId,a.x,a.y,(a.walkPhase or 0)==0)
     local z=a.id==255 and frame.y or a.y
     actor(a.graphicsId,a.x,z,a.facing,a.walkPhase,a.stepFlip,
      {frame=a.frame,bow=a.bow,fieldMove=a.fieldMove,depthOffset=offset or 0,lift=support+(z-a.y)},cam,draw)
@@ -516,7 +529,7 @@ local function actors(game,cam,draw)
  for _,eo in ipairs(Objects.forDraw())do
   local gid=eo.graphicsId or (eo.def and (eo.def.graphicsId or eo.def.graphics))
   if space and space.resolveObjectGraphicsId and eo.def then gid=space.resolveObjectGraphicsId(eo.def) or gid end
-  local support,depthOffset=Furniture.support(cache.cells,gid,eo.px or eo.cellX*16,eo.py or eo.cellY*16)
+  local support,depthOffset=Furniture.support(cache.cells,gid,eo.px or eo.cellX*16,eo.py or eo.cellY*16,not eo.moving)
   actor(gid,(eo.px or eo.cellX*16)+(eo.raiseX or 0),eo.py or eo.cellY*16,
    eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,
    {bow=(eo.bowFrames or 0)>0 or eo.raiseHand,frame=eo.customFrame,upright=tonumber(gid)==92 or tonumber(gid)==94,depthOffset=depthOffset or 0,lift=support-(eo.raiseY or 0)},cam,draw)
@@ -645,14 +658,19 @@ function M.draw(game,vw,vh,cam)
  if cam.level>=6 then
   local dist=cam.level==6 and 0 or 75
   local dx,dz=math.sin(cam.yaw),-math.cos(cam.yaw)
-  local ey=cam.level==6 and (23-(Player.jumpSpriteY and Player.jumpSpriteY()or 0)) or 48
+  local ey=48
+  if cam.level==6 then
+   ey=SpriteAnchor.eyeHeight(Sprites.getDraw(Sprites.playerGraphicsId(game)))
+     -(Player.spriteYOffset or 0)-(Player.jumpSpriteY and Player.jumpSpriteY()or 0)
+  end
   local exports=game and game.mods and game.mods.exports
   local ride=exports and exports.DRAMATIC_SKY_RIDE
   if not cam.battle and not cam.replay and ride and type(ride.currentAltitude)=='function' then
    local ok,height=pcall(ride.currentAltitude)
    if ok and type(height)=='number' then ey=ey+math.max(0,math.min(512,height))end
   end
-  R.camera={eye={cx-dx*dist,ey,cz-dz*dist},focus={cx+dx*70,ey-70*math.tan(cam.pitch),cz+dz*70},fov=math.rad(62)}
+  local focusDistance=cam.level==6 and 24 or 70
+  R.camera={eye={cx-dx*dist,ey,cz-dz*dist},focus={cx+dx*focusDistance,ey-focusDistance*math.tan(cam.pitch),cz+dz*focusDistance},fov=math.rad(62),curve=cam.level==6 and 0 or nil}
   if cam.battle then
    R.camera={eye={cx-dx*75,32,cz-dz*75},focus={cx+dx*16,0,cz+dz*16},fov=math.rad(50)}
   end

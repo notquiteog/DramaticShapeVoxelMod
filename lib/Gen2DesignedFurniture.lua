@@ -41,7 +41,11 @@ function M.backing(S,map,perRow,aw,ah)
   {(tile%perRow*8+7.95)/aw,(math.floor(tile/perRow)*8+7.95)/ah},
   {(tile%perRow*8+.05)/aw,(math.floor(tile/perRow)*8+7.95)/ah}}
  for x=0,map.def.width*32-8,8 do
-  S.objectQuads[#S.objectQuads+1]={{x,24,15.9},{x+8,24,15.9},{x+8,0,15.9},{x,0,15.9},uv=uv,shade=1,own=true}
+  local k=64*4096+math.floor(x/16)*2+64
+  local shape=S.shapeAt and S.shapeAt[k]
+  -- Continue wallpaper behind north-row stairs, never across their entry.
+  local z=shape and shape.art=='stair' and -.1 or 15.9
+  S.objectQuads[#S.objectQuads+1]={{x,24,z},{x+8,24,z},{x+8,0,z},{x,0,z},uv=uv,shade=1,own=true}
  end
 end
 return M

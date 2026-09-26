@@ -344,6 +344,8 @@ do
   T.eq(Structures.volumeClaims({ art = "flat" }), false, "flat art is never a volume")
   T.eq(Structures.volumeClaims(nil), false, "and an absent shape is not one either")
 
+  T.eq(Structures.doorFoldClaims({art="stair",authored=true,derived=true}), false,
+       "complete Crystal stair drawings survive the door fold")
   T.eq(Structures.doorFoldClaims(g2.ground), true,
     "the door fold may replace a DERIVED classification, which is what "
       .. "puts a Johto door into its own facade")

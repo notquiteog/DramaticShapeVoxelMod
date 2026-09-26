@@ -21,3 +21,12 @@ for _,p in ipairs(p)do assert(p.recipe.design~='fr_console','incomplete console 
 p=claim('house',{{0x184},{0x185}})
 assert(#p==1 and p[1].recipe.design=='fr_wall_picture','neighbor picture remained on the floor')
 print('PASS specific model precedence, console ownership and complete neighboring-house furniture/plant claims')
+
+local chairs={['8:4']={cx=8,cy=4,mid=0x4e,pair='player_house',primary='building',secondary='',ts={}}}
+assert(#F.extract(chairs)==1)
+local h,z=F.support(chairs,88,128,64,true)
+assert(math.abs(h-2.8)<.001 and z==-7,'Mom must sit in the cushion, not beside or atop the backrest')
+assert(F.support(chairs,88,128,64,false)==0,'scripted walking was pinned to the chair')
+assert(F.support(chairs,88,112,64,true)==0,'support leaked outside the chair')
+assert(F.support(chairs,92,128,64,true)==0 and F.support(chairs,820002,128,64,true)==0,'items or follower seated as Mom')
+print('PASS seated Mom support, native walking exit and unrelated actors')

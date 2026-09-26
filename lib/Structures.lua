@@ -193,6 +193,9 @@ end
 -- of its front.
 function Structures.doorFoldClaims(s)
   if s == nil then return true end
+  -- A stair warp at a wall edge is still a flight, never a door facade.
+  -- Crystal stair classifications are derived but match complete artwork.
+  if s.art == "stair" then return false end
   if not s.authored then return true end
   return s.derived == true
 end

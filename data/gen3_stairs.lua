@@ -1,6 +1,10 @@
 -- Reviewed native stair assemblies including their landing. Exact four-cell
 -- matches prevent borrowing floors/walls from unrelated furniture drawings.
 return {
+ -- Player-house stairs are three cells wide and tall. The older four-cell
+ -- crop left the front stringer and the rug painted on the floor beside it.
+ {pair='player_house',rows={{0x28,0x16,0x17},{0x1D,0x1E,0x1F},{0x25,0x26,0x27}},east=true,down=false,landing={0,1},design='house'},
+ {pair='player_house',rows={{0x15,0x28,0x28},{0x05,0x06,0x07},{0x0D,0x0E,0x0F}},east=false,down=true,landing={2,1},design='house'},
  {pair='general__rom_082d4d94',rows={{0x354,0x2E8},{0x3A2,0x2F0},{0x355,0x3A0}},east=true,down=false},
  {pair='building__rom_082d4c2c',rows={{0x281,0x2B8},{0x2E4,0x2C0}},east=true,down=false},
  {pair='building__rom_082d4c2c',rows={{0x2B3,0x2B4},{0x2BB,0x2E5}},east=false,down=true},

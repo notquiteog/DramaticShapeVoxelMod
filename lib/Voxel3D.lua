@@ -716,8 +716,11 @@ function Voxel3D.newMesh(verts, map, format)
   end
   local ok, mesh = pcall(love.graphics.newMesh, format or Voxel3D.FORMAT, verts,
                          "triangles", "static")
-  if not ok then return nil end
-  if map and #map > 0 then pcall(mesh.setVertexMap, mesh, map) end
+  if not ok then return nil, tostring(mesh) end
+  if map and #map > 0 then
+    local indexed,err=pcall(mesh.setVertexMap,mesh,map)
+    if not indexed then mesh:release();return nil,tostring(err) end
+  end
   return mesh
 end
 

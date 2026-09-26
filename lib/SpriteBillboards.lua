@@ -105,6 +105,13 @@ function SpriteBillboards.frameAnchor(def, frame)
   return frames[frame] or frames[0] or fh
 end
 
+function SpriteBillboards.eyeHeight(def)
+  -- Use the standing front reference even while walking or turning so
+  -- changing animation padding never makes the camera bob independently.
+  return V.require('CameraEye').height(2,def.frameHeight or 16,
+    def.anchorY or SpriteBillboards.frameAnchor(def,0),def.firstPersonEyeRow)
+end
+
 -- One flat quad -- 16x16 for every vanilla figure, or the def's own
 -- frameWidth x frameHeight for a mod sprite registered bigger than that --
 -- UV-mapped to a whole frame. A hair of inset keeps the sampler inside

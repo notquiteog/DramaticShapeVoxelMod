@@ -4,7 +4,7 @@
 local V=...
 local recipes=V.data('gen3_stairs')
 local M={}
-table.sort(recipes,function(a,b)return #a.rows>#b.rows end)
+table.sort(recipes,function(a,b)return #a.rows*#a.rows[1]>#b.rows*#b.rows[1] end)
 function M.prepare(cells)
  local count=0
  local ordered={}
@@ -13,14 +13,15 @@ function M.prepare(cells)
  for _,c in ipairs(ordered)do
   if not c.stairs then for _,r in ipairs(recipes)do
    if c.pair==r.pair and c.mid==r.rows[1][1] then
-    local group={r=r,cx=c.cx,cy=c.cy,ts=c.ts,cells={}}
+    local width=#r.rows[1]
+    local group={r=r,cx=c.cx,cy=c.cy,ts=c.ts,cells={},width=width}
     local match=true
-    for z=0,#r.rows-1 do for x=0,1 do
+    for z=0,#r.rows-1 do for x=0,width-1 do
      local q=cells[(c.cx+x)..':'..(c.cy+z)]
      if not q or q.pair~=c.pair or q.mid~=r.rows[z+1][x+1] or q.stairs or q.prop then match=false end
-     group.cells[z*2+x+1]=q
+     group.cells[z*width+x+1]=q
     end end
-    local landing=group.cells[(#r.rows-1)*2+(r.east and 1 or 2)]
+    local landing=group.cells[r.landing and (r.landing[2]*width+r.landing[1]+1) or ((#r.rows-1)*width+(r.east and 1 or 2))]
     local expected=r.down and (r.east and 0x6E or 0x6F)or(r.east and 0x6C or 0x6D)
     if landing and (landing.collision==7 or landing.behavior and landing.behavior~=expected)then match=false end
     if match then
@@ -65,6 +66,9 @@ function M.append(c,emit,uvFor)
  if g then
   if g.owner~=c then return end
   local r=g.r
+  if r.design=='house' then
+   return V.require('Gen3HouseStairs').append(g,emit,uvFor)
+  end
   local depth=#r.rows*16
   local function source(x,y)
    local q=g.cells[math.floor(y/16)*2+math.floor(x/16)+1]

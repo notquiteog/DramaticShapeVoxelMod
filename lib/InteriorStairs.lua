@@ -74,6 +74,41 @@ function Stairs.build(S,map,data,cx,cy,s)
       material(east,sx,sy,.68,down and"well-east"or"side-east")
     end end
   end
+  local nativeHouse=map.tileset.id=='TILESET_PLAYERS_HOUSE' or map.tileset.id=='TILESET_PLAYERS_ROOM'
+  if nativeHouse then
+    -- A shallow descending flight keeps individual treads visible from a
+    -- normal eye at its approach. A 45-degree drop in one cell occluded
+    -- every step behind the next riser and read as one blank ramp.
+    if down then h=math.min(h,8);rise=h/4 end
+    -- Crystal's four drawn treads become separate solid steps. Keep the
+    -- original light wood and shaded risers, not a stretched black outline
+    -- through the whole height of each step. The original cell still owns
+    -- the warp; ascending geometry never raises actor collision/support.
+    for band=0,3 do
+      local z0,z1=band*4,(band+1)*4
+      local height=(down and -1 or 1)*(h-band*rise)
+      local sy=down and 13 or z0+2
+      material({vertex(1,height,z0),vertex(15,height,z0),vertex(15,height,z1),vertex(1,height,z1)},3,sy,1,'house-tread')
+      local bottom=down and height+rise or height-rise
+      material({vertex(1,bottom,z1),vertex(15,bottom,z1),vertex(15,height,z1),vertex(1,height,z1)},13,down and 10 or 7,.82,'house-riser')
+      material({vertex(1,height-.35,z1),vertex(15,height-.35,z1),vertex(15,height,z1),vertex(1,height,z1)},0,0,.8,'house-nosing')
+      sides(z0,z1,down and height or 0,down and 0 or height)
+      -- Solid side caps connect each tread to its supporting side panels.
+      for _,span in ipairs({{0,1},{15,16}})do
+        local y=down and 0 or height+.7
+        material({vertex(span[1],y,z0),vertex(span[2],y,z0),vertex(span[2],y,z1),vertex(span[1],y,z1)},13,7,.9,'house-stringer')
+        local base=down and height or 0
+        for _,x in ipairs(span)do
+          material({vertex(x,base,z0),vertex(x,base,z1),vertex(x,y,z1),vertex(x,y,z0)},13,7,.78,'house-stringer-side')
+        end
+        for _,z in ipairs({z0,z1})do
+          material({vertex(span[1],base,z),vertex(span[2],base,z),vertex(span[2],y,z),vertex(span[1],y,z)},13,7,.82,'house-stringer-end')
+        end
+      end
+    end
+    zface(0,down and -h or 0,down and 0 or h,down,13,7,.7,'house-back')
+    return
+  end
   for band=0,3 do
     local z0,z1=band*4,(band+1)*4
     local height=h-band*rise

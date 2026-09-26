@@ -1,3 +1,15 @@
+## 1.28.3 — House stairs, seating and first-person placement
+
+Fixes FireRed/LeafGreen losing the selected 3D camera when leaving the player’s house with FAR/FULL render distance: connected tilesets with no ground triangles are valid empty batches. Genuine upload failures retain actionable diagnostics and bounded recovery.
+
+Rebuilds complete FireRed/LeafGreen house staircases with separate treads, risers, stringers, handrails and recessed descending flights. Restores the bedroom dresser with two drawers and handles. Mom sits at the dining chair’s cushion, with the chair backs facing away from the table; scripted movement remains native.
+
+Crystal house stairs retain their native four-step footprint. Stair warps are protected from door folding; north wall framing and wallpaper recess behind the flights, and shared Gen 1/2 room foundations leave descending stairwells open.
+
+First-person eyes now follow native sprite eye rows and visible-foot anchors across all three generations. FireRed/LeafGreen first person also disables world curvature and uses the shared close-wall focus distance. Mesh revision 76 refreshes stored geometry.
+
+Checked on Gen1Recomp 0.3.20 with isolated native fixtures and focused regressions. See docs/HOUSE_CAMERA_QA_2026-09-26.md for evidence and limits. Full all-map scenery and cross-generation feature parity remain unfinished.
+
 ## 1.28.2 — Native trees and forest performance
 
 Native modeled trees retain distinct source families: pointed conifers, Viridian layered crowns, wide Ilex/Park trees, compact Crystal Kanto crowns and Cut saplings. Colors follow the original artwork around closed 3D crowns. Separate border trees and single wide trees retain their footprints; original 2.5D choices remain available. Shared source images no longer overwrite bush/tree model metadata. Mesh revision 75 refreshes stored models.
