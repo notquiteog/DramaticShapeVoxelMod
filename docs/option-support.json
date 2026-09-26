@@ -4,7 +4,7 @@
       {
         "generation": 1,
         "key": "sceneryProps",
-        "label": "ROCKS & BUSHES",
+        "label": "ROCKS & PLANTS",
         "module": "TreePresentation",
         "status": "not_applicable",
         "consumer": false,
@@ -926,7 +926,7 @@
       {
         "generation": 2,
         "key": "sceneryProps",
-        "label": "ROCKS & BUSHES",
+        "label": "ROCKS & PLANTS",
         "module": "TreePresentation",
         "status": "implemented",
         "consumer": "lib/TreePresentation.lua; lib/NativeTreeArt.lua; lib/Gen2Rocks.lua; lib/Gen2VoxelRock.lua; lib/Gen3Cave.lua; lib/Gen3Outdoor.lua",
@@ -1848,7 +1848,7 @@
       {
         "generation": 3,
         "key": "sceneryProps",
-        "label": "ROCKS & BUSHES",
+        "label": "ROCKS & PLANTS",
         "module": "TreePresentation",
         "status": "implemented",
         "consumer": "lib/TreePresentation.lua; lib/NativeTreeArt.lua; lib/Gen2Rocks.lua; lib/Gen2VoxelRock.lua; lib/Gen3Cave.lua; lib/Gen3Outdoor.lua",

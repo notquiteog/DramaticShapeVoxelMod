@@ -78,6 +78,10 @@ local function tableParts(width,depth)
        {x={width-5,width-3},z={depth-5,depth-3}}}}}}
 end
 local commonHouse={
+  {id='crystal_house_planter',tiles={{10,11},{8,9},{26,27},{24,25}},groundTiles={{1}},model='planter',parts={},support=0},
+  {id='crystal_house_tall_books',tiles={{50,51},{48,49},{14,15},{60,59}},groundTiles={{1}},design='gb_house_tall_books',parts={},support=0},
+  {id='crystal_house_wall_picture',tiles={{45,46},{61,62}},groundTiles={{1}},design='gb_picture',parts={},support=0},
+  {id='crystal_house_wall_clock',tiles={{36,74},{52,44}},groundTiles={{1}},design='gb_picture',parts={},support=0},
   item("crystal_house_table",{{38,39,39,41},{54,47,47,57},{5,47,47,21},{60,58,58,59}},1,
     tableParts(32,28),6),
   item("crystal_house_bookcase",{{14,15},{14,15},{30,31}},1,
@@ -134,6 +138,19 @@ local bedroom={
   item("crystal_bed",{{59,60},{75,76},{91,92}},1,
     {upright(0,15,0,19,20,23,0,24,2)},6),
 }
+-- Traditional rooms use complete hutches and low tatami furniture. These
+-- native drawings differ from the modern-house atlas despite shared numbers.
+local tatami={{68,69,69,70},{84,85,85,86},{69,70,68,69},{85,86,84,85}}
+local traditional={
+ {id='crystal_traditional_hutch',tiles={{35,36},{41,42},{57,58},{82,83}},design='gb_traditional_hutch'},
+ {id='crystal_traditional_drawers',tiles={{35,36},{30,31},{46,47},{24,25}},design='gb_traditional_drawers'},
+ {id='crystal_traditional_books',tiles={{35,36},{62,63},{24,25}},design='gb_traditional_books'},
+ {id='crystal_traditional_cupboard',tiles={{35,36},{8,9},{82,83}},design='gb_traditional_cupboard'},
+ {id='crystal_traditional_radio',tiles={{10,11},{26,27}},design='gb_traditional_radio'},
+ {id='crystal_traditional_cushion',tiles={{2,3},{18,19}},design='gb_seat',support=2.5},
+ {id='crystal_traditional_table',tiles={{35,34,34,36},{66,21,21,67},{66,21,21,67},{51,50,50,52},{37,81,81,38}},design='gb_traditional_table',support=5},
+}
+for _,t in ipairs(traditional)do t.groundTiles=tatami;t.groundAligned=true;t.parts={};t.support=t.support or 0 end
 local designs={
  crystal_kitchen='gb_kitchen',crystal_bedroom_workstation='gb_desk',
  crystal_television='gb_tv',crystal_books='gb_short_books',crystal_bed='gb_tv',crystal_bedroom_pc='gb_pc',crystal_center_terminal='gb_pc',
@@ -171,6 +188,13 @@ wall(house,17,0,16,1);wall(house,17,1,16,1)
 wall(bedroom,2,0,16,1);wall(bedroom,2,1,16,1)
 wall(lab,1,0,16,16);wall(lab,17,1,16,16)
 wall(center,2,0,16,17);wall(center,2,1,16,17)
+for row=0,3 do
+ local tile=row<2 and 17 or 80
+ local t=item('traditional_wall_'..row,{{tile}},1,{},0)
+ t.design='wall';t.tileRow=row;t.wallFront=32-row*8
+ t.wallHigh=32-row*8;t.wallLow=t.wallHigh-8
+ t.groundTiles=tatami;t.groundAligned=true;traditional[#traditional+1]=t
+end
 return {TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
-  TILESET_HOUSE=commonHouse,TILESET_MART=mart,TILESET_POKECENTER=center,
+  TILESET_HOUSE=commonHouse,TILESET_TRADITIONAL_HOUSE=traditional,TILESET_MART=mart,TILESET_POKECENTER=center,
   TILESET_PLAYERS_ROOM=bedroom}

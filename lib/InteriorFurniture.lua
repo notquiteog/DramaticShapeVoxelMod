@@ -74,7 +74,76 @@ function M.draw(id,A)
   B(l+9,.04,n+5,l+9.3,.3,n+10,dark)
   B(l+6,.04,n+9.7,l+9.3,.3,n+10,dark)
  end
- if id=='fr_tower_grave' then
+ if id=='fr_stool' then
+  local mat,dark=T(6,6),T(4,12)
+  for _,x in ipairs({4,10})do for _,z in ipairs({4,10})do B(x,0,z,x+2,4,z+2,dark)end end
+  B(3,3,3,13,4.5,13,mat);top({3,2,10,8},3,3,13,13,4.52)
+ elseif id=='fr_sofa' then
+  local mat,dark=T(8,17),T(3,26)
+  for _,x in ipairs({3,42})do for _,z in ipairs({10,26})do B(x,0,z,x+3,3,z+3,dark)end end
+  B(2,3,9,46,5,29,dark);B(2,5,9,46,16,12,mat)
+  B(1,5,10,5,11,29,mat);B(43,5,10,47,11,29,mat)
+  for i=0,2 do
+   local l=5+i*12.6
+   B(l,5,12,l+12,8,28,mat);top({4+i*13,16,12,10},l,12,l+12,28,8.02)
+   front({4+i*13,3,12,12},l,8,l+12,15,12.02)
+  end
+ elseif id=='fr_office_table' then
+  local w,h=A.width,A.height;local mat=T(12,20)
+  desk(2,8,w-2,h-5,9,mat)
+  top({2,3,w-4,h-19},2,8,w-2,h-5,9.02)
+ elseif id=='fr_round_table' then
+  local w=A.width;local cx=w/2
+  local mat,dark=T(cx,11),T(8,54)
+  B(cx-3,0,31,cx+3,8,37,dark);B(cx-14,0,32,cx+14,1,36,dark);B(cx-2,0,21,cx+2,1,47,dark)
+  -- Oval source drawing, with a closed curved edge and no square base.
+  for row=-21,20 do
+   local half=(w/2-2)*math.sqrt(1-((row+.5)/22)^2)
+   B(cx-half,8,34+row,cx+half,9,35+row,mat)
+  end
+  B(cx-4,9,29,cx+4,9.4,37,T(cx,28));B(cx-2,9.4,31,cx+2,12.4,35,T(cx,25))
+  B(cx-1,12.4,32,cx+1,13,34,dark);B(cx+2,10,32,cx+4,11,33,T(cx,25))
+ elseif id=='fr_ship_bin' or id=='fr_ship_barrel' then
+  local mat,dark=T(7,9),T(4,12)
+  -- Bevelled body, separate bottom, raised rim and inset lid.
+  B(4,0,4,12,1,12,dark);B(3,1,4,13,10,12,mat);B(4,1,3,12,10,13,mat)
+  B(3,10,3,13,11,13,dark);B(4,11,4,12,11.5,12,mat)
+  top({3,1,10,6},3,3,13,13,11.52)
+  for x=4,11,3 do B(x,2,12,x+.5,9,12.3,dark)end
+ elseif id=='fr_ship_porthole' then
+  local rim=T(6,5)
+  B(0,0,12,16,32,15,T(0,12))
+  for _,q in ipairs({{3,11,14,13,13,16},{3,13,14,5,22,16},{11,13,14,13,22,16},{5,22,14,11,24,16}})do
+   B(q[1],q[2],q[3],q[4],q[5],q[6],rim)
+  end
+  B(5,13,14,11,22,15.7,T(7,8));front({4,3,8,11},4,12,12,23,15.72)
+ elseif id=='fr_ship_bed' then
+  local frame,linen=T(15,14),T(24,18)
+  for _,x in ipairs({14,32})do for _,z in ipairs({4,28})do B(x,0,z,x+2,4,z+2,frame)end end
+  B(14,3,3,34,4,30,frame);B(15,4,4,33,5.5,29,linen)
+  B(14,4,2,34,8,4,frame);B(14,4,28,34,6,30,frame)
+  top({14,14,20,16},15,12,33,28,5.52)
+  B(16,5.5,5,32,6.5,11,linen);top({16,4,16,7},16,5,32,11,6.52)
+ elseif id=='fr_ship_chair' then
+  local frame,seat=T(4,13),T(8,6);local reverse=A.recipe.reverse
+  for _,x in ipairs({3,11})do for _,z in ipairs({3,11})do B(x,0,z,x+2,5,z+2,frame)end end
+  B(2,4,2,14,5.5,14,seat);top({4,4,8,8},2,2,14,14,5.52)
+  local l=reverse and 2 or 12
+  B(l,5.5,2,l+2,15,14,frame);B(l-.05,7,3,l+2.05,14,13,seat)
+ elseif id=='fr_ship_table' then
+  local mat=T(4,7);desk(1,3,47,27,7,mat)
+  top({1,3,46,22},1,3,47,27,7.02)
+  -- Raised plate and cup preserve the original table's place setting.
+  B(20,7,9,28,7.5,17,T(24,7));B(22,7.5,11,26,9,15,T(24,11))
+ elseif id=='fr_ship_side_table' then
+  local mat=T(12,24);desk(1,17,31,43,7,mat)
+  top({1,17,30,22},1,17,31,43,7.02)
+  B(22,7,28,28,8,34,T(26,26));B(23,8,29,27,11,33,T(26,24))
+ elseif id=='fr_ship_rail' then
+  local metal,dark=T(7,5),T(7,12)
+  for _,x in ipairs({1,13})do B(x,0,11,x+2,13,13,metal)end
+  B(0,11,10,16,13,14,metal);B(0,5,11,16,6.5,13,dark)
+ elseif id=='fr_tower_grave' then
   local stone,dark,cap=T(6,4),T(3,10),T(7,1)
   -- A low foot, recessed upright inscription and stepped stone crown.
   -- Closed backs and undersides remain visible from first-person/orbit views.
@@ -309,6 +378,37 @@ function M.draw(id,A)
   B(1,5,14,15,16,22,case);B(2,16,15,14,17,21,case)
   front({1,3,14,13},1,5,15,16,22.02)
   B(11,7,22,13,9,22.6,dark);B(3,6,22,8,6.6,22.4,dark)
+ elseif id=='gb_traditional_table' then
+  desk(1,7,31,38,5,T(1,20));top({1,1,30,30},1,7,31,38,5.02)
+ elseif id=='gb_traditional_hutch' or id=='gb_traditional_drawers' then
+  local wood,dark=T(2,2),T(3,10);local n,f=21,31
+  B(1,0,n,15,2,f,wood);B(1,2,n,2,27,f,wood);B(14,2,n,15,27,f,wood)
+  B(1,2,n,15,27,n+1,wood);B(1,27,n,15,29,f,wood)
+  if id=='gb_traditional_hutch' then
+   B(2,10,n+1,14,26,f-1,dark);front({2,9,12,14},2,10,14,26,f-.98)
+   B(2,2,n+1,14,9,f,wood);front({2,25,12,6},2,2,14,9,f+.02)
+   B(1,9,n,15,10,f+.3,wood)
+  else
+   for i=0,2 do
+    local bottom=2+i*8;local sy=24-i*8
+    B(2,bottom,n+1,14,bottom+7,f,wood);front({2,sy+1,12,6},2,bottom,14,bottom+7,f+.02)
+    B(7,bottom+3,f,9,bottom+4,f+.65,dark)
+   end
+  end
+ elseif id=='gb_traditional_books' then
+  shelves(1,13,14,10,21,{{9,18,{1,9,14,6}}},T(1,1),T(3,12),true)
+  B(2,2,14,14,8,23,T(1,1));front({1,17,14,6},2,2,14,8,23.02)
+ elseif id=='gb_traditional_cupboard' then
+  local mat=T(1,1);B(1,0,13,15,20,23,mat);B(1,20,13,15,21,24,mat)
+  front({1,9,14,14},2,1,14,19,23.02)
+  B(7.7,1,23,8.3,19,23.3,T(3,12))
+ elseif id=='gb_traditional_radio' then
+  local mat,dark=T(2,4),T(8,10)
+  B(1,0,6,15,10,14,mat);B(2,10,7,14,11,13,mat)
+  front({1,1,14,14},1,0,15,10,14.02)
+  B(10,3,14,12,5,14.6,dark)
+ elseif id=='gb_house_tall_books' then
+  shelves(1,21,14,10,24,{{3,11,{1,17,14,6}},{13,22,{1,9,14,6}}},T(1,1),T(3,12))
  elseif id=='gb_house_books' then
   shelves(1,13,14,10,21,{{2,9,{1,9,14,6}},{11,19,{1,1,14,6}}},T(1,1),T(3,8))
  elseif id=='gb_pc' then

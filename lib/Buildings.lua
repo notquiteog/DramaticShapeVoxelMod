@@ -150,7 +150,6 @@ local models = {}          -- "<tileset>:<index>" -> prebuilt local quads
 -- is built from the complete drawing and the tower rises to its real
 -- height instead of folding as two half-buildings.
 local function read(t, data, perRow, backTiles)
-  if t.tileRow and ty~=t.tileRow then return false end
   local tiles = t.tiles
   if t.topRows then
     tiles = {}
@@ -1400,6 +1399,7 @@ end
 
 -- Does the template's tile grid sit at (tx, ty)?
 local function matches(S, t, tx, ty)
+  if t.tileRow~=nil and ty~=t.tileRow then return false end
   local tiles = t.tiles
   for r = 1, #tiles do
     local row = tiles[r]
@@ -1494,7 +1494,8 @@ function Buildings.build(S, map, data, perRow)
                 elseif S.gen2 and t.model=="bench" then
                   models[key]=V.require("Gen2Bench").build(t,data,perRow,atlasW,atlasH)
                 elseif S.gen2 and t.model=="planter" then
-                  models[key]=V.require("Gen2Planter").build(t,data,perRow,atlasW,atlasH)
+                  local colors=V.require("TerrainAtlas").originalPixels(map) or data
+                  models[key]=V.require("Gen2Planter").build(t,colors,perRow,atlasW,atlasH)
                 elseif t.claimOnly then
                   -- claim the cells, stamp nothing: the drawing here is
                   -- the off-map half of a building another map models in
@@ -1717,7 +1718,7 @@ function Buildings.stamp(S, map, quads, tx, ty, bw, bh, t)
       { q[3][1] + mx, q[3][2], q[3][3] + mz },
       { q[4][1] + mx, q[4][2], q[4][3] + mz },
       uv = q.uv, shade = shade,
-      canopy = q.card and {mx+bw/2,mz+bh/2,.001} or nil,
+      canopy = q.card and {mx+bw/2,mz+(q.cardZ or bh/2),.001} or nil,
       -- placements only ever scan the BODY, so a building is always this
       -- map's own structure: the mesher's edge keep-rules must not eat
       -- the parts that poke past the boundary (an edge-row house's eave

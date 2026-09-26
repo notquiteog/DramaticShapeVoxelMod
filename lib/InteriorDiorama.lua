@@ -6,6 +6,7 @@ local M={background={.022,.032,.046,1}}
 local cache=setmetatable({},{__mode='k'})
 local materials={}
 local themes={
+ ship={{.86,.86,.89},{.52,.52,.60},{.29,.29,.35},{.92,.91,.72}},
  home={{.73,.71,.61},{.37,.35,.28},{.20,.22,.22},{.91,.87,.70}},
  shop={{.67,.76,.73},{.23,.43,.43},{.13,.25,.29},{.84,.94,.88}},
  center={{.79,.77,.70},{.45,.35,.32},{.22,.27,.30},{.97,.88,.72}},
@@ -13,13 +14,13 @@ local themes={
 }
 function M.profile(def,gen)
  if not def then return end
- local id=def.id or '';local ts=def.tileset or ''
+ local id=def.id or '';local ts=def.tileset or '';local spec
  if gen==3 then
   if tonumber(def.mapType)~=8 then return end
   local pair=def.midLayout and def.midLayout.pair
   if not pair then return end
-  local spec=V.require('Gen3Tilesets').resolve(pair,require('src.import.gba.versions').TILESET_PAIRS)
-  if spec.primary~='building' then return end
+  spec=V.require('Gen3Tilesets').resolve(pair,require('src.import.gba.versions').TILESET_PAIRS)
+  if spec.primary~='building' and spec.secondary~='rom_082d4d94' then return end
  elseif gen==2 then
   if def.environment~='INDOOR' and def.environment~='GATE' then return end
  else
@@ -32,6 +33,7 @@ function M.profile(def,gen)
  end
  local name=(id..' '..ts):upper()
  local theme=name:find('MART') and 'shop' or name:find('CENTER') and 'center' or name:find('LAB') and 'lab' or 'home'
+ if spec and spec.secondary=='rom_082d4d94' then theme='ship' end
  local unit=gen==3 and 16 or 32
  local b={0,0,def.width*unit,def.height*unit}
  if gen==3 then
@@ -46,7 +48,7 @@ function M.profile(def,gen)
   if x1<=x0 or z1<=z0 then return end
   b={x0*16,z0*16,x1*16,z1*16}
   local secondary=V.require('Gen3Tilesets').resolve(def.midLayout.pair,require('src.import.gba.versions').TILESET_PAIRS).secondary
-  if secondary=='lab' or secondary=='pokemon_center' or def.midLayout.pair=='player_house' or def.midLayout.pair=='house' or theme=='shop' then
+  if secondary=='lab' or secondary=='pokemon_center' or def.midLayout.pair=='player_house' or def.midLayout.pair=='house' or theme=='shop' or secondary=='rom_082d4d94' then
    -- The first two rows are the north wall drawing, not extra floor behind
    -- the cabinets. Its continuous backing sits just behind the native facade.
    b[2]=math.min(b[4]-16,(z0+2)*16)-.12
@@ -121,7 +123,7 @@ function M.geometry(p,side,opened)
    for _,a in ipairs({start,finish-2})do part(a,0,a+2,h,2,3.6)end
    -- Recessed luminous wall panels: narrow mullions preserve pixel-art
    -- furniture as the visual focus. Only side walls receive new windows.
-   if side==2 or side==4 then
+   if (side==2 or side==4) and p.theme~='ship' then
     for t=.28,.75,.44 do local c=start+(finish-start)*t
      local function panel(lo,hi,y0,y1,swatch,offset)
       local q=line-outward*offset

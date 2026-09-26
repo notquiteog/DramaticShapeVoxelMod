@@ -112,11 +112,13 @@ function M.of(primary,secondary,mid,behavior,collision)
   local floor=collision~=7 and (mid==0x281 or mid==0x291 or mid>=0x2D0 and mid<=0x305)
   return {kind='flat',reviewedSurface=floor or nil}
  end
- if primary=='building' and profiles[secondary] and (profiles[secondary].surfaces or {})[mid] then
+ local profile=profiles[secondary]
+ local interiorProfile=profile and (primary=='building' or profile.primary==primary)
+ if interiorProfile and (profile.surfaces or {})[mid] then
   return {kind='flat',reviewedSurface=true}
  end
- if primary=='building' and profiles[secondary] and profiles[secondary].walls[mid] and collision==7 then
-  return {kind='roomWall',ground=profiles[secondary].floor}
+ if interiorProfile and profile.walls[mid] and collision==7 then
+  return {kind='roomWall',ground=profile.floor}
  end
  if primary=='building' and secondary=='pewter_gym' then
   if gymWalls[mid] then return {kind='roomWall',ground=mid>=0x2C0 and 0x2C0 or 0x294} end

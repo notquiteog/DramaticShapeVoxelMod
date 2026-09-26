@@ -7,7 +7,8 @@ return function(game)
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
  local Pairs,Shapes,Furniture=V.require('Gen3Tilesets'),V.require('Gen3TileShape'),V.require('Gen3Furniture')
  local Map=require('src.core.game3.map');local Versions=require('src.import.gba.versions')
- local file=assert(io.open(assert(os.getenv('SHOT_DIR'))..'/firered-coverage.csv','w'))
+ local edition=require('src.core.GameVersion').get()
+ local file=assert(io.open(assert(os.getenv('SHOT_DIR'))..'/'..edition..'-coverage.csv','w'))
  file:write('map,pair,primary,environment,hd_scene,cells,flat,trees,building_cells,room_walls,props\n')
  local ids={};for id in pairs(game.data.maps)do ids[#ids+1]=id end;table.sort(ids)
  for i,id in ipairs(ids)do Map.ensureMidLayout(game,id,game.data.maps[id]);if i%30==0 then U.wait(1)end end
@@ -15,6 +16,8 @@ return function(game)
  local I=require('src.core.game3.scripting.interaction_scripts')
  local pairsSeen,enabled,propMaps,propsTotal,recipeCounts={},0,0,0,{}
  local tileRows={}
+ local ledger=os.getenv('QA_CELL_LEDGER') and assert(io.open(os.getenv('QA_CELL_LEDGER'),'w'))
+ if ledger then ledger:write('map,pair,x,y,mid,collision\n')end
  for index,id in ipairs(ids)do
   local def=game.data.maps[id];Map.ensureMidLayout(game,id,def)
   local pair=def.midLayout.pair;local spec=Pairs.resolve(pair,Versions.TILESET_PAIRS)
@@ -23,10 +26,13 @@ return function(game)
   local cells={};local n,flat,trees,buildings,walls=0,0,0,0,0
   for y=0,def.height-1 do for x=0,def.width-1 do
    local mid=def.midLayout:midAt(x,y);local shape=Shapes.of(spec.primary,spec.secondary,mid,(I.behaviors[pair] or {})[mid],def.midLayout:collAt(x,y))
-   cells[x..':'..y]={cx=x,cy=y,mid=mid,pair=Pairs.canonical(pair),primary=spec.primary,secondary=spec.secondary,shape=shape}
+   if ledger then ledger:write(('%s,%s,%d,%d,%03X,%d\n'):format(id,pair,x,y,mid,def.midLayout:collAt(x,y)))end
+   cells[x..':'..y]={cx=x,cy=y,mid=mid,pair=Pairs.canonical(pair),primary=spec.primary,secondary=spec.secondary,shape=shape,
+    behavior=(I.behaviors[pair] or {})[mid],collision=def.midLayout:collAt(x,y)}
   end end
   local Buildings=V.require('Gen3Buildings')
   if supported then local gyms=Buildings.prepare(cells);V.require('Gen3Civic').prepare(cells,gyms,V.data("gen3_exteriors"))end
+  if supported then V.require('Gen3Stairs').prepare(cells)end
   local props=supported and Furniture.extract(cells) or {}
   if #props>0 then propMaps=propMaps+1 end;propsTotal=propsTotal+#props
   for _,p in ipairs(props)do recipeCounts[p.recipe.name]=(recipeCounts[p.recipe.name] or 0)+1 end
@@ -35,7 +41,7 @@ return function(game)
    for _,c in pairs(cells)do if c.gym then c.column=Buildings.column(c.gym)end end
   end
   for _,c in pairs(cells)do
-   local treatment=not supported and 'native_fallback' or c.prop and 'modeled_prop'
+   local treatment=not supported and 'native_fallback' or c.stairs and 'modeled_stairs' or c.prop and 'modeled_prop'
     or (c.column or c.civic) and 'modeled_building' or c.shape.kind=='flat' and (c.shape.reviewedSurface and 'reviewed_surface' or 'unreviewed')
     or (c.shape.kind=='roof' or c.shape.kind=='wall' or c.shape.kind=='roomWall') and 'unmatched_building'
     or 'modeled_'..c.shape.kind
@@ -43,7 +49,7 @@ return function(game)
    local row=tileRows[key] or {pair=pair,mid=c.mid,kind=c.shape.kind,treatment=treatment,cells=0,maps={},example=id,x=c.cx,y=c.cy}
    tileRows[key]=row;row.cells=row.cells+1;row.maps[id]=true
    n=n+1
-   if c.prop then
+   if c.prop or c.stairs then
    elseif c.civic then buildings=buildings+1
    elseif c.column then if c.column.indoor then walls=walls+1 else buildings=buildings+1 end
    elseif c.shape.kind=='tree' and supported then trees=trees+1
@@ -52,8 +58,8 @@ return function(game)
   file:write(('%s,%s,%s,%s,%s,%d,%d,%d,%d,%d,%d\n'):format(id,pair,spec.primary or '',def.environment or '',tostring(supported),n,flat,trees,buildings,walls,#props))
   if index%20==0 then U.wait(1)end
  end
- file:close()
- local tiles=assert(io.open(assert(os.getenv('SHOT_DIR'))..'/firered-tiles.csv','w'))
+ file:close();if ledger then ledger:close()end
+ local tiles=assert(io.open(assert(os.getenv('SHOT_DIR'))..'/'..edition..'-tiles.csv','w'))
  tiles:write('pair,metatile,kind,treatment,cells,maps,example_map,x,y\n')
  local keys={};for key in pairs(tileRows)do keys[#keys+1]=key end;table.sort(keys)
  for _,key in ipairs(keys)do local r=tileRows[key];local maps=0;for _ in pairs(r.maps)do maps=maps+1 end

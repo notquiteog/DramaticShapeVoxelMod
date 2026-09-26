@@ -3,7 +3,7 @@ function V.require(n)if not modules[n]then modules[n]=assert(loadfile('lib/'..n.
 local F=V.require('Gen3Furniture');local n=0
 for _,r in ipairs(F.recipes)do if r.design then
  local cells={}
- for y,row in ipairs(r.rows)do for x,mid in ipairs(row)do cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,primary='building',pair=r.pair or 'test',secondary=r.secondary or '',ts={}}end end
+ for y,row in ipairs(r.rows)do for x,mid in ipairs(row)do cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,primary=r.primary or 'building',pair=r.pair or 'test',secondary=r.secondary or '',ts={}}end end
  local props=F.extract(cells);assert(#props==1 and props[1].recipe==r,'incomplete match '..r.name)
  local count,hi=0,0
  F.append(props[1],function(q,uv)

@@ -15,8 +15,14 @@ for ts,list in pairs(specs) do
   assert(t.support<=8,'furniture support too high')
   assert(t.groundAligned,'floor pattern must retain world alignment')
   if t.model=='planter' then
-   local q=Plant.build(t,{getPixel=function()return .5,.5,.5,1 end},16,128,128)
-   assert(#q>0 and #q<=70,'planter budget')
+   local floor={}
+   for _,row in ipairs(t.groundTiles)do for _,tile in ipairs(row)do floor[tile]=true end end
+   local q=Plant.build(t,{getPixel=function(_,x,y)
+    if floor[math.floor(y/8)*16+math.floor(x/8)]then return .7,.7,.7,1 end
+    if x%8>=2 and x%8<6 and y%8>=1 and y%8<7 then return .2,.6,.25,1 end
+    return .7,.7,.7,1
+   end},16,128,128)
+   assert(#q>0 and #q<=280,'planter budget')
    for _,face in ipairs(q) do
     assert(type(face.shade)=='number')
     for i=1,4 do local p=face[i]

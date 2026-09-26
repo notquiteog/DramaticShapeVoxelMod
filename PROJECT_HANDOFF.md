@@ -1,3 +1,13 @@
+## 1.28.1 — 2026-09-26
+
+House and office plants use curved solid leaves, a raised midrib, closed undersides, and a tapered pot with a rim and inset soil; the native 2.5D alternative remains selectable. LeafGreen ship room styling now resolves edition-specific tileset aliases.
+
+Crystal common houses gain complete potted plants, tall bookcases, wall pictures and clocks. Traditional houses gain low tables, cushions, hutches, drawers, cupboards, radios and continuous north-wall strips. Fixes the misplaced wall-row guard, wrong floor atlas slots in ORIGINAL GAME mode, and palette selection for modeled plants. Native potted plants retain the 3D/2.5D scenery choice. Mesh revision 74 refreshes older scenery.
+
+FireRed/LeafGreen gains complete office sofas, oval/rectangular tables, stools and plants; ship cabin beds, chairs, tables, bookcases, bins, portholes and straight rail sections. Complete source drawings own their footprint. Ship interior framing is enabled without changing exterior deck framing. Native collision, scripts and warps are unchanged.
+
+Validated on Gen1Recomp 0.3.20 with native map inventories and representative rendered views. This is an incremental improvement, not completion of all tiles, settings or battle-stage parity. See docs/SHARED_INTERIORS_QA_2026-09-26.md.
+
 ## 1.28.0 — 2026-09-26
 
 Trees use normal round crowns: separate narrow border rows, one broad tree for a 2x2 drawing. Native TREE ART retains model/card choices. ROCKS & BUSHES adds solid/native-cutout choices in Gen2/3; default models leave people, Pokemon, grass and flowers as sprites. Mesh revision 73 invalidates older geometry. Adds Voxel Ascendant's MIT-licensed optional weather across all three engines (CLEAR/AUTO/RAIN/SNOW/FOG/STORM), with source attribution. Native battle mechanics are unchanged.

@@ -1,3 +1,7 @@
+Current 1.28.1: complete shared interior furniture, native floor routing and wall-row fixes. [Validation and remaining coverage](docs/SHARED_INTERIORS_QA_2026-09-26.md).
+
+House and office plants use curved solid leaves, a raised midrib, closed undersides, and a tapered pot with a rim and inset soil; the native 2.5D alternative remains selectable. LeafGreen ship room styling now resolves edition-specific tileset aliases.
+
 Trees use normal round crowns: separate narrow border rows, one broad tree for a 2x2 drawing. Native TREE ART retains model/card choices. ROCKS & BUSHES adds solid/native-cutout choices in Gen2/3; default models leave people, Pokemon, grass and flowers as sprites. Mesh revision 73 invalidates older geometry. Adds Voxel Ascendant's MIT-licensed optional weather across all three engines (CLEAR/AUTO/RAIN/SNOW/FOG/STORM), with source attribution. Native battle mechanics are unchanged.
 
 ## 1.28.0 — 2026-09-26

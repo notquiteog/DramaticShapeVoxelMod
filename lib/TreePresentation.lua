@@ -5,7 +5,7 @@ M.setting=V.require('ModSetting').new('hdTreeTrunks','TREE TRUNKS',
  {'flat','solid'},{'FLAT 2.5D','MODELED'},1)
 M.art=V.require('ModSetting').new('treeArtwork','TREE ART',
  {'original','illustrated','modeled'},{'ORIGINAL CARD','ILLUSTRATED CARD','ORIGINAL MODEL'},3)
-M.props=V.require('ModSetting').new('sceneryProps','ROCKS & BUSHES',
+M.props=V.require('ModSetting').new('sceneryProps','ROCKS & PLANTS',
  {'modeled','cards'},{'3D MODELS','2.5D SPRITES'},1)
 M.surfaces=V.require('ModSetting').new('surfaceArtwork','SCENERY TEXTURES',
  {'original','detailed'},{'ORIGINAL GAME','DETAILED'},1)

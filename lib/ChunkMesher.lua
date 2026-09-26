@@ -885,7 +885,8 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
   -- `to` routes the quad somewhere other than the main sink -- the water
   -- surface is the only caller that ever does (see runGeometry's header).
   local function topQuad(x0, z0, h, tile, shade, to)
-    if not to and S.gen2 and CommunityVisuals.crystalDepth(map) then
+    if not to and S.gen2 and CommunityVisuals.crystalDepth(map)
+        and V.require("TreePresentation").surfaces:get()=="detailed" then
       tile = V.require("Gen2FloorFinish").tile(map,tile,x0,z0,h)
     end
     local u0, u1, v0, v1 = uvRect(tile, 0, 8)

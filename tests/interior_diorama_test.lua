@@ -64,3 +64,11 @@ assert(Pairs.supports({midLayout={pair='network'},mapType=8},{primary='building'
 -- Shared Building scenes retain the camera; unreviewed art stays flat.
 assert(Pairs.supports({midLayout={pair='unknown'},mapType=8},{primary='building'}))
 print('PASS interior generation isolation, padding, cutaway bounds and '..objects..' native-art furniture recipes')
+
+-- LeafGreen pair suffixes differ; room styling uses the bound native identity.
+local ship={id='FR_SSANNE_1F_ROOM1',width=8,height=8,mapType=8,
+ midLayout={pair='general__leafgreen_ship',midAt=function()return 0x298 end}}
+Pairs.bind({FR_SSANNE_1F_ROOM1=ship})
+assert(M.profile(ship,3).theme=='ship','edition alias lost ship room styling')
+ship.mapType=1
+assert(not M.profile(ship,3),'ship exterior acquired an interior enclosure')

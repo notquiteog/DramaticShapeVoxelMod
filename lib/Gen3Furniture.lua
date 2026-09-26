@@ -75,6 +75,8 @@ for _,r in ipairs(additional)do recipes[#recipes+1]=r end
 local Center=V and V.require('Gen3CenterFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3CenterFurniture.lua')
 for _,r in ipairs(Center.recipes)do recipes[#recipes+1]=r end
 local Designed=V and V.require('Gen3DesignedFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3DesignedFurniture.lua')
+local Institution=V and V.require('Gen3InstitutionFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3InstitutionFurniture.lua')
+for _,r in ipairs(Institution)do recipes[#recipes+1]=r end
 Designed.install(recipes)
 local function matched(mid,expected,r)
  return (r.kind=='escalator' and Center.canonical(mid) or mid)==expected
@@ -176,7 +178,33 @@ function M.append(p,emit,uvFor)
    box(x+sx,y0,z+8-depth/2,x+sx+1,y1,z+8+depth/2,tex(sx,sy))
   end end end
  elseif r.kind=='plant' then
-  source(0,0,p.w,p.d,{x,r.h,z+p.d-6},{x+p.w,r.h,z+p.d-6},{x+p.w,0,z+p.d-6},{x,0,z+p.d-6})
+  if V and p.ts.imageData then
+   local Plant=V.require('Gen2Planter')
+   local pixel=Plant.cutout(p.w,p.d,function(px,py)
+    local mid=r.rows[math.floor(py/16)+1][math.floor(px/16)+1]
+    local slot=p.ts.midToSlot[mid];local ax,ay=slot%p.ts.cols*16+px%16,math.floor(slot/p.ts.cols)*16+py%16
+    local rr,gg,bb,aa=p.ts.imageData:getPixel(ax,ay)
+    if p.ts.overImageData then local r2,g2,b2,a2=p.ts.overImageData:getPixel(ax,ay)
+     rr,gg,bb,aa=r2*a2+rr*(1-a2),g2*a2+gg*(1-a2),b2*a2+bb*(1-a2),a2+aa*(1-a2)
+    end
+    return rr,gg,bb,aa,(ax+.5)/(p.ts.cols*16),(ay+.5)/(p.ts.rows*16)
+   end,p.ts.midToSlot[r.ground] and function(px,py)
+    local slot=p.ts.midToSlot[r.ground];local ax,ay=slot%p.ts.cols*16+px,math.floor(slot/p.ts.cols)*16+py
+    local rr,gg,bb=p.ts.imageData:getPixel(ax,ay)
+    if p.ts.overImageData then local r2,g2,b2,a2=p.ts.overImageData:getPixel(ax,ay)
+     rr,gg,bb=r2*a2+rr*(1-a2),g2*a2+gg*(1-a2),b2*a2+bb*(1-a2)
+    end
+    return rr,gg,bb
+   end)
+   local cards=V.require('TreePresentation').props:get()=='cards'
+   local model=cards and Plant.card(p.w,p.d,pixel) or Plant.fromDrawing(p.w,p.d,pixel)
+   for _,q in ipairs(model)do
+    local points={};for i=1,4 do points[i]={x+q[i][1],q[i][2],z+q[i][3]}end
+    emit(points,q.uv,q.shade,cards and {x+p.w/2,z+p.d-8,.001} or nil)
+   end
+  else
+   source(0,0,p.w,p.d,{x,r.h,z+p.d-6},{x+p.w,r.h,z+p.d-6},{x+p.w,0,z+p.d-6},{x,0,z+p.d-6})
+  end
  elseif r.kind=='mailbox' then
   -- The source mailbox spans two metatiles but only its bottom twenty
   -- drawing rows belong to the object. A closed, bevelled postal box keeps
