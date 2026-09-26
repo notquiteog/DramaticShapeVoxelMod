@@ -1,3 +1,9 @@
+## 1.27.2 — 2026-09-26
+
+Crystal shared scenery pass: 36 existing complete-object recipes now use component furniture—recessed shelving and machine displays, keyboard trays, legged tables, chairs and horizontal beds. Covers facilities, stations, Radio Tower, Game Corners, gates, mansions, ship cabins and Battle Tower. Seven native rock drawings use closed source-colored voxel volumes, covering 2,048 placements in the imported map census. No collision, scripts or encounter behavior changes. Cache revision71 refreshes previous geometry.
+
+Inventoried all388 Crystal maps and inspected ten representative maps in overview/first-person captures on Gen1Recomp0.3.20. Some fixture dialogue obscures lower screen regions; this is not exhaustive visual certification. Generic walls and specialist scenery still require review. Lower grass and starting-area fixes from1.27.1 are included.
+
 ## 1.27.1 — lower sprite grass and starting-area furniture
 
 Source grass is lower across Gen1/2/3; native Gen2/3 ground-pattern layers retain complete patches and flowers stay upright. Fixed generic furniture stealing the FRLG bedroom console; added neighboring-house appliance/plant matches, framed wall picture and continuous backing; authored Crystal common-house TV/radio/books/table components. North enclosure alignment includes both house vocabularies. Cache revision70. Focused model/grass suites and LuaJIT compile pass. See [starting-area review](docs/STARTING_AREA_QA_2026-09-26.md). Existing all-map/settings/battle-camera limits remain.

@@ -1,3 +1,9 @@
+## 1.27.2 — 2026-09-26
+
+Crystal shared scenery pass: 36 existing complete-object recipes now use component furniture—recessed shelving and machine displays, keyboard trays, legged tables, chairs and horizontal beds. Covers facilities, stations, Radio Tower, Game Corners, gates, mansions, ship cabins and Battle Tower. Seven native rock drawings use closed source-colored voxel volumes, covering 2,048 placements in the imported map census. No collision, scripts or encounter behavior changes. Cache revision71 refreshes previous geometry.
+
+Inventoried all388 Crystal maps and inspected ten representative maps in overview/first-person captures on Gen1Recomp0.3.20. Some fixture dialogue obscures lower screen regions; this is not exhaustive visual certification. Generic walls and specialist scenery still require review. Lower grass and starting-area fixes from1.27.1 are included.
+
 ## 1.27.1 — 2026-09-26
 
 Makes grass lower across all three generations while retaining sprite artwork. Crystal and FireRed/LeafGreen also retain the native grass pattern on the ground, so low tufts form complete patches instead of thin separated stripes. Flowers retain their upright native sprite presentation. Refreshes stored geometry to discard taller cached grass.

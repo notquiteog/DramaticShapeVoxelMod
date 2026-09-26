@@ -60,7 +60,39 @@ function M.draw(id,A)
   B(l+9,.04,n+5,l+9.3,.3,n+10,dark)
   B(l+6,.04,n+9.7,l+9.3,.3,n+10,dark)
  end
- if id=='fr_bed' then
+ if id:match('^gb_native_') then
+  local w,h=A.width,A.height
+  local mat,dark=T(1,1),T(math.min(3,w-1),math.min(8,h-1))
+  local rear=math.max(1,h-13);local f=h-1
+  if id=='gb_native_cabinet' then
+   -- Source upper and lower racks occupy distinct recessed shelves.
+   shelves(1,rear,w-2,11,h-2,{{2,h/2-1,{1,h/2,w-2,h/2-1}},
+    {h/2+1,h-3,{1,1,w-2,h/2-2}}},mat,dark)
+  elseif id=='gb_native_machine' then
+   B(2,0,rear,w-2,5,f,mat)
+   front({1,h-6,w-2,5},2,0,w-2,5,f+.02)
+   local topHeight=math.max(12,h-3)
+   crt(1,rear-1,w-2,6,topHeight,{2,2,w-4,math.max(4,h-11)},mat,dark)
+   keyboard({1,h-9,w-2,3},2,f-3,w-4,3,5.1,mat)
+  elseif id=='gb_native_seat' then
+   desk(2,math.max(1,h-11),w-2,h-2,3,mat)
+   B(1,3,h-12,w-1,4,h-1,mat)
+   top({1,math.max(0,h-10),w-2,8},1,h-11,w-1,h-1,4.02)
+   B(1,4,h-12,w-1,9,h-10,mat)
+   front({1,0,w-2,5},1,4,w-1,9,h-9.98)
+  elseif id=='gb_native_bed' then
+   desk(1,2,w-1,h-1,4,mat)
+   B(1,4,2,w-1,6,h-1,mat);top({1,2,w-2,h-4},1,2,w-1,h-1,6.02)
+   B(1,4,1,w-1,8,3,mat)
+   B(3,6,4,w-3,7,9,mat);top({3,3,w-6,5},3,4,w-3,9,7.02)
+  elseif id=='gb_native_table' then
+   desk(1,1,w-1,h-1,6,mat);top({1,1,w-2,h-2},1,1,w-1,h-1,6.02)
+  else
+   desk(1,1,w-1,h-1,6,mat)
+   keyboard({0,0,w,h-3},1,1,w-2,h-4,6.1,mat)
+   front({0,h-3,w,3},1,4,w-1,6,h-1.01)
+  end
+ elseif id=='fr_bed' then
   local metal,white=T(15,16),T(17,25)
   B(13,0,16,15,7,46,metal);B(33,0,16,35,7,46,metal)
   B(13,5,15,35,8,17,metal);B(13,0,44,35,3,46,metal)

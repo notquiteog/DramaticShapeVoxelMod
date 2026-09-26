@@ -28,7 +28,7 @@ function M.build(t,data,perRow,aw,ah)
   box(0,t.wallLow,f-.25,8,t.wallHigh,f,sample(1,1))
   -- Preserve the original wallpaper as one continuous thin face.
   source(0,0,8,8,{0,t.wallHigh,f+.01},{8,t.wallHigh,f+.01},{8,t.wallLow,f+.01},{0,t.wallLow,f+.01})
- else assert(V.require('InteriorFurniture').draw(t.design,{source=source,sample=sample,box=box}),'unknown interior model '..t.design)end
+ else assert(V.require('InteriorFurniture').draw(t.design,{source=source,sample=sample,box=box,width=#t.tiles[1]*8,height=#t.tiles*8}),'unknown interior model '..t.design)end
  return out
 end
 -- Fill only the north-wall backing in reviewed rooms. Claiming a whole

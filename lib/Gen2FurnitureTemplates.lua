@@ -31,6 +31,13 @@ function M.resolve(ts,spec)
    z=z,depth=depth,rise=rise,stretch=true}
  end
  local kind=spec.kind
+ if kind=='boulder' then t.model='native_rock';return t end
+ if kind=='cabinet' or kind=='machine' or kind=='seat' or kind=='bed' or kind=='table' or kind=='console' then
+  t.design='gb_native_'..kind
+  if spec.id:find('slots') then t.design='gb_native_machine' end
+  t.support=(kind=='table' or kind=='bed') and 6 or kind=='seat' and 4 or 0
+  return t
+ end
  if kind=='bench' or kind=='bin' then t.model=kind;return t end
  if kind=='planter' then t.model='planter';return t end
  if kind=='boulder' then

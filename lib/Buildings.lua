@@ -1485,6 +1485,8 @@ function Buildings.build(S, map, data, perRow)
               if not models[key] then
                 if S.gen2 and t.design then
                   models[key]=V.require("Gen2DesignedFurniture").build(t,data,perRow,atlasW,atlasH)
+                elseif S.gen2 and t.model=="native_rock" then
+                  models[key]=V.require("Gen2VoxelRock").build(t,data,perRow,atlasW,atlasH)
                 elseif S.gen2 and t.model=="room_desk" then
                   models[key]=V.require("Gen2RoomDesk").build(t,data,perRow,atlasW,atlasH)
                 elseif S.gen2 and t.model=="bin" then

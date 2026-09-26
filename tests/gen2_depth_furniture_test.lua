@@ -41,3 +41,18 @@ for i,s in ipairs(specs.TILESET_RADIO_TOWER)do
  if s.id=='crystal_depth_radio_equipment' then equipment=i end
 end
 assert(desk and equipment and desk<equipment,'reception desk lost its specific-match priority')
+local V={};local cache={}
+function V.require(n)if not cache[n]then cache[n]=assert(loadfile('lib/'..n..'.lua'))(V)end;return cache[n]end
+local n=0
+for _,list in pairs(specs)do for _,s in ipairs(list)do
+ local blocks={};for i=1,256 do blocks[i]={};for j=1,16 do blocks[i][j]=i*16+j end end
+ local t=assert(Resolve.resolve({blocks=blocks},s))
+ if t.design then
+  local faces=V.require('Gen2DesignedFurniture').build(t,{},128,1024,1024);assert(#faces>20,s.id)
+  for _,q in ipairs(faces)do for i=1,4 do
+   assert(q[i][2]>=0 and q[i][2]==q[i][2],s.id)
+   assert(q.uv[i][1]>=0 and q.uv[i][1]<=1 and q.uv[i][2]>=0 and q.uv[i][2]<=1,s.id)
+  end end;n=n+1
+ end
+end end
+print('PASS '..n..' shared furniture assemblies: geometry and native crop bounds')
