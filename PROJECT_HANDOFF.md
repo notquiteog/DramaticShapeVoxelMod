@@ -1,3 +1,11 @@
+## 1.28.9 — Broadcast rooms and Rocket equipment
+
+Crystal radio rooms now have dedicated broadcast receivers, mixing desks, microphones and low round stools. The complete 5F studio desk owns its stacked equipment and work surface together; cabinet materials no longer sample the empty floor strip above the source drawing.
+
+FireRed/LeafGreen Rocket Hideout machinery now has a closed processing vessel, separate radiator fins, controls, piping and feet, using the native colors. Added the executive desk drawing and fifteen missing teal partition pieces; native walkable copies remain flat. Silph wall colors remain separate. Mesh revision 81 refreshes stored geometry.
+
+Validated on Gen1Recomp 0.3.22 with native Crystal, FireRed, LeafGreen and Yellow fixtures, first-person/static/orbit views, unchanged native map grids, three complete B4F machines in both GBA editions, and focused geometry/source-art regressions. Full-area visual coverage and five-mod feature parity remain unfinished.
+
 ## 1.28.8 — Industrial drums, rubble and equipment
 
 FireRed/LeafGreen Power Plant drums now use separate closed models instead of room-height walls: 66 drums across 39 complete source columns. Its 117 rubble piles use low, irregular faceted stones, with the original sprite alternative under ROCKS & PLANTS. Crystal gains native-art equipment racks and low cable trays, replacing generic shelf geometry.

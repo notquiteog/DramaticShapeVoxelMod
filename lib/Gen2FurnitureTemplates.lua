@@ -31,7 +31,7 @@ function M.resolve(ts,spec)
   t.modelShape=kind=='boulder' and 'rock' or nil;return t
  end
  if kind=='cabinet' or kind=='machine' or kind=='seat' or kind=='bed' or kind=='table' or kind=='console' then
-  t.design='gb_native_'..kind
+  t.design=spec.design or 'gb_native_'..kind
   if spec.id:find('slots') then t.design='gb_native_machine' end
   t.support=(kind=='table' or kind=='bed') and 6 or kind=='seat' and 4 or 0
   return t

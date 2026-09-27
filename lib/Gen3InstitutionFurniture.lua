@@ -6,6 +6,11 @@ local function add(name,pair,rows,design,floor,primary)
   ground=floor,primary=primary or 'building'}
 end
 local office='building__rom_082d4ecc'
+-- Rocket's complete processing machine includes the tall vessel, radiator,
+-- control cabinet and side fittings. Its wall strip is source context only.
+add('rocket_processing_machine',office,{{0x2ad,0x2af,0x289},{0x2b5,0x2b6,0x2b7},{0x2bd,0x2be,0x2bf}},'fr_processing_machine',0x281)
+-- Giovanni's low office desk uses its own shallow three-row drawing.
+add('rocket_executive_desk',office,{{0x2b0,0x2b1,0x2b2},{0x2b8,0x2b9,0x2c4},{0x2c0,0x2c1,0x2c2}},'fr_office_table',0x281)
 for _,mid in ipairs({0x2e3,0x2e4,0x312,0x31a,0x386})do
  add('office_stool_'..mid,office,{{mid}},'fr_stool',mid<0x300 and 0x281 or mid<0x330 and 0x2ed or 0x334)
 end

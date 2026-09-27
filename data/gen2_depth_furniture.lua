@@ -2,8 +2,8 @@
 -- imported tileset; these are object layouts, never bundled ROM artwork.
 -- Crop is {tileX,tileY,width,height} within one 32px metatile. Only complete
 -- drawings are listed: walls, stairs, rugs and puzzle tiles remain native.
-local function prop(id,block,crop,kind,floor)
- return {id='crystal_depth_'..id,block=block,crop=crop,kind=kind,groundBlock=floor}
+local function prop(id,block,crop,kind,floor,design)
+ return {id='crystal_depth_'..id,block=block,crop=crop,kind=kind,groundBlock=floor,design=design}
 end
 local full={0,0,4,4}
 local left={0,0,2,4}
@@ -62,13 +62,13 @@ return {
  TILESET_RADIO_TOWER={
   prop('radio_shelves',10,left,'cabinet',1),
   prop('radio_planter',11,left,'planter',1),
-  prop('radio_terminal',18,left,'machine',1),
+  prop('radio_terminal',18,left,'machine',1,'gb_broadcast_receiver'),
   -- Match the whole reception desk before the taller equipment recipe. Its
   -- monitor pixels recur in the machine, but the desk's left counter does not.
-  prop('radio_desk_terminal',43,{0,2,4,2},'console',1),
-  prop('radio_equipment',28,{2,0,2,4},'machine',1),
-  prop('radio_mixing_desk',56,{0,2,4,2},'console',1),
-  prop('radio_chair',20,{0,0,2,2},'seat',1),
+  prop('radio_desk_terminal',43,{0,2,4,2},'console',1,'gb_broadcast_desk'),
+  prop('radio_equipment',28,{2,0,2,4},'machine',1,'gb_broadcast_receiver'),
+  prop('radio_mixing_desk',56,{0,2,4,2},'console',1,'gb_broadcast_mixer'),
+  prop('radio_chair',20,{0,0,2,2},'seat',1,'gb_broadcast_stool'),
  },
  TILESET_GAME_CORNER={
   prop('game_corner_planter',18,left,'planter',1),

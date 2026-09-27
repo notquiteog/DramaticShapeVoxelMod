@@ -74,7 +74,86 @@ function M.draw(id,A)
   B(l+9,.04,n+5,l+9.3,.3,n+10,dark)
   B(l+6,.04,n+9.7,l+9.3,.3,n+10,dark)
  end
- if id=='fr_industrial_drums' then
+ if id=='fr_processing_machine' then
+  local metal,light,dark=T(7,28),T(7,20),T(25,26)
+  local brass,red=T(22,18),T(8,25)
+  -- Closed stepped cylinders, rather than the original perspective drawing
+  -- stretched across a box. The vessel and its controls share one chassis.
+  local function drum(cx,cz,b,h,r,mat)
+   for _,band in ipairs({{-1,-.7,.45},{-.7,-.4,.8},{-.4,.4,1},{.4,.7,.8},{.7,1,.45}})do
+    B(cx-r*band[3],b,cz+r*band[1],cx+r*band[3],h,cz+r*band[2],mat)
+   end
+  end
+  for _,x in ipairs({3,27})do for _,z in ipairs({23,40})do B(x,0,z,x+4,3,z+4,dark)end end
+  B(2,3,22,33,5,45,metal)
+  B(3,5,23,17,14,42,metal);B(17,5,23,32,17,44,metal)
+  B(18,17,23,31,21,34,light);B(18,17,34,31,19,42,light)
+  front({18,32,12,12},18,6,30,17,44.02)
+  for _,y in ipairs({8,11,14})do B(18,y,44,30,y+.6,44.4,dark)end
+  for _,x in ipairs({21,27})do B(x,12,44.4,x+1.5,13.2,44.8,T(22,40))end
+  drum(10,30,13,16,7,metal);drum(10,30,16,19,5.5,red)
+  drum(10,30,19,31,4.5,light);drum(10,30,31,33,4,metal)
+  drum(10,30,33,36,5,red);drum(10,30,36,37,4,dark)
+  front({8,10,5,4},7.5,34,12.5,36,35.02)
+  -- Separate fins have open spaces between them and a closed manifold.
+  B(19,21,25,32,23,32,dark);B(19,31,25,32,32,32,dark)
+  for x=19,31,2 do B(x,23,25,x+1,31,32,brass)end
+  B(14,26,28,19,28,30,metal)
+  -- Side pipe and two round access fittings, all inside the native footprint.
+  B(32,9,29,36,11,32,metal);B(34,5,29,36,11,32,metal)
+  drum(36,36,4,7,3,metal);drum(36,36,7,8,2,light)
+  drum(5,41,5,8,3,metal);drum(5,41,8,9,2,light)
+  front({8,33,4,10},8,5,12,13,42.02)
+  for z=26,39,3 do B(1.8,6,z,2.02,11,z+.7,dark)end
+ elseif id=='gb_broadcast_stool' then
+  local dark,red,pink=T(4,9),T(8,8),T(6,5)
+  for _,x in ipairs({4,10})do for _,z in ipairs({5,11})do B(x,0,z,x+2,2.5,z+2,dark)end end
+  B(3,2,4,13,3,14,red);B(2,2,6,14,3,12,red)
+  B(4,3,5,12,4,13,pink);B(3,3,7,13,4,11,pink)
+ elseif id=='gb_broadcast_receiver' then
+  -- These 16x32 crops contain eight pixels of floor/wall above the unit.
+  -- Sample only equipment, and leave that source apron on the ground.
+  local shell,dark,trim=T(2,12),T(4,14),T(2,10)
+  B(2,0,17,14,2,31,dark)
+  B(1,2,17,15,23,30,shell);B(1,23,17,15,24,30,trim)
+  for _,bay in ipairs({{3,11,24},{13,22,8}})do
+   B(2,bay[1],29,14,bay[2],30.4,dark)
+   front({1,bay[3],14,8},2,bay[1]+.5,14,bay[2]-.5,30.42)
+   B(1,bay[1]-1,17,15,bay[1],31,trim)
+   for _,x in ipairs({3,11})do B(x,bay[1]+2,30.4,x+1,bay[1]+3,31,trim)end
+  end
+  for z=19,27,2 do B(.8,5,z,1.02,20,z+.6,dark);B(14.98,5,z,15.2,20,z+.6,dark)end
+ elseif id=='gb_broadcast_studio' then
+  local shell,dark,trim=T(2,4),T(5,5),T(3,3)
+  -- Two stacked receivers at the desk's left, not a third monitor/table.
+  B(1,0,9,15,2,23,dark);B(1,2,9,15,22,22,shell)
+  for _,bay in ipairs({{3,11,16},{12,21,0}})do
+   front({1,bay[3],14,8},2,bay[1],14,bay[2],22.02)
+   B(1,bay[1]-1,9,15,bay[1],23,trim)
+   B(12,bay[1]+2,22,13,bay[1]+3,22.8,trim)
+  end
+  B(1,22,9,15,23,23,trim)
+  desk(15,9,47,23,7,shell)
+  top({16,8,32,8},15,9,47,23,7.02)
+  front({16,16,32,8},15,5,47,7,23.02)
+  -- Native yellow mic/control at the right of the work surface.
+  B(43,7,11,46,7.6,14,dark);B(44,7.6,11.8,44.7,10,12.5,dark)
+  B(43.5,10,11,45.5,11,13,T(43,10))
+ elseif id=='gb_broadcast_desk' or id=='gb_broadcast_mixer' then
+  local shell,dark=T(2,3),T(2,12)
+  desk(1,2,31,15,7,shell)
+  top({0,0,32,8},1,2,31,14,7.02)
+  front({0,8,32,8},1,5,31,7,15.02)
+  if id=='gb_broadcast_desk' then
+   B(18,7,3,30,14,10,shell)
+   front({16,0,16,16},18,7,30,14,10.02)
+   for x=20,27,3 do B(x,8,10,x+1,9,10.6,dark)end
+  else
+   -- A slim microphone and base above the original mixing surface.
+   B(22,7,4,26,7.7,7,dark);B(23.5,7.7,5,24.2,11,5.7,dark)
+   B(22.5,11,4.5,25.5,12,6,T(20,2))
+  end
+ elseif id=='fr_industrial_drums' then
   -- Stepped circular sections form closed solid drums, including their
   -- undersides. Each source lid owns one fourteen-pixel footprint.
   local function band(z,b,h,r,mat)

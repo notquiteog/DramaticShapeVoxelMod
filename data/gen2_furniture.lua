@@ -220,6 +220,10 @@ facility[1].design='gb_facility_generator'
 facility[2].design='gb_facility_generator_end'
 facility[3].design='gb_facility_rack'
 facility[4].design='gb_facility_cable_tray'
-return {TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
+local radio={
+ item('crystal_broadcast_studio_desk',{{86,87,1,1,1,1},{88,89,7,7,7,36},{76,77,23,23,23,22}},1,{},0),
+}
+radio[1].design='gb_broadcast_studio'
+return {TILESET_RADIO_TOWER=radio,TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
   TILESET_HOUSE=commonHouse,TILESET_TRADITIONAL_HOUSE=traditional,TILESET_MART=mart,TILESET_POKECENTER=center,
   TILESET_PLAYERS_ROOM=bedroom}

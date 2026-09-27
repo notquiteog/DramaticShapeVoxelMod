@@ -118,7 +118,7 @@ function M.of(primary,secondary,mid,behavior,collision)
   return {kind='flat',reviewedSurface=true}
  end
  if interiorProfile and profile.walls[mid] and collision==7 then
-  return {kind='roomWall',ground=profile.floor}
+  return {kind='roomWall',ground=profile.wallGround and profile.wallGround[mid] or profile.floor}
  end
  if primary=='building' and secondary=='pewter_gym' then
   if gymWalls[mid] then return {kind='roomWall',ground=mid>=0x2C0 and 0x2C0 or 0x294} end
