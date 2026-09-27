@@ -6,6 +6,13 @@ function M.install(recipes)
   recipes[#recipes+1]={name=name,pair=pair,rows=rows,kind='designed',design=design,ground=ground or 1}
  end
  add('museum_space_exhibit','building__rom_082d4c2c',{{0x290,0x291,0x292},{0x298,0x299,0x29a}},'fr_space_exhibit',0x281)
+ add('power_plant_generator','building__rom_082d4e9c',{
+  {0x2e8,0x2e9,0x2ea},{0x2f0,0x2f1,0x2f2},
+  {0x2f8,0x2f9,0x2fa},{0x300,0x301,0x302}},'fr_generator',0x29f)
+ recipes[#recipes].generatorGrating=true
+ add('power_plant_generator_floor','building__rom_082d4e9c',{
+  {0x2eb,0x2ec,0x2ed},{0x2f3,0x2f4,0x2f5},
+  {0x2fb,0x2fc,0x2fd},{0x303,0x304,0x305}},'fr_generator',0x29f)
  -- Complete single-cell grave drawings, including the boundary variants.
  -- Pair-local matching leaves identical numeric IDs in other rooms alone.
  for _,mid in ipairs({0x291,0x293,0x2be,0x2bf,0x2d8,0x2d9})do

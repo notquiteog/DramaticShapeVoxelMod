@@ -1,3 +1,9 @@
+## 1.28.7 — Full-depth starter table and power-plant machinery
+
+Restores the full depth of Oak’s starter table in FireRed/LeafGreen, keeping all three Poké Balls centered and the native approach clear. Adds component models for Crystal’s Power Plant machinery and both FireRed/LeafGreen turbine drawings, using their native artwork and colors. Mesh revision 79 refreshes stored models.
+
+Checked on Gen1Recomp 0.3.20 and the latest 0.3.22 with native first-person/rotating/static captures and focused geometry/cache regressions. Full-area scenery coverage and five-mod feature parity remain unfinished.
+
 ## 1.28.6 — Specialty interiors and shared tower mist
 
 Added closed component models for Crystal tower timber columns, the Olivine lighthouse apparatus, Fast Ship dining tables and the FireRed/LeafGreen museum space exhibit. The lighthouse model is restricted to its map because ship tables reuse the same artwork. Mesh revision 78 refreshes stored geometry.

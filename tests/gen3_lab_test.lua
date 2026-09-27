@@ -29,17 +29,22 @@ end end
 assert(count>100 and bounds[1]==0 and bounds[2]>24,'missing round machine body or feet')
 print('PASS full lab machine, supported starter/Pokedex props and grounded NPCs')
 
--- Native Oak layout: x8..10/y4 is blocked; y5 holds the drawing's legs
--- but is walkable and used by the player/rival starter scripts.
-local maxZ=-math.huge
+-- Native Oak layout: x8..10/y4 is blocked; y5 contains the perspective
+-- apron and is used by starter scripts. Restore the top's depth without
+-- reaching upright actors' feet at the SOUTH edge of that approach row.
+local minZ,maxZ=math.huge,-math.huge
 for _,p in ipairs(props)do if p.recipe.name=='lab_work_table'then
  Furniture.append(p,function(vertices)
-  for _,a in ipairs(vertices)do maxZ=math.max(maxZ,a[3])end
+  for _,a in ipairs(vertices)do
+   minZ=math.min(minZ,a[3]);maxZ=math.max(maxZ,a[3])
+  end
  end,uv)
 end end
-assert(maxZ<5*16,'table solid geometry extends into native walkable approach row')
 local _,ballZ=Furniture.support(cells,92,8*16,4*16)
-assert(5*16+ballZ<maxZ,'starter sprite feet moved off the shallow tabletop')
+local ballCenter=5*16+ballZ
+assert(maxZ-minZ>=23,'starter table compressed to a narrow bench')
+assert(math.abs((minZ+maxZ)/2-ballCenter)<.1,'starters sit at the edge instead of the center')
+assert(ballCenter-6>minZ and ballCenter+6<maxZ,'rotating starter sprite overhangs the top')
 assert(Furniture.support(cells,92,8*16,5*16)==0,'walkable apron incorrectly raises a ground item')
-assert(6*16+32*math.sin(-.4)>maxZ,'static native32px actor leans through the lab table')
-print('PASS lab table stays in blocked row, starter feet supported and front-row actors clear')
+assert(6*16-6>maxZ,'table reaches upright actors in the approach row')
+print('PASS full-depth lab table, centered starter sprites and clear native approach row')

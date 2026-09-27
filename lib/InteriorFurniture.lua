@@ -74,7 +74,51 @@ function M.draw(id,A)
   B(l+9,.04,n+5,l+9.3,.3,n+10,dark)
   B(l+6,.04,n+9.7,l+9.3,.3,n+10,dark)
  end
- if id=='gb_tower_timber' then
+ if id=='fr_generator' then
+  local shell,dark,metal=T(12,18),T(22,38),T(9,11)
+  local grating=A.recipe.generatorGrating
+  -- A curved turbine housing on four feet, with its own access platform.
+  -- The complete 3x4 drawing owns the original shadow and platform pixels.
+  if grating then B(1,0,13,47,1.5,63,metal)end
+  for _,x in ipairs({4,37})do for _,z in ipairs({18,50})do B(x,grating and 1.5 or 0,z,x+7,5,z+7,dark)end end
+  B(3,5,17,45,12,57,metal)
+  for _,q in ipairs({{4,44,20},{7,41,24},{11,37,27},{16,32,29},{20,28,30}})do
+   B(q[1],12,17,q[2],q[3],55,shell)
+  end
+  -- Separate rear ribs, raised central vent and deeply inset front grille.
+  for _,z in ipairs({19,27,35,43,51})do
+   B(3.5,12,z,5,19,z+1,metal);B(43,12,z,44.5,19,z+1,metal)
+  end
+  B(19,29,19,29,30.5,49,metal);B(21,30.5,20,27,30.7,48,dark)
+  for z=21,46,3 do B(21,30.7,z,27,31.1,z+1,shell)end
+  B(7,5,55,41,17,56,dark)
+  front({5,34,38,18},7,5,41,17,56.02)
+  B(21,8,56,27,14,58,metal);B(23,10,58,25,12,58.7,dark)
+  for _,x in ipairs({8,35})do B(x,5,56,x+5,9,59,metal)end
+  for _,x in ipairs(grating and {2,18,34} or {})do
+   B(x,1.5,58,x+12,2,62,dark)
+   for z=58,61,1.5 do B(x,2,z,x+12,2.3,z+.6,shell)end
+  end
+ elseif id=='gb_facility_generator' or id=='gb_facility_generator_end' then
+  local pipe=id=='gb_facility_generator' and 16 or 8
+  local frame,dark,light,brass=T(2,5),T(0,0),T(4,14),T(pipe+2,14)
+  B(1,0,6,31,2,31,dark);B(1,2,7,31,20,30,frame)
+  B(2,20,8,30,22,29,frame)
+  -- Raised top cooling ribs and separate recessed equipment bays.
+  for x=3,28,4 do B(x,22,10,x+1,23,27,dark)end
+  for _,span in ipairs({{1,pipe},{pipe+8,31}})do
+   local l,r=span[1],span[2]
+   if r-l>2 then
+    B(l,3,29,r,18,30.2,dark)
+    front({l,16,r-l,14},l,3,r,18,30.22)
+    B(l,2,30,r,3,31,light);B(l,18,30,r,19,31,light)
+   end
+  end
+  -- A substantial vertical conduit with collars and a pale access panel.
+  B(pipe+1,2,27,pipe+7,24,31.5,dark)
+  for _,h in ipairs({3,7,18,22})do B(pipe+.5,h,26.5,pipe+7.5,h+1,32,brass)end
+  B(pipe+1.5,11,31.5,pipe+6.5,16,32,brass)
+ elseif id=='gb_tower_timber' then
   local wood,dark,edge=T(10,33),T(12,12),T(3,4)
   -- One substantial octagonal column, mortised bands and a spreading foot.
   -- Its complete six-row drawing owns the floor, so no flat core remains.

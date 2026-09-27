@@ -208,6 +208,14 @@ lighthouse[1].groundTiles={{13,29},{29,13}};lighthouse[1].groundAligned=true
 lighthouse[2]=item('crystal_ship_dining_table',lighthouse[1].tiles,13,{},0)
 lighthouse[2].design='gb_ship_dining_table'
 lighthouse[2].groundTiles=lighthouse[1].groundTiles;lighthouse[2].groundAligned=true
-return {TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
+-- Complete machinery sections, ahead of the old facility cabinet crops.
+-- The narrow brass conduit belongs to the machine, not a shelf of books.
+local facility={
+ item('crystal_facility_generator',{{69,69,70,69},{85,85,86,85},{10,11,75,10},{26,27,91,26}},28,{},0),
+ item('crystal_facility_generator_end',{{69,70,69,59},{85,86,85,59},{74,75,74,59},{90,91,90,59}},28,{},0),
+}
+facility[1].design='gb_facility_generator'
+facility[2].design='gb_facility_generator_end'
+return {TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
   TILESET_HOUSE=commonHouse,TILESET_TRADITIONAL_HOUSE=traditional,TILESET_MART=mart,TILESET_POKECENTER=center,
   TILESET_PLAYERS_ROOM=bedroom}

@@ -26,7 +26,10 @@ local recipes={
  {name='lab_books_free_left',secondary='lab',rows={{0x28B},{0x73},{0x283}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
  {name='lab_books_free_right',secondary='lab',rows={{0x28C},{0x74},{0x284}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
  {name='lab_books_free_corner',secondary='lab',rows={{0x2BA},{0x73},{0x287}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
- {name='lab_work_table',secondary='lab',rows={{0x2A8,0x2A9,0x2AA},{0x2B0,0x2B1,0x2B2}},kind='table',h=9,ground=0x289,top=20,footprintDepth=15,topRect={1,3,46,20},material={1,4},supportOffset=-3,supportRows=1},
+ -- A full-depth top centers the three starters at local z=13. The second
+ -- source row includes the front apron/legs, not a reason to halve the top.
+ -- Upright actors on the approach row stand at z=32, clear of its z=25 edge.
+ {name='lab_work_table',secondary='lab',rows={{0x2A8,0x2A9,0x2AA},{0x2B0,0x2B1,0x2B2}},kind='table',h=9,ground=0x289,top=20,footprintDepth=25,topRect={1,3,46,20},material={1,4},supportOffset=-3,supportRows=1},
  {name='lab_pokedex_desk',secondary='lab',rows={{0x85,0x86},{0x285,0x286}},kind='desk',h=12,ground=0x289},
  {name='lab_computer',secondary='lab',rows={{0x75,0x76},{0x285,0x286}},kind='cabinet',h=23,ground=0x289,depth=12,facade={1,3,30,24}},
 
