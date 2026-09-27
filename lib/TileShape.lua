@@ -871,6 +871,7 @@ end
 -- Drop the cache: a mod that shadows data/voxel_heights.lua or a tileset
 -- record needs the next lookup to re-resolve (hot reload, mod toggle).
 function TileShape.invalidate()
+  V.require("Gen2Elevation").invalidate()
   spec = nil
   cache = {}
   figCache = {}

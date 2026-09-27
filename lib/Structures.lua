@@ -1010,6 +1010,7 @@ function Structures.forMap(map)
   V.require("GameCorner").build(S,map)
   V.require("Gen2Exteriors").build(S,map)
   Buildings.build(S, map, pixels(tileset), perRow)
+  if S.gen2 then V.require("Gen2Elevation").buildEdges(S,map)end
   V.require("Gen2Ledges").build(S,map)
   if tileset.id == "PLATEAU" then
     V.require("FacadeEntrances").build(S, map, pixels(tileset), perRow)
@@ -3305,7 +3306,7 @@ end
 
 function Structures.buildStairs(S, map, x0, x1, y0, y1)
   local data = pixels(map.tileset)
-  local steps = map.def and map.def.tileset == "CAVERN" and V.require("CaveSteps")
+  local steps = V.require("CaveSteps")
   for cy = math.floor(y0 / 2), math.floor(y1 / 2) do
     for cx = math.floor(x0 / 2), math.floor(x1 / 2) do
       local s = S.shapeAt[keyOf(cx * 2, cy * 2)]

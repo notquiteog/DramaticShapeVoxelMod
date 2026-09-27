@@ -469,6 +469,8 @@ end
 function Gen2TileShape.at(map, shapes, tile, tx, ty)
   local classes = shapes and shapes.gen2Classes
   if type(classes) ~= "table" then return nil end
+  local elevation=V.require("Gen2Elevation").shape(map,math.floor(tx/2),math.floor(ty/2))
+  if elevation then return elevation end
   if map.tileset.id=="TILESET_PARK" and V.require("CommunityVisuals").crystalHD(map)
     and V.require("Gen2Flowers").bedAt(map,tx,ty) then
     if tile==1 or tile==3 then return classes.ground end

@@ -1854,6 +1854,7 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
       local base = roundBase
                    [rk .. ":" .. (cx * 16 + 8) .. "|" .. (cy * 16 + 8)]
       if base == nil then goto continue end
+      if type(map.cellCollision)=="function" then base=base+V.require("Gen2Elevation").at(map,cx*16+8,cy*16+8)end
       local sapling = saplingReg[key] == true
       local wasSapling = sapling or saplingHistory[key] == true
       if buildGroup == "mature" and wasSapling then goto continue end

@@ -211,7 +211,7 @@ local function groundAt(map, cellX, cellY, px, py)
   -- Cave shelf flights are traversed, unlike instant warp stairs. Read the
   -- same contact point the character mesh and shadow use, including frames
   -- before the engine advances cellX/cellY. All other support stays exact.
-  if map.def and map.def.tileset == "CAVERN" then
+  if map.def and (map.def.tileset == "CAVERN" or type(map.cellCollision)=="function") then
     local steps = V.require("CaveSteps")
     local wx,wz = (px or cellX*16)+8,(py or cellY*16)+8
     local h = steps.support(map,wx,wz)
@@ -228,6 +228,7 @@ local function groundAt(map, cellX, cellY, px, py)
   -- this, crossing into such a map hoisted the walker tree-high for
   -- exactly one step -- the "hops like a ledge" seam bug.
   if not map:inBounds(cellX, cellY) then return 0 end
+  local base=type(map.cellCollision)=='function' and V.require('Gen2Elevation').at(map,(px or cellX*16)+8,(py or cellY*16)+8)or 0
   local shapes = TileShape.forMap(map)
   local s = not shapes.gen2Classes and shapes[map:cellTile(cellX, cellY)] or nil
   -- On Gen 2 the per-TILE table cannot answer this, and its wrong answer is
@@ -254,16 +255,16 @@ local function groundAt(map, cellX, cellY, px, py)
     -- Whole furniture recipes supersede the cell classifier. Read the same
     -- built support that carries the table so starter balls sit on its lid.
     local support=shapes.gen2FurnitureSupports and shapes.gen2FurnitureSupports[cellY*4096+cellX]
-    if support~=nil then return math.max(0,support) end
+    if support~=nil then return base+math.max(0,support) end
   end
-  if not s then return 0 end
+  if not s then return base end
   -- a recessed class (water) still supports whatever stands on it; only
   -- raised ground lifts the model.  Stairs never do: the class height is
   -- the flight's TALL end, but the player enters at floor level and the
   -- warp fires as they step in -- lifting them onto the geometry read as
   -- climbing an invisible block
-  if s.art == "stair" then return 0 end
-  return s.h > 0 and s.h or 0
+  if s.art == "stair" then return base end
+  return base+math.max(0,s.h)
 end
 
 VoxelScene.YAW = YAW
@@ -1504,7 +1505,9 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   local underlayColor = WorldUnderlay.resolve(state, colorsFor(state.map))
 
   Voxel3D.canopyFacing = Voxel.isFirstPerson() or Voxel.isThirdPerson()
+  Voxel3D.orbitGround=groundAt(state.map,math.floor(cx/16),math.floor(cy/16))
   Voxel3D.viewProjection(cx,cy,vw,vh)
+  Voxel3D.orbitGround=nil
   local shCx, shCy = FirstPerson.shadowCenter(cx, cy, vh)
   Timings.call("shadows", castShadows,
               state, terrain, nbMesh, posed, shCx, shCy, vw, vh, atlasFor,

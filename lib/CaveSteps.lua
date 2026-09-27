@@ -6,6 +6,11 @@ local Shape = V.require("TileShape")
 local M = {}
 local function key(x,z) return (z+64)*4096+x+64 end
 local function profile(map)
+  if (map.id or map.def and map.def.id)=="DANCE_THEATER" then return {tiles={{80,80},{95,95}},rise=6}end
+  local id=map.tileset and map.tileset.id
+  if id=='TILESET_CAVE' or id=='TILESET_DARK_CAVE' then
+    return {tiles={{54,55},{54,55}},rise=6}
+  end
   if not map.def or map.def.tileset ~= "CAVERN" then return nil end
   local spec = V.data("voxel_heights")
   local cave = spec and spec.tilesets and spec.tilesets.CAVERN
@@ -22,6 +27,10 @@ end
 function M.levels(map,cx,cz)
   local p = M.match(map,cx,cz)
   if not p then return nil end
+  if type(map.cellCollision)=='function' then
+    local c=V.require('Gen2Elevation').step(map,cx,cz)
+    return c and c.high,c and c.low
+  end
   local shapes = Shape.forMap(map)
   local south = map:inBounds(cx,cz+1) and shapes[map:cellTile(cx,cz+1)]
   -- Five Mt Moon placements join raised floor at both ends. Cutting them

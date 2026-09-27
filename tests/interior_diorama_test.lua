@@ -2,8 +2,8 @@ local Shapes=assert(loadfile('lib/Gen3TileShape.lua'))()
 local Pairs=assert(loadfile('lib/Gen3Tilesets.lua'))()
 package.loaded['src.import.gba.versions']={TILESET_PAIRS={network={primary='building',secondary='pokemon_center'}}}
 local M=assert(loadfile('lib/InteriorDiorama.lua'))({require=function(name)assert(name=='Gen3Tilesets');return Pairs end})
-assert(not M.profile({tileset='CAVERN',width=5,height=5},1))
-assert(not M.profile({environment='CAVE',width=5,height=5},2))
+assert(M.profile({tileset='CAVERN',width=5,height=5},1).cave)
+assert(M.profile({environment='CAVE',width=5,height=5},2).cave)
 assert(not M.profile({environment='TOWN',width=5,height=5},2))
 for _,gen in ipairs({1,2,3})do
  local def={id='VIRIDIAN_MART',tileset='MART',environment='INDOOR',width=6,height=5,mapType=8,

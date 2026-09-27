@@ -599,6 +599,18 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
   local LG={} -- Group city material state to stay within Lua/LuaJIT local limits.
   local push = sink.push
   local waterPush = waterSink and waterSink.push or nil
+  LG.elevation=type(map.cellCollision)=='function' and V.require('Gen2Elevation').field(map) or nil
+  LG.lift=0
+  LG.support=function(x,z)return LG.elevation and V.require('TerrainLevels').at(LG.elevation,x,z)or 0 end
+  LG.raised=function(emit,c,uv,shade)
+    if LG.lift==0 then return emit(c,uv,shade)end
+    local out={};for i,p in ipairs(c)do out[i]={p[1],p[2]+LG.lift,p[3]}end
+    return emit(out,uv,shade)
+  end
+  if LG.elevation then
+    local rawPush=push;push=function(c,uv,shade)return LG.raised(rawPush,c,uv,shade)end
+    if waterPush then local rawWater=waterPush;waterPush=function(c,uv,shade)return LG.raised(rawWater,c,uv,shade)end end
+  end
   local tileset = map.tileset
   local viridianForest = CommunityVisuals.customForest()
     and tileset.id == "FOREST"
@@ -752,12 +764,13 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
 
   local function heightAt(tx, ty)
     local k = keyOf(tx, ty)
-    if S.waterGround and S.waterGround[k] then return S.gen2WaterHeight or -2 end
-    if S.skip[k] then return 0 end
+    local base=LG.support(tx*8+4,ty*8+4)-LG.lift
+    if S.waterGround and S.waterGround[k] then return base+(S.gen2WaterHeight or -2) end
+    if S.skip[k] then return base end
     local run = S.runs[k]
-    if run then return run.h end
+    if run then return base+run.h end
     local s = S.shapeAt[k]
-    return s and s.h or 0
+    return base+(s and s.h or 0)
   end
 
   -- one atlas-rect UV, optionally cropped to art rows [vTop, vBot] of 8
@@ -2642,6 +2655,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
   for ty = -r, th + r - 1 do
     for tx = -r, tw + r - 1 do
       Budget.tick()
+      LG.lift=LG.support(tx*8+4,ty*8+4)
       local k = keyOf(tx, ty)
       local s, tile = S.shapeAt[k], S.tileAt[k]
       local inBody = tx >= 0 and ty >= 0 and tx < tw and ty < th
@@ -3249,6 +3263,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
 
   for _, qi in ipairs(objectOrder) do
     local q = S.objectQuads[qi]
+    LG.lift=(q.caveStepRole or q.terrainAbsolute) and 0 or LG.support((q[1][1]+q[3][1])/2,(q[1][3]+q[3][3])/2)
     Budget.tick()
     local x0 = math.min(q[1][1], q[2][1], q[3][1], q[4][1])
     local x1 = math.max(q[1][1], q[2][1], q[3][1], q[4][1])
@@ -3271,8 +3286,10 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
         target = visualSink.push
       end
       if target == push then ownCell(x0, z0, x1, z1) end
-      target({ q[1], q[2], q[3], q[4] }, quadUV(q),
-        q.shore and q.shade or groundShades(q, q.shade))
+      local points={q[1],q[2],q[3],q[4]}
+      local shade=q.shore and q.shade or groundShades(q,q.shade)
+      if target==push then target(points,quadUV(q),shade)
+      else LG.raised(target,points,quadUV(q),shade)end
     end
   end
 
@@ -3298,6 +3315,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
   local sc = { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } }
   for _, st in ipairs(S.roundStamps or {}) do
     local mx, mz = st.mx, st.mz
+    LG.lift=LG.support(mx,mz)
     local sr = st.r or 8
     local sx0, sz0, sx1, sz1 = mx - sr, mz - sr, mx + sr, mz + sr
     local interior = sx0 > 0 and sx1 < bw and sz0 > 0 and sz1 < bh

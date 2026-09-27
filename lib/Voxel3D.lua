@@ -951,8 +951,9 @@ function Voxel3D.viewProjection(cx, cy, vw, vh)
   local fov = 2 * math.atan(1 / (2 * focal))
   Voxel3D.fovY = fov
 
-  local focus = { cx, 0, cy }
-  local eye = { cx, dist * math.cos(a), cy + dist * math.sin(a) }
+  local ground=Voxel3D.orbitGround or 0
+  local focus = { cx, ground, cy }
+  local eye = { cx, ground + dist * math.cos(a), cy + dist * math.sin(a) }
   -- exposed for camera-facing billboards (VoxelScene yaws sprites at it)
   Voxel3D.eye = eye
   Voxel3D.focus = focus

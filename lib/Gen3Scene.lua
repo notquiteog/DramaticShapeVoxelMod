@@ -15,6 +15,7 @@ local Buildings=V.require('Gen3Buildings')
 local Civic=V.require('Gen3Civic')
 local Outdoor=V.require('Gen3Outdoor')
 local Terrain=V.require('Gen3Terrain')
+local Elevation=V.require('Gen3Elevation')
 local BattleClear=V.require('Gen3BattleClear')
 local Distance=V.require('RenderDistance')
 local Boundary=V.require('Gen3Boundary')
@@ -106,6 +107,7 @@ local function releaseGeometry(cache)
   if part.roof then part.roof:release() end
   if part.plants then part.plants:release() end
   if part.water then part.water:release() end
+  for _,water in ipairs(part.waters or {})do water.mesh:release()end
  end
  for _,part in ipairs(cache.civics or {})do
   if part.mesh then part.mesh:release()end;if part.image then part.image:release()end
@@ -203,6 +205,8 @@ local function build(req,cache,previous)
  end end
  Shapes.layout(cells)
  for _,c in pairs(cells)do if c.gym then c.column=Buildings.column(c.gym)end end
+ Elevation.bind(cells,regions)
+ cache.floorRegions=regions
  local chimneys=Roof.prepare(cells)
  M.chimneyCount=#chimneys
  M.propCount=#props
@@ -223,6 +227,7 @@ local function build(req,cache,previous)
   if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
+  local starts={#b.v,#b.rv,#b.pv,#b.wv,#wood,#leaf}
   if c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
@@ -254,7 +259,7 @@ local function build(req,cache,previous)
      local tx,tz=x+(shape.anchorX or 16),z+(shape.anchorZ or 12)
      if TreeStyle.voxel() then
       local card=native.gen3(c)
-      if not native.addInstance(card,treeGroups,tx,0,tz)then native.appendModel(card,leaf,li,0,tx,0,tz)end
+      if not native.addInstance(card,treeGroups,tx,c.base or 0,tz)then native.appendModel(card,leaf,li,0,tx,0,tz)end
      else native.append(native.gen3(c),leaf,li,0,tx,0,tz,TreeStyle.flat()) end
      if not TreeStyle.voxel() and not TreeStyle.flat() then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,c.cx*73+c.cy*139) end
     else
@@ -367,6 +372,25 @@ local function build(req,cache,previous)
   else
    plane(b.v,b.i,x,z,uv)
   end
+  local base=c.base or 0
+  -- Terrain already owns absolute cap/retaining-face heights.
+  if shape.kind=='cliff' or shape.kind=='caveWall' then base=0 end
+  Elevation.lift(b.v,starts[1],base);Elevation.lift(b.rv,starts[2],base)
+  Elevation.lift(b.pv,starts[3],base);Elevation.lift(b.wv,starts[4],base)
+  Elevation.lift(wood,starts[5],base);Elevation.lift(leaf,starts[6],base)
+  if shape.kind~='cliff' and shape.kind~='caveWall' and shape.kind~='water' and not c.stairs and shape.kind~='steps' then
+   for _,d in ipairs({{-1,0},{1,0},{0,-1},{0,1}})do
+    local n=cells[(c.cx+d[1])..':'..(c.cy+d[2])]
+    if n and n.shape.kind~='cliff' and n.shape.kind~='caveWall' and n.shape.kind~='steps' and not n.stairs then
+     local low=n.base or 0
+     if low<base then
+      local ax,az=x+(d[1]>0 and 16 or 0),z+(d[2]>0 and 16 or 0)
+      local bx,bz=ax+(d[1]==0 and 16 or 0),az+(d[2]==0 and 16 or 0)
+      quad(b.v,b.i,{{ax,low,az},{bx,low,bz},{bx,base,bz},{ax,base,az}},uv,.78)
+     end
+    end
+   end
+  end
  end
  local labWall={}
  for _,c in pairs(cells)do if c.secondary=='lab' and c.cy==0 and c.mid~=0 then
@@ -397,20 +421,24 @@ local function build(req,cache,previous)
  end end
  for _,p in ipairs(props)do if not p.stageHidden then
   local b=batches[p.pair]
+  local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout
   Furniture.append(p,function(vertices,uv,shade,anchor)quad(cutout and b.pv or b.v,cutout and b.pi or b.i,vertices,uv,shade,anchor)end,uvFor)
+  Elevation.lift(b.v,start,p.groundHeight or 0);Elevation.lift(b.pv,plantStart,p.groundHeight or 0)
  end end
  cache.civics={}
  for _,g in ipairs(civics)do if not g.stageHidden then
   local vertices,indices={},{}
   Civic.append(g,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
+  Elevation.lift(vertices,0,g.groundHeight or 0)
   local part={};cache.civics[#cache.civics+1]=part
   part.mesh=assert(R.newMesh(vertices,indices));part.image=Civic.material(g)
   Budget.check()
  end end
  for _,p in ipairs(chimneys)do if not BattleClear.hits(cam,p.cx*16,p.cy*16,p.cx*16+16,p.cy*16+16)then
-  local b=batches[p.pair]
+  local b=batches[p.pair];local start=#b.rv
   Roof.appendChimney(p,function(vertices,uv,shade)quad(b.rv,b.ri,vertices,uv,shade)end,uvFor)
+  local c=cells[p.cx..':'..p.cy];Elevation.lift(b.rv,start,c and c.base or 0)
  end end
  for _,b in pairs(batches)do
   local part={pair=b.pair,secondary=b.secondary,roofMids=b.roofMids}
@@ -426,7 +454,18 @@ local function build(req,cache,previous)
    Budget.check()
   end
   upload('under',b.v,b.i);upload('roof',b.rv,b.ri)
-  upload('plants',b.pv,b.pi,R.TREE_FORMAT);upload('water',b.wv,b.wi)
+  upload('plants',b.pv,b.pi,R.TREE_FORMAT)
+  part.waters={};local levels={}
+  for j=1,#b.wv,4 do
+   local h=b.wv[j][2];local group=levels[h]
+   if not group then group={v={},i={}};levels[h]=group end
+   local base=#group.v
+   for k=0,3 do group.v[#group.v+1]=b.wv[j+k]end
+   for _,k in ipairs({1,2,3,1,3,4})do group.i[#group.i+1]=base+k end
+  end
+  for h,g in pairs(levels)do
+   local mesh=assert(R.newMesh(g.v,g.i));part.waters[#part.waters+1]={mesh=mesh,height=h};Budget.check()
+  end
  end
  cache.treeInstances={}
  V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li,cache.treeInstances)
@@ -477,7 +516,7 @@ local function waterMeshes()
  local out={}
  for _,p in ipairs(cache.parts)do
   local ts=Tiles._pairs[p.pair]
-  if p.water and ts then out[#out+1]={p.water,ts.image}end
+  if ts then for _,water in ipairs(p.waters or {})do out[#out+1]={water.mesh,ts.image,nil,water.height}end end
  end
  return out
 end
@@ -500,7 +539,7 @@ local function rideDust(game,cam)
  for _,p in ipairs(particles)do
   if type(p.x)=='number' and type(p.z)=='number' then
    local t=math.max(0,math.min(1,(tonumber(p.age)or 0)/math.max(.001,tonumber(p.life)or .4)))
-   local model=Mat.mul(Mat.translate(p.x,.3+t*3,p.z),
+   local model=Mat.mul(Mat.translate(p.x,M.groundAt(p.x,p.z)+.3+t*3,p.z),
     Mat.mul(Mat.rotateY(cam.level>=6 and -cam.yaw or 0),Mat.scale(1-t,1-t,1)))
    R.draw(dustMesh,dustImage,model)
   end
@@ -529,9 +568,12 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
   mesh=R.newMesh(v,i);spriteMeshes[key]=mesh
  end
  local yaw=cam.level>=6 and -cam.yaw or 0
- local height=opts.lift or 0
+ local floor=M.groundAt(x+8,z+16-.001)
+ local contact=cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]
+ if contact and contact.prop then floor=contact.prop.groundHeight or floor end
+ local height=floor+(opts.lift or 0)
  if draw~=Shadow.draw and not reflectPlane and (opts.depthOffset or 0)==0 then
-  V.require("ActorContact").draw(x+8,z+16,0,height,spr.width)
+  V.require("ActorContact").draw(x+8,z+16,floor,height-floor,spr.width)
  end
  local pose=Mat.rotateY(yaw)
  local base=Mat.mul(Mat.translate(x+8,height,z+16+(opts.depthOffset or 0)),pose)
@@ -543,6 +585,15 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  if reflectPlane then model=Mat.mul(model,Mat.scale(1,-1,1))end
  if draw==Shadow.draw then draw(mesh,spr.image,caster)
  else draw(mesh,spr.image,model,nil,caster) end
+end
+function M.groundAt(x,z)
+ for _,r in ipairs(cache.floorRegions or {})do
+  local lx,lz=x-r.x*16,z-r.y*16
+  if lx>=0 and lz>=0 and lx<r.w*16 and lz<r.h*16 then
+   return V.require('TerrainLevels').at(r.floorField,lx,lz)+(r.floorOffset or 0)
+  end
+ end
+ return 0
 end
 local function actors(game,cam,draw)
  if cam.replay then
@@ -604,12 +655,13 @@ end
 local effectCanvases={}
 local function fieldEffects(draw,cam)
  local g=love.graphics
- local function effect(name,w,h,paint,verts)
+ local function effect(name,w,h,paint,verts,base)
   local c=effectCanvases[name]
   if not c then c=g.newCanvas(w,h);c:setFilter('nearest','nearest');effectCanvases[name]=c end
   g.push('all');g.setCanvas(c);g.origin();g.setShader();g.setScissor();g.setDepthMode();g.setBlendMode('alpha');g.clear(0,0,0,0);g.setColor(1,1,1,1)
   local ok,err=pcall(paint);g.pop();if not ok then error(err,0)end
   local v,i={},{};quad(v,i,verts,{{0,0},{1,0},{1,1},{0,1}})
+  Elevation.lift(v,0,base or 0)
   local mesh=R.newMesh(v,i);draw(mesh,c);mesh:release()
  end
  local fx=require('src.core.game3.field_effects')
@@ -618,13 +670,13 @@ local function fieldEffects(draw,cam)
   local yaw=cam and cam.level>=6 and cam.yaw or 0
   local dx,dz=8*math.cos(yaw),8*math.sin(yaw)
   effect('landing-dust-'..i,16,8,function()fx.drawFront(x,z+8,nil)end,
-   {{x+8-dx,8,z+16-dz},{x+8+dx,8,z+16+dz},{x+8+dx,0,z+16+dz},{x+8-dx,0,z+16-dz}})
+   {{x+8-dx,8,z+16-dz},{x+8+dx,8,z+16+dz},{x+8+dx,0,z+16+dz},{x+8-dx,0,z+16-dz}},M.groundAt(x+8,z+16-.001))
  end end
  local doors=require('src.core.game3.doors');local a=doors._activeAnim
  if a then
   local x,z=a.x*16,a.y*16+16.15
   effect('door',32,48,function()doors.draw(x,a.y*16-32,32,48)end,
-   {{x,48,z},{x+32,48,z},{x+32,0,z},{x,0,z}})
+   {{x,48,z},{x+32,48,z},{x+32,0,z},{x,0,z}},M.groundAt(x+8,z))
  end
  local heal=require('src.core.game3.pokecenter_heal')
  if heal.isActive()then
@@ -634,13 +686,13 @@ local function fieldEffects(draw,cam)
    if c.prop.recipe.name=='center_screen'then screen=c.prop end
   end end
   if prop then
-   local x,z,h=prop.cx*16,prop.cy*16,prop.recipe.h+.18
+   local x,z,h=prop.cx*16,prop.cy*16,prop.recipe.h+.18+(prop.groundHeight or 0)
    effect('heal-balls',32,24,function()g.translate(-80,-28);heal.drawBalls()end,
     {{x+3,h,z+12},{x+29,h,z+12},{x+29,h,z+28},{x+3,h,z+28}})
    if screen then
     local sx,sz=screen.cx*16,screen.cy*16+(screen.recipe.frontOffset or 32.2)+.04
     effect('heal-monitor',32,16,function()g.translate(-112,-16);heal.drawMonitor()end,
-     {{sx+2,28,sz},{sx+30,28,sz},{sx+30,12,sz},{sx+2,12,sz}})
+     {{sx+2,28,sz},{sx+30,28,sz},{sx+30,12,sz},{sx+2,12,sz}},screen.groundHeight or 0)
    end
   end
  end
@@ -690,9 +742,10 @@ function M.draw(game,vw,vh,cam)
  if cam.level>=6 then
   local dist=cam.level==6 and 0 or 75
   local dx,dz=math.sin(cam.yaw),-math.cos(cam.yaw)
-  local ey=48
+  local ground=M.groundAt(cx,cz+8-.001)
+  local ey=48+ground
   if cam.level==6 then
-   ey=SpriteAnchor.eyeHeight(Sprites.getDraw(Sprites.playerGraphicsId(game)))
+   ey=ground+SpriteAnchor.eyeHeight(Sprites.getDraw(Sprites.playerGraphicsId(game)))
      -(Player.spriteYOffset or 0)-(Player.jumpSpriteY and Player.jumpSpriteY()or 0)
   end
   local exports=game and game.mods and game.mods.exports
@@ -704,7 +757,7 @@ function M.draw(game,vw,vh,cam)
   local focusDistance=cam.level==6 and 24 or 70
   R.camera={eye={cx-dx*dist,ey,cz-dz*dist},focus={cx+dx*focusDistance,ey-focusDistance*math.tan(cam.pitch),cz+dz*focusDistance},fov=math.rad(62),curve=cam.level==6 and 0 or nil}
   if cam.battle then
-   R.camera={eye={cx-dx*75,32,cz-dz*75},focus={cx+dx*16,0,cz+dz*16},fov=math.rad(50)}
+   R.camera={eye={cx-dx*75,ground+32,cz-dz*75},focus={cx+dx*16,ground,cz+dz*16},fov=math.rad(50)}
   end
  else
   R.camera=Interior.camera(Interior.forMap(M.sceneDef,3),S.angle,vw/vh)
@@ -713,7 +766,9 @@ function M.draw(game,vw,vh,cam)
  local atmosphere=V.require("NativeAtmosphere")
  local atmosphereMap=atmosphere.gen3(M.sceneDef,Map.current)
  if atmosphere.kind(atmosphereMap)=="forest" then V.require("DayNight").applyRig(false) end
+ R.orbitGround=M.groundAt(cx,cz+8-.001)
  R.viewProjection(cx,cz,vw,vh)
+ R.orbitGround=nil
  savedCanvas=love.graphics.getCanvas();love.graphics.push('all');saved=true
  if not plate and Shadow.begin(cx,cz,vw,vh) then
   local room=not cam.battle and Interior.forMap(M.sceneDef,3) or nil
@@ -745,12 +800,16 @@ function M.draw(game,vw,vh,cam)
  if cam.battle then
   for _,d in ipairs(water)do R.draw(d[1],d[2])end
  else
-  V.require('WaterSurfacePass').draw(water,function()actors(game,cam,R.draw)end,function()
-   reflectPlane=.05 -- native water surface authored by prepare()
-   local ok,err=pcall(actors,game,cam,R.draw)
-   reflectPlane=nil
-   if not ok then error(err,0)end
-  end)
+  local waterLevels={}
+  for _,d in ipairs(water)do local h=d[4];waterLevels[h]=waterLevels[h]or{};local group=waterLevels[h];group[#group+1]=d end
+  for h,group in pairs(waterLevels)do
+   V.require('WaterSurfacePass').draw(group,function()actors(game,cam,R.draw)end,function()
+    reflectPlane=h
+    local ok,err=pcall(actors,game,cam,R.draw)
+    reflectPlane=nil
+    if not ok then error(err,0)end
+   end)
+  end
   actors(game,cam,R.draw)
   if not cam.replay then rideDust(game,cam);fieldEffects(R.draw,cam)end
  end

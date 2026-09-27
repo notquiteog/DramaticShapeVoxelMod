@@ -1,3 +1,11 @@
+## 1.28.5 — Raised floors and enclosed caves
+
+Raised Crystal and FireRed/LeafGreen floors now follow native stair connections and reviewed platform artwork. Cave shelves, mountain terraces, piers, theater stages, gym walkways and train platforms carry actors, scenery and cameras at their actual floor height. Water reflection planes follow the drawn water level. Native collision, warps and gameplay are unchanged.
+
+Caves in all three generations receive closed outer walls and ceilings in ground-level views, with camera-side cutaways from outside, clearance above raised platforms, and openings for native boundary exits and descending stairs. Outdoors retain open scenery.
+
+Validated on Gen1Recomp 0.3.20 using isolated native map inventories, representative rendered views and stair walking checks. This is an incremental release; exhaustive all-area visual coverage and companion parity remain unfinished. See docs/ELEVATION_QA_2026-09-26.md. Mesh revision 77 refreshes stored terrain.
+
 ## 1.28.4 — Cooperative scenery streaming and higher first-person view
 
 FireRed/LeafGreen builds moving scenery windows cooperatively while continuing to draw the last complete window. Reversals, warps and invalidation cancel unfinished work and release its GPU resources. Model generation and shared uploads gain budget checkpoints; Crystal/FRLG reuse tree source pixels and Gen3 furniture matching skips unrelated recipes.

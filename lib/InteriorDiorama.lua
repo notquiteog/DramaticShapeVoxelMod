@@ -6,6 +6,8 @@ local M={background={.022,.032,.046,1}}
 local cache=setmetatable({},{__mode='k'})
 local materials={}
 local themes={
+ cave={{.38,.34,.30},{.35,.32,.28},{.33,.30,.27},{.42,.38,.34}},
+ ice={{.35,.49,.60},{.33,.47,.57},{.31,.44,.54},{.43,.57,.66}},
  ship={{.86,.86,.89},{.52,.52,.60},{.29,.29,.35},{.92,.91,.72}},
  home={{.73,.71,.61},{.37,.35,.28},{.20,.22,.22},{.91,.87,.70}},
  shop={{.67,.76,.73},{.23,.43,.43},{.13,.25,.29},{.84,.94,.88}},
@@ -15,28 +17,30 @@ local themes={
 function M.profile(def,gen)
  if not def then return end
  local id=def.id or '';local ts=def.tileset or '';local spec
+ local cave=gen==1 and ts=='CAVERN' or gen==2 and def.environment=='CAVE' or gen==3 and tonumber(def.mapType)==4
  if gen==3 then
-  if tonumber(def.mapType)~=8 then return end
+  if tonumber(def.mapType)~=8 and not cave then return end
   local pair=def.midLayout and def.midLayout.pair
   if not pair then return end
   spec=V.require('Gen3Tilesets').resolve(pair,require('src.import.gba.versions').TILESET_PAIRS)
-  if spec.primary~='building' and spec.secondary~='rom_082d4d94' then return end
+  if not cave and spec.primary~='building' and spec.secondary~='rom_082d4d94' then return end
  elseif gen==2 then
-  if def.environment~='INDOOR' and def.environment~='GATE' then return end
+  if def.environment~='INDOOR' and def.environment~='GATE' and not cave then return end
  else
-  -- Dungeon, cave and ship exteriors keep their authored enclosing geometry.
+  -- Buildings and caves are enclosed; outdoor maps keep their scenery.
   local allowed={REDS_HOUSE_1=true,REDS_HOUSE_2=true,HOUSE=true,HOUSE_1=true,
    HOUSE_2=true,MART=true,POKECENTER=true,DOJO=true,GYM=true,CLUB=true,
    LOBBY=true,LAB=true,FACILITY=true,INTERIOR=true,GATE=true,
    FOREST_GATE=true,MUSEUM=true,BEACH_HOUSE=true}
-  if not allowed[ts] then return end
+  if not allowed[ts] and not cave then return end
  end
  local name=(id..' '..ts):upper()
  local theme=name:find('MART') and 'shop' or name:find('CENTER') and 'center' or name:find('LAB') and 'lab' or 'home'
  if spec and spec.secondary=='rom_082d4d94' then theme='ship' end
+ if cave then theme=(name:find('ICE') or name:find('SEAFOAM')) and 'ice' or 'cave' end
  local unit=gen==3 and 16 or 32
  local b={0,0,def.width*unit,def.height*unit}
- if gen==3 then
+ if gen==3 and not cave then
   -- Native layouts include padded black cells. Do not enclose that padding.
   local x0,z0,x1,z1=def.width,def.height,0,0
   for y=0,def.height-1 do for x=0,def.width-1 do
@@ -57,7 +61,7 @@ function M.profile(def,gen)
   local fronts={TILESET_PLAYERS_HOUSE=16,TILESET_PLAYERS_ROOM=16,TILESET_HOUSE=16,TILESET_LAB=16,TILESET_POKECENTER=16}
   if fronts[ts]then b[2]=fronts[ts]-.3 end
  end
- return {bounds=b,height=gen==3 and (theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen}
+ return {bounds=b,height=cave and 96 or gen==3 and (theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen,cave=cave}
 end
 local function texture(theme)
  if materials[theme]then return materials[theme]end
@@ -135,6 +139,21 @@ function M.geometry(p,side,opened)
    -- A low continuous foundation presents a finished cut edge without
    -- covering sprites, the entry mat, or interaction targets.
    part(start,-3,finish,0,3)
+  elseif p.cave then
+   -- Continuous stone strata with a closed back, all outside the playable
+   -- footprint. Native maze walls stay in front; no house trim or windows.
+   for a=start,finish-1,16 do
+    local c=math.min(finish,a+16)
+    local floor,lintel=-4,-4
+    for _,q in ipairs(p.passages and p.passages[side] or {})do
+     if a<q[2] and c>q[1]then floor=q[3];lintel=math.max(lintel,floor+32)end
+    end
+    if lintel>-4 and floor>0 then part(a,-4,c,floor,3)end
+    for y=lintel,h-1,12 do
+     local band=math.floor(y/12);local swatch=1+(math.floor(a/16)*13+band*7+side*11)%3
+     part(a,y,c,math.min(h,y+12),swatch,3+((math.floor(a/16)+band+side)%3)*.4)
+    end
+   end
   else
    part(start,8,finish,h-3.5,1)
    part(start,0,finish,7,2,3.3)
@@ -167,6 +186,35 @@ function M.forMap(map,gen)
  if entry~=nil then return entry or nil end
  local p=M.profile(def,gen)
  if not p then cache[def]=false;return end
+ if p.cave then
+  local field=gen==2 and V.require('Gen2Elevation').field(map) or gen==3 and V.require('Gen3Elevation').field(def)
+  for _,c in pairs(field and field.cells or {})do p.height=math.max(p.height,(c.high or c.height or 0)+64)end
+  -- Only native exits/connections open the shell. Several cave boundary
+  -- drawings use walkable collision despite being walls. Interior warp
+  -- stairs retain their separate floor cut.
+  p.passages={{},{},{},{}}
+  local w,h=def.width*(gen==3 and 1 or 2),def.height*(gen==3 and 1 or 2)
+  local function passage(side,x,y,along)
+   local walk
+   if gen==3 then local cell=def.midLayout:cellAt(x,y);walk=cell and cell.coll~=7
+   else walk=map.isWalkableCell and map:isWalkableCell(x,y) or map.isWaterCell and map:isWaterCell(x,y)end
+   local exit=false
+   for _,warp in ipairs(def.warps or {})do
+    if warp.x==x and warp.y==y then exit=true;break end
+   end
+   -- Connected cave maps may expose a walkable seam without a warp event.
+   local direction=({'north','east','south','west'})[side]
+   for key,connection in pairs(def.connections or {})do
+    if key==direction or connection.direction==direction then exit=true;break end
+   end
+   if walk and exit then
+    local c=field and field.cells[x..':'..y]
+    p.passages[side][#p.passages[side]+1]={along*16,(along+1)*16,c and c.height or 0}
+   end
+  end
+  for x=0,w-1 do passage(1,x,0,x);passage(3,x,h-1,x)end
+  for y=0,h-1 do passage(4,0,y,y);passage(2,w-1,y,y)end
+ end
  if gen~=3 and type(map.tileAt)=='function' and type(map.tileset)=='table' then
   -- The room's foundation used to seal GB stairwells at y=-.25, hiding
   -- every descending tread. Use the same semantic openings as the mesher.
@@ -198,7 +246,7 @@ function M.setOpenings(p,openings)
  for key,mesh in pairs(p.meshes or {})do if key:match('^5:')then mesh:release();p.meshes[key]=nil end end
 end
 function M.camera(p,angle,aspect)
- if not p then return end
+ if not p or p.cave then return end
  local b=p.bounds;local w,d=b[3]-b[1],b[4]-b[2]
  -- Compact rooms read as complete dioramas; large halls keep the player's
  -- scrolling camera. Free/first-person cameras never call this helper.
