@@ -74,7 +74,65 @@ function M.draw(id,A)
   B(l+9,.04,n+5,l+9.3,.3,n+10,dark)
   B(l+6,.04,n+9.7,l+9.3,.3,n+10,dark)
  end
- if id=='fr_generator' then
+ if id=='fr_industrial_drums' then
+  -- Stepped circular sections form closed solid drums, including their
+  -- undersides. Each source lid owns one fourteen-pixel footprint.
+  local function band(z,b,h,r,mat)
+   for _,row in ipairs({{-7,-5,3},{-5,-3,5},{-3,3,7},{3,5,5},{5,7,3}})do
+    B(8-row[3]*r/7,b,z+row[1]*r/7,8+row[3]*r/7,h,z+row[2]*r/7,mat)
+   end
+  end
+  for i=0,A.height/16-2 do
+   local sy,z=i*16,16+i*16
+   local shell,rim,lid=T(11,sy+24),T(2,sy+17),T(7,sy+15)
+   band(z,0,12,6.5,shell);band(z,0,1,7,rim)
+   band(z,12,13,7,rim);band(z,13,13.4,6,lid)
+   B(8.5,13.4,z-2,10,13.8,z-.5,T(7,sy+17))
+   front({5,sy+23,6,6},5,3,11,10,z+6.52)
+  end
+ elseif id=='fr_industrial_rubble' then
+  local stone,light,dark=T(5,7),T(4,10),T(2,9)
+  -- Unequal fragments follow the pile's native footprint. There is no
+  -- rectangular plinth or repeated row of equally sized round boulders.
+  local function fragment(base,shoulder,peak)
+   local center={peak[1],0,peak[3]}
+   for i,a in ipairs(base)do
+    local j=i%#base+1;local b,u,v=base[j],shoulder[i],shoulder[j]
+    A.face({a,b,v,u},stone,.72+(i%3)*.08)
+    A.face({u,v,peak,peak},light,.86+(i%2)*.1)
+    A.face({b,a,center,center},dark,.65)
+   end
+  end
+  fragment({{1,0,7},{3,0,4},{7,0,4},{9,0,8},{7,0,13},{2,0,12}},
+   {{2,3,7},{4,4,5},{6,4,5},{8,3,8},{6,3,11},{3,3,11}},{5,4,8})
+  fragment({{6,0,2},{9,0,1},{12,0,4},{10,0,8},{7,0,7}},
+   {{7,2,3},{9,3,2},{11,2,4},{9,2,6},{8,2,6}},{9,3,4})
+  fragment({{8,0,8},{11,0,6},{15,0,8},{14,0,12},{10,0,14},{7,0,12}},
+   {{9,3,9},{11,3,7},{13,2,9},{12,3,11},{10,2,12},{8,2,11}},{11,3.2,10})
+ elseif id=='gb_facility_rack' then
+  local frame,dark,cap=T(1,10),T(3,10),T(3,2)
+  B(1,0,15,15,2,31,dark);B(1,2,15,15,29,30,frame)
+  B(1,29,15,15,31,30,cap)
+  B(2,24,30,14,29,31,cap);front({2,1,12,6},2,24,14,29,31.02)
+  for _,bay in ipairs({{3,12,16},{14,23,8}})do
+   B(2,bay[1],29,14,bay[2],30.6,dark)
+   front({2,bay[3],12,8},2,bay[1]+1,14,bay[2]-1,30.62)
+   B(1,bay[1],30,15,bay[1]+1,31,frame)
+   for _,x in ipairs({4,10})do B(x,bay[1]+4,30.6,x+2,bay[1]+5.5,31.2,T(x,10))end
+  end
+  for _,z in ipairs({18,21,24,27})do
+   B(.8,5,z,1.02,23,z+.7,dark);B(14.98,5,z,15.2,23,z+.7,dark)
+  end
+ elseif id=='gb_facility_cable_tray' then
+  local dark,red,pink,clip=T(5,2),T(1,2),T(13,2),T(0,4)
+  B(0,0,0,16,.15,16,dark)
+  for _,x in ipairs({1,9})do for z=0,15,2 do
+   local dx=(math.floor(z/2)%4==1 or math.floor(z/2)%4==2)and 1 or 0
+   B(x+dx,.15,z,x+dx+2,.65,z+2,red)
+   B(x+dx,.65,z,x+dx+.6,.8,z+2,pink)
+  end end
+  for _,z in ipairs({4,12})do B(0,.15,z,16,.9,z+.7,clip)end
+ elseif id=='fr_generator' then
   local shell,dark,metal=T(12,18),T(22,38),T(9,11)
   local grating=A.recipe.generatorGrating
   -- A curved turbine housing on four feet, with its own access platform.

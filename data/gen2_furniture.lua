@@ -213,9 +213,13 @@ lighthouse[2].groundTiles=lighthouse[1].groundTiles;lighthouse[2].groundAligned=
 local facility={
  item('crystal_facility_generator',{{69,69,70,69},{85,85,86,85},{10,11,75,10},{26,27,91,26}},28,{},0),
  item('crystal_facility_generator_end',{{69,70,69,59},{85,86,85,59},{74,75,74,59},{90,91,90,59}},28,{},0),
+ item('crystal_facility_rack',{{64,66},{10,11},{10,11},{26,27}},28,{},0),
+ item('crystal_facility_cable_tray',{{12,13},{12,13}},28,{},0),
 }
 facility[1].design='gb_facility_generator'
 facility[2].design='gb_facility_generator_end'
+facility[3].design='gb_facility_rack'
+facility[4].design='gb_facility_cable_tray'
 return {TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
   TILESET_HOUSE=commonHouse,TILESET_TRADITIONAL_HOUSE=traditional,TILESET_MART=mart,TILESET_POKECENTER=center,
   TILESET_PLAYERS_ROOM=bedroom}

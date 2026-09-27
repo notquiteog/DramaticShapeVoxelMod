@@ -13,6 +13,17 @@ function M.install(recipes)
  add('power_plant_generator_floor','building__rom_082d4e9c',{
   {0x2eb,0x2ec,0x2ed},{0x2f3,0x2f4,0x2f5},
   {0x2fb,0x2fc,0x2fd},{0x303,0x304,0x305}},'fr_generator',0x29f)
+ -- In the native perspective drawing each middle cell contains the base of
+ -- one canister and the lid of the next. Claim the whole column, then build
+ -- one separate drum per original lid, never a wall or a stretched cylinder.
+ for _,cap in ipairs({0x2d0,0x2d1})do for middle=0,2 do
+  local rows={{cap}}
+  for i=1,middle do rows[#rows+1]={0x2d8}end
+  rows[#rows+1]={0x2d9}
+  add('power_plant_drums_'..cap..'_'..middle,'building__rom_082d4e9c',rows,'fr_industrial_drums',0x29f)
+ end end
+ add('power_plant_rubble','building__rom_082d4e9c',{{0x2b6}},'fr_industrial_rubble',0x29f)
+ recipes[#recipes].spriteAlternative='rock';recipes[#recipes].cutout=true
  -- Complete single-cell grave drawings, including the boundary variants.
  -- Pair-local matching leaves identical numeric IDs in other rooms alone.
  for _,mid in ipairs({0x291,0x293,0x2be,0x2bf,0x2d8,0x2d9})do
@@ -67,6 +78,10 @@ function M.append(p,source,box,sample,emit)
  local function point(a)return {a[1]+x,a[2],a[3]+z}end
  return Geometry.draw(p.recipe.design,{
   sample=sample,recipe=p.recipe,width=p.w,height=p.d,
+  face=function(vertices,uv,shade)
+   local points={};for i,a in ipairs(vertices)do points[i]=point(a)end
+   emit(points,uv,shade or 1)
+  end,
   box=function(l,b,n,r,h,s,uv)
    box(l+x,b,n+z,r+x,h,s+z,uv)
    emit({{l+x,b,s+z},{r+x,b,s+z},{r+x,b,n+z},{l+x,b,n+z}},uv,.65)

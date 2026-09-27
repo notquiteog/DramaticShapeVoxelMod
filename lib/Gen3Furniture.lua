@@ -172,6 +172,10 @@ function M.append(p,emit,uvFor)
   local v=t[1][2]+(t[3][2]-t[1][2])*(sy%16+.5)/16
   return {{u,v},{u,v},{u,v},{u,v}}
  end
+ if r.spriteAlternative=='rock' and V and p.ts.imageData and V.require('TreePresentation').props:get()=='cards' then
+  V.require('Gen3Cave').rock({cx=p.cx,cy=p.cy,ts=p.ts,mid=r.rows[1][1],shape={ground=r.ground,height=7}},emit,uvFor)
+  return
+ end
  if Designed.append(p,source,box,sample,emit)then return end
  if Center.append(p,source,box,sample,emit,uvFor)then return end
  if r.kind=='relief' or r.kind=='bin' or r.kind=='plaque' then

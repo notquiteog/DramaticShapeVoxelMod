@@ -89,7 +89,7 @@ local STATIC_PLAYTHROUGH = "bavc_static_mesh_v2"
 -- bed and the open bin. Old geometry must not mask these visual corrections.
 -- Flat foliage cards replace crown shells; metadata now stores anchor X/Z/Y.
 -- Authored interior components, floor borders and native wall backing.
-Disk.CACHE_REVISION = 79
+Disk.CACHE_REVISION = 80
 -- Patch releases which do not change emitted vertices must keep the existing
 -- world cache usable. This token matches the first static-mesh-cache-v2 build;
 -- CACHE_REVISION, not the public mod version, owns geometry compatibility.
