@@ -58,8 +58,7 @@ set(3,'surfaceArtwork','implemented','lib/Gen3Scene.lua; lib/Voxel3D.lua','Nativ
 set(3,'communityTreeDetail','implemented','lib/NativeTreeArt.lua; lib/VoxelHull.lua','FULL/BALANCED/HANDHELD change native voxel tree resolution, with live geometry rebuild.')
 for gen=2,3 do
  set(gen,'atmos communityForest','implemented','lib/NativeAtmosphere.lua; lib/ForestAtmos.lua','Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.')
- set(gen,'towerFog towerFogThickness','implemented','lib/NativeAtmosphere.lua','Native ghost/tower maps consume fog visibility/thickness, gated by TOWER VISUALS.')
- set(gen,'towerFogSpeed','partial','lib/NativeAtmosphere.lua','Changes native tower particle speed; animated ground mist has not been ported.')
+ set(gen,'towerFog towerFogSpeed towerFogThickness','implemented','lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua','Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.')
  set(gen,'communityCaves communityCaveDetails communityTower towerDetails','partial','lib/NativeAtmosphere.lua','Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.')
 end
 for gen=1,3 do

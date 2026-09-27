@@ -13,6 +13,8 @@ local TowerFogSettings = V.require("TowerFogSettings")
 
 local Mist = {}
 local GROUPS, TAU = 6, math.pi * 2
+local FORMAT = { {"VertexPosition","float",3}, {"VertexTexCoord","float",2},
+  {"VertexShade","float",1}, {"MistGround","float",1} }
 local cache = setmetatable({}, { __mode = "k" })
 local texture, softShader
 local shaderTried = false
@@ -73,9 +75,13 @@ local function fogShader()
     uniform vec3 eye;
     uniform float pull;
     uniform vec3 curve;
+    #ifdef VERTEX
+    attribute float MistGround;
 
     vec4 position(mat4 transform_projection, vec4 vertex_position) {
       vec4 w = model * vertex_position;
+      // Thickness scales the bank above its floor, never the raised floor.
+      w.y += MistGround * (1.0 - model[1][1]);
       if (curve.z > 0.0) {
         vec2 d = w.xz - curve.xy;
         w.y -= dot(d, d) * curve.z;
@@ -86,11 +92,15 @@ local function fogShader()
       return vp * w;
     }
 
+    #endif
+
+    #ifdef PIXEL
     vec4 effect(vec4 color, Image tex, vec2 tc, vec2 sc) {
       vec4 p = Texel(tex, tc);
       if (p.a < 0.01) discard;
       return vec4(p.rgb * color.rgb, p.a * color.a);
     }
+    #endif
   ]])
   if ok then softShader = made end
   return softShader
@@ -102,7 +112,7 @@ end
 
 local function vertex(g, x, y, z, u, v)
   g.verts[#g.verts + 1] = {
-    x, y, z, u or .5, v or .5, 1
+    x, y, z, u or .5, v or .5, 1, 0
   }
   return #g.verts
 end
@@ -225,14 +235,17 @@ local function ribbonBank(g, x0, z0, x1, z1, halfWidth, height, seed)
   g.sumZ = g.sumZ + (z0 + z1) * .5
 end
 
-local function build(map)
+local function build(map,layout)
   local banks, wisps = {}, {}
   for i = 1, GROUPS do banks[i], wisps[i] = group(), group() end
 
-  local S = Structures.forMap(map)
+  local S = not layout and Structures.forMap(map)
   local wc = map.widthCells or ((map.def and map.def.width or 1) * 2)
   local hc = map.heightCells or ((map.def and map.def.height or 1) * 2)
   local graves, graveSet = {}, {}
+  if layout then
+    for _,point in ipairs(layout.anchors)do graves[#graves+1]=point;graveSet[point[2]*4096+point[1]]=true end
+  else
   for cy = 0, hc - 1 do
     for cx = 0, wc - 1 do
       local found = false
@@ -249,7 +262,10 @@ local function build(map)
     end
   end
 
+  end
+
   local function walk(cx, cy)
+    if layout then return layout.walk(cx,cy)end
     local ok, result = pcall(function() return map:isWalkableCell(cx, cy) end)
     return ok and result or false
   end
@@ -313,8 +329,15 @@ local function build(map)
 
   local out = { banks = {}, wisps = {}, centers = {}, count = #graves }
   for i = 1, GROUPS do
-    out.banks[i] = Voxel3D.newMesh(banks[i].verts, banks[i].indices)
-    out.wisps[i] = Voxel3D.newMesh(wisps[i].verts, wisps[i].indices)
+    if layout and layout.ground then
+      for _,g in ipairs({banks[i],wisps[i]})do
+        for _,v in ipairs(g.verts)do
+          v[7]=layout.ground(v[1],v[3]);v[2]=v[2]+v[7]
+        end
+      end
+    end
+    out.banks[i] = Voxel3D.newMesh(banks[i].verts, banks[i].indices, FORMAT)
+    out.wisps[i] = Voxel3D.newMesh(wisps[i].verts, wisps[i].indices, FORMAT)
     local n = math.max(1, banks[i].count)
     out.centers[i] = { banks[i].sumX / n, banks[i].sumZ / n }
   end
@@ -352,14 +375,14 @@ local function fogTime(now, speed)
   return animTime
 end
 
-local function draw(map)
-  if not isTower(map) then return false end
+local function draw(map,layout)
+  if not layout and not isTower(map) then return false end
   -- OFF must allocate no image, shader or map geometry on first use.
   if not TowerFogSettings.active() then return false end
   local img = mistTexture()
   if not img then return false end
   local slot = cache[map]
-  if not slot then slot = build(map); cache[map] = slot end
+  if not slot then slot = build(map,layout); cache[map] = slot end
 
   local now = 0
   pcall(function() now = love.timer.getTime() end)
@@ -398,7 +421,7 @@ local function draw(map)
       local c = slot.centers[i]
       local model = breathingModel(c[1], c[2], dx,
         .12 + math.sin(t * .13 + phase * 1.4) * .22, dz,
-        1 + pulse * .038, heightMult * (1 - pulse * .025))
+        1 + pulse * .038, (layout and not shader) and 1 or heightMult * (1 - pulse * .025))
       g.setColor(.94, .95, .96, .118 * alphaMult)
       drawFogMesh(slot.banks[i], img, model, 1.45, shader)
 
@@ -430,6 +453,7 @@ end
 
 function Mist.draw(state) return draw(state and state.map) end
 function Mist.drawBattle(map) return draw(map) end
+function Mist.drawNative(map,layout) return layout and draw(map,layout) or false end
 
 function Mist.invalidate()
   for _, slot in pairs(cache) do

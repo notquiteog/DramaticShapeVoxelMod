@@ -511,7 +511,7 @@ function Gen2TileShape.install(shapes, map)
       end
       if t.supportBounds then x0,z0,x1,z1=unpack(t.supportBounds) end
       for ty=0,th-bh do for tx=0,tw-bw do
-        if (not t.tileRow or t.tileRow==ty) and map:tileAt(tx,ty)==t.tiles[1][1] then
+        if (not t.maps or t.maps[map.id]) and (not t.tileRow or t.tileRow==ty) and map:tileAt(tx,ty)==t.tiles[1][1] then
           local match=true
           for r=1,bh do for c=1,bw do
             if map:tileAt(tx+c-1,ty+r-1)~=t.tiles[r][c] then match=false end

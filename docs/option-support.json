@@ -1775,32 +1775,32 @@
       },
       {
         "generation": 2,
-        "detail": "Native ghost/tower maps consume fog visibility/thickness, gated by TOWER VISUALS.",
+        "detail": "Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.",
         "key": "towerFog",
         "verification": "source audit",
         "module": "TowerFogSettings",
         "status": "implemented",
-        "consumer": "lib/NativeAtmosphere.lua",
+        "consumer": "lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua",
         "label": "TOWER FOG"
       },
       {
         "generation": 2,
-        "detail": "Changes native tower particle speed; animated ground mist has not been ported.",
+        "detail": "Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.",
         "key": "towerFogSpeed",
         "verification": "source audit",
         "module": "TowerFogSettings",
-        "status": "partial",
-        "consumer": "lib/NativeAtmosphere.lua",
+        "status": "implemented",
+        "consumer": "lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua",
         "label": "FOG SPEED"
       },
       {
         "generation": 2,
-        "detail": "Native ghost/tower maps consume fog visibility/thickness, gated by TOWER VISUALS.",
+        "detail": "Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.",
         "key": "towerFogThickness",
         "verification": "source audit",
         "module": "TowerFogSettings",
         "status": "implemented",
-        "consumer": "lib/NativeAtmosphere.lua",
+        "consumer": "lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua",
         "label": "FOG THICKNESS"
       },
       {
@@ -2697,32 +2697,32 @@
       },
       {
         "generation": 3,
-        "detail": "Native ghost/tower maps consume fog visibility/thickness, gated by TOWER VISUALS.",
+        "detail": "Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.",
         "key": "towerFog",
         "verification": "source audit",
         "module": "TowerFogSettings",
         "status": "implemented",
-        "consumer": "lib/NativeAtmosphere.lua",
+        "consumer": "lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua",
         "label": "TOWER FOG"
       },
       {
         "generation": 3,
-        "detail": "Changes native tower particle speed; animated ground mist has not been ported.",
+        "detail": "Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.",
         "key": "towerFogSpeed",
         "verification": "source audit",
         "module": "TowerFogSettings",
-        "status": "partial",
-        "consumer": "lib/NativeAtmosphere.lua",
+        "status": "implemented",
+        "consumer": "lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua",
         "label": "FOG SPEED"
       },
       {
         "generation": 3,
-        "detail": "Native ghost/tower maps consume fog visibility/thickness, gated by TOWER VISUALS.",
+        "detail": "Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.",
         "key": "towerFogThickness",
         "verification": "source audit",
         "module": "TowerFogSettings",
         "status": "implemented",
-        "consumer": "lib/NativeAtmosphere.lua",
+        "consumer": "lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua",
         "label": "FOG THICKNESS"
       },
       {

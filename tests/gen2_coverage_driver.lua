@@ -38,7 +38,7 @@ return function(game)
   for _,t in ipairs(list) do
    local w,h=#t.tiles[1],#t.tiles
    for y=0,th-h do for x=0,tw-w do
-    local match=(t.tileRow==nil or y==t.tileRow) and map:tileAt(x,y)==t.tiles[1][1]
+    local match=(not t.maps or t.maps[map.id]) and (t.tileRow==nil or y==t.tileRow) and map:tileAt(x,y)==t.tiles[1][1]
     if match then
      for dy=0,h-1 do for dx=0,w-1 do
       if claimed[(y+dy)*tw+x+dx] or map:tileAt(x+dx,y+dy)~=t.tiles[dy+1][dx+1] then match=false end

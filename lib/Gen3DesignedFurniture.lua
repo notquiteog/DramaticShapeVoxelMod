@@ -5,6 +5,7 @@ function M.install(recipes)
  local function add(name,pair,rows,design,ground)
   recipes[#recipes+1]={name=name,pair=pair,rows=rows,kind='designed',design=design,ground=ground or 1}
  end
+ add('museum_space_exhibit','building__rom_082d4c2c',{{0x290,0x291,0x292},{0x298,0x299,0x29a}},'fr_space_exhibit',0x281)
  -- Complete single-cell grave drawings, including the boundary variants.
  -- Pair-local matching leaves identical numeric IDs in other rooms alone.
  for _,mid in ipairs({0x291,0x293,0x2be,0x2bf,0x2d8,0x2d9})do

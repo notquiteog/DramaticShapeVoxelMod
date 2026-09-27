@@ -1,3 +1,11 @@
+## 1.28.6 — Specialty interiors and shared tower mist
+
+Added closed component models for Crystal tower timber columns, the Olivine lighthouse apparatus, Fast Ship dining tables and the FireRed/LeafGreen museum space exhibit. The lighthouse model is restricted to its map because ship tables reuse the same artwork. Mesh revision 78 refreshes stored geometry.
+
+Gen2/Gen3 towers now draw Gen1's rolling mist banks with shared visibility, speed and thickness controls; thickness preserves raised floor heights. Refreshed the native tile ledger: 388 Crystal and 426 FireRed maps. Classification is not visual approval: 24,754 Crystal wall cells and 74,506 FireRed unreviewed cells remain in the review queue, alongside 297 unmatched FireRed building cells.
+
+Validated on Gen1Recomp 0.3.20 with native specialty/lab captures in Yellow, Crystal, FireRed and LeafGreen, 144 complete-object geometry checks, atmosphere/cache tests and 399 option-consumer checks. Full-area quality and five-mod parity remain unfinished. See docs/SPECIALTY_QA_2026-09-26.md.
+
 ## 1.28.5 — Raised floors and enclosed caves
 
 Raised Crystal and FireRed/LeafGreen floors now follow native stair connections and reviewed platform artwork. Cave shelves, mountain terraces, piers, theater stages, gym walkways and train platforms carry actors, scenery and cameras at their actual floor height. Water reflection planes follow the drawn water level. Native collision, warps and gameplay are unchanged.

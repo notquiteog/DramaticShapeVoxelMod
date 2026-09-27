@@ -7,13 +7,14 @@ local C=V.require('CommunityVisuals')
 local T=V.require('TowerFogSettings')
 M.settings={F.setting,C.forest,C.caves,C.caveDetails,C.tower,T.enabled,T.thickness,T.speed,T.details}
 local configured={}
+local mistLayouts=setmetatable({},{__mode='k'})
 local proxies=setmetatable({},{__mode='k'})
 function M.gen3(def,id)
  if not def then return end
  if not proxies[def]then
   local layout=def.midLayout or {}
   proxies[def]={id=def.id or id,def={width=(layout.width or def.width or 16)/2,
-   height=(layout.height or def.height or 16)/2,environment=def.environment},nativeType=def.mapType,nativeGeneration=3}
+   height=(layout.height or def.height or 16)/2,environment=def.environment},nativeType=def.mapType,nativeGeneration=3,nativeDef=def}
  end
  return proxies[def]
 end
@@ -58,8 +59,37 @@ function M.fog(map)
  end
  return f.fog
 end
+function M.mistLayout(map)
+ if M.kind(map)~='tower'then return end
+ if mistLayouts[map]then return mistLayouts[map]end
+ local layout={anchors={}}
+ local w,h=map.def.width*2,map.def.height*2
+ if map.nativeGeneration==3 then
+  local def=map.nativeDef;local native=def and def.midLayout
+  if not native then return end
+  local graves={[0x291]=true,[0x293]=true,[0x2be]=true,[0x2bf]=true,[0x2d8]=true,[0x2d9]=true}
+  for y=0,h-1 do for x=0,w-1 do if graves[native:midAt(x,y)]then layout.anchors[#layout.anchors+1]={x,y}end end end
+  layout.walk=function(x,y)return x>=0 and y>=0 and x<w and y<h and native:collAt(x,y)~=7 end
+  layout.ground=function(x,z)return V.require('Gen3Elevation').at(def,x,z)end
+ else
+  if not map.isWalkableCell then return end
+  layout.walk=function(x,y)return x>=0 and y>=0 and x<w and y<h and map:isWalkableCell(x,y)end
+  layout.ground=function(x,z)return V.require('Gen2Elevation').at(map,x,z)end
+  -- Crystal towers have timber pillars/ruins instead of grave rows. Seed
+  -- banks along those solid boundaries, excluding the blank outer padding.
+  for y=1,h-2 do for x=1,w-2 do
+   local a,b=map:tileAt(x*2,y*2),map:tileAt(x*2+1,y*2+1)
+   if not layout.walk(x,y) and not(a==1 and b==1) and
+    (layout.walk(x-1,y)or layout.walk(x+1,y)or layout.walk(x,y-1)or layout.walk(x,y+1))then
+    layout.anchors[#layout.anchors+1]={x,y}
+   end
+  end end
+ end
+ mistLayouts[map]=layout;return layout
+end
 function M.draw(map)
- local _,opt=profile(map);if not opt or opt.level=='off'then return end
+ local kind,opt=profile(map);if not opt or opt.level=='off'then return end
  F.draw(map,opt)
+ if kind=='tower' and T.active()then V.require('TowerGraveMist').drawNative(map,M.mistLayout(map))end
 end
 return M

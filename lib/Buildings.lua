@@ -1452,7 +1452,7 @@ function Buildings.build(S, map, data, perRow)
                         and s.building_back_templates[tileset.id]
 
   for index, t in ipairs(list) do
-    if type(t.tiles) == "table" and #t.tiles > 0 then
+    if type(t.tiles) == "table" and #t.tiles > 0 and (not t.maps or t.maps[map.id]) then
       local bh, bw = #t.tiles, #t.tiles[1]
       local first = t.tiles[1][1]
       local built = nil

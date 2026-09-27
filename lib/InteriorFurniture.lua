@@ -74,7 +74,53 @@ function M.draw(id,A)
   B(l+9,.04,n+5,l+9.3,.3,n+10,dark)
   B(l+6,.04,n+9.7,l+9.3,.3,n+10,dark)
  end
- if id=='fr_stool' then
+ if id=='gb_tower_timber' then
+  local wood,dark,edge=T(10,33),T(12,12),T(3,4)
+  -- One substantial octagonal column, mortised bands and a spreading foot.
+  -- Its complete six-row drawing owns the floor, so no flat core remains.
+  B(1,0,21,31,2,47,dark);B(3,2,23,29,4,45,wood)
+  B(6,4,25,26,37,43,wood);B(4,4,28,28,37,40,wood)
+  for _,h in ipairs({5,29,36})do
+   B(4,h,24,28,h+2,44,edge);B(3,h,27,29,h+2,41,edge)
+  end
+  for _,x in ipairs({8,15,23})do B(x,8,42.9,x+.55,28,43.2,dark);B(x,8,24.8,x+.55,28,25.1,dark)end
+  B(2,38,22,30,40,46,wood)
+ elseif id=='gb_lighthouse_beacon' then
+  local frame,lens,dark=T(6,3),T(8,20),T(2,0)
+  B(2,0,14,30,3,46,dark);B(3,3,15,29,5,45,frame)
+  for _,x in ipairs({3,27})do for _,z in ipairs({16,42})do B(x,5,z,x+2,29,z+2,frame)end end
+  B(3,28,15,29,30,45,frame);B(6,30,18,26,32,42,frame)
+  B(9,5,24,23,8,38,dark);B(12,8,27,20,12,35,frame)
+  -- Stepped Fresnel lens rings, a separate central lamp and rear conduit.
+  for _,ring in ipairs({{12,5},{15,7},{18,8},{21,7},{24,5}})do
+   local y,r=ring[1],ring[2]
+   B(16-r,y,29-r,16+r,y+2,33+r,lens)
+   B(14-r,y,31-r,18+r,y+2,31+r,lens)
+  end
+  B(15,10,17,17,28,19,dark);B(15,25,18,17,27,31,dark)
+  B(10,5,44,22,8,46,frame);front({8,40,16,7},10,5,22,8,46.02)
+ elseif id=='gb_ship_dining_table' then
+  local edge,wood=T(28,36),T(1,3)
+  desk(1,13,31,46,8,wood)
+  B(1,6.5,13,31,8,46,edge)
+  top({1,1,30,37},1,13,31,46,8.02)
+ elseif id=='fr_space_exhibit' then
+  local white,edge,dark,stand=T(19,8),T(13,7),T(13,12),T(6,23)
+  B(2,0,3,46,2,30,stand);B(4,2,5,44,3,28,edge)
+  for _,x in ipairs({14,34})do B(x,3,17,x+3,9,20,dark)end
+  -- Closed fuselage, stepped pointed nose, paired swept wings and tail fin.
+  B(7,10,15,40,14,23,white);B(10,14,16,39,16,22,white)
+  B(4,11,17,10,14,21,white);B(2,11.5,18,5,13,20,edge)
+  B(10,15.8,16.8,16,16.5,21.2,dark)
+  for i=0,5 do
+   local x=20+i*2
+   B(x,10.5,14-i*1.6,x+3,12.3,24+i*1.6,white)
+  end
+  B(36,13,9,42,14.5,29,white)
+  B(36,14,18,41,22,20,white);B(38,22,18,41,24,20,edge)
+  for _,z in ipairs({16,20})do B(40,10.5,z,43,13.5,z+2,dark)end
+  front({10,27,28,4},11,1,37,3,30.02)
+ elseif id=='fr_stool' then
   local mat,dark=T(6,6),T(4,12)
   for _,x in ipairs({4,10})do for _,z in ipairs({4,10})do B(x,0,z,x+2,4,z+2,dark)end end
   B(3,3,3,13,4.5,13,mat);top({3,2,10,8},3,3,13,13,4.52)

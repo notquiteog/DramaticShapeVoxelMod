@@ -195,6 +195,19 @@ for row=0,3 do
  t.wallHigh=32-row*8;t.wallLow=t.wallHigh-8
  t.groundTiles=tatami;t.groundAligned=true;traditional[#traditional+1]=t
 end
-return {TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
+local tower={item('crystal_tower_timber',{
+ {45,46,46,47},{61,62,62,63},{60,62,1,44},{77,78,78,79},{77,78,78,79},{93,94,94,95}},2,{},0)}
+tower[1].design='gb_tower_timber'
+local lighthouse={item('crystal_lighthouse_beacon',{
+ {9,10,10,12},{25,26,44,28},{25,64,65,28},{25,80,81,28},{20,130,130,53},{11,128,129,11}},13,{},0)}
+lighthouse[1].design='gb_lighthouse_beacon'
+lighthouse[1].maps={OLIVINE_LIGHTHOUSE_6F=true}
+lighthouse[1].groundTiles={{13,29},{29,13}};lighthouse[1].groundAligned=true
+-- The same tiles are a dining table aboard the Fast Ship. Geometry follows
+-- the location's subject as well as the source drawing.
+lighthouse[2]=item('crystal_ship_dining_table',lighthouse[1].tiles,13,{},0)
+lighthouse[2].design='gb_ship_dining_table'
+lighthouse[2].groundTiles=lighthouse[1].groundTiles;lighthouse[2].groundAligned=true
+return {TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
   TILESET_HOUSE=commonHouse,TILESET_TRADITIONAL_HOUSE=traditional,TILESET_MART=mart,TILESET_POKECENTER=center,
   TILESET_PLAYERS_ROOM=bedroom}
