@@ -40,6 +40,48 @@ likely cause of a conflict state that git itself did not create. If
 is live, back up with `git bundle create --all`, and reset to a known-good
 commit.
 
+## 1.28.16 — Five test suites had drifted into being dead
+
+`voxel_visual_object_filter` — 3,388 checks, the mod's second-largest suite —
+had been failing with `unexpected Structures module CommunityVisuals`. So had
+`battle_scene_visual_sidecar`, `ram_precache_setting`, `cut_mesh_refresh` and
+`grass_east_edge`, each for the same reason in its own way.
+
+Every one loaded a mod module with `loadfile("lib/X.lua")` and a hand-kept list
+of the sibling names that module may `require`. **The installed loader always
+passes the mod namespace**, so `V.require` resolves in the game and is nil in the
+test. Each list was several modules out of date, and the failure surfaced as a
+nil-index error inside a module the test never claimed to cover.
+
+`tests/modload.lua` resolves siblings off disk the way the loader does, with
+explicit overrides where a test deliberately substitutes a fake. The deliberate
+substitutions stay and are ordered first: `Voxel3D`/`VoxelMeshDisk` in the
+visual-object test are stubbed because it supplies a fake format which cannot go
+through the renderer, and the fake `Mat4`/`DayNight`/`VoxelState` in the
+companion namespace are that test's whole point.
+
+Four fixture gaps were hiding behind the crashes and are fixed rather than
+worked around:
+
+- two `Voxel3D` stubs had no `metalRenderer` or `battleOcclusion`
+- the visual-object fixture's tileset had no `blocks`, which `Structures` reads
+  the border block out of (`Structures.lua:919`)
+- `cut_mesh_refresh`'s map had no `id`, which the cache and job queue key on
+- `grass_east_edge` pinned `CACHE_REVISION == 37` and it is 81 — 1.28.9 alone
+  moved it past 80 as models changed, each bump invalidating stored geometry on
+  purpose. Pinning the number made it a tripwire for every unrelated model
+  change, so it now asserts what is actually protected: a current revision, so a
+  cache written here cannot be read back by an older build.
+
+One subtlety worth keeping: the `ChunkMesher` and `VoxelCompanion` namespaces
+must be handed the **same** `Structures`/`TileShape`/`BuildBudget` instances the
+test already holds. Fresh copies keep their own caches, and the mesher and the
+test then disagree about what was claimed — which is how the first attempt at
+this failed on "the canonical colour variant includes the sign".
+
+Suite 123 passed / 79 failed with an engine; 105 / 35 / 62 standalone. CI
+baseline 38 → 35, and the Tests workflow is green.
+
 ## 1.28.15 — A map connection is not a wall
 
 `voxel_seam_ao_test` had been failing at every ref that could be checked
