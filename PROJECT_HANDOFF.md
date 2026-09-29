@@ -84,6 +84,15 @@ with a capture that shows nothing.
 
 Suite 118 passed / 84 failed.
 
+CI is green on this commit, and the contract is a baseline rather than zero.
+The first workflow push went red on the 38 pre-existing failures, which says
+the suite has a known tail, not that it had regressed. `tools/TEST_BASELINE`
+holds that count as a **ceiling**: a new failure fails the run, a fixed one only
+lowers it. Verified both directions -- at 38 the runner exits 0, and with one
+test deliberately broken it exits 1 with "39 suites failed, 38 are
+known-failing". Standalone CI sees 103 passed / 38 failed / 61 skipped; with an
+engine root it is 118/84.
+
 ## 1.28.14 — Orb plinths are two masses again
 
 The four `orb_plinth` recipes (`gym_orb_plinth`, `champion_orb_plinth`,
