@@ -39,24 +39,53 @@ function M.rock(c,emit,uvFor)
  end
  local slot=c.ts.midToSlot[c.mid]
  local px,py=slot%c.ts.cols*16,math.floor(slot/c.ts.cols)*16
- local bottom=0
- for y=15,0,-1 do
-  local any=false;for x=0,15 do if mask[y*16+x]then any=true;break end end
-  if any then break end;bottom=bottom+1
- end
+ -- Carve over the mask's OWN bounding box, not the whole 16x16 tile. A
+ -- metatile draws its boulder in the middle with a wall behind it, so hulling
+ -- the full tile makes the block as wide as the artwork and the floor stripe
+ -- and the loose dirt speckle the test is about come along with it. The older
+ -- ring builder trimmed each row to its own extent for the same reason, and
+ -- this is the same guarantee expressed as a hull: the boulder's silhouette
+ -- decides its size, and the art around it is not sampled as part of it.
+ local minX,minY,maxX,maxY=16,16,-1,-1
+ for y=0,15 do for x=0,15 do
+  if mask[y*16+x]then
+   if x<minX then minX=x end;if x+1>maxX then maxX=x+1 end
+   if y<minY then minY=y end;if y+1>maxY then maxY=y+1 end
+  end
+ end end
+ if maxX<minX or maxY<minY then return end
+ local hw,hh=maxX-minX,maxY-minY
+ -- `bottom` is how many of the carving box's rows sit BELOW the shape, which
+ -- VoxelHull turns into height = h - bottom. It is not the height itself:
+ -- passing the full height would zero the height and emit no faces at all.
+ -- The metatile's own bottom padding, if any, is what belongs here.
+ local bottom=15-maxY
  local H=V.require('VoxelHull')
+ -- The hull is built over the BLOCK, which is hw x hh and centred on itself,
+ -- so the block-local coordinate maps back to the metatile as minX + x.
  local sample=function(x,y)
-  local r,g,b,a=c.ts.imageData:getPixel(px+x,py+y)
+  local sx,sy=minX+x,minY+y
+  local r,g,b,a=c.ts.imageData:getPixel(px+sx,py+sy)
   -- Merged source colour only selects coplanar merges; draw uses the live
   -- native atlas (including its native BG2 pass) through the sampled UV.
-  local uvx,uvy=unpack(tex(x+.5,y+.5))
-  return r,g,b,mask[y*16+x]and a or 0,uvx,uvy
+  local uvx,uvy=unpack(tex(sx+.5,sy+.5))
+  return r,g,b,mask[sy*16+sx]and a or 0,uvx,uvy
  end
  local card=V.require('TreePresentation').props:get()=='cards'
- local hull=card and H.card(16,16,sample,bottom,c.shape.height or 16) or H.build(16,16,sample,1,bottom,nil,'rock')
+ local hull=card and H.card(hw,hh,sample,bottom,c.shape.height or 16)
+  or H.build(hw,hh,sample,1,bottom,nil,'rock')
+ -- VoxelHull emits a block spanning [-w/2, w/2] about the origin, so the
+ -- block's centre in metatile space is (minX+minY)/2 + size/2. Offsetting by
+ -- the centre -- not the minimum -- lands the silhouette back exactly where the
+ -- drawing put it, so a boulder drawn left of centre stays left of centre.
+ local ox,oz=minX+hw/2,minY+hh/2
  for _,q in ipairs(hull)do
   local points={};local t={q.u,q.v}
-  for _,p in ipairs(q)do points[#points+1]={c.cx*16+8+p[1],p[2]*(card and 1 or (c.shape.height or 16)/16),c.cy*16+8+p[3]}end
+  for _,p in ipairs(q)do
+   points[#points+1]={c.cx*16+ox+p[1],
+    p[2]*(card and 1 or (c.shape.height or 16)/16),
+    c.cy*16+oz+p[3]}
+  end
   emit(points,{t,t,t,t},q.shade,card and {c.cx*16+8,c.cy*16+8,.001} or nil)
  end
 end
