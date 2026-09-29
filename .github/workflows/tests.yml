@@ -1,0 +1,52 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests
+  cancel-in-progress: true
+
+jobs:
+  lua-suite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install LuaJIT
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y luajit
+
+      # No engine checkout: this repository is the mod, not the engine, and the
+      # release workflow only packages this tree. The ~31 suites that need
+      # src/ are reported as SKIP by the runner rather than failing, and
+      # everything that can run without the engine does run here.
+      #
+      # This job exists because nothing ran the suite automatically. A
+      # map.width read added in 1.28.5 broke the Gen 2 classifier suite, and it
+      # stayed red for several releases; a grass shape change in 1.27.1 and a
+      # ladder pin split in 1.24.0 each did the same to their own suite.
+      - name: Run the Lua suite
+        run: bash tools/run_tests.sh
+
+      - name: Compile every production module
+        run: |
+          set -euo pipefail
+          fail=0
+          for f in lib/*.lua lib/*/*.lua main.lua; do
+            [ -f "$f" ] || continue
+            if ! luajit -bl "$f" /dev/null >/dev/null 2>&1; then
+              echo "::error file=$f::does not compile under LuaJIT"
+              fail=1
+            fi
+          done
+          exit "$fail"
+
+      - name: Whitespace
+        run: git diff --check

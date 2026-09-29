@@ -40,6 +40,79 @@ likely cause of a conflict state that git itself did not create. If
 is live, back up with `git bundle create --all`, and reset to a known-good
 commit.
 
+## 1.28.13 — Gen 3 boulders, and a suite that finally runs on every push
+
+### `Gen3Cave.rock` carved the whole metatile, not the boulder
+
+`gen3_rock_silhouette_test` was failing on `ts={}`: `rock` has read the UV slot
+off the tileset (`midToSlot`, `cols`, `imageData`) since ea4f076, so the fixture
+had stopped being a fixture. With a real tileset supplied, the defect it was
+written to catch appeared: `rock` built a `VoxelHull` over the **entire
+16×16 metatile**. A metatile draws its boulder in the middle with a wall behind
+it, so the block came out as wide as the artwork, carrying the disconnected
+floor stripes and dirt grit that `boulderMask` had already rejected.
+
+The ring builder this replaced trimmed every row to its own extent. ea4f076
+dropped that when it swapped rings for a hull. The hull now covers the mask's
+**own bounding box**, so the silhouette decides the size again.
+
+Two details the assertion found rather than code review:
+
+- `VoxelHull` emits a block spanning `[-w/2, w/2]` and computes `height =
+  h - bottom`. Passing `bottom = h` — the obvious reading of "it is this tall" —
+  zeroes the height and emits **nothing at all**. `bottom` is the empty rows
+  *below* the shape: `15 - maxY`.
+- The block is re-seated by its **centre** (`minX + hw/2`), not its minimum, or
+  the boulder sits 8px off its artwork.
+
+Verified by rendering before and after: Pewter Gym (the map the test models)
+plus Saffron Gym, Viridian Forest, Route 9 and Mt Moon B1F. Only Pewter moves
+(2.44%) and its boulders keep their shape and placement; the other four are
+0.00–0.52%, with Mt Moon's being its water animation.
+
+### `gen3_outdoor_test`: two faults, both in the test
+
+It loaded `Gen3TileShape.lua` and `Gen3Outdoor.lua` via `loadfile(...)` with no
+argument, so the mod namespace arrived nil and every `V.require` inside them
+raised. Fixed by passing a resolver — which needs `local V` declared *before*
+the table literal that closes over it. `local V = { require = function() ...
+V ... end }` makes the inner `V` a different, nil local and reproduces exactly
+the error the guard was added to remove. Worth stating rather than leaving to
+the next reader.
+
+It then read a missing camera anchor as a lost root for all three plant
+drawings. They are three different things (`Gen3TileShape.lua:73`):
+
+| mid | shape | correct output |
+| --- | --- | --- |
+| `4` | flowers | one anchored card, full 16px |
+| `5` | shrub | carved `VoxelHull`, many un-anchored faces (`ROCKS & PLANTS` defaults to `modeled`) |
+| `0xD` | grass | flat ground plate at `.025` (un-anchored) **plus** an anchored tuft |
+
+`[5]` made the old "one native drawing became multiple cards" assertion
+unsatisfiable, and `[0xD]` is the same two-mesh split that made
+`gen2_depth_style_test` stale one release earlier. Each is now asserted on its
+own terms. `tests/low_grass_test.lua`, which already pinned the 1.27.1 intent,
+still passes unchanged.
+
+### The suite now runs on every push
+
+`tools/run_tests.sh` plus `.github/workflows/tests.yml`. Standalone it reports
+**102 passed, 39 failed, 61 skipped**, and the split is honest: the 61 skipped
+are the `astra_*` A/B harnesses and `palettes_gbc` fixtures this repository
+does not carry; the 39 are real. With an engine root on `LUA_PATH` (as in a dev
+checkout) it is 116 passed / 86 failed.
+
+The 31 suites that need `src/` are reported as SKIP, not FAIL, when no engine
+root is given — otherwise a missing checkout would read as a broken build.
+
+The workflow also compiles every production module and runs `git diff --check`,
+both verified locally. There is still no engine checkout, so those 31 suites
+remain unrun in CI; wiring that up needs an engine repository reference that
+does not exist in this workflow yet.
+
+Suite went 112 → 116 passing across this session.
+
 ## 1.28.12 — Cave ladders: a stale test, and one piece of dead code
 
 `cave_ladder_test` had been failing 17 checks since c22a6a6 (1.24.0-test.1,
