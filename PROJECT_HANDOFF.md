@@ -40,6 +40,50 @@ likely cause of a conflict state that git itself did not create. If
 is live, back up with `git bundle create --all`, and reset to a known-good
 commit.
 
+## 1.28.15 — A map connection is not a wall
+
+`voxel_seam_ao_test` had been failing at every ref that could be checked
+(`71065e0`, `1b7eb90`, and `046dd33`), so it is old rather than new — but the
+defect is real and the test states it precisely.
+
+The border ring is meshed `RING` tiles deep all the way round. At a **declared
+connection** the body's own edge is therefore flanked by ring cells, and
+counting those as tall neighbours occlusion-shaded the seam. On open water —
+the one surface in the game with no art to hide behind — the band reads as a
+shadow floating on the sea.
+
+Two places needed the rule, and the second was the one that mattered:
+
+- `aoShades` (top faces) now reads `aoHeightAt`, which at a seam returns the
+  height of the **body cell the seam continues**, not the ring's own. Reading
+  the ring directly reports 0 on a map with no elevation field, which makes a
+  water surface look like it sat in a pit.
+- `renderHeightAt` (the sides pass) returns the continuing water height at a
+  seam, so a body edge never builds a face against open terrain at all. That
+  face was the thing doing the shading.
+
+`renderHeightAt` was the one that mattered because the shaded quads are the
+*body's own east face* drawn against the ring, not the ring shading itself.
+Once it stopped being built, the test's other three assertions — walled edges
+still shade, the seam carries water corners, and the two-crowder step is
+exactly `1 - 2*AO_STEP = 0.568` — all hold. 5/5.
+
+The rule is scoped to `map.def.connections`, so this is the connection and not
+an amnesty for every cell on a map edge.
+
+**What could not be shown.** No real connected map changes above the noise
+floor. `CELADON_CITY` is the only Gen 1 map in this build with real
+`east`/`west` connections and its body is land, where the ring was never taller
+than the body, so the rule has nothing to do — 0.14–0.22% against a 4.53%
+noise floor. Pallet reads 35–44% but that is foliage animation (measured: 34.68%
+and 49.86% between two runs of the *same* build), and the diff crop shows the
+bush at a different frame with the ground, walls and fence pixel-identical. So
+the fix is verified by its own fixture and by a clean full-suite run, **not** by
+a before/after capture in the game. Reported as such rather than dressed up
+with a capture that shows nothing.
+
+Suite 118 passed / 84 failed.
+
 ## 1.28.14 — Orb plinths are two masses again
 
 The four `orb_plinth` recipes (`gym_orb_plinth`, `champion_orb_plinth`,

@@ -762,6 +762,45 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
     return towerMaterialUV(rx, ry, TOWER_DETAIL_SIZE, u, v)
   end
 
+  -- A map CONNECTION is not a wall.
+  --
+  -- The border ring is meshed RING tiles deep all the way round, so at a
+  -- connection the body's own edge is flanked by ring cells. Counting those as
+  -- tall neighbours occlusion-shades the seam, and on open water -- the one
+  -- surface in the game with no art to hide behind -- the band reads as a
+  -- shadow floating on the sea. At a connection the ring is the seam, not a
+  -- wall, and the terrain there is as flat as the body's own ground, so its
+  -- height is asked as ground. On the other three sides nothing changes: the
+  -- ring really is a wall there and still shades, and a walled map's water
+  -- edge still darkens. This is the connection, not an amnesty for every cell
+  -- that happens to sit on a map edge.
+  local openSeam, seamW, seamH = {}, 0, 0
+  do
+    local d = map.def
+    if type(d) == "table" then
+      seamW = (tonumber(d.width) or 0) * 4
+      seamH = (tonumber(d.height) or 0) * 4
+      local con = d.connections
+      if type(con) == "table" then
+        for _, side in ipairs({ "east", "west", "north", "south" }) do
+          if con[side] then openSeam[side] = true end
+        end
+      end
+    end
+  end
+  local function inOpenSeam(tx, ty)
+    if not (openSeam.east or openSeam.west or openSeam.north or openSeam.south) then
+      return false
+    end
+    if ty >= 0 and ty < seamH then
+      return (openSeam.east and tx == seamW) or (openSeam.west and tx == -1)
+    end
+    if tx >= 0 and tx < seamW then
+      return (openSeam.north and ty == -1) or (openSeam.south and ty == seamH)
+    end
+    return false
+  end
+
   local function heightAt(tx, ty)
     local k = keyOf(tx, ty)
     local base=LG.support(tx*8+4,ty*8+4)-LG.lift
@@ -821,15 +860,33 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
 
   -- A top face's four corners, each occluded by the three cells that touch
   -- it: two edge neighbours and the diagonal between them.
+  --
+  -- aoHeightAt differs from heightAt only across a declared connection, where
+  -- the ring is the seam rather than a wall and must not occlude the body.
+  local function aoHeightAt(tx, ty)
+    if not inOpenSeam(tx, ty) then return heightAt(tx, ty) end
+    -- The seam continues the body's own surface, so its height is the height
+    -- of the body cell it continues -- the same water at the same level, or
+    -- the same ground. The ring tile itself carries no shape, so reading it
+    -- directly reports 0 and makes a water surface look like it sat in a pit.
+    local stepX, stepY = 0, 0
+    if tx == seamW then stepX = -1
+    elseif tx == -1 then stepX = 1
+    elseif ty == -1 then stepY = 1
+    elseif ty == seamH then stepY = -1 end
+    return heightAt(tx + stepX, ty + stepY)
+  end
+
   local function aoShades(tx, ty, h, shade)
-    local n = heightAt(tx, ty - 1) > h
-    local s = heightAt(tx, ty + 1) > h
-    local e = heightAt(tx + 1, ty) > h
-    local w = heightAt(tx - 1, ty) > h
-    local nw = heightAt(tx - 1, ty - 1) > h
-    local ne = heightAt(tx + 1, ty - 1) > h
-    local sw = heightAt(tx - 1, ty + 1) > h
-    local se = heightAt(tx + 1, ty + 1) > h
+
+    local n = aoHeightAt(tx, ty - 1) > h
+    local s = aoHeightAt(tx, ty + 1) > h
+    local e = aoHeightAt(tx + 1, ty) > h
+    local w = aoHeightAt(tx - 1, ty) > h
+    local nw = aoHeightAt(tx - 1, ty - 1) > h
+    local ne = aoHeightAt(tx + 1, ty - 1) > h
+    local sw = aoHeightAt(tx - 1, ty + 1) > h
+    local se = aoHeightAt(tx + 1, ty + 1) > h
     if not (n or s or e or w or nw or ne or sw or se) then return shade end
     local function corner(a, b, d)
       local k = 0
@@ -1225,6 +1282,14 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
 
   local function renderHeightAt(tx, ty)
     local k = keyOf(tx, ty)
+    if inOpenSeam(tx, ty) then
+      -- The ring across a connection is the seam, not a wall. A body edge that
+      -- draws a face against it is drawing a wall against open terrain, and
+      -- that face is what shades the seam -- on water it is the shadow
+      -- floating on the sea. Report the neighbour as continuing flat, so the
+      -- face is never built and nothing at the seam needs shading off.
+      return S.gen2WaterHeight or -2
+    end
     if S.waterGround and S.waterGround[k] then return S.gen2WaterHeight or -2 end
     if S.skip[k] then return 0 end
     local s = S.shapeAt[k]
