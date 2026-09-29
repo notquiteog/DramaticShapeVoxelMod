@@ -60,9 +60,14 @@ T.same(priority,
   { "ROUTE_2", "PEWTER_CITY", "VIRIDIAN_CITY", "ROUTE_3", "ROUTE_1" },
   "the saved map leads a deterministic two-hop connection neighborhood")
 
+-- BuildBudget and StaticGeometry are stubbed because this test only exercises
+-- the cache directory layout. Everything else resolves off disk: a hard error
+-- on an unlisted name made the suite fail on VoxelMeshDisk's own LoadTimings
+-- dependency, which is not what it is testing.
+local MODLOAD = assert(loadfile(root .. "/tests/modload.lua"))()
 local DiskV = { require = function(name)
   if name == "BuildBudget" or name == "StaticGeometry" then return {} end
-  error("unexpected module " .. tostring(name))
+  return MODLOAD.load(name)
 end }
 local Disk = assert(loadfile(root .. "/lib/VoxelMeshDisk.lua"))(DiskV)
 local prefix = Disk.DIRECTORY .. "/"

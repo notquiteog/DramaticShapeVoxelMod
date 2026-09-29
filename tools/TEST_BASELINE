@@ -14,4 +14,11 @@
 # us the workflow's contract was wrong rather than that the suite had regressed:
 # a suite with a known tail must gate on that tail not shrinking, not on zero.
 # Asserting a ceiling means a NEW failure still fails the run.
-38
+#
+# 2026-09-29: 38 -> 35. Five suites came back by fixing their FIXTURES, not the
+# mod: voxel_visual_object_filter (3388 checks), battle_scene_visual_sidecar,
+# ram_precache_setting, cut_mesh_refresh and grass_east_edge each loaded a module
+# with loadfile and a hand-kept list of sibling names, and every list was several
+# modules out of date. tests/modload.lua resolves siblings off disk the way the
+# installed loader does, so those lists cannot drift again.
+35

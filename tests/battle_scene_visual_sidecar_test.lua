@@ -76,6 +76,11 @@ local Voxel3D = {
   },
 }
 function Voxel3D.available() return true end
+-- BattleScene opens a camera-relative occlusion gap behind the battlers each
+-- pass (lib/BattleScene.lua:1674). The stub stands in for the renderer, so it
+-- has to answer that call; otherwise the suite fails inside the pass it is
+-- meant to be asserting about, rather than on the sidecar behaviour.
+function Voxel3D.battleOcclusion() return nil end
 function Voxel3D.viewProjection()
   if Voxel3D.camera then
     Voxel3D.eye = Voxel3D.camera.eye
@@ -213,6 +218,11 @@ love = {
   },
 }
 
+-- The entries below are deliberate substitutions. Anything not listed resolves
+-- off disk rather than raising: a strict list has to be edited every time a
+-- module acquires a sibling, and until it is the suite fails in a module it
+-- never claimed to cover (RenderDistance, via ChunkMesher).
+local MODLOAD = assert(loadfile("tests/modload.lua"))()
 local namespace = {}
 function namespace.require(name)
   if name == 'q57/Adapter' then return {prepare = function() end, draw = function() end} end
@@ -230,7 +240,7 @@ function namespace.require(name)
   if name == 'ForestAtmos' or name == 'ForestDressing' or name == 'Backdrop'
       or name == 'SkyLayer' or name == 'CaveSconces' or name == 'TowerLobbyDetails'
       or name == 'TowerGraveMist' or name == 'CaveAtmosphere3D' then return {} end
-  return assert(({
+  local stub = ({
     Pokeball = {},
     PokeballSettings = { active = function() return false end },
     CommunityFlora = {
@@ -259,7 +269,9 @@ function namespace.require(name)
     BossBackdrop = { image = function() return nil end },
     AntiAlias = AntiAlias,
     GlassMask = { texture = function() return nil end },
-  })[name], "unexpected BattleScene module " .. tostring(name))
+  })[name]
+  if stub ~= nil then return stub end
+  return MODLOAD.load(name)
 end
 
 local BattleScene = assert(loadfile("lib/BattleScene.lua"))(namespace)

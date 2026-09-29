@@ -30,8 +30,19 @@ package.loaded["src.render.Assets"] = Assets
 package.loaded["src.world.Map"] = { isOutdoor = function() return true end }
 package.loaded["src.core.Game"] = { save = { version = "red" } }
 
+-- CommunityVisuals is resolved for real rather than stubbed: Structures calls
+-- eleven of its functions (crystalDepth, crystalHD, customCityGround,
+-- customWalls, customForest, customTrees, customSigns, customPillars,
+-- customCourtyards, customCutTrees, customTower), and a stub has to keep that
+-- list in step with the module forever. The real one defaults every ladder to
+-- Battle Art's own behaviour, which is what this test wants. It needs only
+-- ModSetting, so it loads off disk. See tests/modload.lua.
+local MODLOAD = assert(loadfile("tests/modload.lua"))()
 local structureNamespace = {
   require = function(name)
+    if name == "CommunityVisuals" then
+      return MODLOAD.load("CommunityVisuals")
+    end
     return assert(({
       Buildings = Buildings,
       TileShape = TileShape,
@@ -53,8 +64,18 @@ local function annotatedMap(id)
     tileset = {
       id = "OVERWORLD", image = "synthetic-atlas", tilesPerRow = 16,
       imageWidth = 128, imageHeight = 48,
+      -- Structures reads the border block out of this (lib/Structures.lua:919)
+      -- and the old hand-stubbed namespaces never loaded it far enough to
+      -- ask. Every block is a distinct 4x4 of tile ids, so no two blocks
+      -- compare equal and the ring is distinguishable from the body.
+      blocks = {},
     },
   }
+  for b = 1, 128 do
+    local row = {}
+    for i = 1, 16 do row[i] = (b - 1) * 16 + i end
+    map.tileset.blocks[b] = row
+  end
   function map:tileAt(x, z) return (x == 2 and z == 0) and 1 or 0 end
   function map:cellTile(x, z) return (x == 0 and z == 0) and 4 or 0 end
   function map:isWalkableCell(x, z) return not (x == 0 and z == 0) end
@@ -102,6 +123,10 @@ local Voxel3D = {
     [1] = 0.84, [2] = 0.72, [3] = 1.00, [4] = 0.55,
     [5] = 0.90, [6] = 0.68,
   },
+  -- VoxelCompanion asks whether the LÖVE 12 Metal path is live to name the
+  -- platform (lib/VoxelCompanion.lua:300). A stub that omits it fails there
+  -- rather than in the behaviour this test is about, so answer the question.
+  metalRenderer = function() return false end,
   pushQuad = function(indices, quad)
     local first = quad * 4 + 1
     for _, index in ipairs({ first, first + 1, first + 2,
@@ -126,12 +151,42 @@ local MeshDisk = {
   saveAux = function() return false, "disabled in ROM-free test" end,
   purge = function() return true end,
 }
+-- Resolved for real rather than stubbed: the mesher wraps its geometry build
+-- in LoadTimings and asks CommunityVisuals eleven questions, and a stub list has
+-- to track both forever. Voxel3D and VoxelMeshDisk stay stubbed -- this test
+-- supplies a fake format that cannot go through the real renderer.
+-- Resolved for real rather than stubbed: the mesher wraps its geometry build
+-- in LoadTimings and asks CommunityVisuals eleven questions, and a stub list
+-- has to track both forever. Voxel3D and VoxelMeshDisk stay stubbed -- this
+-- test supplies a fake format that cannot go through the real renderer.
+--
+-- Structures, TileShape and BuildBudget are the SAME instances this test
+-- already holds, not fresh copies: the mesher and the test must agree about
+-- what was claimed, and a second copy keeps its own caches.
+local REAL_CHUNK_MESHER_DEPS = {
+  LoadTimings = true, CommunityVisuals = true, Gen2CaveSurface = true,
+  Gen2Elevation = true, TerrainLevels = true,
+  Structures = Structures, TileShape = TileShape, BuildBudget = Budget,
+}
 local namespace = { companion = nil }
 function namespace.require(name)
-  return assert(({
-    Structures = Structures, TileShape = TileShape, Voxel3D = Voxel3D,
-    BuildBudget = Budget, VoxelMeshDisk = MeshDisk,
-  })[name], "unexpected ChunkMesher module " .. tostring(name))
+  -- LoadTimings and LoadTimings' own dependencies are real: the mesher wraps
+  -- its geometry build in them, and stubbing that would make this test
+  -- measure a build path the game never takes.
+  -- Order matters. A stub here is a deliberate substitution (Voxel3D and
+  -- VoxelMeshDisk: a fake format that cannot go through the renderer). Then
+  -- the instances this test already holds, so the mesher and the test agree
+  -- about what was claimed rather than keeping two caches. Then the real module
+  -- off disk, so acquiring a new sibling does not turn into a nil-index error
+  -- in a module nobody asked about -- which is how this suite came to fail on
+  -- Structures' CommunityVisuals dependency rather than on itself.
+  local stub = ({
+    Voxel3D = Voxel3D, VoxelMeshDisk = MeshDisk,
+  })[name]
+  if stub ~= nil then return stub end
+  local pinned = REAL_CHUNK_MESHER_DEPS[name]
+  if pinned ~= nil and pinned ~= true then return pinned end
+  return MODLOAD.load(name)
 end
 local ChunkMesher = assert(loadfile("lib/ChunkMesher.lua"))(namespace)
 
@@ -181,11 +236,17 @@ local cleanMod = function()
 end
 local companionNamespace = { mod = cleanMod() }
 function companionNamespace.require(name)
-  return assert(({
+  -- Deliberate substitutions first (the fakes above), then the real module off
+  -- disk. The same reasoning as the ChunkMesher namespace: a strict list has
+  -- to be edited every time a module acquires a sibling, and until it is, the
+  -- suite fails in a module it never claimed to be testing.
+  local stub = ({
     VoxelCompanionAPI = API, VoxelVisualObjects = VisualObjects,
     Mat4 = fakeMat4, TileShape = TileShape, ChunkMesher = ChunkMesher,
     VoxelState = fakeVoxelState, Voxel3D = Voxel3D, DayNight = fakeDayNight,
-  })[name], "unexpected Companion module " .. tostring(name))
+  })[name]
+  if stub ~= nil then return stub end
+  return MODLOAD.load(name)
 end
 local VoxelCompanion = assert(loadfile("lib/VoxelCompanion.lua"))(companionNamespace)
 love = {
@@ -307,6 +368,11 @@ local function touchingMap(id, horizontal)
     tileset = {
       id = "OVERWORLD", image = "synthetic-atlas", tilesPerRow = 16,
       imageWidth = 128, imageHeight = 48,
+      -- Structures reads the border block out of this (lib/Structures.lua:919)
+      -- and the old hand-stubbed namespaces never loaded it far enough to
+      -- ask. Every block is a distinct 4x4 of tile ids, so no two blocks
+      -- compare equal and the ring is distinguishable from the body.
+      blocks = {},
     },
   }
   function map:tileAt() return 0 end

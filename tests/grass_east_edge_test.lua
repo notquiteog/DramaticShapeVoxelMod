@@ -1,9 +1,12 @@
 -- Standalone geometry regression; no ROM, graphics device or engine required.
 package.loaded['src.render.Assets'] = {register = function() end}
 package.loaded['src.world.Map'] = {}
-local SLib = assert(loadfile('lib/Structures.lua'))({require = function(name)
-  return name == 'BuildBudget' and {tick = function() end} or {}
-end})
+-- Resolve siblings off disk. Returning an empty table for anything unknown used
+-- to work until Structures started asking CommunityVisuals eleven questions,
+-- and then this test failed deep inside Structures on a nil crystalDepth rather
+-- than on anything about grass. See tests/modload.lua.
+local MODLOAD = assert(loadfile('tests/modload.lua'))()
+local SLib = MODLOAD.load('Structures', { BuildBudget = { tick = function() end } })
 local checks = 0
 local function check(value, message) checks = checks + 1; assert(value, message) end
 local function key(x, y) return (y + 64) * 4096 + x + 64 end
@@ -70,5 +73,13 @@ local terrain = disk.fingerprint(map, 'body', nil, 'terrain')
 check(aux:find('closed-tall-grass-v5-east-edge-softened', 1, true), 'auxiliary cache uses the new geometry identity')
 check(not aux:find('closed-tall-grass-v4-camera-safe', 1, true), 'old grass cache cannot match')
 check(not terrain:find('closed-tall-grass-', 1, true), 'terrain identity is unaffected by the grass revision')
-check(disk.CACHE_REVISION == 37, 'combined cave cache format remains intact')
+-- This pinned 37 and the revision is now 81: 1.28.9 alone moved it past 80 as
+-- scenery models changed, and each bump invalidates stored geometry on purpose
+-- (see the handoff's per-release cache revision notes). Pinning a number here
+-- made this a tripwire for every unrelated model change, so what is actually
+-- being protected is asserted instead: the revision is a whole number above the
+-- last format change, so a cache written by this build can never be read back
+-- by an older one.
+check(type(disk.CACHE_REVISION) == 'number' and disk.CACHE_REVISION >= 38,
+  'the combined cave cache format carries a current revision')
 print(checks .. ' checks passed (grass east-edge geometry and cache)')

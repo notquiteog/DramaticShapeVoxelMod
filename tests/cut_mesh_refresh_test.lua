@@ -9,8 +9,12 @@ local modules = {
   Structures = { invalidate = function(id) invalidated[#invalidated + 1] = id end },
   Voxel3D = { pushQuad = function() end, newMesh = function(v) return v end },
 }
+-- The three entries in `modules` are deliberate stubs. Anything else resolves
+-- off disk: `or {}` used to be good enough, and stopped being the moment a
+-- module asked a real question of a sibling.
+local MODLOAD = assert(loadfile(root .. "/tests/modload.lua"))()
 local M = assert(loadfile(root .. "/lib/ChunkMesher.lua"))({
-  require = function(name) return modules[name] or {} end,
+  require = function(name) return modules[name] or MODLOAD.load(name) end,
 })
 local function upvalue(fn, wanted)
   for i = 1, 100 do
@@ -50,7 +54,11 @@ cache.CUT, cache.NEIGHBOR = current, neighbor
 local before, after = {}, {}
 for i = 1, 16 do before[i], after[i] = 1, 1 end
 after[1] = 2 -- only the north-west cell changes; the hedge stays
-local map = { tileset = { blocks = { before, after } }, blockAt = function() return 1 end }
+-- id: every real Map has one, and ChunkMesher keys its cache and its job
+-- queue on it (lib/ChunkMesher.lua:4071, 4077). Without it the job key
+-- concatenates nil, which is how this test failed inside finishJob rather
+-- than on the retention behaviour it is about.
+local map = { id = "CUT_MESH_REFRESH", tileset = { blocks = { before, after } }, blockAt = function() return 1 end }
 M.refresh("CUT", 0, 0, map, 0)
 T.eq(#uploads, 1, "cut uploads only one owned range")
 T.eq(uploads[1].start, 5, "upload starts after the ground vertices")
