@@ -1,8 +1,64 @@
-## Gen 2/3 scenery coverage audit — 2026-09-29 (QA only, no source change)
+## Working-tree recovery, 2026-09-29 — read this first
 
-No production file was modified in this pass. This entry records what was
-measured, one confirmed root cause, and the tooling left behind for the next
-session.
+At 14:07 the checkout was found with 20+ files unmerged and full of
+`<<<<<<< Updated upstream` / `>>>>>>> Stashed changes` markers, so the mod
+stopped parsing (`main.lua:723: unexpected symbol near '<'`). **This was not a
+merge anyone started with git.** The evidence:
+
+- `.git/AUTO_MERGE` existed but there was no `MERGE_HEAD`, no `REBASE_HEAD` and
+  no `sequencer` — so no merge or rebase was actually in progress, yet the index
+  held stage 1/2/3 entries for 24 paths.
+- The stage-2 ("ours") blob for `main.lua` was git's **empty-file** hash
+  `d41d8cd9`, which a normal merge never produces. Stage 2 was otherwise
+  byte-identical to `main`, and stage 1 to `ORIG_HEAD` (`9021702`, already an
+  ancestor of `main`).
+- Stage 3 matched `main.lua` as of the tip of `Legendary-Additions` (`1b7eb90`)
+  — which `git merge-base --is-ancestor` confirms is **already merged into
+  `main`**, so merging it again has nothing to merge.
+- The reflog contained no merge and no commit other than this work.
+- `master` is an *ancestor* of `main` (93 commits behind), not a source of it.
+
+Every conflicted path was verified to contain **only** conflict markers and no
+real content, so nothing was lost. Recovery, in order:
+
+1. Full `git bundle create --all` backup, plus the index, the unmerged stage
+   hashes, `refs.txt`, the stash list, and a copy of every damaged file, under
+   `/tmp/opencode/bav-recovery-*/` (108 MB, bundle 95 MB).
+2. Saved the two intentional uncommitted edits as a patch.
+3. `git reset --hard f4feaec` — returned the tree to the verified commit.
+4. Re-applied the two edits, removed the stale `.git/AUTO_MERGE`, and
+   re-verified: 114/114 on the Gen 2 shape suite, grass suite green, `git fsck`
+   clean, `stash@{0}` untouched.
+5. `stash@{0}` ("Crystal FireRed HD2D work before absol89 1.11.0 merge") was
+   never popped, applied or dropped, and remains intact.
+
+**Lesson worth keeping.** Another coding agent was running concurrently in this
+workspace (on a different project). A second writer in one checkout is the most
+likely cause of a conflict state that git itself did not create. If
+`git status` ever shows unmerged paths while the reflog is empty, do not run
+`git merge --abort` — there is no merge to abort. Check whether a second agent
+is live, back up with `git bundle create --all`, and reset to a known-good
+commit.
+
+## 1.28.11 — Gen 2 grass test was stale, not the grass
+
+`gen2_depth_style_test:59` ("grass illustration is no longer flat") was the
+other real suite failure. It is a **stale assertion, not a rendering bug**:
+1.27.1 (cae8ee7) deliberately split a grass patch into two meshes — the flat
+meadow plate the blades stand on, and the upright blades — and added
+`tests/low_grass_test.lua` to pin the new behaviour. It did not update
+`gen2_depth_style_test`, which still asserted every emitted quad was at
+`z == 4`, a shape that only a single-mesh patch had.
+
+The test now pins both halves from both sides: a plate must be flat at
+`y == .025` with no canopy anchor, blades must stay upright at `z == 4` with
+one, and each source run must contribute exactly one of each. This is the
+second time this suite caught a stale expectation rather than a real defect
+(the first was `Gen2Elevation`); both went unnoticed for the same reason --
+there is no CI runner, so nothing is red until someone runs it by hand.
+
+`tests/low_grass_test.lua` still passes unchanged, which is the check that
+1.27.1's intent is intact.
 
 ### Backlog, measured rather than estimated
 
@@ -258,6 +314,27 @@ Not attempted here: it needs per-tileset art work on four drawings, and the
 `Gen2VoxelRock` split has to place two hulls at the right heights. Block dumps
 for that work: `block.lua` renders a whole 4x4 metatile plus its ground block
 (`results/crystal-block/block-tower_plinth-18.png`).
+
+**Do not "fix" this by moving the crop.** It was tried and it is wrong. The
+block dumps read as though the drawing sits in the block's right half, which
+suggests `left={0,0,2,4}` misses it; moving the four recipes to `{2,0,2,4}`
+looked right and changed **0.00%** of the rendered output. Counting real
+placements instead of eyeballing pixels says why — `Buildings.matches` compares
+a recipe's crop against the MAP's tile grid, and on this tileset the right half
+is tile `2` in all eight positions, which is the uniform filler:
+
+| recipe | shipped `left` crop | matches | `{2,0,2,4}` matches |
+| --- | --- | --- | --- |
+| gym_orb_plinth | `32/33 48/49 34/35 50/51` | 18 in 9 maps | 567 in 3 maps, all `2/2 2/2 2/2 2/2` |
+| champion_orb_plinth | `46/47 62/63 78/79 94/95` | 2 in 1 map | 22 in 1 map, all `83/83 ...` |
+| tower_gym_plinth | `40/41 56/57 42/43 58/59` | 4 in 2 maps | 3436 in 18 maps, all `2/2 ...` |
+| tower_round_brazier | `74/75 90/91 76/92 54/55` | 5 in 3 maps | 3436 in 18 maps, all `2/2 ...` |
+
+The shipped crops are four distinct tile rows, which is what a drawing is. The
+right half is filler that happens to be everywhere on those maps, so it "matches"
+thousands of times and builds nothing. The real bug is only the missing
+`modelShape`/`parts`, and the recipe's crop is correct. Measurement tool:
+`orbmatch.lua` in the QA scratch directory.
 
 ### Not verified
 

@@ -53,14 +53,32 @@ local pixels={getPixel=function(_,x,y) local v=(x%8>=2 and x%8<=5 and y%8>=2) an
 local q={};assert(Grass.append(q,map,0,0,pixels,7,{}))
 assert(#q>0,'native grass blades missing')
 assert(Grass.groundTile(map)==5,'standing grass underlay must use meadow art')
+-- Since 1.27.1 a grass patch emits TWO meshes per source run: the flat meadow
+-- plate the blades stand on (z of .025, no canopy anchor) and the upright
+-- blades themselves (z of 4, with one). This used to assert z==4 on every quad,
+-- which the ground plate made false -- the assertion outlived the geometry, and
+-- nothing was red because the suite had no runner. Both halves are pinned now:
+-- the plate must stay flat and un-anchored, the blades must stay upright, and
+-- each source run must contribute exactly one of each.
+local plates,blades=0,0
 for _,quad in ipairs(q) do
  assert(type(quad.shade)=='number','auxiliary mesh requires scalar shade')
- for i=1,4 do local p=quad[i]
-  assert(p[1]>=0 and p[1]<=8 and p[3]==4,'grass illustration is no longer flat')
-  assert(quad.canopy and quad.canopy[3]>0,'grass has no camera anchor')
-  assert(p[2]>=0 and p[2]<=8,'grass hides full player')
+ if quad.canopy then
+  blades=blades+1
+  assert(quad.canopy[3]>0,'grass has no camera anchor')
+  for i=1,4 do local p=quad[i]
+   assert(p[1]>=0 and p[1]<=8 and p[3]==4,'grass blades are no longer upright')
+   assert(p[2]>=0 and p[2]<=8,'grass hides full player')
+  end
+ else
+  plates=plates+1
+  for i=1,4 do local p=quad[i]
+   assert(p[2]==.025,'the grass ground plate must stay flat on the floor')
+  end
  end
 end
+assert(plates>0 and plates==blades,
+ ('every grass source run needs one ground plate and one blade (got %d/%d)'):format(plates,blades))
 map.tileset.id='TILESET_LAB';assert(not Grass.append({},map,0,0),'indoor art used as grass')
 print('2.5D default and style isolation, flat foliage budget and grass bounds passed')
 
