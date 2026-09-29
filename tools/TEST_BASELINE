@@ -5,8 +5,8 @@
 #
 #   ~61 skipped   astra_* A/B harnesses and palettes_gbc, which need a
 #                 generated Yellow dataset this repository does not carry
-#   ~22 drift     a test loads a module with loadfile(...) and no `V`, so
-#                 V.require is nil inside it; the mod always supplies V
+#   ~9 fixed      suites that loaded a module with loadfile and a hand-kept
+#                 sibling list; all revived on 2026-09-29 via tests/modload.lua
 #   ~6 real       unimplemented features (water_effect_precision's two-form
 #                 shader fallback has never existed) or stale expectations
 #
@@ -15,10 +15,14 @@
 # a suite with a known tail must gate on that tail not shrinking, not on zero.
 # Asserting a ceiling means a NEW failure still fails the run.
 #
-# 2026-09-29: 38 -> 35. Five suites came back by fixing their FIXTURES, not the
-# mod: voxel_visual_object_filter (3388 checks), battle_scene_visual_sidecar,
-# ram_precache_setting, cut_mesh_refresh and grass_east_edge each loaded a module
-# with loadfile and a hand-kept list of sibling names, and every list was several
-# modules out of date. tests/modload.lua resolves siblings off disk the way the
-# installed loader does, so those lists cannot drift again.
-35
+# 2026-09-29: 38 -> 35 -> 32, all by fixing FIXTURES rather than the mod.
+# Every suite revived here was loading a mod module with loadfile and a hand-kept
+# list of sibling names (or answering an unlisted one with `{}`), and every one
+# of those lists was out of date. tests/modload.lua resolves siblings off disk
+# the way the installed loader does, so they cannot drift again. The revived
+# suites: voxel_visual_object_filter (3388 checks), battle_scene_visual_sidecar,
+# ram_precache_setting, cut_mesh_refresh, grass_east_edge, city_ground_option,
+# gen3_escalator_camera, atmosphere_camera_projection and
+# building_canopy_regression.
+#
+32

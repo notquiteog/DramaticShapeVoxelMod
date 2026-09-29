@@ -157,7 +157,7 @@ do
   }
   local sceneVoxel = {}
   local pillarLive
-  local sceneModules = setmetatable({
+  local sceneModules = {
     ChunkMesher = chunk,
     TerrainAtlas = { setLive = function() end },
     VoxelState = sceneVoxel,
@@ -170,11 +170,28 @@ do
       castShadows = function() end,
       drawCommunityTrees = function() end,
     },
-    ModSetting = { new = function(_, _, values)
-      return { get = function() return values[1] end }
+    -- ModSetting.new is also reached by CommunityVisuals, which indexes every
+    -- setting by its `key` (lib/CommunityVisuals.lua:189). The old stub
+    -- returned a table with no key, so that raised table index is nil. The key
+    -- is the first argument, and `get` still answers the fixture's value.
+    ModSetting = { new = function(_, key, values)
+      return { key = key, get = function() return values[1] end }
     end },
-  }, { __index = function() return {} end })
-  local SceneV = { require = function(name) return sceneModules[name] end }
+  }
+  -- sceneModules is the deliberate fixture set. It used to answer anything
+  -- unlisted with `{}`, which turns a sibling that has a real interface --
+  -- CacheTrace, whose .log VoxelScene calls on every live-set change -- into
+  -- an empty table and fails deep inside the module rather than on the canopy
+  -- geometry this test is about. Unlisted names now resolve off disk, the way
+  -- the installed loader resolves them. See tests/modload.lua.
+  local MODLOAD = assert(loadfile(base .. "/tests/modload.lua"))()
+  local SceneV = MODLOAD.namespace()
+  local realRequire = SceneV.require
+  SceneV.require = function(name)
+    local stub = sceneModules[name]
+    if stub ~= nil then return stub end
+    return realRequire(name)
+  end
   local sceneChunk = assert(loadfile(base .. "/lib/VoxelScene.lua"))
   local VoxelScene = sceneChunk(SceneV)
   local forest = { id = "VIRIDIAN_FOREST", def = { width = 1, height = 1 } }

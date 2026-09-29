@@ -1,8 +1,12 @@
 local state={angle=0,FOCAL=1,isFirstPerson=function()return true end,isThirdPerson=function()return false end}
+-- VoxelState is a fixture, and Mat4/AtmosphereCamera are real. Everything else
+-- resolves off disk rather than becoming an empty table: `return {}` is why
+-- this suite died on a nil `shader` concat inside Voxel3D instead of on the
+-- camera projection it exists to check. See tests/modload.lua.
+local MODLOAD=assert(loadfile('tests/modload.lua'))()
 local V={require=function(name)
  if name=='VoxelState'then return state end
- if name=='Mat4' or name=='AtmosphereCamera'then return assert(loadfile('lib/'..name..'.lua'))()end
- return {}
+ return MODLOAD.load(name)
 end}
 local R=assert(loadfile('lib/Voxel3D.lua'))(V)
 R.camera={eye={0,5,10},focus={0,5,0},up={0,1,0},fov=1}

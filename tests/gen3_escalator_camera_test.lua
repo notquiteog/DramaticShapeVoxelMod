@@ -11,7 +11,11 @@ module('special_field_anim',{isActive=function()return active end,isEscalatorMov
 module('warp',{isEscalatorActive=function()return warp end})
 module('battle_transition',{isActive=function()return battle end})
 local P={bind=function()end,resolve=function()return{}end,supports=function()return true end}
-local Scene=assert(loadfile('lib/Gen3Scene.lua'))({require=function(n)return n=='Gen3Tilesets'and P or{}end})
+-- Gen3Tilesets is a fixture; every other sibling resolves off disk. Returning
+-- `{}` for the rest is what made this fail on `Gen3Tilesets.new` being nil
+-- rather than on the escalator camera logic. See tests/modload.lua.
+local MODLOAD=assert(loadfile('tests/modload.lua'))()
+local Scene=MODLOAD.load('Gen3Scene',{Gen3Tilesets=P})
 local g={session={},data={maps={}}}
 assert(not Scene.nativeRequired(g))
 active,warp=true,true;assert(not Scene.nativeRequired(g),'escalator inter-phase flicker')

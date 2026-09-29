@@ -81,8 +81,15 @@ local modules = {
   },
   CommunityVisuals = Community,
 }
+-- The `modules` table is the deliberate fixture set. Anything else resolves
+-- off disk: asserting on the table made this fail on Gen2CaveSurface, a
+-- sibling ChunkMesher has needed for some time and the fixture never listed.
+-- See tests/modload.lua.
+local MODLOAD = assert(loadfile('tests/modload.lua'))()
 local C = assert(loadfile('lib/ChunkMesher.lua'))({
-  require = function(name) return assert(modules[name], name) end,
+  require = function(name)
+    return modules[name] or MODLOAD.load(name)
+  end,
 })
 modules.TowerGarden = assert(loadfile('lib/TowerGarden.lua'))({
   require = function() return Community end,
