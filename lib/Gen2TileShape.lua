@@ -288,6 +288,88 @@ local function thin(map, Permissions, cx, cy)
   return ns or ew
 end
 
+-- Is this solid cell the interior of a map's background mass?
+--
+-- GSC draws the mass a map is carved out of as one solid tile repeated to the
+-- border -- $01 (solid black) in OLIVINE_LIGHTHOUSE_1F and FAST_SHIP_1F, $00
+-- in GOLDENROD_UNDERGROUND, $01 again in TIN_TOWER.  Read as a wall, which is
+-- what every WALL collision asks, that mass became a 16px plateau as tall and
+-- as dark as the room it surrounds, and the room disappeared into it.  That is
+-- the whole of the "washed out, flat, nothing there" reading in those
+-- tilesets.
+--
+-- Three conditions, and the last two are what keep the rule off masonry.
+-- UNIFORM, because a real wall's 2x2 drawing mixes its face rows, caps and
+-- trims; a wall is uniform only when it is one flat colour.  Next to no
+-- walkable cell, because a wall is by definition beside the floor it
+-- encloses -- that alone is what spares every room's own kerb.  And EMBEDDED,
+-- at least three orthogonal neighbours carrying the same tile, because that is
+-- what the interior of a mass looks like: the two-cell corner of a small
+-- uniform prop has only two, and a lone block in a field has none, so neither
+-- can be mistaken for the mass a map is carved out of.
+--
+-- Whole-component membership was tried and rejected: one walkable cell
+-- anywhere in the run disqualifies the entire run, and GOLDENROD_UNDERGROUND's
+-- rock touches its tunnels, so 723 background cells collapsed to 0.
+--
+-- Measured over real imported maps: MOUNT_MORTAR_1F_INSIDE 0 of 663 wall
+-- cells, UNION_CAVE_B1F 0 of 179, CELADON_CITY 0 of 374 -- nothing is taken
+-- off any of them. It separates the two populations instead of thinning walls.
+--
+-- The cell resolves to `ground`, not `void`: the mass is still there and still
+-- unwalkable (collision is untouched -- this is presentation only), it just
+-- stops standing up. `void` would punch a hole through to the underlay, and a
+-- hole where a plateau was is a worse trade.
+local MIN_SAME_TILE_NEIGHBOURS = 3
+-- Memoised per map: the analysis is a whole-map pass, and the mesher asks
+-- once per cell. Weak keys so a released map's table does not outlive it.
+local backgroundSets = setmetatable({}, { __mode = "k" })
+function Gen2TileShape.backgroundMass(map, Permissions)
+  Permissions = Permissions or (modules())
+  if not (Permissions and type(map.cellCollision) == "function"
+    and type(map.tileAt) == "function") then return nil end
+  if backgroundSets[map] then return backgroundSets[map] end
+  local set = {}
+  local W, H = map.widthCells, map.heightCells
+  if type(W) ~= "number" or type(H) ~= "number" then
+    -- No extent to walk (a stub map). Report an empty set rather than nil, so
+    -- a caller that asks once does not retry the analysis per cell.
+    backgroundSets[map] = set
+    return set
+  end
+  local function uniformTile(cx, cy)
+    if cx < 0 or cy < 0 or cx >= W or cy >= H then return nil end
+    local ok, perm = pcall(map.cellCollision, map, cx, cy)
+    if not ok or Permissions.of(tonumber(perm) or -1) ~= Permissions.WALL then return nil end
+    local ids = drawing(map, cx, cy)
+    if ids[1] ~= ids[2] or ids[2] ~= ids[3] or ids[3] ~= ids[4] then return nil end
+    return ids[1]
+  end
+  for cy = 0, H - 1 do for cx = 0, W - 1 do
+    local tile = uniformTile(cx, cy)
+    if tile then
+      local same, touchesFloor = 0, false
+      for _, d in ipairs({ { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } }) do
+        local nx, ny = cx + d[1], cy + d[2]
+        local ok, coll = pcall(map.cellCollision, map, nx, ny)
+        if ok and Permissions.of(tonumber(coll) or -1) == Permissions.LAND then
+          touchesFloor = true
+        end
+        if uniformTile(nx, ny) == tile then same = same + 1 end
+      end
+      if not touchesFloor and same >= MIN_SAME_TILE_NEIGHBOURS then
+        set[cy * 4096 + cx] = true
+      end
+    end
+  end end
+  backgroundSets[map] = set
+  return set
+end
+local function backgroundFill(map, Permissions, cx, cy)
+  local set = Gen2TileShape.backgroundMass(map, Permissions)
+  return set ~= nil and set[cy * 4096 + cx] == true
+end
+
 -- Fences and signs are an OUTDOOR reading, and the gate is not fussiness:
 -- `thin` asks whether a solid has open ground on both sides, which is true
 -- of a railing and equally true of a rock pillar in a cave or a pew in
@@ -460,6 +542,13 @@ function Gen2TileShape.classAt(map, cx, cy, palTop, palBot)
   if outdoor(map) and thin(map, Permissions, cx, cy) then
     if palTop == PAL_GRAY then return "signpost" end
     return "fence"
+  end
+  -- Background filler: a roof-palette cell is exempt, because a building's
+  -- roof rows are uniform and border only other solids -- dropping them would
+  -- open the gable the volume builder just assembled.
+  if palTop ~= PAL_ROOF and palBot ~= PAL_ROOF
+     and backgroundFill(map, Permissions, cx, cy) then
+    return "ground"
   end
   return "wall"
 end

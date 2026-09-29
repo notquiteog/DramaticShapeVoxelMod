@@ -78,15 +78,29 @@ local LEDGE_DOWN, WATER_C, HEADBUTT, CUT = 0xa3, 0x29, 0x15, 0x12
 
 -- A map the classifier can answer for: the two questions it asks are
 -- `cellCollision` and `tileAt`, plus the environment for the outdoor gate.
+--
+-- A cell is { collision, tile }. It may also carry a second element, the cell's
+-- four 8x8 tiles row-major, so a case can state a drawing that MIXES its face
+-- and cap rows the way a real wall does. Without it every cell is trivially
+-- uniform, which cannot express the background-filler rule at all.
 local function fakeMap(cells, environment)
   local tileset = { id = "TILESET_JOHTO", imageWidth = 128, imageHeight = 128,
                     tilesPerRow = 16, tilePalettes = {} }
   for tile, slot in pairs(PALETTE_OF) do
     tileset.tilePalettes[tile + 1] = slot
   end
+  local widthCells, heightCells = 0, 0
+  for y, row in pairs(cells) do
+    heightCells = math.max(heightCells, y + 1)
+    for x in pairs(row) do widthCells = math.max(widthCells, x + 1) end
+  end
   return {
     id = "FAKE_MAP",
     tileset = tileset,
+    -- The background-mass analysis needs the map's extent, exactly as the real
+    -- Map.new supplies it. A stub without it silently classifies nothing.
+    widthCells = widthCells,
+    heightCells = heightCells,
     def = { id = "FAKE_MAP", environment = environment or "TOWN" },
     cellCollision = function(_, cx, cy)
       local row = cells[cy]
@@ -97,7 +111,13 @@ local function fakeMap(cells, environment)
       local cx, cy = math.floor(tx / 2), math.floor(ty / 2)
       local row = cells[cy]
       local cell = row and row[cx]
-      return cell and cell[2] or 26
+      if not cell then return 26 end
+      local quad = cell[2]
+      if type(quad) == "table" then
+        local dx, dy = tx % 2, ty % 2
+        return quad[dy * 2 + dx + 1] or quad[1]
+      end
+      return quad
     end,
     isWaterCell = function() return false end,
     isWalkableCell = function() return false end,
@@ -119,7 +139,7 @@ end
 --   S a sign, likewise isolated
 --   M masonry with solid neighbours, so a building's flank
 local GROUND, TREE = { LAND, 6 }, { WALL_C, 30 }
-local ROOF_CELL, MASONRY = { WALL_C, 16 }, { WALL_C, 26 }
+local ROOF_CELL, MASONRY = { WALL_C, 16 }, { WALL_C, { 26, 26, 78, 78 } }
 local FENCE_CELL, SIGN_CELL = { WALL_C, 26 }, { WALL_C, 78 }
 local GRASS_CELL, LEDGE_CELL = { TALL_GRASS, 5 }, { LEDGE_DOWN, 5 }
 local WATER_CELL = { WATER_C, 20 }
@@ -235,6 +255,79 @@ for _, want in ipairs({ { 1, 4, "tree" }, { 2, 1, "wall" }, { 2, 2, "wall" },
       "the " .. want[3] .. " shape is AUTHORED -- the flag the mesher's "
         .. "structure fold is gated on")
   end
+end
+
+-- ------- background filler is not a wall
+--
+-- GSC draws the mass a map is carved out of as one solid tile repeated to the
+-- border (OLIVINE_LIGHTHOUSE_1F/FAST_SHIP_1F $01, GOLDENROD_UNDERGROUND $00).
+-- Read as a wall, that mass became a 16px plateau as tall and as dark as the
+-- room it surrounded, and the room vanished into it.
+--
+-- Both halves matter and both are asserted here, because together they are
+-- what keeps the rule off real masonry: a filler is UNIFORM and UNREACHABLE,
+-- while a wall is either mixed (face rows, caps, trims) or next to the floor
+-- it encloses.
+do
+  -- A 3x3 field of one repeated tile with no walkable cell anywhere: the
+  -- "mass a map is carved out of" shape GSC draws to the border.
+  local FLAT = { 1, 1, 1, 1 }
+  local FILL = {
+    [0] = { [0] = { WALL_C, FLAT }, [1] = { WALL_C, FLAT }, [2] = { WALL_C, FLAT } },
+    [1] = { [0] = { WALL_C, FLAT }, [1] = { WALL_C, FLAT }, [2] = { WALL_C, FLAT } },
+    [2] = { [0] = { WALL_C, FLAT }, [1] = { WALL_C, FLAT }, [2] = { WALL_C, FLAT } },
+  }
+  local fill = fakeMap(FILL, "DUNGEON")
+  T.eq(G2.classAt(fill, 1, 1, nil, nil), "ground",
+    "an embedded uniform solid no walkable cell touches is background, not wall")
+
+  -- Same cell, but its 2x2 mixes face and cap rows the way a real wall does.
+  -- It must stay a wall, or the rule starts eating masonry.
+  local MIXED = { 26, 26, 16, 16 }
+  local MASON = {
+    [0] = { [0] = { WALL_C, MIXED }, [1] = { WALL_C, MIXED }, [2] = { WALL_C, MIXED } },
+    [1] = { [0] = { WALL_C, MIXED }, [1] = { WALL_C, MIXED }, [2] = { WALL_C, MIXED } },
+    [2] = { [0] = { WALL_C, MIXED }, [1] = { WALL_C, MIXED }, [2] = { WALL_C, MIXED } },
+  }
+  local mason = fakeMap(MASON, "DUNGEON")
+  T.eq(G2.classAt(mason, 1, 1, nil, nil), "wall",
+    "a MIXED solid no walkable cell touches is still a wall")
+
+  -- Uniform and embedded, but it now borders open ground: a uniform wall that
+  -- encloses a room is masonry (a plain kerb), not the map's background. The
+  -- mass is 2x2 so the cells being asserted really do touch the floor.
+  local BORDERED = {
+    [0] = { [0] = { WALL_C, FLAT }, [1] = { WALL_C, FLAT }, [2] = GROUND },
+    [1] = { [0] = { WALL_C, FLAT }, [1] = { WALL_C, FLAT }, [2] = GROUND },
+    [2] = { [0] = GROUND, [1] = GROUND, [2] = GROUND },
+  }
+  local bordered = fakeMap(BORDERED, "DUNGEON")
+  for _, cell in ipairs({ { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 } }) do
+    T.eq(G2.classAt(bordered, cell[1], cell[2], nil, nil), "wall",
+      "a uniform solid that TOUCHES walkable ground is a wall ("
+        .. cell[1] .. "," .. cell[2] .. ")")
+  end
+
+  -- A lone uniform block standing in a field is not a mass.
+  local LONE = {
+    [0] = { [0] = { WALL_C, FLAT }, [1] = { WALL_C, 26 }, [2] = { WALL_C, 26 } },
+    [1] = { [0] = { WALL_C, 26 }, [1] = GROUND, [2] = GROUND },
+    [2] = { [0] = { WALL_C, 26 }, [1] = GROUND, [2] = GROUND },
+  }
+  local lone = fakeMap(LONE, "DUNGEON")
+  T.eq(G2.classAt(lone, 0, 0, nil, nil), "wall",
+    "a lone uniform block is a wall, not background")
+
+  -- A roof-palette cell is exempt even when uniform and unreachable: building
+  -- roof rows are uniform and border only other solids.
+  local ROOFLIKE = {
+    [0] = { [0] = { WALL_C, FLAT }, [1] = { WALL_C, FLAT }, [2] = { WALL_C, FLAT } },
+    [1] = { [0] = { WALL_C, FLAT }, [1] = { WALL_C, FLAT }, [2] = { WALL_C, FLAT } },
+    [2] = { [0] = { WALL_C, FLAT }, [1] = { WALL_C, FLAT }, [2] = { WALL_C, FLAT } },
+  }
+  local rooflike = fakeMap(ROOFLIKE, "DUNGEON")
+  T.eq(G2.classAt(rooflike, 1, 1, ROOF, ROOF), "wall",
+    "a uniform unreachable ROOF-palette solid stays a wall (the gable)")
 end
 
 -- and the distribution, which is what the bug looked like: a map that

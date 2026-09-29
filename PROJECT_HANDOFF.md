@@ -1,3 +1,271 @@
+## Gen 2/3 scenery coverage audit — 2026-09-29 (QA only, no source change)
+
+No production file was modified in this pass. This entry records what was
+measured, one confirmed root cause, and the tooling left behind for the next
+session.
+
+### Backlog, measured rather than estimated
+
+Regenerated the native tile ledger with the 0.3.22 runtime (388 Crystal maps,
+426 FireRed/LeafGreen). Unreviewed volume, by treatment:
+
+- **Crystal**: 24,719 generic-wall cells across 1,114 distinct drawings in 34
+  tilesets, plus 592 classified-ground and 230 modeled-prop rows. Largest
+  clusters: `TILESET_DARK_CAVE` 4,043 cells / 21 drawings, `TILESET_TOWER`
+  3,481 / 27, `TILESET_LIGHTHOUSE` 2,452 / 45, `TILESET_CAVE` 2,392 / 21,
+  `TILESET_GATE` 1,404 / 11, `TILESET_KANTO` 1,369 / 60,
+  `TILESET_ELITE_FOUR_ROOM` 1,335 / 29, `TILESET_UNDERGROUND` 1,274 / 20.
+  The single largest drawings are uniform fills: `TILESET_TOWER 1:1:1:1`
+  (1,412), `TILESET_DARK_CAVE 38:38:38:38` (1,318), `TILESET_GATE 0:0:0:0`
+  (1,040), `TILESET_LIGHTHOUSE 1:1:1:1` (814).
+- **FireRed/LeafGreen**: 74,506 unreviewed cells across 6,844 drawings, plus
+  297 unmatched-building cells. 6,844 of those rows are `kind=flat` interior
+  and outdoor surfaces, not walls — 38 Pokemon Center floors, 50 house floors,
+  the Sevii/Mt Ember ledges, the Tanoby Ruins floors. Top rows:
+  `general__rom_082d4bfc $2F2` (Mt Moon B1F, 1,672),
+  `building__rom_082d4efc $281/$282` (Pokemon Tower 1F, 2,234 across 7 maps),
+  `network $281/$008` (Pokemon Center 1F, 1,994 across 38 maps),
+  `building__rom_082d5094 $008` (Trainer Tower 1F, 1,108 across 9 maps).
+
+These are classification counts, not visual approval, in both directions: a
+reviewed row can still look wrong, and an unreviewed row can look fine.
+
+### Confirmed root cause: background filler is being built as wall mass
+
+`TILESET_LIGHTHOUSE` (`OLIVINE_LIGHTHOUSE_1F/2F`, `FAST_SHIP_1F/B1F`) renders
+as a featureless dark plane crossed by a thin white tile grid. Cause, measured
+from the running mod rather than read off the art:
+
+- The lighthouse tileset's tile `$01` is solid black. Dumped source art:
+  `results/crystal-tiles/tiles-lighthouse.png`.
+- `Gen2TileShape.classAt` returns `wall` for the map's background mass. On
+  `OLIVINE_LIGHTHOUSE_1F` that is 252 of 360 cells; on `FAST_SHIP_1F`, 414 of
+  574. Both maps' census rows are `0/wall` at `h=16 art=upright foldCell=true`,
+  and the representative cell is `tile=1` with a uniform `1:1:1:1` drawing.
+- The census agrees: `TILESET_LIGHTHOUSE 1:1:1:1` is 814 cells on its own.
+- Both maps have `furniture_placements = 0` in the map census, so no recipe
+  ever claims the room and nothing else supplies material.
+- Net effect: a room whose walls and floor are the same black 16px mass. The
+  real wall speckle (`$4A/$4B/$5A/$5B`) is present but never gets a silhouette
+  because the void plateau around it is as tall and as dark as it is.
+
+Proposed rule, not yet applied: a solid cell whose 2x2 drawing is **uniform** and
+which has **no orthogonally walkable neighbour** is background, not wall. The
+uniformity test is what keeps it safe — real wall drawings mix face rows, caps
+and trims, while a filler tile repeats. Measured before shipping: how many
+`wall` cells per tileset satisfy it. Rejected alternatives and why: recolouring
+is wrong because the tileset is greyscale and the mod's rule is to keep the
+native palette; a flat-height change does nothing because the problem is
+silhouette, not height.
+
+### Two things that looked like defects and are not
+
+- Union Cave / Burned Tower B1F reading as "washed out" is faithful. Both use
+  `TILESET_CAVE`, whose `$16` floor is a near-white dither in the source and
+  whose wall tiles `$17/$07/$0A` are the dark rock. `MOUNT_MORTAR_1F_INSIDE`
+  uses the same block numbering on `TILESET_DARK_CAVE` and reads correctly
+  because that map group has a dark palette. The wall/floor contrast is the
+  map's own palette, and the mesher already tops a wall with a rock tile rather
+  than the floor tile.
+- Large black regions in early FireRed captures were the fixture standing on a
+  census rim cell and the camera looking off the map edge, not a rendering
+  fault. Camera cells belong inside the space.
+
+### Audit tooling left in `.scratch/ascendant-20260926`
+
+- `survey.lua` / `survey2.lua` — batch scene capture. `survey2.lua` is the one
+  that works: it re-applies the camera lock from inside the `game.update`
+  wrapper, and asserts per target that the native tile/collision grid is
+  unchanged. `QA_TARGETS=<file>` selects the list; each target is captured at
+  the zoom a player holds (`close` = level 7, `first` = level 6) plus a fitted
+  `overview`. A fitted overview of a whole route is too far out to judge
+  scenery — it flattens ground into a repeating pattern.
+- `tiles.lua` — dump chosen tileset tiles at 4-9x, for checking what the
+  original drawing actually offers before modelling from it.
+- `probe.lua` — per-map class census: every class with its count, example cell,
+  `h`, `art`, `authored`, `volume`, `foldCell`, and the tile rows a
+  representative cell wears. Answers "why does this look wrong" from the
+  running mod.
+- `orphan.lua` — intended to count the uniform-orphan-wall rule's blast radius.
+  **Still broken**: it reports `statkeys=0` and does not classify a single
+  cell. Do not trust it; fix before using it to justify the lighthouse change.
+- `sheet.py` — contact sheet builder, `python3 sheet.py 'results/*-close.png'
+  out.jpg 3 620`. The only practical way to review a full survey.
+- `run-long.sh <version> <driver> [seconds]` — same launch contract as
+  `run-0322.sh` with a survey-sized timeout. The 180s in `run-0322.sh` is too
+  short for a multi-map survey.
+
+### Environment blockers (both still true)
+
+- **Xvfb/LÖVE crashes.** `XIO: fatal IO error 0 on X server ":99"` kills the
+  run on longer drivers, and `timeout` then reports exit 124 with a log that
+  stops at the boot map. It correlates with long CPU-bound loops that do not
+  yield frames; map-based drivers (`survey2.lua`, `studio-release.lua`) run
+  reliably, whole-tileset censuses do not.
+- **No regression baseline for the mod's Lua suite.** The 0.3.22 runtime ships
+  only `tests/drivers`. `tests/modkit`, `harness.lua`, `love_stub.lua`,
+  `fs_io.lua` and `tests/fixture_data` were copied in from
+  `/home/admin/Apps/Gen1Recomp/source` (an older engine build) to make
+  `tests/gen2_tile_shape_test.lua` run at all; it then fails its
+  authored-flag and class assertions. That is a fixture/engine mismatch, not
+  evidence of a mod defect — but it means **there is currently no trustworthy
+  way to detect a classifier regression across the 388/426 imported maps.**
+  Resolving this is a prerequisite for the lighthouse change.
+
+### Not verified / remaining risk
+
+No rendering change was shipped, so no visual regression is possible from this
+pass. Everything above is either a census count, a classification measurement,
+or a capture I inspected. The lighthouse fix is diagnosed but unproven and must
+not be described as done.
+
+## 1.28.10 — Test baseline restored, and background fill is not a wall
+
+Two things, one a regression fix and one the largest single scenery correction
+measured so far. Unreleased working tree: `lib/Gen2Elevation.lua`,
+`lib/Gen2TileShape.lua`, `tests/gen2_tile_shape_test.lua`, `.gitignore`.
+
+### The test suite had been red since 1.28.5, and nobody knew
+
+`tests/gen2_tile_shape_test.lua` is the suite that pins the Gen 2 classifier.
+It failed on a clean checkout: `Gen2Elevation.field` began reading
+`map.width*2, map.height*2` in a2e6eaa (1.28.5, "Raise native platforms and
+enclose cave interiors"), *after* the test was last touched in f73e09b (1.28.4).
+A map without those fields raised inside `TileShape.at`'s `pcall`, so the
+`pcall` returned no shape, the generic cell rules answered instead, and every
+Gen 2 class silently resolved to unauthored ground — trees, water, walls, all of
+it. The exception was swallowed, so it presented as ordinary assertion failures
+rather than a crash.
+
+`Gen2Elevation.field` now returns early for a map that cannot state its
+dimensions, matching the guard its sibling `Gen2TileShape.supports` already
+carries. 106/106, then 114/114 with the new cases below. Real maps always carry
+`width`/`height` (`src/world/gen2/Map.lua:18`), so production is unaffected.
+
+There is still **no CI runner** for the suite. `run-tests.sh` in
+`.scratch/ascendant-20260926` is a stopgap and should be promoted into
+`.github/workflows`.
+
+### Suite baseline, for anyone touching a classifier
+
+Run from the **mod root** with the engine on `LUA_PATH` — many suites
+`dofile("lib/X.lua")` relative to the mod, so running them from the engine root
+fails on file layout, not on code. Before and after this change: **112 passed,
+90 failed**, identical lists. Categories:
+
+- **~59 `astra_*`** need `ASTRA_GENERATED` and `ASTRA_FULL_BASELINE` (a
+  generated Yellow dataset that does not exist here). Not real failures.
+- **~22** are module-registry drift: the test loads a module with
+  `loadfile(...)()` and no `V`, so `V.require(...)`, `Gen3Scene.new`,
+  `Gen3Cave.midToSlot`, `Structures.crystalDepth`, `CommunityFlora.setting` are
+  nil. `lib/VoxelHull.lua:3` and `lib/Gen3Outdoor.lua:5` already carry the
+  `V and V.require(...) or loadfile(...)` pattern for exactly this; the rest do
+  not. Precedent exists, so these are cheap, but each is its own file.
+- **6 are real content failures** and are the next work:
+  `gen2_reviewed_scenery_test:20` (see below), `gen2_depth_style_test:59`
+  ("grass illustration is no longer flat" — Gen 2 grass blades are no longer at
+  `p[3]==4`), `cave_ladder_test:153` (17 failures),
+  `voxel_seam_ao_test` (water corners occlusion-shaded at a connected seam),
+  `water_effect_precision_test:82`, plus `choose_your_hero_test:68`,
+  `gen3_adapter_test:29`, `scenery_polish_test:5`.
+- `battle_art_voxel_fork_test` cannot compile at all: "main function has more
+  than 200 local variables" is LuaJIT's hard ceiling, and that file has grown
+  past it. It needs splitting, not debugging.
+
+### `TILESET_LIGHTHOUSE`/`GATE`/`TOWER`: the map's background was a 16px plateau
+
+GSC draws the mass a map is carved out of as one solid tile repeated to the
+border — `$01` (solid black) in `OLIVINE_LIGHTHOUSE_1F` and `FAST_SHIP_1F`,
+`$00` in `GOLDENROD_UNDERGROUND`, `$01` again in `TIN_TOWER`. Every WALL
+collision classifies it `wall`, so it became a 16px block as tall and as dark as
+the room it surrounded, and the room disappeared into it. That is the whole of
+the "washed out, flat, nothing there" reading in those tilesets.
+
+`Gen2TileShape.backgroundMass` now finds that mass: a cell whose 2x2 drawing is
+**uniform**, that touches **no walkable cell**, and that has **three or more
+orthogonal neighbours carrying the same tile**, is background and resolves to
+`ground` rather than `wall`. `ground`, not `void` — the mass is still there and
+still unwalkable (collision is untouched), it just stops standing up; `void`
+would punch a hole through to the underlay. Roof-palette cells are exempt,
+because a building's roof rows are uniform and border only other solids.
+
+Whole-*component* membership was implemented first and rejected: one walkable
+cell anywhere in the run disqualifies the whole run, and Goldenrod's rock
+touches its tunnels, so 717 background cells collapsed to 0. A 1-cell rim of
+wall survives around each mass, which reads as a kerb.
+
+Measured cell counts, `backgroundMass` output:
+
+| Map | wall | background | % |
+| --- | --- | --- | --- |
+| GOLDENROD_UNDERGROUND | 129 | 717 | 84% |
+| FAST_SHIP_1F | 190 | 224 | 54% |
+| FAST_SHIP_B1F | 201 | 104 | 34% |
+| TIN_TOWER_5F | 181 | 92 | 33% |
+| OLIVINE_LIGHTHOUSE_1F | 225 | 27 | 10% |
+| MOUNT_MORTAR_1F_INSIDE | 663 | 0 | 0% |
+| UNION_CAVE_B1F | 179 | 0 | 0% |
+| CELADON_CITY | 374 | 0 | 0% |
+| CHERRYGROVE_CITY | 49 | 0 | 0% |
+
+### Rendered verification, and a measured noise floor
+
+Captured `close`/`first`/`overview` at IN2 on 10 maps before and after (the
+same `git stash` swap, same targets, same zoom), then captured the **after**
+build a second time to establish what "unchanged" looks like. That noise floor
+matters: Cherrygrove differs 17.0% between two runs of the *same* build, from
+animated water, foliage and the actor's idle frame, so an eyeball comparison
+alone would have "proven" a regression that was never there.
+
+| Scene | before→after | noise floor | verdict |
+| --- | --- | --- | --- |
+| GOLDENROD_UNDERGROUND | 57.5 / 81.0 / 44.1% | 0.00% | real |
+| OLIVINE_LIGHTHOUSE_1F | 26.6 / 0.00 / 10.0% | 0.00% | real |
+| FAST_SHIP_1F | 15.9 / 15.0 / 13.0% | 0.01% | real |
+| FAST_SHIP_B1F | 0.01 / 0.00 / 15.9% | 0.00% | real (overview) |
+| TIN_TOWER_5F | 0.07 / 0.00 / 6.6% | 0.00% | real (overview) |
+| CHERRYGROVE_CITY | 16.8 / 10.7 / 18.8% | 17.0 / 11.0 / 17.8% | **noise** |
+| CELADON_CITY | 3.1 / 3.4 / 4.2% | 3.3 / 4.5 / 3.5% | **noise** |
+| ROUTE_4 | 0.5 / 0.2 / 0.0% | 0.8 / 0.3 / 0.1% | **noise** |
+| MOUNT_MORTAR_1F_INSIDE | 0.02 / 0.00 / 0.00% | 0.02 / 0.00 / 0.00% | **noise** |
+| UNION_CAVE_B1F | 0.00 / 0.00 / 0.00% | 0.00 / 0.61 / 0.13% | **noise** |
+
+Inspected: the lighthouse stops being a flat grid plane and reads as a room with
+depth; Goldenrod's rock reads as mass beside the tunnels instead of a uniform
+plane; the Fast Ship gains a terrace. No area is punched through — cells that
+went flat still carry the tileset's own art at floor level. Caves, cities and
+routes are unchanged above noise.
+
+Five new assertions in `gen2_tile_shape_test.lua` pin the rule from both sides
+(background goes flat; mixed drawings, ground-bordered walls, lone blocks and
+roof-palette cells all stay walls). The test's `fakeMap` grew two things it
+lacked: a per-cell four-tile drawing, without which *every* cell is trivially
+uniform and the rule cannot be expressed at all, and `widthCells`/`heightCells`,
+without which the mass analysis reports nothing.
+
+### The orb/pedestal regression, diagnosed and not fixed
+
+`gen2_reviewed_scenery_test:20` fails: all four `orb_plinth` recipes
+(`crystal_depth_gym_orb_plinth`, `_champion_orb_plinth`, `_tower_gym_plinth`,
+`_tower_round_brazier`) resolve to **zero parts**, because 7712542 grouped
+`orb_plinth` with `boulder` and it now takes the `native_rock` path with no
+`modelShape`. Rendered: `TIN_TOWER_5F` shows the object as a tall featureless
+slab, and Ecruteak/Champion's room plinths likewise. The test's contract
+("orb and pedestal must stay separate") is the right one — a plinth drawn 16x32
+is two masses with a waist, and one hull over the whole crop merges them.
+
+Not attempted here: it needs per-tileset art work on four drawings, and the
+`Gen2VoxelRock` split has to place two hulls at the right heights. Block dumps
+for that work: `block.lua` renders a whole 4x4 metatile plus its ground block
+(`results/crystal-block/block-tower_plinth-18.png`).
+
+### Not verified
+
+Gen 3 and the other two quarters of Crystal's uniform fills (388 maps, 34
+tilesets) are unmeasured against this rule. First/third-person framing on the
+changed maps was captured but not walked. Xvfb still crashes on long CPU-bound
+loops that do not yield frames, which is what the whole-tileset census needs.
+
 ## 1.28.9 — Broadcast rooms and Rocket equipment
 
 Crystal radio rooms now have dedicated broadcast receivers, mixing desks, microphones and low round stools. The complete 5F studio desk owns its stacked equipment and work surface together; cabinet materials no longer sample the empty floor strip above the source drawing.

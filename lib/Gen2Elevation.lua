@@ -22,6 +22,16 @@ end
 function M.field(map)
  local kind=family(map)
  if not kind or type(map.cellCollision)~='function' then return end
+ -- The field is built over the map's full extent, so it needs those
+ -- dimensions. A real Map always carries them, but a stub map -- the Gen 2
+ -- shape test's fake map, a Gen 1 map reached through a path that did not
+ -- gate -- does not, and reading them anyway raised inside
+ -- TileShape.at's pcall. That pcall then returned no shape, the generic cell
+ -- rules answered instead, and every Gen 2 class silently resolved to
+ -- unauthored ground: the exact regression this module's siblings
+ -- (Gen2TileShape.supports) already guard against. A map that cannot say how
+ -- big it is has no floor field to contribute.
+ if type(map.width)~='number' or type(map.height)~='number' then return end
  if fields[map]then return fields[map]end
  local Permissions=require('src.world.gen2.Permissions')
  local f=Levels.build(map.width*2,map.height*2,function(x,y)

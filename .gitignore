@@ -59,3 +59,11 @@ TEST69-NOTES.txt
 TEST75-NOTES.txt
 TEST77-CAPTURE-FACING.txt
 THIS-TEST-NOTES.txt
+
+# Engine runtime artifacts. The engine writes these into its working
+# directory, which is this checkout whenever the Lua suite runs from the mod
+# root (the suite dofile()s lib/ with paths relative to here).
+/options.lua
+/options.lua.bak
+/options.lua.tmp
+/mod_option_schemas.json
