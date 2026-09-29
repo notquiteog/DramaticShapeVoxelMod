@@ -40,6 +40,50 @@ likely cause of a conflict state that git itself did not create. If
 is live, back up with `git bundle create --all`, and reset to a known-good
 commit.
 
+## 1.28.14 — Orb plinths are two masses again
+
+The four `orb_plinth` recipes (`gym_orb_plinth`, `champion_orb_plinth`,
+`tower_gym_plinth`, `tower_round_brazier`) had resolved to **zero parts** and
+rendered as one tall featureless slab, ever since 7712542 grouped `orb_plinth`
+with `boulder` and gave it the `native_rock` path with no `modelShape`.
+`gen2_reviewed_scenery_test:20` caught it and had been red since.
+
+A plinth is two masses: the pedestal it stands on and the orb above it, with the
+drawing's waist between them. One `VoxelHull` over the whole crop welds them
+into a single block. The crop is **correct** and must not change — the earlier
+suspicion that `left={0,0,2,4}` missed the drawing was wrong, and measuring
+real placements showed the alternative `{2,0,2,4}` is the tileset's uniform
+filler (3436 matches on 18 maps against 4 real ones, all `2/2 2/2 2/2 2/2`).
+
+- `Gen2FurnitureTemplates` gives `orb_plinth` its own `modelShape` and two
+  parts, with the upper one carrying the silhouette flag the test asks for.
+- `Gen2VoxelRock` carves the mask **twice**: the row the mask is thinnest at is
+  the waist, and each half gets its own sub-mask, so the gap in the drawing is
+  a real gap. The orb's hull is raised by however tall the pedestal came out,
+  so it stands *on* the pedestal rather than intersecting it.
+
+Measured placement counts (how the camera was aimed, since a survey cell
+nearby shows 0.00%):
+
+| recipe | placements | example |
+| --- | --- | --- |
+| gym_orb_plinth | 18 in 9 maps | BLACKTHORN_GYM_1F (3,14), GOLDENROD_GYM (2,1) |
+| champion_orb_plinth | 2 in 1 map | OLIVINE_GYM (3,12) |
+| tower_gym_plinth | 4 in 2 maps | ECRUTEAK_GYM (3,14) |
+| tower_round_brazier | 5 in 3 maps | — |
+
+Rendered before and after at three real plinths. Olivine Gym, Ecruteak Gym and
+Blackthorn Gym 1F each change 24–25%; the earlier near-miss survey cells change
+0.00%, because they were not near a plinth — the first attempt at this fix
+measured 0.00% everywhere and that was a bad camera, not a no-op. The other ten
+survey scenes are bit-identical, so nothing else moved.
+
+Inspected: the gym plinths now read as a red orb resting on a grey carved
+pedestal with a visible gap, two per gym, instead of a black slab. The tower
+brazier and the Champion's Room plinth are built by the same path.
+
+Suite 117 passed / 85 failed.
+
 ## 1.28.13 — Gen 3 boulders, and a suite that finally runs on every push
 
 ### `Gen3Cave.rock` carved the whole metatile, not the boulder

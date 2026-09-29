@@ -28,7 +28,25 @@ function M.resolve(ts,spec)
  local kind=spec.kind
  if kind=='boulder' or kind=='statue' or kind=='monument' or kind=='orb_plinth' or kind=='bicycle' then
   t.model='native_rock';t.modelDepth=kind=='bicycle' and 3 or nil
-  t.modelShape=kind=='boulder' and 'rock' or nil;return t
+  t.modelShape=kind=='boulder' and 'rock' or kind=='orb_plinth' and 'orb_plinth' or nil
+  if kind=='boulder' then
+   -- The whole drawing IS the boulder, so it is one silhouette.
+   t.parts={{x={0,w-1},top={0,h-1},facade={0,h-1},z=0,depth=w,silhouette=true}}
+  elseif kind=='orb_plinth' then
+   -- A plinth is TWO masses with a waist between them: the pedestal it stands
+   -- on and the orb above it. One hull over the whole crop welds them into a
+   -- single slab, which is what the drawing does not show. The split row is
+   -- recorded here so the recipe states its own structure; Gen2VoxelRock finds
+   -- the same waist from the mask and carves the two halves.
+   local waist=math.floor(h/2)
+   t.waist=waist
+   t.parts={
+    {x={0,w-1},top={waist,h-1},facade={waist,h-1},z=0,depth=w},
+    {x={0,w-1},top={0,waist-1},facade={0,waist-1},z=0,depth=w,
+     silhouette=true},
+   }
+  end
+  return t
  end
  if kind=='cabinet' or kind=='machine' or kind=='seat' or kind=='bed' or kind=='table' or kind=='console' then
   t.design=spec.design or 'gb_native_'..kind
