@@ -81,8 +81,14 @@ local OBJECT_DEPTH = 6             -- voxel thickness of a detected prop
 -- direction -- a bicycle drawn side-on is a LINE drawing whose negative
 -- space is the drawing, and at the 5 voxels `prop` gives, the side faces
 -- of neighbouring strokes close every gap in it off-axis
+-- Depth of the standee pass, per pinned class. `ladder` was here at 2 while
+-- the cave ladder pins were `ladder_up`/`ladder_down` (c22a6a6), so it stopped
+-- being reachable: this table is only read for art=="billboard" shapes, and a
+-- warp ladder is art=="stair" and is cut by CaveLadders, which carves the
+-- source rails and rungs itself. The two-voxels-thick carve still happens,
+-- inside CaveLadders' own fill calls.
 local PINNED_DEPTH = { billboard = 10, prop = 5, stool = 10, cutout = 1,
-                       console = 10, post = 6, signpost = 2, bike = 2, ladder = 2 }
+                       console = 10, post = 6, signpost = 2, bike = 2 }
 
 local MAX_ROWS = 6                 -- volume height cap: 48px
 

@@ -40,6 +40,75 @@ likely cause of a conflict state that git itself did not create. If
 is live, back up with `git bundle create --all`, and reset to a known-good
 commit.
 
+## 1.28.12 — Cave ladders: a stale test, and one piece of dead code
+
+`cave_ladder_test` had been failing 17 checks since c22a6a6 (1.24.0-test.1,
+Sep 23). That commit split the Gen 1 CAVERN ladder pin in two:
+
+```
+-      ladder = { 10, 11, 26, 27, 8, 9, 24, 25 },
++      ladder_up = { 10, 11, 26, 27 },
++      ladder_down = { 8, 9, 24, 25 },
+```
+
+which is a real change, not a rename. `Structures.buildStairs` reads
+`s.class == "ladder_down"` to decide a cell is the **hole** rather than a riser,
+and routes both to `CaveLadders.build`, which carves a shaft: a rim, four
+walls, a floor and the source rails and rungs voxelised into it. The test still
+asserted the undivided `ladder` class with `art == "billboard"`, so it demanded
+the standee path that no ladder takes any more.
+
+**The code was right and the test was stale.** Verified by rendering the real
+thing: four live Gen 1 warp cells in `CERULEAN_CAVE_1F` (two `ladder_up`, one
+`ladder_down`) captured in `close` and `first` at IN2 —
+`results/yellow-ladders/`. Ladders read as a shaft with a rim and a visible
+opening, which is what the source drawing shows. The test now pins the split
+pins, `art == "stair"` as the routing condition, and both `ladder_up` and
+`ladder_down` at 16.
+
+Removing the test's other assertion surfaced genuine dead code: `PINNED_DEPTH`
+had `ladder = 2`, but that table is only read for `art == "billboard"` shapes
+(`Structures.lua:4001`), and a warp ladder is `art == "stair"`. Nothing could
+reach it. Removed. The two-voxel carve the entry described still happens, in
+`CaveLadders`' own `fill` calls, so it is now asserted by **building a shaft**
+and counting the distinct z planes its quads span (1 or 2) rather than by
+reading a table that no longer participates. A source-text grep was tried first
+and rejected: it would keep passing if the code stopped carving.
+
+Re-rendered all four ladder cells after the change: six of eight captures are
+bit-identical, and the other two (1.48% and 0.37%) sit at the run-to-run noise
+floor for the same scene (0.89% and 0.49%) — animated water and actor frames.
+`PINNED_DEPTH` losing a key that nothing read cannot move pixels, and the
+measurement confirms it.
+
+46 checks. Suite 114 passed / 88 failed, up from 112/90.
+
+### Three failures that are NOT regressions, and should not be "fixed"
+
+Checked each against `046dd33` (before this session's work) and against the
+handoff's own record. All three fail identically at that commit, so none is
+something this work introduced:
+
+- **`water_effect_precision_test`** — expects a `EFFECT_PREC` macro with a
+  pinned and a bare shader form, tried in order. `EFFECT_PREC` **has never
+  existed** in `lib/Water.lua` (0 occurrences at `71065e0` either), and
+  `Water.shader` compiles one form. The test describes an unimplemented
+  fallback, not a broken one. `PROJECT_HANDOFF.md:1017` already records this as
+  "a legacy failure ... IDENTICAL with HEAD Water.lua. Not a new regression."
+  The current signature
+  (`vec4 effect(mediump vec4 color, Image tex, mediump vec2 tc, mediump vec2 sc)`)
+  does satisfy the test's *intent* — every float slot qualified together,
+  sampler left alone — just inline rather than through a macro.
+- **`scenery_polish_test:5`, `choose_your_hero_test:68`, `gen3_adapter_test:29`,
+  `legendary_cave_merge_test:5`, `legendary_visuals_test:48`** — all fail
+  identically at `046dd33`.
+- **`heal_overlay_test`** wants `data/palettes_gbc.lua`, which this checkout does
+  not have.
+
+Of the 88, ~59 are `astra_*` A/B tests needing `ASTRA_GENERATED`/`ASTRA_FULL_BASELINE`,
+~22 are the `V`-less `loadfile` module-drift cases already described above, and
+`battle_art_voxel_fork_test` cannot compile at all (LuaJIT's 200-local ceiling).
+
 ## 1.28.11 — Gen 2 grass test was stale, not the grass
 
 `gen2_depth_style_test:59` ("grass illustration is no longer flat") was the
@@ -178,8 +247,8 @@ not be described as done.
 ## 1.28.10 — Test baseline restored, and background fill is not a wall
 
 Two things, one a regression fix and one the largest single scenery correction
-measured so far. Unreleased working tree: `lib/Gen2Elevation.lua`,
-`lib/Gen2TileShape.lua`, `tests/gen2_tile_shape_test.lua`, `.gitignore`.
+measured so far. Changes: `lib/Gen2Elevation.lua`, `lib/Gen2TileShape.lua`,
+`tests/gen2_tile_shape_test.lua`, `.gitignore`.
 
 ### The test suite had been red since 1.28.5, and nobody knew
 
