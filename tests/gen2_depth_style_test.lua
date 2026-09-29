@@ -86,6 +86,13 @@ local Shell=assert(loadfile('lib/Gen2InteriorShell.lua'))({require=function(name
  assert(name=='Structures');return {forMap=function()return {furniture={{height=40}}}end}
 end})
 assert(Shell.geometry({def={environment='TOWN',width=10,height=9}})==nil)
+assert(Shell.geometry({def={environment='ROUTE',width=10,height=9}})==nil)
+assert(Shell.geometry({def={environment='CAVE',width=10,height=9}})==nil)
+assert(Shell.geometry({def={environment='GATE',width=10,height=9}})==nil)
+-- All 39 DUNGEON maps rendered a black void above the wall tops until this.
+local dVertices,dIndices,dCeiling=Shell.geometry({def={environment='DUNGEON',width=10,height=9}})
+assert(#dVertices==20 and #dIndices==30 and dCeiling>=48,
+ 'a DUNGEON map must get the same room enclosure as an INDOOR one')
 local vertices,indices,ceiling=Shell.geometry({def={environment='INDOOR',width=5,height=4}})
 assert(#vertices==20 and #indices==30 and ceiling>=56)
 for _,p in ipairs(vertices) do

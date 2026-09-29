@@ -184,6 +184,17 @@ local function skyFor(map)
   if map and map.tileset and map.tileset.id == "CAVERN" then
     return { .045, .030, .034, 1 }
   end
+  -- Towers, lighthouses and the Goldenrod Underground are enclosed too, but
+  -- they carry a TOWER/GATE tileset rather than CAVERN, so they fell through
+  -- to a nil sky and the pure-3D cutaway showed a black void above the wall
+  -- tops. They want the same dark rock the caverns use. This is presentation
+  -- only; with the camera genuinely outside the room there is no lid to draw.
+  if map and map.def then
+    local env = map.def.environment
+    if env == "DUNGEON" or env == "GATE" then
+      return { .045, .030, .034, 1 }
+    end
+  end
   local sky = VoxelScene.skyColor(map, skyStrength(Voxel.angle))
   if not sky then return nil end
   return Sky.dress(sky)
