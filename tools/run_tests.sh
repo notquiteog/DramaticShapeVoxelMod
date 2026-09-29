@@ -40,8 +40,18 @@ for t in tests/*_test.lua; do
   grep -q "ASTRA_GENERATED required" "$log" && needs_dataset=yes
   grep -q "ASTRA_FULL_BASELINE" "$log" && needs_dataset=yes
   grep -q "cannot open data/palettes_gbc" "$log" && needs_dataset=yes
+  # These use the ENGINE's tests.modkit, which lives in the engine checkout and
+  # is not part of this repository. Without an engine root they cannot run at
+  # all, which is a missing harness rather than a broken suite.
+  if grep -q "module 'tests.modkit' not found" "$log" \
+     || grep -q "module 'tests.harness' not found" "$log"; then
+    needs_engine=yes
+  fi
   if [ "$needs_dataset" = yes ]; then
     printf 'SKIP  %-52s (needs a generated dataset)\n' "$name"
+    skip=$((skip + 1))
+  elif [ "$needs_engine" = yes ] && [ -z "$engine" ]; then
+    printf 'SKIP  %-52s (needs the engine test harness)\n' "$name"
     skip=$((skip + 1))
   elif [ $rc -eq 0 ] && ! grep -qE '^FAIL' "$log"; then
     printf 'PASS  %-52s %s\n' "$name" \

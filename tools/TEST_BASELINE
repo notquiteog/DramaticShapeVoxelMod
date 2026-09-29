@@ -15,14 +15,29 @@
 # a suite with a known tail must gate on that tail not shrinking, not on zero.
 # Asserting a ceiling means a NEW failure still fails the run.
 #
-# 2026-09-29: 38 -> 35 -> 32, all by fixing FIXTURES rather than the mod.
-# Every suite revived here was loading a mod module with loadfile and a hand-kept
-# list of sibling names (or answering an unlisted one with `{}`), and every one
-# of those lists was out of date. tests/modload.lua resolves siblings off disk
-# the way the installed loader does, so they cannot drift again. The revived
-# suites: voxel_visual_object_filter (3388 checks), battle_scene_visual_sidecar,
-# ram_precache_setting, cut_mesh_refresh, grass_east_edge, city_ground_option,
-# gen3_escalator_camera, atmosphere_camera_projection and
-# building_canopy_regression.
+# 2026-09-29: 38 -> 11, and every step was a FIXTURE or a stale expectation
+# rather than a defect in the mod.
 #
-32
+#   38 -> 32  nine suites loaded a mod module with loadfile and a hand-kept
+#             list of sibling names (or answered an unlisted one with `{}`), and
+#             every list was out of date. tests/modload.lua resolves siblings
+#             off disk the way the installed loader does, so they cannot drift
+#             again: voxel_visual_object_filter (3388 checks),
+#             battle_scene_visual_sidecar, ram_precache_setting,
+#             cut_mesh_refresh, grass_east_edge, city_ground_option,
+#             gen3_escalator_camera, atmosphere_camera_projection,
+#             building_canopy_regression.
+#   32 -> 11  twenty-one more turned out to need the ENGINE's tests.modkit,
+#             which lives in the engine checkout and is not in this repository,
+#             so standalone they cannot run at all. The runner now reports those
+#             as SKIP rather than counting them as failures -- they were never
+#             broken, they were being measured by a harness that was not there.
+#             With an engine root they run, and that is the number that matters
+#             for this codebase's coverage.
+#
+# The 11 below all run without the engine and all still fail. Each has a
+# distinct cause, listed in PROJECT_HANDOFF.md.
+#
+#   38 -> 35 -> 32 -> 11
+
+11

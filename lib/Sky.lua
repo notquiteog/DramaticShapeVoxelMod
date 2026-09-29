@@ -372,6 +372,8 @@ Sky.GLOW_REACH = 0.64
 
 local shader = nil            -- nil = untried, false = unavailable
 
+Sky._source = function() return SHADER_SRC end   -- named for the suite
+
 local function getShader()
   if shader == nil then
     shader = false
