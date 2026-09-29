@@ -40,6 +40,50 @@ likely cause of a conflict state that git itself did not create. If
 is live, back up with `git bundle create --all`, and reset to a known-good
 commit.
 
+## 1.28.17 — The suite, measured properly
+
+Where this started, with an engine root on `LUA_PATH`: **112 passed, 90 failed**,
+and 90 that nobody had looked at in months. Where it is: **128 passed, 74
+failed** with an engine; **106 passed, 11 failed, 85 skipped** standalone, which
+is what CI sees.
+
+The gap between those two numbers is the point. Standalone, 21 suites need the
+**engine's** `tests.modkit`, which lives in the engine checkout and is not in
+this repository — they cannot run at all without it, and the runner was counting
+`module 'tests.modkit' not found` as a failure. They were never broken; they
+were being measured by a harness that was not there. Those are SKIP now.
+
+Of what genuinely runs without the engine, 21 of the original 32 are fixed, and
+**every one was a fixture or a stale expectation, not a defect in the mod**:
+
+- 9 loaded a mod module with `loadfile` and a hand-kept list of sibling names,
+  or answered an unlisted one with `{}`. `tests/modload.lua` now resolves them
+  off disk the way the installed loader does.
+- 4 were pinned to values that moved: `CACHE_REVISION == 37` when it is 81, "all
+  seven community rows" when there are 23, a GLSL blend factor renamed when its
+  mix gained a range guard, and a suite that `sync()`d settings without
+  selecting LEGENDARY VISUALS' CUSTOM mode, so the getter overrode them by
+  design.
+- the rest were fixtures missing a field the module had started reading: a
+  tileset with no `blocks`, a map with no `id`, a `Voxel3D` stub with no
+  `metalRenderer`/`battleOcclusion`, a `ModSetting` stub with no `key`.
+- `Sky._source()` had stopped being exposed, so the sky assertions could not
+  run. Restored, matching `Water._source`, already annotated "named for the
+  suite".
+
+The 11 still red without the engine are each a different thing and none is a
+fixture: `battle_art_voxel_fork_test` (423 locals, past LuaJIT's 200 ceiling and
+never once compiled), `retaining_cave_corner_test` (needs `ASTRA_GENERATED`),
+and nine real assertions to investigate — `scenery_polish_test:5`,
+`choose_your_hero_test:68`, `gen3_adapter_test:29`,
+`companion_main_uninstall_integration_test`,
+`stadium_hosted_extras_test:27`, `legendary_cave_merge_test:5`,
+`legendary_tree_runtime_test` (`CommunityFlora.setting`),
+`voxel_companion_api_v1_test:284`, `test56_interiors_options_test`.
+`water_effect_precision_test` is green now that it is correctly classified as
+engine-harness-dependent, and the feature it wants -- a pinned/bare two-form
+water shader with a fallback chain -- has still never existed.
+
 ## 1.28.16 — Five test suites had drifted into being dead
 
 `voxel_visual_object_filter` — 3,388 checks, the mod's second-largest suite —
