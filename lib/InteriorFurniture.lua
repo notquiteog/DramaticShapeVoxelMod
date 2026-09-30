@@ -832,6 +832,27 @@ elseif id=='fr_condo_plant' then
   B(6.2,8.4,5,9.8,10.4,10,leaf)
   B(6.4,4.2,6.2,9.6,5,9.8,soil)
   top({5,6,6,5},5,5,11,11,10.42)
+elseif id=='fr_roof_ac_unit' then
+  -- Rooftop plant: a housing on a curb, a louvred grille and a recessed fan
+  -- behind it, with a conduit running down the back. The native drawing is a
+  -- frontal box, so the grille blades and fan hub are what make it read.
+  local shell,shade,grille,dark,hub=T(7,9),T(7,15),T(5,12),T(3,11),T(9,6)
+  B(1,0,3,15,1.6,13,dark)
+  B(1.8,1.6,3.6,14.2,2.6,12.4,shade)
+  B(2.6,2.6,4,13.4,10.6,12,shell)
+  -- recessed grille bay
+  B(3.4,3.6,3.6,12.6,9.4,4.2,shade)
+  -- louvre blades, spaced so air reads between them
+  for y=4,9,1.6 do B(3.6,y,3.4,12.4,y+.8,4.4,grille)end
+  -- fan hub behind the grille
+  B(6,5,3.6,10,8,4.0,hub)
+  B(7,6,3.5,9,7,3.9,dark)
+  B(2,10.6,3.6,14,11.4,12.4,shade)
+  B(2.6,11.4,4,13.4,12,12,shell)
+  -- conduit down the back
+  B(12.6,0,4.4,14,10.6,5.6,dark)
+  B(12.8,1,4.6,13.8,2,5.4,shell)
+  B(12.8,3,4.6,13.8,4,5.4,shell)
 elseif id=='fr_store_shelf' then
   -- Store racking: an upright frame carrying four decks, each stocked with
   -- offset blocks so the front reads as goods on shelves rather than one
