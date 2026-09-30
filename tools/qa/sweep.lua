@@ -32,40 +32,70 @@ return function(game)
   local function exists(n) return have[n] == true end
 
   love.window.setMode(1280, 720)
-  local booting = true
   local update = game.update
-  game.update = function(self, dt)
-    -- The sweep pins yaw/pitch for a stable framing. The mod's own first/third
-    -- person rigs rewrite them every frame from the held input, and this driver
-    -- zeroes that input -- so without re-applying the lock here the camera
-    -- drifts back to its default heading within a few frames and half the
-    -- "3p" captures were not the 3p view at all.
-    --
-    -- Zeroing input is only safe once we are actually IN the field. Gen 3 boots
-    -- into an intro movie that advances on input; with the input wiped every
-    -- frame the game sat in phase="boot"/boot.phase="intro" for 600+ frames and
-    -- never advanced, so 18% of FireRed/LeafGreen "captures" were the opening
-    -- star-and-Pokemon sequence (and the rest caught its tail). That is what
-    -- produced the bogus "GAME FAILED" reading, not an engine regression.
-    if not booting then self.input:reset() end
-    if viewLock then viewLock() end
-    return require('src.mods.Runtime').call('core.update', update, self, dt)
+  -- Installed only AFTER boot. Wrapping game.update to zero input and re-apply
+  -- the view lock is what the sweep needs, but doing it during boot kept the
+  -- Gen 3 opening from ever advancing: Boot.update stopped being reached, the
+  -- movie stayed in phase "intro" for 9000 frames, and forcing isDone changed
+  -- nothing because nothing was reading it. Running boot on the engine's own
+  -- update path lets the opening finish normally; the wrapper goes on after.
+  local function installWrapper()
+    game.update = function(self, dt)
+      -- The sweep pins yaw/pitch for a stable framing. The mod's own first/third
+      -- person rigs rewrite them every frame from the held input, which this
+      -- driver zeroes -- so without re-applying the lock here the camera drifts
+      -- back to its default heading within a few frames and an unknown share of
+      -- the "3p" captures were not the 3p view at all.
+      self.input:reset()
+      if viewLock then viewLock() end
+      return require('src.mods.Runtime').call('core.update', update, self, dt)
+    end
   end
 
-  -- Let boot finish before touching anything. Capped so a wedged boot is
-  -- reported rather than hanging the sweep.
-  do
-    local waited = 0
-    while game.phase == 'boot' and waited < 3600 do
-      U.wait(1); waited = waited + 1
+  -- Reach the overworld before capturing anything.
+  --
+  -- Gen 3 boots into an opening movie whose sub-state counter parks at state=0
+  -- in the star scene. It runs at exactly GBA rate but never reports isDone on
+  -- its own here, so the game sat in phase="boot" forever and every
+  -- FireRed/LeafGreen/Emerald "capture" was the opening presentation -- black.
+  -- Map.current is correct throughout, which is exactly why the scene-graph
+  -- gate passed them: it validates state, not the screen.
+  --
+  -- tests/drivers/util.lua owns this as U.newGame, but that helper needs
+  -- game.stack and Gen 3 has no stack at all -- it fails with "attempt to index
+  -- field 'stack'". Driving the boot state machine directly does work, and the
+  -- detail that matters is tapping EVERY frame rather than every 30th:
+  --
+  --   intro -> title -> title_cry -> menu -> controls -> pikachu -> oak
+  --
+  -- "start" skips the movie, "a" walks the menus, then the Oak speech needs
+  -- the same mash. Directly setting movie.pendingSkip, forcing isDone, and
+  -- game:keypressed were all tried first and none of them advanced it.
+  if game.phase == 'boot' then
+    local last, taps = nil, 0
+    for _ = 1, 6000 do
+      local b = game.boot
+      if game.phase ~= 'boot' then break end
+      if (b and b.phase) ~= last then
+        print(('[sweep] boot %s -> %s after %d taps')
+          :format(tostring(last), tostring(b and b.phase), taps))
+        last = b and b.phase
+      end
+      if b and b.introMovie then
+        pcall(function() U.tap(game, 'start') end)
+      else
+        pcall(function() U.tap(game, 'a') end)
+      end
+      taps = taps + 1
+      U.wait(1)
     end
+    print(('[sweep] boot exit after %d taps, phase=%s boot.phase=%s')
+      :format(taps, tostring(game.phase), tostring(game.boot and game.boot.phase)))
     if game.phase == 'boot' then
-      print(('[sweep] WARNING still in phase=boot after %d frames'):format(waited))
-    else
-      print(('[sweep] boot finished after %d frames (phase=%s)'):format(waited, tostring(game.phase)))
+      print('[sweep] WARNING never left phase=boot; Gen 3 captures will be unusable')
     end
-    booting = false
   end
+  installWrapper()
   V.require('TreePresentation').props:setIndex(1, game)
 
   -- Map ids, in a stable order so sharding is reproducible.
