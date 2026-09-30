@@ -101,7 +101,13 @@ return function(game)
     local dx, dz = tx - vx, ty - vy
     if dx == 0 and dz == 0 then dx, dz = 0, -1 end
     local yaw = math.atan(dx, dz)
-    local pitch = 0.06
+    -- A floor has to be looked DOWN at. Aiming horizontally at one puts the
+    -- camera's eye level across it, the floor falls to the bottom edge and the
+    -- frame reads as a flat card -- which is how TILESET_TRADITIONAL_HOUSE
+    -- blocks scored flat when the real defect was only that block 4 is the
+    -- reviewed tatami floor and the rest fall through to native art.
+    -- Positive pitch is downward in this rig (sweep.lua uses .22 for 3p).
+    local pitch = subjectFloor and 0.55 or 0.06
     if gen == 3 then
       if C and C.setLevel then pcall(function() C.setLevel(camera == "3p" and 7 or 6, game) end) end
       if C then aim = function() C.yaw, C.pitch = yaw, pitch end end
@@ -206,6 +212,7 @@ return function(game)
       end
     end
 
+    local subjectFloor = false
     local best
     for radius = 0, 8 do
       for dy = -radius, radius do
@@ -217,7 +224,7 @@ return function(game)
               local d = dx * dx + dy * dy
               -- prefer standing below the subject so it is in frame, not overhead
               if dx == 0 and dy > 0 and openness == 3 then
-                return x, y, "up"
+                return x, y, "up", subjectFloor
               end
               -- more open beats less; nearer beats further
               local better = not best
@@ -234,9 +241,10 @@ return function(game)
       if best and best.openness == 3 then break end
     end
     if best then
-      return best.x, best.y, (best.dy > 0 and "up" or (best.dx < 0 and "right" or "left"))
+      return best.x, best.y, (best.dy > 0 and "up" or (best.dx < 0 and "right" or "left")),
+             subjectFloor
     end
-    return tx, ty, "up"
+    return tx, ty, "up", subjectFloor
   end
 
   local done, skipped, failed, blank = 0, 0, 0, 0
@@ -249,8 +257,8 @@ return function(game)
     local f = io.open(file, "rb")
     if f then f:close(); skipped = skipped + 1
     else
-      local vx, vy, facing = viewpoint(r.map, r.x, r.y)
-      aimAt(vx, vy, r.x, r.y)
+      local vx, vy, facing, subjectFloor = viewpoint(r.map, r.x, r.y)
+      aimAt(vx, vy, r.x, r.y, subjectFloor)
       if currentMap ~= r.map then
         if not loadAt(r.map, vx, vy, facing) then failed = failed + 1 end
         currentMap = r.map
