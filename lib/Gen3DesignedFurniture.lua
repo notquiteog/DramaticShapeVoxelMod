@@ -122,6 +122,18 @@ function M.install(recipes)
  -- at 0x2b0 rather than 0x2a7. Read off the native sheet against
  -- FR_CINNABAR_ISLAND_GYM's layout.
  add('cinnabar_gym_switch','building__rom_082d4d7c',{{0x2b0}},'fr_gym_switch_panel',1)
+ -- The four remaining gyms, each read off its own native sheet and intersected
+ -- with that gym's midLayout. Every gym has a distinct signature fixture.
+ -- Cerulean (rom_082d4d1c) 0x2ae, Vermilion (rom_082d4d34) 0x2c8/0x2c9: switch
+ --   hardware, reusing fr_gym_switch_panel.
+ -- Viridian (rom_082d4cbc) 0x291: a potted tree.
+ -- Celadon (rom_082d4d4c) 0x284/0x285: plant racks.
+ add('cerulean_gym_switch','building__rom_082d4d1c',{{0x2ae}},'fr_gym_switch_panel',1)
+ add('vermilion_gym_switch_a','building__rom_082d4d34',{{0x2c8}},'fr_gym_switch_panel',1)
+ add('vermilion_gym_switch_b','building__rom_082d4d34',{{0x2c9}},'fr_gym_switch_panel',1)
+ add('viridian_gym_plant','building__rom_082d4cbc',{{0x291}},'fr_gym_plant',1)
+ add('celadon_gym_rack_a','building__rom_082d4d4c',{{0x284}},'fr_gym_plant_rack',1)
+ add('celadon_gym_rack_b','building__rom_082d4d4c',{{0x285}},'fr_gym_plant_rack',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true

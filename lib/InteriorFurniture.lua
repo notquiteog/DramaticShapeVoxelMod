@@ -832,6 +832,32 @@ elseif id=='fr_condo_plant' then
   B(6.2,8.4,5,9.8,10.4,10,leaf)
   B(6.4,4.2,6.2,9.6,5,9.8,soil)
   top({5,6,6,5},5,5,11,11,10.42)
+elseif id=='fr_gym_plant' then
+  -- A gym's potted tree: a deep trough, a soil bed and three offset canopy
+  -- tiers so the crown has volume and a silhouette.
+  local trough,soil,leaf,leaf2,dark=T(7,12),T(4,15),T(6,5),T(9,10),T(3,14)
+  B(2,0,5,14,1.6,11,dark)
+  B(2.4,1.6,5.4,13.6,2.4,10.6,trough)
+  B(3,2.4,5.8,13,3,10.2,soil)
+  B(6,3,5.6,10,4.4,10.4,dark)
+  B(5,4.4,4.8,11,7,11.2,leaf)
+  B(3.6,7,4.4,12.4,9.4,11.6,leaf2)
+  B(5.4,9.4,4.8,10.6,11.6,11.2,leaf)
+  B(4.2,11.6,5,11.8,11.4,11,leaf2)
+elseif id=='fr_gym_plant_rack' then
+  -- A gym's plant rack: an open frame of two decks with planted trays, which
+  -- is how the native art draws it -- plants on shelves, not a painted panel.
+  local frame,tray,soil,leaf,dark=T(6,8),T(7,13),T(4,15),T(6,5),T(3,12)
+  B(2,0,4,3,11,12,frame)
+  B(13,0,4,14,11,12,frame)
+  for _,y in ipairs({1.2,6.2})do
+   B(2,y,4,14,y+1,12,tray)
+   B(3,y+1,4.6,13,y+1.6,11.4,soil)
+   for x=3.4,12.4,3 do
+    B(x,y+1.6,5.2,x+2.2,y+3.4,10.8,leaf)
+   end
+  end
+  B(2,11,4,14,12,12,frame)
 elseif id=='fr_gym_switch_panel' then
   -- The gym switch panel: a canted console on a plinth, with a grid of
   -- individually raised buttons and a lamp strip above them. The native art is
