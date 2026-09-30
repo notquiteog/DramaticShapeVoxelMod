@@ -96,6 +96,12 @@ return function(game)
   local function viewpoint(mapId, tx, ty)
     local map = nil
     local walkable
+    -- "openness" matters more than strict walkability. A Burned Tower B1F floor
+    -- is not Perm.LAND, so a LAND-only test found no acceptable cell anywhere,
+    -- fell back to standing on the drawing, and buried the camera in geometry --
+    -- 79 readings that looked like defects and were all harness error, since
+    -- the per-map sweep of Burned Tower B1F renders with uniq=1050, ink=0.66.
+    -- Accept anything that is not a wall, preferring LAND, then WATER.
     if gen == 3 then
       local Map = require("src.core.game3.map")
       local def = game.data and game.data.maps and game.data.maps[mapId]
@@ -103,20 +109,27 @@ return function(game)
       local Perm = require("src.core.game3.permissions")
       local L = def and def.midLayout
       walkable = function(x, y)
-        if not L then return false end
+        if not L then return 0 end
         local ok, c = pcall(function() return L:collAt(x, y) end)
-        return ok and Perm.isWalkable(c)
+        if not ok then return 0 end
+        if Perm.isWalkable(c) then return 3 end
+        if c == 7 then return 0 end
+        return 1
       end
     elseif gen == 2 then
       local G2 = require("src.world.gen2.Map")
+      local Coll = require("src.core.CollPermissions")
       local def = game.world and game.world.maps and game.world.maps[mapId]
       local ts = def and game.world.tilesets[def.tileset]
       if def and ts then pcall(function() map = G2.new(def, ts) end) end
-      local Perm = require("src.world.gen2.Permissions")
       walkable = function(x, y)
-        if not map then return false end
+        if not map then return 0 end
         local ok, c = pcall(function() return map:cellCollision(x, y) end)
-        return ok and Perm.of(tonumber(c) or -1) == Perm.LAND
+        if not ok or c == 0xff then return 0 end
+        local ok2, k = pcall(function() return Coll.of(c) end)
+        if ok2 and k == Coll.WALL then return 0 end
+        if ok2 and k == Coll.LAND then return 3 end
+        return 1
       end
     else
       local G1 = require("src.world.Map")
@@ -124,31 +137,44 @@ return function(game)
       local ts = def and (game.data.tilesets or {})[def.tileset]
       if def then pcall(function() map = { def = def, tileset = ts } end) end
       walkable = function(x, y)
-        if not def then return false end
+        if not def or not ts then return 0 end
         local ok, v = pcall(function() return G1.defIsWalkableCell(def, ts, x, y) end)
-        return ok and v
+        if ok and v then return 3 end
+        local ok2, p2 = pcall(function() return G1.defPassable(def, ts, x, y) end)
+        if ok2 and p2 then return 1 end
+        return 0
       end
     end
 
-    -- Spiral outward, preferring cells adjacent to the drawing.
     local best
-    for radius = 0, 5 do
+    for radius = 0, 8 do
       for dy = -radius, radius do
         for dx = -radius, radius do
           if math.max(math.abs(dx), math.abs(dy)) == radius then
             local x, y = tx + dx, ty + dy
-            if walkable(x, y) then
+            local openness = walkable(x, y)
+            if openness > 0 then
               local d = dx * dx + dy * dy
-              -- prefer being BELOW the drawing: looking up puts the wall in frame
-              if dx == 0 and dy > 0 then return x, y, "down" end
-              if not best or d < best.d then best = { x = x, y = y, d = d, dx = dx, dy = dy } end
+              -- prefer standing below the subject so it is in frame, not overhead
+              if dx == 0 and dy > 0 and openness == 3 then
+                return x, y, "up"
+              end
+              -- more open beats less; nearer beats further
+              local better = not best
+                or openness > best.openness
+                or (openness == best.openness and d < best.d)
+              if better then
+                best = { x = x, y = y, d = d, dx = dx, dy = dy, openness = openness }
+              end
             end
           end
         end
       end
-      if best then
-        return best.x, best.y, (best.dy > 0 and "up" or (best.dx < 0 and "right" or "left"))
-      end
+      -- A LAND cell on the first ring is good enough; don't scan the whole map.
+      if best and best.openness == 3 then break end
+    end
+    if best then
+      return best.x, best.y, (best.dy > 0 and "up" or (best.dx < 0 and "right" or "left"))
     end
     return tx, ty, "up"
   end
