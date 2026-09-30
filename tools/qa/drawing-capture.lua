@@ -25,6 +25,17 @@ return function(game)
   local okGen, Generation = pcall(function() return V.require("Generation") end)
   local gen = Generation.number()
 
+  local aim = nil
+  -- Re-apply the aim every frame; the mod's rigs rewrite yaw/pitch from input.
+  do
+    local realUpdate = game.update
+    game.update = function(self, dt)
+      self.input:reset()
+      if aim then aim() end
+      return require("src.mods.Runtime").call("core.update", realUpdate, self, dt)
+    end
+  end
+
   -- Gen 3 must be in the overworld before map data resolves.
   if game.phase == "boot" then
     for _ = 1, 6000 do
@@ -55,6 +66,48 @@ return function(game)
 
   local P = nil
   if gen == 1 or gen == 2 then P = require("src.render.Pipelines") end
+  local F = nil
+  if gen == 1 or gen == 2 then
+    local okF, FP = pcall(function() return V.require("FirstPerson") end)
+    F = okF and FP or nil
+  end
+  local C = nil
+  if gen == 3 then
+    local okC, G3 = pcall(function() return V.require("Gen3Integration") end)
+    C = okC and G3 or nil
+  end
+  local Zoom = nil
+  do
+    local okZ, Z = pcall(require, "src.render.Zoom")
+    Zoom = okZ and Z or nil
+  end
+
+  -- AIM THE CAMERA AT THE SUBJECT.
+  --
+  -- The third variant of the same harness bug. This driver never set yaw or
+  -- pitch, so the default heading could face a wall at point-blank range and
+  -- fill the whole frame with one surface -- which scored as a flat drawing.
+  -- WHIRL_ISLAND_NW/TILESET_DARK_CAVE__9 came back as a uniform brown field
+  -- while the per-map sweep of that map renders with uniq=837, ink=0.57.
+  -- The sweep never had this problem because it pins yaw/pitch per view AND
+  -- re-applies it every frame; the mod's rigs rewrite them from held input, so
+  -- a one-shot assignment drifts immediately.
+  local function aimAt(vx, vy, tx, ty)
+    -- Yaw convention from VoxelScene's YAW table: down(+z)=0, right(+x)=pi/2,
+    -- up(-z)=pi, left(-x)=-pi/2 -- which is exactly atan2(dx, dz).
+    local dx, dz = tx - vx, ty - vy
+    if dx == 0 and dz == 0 then dx, dz = 0, -1 end
+    local yaw = math.atan(dx, dz)
+    local pitch = 0.06
+    if gen == 3 then
+      if C and C.setLevel then pcall(function() C.setLevel(camera == "3p" and 7 or 6, game) end) end
+      if C then aim = function() C.yaw, C.pitch = yaw, pitch end end
+    else
+      if P then pcall(function() P.setLevel("voxel", camera == "3p" and 7 or 6) end) end
+      if F then aim = function() F.yaw, F.pitch = yaw, pitch end end
+    end
+    if Zoom then pcall(function() Zoom.offset = 1 end) end
+  end
 
   local function loadAt(mapId, cx, cy, facing)
     if gen == 3 then
@@ -190,6 +243,7 @@ return function(game)
     if f then f:close(); skipped = skipped + 1
     else
       local vx, vy, facing = viewpoint(r.map, r.x, r.y)
+      aimAt(vx, vy, r.x, r.y)
       if currentMap ~= r.map then
         if not loadAt(r.map, vx, vy, facing) then failed = failed + 1 end
         currentMap = r.map
