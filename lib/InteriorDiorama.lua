@@ -89,7 +89,20 @@ function M.geometry(p,side,opened)
  local verts,indices={},{}
  local function face(points,swatch,shade)
   local n=#verts
-  for _,a in ipairs(points)do verts[#verts+1]={a[1],a[2],a[3],(swatch-.5)/8,.5,shade or 1}end
+  -- Spread the sample across the face instead of pinning one texel.
+  --
+  -- The theme is a four-colour ramp, but every wall took a single texel of it,
+  -- so each face came out as one flat colour -- exactly the printed card the
+  -- voxel pass exists to replace, and why interiors built from
+  -- TILESET_TRADITIONAL_HOUSE measured FLAT in every camera.
+  --
+  -- Two swatches, not four: walking the whole ramp gave the walls hard
+  -- horizontal banding that read as stripes. Blending the face across a single
+  -- adjacent pair keeps a visible surface without the zebra.
+  for k,a in ipairs(points)do
+   local u=((swatch-1+((k-1)%2))/8+.5/8)
+   verts[#verts+1]={a[1],a[2],a[3],u,.5,shade or 1}
+  end
   for _,k in ipairs({1,2,3,1,3,4})do indices[#indices+1]=n+k end
  end
  local function box(a,y0,c,d,y1,f,swatch)
