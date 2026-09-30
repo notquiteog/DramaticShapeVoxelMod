@@ -118,6 +118,10 @@ function M.install(recipes)
  add('gym_switch_panel','building__rom_082d4d64',{{0x2a7}},'fr_gym_switch_panel',1)
  add('gym_disc_a','building__rom_082d4d64',{{0x293}},'fr_gym_disc',1)
  add('gym_disc_b','building__rom_082d4d64',{{0x294}},'fr_gym_disc',1)
+ -- Cinnabar Gym, building__rom_082d4d7c: the same switch console as Saffron,
+ -- at 0x2b0 rather than 0x2a7. Read off the native sheet against
+ -- FR_CINNABAR_ISLAND_GYM's layout.
+ add('cinnabar_gym_switch','building__rom_082d4d7c',{{0x2b0}},'fr_gym_switch_panel',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
