@@ -30,9 +30,15 @@ function M.geometry(map)
     end
   end
   local verts,indices={},{}
-  local function face(points,u,shade)
+  -- us may be a single value for the whole face, or four values so a face can
+  -- sample across the texture. The lid needs that: with one u it took a single
+  -- texel and every ceiling read as one flat card, which is the failure the
+  -- room enclosure exists to avoid -- it just moved the problem from a void to
+  -- a blank plane.
+  local function face(points,us,shade)
     local k=#verts
-    for _,p in ipairs(points) do verts[#verts+1]={p[1],p[2],p[3],u,.5,shade} end
+    local quad = type(us)=='table' and us or {us,us,us,us}
+    for i,p in ipairs(points) do verts[#verts+1]={p[1],p[2],p[3],quad[i],.5,shade} end
     for _,i in ipairs({1,2,3,1,3,4}) do indices[#indices+1]=k+i end
   end
   -- Move the four faces just beyond the existing perimeter to avoid coplanar
@@ -44,11 +50,14 @@ function M.geometry(map)
   -- new towers and lighthouses read as one flat white card filling the top of
   -- the frame, which is the same "printed plane" look the room is meant to avoid.
   local lidShade = map.def.environment == 'DUNGEON' and .58 or 1
-  face({{x0,0,z0},{x1,0,z0},{x1,ceiling,z0},{x0,ceiling,z0}},.75,.92)
-  face({{x1,0,z1},{x0,0,z1},{x0,ceiling,z1},{x1,ceiling,z1}},.75,.92)
-  face({{x0,0,z1},{x0,0,z0},{x0,ceiling,z0},{x0,ceiling,z1}},.75,.86)
-  face({{x1,0,z0},{x1,0,z1},{x1,ceiling,z1},{x1,ceiling,z0}},.75,.86)
-  face({{x0,ceiling,z0},{x1,ceiling,z0},{x1,ceiling,z1},{x0,ceiling,z1}},.25,lidShade)
+  -- Wall faces keep the plain texel (index 0). The lid walks texels 1..7 so
+  -- the ceiling carries a visible surface instead of one colour.
+  face({{x0,0,z0},{x1,0,z0},{x1,ceiling,z0},{x0,ceiling,z0}},0,.92)
+  face({{x1,0,z1},{x0,0,z1},{x0,ceiling,z1},{x1,ceiling,z1}},0,.92)
+  face({{x0,0,z1},{x0,0,z0},{x0,ceiling,z0},{x0,ceiling,z1}},0,.86)
+  face({{x1,0,z0},{x1,0,z1},{x1,ceiling,z1},{x1,ceiling,z0}},0,.86)
+  local lid = {1/8,7/8,7/8,1/8}
+  face({{x0,ceiling,z0},{x1,ceiling,z0},{x1,ceiling,z1},{x0,ceiling,z1}},lid,lidShade)
   return verts,indices,ceiling
 end
 -- ThirdPerson has a third rung: the boom can be out behind the shoulder, or
@@ -81,9 +90,18 @@ function M.draw(map)
     cache[map]=entry
   end
   if not texture then
-    local data=love.image.newImageData(2,1)
-    data:setPixel(0,0,.84,.83,.78,1)
-    data:setPixel(1,0,.69,.70,.67,1)
+    -- Texel 0 is the wall. Texels 1..7 are a shallow ceiling pattern: a slow
+    -- lightness ramp with a dithered break so the lid reads as a surface at
+    -- any zoom. Nearest filtering keeps the Game Boy look.
+    local data=love.image.newImageData(8,1)
+    data:setPixel(0,0,.69,.70,.67,1)
+    local lid={.86,.855,.84,.825,.81,.80,.795,.79}
+    for i=1,7 do
+      local base=lid[i+1]
+      -- every third texel sits a step darker: a coarse band, not noise
+      local k=(i%3==0) and .965 or 1
+      data:setPixel(i,0,base*k,base*k,base*k*.99,1)
+    end
     texture=love.graphics.newImage(data);texture:setFilter('nearest','nearest')
     data:release()
   end
