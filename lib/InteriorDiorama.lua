@@ -28,10 +28,22 @@ function M.profile(def,gen)
   if def.environment~='INDOOR' and def.environment~='GATE' and not cave then return end
  else
   -- Buildings and caves are enclosed; outdoor maps keep their scenery.
+  --
+  -- SHIP, CEMETERY and MANSION were missing here and every map that uses them
+  -- was getting no room at all, so no ceiling: the S.S. Anne (12 maps), the
+  -- Pokemon Tower (8) and the Celadon Mansion (5) all rendered as a black void
+  -- in BOTH cameras. Confirmed against the data -- all 25 are interior maps
+  -- with connections = {}.
+  --
+  -- Deliberately NOT a "no connections means a room" rule: 186 of 222 Gen 1
+  -- maps have no connections, and that set includes genuinely outdoor
+  -- tilesets (SHIP_PORT, PLATEAU, FOREST, UNDERGROUND), which would have put
+  -- a lid over open ground.
   local allowed={REDS_HOUSE_1=true,REDS_HOUSE_2=true,HOUSE=true,HOUSE_1=true,
    HOUSE_2=true,MART=true,POKECENTER=true,DOJO=true,GYM=true,CLUB=true,
    LOBBY=true,LAB=true,FACILITY=true,INTERIOR=true,GATE=true,
-   FOREST_GATE=true,MUSEUM=true,BEACH_HOUSE=true}
+   FOREST_GATE=true,MUSEUM=true,BEACH_HOUSE=true,
+   SHIP=true,CEMETERY=true,MANSION=true}
   if not allowed[ts] and not cave then return end
  end
  local name=(id..' '..ts):upper()

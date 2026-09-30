@@ -216,7 +216,7 @@ return function(game)
     return nil
   end
 
-  local done, skipped, refused = 0, 0, 0
+  local done, skipped, refused, blankShots = 0, 0, 0, 0
   for index_i, id in ipairs(ids) do
     if (index_i - 1) % nshards == shard then
       if maxMaps and done >= maxMaps then break end
@@ -327,7 +327,34 @@ return function(game)
             if live == nil then
               print(('[sweep] UNVERIFIED %s %s: could not read the scene graph'):format(id, v.name))
             end
-            if U.shot(game, dir .. '/' .. file) then
+            -- Blank captures: a uniform frame still passes the scene-graph gate
+            -- because Map.current is right while nothing has been drawn yet. It
+            -- showed up as ~24 maps across Gen 1 (CELADON_CITY, CERULEAN_CITY,
+            -- POWER_PLANT, ROUTE_11/13 ...) rendering as an empty frame in one
+            -- camera only, intermittently, which is a timing race and not a
+            -- render defect. A blank PNG compresses to a few hundred bytes, so
+            -- re-shoot on size rather than trusting one attempt.
+            local written = false
+            for attempt = 1, 3 do
+              if not U.shot(game, dir .. '/' .. file) then break end
+              local bytes = 0
+              local fh = io.open(dir .. '/' .. file, 'rb')
+              if fh then bytes = fh:seek('end') or 0; fh:close() end
+              if bytes > 6000 then written = true; break end
+              blankShots = blankShots + 1
+              if attempt < 3 then
+                print(('[sweep] blank capture %s %s (attempt %d, %dB) -- resettling')
+                  :format(id, v.name, attempt, bytes))
+                for _ = 1, 90 do U.wait(1) end
+              end
+            end
+            if not written then
+              print(('[sweep] BLANK %s %s: no non-empty frame after 3 attempts')
+                :format(id, v.name))
+              viewLock = nil
+              break
+            end
+            do
               have[file] = true
               index:write(('%s\t%s\t%d\t%d\t%s\n'):format(id, v.name, cx, cy, file))
               index:flush()
@@ -342,7 +369,7 @@ return function(game)
     end
   end
   index:close()
-  print(('[sweep] DONE gen=%d shard=%d/%d captured=%d already=%d refused=%d')
-    :format(gen, shard, nshards, done, skipped, refused))
+  print(('[sweep] DONE gen=%d shard=%d/%d captured=%d already=%d refused=%d blank_retries=%d')
+    :format(gen, shard, nshards, done, skipped, refused, blankShots))
   love.event.quit()
 end
