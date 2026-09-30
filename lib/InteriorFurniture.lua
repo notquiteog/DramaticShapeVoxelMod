@@ -832,6 +832,30 @@ elseif id=='fr_condo_plant' then
   B(6.2,8.4,5,9.8,10.4,10,leaf)
   B(6.4,4.2,6.2,9.6,5,9.8,soil)
   top({5,6,6,5},5,5,11,11,10.42)
+elseif id=='fr_slot_machine' then
+  -- A slot machine: a plinth, a canted cabinet, a deep bezel around the reels
+  -- and a lit crown marquee. The reels sit back inside the bezel so the screen
+  -- reads as a recess rather than a decal on the front.
+  local body,shade,reel,marquee,dark=T(6,10),T(6,15),T(9,4),T(9,7),T(3,12)
+  B(2,0,4,14,1.6,12,dark)
+  B(2.6,1.6,4.6,13.4,2.4,11.4,shade)
+  B(3,2.4,4.6,13,10.6,11,body)
+  -- bezel and the recessed screen
+  B(3.6,4,5,12.4,4.6,10.4,shade)
+  B(4.2,4.6,4.8,11.8,8.6,5.2,dark)
+  -- three reels inside the recess
+  for i=0,2 do
+   local x=4.6+i*2.4
+   B(x,5,4.6,x+1.8,8.2,5.4,reel)
+   B(x+.2,6.2,4.4,x+1.6,7.6,4.9,shade)
+  end
+  -- crown marquee
+  B(3,10.6,4.6,13,11.4,11,marquee)
+  B(3.4,11.4,5,12.6,12,10.6,body)
+  B(2.6,12,4.6,13.4,12.8,11.4,shade)
+  -- lever on the right cheek
+  B(13.4,5.4,6.6,14.2,8.6,7.4,dark)
+  B(13.6,8.2,6.8,14.4,9,7.6,marquee)
 elseif id=='fr_gym_plant' then
   -- A gym's potted tree: a deep trough, a soil bed and three offset canopy
   -- tiers so the crown has volume and a silhouette.

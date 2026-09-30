@@ -134,6 +134,13 @@ function M.install(recipes)
  add('viridian_gym_plant','building__rom_082d4cbc',{{0x291}},'fr_gym_plant',1)
  add('celadon_gym_rack_a','building__rom_082d4d4c',{{0x284}},'fr_gym_plant_rack',1)
  add('celadon_gym_rack_b','building__rom_082d4d4c',{{0x285}},'fr_gym_plant_rack',1)
+ -- Celadon Game Corner, building__rom_082d4cec, 3 maps, no recipe. Slot
+ -- machines at 0x2b8/0x2b9/0x2ba/0x2bb, read off the native sheet against
+ -- FR_CELADON_CITY_GAME_CORNER's layout.
+ add('corner_slot_a','building__rom_082d4cec',{{0x2b8}},'fr_slot_machine',1)
+ add('corner_slot_b','building__rom_082d4cec',{{0x2b9}},'fr_slot_machine',1)
+ add('corner_slot_c','building__rom_082d4cec',{{0x2ba}},'fr_slot_machine',1)
+ add('corner_slot_d','building__rom_082d4cec',{{0x2bb}},'fr_slot_machine',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
