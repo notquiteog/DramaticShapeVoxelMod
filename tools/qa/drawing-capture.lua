@@ -239,7 +239,7 @@ return function(game)
     return tx, ty, "up"
   end
 
-  local done, skipped, failed = 0, 0, 0
+  local done, skipped, failed, blank = 0, 0, 0, 0
   local currentMap = nil
   for i, r in ipairs(rows) do
     if done + skipped >= limit then break end
@@ -261,13 +261,30 @@ return function(game)
       end
       for _ = 1, settle do U.wait(1) end
       os.execute(("mkdir -p %q"):format(shotsFor(r.map)))
-      if U.shot(game, file) then done = done + 1 else failed = failed + 1 end
+      -- Same settle race the per-map sweep has: the frame comes back empty
+      -- (HUD only) while the mesher is still filling. Gen 1 hit this 31-39
+      -- times per game and it looked exactly like "these tiles render nothing"
+      -- -- CERULEAN_CITY/OVERWORLD__24 came back pure black. A blank PNG is a
+      -- few hundred bytes, so re-shoot on size rather than recording it.
+      local ok = false
+      for attempt = 1, 3 do
+        if not U.shot(game, file) then break end
+        local bytes = 0
+        local fh = io.open(file, 'rb')
+        if fh then bytes = fh:seek('end') or 0; fh:close() end
+        if bytes > 6000 then ok = true; break end
+        blank = blank + 1
+        if attempt < 3 then
+          for _ = 1, 90 do U.wait(1) end
+        end
+      end
+      if ok then done = done + 1 else failed = failed + 1 end
     end
     if i % 250 == 0 then
       print(("[dc] %d/%d rendered, %d skipped, %d failed"):format(i, #rows, skipped, failed))
     end
   end
-  print(("[dc] DONE %s: rendered=%d skipped=%d failed=%d -> %s")
-    :format(version, done, skipped, failed, dir))
+  print(("[dc] DONE %s: rendered=%d skipped=%d failed=%d blank_retries=%d -> %s")
+    :format(version, done, skipped, failed, blank, dir))
   return
 end
