@@ -78,6 +78,12 @@ function M.install(recipes)
  -- FR_SEVEN_ISLAND_TANOBY_RUINS_DILFORD_CHAMBER's layout.
  add('ruins_shelf_a','building__rom_082d5034',{{0x287}},'fr_ruins_shelf',1)
  add('ruins_shelf_b','building__rom_082d5034',{{0x288}},'fr_ruins_shelf',1)
+ -- Four Island, building__rom_082d4f14, 8 maps. Lorelei's house draws a
+ -- wooden table at 0x2e4/0x2e5/0x2e6 and a bed at 0x2ed.
+ add('lorelei_table_a','building__rom_082d4f14',{{0x2e4}},'fr_house_table',1)
+ add('lorelei_table_b','building__rom_082d4f14',{{0x2e5}},'fr_house_table',1)
+ add('lorelei_table_c','building__rom_082d4f14',{{0x2e6}},'fr_house_table',1)
+ add('lorelei_bed','building__rom_082d4f14',{{0x2ed}},'fr_room_bed',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true

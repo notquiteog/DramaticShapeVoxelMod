@@ -832,6 +832,17 @@ elseif id=='fr_condo_plant' then
   B(6.2,8.4,5,9.8,10.4,10,leaf)
   B(6.4,4.2,6.2,9.6,5,9.8,soil)
   top({5,6,6,5},5,5,11,11,10.42)
+elseif id=='fr_house_table' then
+  -- A wooden table seen at a shallow angle: splayed legs, an apron and a
+  -- thick top, so the underside reads from a low camera instead of being a
+  -- floating slab.
+  local top,apron,leg,dark=T(8,6),T(7,11),T(6,15),T(3,12)
+  for _,x in ipairs({2.5,10.5})do for _,z in ipairs({3,9})do
+   B(x,0,z,x+3,6,z+3,leg)
+  end end
+  B(2,5,3,14,6.4,12.4,apron)
+  B(1.6,6.4,2.6,14.4,7.8,12.8,top)
+  B(2.2,7.8,3.2,13.8,8,12.2,dark)
 elseif id=='fr_ruins_shelf' then
   -- Tanoby Ruins shelving: a tall case with three decks of individually offset
   -- spines and an open band, so the front never reads as one printed plane.
