@@ -70,10 +70,12 @@ return function(game)
 
   -- Map ids, in a stable order so sharding is reproducible.
   local ids = {}
-  if gen == 3 then
-    for id in pairs(game.data.maps) do ids[#ids + 1] = id end
-  else
+  -- Gen 1 and Gen 3 read game.data.maps. Only Gen 2 has a game.world object,
+  -- and treating Gen 1 as if it did indexed a nil field and swept nothing.
+  if gen == 2 then
     for id in pairs(game.world.maps) do ids[#ids + 1] = id end
+  else
+    for id in pairs(game.data.maps) do ids[#ids + 1] = id end
   end
   table.sort(ids)
   -- QA_MAPS restricts the run to an explicit id list (one per line). Used to
@@ -129,6 +131,10 @@ return function(game)
               local Perm = require('src.core.game3.permissions')
               return Perm.isWalkable(map.midLayout:collAt(cx, cy))
             end
+            if gen == 1 then
+              local Map = require('src.world.Map')
+              return Map.defIsWalkableCell(map.def, map.tileset, cx, cy)
+            end
             local Perm = require('src.world.gen2.Permissions')
             return Perm.of(tonumber(map:cellCollision(cx, cy)) or -1)
               == Perm.LAND
@@ -154,6 +160,18 @@ return function(game)
       local ok, Map = pcall(require, 'src.core.game3.map')
       if ok and Map and Map.current ~= nil then
         return tostring(Map.current) == tostring(id)
+      end
+      return nil
+    end
+    if gen == 1 then
+      -- Gen 1 lives on the scene stack (OverworldController), unlike Gen 2's
+      -- bare game.world and Gen 3's Map.current.
+      if game.stack and type(game.stack.top) == 'function' then
+        local ok, top = pcall(function() return game.stack:top() end)
+        if ok and top then
+          local got, v = pcall(function() return top.map and top.map.id end)
+          if got and v ~= nil then return tostring(v) == tostring(id) end
+        end
       end
       return nil
     end
@@ -195,6 +213,15 @@ return function(game)
             local Map = require('src.core.game3.map')
             Map.ensureMidLayout(game, id, game.data.maps[id])
             return game.data.maps[id]
+          end
+          if gen == 1 then
+            local def = game.data.maps[id]
+            local ts = (game.data.tilesets or {})[def.tileset]
+            -- Walkability for gen 1 is a def+tileset question
+            -- (Map.defIsWalkableCell), not a collision read on a live object,
+            -- so hand the cell picker the two pieces it needs.
+            return { def = def, tileset = ts, id = id,
+                     widthCells = def.width * 2, heightCells = def.height * 2 }
           end
           local Map = require('src.world.gen2.Map')
           return Map.new(game.world.maps[id], game.world.tilesets[game.world.maps[id].tileset])

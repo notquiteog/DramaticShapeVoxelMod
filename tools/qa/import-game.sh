@@ -18,14 +18,18 @@ v="$1"; limit="${2:-1800}"
 engine="${QA_ENGINE:?set QA_ENGINE to the gen1recomp root}"
 roms="${QA_ROM_DIR:?set QA_ROM_DIR to the directory holding the ROMs}"
 work="${QA_WORK:-$PWD/tmp/qa}"
+love_bin="${QA_LOVE:-love}"
 
 case "$v" in
-  crystal)   rom="$roms/PokemonCrystal(UE)(V1.1).gbc" ;;
+  red)      rom="$roms/Pokemon Red.gb" ;;
+  blue)     rom="$roms/Pokemon - Blue Version (USA, Europe) (SGB Enhanced).gb" ;;
+  yellow)   rom="$roms/PokemonYellow(UE).gbc" ;;
+  crystal)  rom="$roms/PokemonCrystal(UE)(V1.1).gbc" ;;
   gold)      rom="$roms/Pokemon - Gold Version (USA, Europe) (SGB Enhanced) (GB Compatible).gbc" ;;
   silver)    rom="$roms/Pokemon - Silver Version (USA, Europe) (SGB Enhanced) (GB Compatible).gbc" ;;
-  yellow)    rom="$roms/PokemonYellow(UE).gbc" ;;
   firered)   rom="$roms/1636 - Pokemon Fire Red (U)(Squirrels).gba" ;;
   leafgreen) rom="$roms/Pokemon - Leaf Green Version (U) (V1.1).gba" ;;
+  emerald)   rom="$roms/Pokemon - Emerald Version (USA, Europe).gba" ;;
   *) echo "unknown game: $v" >&2; exit 2 ;;
 esac
 
@@ -45,7 +49,7 @@ echo "    home: $home"
   env XDG_DATA_HOME="$home" POKEPORT_IDENTITY="iso-$v-qa" \
       POKEPORT_IMPORT_ROM="$rom" POKEPORT_IMPORT_ONLY=1 \
       timeout -k 20 "$limit" xvfb-run -a stdbuf -oL -eL \
-      love . --developer --no-sync ) > "$log" 2>&1
+      "$love_bin" . --developer --no-sync ) > "$log" 2>&1
 echo "    exit: $?    log: $log"
 
 maps="$home/love/iso-$v-qa/$v/data/generated/maps.lua"

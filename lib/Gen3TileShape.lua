@@ -5,6 +5,37 @@
 local V=...
 local M={}
 local profiles=V and V.require('Gen3InteriorProfiles') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3InteriorProfiles.lua')
+
+-- The tables below are FIRERED/LEAFGREEN metatile numbers. They are looked up
+-- by bare `mid` inside the primary=='general' branch, with no `secondary`
+-- scoping, because in FRLG those numbers are unique across the pair.
+-- Another Gen 3 cart has its own metatile numbering, so the same numbers mean
+-- unrelated art there -- and these tables EXTRUDE (cliff=32px, tree, fence,
+-- ledge) rather than merely mis-colour. Emerald's General tileset lands inside
+-- 104-125, so without this gate unrelated art would be lifted off the floor.
+--
+-- The gate must fire ONLY for a Gen 3 cart that is not FRLG. It deliberately
+-- stays permissive when the cart names another GENERATION: the engine harness
+-- defaults GameVersion.current to "red", and the Gen 3 suites exercise these
+-- tables under that default. Narrowing on the version name alone broke
+-- gen3_outdoor_test under tools/run_tests.sh with an engine root, while the
+-- same test passes standalone.
+local FRLG_CARTS = { firered = true, leafgreen = true }
+local function firlgMetatileIds()
+  local ok, Generation = pcall(function() return V and V.require and V.require('Generation') end)
+  if not (ok and Generation and Generation.version) then return true end
+  local got, id = pcall(Generation.version)
+  if not got or type(id) ~= 'string' then return true end
+  if FRLG_CARTS[id] then return true end
+  -- A non-FRLG Gen 3 cart: the numbering genuinely differs, so stand down.
+  local genOK, GenerationNumber = pcall(function()
+    return Generation.number and Generation.number()
+  end)
+  if genOK and GenerationNumber == 3 then return false end
+  return true
+end
+
+
 local trees={ [0x00A]=true,[0x00B]=true,[0x00C]=true,[0x00E]=true,[0x00F]=true,[0x013]=true }
 for _,start in ipairs({0x014,0x01C,0x024}) do for i=0,3 do trees[start+i]=true end end
 local roots={ [0x014]=true,[0x016]=true,[0x024]=true,[0x026]=true }
@@ -129,13 +160,17 @@ function M.of(primary,secondary,mid,behavior,collision)
  end
  if primary=='general' then
   if localProps[secondary] and localProps[secondary][mid] then return localProps[secondary][mid]end
-  if cliffs[mid] then return {kind='cliff',height=32,ground=1}end
-  if fences[mid] or ledges[mid] or plants[mid] then return fences[mid] or ledges[mid] or plants[mid] end
-  if trees[mid] then return {kind='tree',root=roots[mid],ground=1} end
+  -- FRLG-numbered shapes only. Another Gen 3 cart shares these numbers with
+  -- unrelated artwork, so on a non-FRLG cart the floor stays flat instead of
+  -- being extruded into cliffs/trees/fences/ledges it never was.
+  local firlg = firlgMetatileIds()
+  if firlg and cliffs[mid] then return {kind='cliff',height=32,ground=1}end
+  if firlg and (fences[mid] or ledges[mid] or plants[mid]) then return fences[mid] or ledges[mid] or plants[mid] end
+  if firlg and trees[mid] then return {kind='tree',root=roots[mid],ground=1} end
   if mid==2 then return {kind='sign',height=12,ground=1} end
   if mid==3 then return {kind='sign',height=12,ground=1} end
-  if surfaces[mid] then return {kind='flat',reviewedSurface=true} end
-  if common[mid] then return {kind=common[mid],ground=1} end
+  if firlg and surfaces[mid] then return {kind='flat',reviewedSurface=true} end
+  if firlg and common[mid] then return {kind=common[mid],ground=1} end
   if secondary=='viridian_city' and viridian[mid] then return {kind=viridian[mid],ground=1} end
  end
  if secondary=='pallet_town' and pallet[mid] then

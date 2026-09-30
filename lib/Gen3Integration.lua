@@ -169,6 +169,15 @@ function M.install()
  mod.exports.battlePresentation={modernUIEnabled=V.require('ModernBattleUI').enabled,
   nativeHudOwned=function()return BattleStage.active and V.require('ModernBattleUI').enabled()end}
  mod.exports.firered={camera=M,outdoor=true,battles=BattleStage,presentation='beta'}
+ -- Emerald shares this entire pipeline -- the camera, the battle stage and the
+ -- presentation flags are all lineage-generic -- but the namespace was named
+ -- after one cart, so a companion booting on Emerald found no Gen 3 namespace
+ -- and fell back to no camera. Publish the same table under every Gen 3 cart
+ -- id rather than renaming: eleven test drivers reach for exports.firered.
+ local gen3Namespace=mod.exports.firered
+ for _,cart in ipairs{'emerald'}do mod.exports[cart]=gen3Namespace end
+ -- ...and once under the durable, cart-neutral name.
+ mod.exports.gen3=gen3Namespace
  print('[Battle Art FireRed] native field and battle background adapters installed')
 end
 return M
