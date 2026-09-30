@@ -771,6 +771,66 @@ elseif id=='fr_elite_pedestal' then
   B(8.8,7,5.6,9.4,11,10.4,dark)
   top({5,6,6,6},5,5.2,11,10.8,15.02)
   front({5,8,6,5},5,6,11,14,10.01)
+elseif id=='fr_condo_bed' then
+  -- Celadon Condominiums: a bed seen end-on. Base, mattress with a raised
+  -- pillow end, a folded blanket band and side rails, so the silhouette has a
+  -- head and a foot instead of one slab.
+  local frame,mattress,blanket,pillow,dark=T(6,10),T(7,13),T(8,15),T(9,5),T(3,15)
+  B(2,0,3,14,3,13,dark)
+  B(2.6,3,3.6,13.4,4.2,12.4,frame)
+  B(3,4.2,4,13,6.2,12,mattress)
+  B(3,6.2,4,13,7.4,12,blanket)
+  B(3.6,7.4,4.6,12.4,7.8,11.4,mattress)
+  -- head end with a raised pillow
+  B(3,4.2,4,13,6.6,5.4,pillow)
+  B(2,4.2,4,3,6.6,12,frame)
+  B(13,4.2,4,14,6.6,12,frame)
+  top({3,4,10,8},3,4,13,12,7.82)
+  front({3,8,10,4},3,4,13,7.6,12.01)
+elseif id=='fr_condo_wardrobe' then
+  -- A tall case with two doors, a moulded cornice and a plinth. Built as
+  -- separate door leaves so the centre split survives an orbit.
+  local wood,shade,panel,dark=T(6,8),T(6,15),T(8,12),T(3,14)
+  B(2,0,3,14,1.4,13,dark)
+  B(2.6,1.4,3.6,13.4,2.4,12.4,shade)
+  B(3,2.4,4,13,12.6,12,wood)
+  for _,x in ipairs({3.2,8.4})do
+   B(x,3,4.2,x+4.4,11.4,11.6,panel)
+   B(x+.2,3.4,4,x+4.2,11,11.4,wood)
+  end
+  B(2.6,12.6,3.6,13.4,13.6,12.4,shade)
+  B(2,13.6,3,14,14.6,12,wood)
+  for _,x in ipairs({6.6,7.2})do B(x,5,4,x+.4,5.6,4.4,dark)end
+  top({3,4,10,8},2,3,14,12,14.62)
+elseif id=='fr_condo_kitchen' then
+  -- Counter run: worktop, plinth, a sink recess and an upper shelf. The
+  -- yellow worktop edge is picked out so it reads as a counter, not a wall.
+  local cab,work,sink,shade,dark=T(6,11),T(9,4),T(8,15),T(6,15),T(3,13)
+  B(2,0,3,14,2.4,13,dark)
+  B(2.6,2.4,3.6,13.4,4.2,12.4,cab)
+  B(2,4.2,2.6,14,5,13.4,work)
+  B(3.4,2.8,4.6,12.6,4.4,12.8,sink)
+  B(3.8,4.4,5,12.2,4.6,12.6,work)
+  for _,x in ipairs({4,9})do
+   B(x,2.6,4.2,x+3,4,4.4,dark)
+   B(x+.3,2.9,4.2,x+2.7,3.8,4.3,shade)
+  end
+  B(3,9.4,4.4,13,10,12,shade)
+  B(3,10,4.2,13,13.4,11.8,cab)
+  top({3,4,10,8},2,2.6,14,13.4,5.02)
+  front({3,10,10,3},3,5,13,13.4,11.81)
+elseif id=='fr_condo_plant' then
+  -- A potted plant for the condo corners: tapered pot, soil, and three offset
+  -- foliage tiers so the crown is a volume rather than a card.
+  local pot,soil,leaf,leaf2=T(7,13),T(4,15),T(6,5),T(9,10)
+  B(6,0,6,10,1.4,10,pot)
+  B(5.4,1.4,5.6,10.6,3.6,10.4,pot)
+  B(5.2,3.6,5.4,10.8,4.2,10.6,soil)
+  B(6,4.2,6,10,6,10,leaf)
+  B(4.6,6,4.8,11.4,8.4,10.2,leaf2)
+  B(6.2,8.4,5,9.8,10.4,10,leaf)
+  B(6.4,4.2,6.2,9.6,5,9.8,soil)
+  top({5,6,6,5},5,5,11,11,10.42)
  elseif id=='fr_gym_pillar' then
   -- A gym column: stepped plinth, fluted shaft, banded capital. Closed solids
   -- with real steps rather than one stretched texture, so the silhouette reads
