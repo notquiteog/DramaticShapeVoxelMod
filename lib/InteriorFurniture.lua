@@ -832,6 +832,23 @@ elseif id=='fr_condo_plant' then
   B(6.2,8.4,5,9.8,10.4,10,leaf)
   B(6.4,4.2,6.2,9.6,5,9.8,soil)
   top({5,6,6,5},5,5,11,11,10.42)
+elseif id=='fr_stadium_stand' then
+  -- Colosseum seating: three raked tiers with individually offset seats and a
+  -- rail along the front, so the stand steps back like a stand rather than
+  -- reading as a painted bank.
+  local frame,seat,seat2,rail,dark=T(6,10),T(7,14),T(9,15),T(8,6),T(3,12)
+  B(2,0,4,14,1.4,12,dark)
+  for i=0,2 do
+   local y=1.4+i*3.4; local z=4+i*1.2
+   B(2,y,z,14,y+1.2,z+3.4,frame)
+   -- seats, offset along the tier
+   for x=2.6,12.4,2 do
+    B(x,y+1.2,z+0.6,x+1.6,y+2.4,z+2.8,((x+i)%4<2) and seat or seat2)
+   end
+   B(2,y+1.2,z+2.8,14,y+1.6,z+3.4,rail)
+  end
+  B(2,11.6,7.6,14,12.6,11,frame)
+  B(2,12.6,7.4,14,13.4,11.2,rail)
 elseif id=='fr_slot_machine' then
   -- A slot machine: a plinth, a canted cabinet, a deep bezel around the reels
   -- and a lit crown marquee. The reels sit back inside the bezel so the screen

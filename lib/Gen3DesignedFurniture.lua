@@ -141,6 +141,12 @@ function M.install(recipes)
  add('corner_slot_b','building__rom_082d4cec',{{0x2b9}},'fr_slot_machine',1)
  add('corner_slot_c','building__rom_082d4cec',{{0x2ba}},'fr_slot_machine',1)
  add('corner_slot_d','building__rom_082d4cec',{{0x2bb}},'fr_slot_machine',1)
+ -- Battle Colosseum, building__rom_082d4c44, 4 maps. Seating at 0x30a
+ -- (upper tier) and 0x2f6/0x2fa (lower), read off the native sheet against
+ -- FR_BATTLE_COLOSSEUM_2P's layout.
+ add('colosseum_stand_a','building__rom_082d4c44',{{0x30a}},'fr_stadium_stand',1)
+ add('colosseum_stand_b','building__rom_082d4c44',{{0x2f6}},'fr_stadium_stand',1)
+ add('colosseum_stand_c','building__rom_082d4c44',{{0x2fa}},'fr_stadium_stand',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
