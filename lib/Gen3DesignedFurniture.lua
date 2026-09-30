@@ -106,6 +106,12 @@ function M.install(recipes)
  -- FR_CELADON_CITY_CONDOMINIUMS_ROOF_ROOM's layout.
  add('roof_ac_unit_a','building__rom_082d4f5c',{{0x288}},'fr_roof_ac_unit',1)
  add('roof_ac_unit_b','building__rom_082d4f5c',{{0x28e}},'fr_roof_ac_unit',1)
+ -- Remaining furnished houses, all reusing fr_room_bed.
+ -- Cerulean House 2, building__rom_082d4fa4: beds at 0x14f and 0x285.
+ -- Seven Island house, building__rom_082d4e24: a bed at 0x14d.
+ add('cerulean_house_bed_a','building__rom_082d4fa4',{{0x14f}},'fr_room_bed',1)
+ add('cerulean_house_bed_b','building__rom_082d4fa4',{{0x285}},'fr_room_bed',1)
+ add('sevii_house_bed','building__rom_082d4e24',{{0x14d}},'fr_room_bed',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
