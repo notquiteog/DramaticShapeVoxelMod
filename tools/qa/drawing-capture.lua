@@ -56,14 +56,14 @@ return function(game)
   local P = nil
   if gen == 1 or gen == 2 then P = require("src.render.Pipelines") end
 
-  local function loadAt(mapId, cx, cy)
+  local function loadAt(mapId, cx, cy, facing)
     if gen == 3 then
       local Map = require("src.core.game3.map")
       if game.data and game.data.maps and game.data.maps[mapId] then
         pcall(function() Map.ensureMidLayout(game, mapId, game.data.maps[mapId]) end)
       end
       return pcall(function()
-        assert(Map.load(nil, game, mapId, { x = cx, y = cy, facing = "up" }))
+        assert(Map.load(nil, game, mapId, { x = cx, y = cy, facing = facing or "up" }))
       end)
     elseif gen == 2 then
       local w = game.world
@@ -76,10 +76,81 @@ return function(game)
     else
       local ok = pcall(function()
         if game.stack then game.stack:clear() end
-        game.stack:push(require("src.world.OverworldController"), mapId, cx, cy, "up")
+        game.stack:push(require("src.world.OverworldController"), mapId, cx, cy, facing or "up")
       end)
       return ok
     end
+  end
+
+  -- Stand NEXT TO the drawing, not on it.
+  --
+  -- The census records the cell the drawing occupies, and for anything that is
+  -- not floor -- every wall, tree, fence, ledge, sign -- that cell is by
+  -- definition not walkable. Standing there puts the first-person camera
+  -- inside the geometry and the frame comes back empty apart from the HUD.
+  -- That produced 509 false "renders nothing" readings across Crystal's 1864
+  -- drawings; OLIVINE_LIGHTHOUSE_2F is the clearest case, and the per-map sweep
+  -- of that same map shows a correctly rendered room.
+  --
+  -- So: find the nearest walkable cell and aim the camera at the drawing.
+  local function viewpoint(mapId, tx, ty)
+    local map = nil
+    local walkable
+    if gen == 3 then
+      local Map = require("src.core.game3.map")
+      local def = game.data and game.data.maps and game.data.maps[mapId]
+      if def then pcall(function() Map.ensureMidLayout(game, mapId, def) end) end
+      local Perm = require("src.core.game3.permissions")
+      local L = def and def.midLayout
+      walkable = function(x, y)
+        if not L then return false end
+        local ok, c = pcall(function() return L:collAt(x, y) end)
+        return ok and Perm.isWalkable(c)
+      end
+    elseif gen == 2 then
+      local G2 = require("src.world.gen2.Map")
+      local def = game.world and game.world.maps and game.world.maps[mapId]
+      local ts = def and game.world.tilesets[def.tileset]
+      if def and ts then pcall(function() map = G2.new(def, ts) end) end
+      local Perm = require("src.world.gen2.Permissions")
+      walkable = function(x, y)
+        if not map then return false end
+        local ok, c = pcall(function() return map:cellCollision(x, y) end)
+        return ok and Perm.of(tonumber(c) or -1) == Perm.LAND
+      end
+    else
+      local G1 = require("src.world.Map")
+      local def = game.data and game.data.maps and game.data.maps[mapId]
+      local ts = def and (game.data.tilesets or {})[def.tileset]
+      if def then pcall(function() map = { def = def, tileset = ts } end) end
+      walkable = function(x, y)
+        if not def then return false end
+        local ok, v = pcall(function() return G1.defIsWalkableCell(def, ts, x, y) end)
+        return ok and v
+      end
+    end
+
+    -- Spiral outward, preferring cells adjacent to the drawing.
+    local best
+    for radius = 0, 5 do
+      for dy = -radius, radius do
+        for dx = -radius, radius do
+          if math.max(math.abs(dx), math.abs(dy)) == radius then
+            local x, y = tx + dx, ty + dy
+            if walkable(x, y) then
+              local d = dx * dx + dy * dy
+              -- prefer being BELOW the drawing: looking up puts the wall in frame
+              if dx == 0 and dy > 0 then return x, y, "down" end
+              if not best or d < best.d then best = { x = x, y = y, d = d, dx = dx, dy = dy } end
+            end
+          end
+        end
+      end
+      if best then
+        return best.x, best.y, (best.dy > 0 and "up" or (best.dx < 0 and "right" or "left"))
+      end
+    end
+    return tx, ty, "up"
   end
 
   local done, skipped, failed = 0, 0, 0
@@ -92,8 +163,9 @@ return function(game)
     local f = io.open(file, "rb")
     if f then f:close(); skipped = skipped + 1
     else
+      local vx, vy, facing = viewpoint(r.map, r.x, r.y)
       if currentMap ~= r.map then
-        if not loadAt(r.map, r.x, r.y) then failed = failed + 1 end
+        if not loadAt(r.map, vx, vy, facing) then failed = failed + 1 end
         currentMap = r.map
         for _ = 1, 8 do U.wait(1) end
       end
