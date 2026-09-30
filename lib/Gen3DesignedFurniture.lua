@@ -59,14 +59,20 @@ function M.install(recipes)
  -- Celadon Condominiums, building__rom_082d4f8c, 4 maps and no recipe. A
  -- genuinely furnished interior: kitchen runs, beds, wardrobes and plants, all
  -- read off the native sheet against FR_CELADON_CITY_CONDOMINIUMS_1F's layout.
- add('condo_bed_a','building__rom_082d4f8c',{{0x289}},'fr_condo_bed',1)
- add('condo_bed_b','building__rom_082d4f8c',{{0x28c}},'fr_condo_bed',1)
+ add('room_bed_a','building__rom_082d4f8c',{{0x289}},'fr_room_bed',1)
+ add('room_bed_b','building__rom_082d4f8c',{{0x28c}},'fr_room_bed',1)
  add('condo_wardrobe_a','building__rom_082d4f8c',{{0x290}},'fr_condo_wardrobe',1)
  add('condo_wardrobe_b','building__rom_082d4f8c',{{0x291}},'fr_condo_wardrobe',1)
  add('condo_wardrobe_c','building__rom_082d4f8c',{{0x294}},'fr_condo_wardrobe',1)
  add('condo_kitchen_a','building__rom_082d4f8c',{{0x283}},'fr_condo_kitchen',1)
  add('condo_kitchen_b','building__rom_082d4f8c',{{0x285}},'fr_condo_kitchen',1)
  add('condo_plant','building__rom_082d4f8c',{{0x2a1}},'fr_condo_plant',1)
+ -- Celadon Hotel, building__rom_082d4f44. The room beds are the same drawing
+ -- as the Condominiums', so they reuse that design rather than duplicating it.
+ add('hotel_bed_a','building__rom_082d4f44',{{0x28e}},'fr_room_bed',1)
+ add('hotel_bed_b','building__rom_082d4f44',{{0x29d}},'fr_room_bed',1)
+ add('hotel_bed_c','building__rom_082d4f44',{{0x29f}},'fr_room_bed',1)
+ add('hotel_bed_d','building__rom_082d4f44',{{0x2a3}},'fr_room_bed',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true

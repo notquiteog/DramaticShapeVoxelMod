@@ -771,8 +771,9 @@ elseif id=='fr_elite_pedestal' then
   B(8.8,7,5.6,9.4,11,10.4,dark)
   top({5,6,6,6},5,5.2,11,10.8,15.02)
   front({5,8,6,5},5,6,11,14,10.01)
-elseif id=='fr_condo_bed' then
-  -- Celadon Condominiums: a bed seen end-on. Base, mattress with a raised
+elseif id=='fr_room_bed' then
+  -- A room bed seen end-on. First authored for the Celadon Condominiums and
+  -- reused by the Celadon Hotel, which draws the same furniture. Base, mattress with a raised
   -- pillow end, a folded blanket band and side rails, so the silhouette has a
   -- head and a foot instead of one slab.
   local frame,mattress,blanket,pillow,dark=T(6,10),T(7,13),T(8,15),T(9,5),T(3,15)
