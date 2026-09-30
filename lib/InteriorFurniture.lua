@@ -690,6 +690,31 @@ function M.draw(id,A)
   B(3,0,9,29,4,29,case);B(2,4,8,30,6,30,case)
   top({2,7,28,21},2,10,30,29,6.02)
   B(4,6,16,28,12,19,case);front({4,0,24,7},4,6,28,12,19.02)
+elseif id=='fr_lab_centrifuge' then
+  -- Oak's lab bank: a 3x2 cabinet run whose six source cells are each half a
+  -- machine, so it is built as real geometry rather than one stretched drawing.
+  -- Blue case, recessed orange canister, a lit control strip and a plinth, all
+  -- inside the native footprint.
+  local case,shade,orange,glass=T(6,10),T(6,18),T(9,3),T(4,14)
+  B(1,0,4,46,3,20,T(3,20))
+  B(2,3,5,45,5,19,case)
+  B(3,5,6,44,20,18,shade)
+  -- three canisters across the top course
+  for _,x in ipairs({4,18,32})do
+   B(x,8,7,x+11,17,15,case)
+   B(x+1.5,9.5,7.4,x+9.5,15.5,8.2,orange)
+   B(x+2,11,7.2,x+9,14,8,orange)
+  end
+  -- lower course: doors and a lit strip
+  for _,x in ipairs({4,18,32})do
+   B(x,4.5,7,x+11,7.5,15,glass)
+   B(x+1,5,6.6,x+10,7.2,15.6,case)
+  end
+  B(3,17.5,6,44,18.5,18,orange)
+  for x=5,42,3 do B(x,18.6,6.4,x+1.2,19.6,17.6,case)end
+  front({2,6,44,12},2,0,45,3,20.02)
+  B(2,19.5,5,44,21,19,case)
+  top({2,5,44,14},2,4,45,20,21.02)
  elseif id=='fr_gym_pillar' then
   -- A gym column: stepped plinth, fluted shaft, banded capital. Closed solids
   -- with real steps rather than one stretched texture, so the silhouette reads

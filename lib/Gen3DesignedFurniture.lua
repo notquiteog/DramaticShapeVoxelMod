@@ -38,6 +38,11 @@ function M.install(recipes)
  add('living_cupboard','player_house',{{0x2e,0x2f},{0x36,0x37},{0x3e,0x3f}},'fr_cupboard')
  add('neighbor_wall_picture','house',{{0x184},{0x185}},'fr_wall_picture')
  add('lab_complete_books','oak_lab',{{0x73,0x74},{0x283,0x284}},'fr_lab_books',0x289)
+ -- Oak's lab machine bank: a clean 3x2 run of cabinet halves, each pair a
+ -- distinct machine. Identified off the native sheet for oak_lab, where
+ -- 0x2ed-0x2f2 are blue cases carrying orange canisters.
+ add('lab_centrifuge_bank','oak_lab',{
+  {0x2ed,0x2ee,0x2ef},{0x2f0,0x2f1,0x2f2}},'fr_lab_centrifuge',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
