@@ -63,27 +63,46 @@ All nine games: every map, both cameras, **0 refused, 0 unverified** by the
 scene-graph gate (`game.world.map.id` for gen 1/2, `src.core.game3.map.current`
 for gen 3). No battle splashes and no title cards anywhere in the final runs.
 
-## Per-drawing results — Crystal complete
+## Per-drawing results
 
-1,864 drawings, each rendered in isolation and scored on uniformity with the HUD
-masked out:
+Every distinct drawing rendered in isolation, both games' worth of cameras,
+scored on uniformity with the HUD masked out. `FLAT` is the failure this project
+exists to catch — a subject that draws as one untextured plane.
 
-| Class | Count | Share | Cells |
-| --- | --- | --- | --- |
-| OK — real 3D art | 1,838 | 98.6% | 145,856 |
-| EMPTY — nothing drawn | 0 | 0.0% | 0 |
-| FLAT — a flat card | 26 | 1.4% | 1,644 |
+| Game | Drawings | OK | Empty | Flat | Defect cells | Share of cells |
+| --- | --- | --- | --- | --- | --- | --- |
+| red | 1,194 | 1,192 (99.9%) | 1 | 1 | 96 | 0.1% |
+| blue | 1,194 | 1,192 (99.9%) | 1 | 1 | 96 | 0.1% |
+| yellow | 1,209 | 1,207 (99.9%) | 1 | 1 | 96 | 0.1% |
+| gold | 1,466 | 1,453 (99.1%) | 0 | 13 | 1,588 | 1.1% |
+| silver | 1,466 | 1,441 (98.3%) | 0 | 25 | 604 | 0.4% |
+| crystal | 1,864 | 1,838 (98.6%) | 0 | 26 | 1,644 | 1.1% |
+| firered | 11,060 | 11,060 (100%) | 0 | 0 | 0 | 0% |
+| leafgreen | 11,056 | 11,056 (100%) | 0 | 0 | 0 | 0% |
+| emerald | *rendering* | | | | | |
 
-**Crystal is 98.6% covered and the 26 flat drawings are a real defect, verified
-in both camera modes.** `MAHOGANY_MART_1F` was checked first- and third-person:
-`TILESET_TRADITIONAL_HOUSE` walls render as an untextured plane over an
-untextured floor — exactly the "flat printed card" failure this project exists to
-avoid. The one block that *is* reviewed (`Gen2FloorFinish.lua:11`, block 4,
-tatami) is itself among the flat readings, so the finish is not contributing
-visible variation.
+**30,519 drawings scored, 30,439 OK (99.7%), 5,120 defective cell instances of
+~2.4M (0.2%).**
 
-The 26 are 25 × `TILESET_TRADITIONAL_HOUSE` plus `TILESET_GATE__39` (1,040 cells,
-the single largest). Gen 2 shows the same family in gold (13) and silver (25).
+### What "100%" does and does not mean
+
+FireRed and LeafGreen score a clean 100%, and that is not the same as authored
+voxel art. The metric only detects *empty* and *flat* frames. Gen 3 renders
+**native tile art extruded in 3D**, which is correctly modulated and scores OK
+even though no Emerald-specific profile exists. See "Open defect families".
+
+### The flat family, confirmed in both cameras
+
+`MAHOGANY_MART_1F` was checked first- and third-person: `TILESET_TRADITIONAL_HOUSE`
+walls render as an untextured plane over an untextured floor. The one block that
+*is* reviewed (`Gen2FloorFinish.lua:11`, block 4, tatami) is itself among the
+flat readings, so the finish contributes no visible variation. The family is
+25 blocks in Crystal, 12 in Gold, 13 in Silver, plus `TILESET_GATE__39`
+(1,040 cells) and `TILESET_TOWER__1` (1,412 cells in Gold) — the largest single
+defects in Gen 2.
+
+Gen 1's remaining 1 empty and 1 flat per game are `OVERWORLD` / `GYM` blocks in
+city maps; the blank-frame retry in the harness removed the other 30-38 per game.
 
 ## Open defect families
 
