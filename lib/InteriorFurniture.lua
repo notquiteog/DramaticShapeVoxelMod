@@ -690,6 +690,110 @@ function M.draw(id,A)
   B(3,0,9,29,4,29,case);B(2,4,8,30,6,30,case)
   top({2,7,28,21},2,10,30,29,6.02)
   B(4,6,16,28,12,19,case);front({4,0,24,7},4,6,28,12,19.02)
+ elseif id=='fr_gym_pillar' then
+  -- A gym column: stepped plinth, fluted shaft, banded capital. Closed solids
+  -- with real steps rather than one stretched texture, so the silhouette reads
+  -- from any orbit the way the native drawing's does head-on.
+  local stone,shade,dark=T(9,12),T(9,20),T(4,26)
+  B(6,0,6,26,4,26,dark);B(7,4,7,25,6,25,stone);B(8,6,8,24,7,24,dark)
+  for x=9,23,3 do B(x,7,8.2,x+1,28,8.6,shade)end
+  for x=9,22,3 do B(x,28,7.4,x+1.6,29.4,8.6,shade)end
+  B(9,29,7,23,30,9,stone)
+  B(7,30,6,25,32,10,shade);B(8,32,7,24,33,9,dark)
+  B(8,0,6,24,33,7,shade);B(8,0,6,7,33,26,dark);B(25,0,6,26,33,26,dark)
+  top({8,8,16,16},8,6,24,26,33.02)
+ elseif id=='fr_gym_platform' then
+  -- The raised battle floor: two treads and a matted top, with the nosing
+  -- picked out so the step edge survives a flat-lit scene.
+  local deck,lip,dark=T(12,10),T(12,22),T(6,26)
+  B(1,0,1,30,3,22,dark);B(1,3,1,30,5,20,lip)
+  B(2,5,2,29,7,19,deck)
+  top({2,8,27,17},2,2,29,19,7.02)
+  B(1,7,1,2,7.4,20,lip);B(29,7,1,30,7.4,20,lip)
+ elseif id=='fr_vending_machine' then
+  -- Cabinet, recessed glass with three product shelves, a lit header band and
+  -- the dispenser tray at the foot. The glass is a single dark inset so the
+  -- products inside read as depth rather than a printed panel.
+  local case,dark,glass=T(5,8),T(3,14),T(2,20)
+  local hdr=T(6,3)
+  B(3,0,5,29,3,19,dark);B(4,3,6,28,5,18,case)
+  B(5,5,7,27,22,8,glass)
+  for _,y in ipairs({8,13,18})do B(5,y,6.4,27,y+.8,7.6,case)end
+  -- products: staggered blocks on each shelf, not a printed row
+  for _,y in ipairs({8,13,18})do for x=6,25,3 do
+   local h=(x%2==0) and 2.4 or 1.6
+   B(x,y,6.6,x+2,y+h,7.4,hdr)
+  end end
+  front({5,10,22,12},5,5,27,22,8.02)
+  B(4,25,6,28,28,18,hdr)
+  front({4,28,24,4},4,25,28,28,18.02)
+  B(8,3,19,24,5,19.4,dark);front({8,24,16,3},8,3,24,5,19.42)
+ elseif id=='fr_mart_shelf_rack' then
+  -- Goods racking. Uprights, three decks and individually offset stock, so the
+  -- shelf front never reads as one repeated wallpaper plane.
+  local frame,deck,goods=T(7,9),T(7,20),T(9,3)
+  for _,x in ipairs({2,30})do B(x,0,4,x+2,26,18,frame)end
+  B(2,0,4,32,1.2,5,deck);B(2,0,17,32,18.2,18,deck)
+  for _,y in ipairs({1.2,9.4,17})do
+   B(3,y,5,31,y+1,17,deck)
+   for x=4,29,3 do
+    local h=((x+y)%3==0) and 3.2 or 2.2
+    B(x,y+1,6,x+2,y+h,16,goods)
+   end
+  end
+  top({2,5,30,12},2,4,32,18,26.02)
+ elseif id=='fr_cafe_table' then
+  -- Round cafe table: pedestal column, splayed foot, rimmed top.
+  local top_m,stem,dark=T(11,9),T(9,16),T(5,20)
+  B(7,0,7,25,2,25,dark)
+  for _,d in ipairs({0,1})do B(10+d*3,2,10+d*3,22-d*3,3,22-d*3,dark)end
+  B(14,2,14,18,9,18,stem)
+  B(11,9,11,21,11,21,top_m)
+  top({10,10,12,12},11,11,21,21,11.02)
+  B(10,10.4,13,22,11,17,stem)
+ elseif id=='fr_office_chair' then
+  -- Swivel chair: five-star base, gas column, contoured seat and a padded back
+  -- that leans away from the seat rather than standing vertical behind it.
+  local frame,seat,dark=T(6,8),T(9,11),T(4,19)
+  for i=0,4 do
+   local a=i*(math.pi*2/5)
+   local cx,cz=16+math.cos(a)*7,16+math.sin(a)*7
+   B(cx-1.6,.6,cz-1.6,cx+1.6,2.4,cz+1.6,frame)
+  end
+  B(14.5,2,14.5,17.5,8,17.5,dark)
+  B(9,8,9,23,10.6,23,seat)
+  B(10,10.6,12,22,12,21,seat)
+  top({10,13,12,8},10,9,22,23,12.02)
+  B(10,12,22,25,23,seat)
+  B(9.4,14,22.2,25,23,frame)
+ elseif id=='fr_potted_plant' then
+  -- Tapering pot, a soil lip, and three offset foliage tiers so the crown is a
+  -- volume with a silhouette instead of a card.
+  local pot,soil,leaf,leaf2=T(8,14),T(4,20),T(6,4),T(9,9)
+  B(9,0,9,23,2,23,pot)
+  B(8,2,8,24,7,24,pot)
+  B(7.6,7,7.6,24.4,8,24.4,soil)
+  B(8,6.6,8,24,7.6,24,soil)
+  B(10,8,10,22,12,22,leaf)
+  B(7,11,7,25,15,25,leaf2)
+  B(9,14,9,23,17,23,leaf)
+  B(11,8.6,11,21,9.4,21,soil)
+  top({8,9,16,13},8,8,24,24,17.02)
+ elseif id=='fr_bookshelf_tall' then
+  -- Full-height case with four decks and individually offset spines, and an
+  -- open shelf band so it does not read as one solid slab.
+  local wood,spine,dark=T(5,7),T(8,12),T(3,18)
+  B(2,0,4,32,1.6,18,dark);B(2,0,4,3.4,32,18,wood);B(30.6,0,4,32,32,18,wood)
+  B(2,32,4,32,33.6,18,wood);B(2,0,4,32,33.6,5.6,wood)
+  for _,y in ipairs({1.6,10,18.4,26.8})do
+   B(3.4,y,5,30.6,y+1,17,wood)
+   for x=4,29,2 do
+    local h=2+((x*7+y*3)%5)
+    B(x,y+1,5.4,x+1.6,y+1+h,16.6,spine)
+   end
+  end
+  B(2,0,4,32,33.6,18,wood)
+  top({3,5,29,12},2,4,32,18,33.62)
  else return false end
  return true
 end
