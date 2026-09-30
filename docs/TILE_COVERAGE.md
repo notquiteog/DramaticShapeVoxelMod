@@ -65,44 +65,62 @@ for gen 3). No battle splashes and no title cards anywhere in the final runs.
 
 ## Per-drawing results
 
-Every distinct drawing rendered in isolation, both games' worth of cameras,
-scored on uniformity with the HUD masked out. `FLAT` is the failure this project
-exists to catch — a subject that draws as one untextured plane.
+Every distinct drawing rendered in isolation, in every game, scored on
+uniformity with the HUD masked out.
 
-| Game | Drawings | OK | Empty | Flat | Defect cells | Share of cells |
-| --- | --- | --- | --- | --- | --- | --- |
-| red | 1,194 | 1,192 (99.9%) | 1 | 1 | 96 | 0.1% |
-| blue | 1,194 | 1,192 (99.9%) | 1 | 1 | 96 | 0.1% |
-| yellow | 1,209 | 1,207 (99.9%) | 1 | 1 | 96 | 0.1% |
-| gold | 1,466 | 1,453 (99.1%) | 0 | 13 | 1,588 | 1.1% |
-| silver | 1,466 | 1,441 (98.3%) | 0 | 25 | 604 | 0.4% |
-| crystal | 1,864 | 1,838 (98.6%) | 0 | 26 | 1,644 | 1.1% |
-| firered | 11,060 | 11,060 (100%) | 0 | 0 | 0 | 0% |
-| leafgreen | 11,056 | 11,056 (100%) | 0 | 0 | 0 | 0% |
-| emerald | *rendering* | | | | | |
+| Game | Drawings | Pass screen | Empty | Flat | Defect cells |
+| --- | --- | --- | --- | --- | --- |
+| red | 1,194 | 1,192 | 1 | 1 | 96 |
+| blue | 1,194 | 1,192 | 1 | 1 | 96 |
+| yellow | 1,209 | 1,207 | 1 | 1 | 96 |
+| gold | 1,466 | 1,453 | 0 | 13 | 1,588 |
+| silver | 1,466 | 1,441 | 0 | 25 | 604 |
+| crystal | 1,864 | 1,838 | 0 | 26 | 1,644 |
+| firered | 11,060 | 11,060 | 0 | 0 | 0 |
+| leafgreen | 11,056 | 11,056 | 0 | 0 | 0 |
+| emerald | 13,262 | 13,262 | 0 | 0 | 0 |
+| **total** | **43,775** | **43,760** | **3** | **65** | **4,124** |
 
-**30,519 drawings scored, 30,439 OK (99.7%), 5,120 defective cell instances of
-~2.4M (0.2%).**
+4,124 defective cell instances of ~3.19M (0.13%). Every drawing is captured
+under `results/draw/<game>/<map>/<tileset>::<block>-1p.png`.
 
-### What "100%" does and does not mean
+### THIS TABLE IS NOT A QUALITY VERDICT
 
-FireRed and LeafGreen score a clean 100%, and that is not the same as authored
-voxel art. The metric only detects *empty* and *flat* frames. Gen 3 renders
-**native tile art extruded in 3D**, which is correctly modulated and scores OK
-even though no Emerald-specific profile exists. See "Open defect families".
+It is a screen for *empty* and *flat* frames. It cannot tell authored voxel art
+from extruded native art, and it has been caught passing visibly bad frames:
+`MAHOGANY_MART_1F` passes every threshold here and is still a bare wall over a
+bare floor in both cameras. Six different metrics were tried — void fraction,
+dark fraction, dominant-colour share, flat mid-band, ink coverage and local
+gradient — and each caught some frames and passed others.
 
-### The flat family, confirmed in both cameras
+**Judge by opening the image.** The table tells you where to look, not what you
+will find.
 
-`MAHOGANY_MART_1F` was checked first- and third-person: `TILESET_TRADITIONAL_HOUSE`
-walls render as an untextured plane over an untextured floor. The one block that
-*is* reviewed (`Gen2FloorFinish.lua:11`, block 4, tatami) is itself among the
-flat readings, so the finish contributes no visible variation. The family is
-25 blocks in Crystal, 12 in Gold, 13 in Silver, plus `TILESET_GATE__39`
-(1,040 cells) and `TILESET_TOWER__1` (1,412 cells in Gold) — the largest single
-defects in Gen 2.
+### Where the 68 defects actually are
 
-Gen 1's remaining 1 empty and 1 flat per game are `OVERWORLD` / `GYM` blocks in
-city maps; the blank-frame retry in the harness removed the other 30-38 per game.
+- **Gen 2 `TILESET_TRADITIONAL_HOUSE`** — ~25 per game. The room shell pinned
+  one texel per wall face, so walls were flat colour. Fixed (`8a9f51b`), which
+  also revealed that `Gen2FloorFinish`'s tatami finish had been buried under it.
+- **`TILESET_TOWER__1` / `TILESET_GATE::39`** — the largest single items at
+  1,412 and 1,040 cells. The lid they sit on was one flat texel; fixed
+  (`69992d2`).
+- **Gen 1 `OVERWORLD`/`GYM` city blocks** — 2 per game.
+
+### Interiors that need no authoring at all
+
+`TILESET_RUINS_OF_ALPH` has **zero** authored props in either table, and it
+renders well: the Unown glyph wall reads as 3D blocks, the floor panels have real
+divisions, the pillar has volume. Pattern-based rooms are served by the generic
+shape-plus-extrusion path. Counting authored props per tileset is therefore a
+poor measure of coverage — a room can have no props and be excellent.
+
+### Gen 3 has no cart-specific art
+
+FireRed, LeafGreen and Emerald all score clean because they render **native tile
+art extruded in 3D**, which is correctly modulated. `Gen3TileShape` carries ~330
+FireRed metatile ids and `Gen3Tilesets` maps 425 `FR_` map ids; none apply to
+Emerald's numbering. Emerald's 13,262 drawings are unauthored — that is the real
+remaining work, and no metric here can detect it.
 
 ## Open defect families
 
