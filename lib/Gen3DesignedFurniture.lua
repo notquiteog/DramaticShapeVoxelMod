@@ -51,6 +51,11 @@ function M.install(recipes)
  add('rocket_hazard_cabinet_b','general__rom_082d501c',{{0x28a}},'fr_rocket_hazard_cabinet',1)
  add('rocket_console','general__rom_082d501c',{{0x282}},'fr_rocket_console',1)
  add('rocket_console_b','general__rom_082d501c',{{0x283}},'fr_rocket_console',1)
+ -- Elite Four chambers, building__rom_082d50c4: 317 distinct metatiles over 5
+ -- maps and no recipe at all. 0x2a1 is the single cell that breaks the floor
+ -- pattern -- the chamber's centrepiece -- read off the native sheet and
+ -- confirmed against FR_POKEMON_LEAGUE_AGATHAS_ROOM's own midLayout.
+ add('elite_pedestal','building__rom_082d50c4',{{0x2a1}},'fr_elite_pedestal',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true

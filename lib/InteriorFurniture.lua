@@ -749,6 +749,28 @@ elseif id=='fr_rocket_console' then
   B(5,11,4.4,26,12.6,15.2,screen)
   B(3,15,4,29,15,16,shade)
   top({3,5,13,9},2,3,30,17,18.02)
+elseif id=='fr_elite_pedestal' then
+  -- The Elite Four chamber's centrepiece (0x2a1 on building__rom_082d50c4):
+  -- a stepped stone plinth carrying a carved marker. It is the one cell in the
+  -- room that breaks the floor pattern, and the native drawing is a tall
+  -- frontal slab -- so it is built as a base, two treads and an upright with a
+  -- cap rather than one extruded plane. Everything stays inside one 16px cell.
+  local stone,lit,shade,dark=T(7,4),T(9,6),T(6,12),T(4,14)
+  B(2,0,3,14,1.6,13,dark)
+  B(2.6,1.6,3.6,13.4,3.2,12.4,stone)
+  B(3.4,3.2,4,12.6,4.6,12,shade)
+  B(4,4.6,4.6,12,6,11.4,stone)
+  -- upright marker, tapered
+  B(5,6,5.2,11,12,10.8,stone)
+  B(5.6,12,5.8,10.4,13.2,10.2,lit)
+  B(5.8,13.2,6,10.2,14,10,shade)
+  B(6,14,6.2,10,15,9.8,lit)
+  B(6.4,6,5.4,7.4,12,10.6,lit)
+  B(8.6,6,5.4,9.6,12,10.6,shade)
+  B(6.6,7,5.6,7.2,11,10.4,dark)
+  B(8.8,7,5.6,9.4,11,10.4,dark)
+  top({5,6,6,6},5,5.2,11,10.8,15.02)
+  front({5,8,6,5},5,6,11,14,10.01)
  elseif id=='fr_gym_pillar' then
   -- A gym column: stepped plinth, fluted shaft, banded capital. Closed solids
   -- with real steps rather than one stretched texture, so the silhouette reads
