@@ -112,6 +112,12 @@ function M.install(recipes)
  add('cerulean_house_bed_a','building__rom_082d4fa4',{{0x14f}},'fr_room_bed',1)
  add('cerulean_house_bed_b','building__rom_082d4fa4',{{0x285}},'fr_room_bed',1)
  add('sevii_house_bed','building__rom_082d4e24',{{0x14d}},'fr_room_bed',1)
+ -- Saffron Gym, building__rom_082d4d64. A switch console at 0x2a7 and low
+ -- round plinths at 0x293/0x294, read off the native sheet against
+ -- FR_SAFFRON_CITY_GYM's layout.
+ add('gym_switch_panel','building__rom_082d4d64',{{0x2a7}},'fr_gym_switch_panel',1)
+ add('gym_disc_a','building__rom_082d4d64',{{0x293}},'fr_gym_disc',1)
+ add('gym_disc_b','building__rom_082d4d64',{{0x294}},'fr_gym_disc',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true

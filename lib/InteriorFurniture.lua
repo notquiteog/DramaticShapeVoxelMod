@@ -832,6 +832,38 @@ elseif id=='fr_condo_plant' then
   B(6.2,8.4,5,9.8,10.4,10,leaf)
   B(6.4,4.2,6.2,9.6,5,9.8,soil)
   top({5,6,6,5},5,5,11,11,10.42)
+elseif id=='fr_gym_switch_panel' then
+  -- The gym switch panel: a canted console on a plinth, with a grid of
+  -- individually raised buttons and a lamp strip above them. The native art is
+  -- a flat panel of squares; the raised buttons and the raked face are what
+  -- make it read as a console.
+  local body,shade,button,dark,lamp=T(6,10),T(6,15),T(9,4),T(3,12),T(9,8)
+  B(2,0,4,14,2,12,dark)
+  B(2.6,2,4.6,13.4,3,11.4,shade)
+  B(3,3,4.6,13,4.6,10.8,body)
+  -- raked face carrying a 3x4 button grid
+  B(3,4.6,4.4,13,8,10.6,shade)
+  for row=0,2 do for col=0,3 do
+   local x=3.8+col*2.3; local y=5+row*1.1
+   B(x,y,4.2,x+1.7,y+.7,4.6,button)
+  end end
+  B(3,8,4.6,13,8.8,10.8,body)
+  -- lamp strip along the top edge
+  B(3.2,8.8,4.8,12.8,9.4,10.6,lamp)
+  B(2,9.4,4.4,14,10.4,11.4,shade)
+  B(3,10.4,4.8,13,11.2,11,body)
+elseif id=='fr_gym_disc' then
+  -- A low round plinth: stepped drum base, a capped shaft and a dark top
+  -- face, built as concentric closed steps rather than a stretched circle.
+  local stone,shade,dark,cap=T(8,10),T(8,15),T(3,11),T(6,6)
+  B(4,0,4,12,1.4,12,dark)
+  B(4.6,1.4,4.6,11.4,2.2,11.4,stone)
+  B(5,2.2,5,11,2.8,11,shade)
+  B(5.2,2.8,5.2,10.8,6.4,10.8,stone)
+  B(5,6.4,5,11,7,11,shade)
+  B(4.6,7,4.6,11.4,7.8,11.4,stone)
+  B(4,7.8,4,12,8.6,12,dark)
+  B(5,8.6,5,11,9,11,cap)
 elseif id=='fr_roof_ac_unit' then
   -- Rooftop plant: a housing on a curb, a louvred grille and a recessed fan
   -- behind it, with a conduit running down the back. The native drawing is a
