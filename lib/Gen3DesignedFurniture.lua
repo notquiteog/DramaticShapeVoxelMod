@@ -93,6 +93,14 @@ function M.install(recipes)
  add('store_shelf_c','building__rom_082d4e6c',{{0x2da}},'fr_store_shelf',1)
  add('store_shelf_d','building__rom_082d4e6c',{{0x2dc}},'fr_store_shelf',1)
  add('store_shelf_e','building__rom_082d4e6c',{{0x2e5}},'fr_store_shelf',1)
+ -- Pokemon Tower, building__rom_082d4efc, 12 maps. It already carries the
+ -- grave recipes; its bookcases and plants had none. Both objects are the same
+ -- as ones authored elsewhere, so these reuse fr_ruins_shelf and fr_condo_plant
+ -- rather than duplicating geometry.
+ add('tower_bookcase_a','building__rom_082d4efc',{{0x288}},'fr_ruins_shelf',0x281)
+ add('tower_bookcase_b','building__rom_082d4efc',{{0x28c}},'fr_ruins_shelf',0x281)
+ add('tower_bookcase_c','building__rom_082d4efc',{{0x292}},'fr_ruins_shelf',0x281)
+ add('tower_plant','building__rom_082d4efc',{{0x2a0}},'fr_condo_plant',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
