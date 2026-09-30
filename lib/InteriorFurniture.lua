@@ -832,6 +832,38 @@ elseif id=='fr_condo_plant' then
   B(6.2,8.4,5,9.8,10.4,10,leaf)
   B(6.4,4.2,6.2,9.6,5,9.8,soil)
   top({5,6,6,5},5,5,11,11,10.42)
+elseif id=='fr_store_shelf' then
+  -- Store racking: an upright frame carrying four decks, each stocked with
+  -- offset blocks so the front reads as goods on shelves rather than one
+  -- printed plane. A price rail runs along the front edge of every deck.
+  local frame,deck,goods1,goods2,dark=T(6,8),T(8,14),T(9,4),T(7,6),T(3,12)
+  for _,x in ipairs({2,12.6})do B(x,0,4,x+1.4,14,5,dark)end
+  for _,y in ipairs({0,3.4,6.8,10.2,13.4})do
+   B(2,y,4,14,y+1,12.4,deck)
+   B(2,y,11.9,14,y+.5,12.4,dark)
+  end
+  for _,y in ipairs({1,4.4,7.8,11.2})do
+   for x=2.6,12,2 do
+    local h=1.6+((x*5+y*3)%3)*.4
+    B(x,y,4.6,x+1.7,y+h,11.6,(x%4<2) and goods1 or goods2)
+   end
+  end
+  B(1.6,0,3.6,14.4,14.4,5.4,frame)
+elseif id=='fr_store_goods_rack' then
+  -- The orange display unit: a low plinth with tiered racks of colour, which
+  -- is how the native art presents it -- a front of merchandise, not a box.
+  local plinth,rack,goods1,goods2,dark=T(8,15),T(6,9),T(9,5),T(7,3),T(3,11)
+  B(2,0,4,14,2,12,plinth)
+  B(2.4,2,4.4,13.6,2.6,11.6,dark)
+  for _,y in ipairs({2.6,5.2,7.8})do B(3,y,4.8,13,y+.7,11.2,rack)end
+  for i,yy in ipairs({2.6,5.2,7.8})do
+   for x=3.4,11.4,2 do
+    local h=1.4+((x*7+yy*3)%3)*.5
+    B(x,yy+.7,5.2,x+1.6,yy+.7+h,10.8,((i+x)%2==0) and goods1 or goods2)
+   end
+  end
+  B(3,10.4,5,13,11.2,10.8,rack)
+  B(2,11.2,4.4,14,12.4,11.6,plinth)
 elseif id=='fr_house_table' then
   -- A wooden table seen at a shallow angle: splayed legs, an apron and a
   -- thick top, so the underside reads from a low camera instead of being a

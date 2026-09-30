@@ -84,6 +84,15 @@ function M.install(recipes)
  add('lorelei_table_b','building__rom_082d4f14',{{0x2e5}},'fr_house_table',1)
  add('lorelei_table_c','building__rom_082d4f14',{{0x2e6}},'fr_house_table',1)
  add('lorelei_bed','building__rom_082d4f14',{{0x2ed}},'fr_room_bed',1)
+ -- Celadon Department Store, building__rom_082d4e6c, 6 maps. Stocked
+ -- racking at 0x2c0/0x2cc/0x2d4/0x2da/0x2dc/0x2e5, read off the native sheet
+ -- against FR_CELADON_CITY_DEPARTMENT_STORE_1F's layout.
+ add('store_goods_rack','building__rom_082d4e6c',{{0x2c0}},'fr_store_goods_rack',1)
+ add('store_shelf_a','building__rom_082d4e6c',{{0x2cc}},'fr_store_shelf',1)
+ add('store_shelf_b','building__rom_082d4e6c',{{0x2d4}},'fr_store_shelf',1)
+ add('store_shelf_c','building__rom_082d4e6c',{{0x2da}},'fr_store_shelf',1)
+ add('store_shelf_d','building__rom_082d4e6c',{{0x2dc}},'fr_store_shelf',1)
+ add('store_shelf_e','building__rom_082d4e6c',{{0x2e5}},'fr_store_shelf',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
