@@ -26,15 +26,6 @@ return function(game)
   local gen = Generation.number()
 
   local aim = nil
-  -- Re-apply the aim every frame; the mod's rigs rewrite yaw/pitch from input.
-  do
-    local realUpdate = game.update
-    game.update = function(self, dt)
-      self.input:reset()
-      if aim then aim() end
-      return require("src.mods.Runtime").call("core.update", realUpdate, self, dt)
-    end
-  end
 
   -- Gen 3 must be in the overworld before map data resolves.
   if game.phase == "boot" then
@@ -43,6 +34,18 @@ return function(game)
       local b = game.boot
       pcall(function() U.tap(game, (b and b.introMovie) and "start" or "a") end)
       U.wait(1)
+    end
+  end
+
+  -- Only now is it safe to zero input every frame. Installing this wrapper
+  -- before the boot drive wiped each U.tap on the same frame, so Gen 3 never
+  -- left the title screen and every capture was the title art.
+  do
+    local realUpdate = game.update
+    game.update = function(self, dt)
+      self.input:reset()
+      if aim then aim() end
+      return require("src.mods.Runtime").call("core.update", realUpdate, self, dt)
     end
   end
 
@@ -157,16 +160,20 @@ return function(game)
     -- Accept anything that is not a wall, preferring LAND, then WATER.
     if gen == 3 then
       local Map = require("src.core.game3.map")
+      -- There is no src.core.game3.permissions module; the walkability test is
+      -- Collision.isWalkable(cx, cy) in src/core/game3/collision.lua:858, which
+      -- is bound to the loaded map. Requiring the non-existent name threw on
+      -- every Gen 3 drawing and produced zero captures for all three games.
+      local Collision = require("src.core.game3.collision")
       local def = game.data and game.data.maps and game.data.maps[mapId]
       if def then pcall(function() Map.ensureMidLayout(game, mapId, def) end) end
-      local Perm = require("src.core.game3.permissions")
       local L = def and def.midLayout
       walkable = function(x, y)
         if not L then return 0 end
-        local ok, c = pcall(function() return L:collAt(x, y) end)
-        if not ok then return 0 end
-        if Perm.isWalkable(c) then return 3 end
-        if c == 7 then return 0 end
+        local ok, v = pcall(function() return Collision.isWalkable(x, y) end)
+        if ok and v then return 3 end
+        local okc, c = pcall(function() return L:collAt(x, y) end)
+        if okc and c == 7 then return 0 end
         return 1
       end
     elseif gen == 2 then
