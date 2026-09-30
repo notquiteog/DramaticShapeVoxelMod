@@ -43,6 +43,14 @@ function M.install(recipes)
  -- 0x2ed-0x2f2 are blue cases carrying orange canisters.
  add('lab_centrifuge_bank','oak_lab',{
   {0x2ed,0x2ee,0x2ef},{0x2f0,0x2f1,0x2f2}},'fr_lab_centrifuge',1)
+ -- Naval Rock, FireRed's Team Rocket base, on general__rom_082d501c -- 26
+ -- maps and the largest Gen 3 tileset with no recipe at all. 0x289/0x28a are
+ -- hazard-striped machinery and 0x282/0x283 the blue console units, read off the
+ -- native sheet and intersected with FR_NAVEL_ROCK_1F's own midLayout.
+ add('rocket_hazard_cabinet','general__rom_082d501c',{{0x289}},'fr_rocket_hazard_cabinet',1)
+ add('rocket_hazard_cabinet_b','general__rom_082d501c',{{0x28a}},'fr_rocket_hazard_cabinet',1)
+ add('rocket_console','general__rom_082d501c',{{0x282}},'fr_rocket_console',1)
+ add('rocket_console_b','general__rom_082d501c',{{0x283}},'fr_rocket_console',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true

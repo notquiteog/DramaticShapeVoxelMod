@@ -715,6 +715,40 @@ elseif id=='fr_lab_centrifuge' then
   front({2,6,44,12},2,0,45,3,20.02)
   B(2,19.5,5,44,21,19,case)
   top({2,5,44,14},2,4,45,20,21.02)
+elseif id=='fr_rocket_hazard_cabinet' then
+  -- Naval Rock's striped machinery: a chamfered steel cabinet with a
+  -- hazard-striped mid band and a recessed control face. Closed solids with a
+  -- real bevel, so it catches light on the edges instead of reading as a decal.
+  local steel,shade,dark,stripe=T(6,9),T(6,17),T(3,19),T(10,4)
+  B(2,0,3,30,3,17,dark)
+  B(3,3,4,29,22,16,steel)
+  B(3,22,4,29,23,16,shade)
+  -- hazard band: alternating blocks, not a printed stripe
+  for x=3,28,4 do
+   B(x,11,3.4,x+1.8,15,16.4,stripe)
+   B(x+2,11,3.4,x+3.6,15,16.4,shade)
+  end
+  B(3,10.6,3,29,11,16.6,dark)
+  B(3,15,3,29,15.6,16.6,dark)
+  -- recessed control face with three lamps
+  B(8,17,3.2,24,21,4.2,shade)
+  B(9,18,3,23,20,3.4,dark)
+  for _,x in ipairs({11,16,21})do B(x,19.4,2.8,x+1.6,20.4,3.2,stripe)end
+  front({3,18,26,5},3,17,29,21,16.02)
+  B(2,0,3,3,23,17,shade);B(29,0,3,30,23,17,shade)
+  top({3,4,26,13},2,3,30,17,23.02)
+elseif id=='fr_rocket_console' then
+  -- The blue-topped console beside it: angled desk, sloped screen bank and a
+  -- keyboard shelf, so the row of them reads as workstations.
+  local body,shade,screen,dark=T(6,12),T(6,19),T(4,7),T(3,19)
+  B(2,0,3,30,2,17,dark)
+  B(3,2,4,29,9,16,body)
+  B(3,9,4,29,10,16,shade)
+  B(4,10,5,28,17,15,body)
+  for _,x in ipairs({7,14,21})do B(x,13,4.6,x+5,16,5.2,shade)end
+  B(5,11,4.4,26,12.6,15.2,screen)
+  B(3,17,4,29,18,16,shade)
+  top({3,5,26,11},2,3,30,17,18.02)
  elseif id=='fr_gym_pillar' then
   -- A gym column: stepped plinth, fluted shaft, banded capital. Closed solids
   -- with real steps rather than one stretched texture, so the silhouette reads
