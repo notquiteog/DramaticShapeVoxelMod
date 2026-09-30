@@ -50,14 +50,17 @@ return function(game)
       :format(taps, tostring(game.phase)))
   end
 
-  -- drawingKey -> { maps = {mapId=true}, cells = n }
+  -- drawingKey -> { maps = {mapId=true}, cells = n, rep = {mapId, cx, cy} }
   local drawings, mapCount, cellTotal = {}, 0, 0
 
-  local function note(key, mapId)
+  local function note(key, mapId, cx, cy)
     local d = drawings[key]
     if not d then d = { maps = {}, cells = 0 }; drawings[key] = d end
     d.maps[mapId] = true
     d.cells = d.cells + 1
+    -- One representative cell per drawing, so a later capture harness can jump
+    -- straight to it instead of re-deriving where the drawing lives.
+    if not d.rep then d.rep = { mapId, cx, cy } end
   end
 
   if gen == 3 then
@@ -77,7 +80,7 @@ return function(game)
           for cx = 0, w - 1 do
             local ok, mid = pcall(function() return L:midAt(cx, cy) end)
             if ok and mid ~= nil then
-              note(tostring(L.pair) .. "::" .. tostring(mid), id)
+              note(tostring(L.pair) .. "::" .. tostring(mid), id, cx, cy)
               cellTotal = cellTotal + 1
             end
           end
@@ -128,7 +131,7 @@ return function(game)
           for cx = 0, w - 1 do
             local ok, b = pcall(blockId, cx, cy)
             if ok and b ~= nil then
-              note(tostring(def.tileset) .. "::" .. tostring(b), id)
+              note(tostring(def.tileset) .. "::" .. tostring(b), id, cx, cy)
               cellTotal = cellTotal + 1
             end
           end
@@ -148,7 +151,7 @@ return function(game)
             local n = 0; for _ in pairs(drawings) do n = n + 1 end; return n
           end)()), "\n")
   f:write("# unit: gen1/gen2 = (tilesetId, blockId); gen3 = (pair, mid)\n")
-  f:write("drawing\tmap_count\tcell_count\tmaps\n")
+  f:write("drawing\tmap_count\tcell_count\trep_map\trep_cx\trep_cy\tmaps\n")
   local keys = {}
   for k in pairs(drawings) do keys[#keys + 1] = k end
   table.sort(keys)
@@ -157,7 +160,8 @@ return function(game)
     local ms = {}
     for m in pairs(d.maps) do ms[#ms + 1] = m end
     table.sort(ms)
-    f:write(k, "\t", #ms, "\t", d.cells, "\t", table.concat(ms, ","), "\n")
+    f:write(k, "\t", #ms, "\t", d.cells, "\t", d.rep[1], "\t", d.rep[2], "\t",
+           d.rep[3], "\t", table.concat(ms, ","), "\n")
   end
   f:close()
   local distinct = #keys
