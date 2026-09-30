@@ -73,6 +73,11 @@ function M.install(recipes)
  add('hotel_bed_b','building__rom_082d4f44',{{0x29d}},'fr_room_bed',1)
  add('hotel_bed_c','building__rom_082d4f44',{{0x29f}},'fr_room_bed',1)
  add('hotel_bed_d','building__rom_082d4f44',{{0x2a3}},'fr_room_bed',1)
+ -- Tanoby Ruins, building__rom_082d5034, 7 maps. Dilford Chamber carries
+ -- bookcases at 0x287/0x288, read off the native sheet against
+ -- FR_SEVEN_ISLAND_TANOBY_RUINS_DILFORD_CHAMBER's layout.
+ add('ruins_shelf_a','building__rom_082d5034',{{0x287}},'fr_ruins_shelf',1)
+ add('ruins_shelf_b','building__rom_082d5034',{{0x288}},'fr_ruins_shelf',1)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true

@@ -832,6 +832,23 @@ elseif id=='fr_condo_plant' then
   B(6.2,8.4,5,9.8,10.4,10,leaf)
   B(6.4,4.2,6.2,9.6,5,9.8,soil)
   top({5,6,6,5},5,5,11,11,10.42)
+elseif id=='fr_ruins_shelf' then
+  -- Tanoby Ruins shelving: a tall case with three decks of individually offset
+  -- spines and an open band, so the front never reads as one printed plane.
+  local wood,spine,spine2,dark=T(6,9),T(7,13),T(9,15),T(3,14)
+  B(2,0,4,14,1.5,12,dark)
+  B(2.5,1.5,4.5,13.5,2.4,11.5,wood)
+  B(2,12,4,14,13.4,12,wood)
+  B(2,13.4,4,14,15,12,wood)
+  for _,y in ipairs({2.4,6.2,10})do
+   B(3,y,5,13,y+1,11,wood)
+   for x=3.5,12,1.8 do
+    local h=2.2+((x*7+y*3)%4)*.5
+    B(x,y+1,5.4,x+1.4,y+1+h,10.6,(x%3.6<1.8) and spine2 or spine)
+   end
+  end
+  top({3,5,10,6},2,4,14,12,15.02)
+  front({3,3,10,10},2,2.4,14,13.4,12.01)
  elseif id=='fr_gym_pillar' then
   -- A gym column: stepped plinth, fluted shaft, banded capital. Closed solids
   -- with real steps rather than one stretched texture, so the silhouette reads
