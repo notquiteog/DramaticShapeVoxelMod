@@ -873,6 +873,23 @@ elseif id=='fr_slot_machine' then
   -- lever on the right cheek
   B(13.4,5.4,6.6,14.2,8.6,7.4,dark)
   B(13.6,8.2,6.8,14.4,9,7.6,marquee)
+elseif id=='fr_lab_machine' then
+  -- A single-cell lab machine: plinth, canted body, a lit panel recessed into
+  -- the face and a vent bank along the top. One 16px cell, so it can be placed
+  -- anywhere -- unlike fr_lab_centrifuge, which samples its second row and
+  -- therefore needs a two-row recipe.
+  local body,shade,panel,vent,dark=T(7,9),T(7,15),T(9,4),T(6,12),T(3,13)
+  B(2,0,3,14,1.6,13,dark)
+  B(2.6,1.6,3.6,13.4,2.6,12.4,shade)
+  B(3,2.6,4,13,11.6,12,body)
+  B(4,3.6,3.8,12,8.6,4.2,shade)
+  B(4.6,4.2,3.6,11.4,7.6,4,panel)
+  for y=4.4,7,1.2 do B(5,y,3.4,11,y+.6,3.8,dark)end
+  -- vent bank along the top
+  for x=4,12,2 do B(x,8.8,4,x+1.2,10.2,11.4,vent)end
+  B(3,10.4,4,13,11.6,12,shade)
+  B(3,11.6,3.6,13,12.6,12.4,body)
+  B(2,12.6,3.4,14,13.4,12.6,shade)
 elseif id=='fr_gym_plant' then
   -- A gym's potted tree: a deep trough, a soil bed and three offset canopy
   -- tiers so the crown has volume and a silhouette.
