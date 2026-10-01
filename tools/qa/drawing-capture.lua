@@ -259,11 +259,14 @@ return function(game)
     else
       local vx, vy, facing, subjectFloor = viewpoint(r.map, r.x, r.y)
       aimAt(vx, vy, r.x, r.y, subjectFloor)
-      if currentMap ~= r.map then
-        if not loadAt(r.map, vx, vy, facing) then failed = failed + 1 end
-        currentMap = r.map
-        for _ = 1, 8 do U.wait(1) end
-      end
+      -- Reload per drawing, not per map. Loading once and only re-aiming left
+      -- the player standing in the same cell for every subject, so a whole
+      -- room's captures came out byte-identical -- every building__lab drawing
+      -- was the same 6038 bytes. The viewpoint is the whole point of the
+      -- capture, so it has to be honoured for every row.
+      if not loadAt(r.map, vx, vy, facing) then failed = failed + 1 end
+      currentMap = r.map
+      for _ = 1, 8 do U.wait(1) end
       if gen == 1 or gen == 2 then
         pcall(function() P.setLevel("voxel", camera == "3p" and 7 or 6) end)
       end
