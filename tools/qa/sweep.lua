@@ -216,7 +216,7 @@ return function(game)
     return nil
   end
 
-  local done, skipped, refused, blankShots = 0, 0, 0, 0
+  local done, skipped, refused, blankShots, blankMaps = 0, 0, 0, 0, 0
   for index_i, id in ipairs(ids) do
     if (index_i - 1) % nshards == shard then
       if maxMaps and done >= maxMaps then break end
@@ -349,7 +349,13 @@ return function(game)
               end
             end
             if not written then
-              print(('[sweep] BLANK %s %s: no non-empty frame after 3 attempts')
+              -- Delete it. A blank file left on disk is worse than no file:
+              -- the resume pass keys off presence, so the next run would skip
+              -- this map as "already captured" and the gap would become
+              -- permanent and invisible.
+              os.remove(dir .. '/' .. file)
+              blankMaps = blankMaps + 1
+              print(('[sweep] BLANK %s %s: no non-empty frame after 3 attempts -- dropped')
                 :format(id, v.name))
               viewLock = nil
               break
@@ -369,7 +375,7 @@ return function(game)
     end
   end
   index:close()
-  print(('[sweep] DONE gen=%d shard=%d/%d captured=%d already=%d refused=%d blank_retries=%d')
-    :format(gen, shard, nshards, done, skipped, refused, blankShots))
+  print(('[sweep] DONE gen=%d shard=%d/%d captured=%d already=%d refused=%d blank_retries=%d blank_maps=%d')
+    :format(gen, shard, nshards, done, skipped, refused, blankShots, blankMaps))
   love.event.quit()
 end
