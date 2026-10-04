@@ -1,3 +1,12 @@
+# Shared houses and department stores — 2026-10-04
+
+Post-1.30.0 main work: 15 Emerald house recipes add 298 fixtures across 46 more
+maps; Crystal store benches/vending machines and FRLG demo tables/display
+islands are modeled. Removed false Celadon floor-to-merchandise recipes.
+[Evidence and remaining coverage](docs/HOUSE_STORE_COVERAGE_2026-10-04.md).
+Official 0.3.51 render fixtures; standalone tests 111 pass / 11 known fail /
+85 skip. No new release yet. Full-world coverage remains unfinished.
+
 # World battle projection and Littleroot models — 2026-10-04
 
 Battle Art 1.30.0: native Gen3 actors/effects use pooled transparent cards in the

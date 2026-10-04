@@ -3,7 +3,7 @@
 return function(game)
  assert(love.filesystem.getIdentity():match('%-qa$'),'refusing a non-QA profile')
  local U=dofile('tests/drivers/util.lua')
- game:_handleBootAction({action='new_game',start={map='FR_PALLET_TOWN',x=10,y=9,facing='down'}})
+ game:_handleBootAction({action='new_game',start={map=require('src.core.GameVersion').get()=='emerald' and 'EM_LITTLEROOT_TOWN' or 'FR_PALLET_TOWN',x=10,y=9,facing='down'}})
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
  local Pairs,Shapes,Furniture=V.require('Gen3Tilesets'),V.require('Gen3TileShape'),V.require('Gen3Furniture')
  local Map=require('src.core.game3.map');local Versions=require('src.import.gba.versions')

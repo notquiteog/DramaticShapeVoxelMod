@@ -90,7 +90,92 @@ function M.draw(id,A)
    top({sx,sy,sw,sh},x+.25,z+.25,x+span-.3,z+depth-.4,tall+.02)
   end end
  end
- if id=='em_lab_books' then
+ if id=='fr_department_glass' then
+  local case=T(1,18)
+  B(1,0,8,31,2,37,case);B(2,2,9,30,11,36,T(4,24))
+  for _,x in ipairs{1,15,29}do B(x,2,8,x+2,12,37,case)end
+  B(1,11,8,31,12,10,case);B(1,11,35,31,12,37,case)
+  top({2,14,28,25},2,10,30,35,11.5)
+  front({1,40,30,5},1,2,31,4,37.02)
+ elseif id=='fr_department_stock' then
+  local case=T(2,20)
+  B(1,0,8,31,2,56,case);B(15,2,8,17,17,56,case)
+  for _,x in ipairs{2,18}do
+   B(x,2,9,x+12,4,55,case)
+   stock({x,14,12,40},x+.4,10,11.2,44,4,12,3)
+  end
+ elseif id=='gb_department_bench' then
+  local edge,cloth=T(1,1),T(6,6)
+  B(2,0,3,4,3,29,edge);B(12,0,3,14,3,29,edge)
+  for _,z in ipairs{0,16}do
+   B(1,2,z+1,15,3,z+15,edge)
+   B(2,3,z+2,14,4,z+14,cloth)
+   top({2,z+2,12,11},2,z+2,14,z+14,4.02)
+  end
+ elseif id=='gb_department_vending' then
+  local case,dark=T(1,1),T(4,10)
+  B(1,0,17,15,26,30,case)
+  front({1,7,14,23},1,1,15,25,30.02)
+  B(3,2,30.05,13,5,30.2,dark)
+  B(11,12,30.05,13,14,30.4,case)
+ elseif id=='fr_department_game_demo' then
+  local case,dark=T(3,16),T(35,14)
+  desk(1,13,111,30,7,case)
+  top({1,14,110,9},1,13,111,30,7.02)
+  for _,x in ipairs{16,64}do
+   crt(x+16,13,15,9,21,{x+17,11,13,11},T(x+17,10),dark)
+   B(x+1,7,18,x+13,10,26,T(x+2,14))
+   top({x+1,10,12,6},x+1,18,x+13,26,10.02)
+   B(x+2,7,27,x+9,8,30,case)
+   top({x+2,21,7,3},x+2,27,x+9,30,8.02)
+  end
+ elseif id=='em_home_tv' then
+  local wood,case,dark=T(4,34),T(1,18),T(4,22)
+  -- Low closed media cabinet with a full-depth CRT above it.
+  B(1,0,24,31,7,38,wood);front({1,32,30,7},1,1,31,7,38.02)
+  crt(1,25,30,9,23,{2,20,28,10},case,dark)
+ elseif id=='em_home_books' then
+  shelves(1,25,30,13,27,{{3,10,{2,33,28,6}},{12,18,{2,25,28,6}},{20,25,{2,18,28,5}}},T(1,18),T(4,24),true)
+ elseif id=='em_home_fridge' then
+  local case,edge=T(5,18),T(1,24)
+  B(1,0,24,15,29,38,case)
+  front({1,14,14,26},1,1,15,28,38.02)
+  B(1,19,38,15,19.5,38.2,edge)
+  B(3,13,38.1,4,17,38.6,edge);B(3,22,38.1,4,25,38.6,edge)
+ elseif id=='em_home_drawers' then
+  local wood=T(2,22)
+  B(1,0,14,15,9,29,wood);B(0,9,13,16,10,30,T(3,11))
+  for i=0,1 do
+   B(2,1+i*4,29,14,4.5+i*4,29.5,wood)
+   front({2,18+(1-i)*5,12,5},2,1+i*4,14,4.5+i*4,29.52)
+   B(6,2.5+i*4,29.5,10,3+i*4,30,T(3,19))
+  end
+ elseif id=='em_home_sink' then
+  local case,metal,dark=T(2,24),T(9,11),T(10,13)
+  B(0,0,15,32,9,29,case)
+  front({0,19,32,9},0,1,32,9,29.02)
+  -- Recessed basin, solid worktop rim and a raised tap; no open shell.
+  B(0,9,14,32,10,17,metal);B(0,9,26,32,10,30,metal)
+  B(0,9,17,3,10,26,metal);B(14,9,17,32,10,26,metal)
+  B(3,7,17,14,7.6,26,dark)
+  B(3,7.6,17,4,10,26,metal);B(13,7.6,17,14,10,26,metal)
+  B(4,7.6,17,13,10,18,metal);B(4,7.6,25,13,10,26,metal)
+  top({17,9,13,8},17,17,30,26,10.02)
+  B(8,10,14,9,14,15,metal);B(8,13,14,9,14,20,metal)
+ elseif id=='em_home_table' then
+  local wood=T(2,8)
+  desk(2,3,30,29,8,wood)
+  top({2,2,28,25},2,3,30,29,8.02)
+ elseif id=='em_home_chair_left' or id=='em_home_chair_right' then
+  local wood,cloth=T(4,6),T(8,8)
+  desk(4,5,12,13,4,wood)
+  B(3,4,4,13,5,13,cloth);top({3,4,10,9},3,4,13,13,5.02)
+  local x=id=='em_home_chair_left' and 2 or 12
+  B(x,0,3,x+2,10,5,wood);B(x,0,12,x+2,10,14,wood)
+  B(x,7,3,x+2,10,14,wood)
+ elseif id=='em_home_cushion' then
+  cushion(2,2,12,12,{2,2,12,12},T(5,5),T(2,2))
+ elseif id=='em_lab_books' then
   -- A freestanding double shelf: solid back and end panels, individually
   -- raised books and readable native spines on both open tiers.
   shelves(1,26,30,13,25,{{3,11,{2,29,28,7}},{14,22,{2,20,28,7}}},T(1,20),T(4,28),true)

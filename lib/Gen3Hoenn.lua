@@ -24,6 +24,26 @@ local function add(name,pair,rows,kind,extra)
  for k,v in pairs(extra or{})do r[k]=v end
  M.recipes[#M.recipes+1]=r
 end
+-- Complete native house fixtures. Pair-local patterns keep Hoenn IDs from
+-- aliasing FRLG furniture; only the object's cells receive a floor replacement.
+local house='building__generic_building'
+local function home(name,rows,design,ground)
+ add('hoenn_home_'..name,house,rows,'designed',{design=design,ground=ground or 0x223})
+end
+home('tv',{{0x286,0x287},{0x28e,0x28f},{0x296,0x297}},'em_home_tv')
+home('books',{{0x279,0x27a},{0x281,0x282},{0x289,0x28a}},'em_home_books')
+home('fridge',{{0x278},{0x280},{0x288}},'em_home_fridge')
+home('kitchen_drawers',{{0x268},{0x270}},'em_home_drawers')
+home('sink',{{0x26c,0x26d},{0x274,0x275}},'em_home_sink')
+home('table_yellow',{{0x248,0x249},{0x250,0x251}},'em_home_table')
+home('table_plain',{{0x24a,0x24b},{0x252,0x253}},'em_home_table')
+home('table_rustic',{{0x24e,0x24f},{0x256,0x257}},'em_home_table',0x229)
+for _,id in ipairs{0x22b,0x22c,0x2e2}do home('chair_'..id,{{id}},id==0x22b and 'em_home_chair_left' or 'em_home_chair_right')end
+home('cushion',{{0x244}},'em_home_cushion',0x229)
+add('hoenn_home_plant',house,{{0x290},{0x298}},'plant',{h=22,cutout=true,ground=0x223})
+-- Rustic homes have their own timber furniture and floor palette.
+home('rustic_tv',{{0x2b1,0x2b2},{0x2b9,0x2ba},{0x2c1,0x2c2}},'em_home_tv',0x229)
+home('rustic_books',{{0x2be,0x2bf},{0x2c6,0x2c7},{0x2ce,0x2cf}},'em_home_books',0x229)
 local center='building__pokemon_center'
 local lab='building__lab'
 add('birch_books',lab,{{0x210,0x211},{0x218,0x219},{0x220,0x221}},'designed',{design='em_lab_books'})

@@ -93,6 +93,8 @@ local commonHouse={
   house[#house], -- same complete stool drawing, including floor and leg zones
 }
 local mart={
+  {id='crystal_department_bench',tiles={{34,35},{50,51},{36,37},{52,53}},groundTiles={{1}},design='gb_department_bench',parts={},support=4},
+  {id='crystal_department_vending',tiles={{12,13},{76,77},{76,77},{78,79}},groundTiles={{1}},design='gb_department_vending',parts={},support=0},
   item("crystal_mart_cooler",{{12,13},{86,87},{88,89},{90,91}},72,
     {upright(0,15,0,5,6,31,20,12)}),
   item("crystal_mart_shelf",{{12,13},{80,81},{80,81},{94,95}},72,

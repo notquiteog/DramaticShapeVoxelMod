@@ -5,6 +5,11 @@ function M.install(recipes)
  local function add(name,pair,rows,design,ground)
   recipes[#recipes+1]={name=name,pair=pair,rows=rows,kind='designed',design=design,ground=ground or 1}
  end
+ -- Celadon's console demos sit on one continuous low island, with raised
+ -- screens and game units. Preserve the native gaps beneath the counter.
+ add('department_game_demo','building__rom_082d4e6c',{
+  {0x2f2,0x30b,0x30c,0x2e9,0x30b,0x30c,0x2ea},
+  {0x2eb,0x313,0x314,0x2d4,0x313,0x314,0x2ee}},'fr_department_game_demo',0x2c0)
  add('museum_space_exhibit','building__rom_082d4c2c',{{0x290,0x291,0x292},{0x298,0x299,0x29a}},'fr_space_exhibit',0x281)
  add('power_plant_generator','building__rom_082d4e9c',{
   {0x2e8,0x2e9,0x2ea},{0x2f0,0x2f1,0x2f2},
@@ -84,15 +89,11 @@ function M.install(recipes)
  add('lorelei_table_b','building__rom_082d4f14',{{0x2e5}},'fr_house_table',1)
  add('lorelei_table_c','building__rom_082d4f14',{{0x2e6}},'fr_house_table',1)
  add('lorelei_bed','building__rom_082d4f14',{{0x2ed}},'fr_room_bed',1)
- -- Celadon Department Store, building__rom_082d4e6c, 6 maps. Stocked
- -- racking at 0x2c0/0x2cc/0x2d4/0x2da/0x2dc/0x2e5, read off the native sheet
- -- against FR_CELADON_CITY_DEPARTMENT_STORE_1F's layout.
- add('store_goods_rack','building__rom_082d4e6c',{{0x2c0}},'fr_store_goods_rack',1)
- add('store_shelf_a','building__rom_082d4e6c',{{0x2cc}},'fr_store_shelf',1)
- add('store_shelf_b','building__rom_082d4e6c',{{0x2d4}},'fr_store_shelf',1)
- add('store_shelf_c','building__rom_082d4e6c',{{0x2da}},'fr_store_shelf',1)
- add('store_shelf_d','building__rom_082d4e6c',{{0x2dc}},'fr_store_shelf',1)
- add('store_shelf_e','building__rom_082d4e6c',{{0x2e5}},'fr_store_shelf',1)
+ -- Complete Celadon displays; 0x2c0 is bare parquet, never stock.
+ add('department_glass_case','building__rom_082d4e6c',{
+  {0x317,0x317},{0x31f,0x31f},{0x327,0x327}},'fr_department_glass',0x2c0)
+ add('department_stock_island','building__rom_082d4e6c',{
+  {0x318,0x319},{0x320,0x321},{0x328,0x329},{0x330,0x331}},'fr_department_stock',0x2c0)
  -- Pokemon Tower, building__rom_082d4efc, 12 maps. It already carries the
  -- grave recipes; its bookcases and plants had none. Both objects are the same
  -- as ones authored elsewhere, so these reuse fr_ruins_shelf and fr_condo_plant
