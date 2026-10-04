@@ -90,7 +90,37 @@ function M.draw(id,A)
    top({sx,sy,sw,sh},x+.25,z+.25,x+span-.3,z+depth-.4,tall+.02)
   end end
  end
- if id=='em_mart_stock' then
+ if id=='em_lab_books' then
+  -- A freestanding double shelf: solid back and end panels, individually
+  -- raised books and readable native spines on both open tiers.
+  shelves(1,26,30,13,25,{{3,11,{2,29,28,7}},{14,22,{2,20,28,7}}},T(1,20),T(4,28),true)
+  B(1,25,26,31,26.5,39,T(3,14));top({1,4,30,10},1,26,31,39,26.52)
+ elseif id=='em_lab_computer' then
+  local case,dark,wood=T(13,16),T(12,12),T(26,24)
+  desk(1,27,31,42,8,wood)
+  crt(8,26,15,11,26,{10,8,12,9},case,dark)
+  keyboard({9,23,13,5},9,34,13,6,8.1,case)
+  B(2,8,28,7,22,37,case);front({2,9,5,16},2,8,7,22,37.02)
+ elseif id=='em_lab_desk' then
+  local wood=T(4,16)
+  desk(0,11,64,26,8,wood);top({0,8,64,11},0,11,64,26,8.02)
+  -- Separate research books/papers above the continuous desk surface.
+  for _,q in ipairs({{18,2,11,10},{34,2,10,10},{49,3,10,9}})do
+   local x,y,w,d=unpack(q);B(x,8.05,12,x+w,9.4,12+d,T(x+3,y+3))
+   top(q,x,12,x+w,12+d,9.42)
+  end
+ elseif id=='em_lab_starter' then
+  local wood,dark=T(3,11),T(17,25)
+  B(2,0,9,30,1,29,dark);B(1,1,8,31,8,28,wood)
+  B(0,8,7,32,9,29,wood);top({1,2,30,13},1,8,31,27,9.02)
+  front({1,16,30,13},1,1,31,8,28.02)
+  B(15.6,1,28,16.4,8,28.2,dark)
+ elseif id=='em_lab_server' then
+  local case,dark=T(2,20),T(5,28)
+  B(1,0,27,15,25,40,case)
+  front({1,7,14,30},1,1,15,24,40.02)
+  for y=4,21,4 do B(2,y,26.95,14,y+.6,27,dark)end
+ elseif id=='em_mart_stock' then
   local case,dark=T(2,16),T(4,29)
   shelves(1,29,30,12,26,{{3,12,{2,33,28,10}},{14,23,{2,20,28,11}}},case,dark,true)
   B(1,26,29,31,28,41,case);front({1,10,30,8},1,22,31,28,41.04)

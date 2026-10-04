@@ -22,4 +22,7 @@ local n=#calls;M.fit(big,64,false,far);assert(#calls==n,'fitted frame is cached'
 M.fit(big,64,true,far);assert(#calls==n+1,'mirrored frame has independent cache key')
 front='gen3';assert(M.stagePixelScale(false)==.68,'native 64px source is not treated as BW')
 M.staged=false;M.fit(small,64,false);assert(calls[#calls].sx>near,'2D fallback retains normal fit')
+M.world=true
+assert(M.stagePixelScale(true)==64/96 and M.stagePixelScale(false)==1,'world cards preserve source pitch; perspective alone changes apparent size')
+front='gen5';assert(M.stagePixelScale(true)==M.stagePixelScale(false),'identical source generations share identical world scale')
 print('PASS battle source-pixel scale, far-row perspective, foot anchoring, cache and 2D fallback')

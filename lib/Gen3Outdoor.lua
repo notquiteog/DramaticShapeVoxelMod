@@ -70,6 +70,14 @@ function M.append(c,emit,uvFor)
   emit({{x1,y1,z1},{x1,y1,z0},{x1,y0,z0},{x1,y0,z1}},tex,.9)
  end
  if s.kind=='sign' then
+  if s.hoenn then
+   local white,blue=sub(uv,3,6,3,6),sub(uv,5,8,5,8)
+   for _,px in ipairs({2,12})do box(x+px,0,z+6,x+px+2,8,z+10,white)end
+   box(x+1,5,z+6.5,x+15,12,z+9.5,white)
+   box(x+3,6,z+6.45,x+13,10,z+6.5,blue)
+   emit({{x+2,11,z+9.52},{x+14,11,z+9.52},{x+14,5,z+9.52},{x+2,5,z+9.52}},sub(uv,2,5,14,13),1)
+   return true
+  end
   local trim=sub(uv,3,3,4,4)
   box(x+6.7,0,z+7.3,x+9.3,6,z+9.3,trim)
   box(x+1,5,z+7.6,x+15,12,z+9.2,trim)

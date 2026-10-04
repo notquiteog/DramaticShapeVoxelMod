@@ -146,6 +146,8 @@ function M.material(g)
   if chimney and x>=chimney[1] and x<chimney[3] and y>=chimney[2] and y<chimney[4]then
    rr,gg,bb,aa=sourcePixel(g,28,y)
   end
+  local vent=g.custom and g.custom.roofVent
+  if vent and x>=vent[1]and x<vent[3]and y>=vent[2]and y<vent[4]then rr,gg,bb,aa=sourcePixel(g,64,y)end
   data:setPixel(x+p.w,y,rr,gg,bb,aa)
  end end
  -- Isolate the raised emblem from the roof surrounding it. Walk inward
@@ -288,6 +290,23 @@ function M.append(g,emit)
   end
  end
  local chimney=g.custom and g.custom.chimney
+ local vent=g.custom and g.custom.roofVent
+ if vent then
+  -- Birch's circular extractor is a raised drum, not a flat roof decal.
+  local cx,cz=x+(vent[1]+vent[3])/2,z+p.back+18
+  local bottom=p.wall+p.bevel;local top=bottom+13
+  local metal=uv(vent[1]+5.1,vent[2]+15.1,vent[1]+5.2,vent[2]+15.2)
+  local dark=uv(vent[1]+16.1,vent[2]+9.1,vent[1]+16.2,vent[2]+9.2)
+  for i=0,15 do
+   local a,b=i*math.pi/8,(i+1)*math.pi/8
+   local function point(r,y,t)return {cx+r*math.cos(t),y,cz+r*math.sin(t)}end
+   face({point(13,top,a),point(13,top,b),point(13,bottom,b),point(13,bottom,a)},metal,.8+.15*math.sin(a))
+   face({point(9,top,a),point(9,top,b),point(13,top,b),point(13,top,a)},metal,1)
+   face({point(9,top,a),point(9,top,b),point(9,top-3,b),point(9,top-3,a)},dark,.7)
+   face({{cx,top-3,cz},point(9,top-3,a),point(9,top-3,b),{cx,top-3,cz}},dark,.8)
+  end
+  for offset=-6,6,3 do Architecture.box(face,cx-7,top-1,cz+offset,cx+7,top-.3,cz+offset+.7,metal)end
+ end
  if chimney then
   local l,r=chimney[1]+2,chimney[3]-2;local back=p.back+8;local front=back+12
   local bottom=p.wall+p.bevel;local top=bottom+20

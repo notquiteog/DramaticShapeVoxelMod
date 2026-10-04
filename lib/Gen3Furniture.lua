@@ -309,7 +309,7 @@ function M.append(p,emit,uvFor)
    local v=uv[1][2]+(uv[3][2]-uv[1][2])*(sy%16+.5)/16
    return {{u,v},{u,v},{u,v},{u,v}}
   end
-  local silver,blue,dark=sample(7,12),sample(12,32),sample(9,38)
+  local silver,blue,dark=sample(7,12),sample(12,r.bodyY or 32),sample(9,r.panelY or 38)
   local cx,cz=x+16,z+31
   local rings={{2,10},{5,12},{7,11},{18,11},{20,14},{22,14},{24,12}}
   for j=1,#rings-1 do
@@ -329,13 +329,13 @@ function M.append(p,emit,uvFor)
   end
   for sy=0,13 do
    local dy=(sy-6.5)/7;local half=math.sqrt(math.max(0,1-dy*dy))*12
-   source(16-half,12+sy,half*2,1,
+   source(16-half,(r.topY or 12)+sy,half*2,1,
     {cx-half,24.03,cz+(sy/7-1)*12},{cx+half,24.03,cz+(sy/7-1)*12},
     {cx+half,24.03,cz+((sy+1)/7-1)*12},{cx-half,24.03,cz+((sy+1)/7-1)*12})
   end
   for _,dx in ipairs({-11,8})do for _,dz in ipairs({-9,8})do box(cx+dx,0,cz+dz,cx+dx+3,6,cz+dz+4,silver)end end
   box(cx-5,2,cz+10,cx+5,11,cz+12,dark)
-  source(12,37,8,8,{cx-4,10,cz+12.03},{cx+4,10,cz+12.03},{cx+4,3,cz+12.03},{cx-4,3,cz+12.03})
+  source(12,r.panelY or 37,8,8,{cx-4,10,cz+12.03},{cx+4,10,cz+12.03},{cx+4,3,cz+12.03},{cx-4,3,cz+12.03})
  elseif r.kind=='desk' then
   -- The Pokédex desk's native top occupies rows 6..16, not the wall
   -- above it or the floor below its feet. Model the frame independently.

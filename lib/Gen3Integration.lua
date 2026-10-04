@@ -116,6 +116,7 @@ function M.install()
   return next(game,ev)
  end)
  local stick={x=0,y=0}
+ local battleMouse
  mod.hooks:wrap('input.gamepad',function(next,game,ev)
   if ev.phase=='axis' then
    if ev.axis=='rightx'then stick.x=tonumber(ev.value)or 0 elseif ev.axis=='righty'then stick.y=tonumber(ev.value)or 0 end
@@ -124,7 +125,20 @@ function M.install()
  end)
  mod.hooks:wrap('core.update',function(next,game,dt,...)
   recovery:update(dt)
+  BattleStage.update()
   SceneOptions.update(dt)
+  if BattleStage.active and Battle.isActive()then
+   local camera=V.require('BattleCam')
+   camera.stickOrbit(stick.x,math.min(dt,.1));camera.stickPitch(stick.y,math.min(dt,.1))
+   -- Game3 0.3.51 does not dispatch input.pointer. Read the secondary
+   -- button without replacing any engine callback or consuming menu input.
+   local mouse=love.mouse
+   if mouse and mouse.isDown(2)then
+    local x,y=mouse.getPosition()
+    if battleMouse then camera.mouseOrbit(x-battleMouse[1]);camera.mousePitch(y-battleMouse[2])end
+    battleMouse={x,y}
+   else battleMouse=nil end
+  else battleMouse=nil end
   if looking(game) and free() then
    local function axis(v)return math.abs(v)>.18 and (v-(v>0 and .18 or -.18))/.82 or 0 end
    local elapsed=math.min(tonumber(dt)or 0,.1)
@@ -137,6 +151,10 @@ function M.install()
  end
  mod.events:on('save.writing',function()V.require('DayNight').store()end)
  local dragging=false
+ mod.hooks:wrap('input.wheel',function(next,game,dy)
+  if BattleStage.active and Battle.isActive()then V.require('BattleCam').stepZoom(dy);return true end
+  return next(game,dy)
+ end)
  mod.hooks:wrap('input.pointer',function(next,game,ev)
   if ev.source=='mouse' and looking(game) and free() then
    if ev.button==2 then

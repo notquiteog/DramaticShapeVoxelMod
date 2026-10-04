@@ -25,11 +25,11 @@ end
 -- independently made small fronts enormous and erased the artwork's scale.
 -- Gen 1/2 already project their actors through the world camera.
 function M.stagePixelScale(back)
- if not M.staged then return nil end
+ if not M.staged and not M.world then return nil end
  local side=back and Art.playerSide()or 'front'
  local setting=side=='back'and Art.backAnimationSetting or Art.frontAnimationSetting
  local reference=({gen1=56,gen2=56,gen3=64,gen4=80,gen5=96})[setting:get()]or 64
- return (64/reference)*(back and 1 or .68)
+ return (64/reference)*(M.world and 1 or back and 1 or .68)
 end
 function M.settings()
  return {Art.setting,Art.frontAnimationSetting,Art.backAnimationSetting,Art.viewSetting,Art.duplicateSetting,Art.frontFlipSetting,Art.trainerSetting,Art.playerArtSetting,Art.playerAnimationSetting}
@@ -40,7 +40,7 @@ function M.install()
  if gen==3 then
   local P=require('src.core.game3.pokemon');local UI=require('src.core.game3.battle.ui')
   local Anim=require('src.core.game3.battle.anim')
-  local active=false;local artMon,explicitArtMon;local draw=UI.draw
+  local active=false;local artMon,explicitArtMon,artId;local draw=UI.draw
   local Light=V.require('Gen3SpriteLight')
   undo[#undo+1]=V.require('Gen3TrainerArt').install(function()return active end,M.fit)
   UI.draw=function(...)
@@ -57,7 +57,7 @@ function M.install()
   if type(shown)=='function'then
    Anim.shownBattler=function(side,battler,...)
     local resolved=shown(side,battler,...)
-    if active and not explicitArtMon then artMon=resolved or battler end
+    if active and not explicitArtMon then artMon=resolved or battler;artId=side end
     return resolved
    end
    undo[#undo+1]=function()Anim.shownBattler=shown end
@@ -82,16 +82,44 @@ function M.install()
       mon.otSecretId=source.otSecretId;mon.isShiny=source.isShiny
      end
      local image=M.image(mon,side=='back')
-     if image then return Light.tag({image=M.fit(image,64,side=='back' and Art.playerSide()=='front' and Art.flipsPlayerFront(),M.stagePixelScale(side=='back')),w=64,h=64})end
+     if image then return Light.tag({image=M.fit(image,64,side=='back' and Art.playerSide()=='front' and Art.flipsPlayerFront(),M.stagePixelScale(side=='back')),w=64,h=64},artId)end
     end
     local entry=original(species,form,...)
-    if active and M.staged and entry and entry.image and side=='front' then
+    if active and M.staged and not M.world and entry and entry.image and side=='front' then
      local copy={};for k,v in pairs(entry)do copy[k]=v end
      copy.image=M.fit(entry.image,64,false,.68);entry=copy
     end
-    return active and Light.tag(entry)or entry
+    return active and Light.tag(entry,artId)or entry
    end
    undo[#undo+1]=function()P[key]=original end
+  end
+  -- Special pictures use separate native readers; they must retain the same
+  -- actor ownership as ordinary sprites, including substitutes and RSE frames.
+  local function tagReader(owner,key,imageOnly)
+   local original=owner[key];if type(original)~='function'then return end
+   owner[key]=function(...)
+    local entry=original(...)
+    if active then Light.tag(imageOnly and {image=entry}or entry,artId)end
+    return entry
+   end
+   undo[#undo+1]=function()owner[key]=original end
+  end
+  tagReader(P,'ghostPic');tagReader(Anim,'substituteImage',true)
+  local ok,MonAnim=pcall(require,'src.core.game3.mon_anim')
+  if ok then
+   local original=MonAnim.framePic
+   MonAnim.framePic=function(species,frame,shiny)
+    if active then
+     local source=artMon and (artMon.mon or artMon)
+     local mon={species=P.national(species),isShiny=shiny}
+     if source then for _,k in ipairs({'personality','otId','otSecretId','isShiny'})do mon[k]=source[k]end end
+     local image=M.image(mon,false)
+     if image then return Light.tag({image=M.fit(image,64,false,M.stagePixelScale(false)),w=64,h=64},artId)end
+    end
+    local entry=original(species,frame,shiny)
+    return active and Light.tag(entry,artId)or entry
+   end
+   undo[#undo+1]=function()MonAnim.framePic=original end
   end
  elseif gen==2 then
   local State=require('src.ui.gen2.BattleState');local pic=State.pic

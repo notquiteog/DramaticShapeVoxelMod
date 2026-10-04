@@ -757,7 +757,12 @@ function M.draw(game,vw,vh,cam)
   local focusDistance=cam.level==6 and 24 or 70
   R.camera={eye={cx-dx*dist,ey,cz-dz*dist},focus={cx+dx*focusDistance,ey-focusDistance*math.tan(cam.pitch),cz+dz*focusDistance},fov=math.rad(62),curve=cam.level==6 and 0 or nil}
   if cam.battle then
-   R.camera={eye={cx-dx*75,ground+32,cz-dz*75},focus={cx+dx*16,ground,cz+dz*16},fov=math.rad(50)}
+   R.camera=V.require('BattleCam').rig(cam.arena,ground)
+   local c,s=math.cos(cam.yaw),math.sin(cam.yaw)
+   for _,p in ipairs({R.camera.eye,R.camera.focus})do
+    local x,z=p[1]-cx,p[3]-cz;p[1],p[3]=cx+x*c-z*s,cz+x*s+z*c
+   end
+   if cam.actors and cam.actors.st.double then R.camera.fov=2*math.atan(math.tan(R.camera.fov/2)*2.3)end
   end
  else
   R.camera=Interior.camera(Interior.forMap(M.sceneDef,3),S.angle,vw/vh)
@@ -768,6 +773,7 @@ function M.draw(game,vw,vh,cam)
  if atmosphere.kind(atmosphereMap)=="forest" then V.require("DayNight").applyRig(false) end
  R.orbitGround=M.groundAt(cx,cz+8-.001)
  R.viewProjection(cx,cz,vw,vh)
+ if cam.actors then cam.actors:prepare(cam,M.groundAt(cx,cz+8-.001),R.eye)end
  R.orbitGround=nil
  savedCanvas=love.graphics.getCanvas();love.graphics.push('all');saved=true
  if not plate and Shadow.begin(cx,cz,vw,vh) then
@@ -777,6 +783,8 @@ function M.draw(game,vw,vh,cam)
   for _,d in ipairs(waterMeshes())do Shadow.draw(d[1],d[2])end
   if not cam.battle then
    Shadow.sprites(true);actors(game,cam,Shadow.draw);Shadow.sprites(false)
+  elseif cam.actors then
+   Shadow.sprites(true);cam.actors:draw(Shadow.draw);Shadow.sprites(false)
   end
   Shadow.finish('firered')
  end
@@ -788,7 +796,15 @@ function M.draw(game,vw,vh,cam)
   {bounds[1]*16,bounds[2]*16,(bounds[3]+1)*16,(bounds[4]+1)*16})or nil
  R.fog=atmosphere.fog(atmosphereMap) or R.fog
  if not R.beginScene(renderWidth,renderHeight,cx,cz,vw,vh,background,'firered') then M.restore();return false end
- R.battleOcclusion(nil)
+ if cam.actors then
+  local p=cam.actors.points
+  local function row(id)
+   if cam.actors.st.double then return {(p[id][1]+p[id+2][1])/2,(p[id][3]+p[id+2][3])/2}end
+   return {p[id][1],p[id][3]}
+  end
+  R.battleOcclusion({player=row(0),enemy=row(1)},p[0][2],
+   cam.actors.st.double and {player={contentWidth=300},enemy={contentWidth=300}}or nil)
+ else R.battleOcclusion(nil)end
  if plate then
   if plate.image then R.backdrop(plate.image,plate.offset)end
  else
@@ -799,6 +815,8 @@ function M.draw(game,vw,vh,cam)
  local water=not plate and waterMeshes()or {}
  if cam.battle then
   for _,d in ipairs(water)do R.draw(d[1],d[2])end
+  R.battleOcclusion(nil)
+  if cam.actors then cam.actors:draw()end
  else
   local waterLevels={}
   for _,d in ipairs(water)do local h=d[4];waterLevels[h]=waterLevels[h]or{};local group=waterLevels[h];group[#group+1]=d end

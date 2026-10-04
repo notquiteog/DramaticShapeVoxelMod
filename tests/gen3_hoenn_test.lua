@@ -18,5 +18,14 @@ for _,r in ipairs(H.recipes)do
  version='firered';assert(#F.extract(cells)==0,'Hoenn recipe claimed FRLG art: '..r.name);version='emerald'
  count=count+1
 end
+cache.BuildBudget={tick=function()end,check=function()end}
+local Civic=V.require('Gen3Civic')
+for _,r in ipairs(H.exteriors)do
+ local cells={};for y,row in ipairs(r.rows)do for x,mid in ipairs(row)do
+  cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair=r.pair,primary='general',ts={}}
+ end end
+ local found=Civic.prepare(cells,{},{});assert(#found==1 and found[1].family==r.name,r.name)
+ local p=Civic.profile(found[1]);assert(p.wall>0 and p.wallBottom<=#r.rows*16,'roof/wall extent includes outside ground')
+end
 version='leafgreen';assert(not H.active());assert(S.of('general','pallet_town',0x14,0,1).kind=='tree')
 print('PASS '..count..' native Hoenn furniture recipes, family isolation and four-cell tree artwork')

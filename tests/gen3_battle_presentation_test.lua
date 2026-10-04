@@ -13,7 +13,7 @@ local Animated={playerTrainerPicture=function(p)
  return images[({[0]=1,[1]=2,[25]=3,[49]=4,[72]=5})[p]]
 end}
 local V={data=function(name)return dofile('data/'..name..'.lua')end}
-local modules={BattleArt=Art,AnimatedBattleArt=Animated,UiBackplates=U,
+local modules={BattleArt=Art,AnimatedBattleArt=Animated,UiBackplates=U,Gen3SpriteLight={tag=function(entry)return entry end},
  DayNight={time=function()return 12 end,mix=function()return {[phase]=1}end},
  BackdropImage={load=function(folder,file)if not file then return nil end;loaded[#loaded+1]=folder..'/'..file;return available and file or nil end},
  Gen3Tilesets={outdoor=function(d)return d and d.mapType==1 end}}

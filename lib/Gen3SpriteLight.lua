@@ -1,11 +1,11 @@
--- Native actors stay on the UI plane. Shade only their tagged image draws,
--- multiplying native flash/fade colors and restoring state even on errors.
--- World-space cast shadows remain a separate, unsupported native adapter.
+-- Tag native image ownership for world projection. The legacy UI-light path
+-- remains available when a caller stages artwork without a world frame.
 local V=...
 local M={}
 local images
-function M.tag(entry)
+function M.tag(entry,id)
  if images and entry and entry.image then images[entry.image]=true end
+ if M.world and entry and entry.image then M.world:tag(entry.image,id)end
  return entry
 end
 function M.scope(draw,...)
@@ -14,7 +14,7 @@ function M.scope(draw,...)
  local stage=V.require('Gen3Battle')
  local UI=V.require('UiBackplates')
  G.draw=function(image,...)
-  if images[image] and stage.active and not UI.spritesUnlit()then
+  if images[image] and stage.active and not M.world and not UI.spritesUnlit()then
    local Map=require('src.core.game3.map')
    local tint=V.require('DayNight').tint(V.require('Gen3Tilesets').outdoor(Map.currentDef()))
    local r,g,b,a=G.getColor();G.setColor(r*tint[1],g*tint[2],b*tint[3],a)

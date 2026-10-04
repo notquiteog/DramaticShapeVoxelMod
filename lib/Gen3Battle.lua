@@ -1,6 +1,5 @@
--- Presentation seam for the native FRLG battle engine. Keep its complete UI,
--- sprite/particle ordering, intro, hit sequencer and end-of-battle lifecycle.
--- Only the static background is replaced, on the engine's separate world plane.
+-- Native battle timing and menus, with its live actor/effect artwork projected
+-- into the same scene, depth buffer and shadow map as the field.
 local V=...
 local M={active=false,rendered=0}
 local setting=V.require('ModSetting').new('battles','3D-BTL',
@@ -22,6 +21,13 @@ function setting:read()
 end
 M.setting=setting
 function M.enabled()return setting:get()==true end
+function M.update()
+ if not require('src.core.game3.battle').isActive() or not M.enabled()then
+  if M.active or M.frame then V.require('Gen3BattleActors').release()end
+  M.active=false;M.frame=nil
+  if M.hud then M.hud.reset()end
+ end
+end
 -- Face the clearest nearby ground without moving a player or changing a map.
 function M.openYaw(x,y,walkable)
  local best,yaw=-math.huge,0
@@ -55,6 +61,7 @@ function M.install()
  local Display=require('src.core.game3.display')
  local Renderer=require('src.render.Renderer')
  local Scene=V.require('Gen3Scene')
+ local Actors=V.require('Gen3BattleActors')
  local original,bg=Battle.draw,Bg.draw
  local Hud=V.require('Gen3BattleHud')
  local uninstallHud=Hud.install(M)
@@ -64,11 +71,11 @@ function M.install()
  local camera={level=7,yaw=0,pitch=.38,battle=true}
  local battleState
  Bg.draw=function(...)
-  if drawing then return true end
+  if drawing then M.frame.inWorld=true;return true end
   return bg(...)
  end
  Battle.draw=function(game,w,h)
-  M.active=false;Hud.reset()
+  M.active=false;M.frame=nil;Hud.reset()
   recovery:update(love.timer.getDelta())
   if not M.enabled() or not Battle.isActive() or not recovery:ready(Battle._st) or Display.planesBroken
      or Scene.nativeRequired(game) then return original(game,w,h)end
@@ -79,11 +86,22 @@ function M.install()
    camera.center=M.openArea(px,py,Collision.isWalkable)
    camera.yaw=M.openYaw(math.floor(camera.center[1]/16),math.floor(camera.center[2]/16),Collision.isWalkable)
    battleState=Battle._st
+   camera.arena={mid=camera.center,cameraSafe=true}
+   V.require('BattleCam').reset(camera.arena)
   end
   local Map=require('src.core.game3.map')
   camera.plate=V.require('Gen3BattleBackdrop').frame(Map.current,Map.currentDef(),Battle._st)
   local G=love.graphics
   local ui=G.getCanvas()
+  local Ui=require('src.core.game3.battle.ui')
+  if Ui._caughtDexScene then return original(game,w,h)end
+  M.frame=Actors.new(Battle._st);camera.actors=M.frame
+  V.require('BattleCam').update(love.timer.getDelta())
+  M.active=true;drawing=true;Hud.begin()
+  G.clear(0,0,0,0)
+  local drawn,err=pcall(M.frame.capture,M.frame,original,game,w,h)
+  drawing=false;Hud.finish()
+  if not drawn then M.active=false;M.frame=nil;error(err,0)end
   local ok,ready=pcall(function()
    Renderer:beginWorldPass()
    local vw,vh=Renderer:worldViewSize()
@@ -93,6 +111,7 @@ function M.install()
   Renderer:endWorldPass()
   G.setCanvas(ui)
   if not ok or not ready then
+   M.active=false;M.frame=nil;camera.actors=nil;Hud.reset();G.clear(0,0,0,0)
    Renderer.worldActive=false;Renderer:setWorldOverride(nil)
    if not ok then
     recovery:failed(ready);Scene.invalidate();print('[Battle Art FireRed] battle stage fallback: '..tostring(ready))
@@ -101,17 +120,10 @@ function M.install()
   end
   Renderer.uiOpaque=false
   recovery:succeeded()
-  G.clear(0,0,0,0)
   M.active=true;M.rendered=M.rendered+1
-  drawing=true;Hud.begin()
-  local art=V.require('NativeBattleArt');local previousStage=art.staged;art.staged=true
-  local drawn,err=pcall(original,game,w,h)
-  art.staged=previousStage
-  drawing=false;Hud.finish()
-  if not drawn then error(err,0)end
  end
  return function()
-  uninstallHud();Battle.draw=original;Bg.draw=bg;M.active=false
+  uninstallHud();Battle.draw=original;Bg.draw=bg;M.active=false;M.frame=nil;Actors.release()
  end
 end
 return M

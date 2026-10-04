@@ -38,7 +38,7 @@ function M.install(stage)
  -- Preserve the actors before the native command window covers their feet.
  -- Erasing this strip used to cut a full-body back at y=112.
  Chrome.drawPanel=function(mode,...)
-  if capturing and stage.active and (mode=='menu' or mode=='moves') then
+  if capturing and stage.active and not stage.frame and (mode=='menu' or mode=='moves') then
    local G=love.graphics;local source=G.getCanvas()
    if source then
     underlay=underlay or G.newCanvas(240,48,{dpiscale=1})
@@ -98,6 +98,7 @@ function M.install(stage)
   G.pop()
  end
  Health.draw=function(side,battler,opts)
+  if stage.frame then stage.frame.inWorld=false end
   if stage.active and UI.uiHidden('hud') then return end
   local st=Battle._st
   if not capturing or not stage.active or not st or st.safari or not battler then
@@ -127,7 +128,7 @@ function M.install(stage)
   local r=require('src.render.Renderer'):frameRects()
   local anchor={r.uox+(cx+(p and p.ox or 0))*r.Ux,
    r.uoy+(cy+(p and p.oy or 0)+Ui.bounceOffset('mon',id)+head)*r.Uy}
-  M.cards[id]={anchor=anchor,name=State.displayName(battler),level=p and p.displayLevel or mon.level or 1,
+  M.cards[id]={anchor=anchor,nativeHead={cx+(p and p.ox or 0),cy+(p and p.oy or 0)+Ui.bounceOffset('mon',id)+head},name=State.displayName(battler),level=p and p.displayLevel or mon.level or 1,
    hp=math.max(0,math.floor(hp or mon.hp or 0)),maximum=math.max(1,math.floor(maxHp or mon.maxHp or 1)),
    status=({'SLP','PSN','BRN','FRZ','PAR','PSN'})[status],gender=mon.gender,
    caught=id%2==1 and Health.shouldShowCaughtMarker(st,battler),
@@ -136,6 +137,13 @@ function M.install(stage)
  end
  local function paint()
   local G=love.graphics;local w,h=G.getDimensions();local k=Options.hudScale(w,h)
+  if stage.frame then
+   local r=require('src.render.Renderer'):frameRects()
+   for id,c in pairs(M.cards)do
+    local p=stage.frame:head(id,unpack(c.nativeHead))
+    if p then c.anchor={r.vux+p[1]*r.vuw,r.vuy+p[2]*r.vuh}end
+   end
+  end
   G.origin();G.scale(k);w,h=w/k,h/k
   local function label(value,x,y,width)return Theme.text(value,x,y,width,Options.ink())end
   local items={}

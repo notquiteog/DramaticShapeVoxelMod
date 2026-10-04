@@ -26,6 +26,10 @@ function M.key(st,info)
  return key~='' and key or nil
 end
 function M.install(active,fit)
+ local function tagged(entry,id)
+  if active()then return V.require('Gen3SpriteLight').tag(entry,id)end
+  return entry
+ end
  local Trainer=require('src.core.game3.trainer_pic')
  local Battle=require('src.core.game3.battle')
  local Trainers=require('src.core.game3.scripting.trainers')
@@ -37,10 +41,10 @@ function M.install(active,fit)
    if st and not st.link and tonumber(id)==tonumber(st.trainerPicId)then
     local info=st.trainerId and Trainers.info(st.trainerId)
     local key=M.key(st,info);local image=key and Art.trainerImage(key)
-    if image then return {image=fit(image,64),w=64,h=64}end
+    if image then return tagged({image=fit(image,64),w=64,h=64},5)end
    end
   end
-  return front(id,...)
+  return tagged(front(id,...),5)
  end
  Trainer.back=function(gender,...)
   -- Old Man, Poke Dude and other scripted roles retain their native sheets.
@@ -50,7 +54,7 @@ function M.install(active,fit)
     local frames,key={},'';local width,height=0,0
     for i,progress in ipairs({0,1,25,49,72})do
      local image=Animated.playerTrainerPicture(progress)
-     if not image then return back(gender,...)end
+     if not image then return tagged(back(gender,...),4)end
      frames[i]=image;key=key..tostring(image)..':'
      local w,h=image:getDimensions();width=math.max(width,w);height=math.max(height,h)
     end
@@ -69,10 +73,10 @@ function M.install(active,fit)
      if not ok then c:release();error(err,0)end
      c:setFilter('nearest','nearest');sheets[key]=c
     end
-    return {image=sheets[key],w=64,h=320}
+    return tagged({image=sheets[key],w=64,h=320},4)
    end
   end
-  return back(gender,...)
+  return tagged(back(gender,...),4)
  end
  return function()
   Trainer.front,Trainer.back=front,back

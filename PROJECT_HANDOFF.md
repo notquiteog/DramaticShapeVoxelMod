@@ -1,3 +1,11 @@
+# World battle projection and Littleroot models — 2026-10-04
+
+Battle Art 1.30.0: native Gen3 actors/effects use pooled transparent cards in the
+world depth/shadow pass. Gen1/2 battle ownership is unchanged. See
+[QA and remaining coverage](docs/WORLD_BATTLE_2026-10-04.md). Native source
+artwork remains ROM-derived at runtime; no art/caches/captures are committed.
+Work lives on main. Scratch fixtures: `.scratch/world-battle-20261004`.
+
 # Emerald and modeled architecture release — 2026-10-04
 
 Battle Art 1.29.0 integrates upstream 1.11.1, native Emerald scenery recipes,

@@ -13,7 +13,7 @@ local treeRows={{0x1d4,0x1d5},{0x1dc,0x1dd}}
 function M.shape(primary,secondary,mid,behavior,collision)
  if primary=='general' then
   if trees[mid]then return {kind='tree',ground=1,root=roots[mid],anchorX=16,anchorZ=8,treeRows=treeRows,treeFamily='round',treeTrim=0}end
-  if mid==3 then return {kind='sign',height=12,ground=1}end
+  if mid==3 then return {kind='sign',height=12,ground=1,hoenn=true}end
   if mid==4 then return {kind='flowers',height=10,ground=1}end
   if mid==0xd or mid==0x15 then return {kind='grass',height=4,ground=1}end
  end
@@ -25,6 +25,16 @@ local function add(name,pair,rows,kind,extra)
  M.recipes[#M.recipes+1]=r
 end
 local center='building__pokemon_center'
+local lab='building__lab'
+add('birch_books',lab,{{0x210,0x211},{0x218,0x219},{0x220,0x221}},'designed',{design='em_lab_books'})
+add('birch_free_books',lab,{{0x224,0x225},{0x22c,0x22d},{0x234,0x235}},'designed',{design='em_lab_books'})
+add('birch_free_books_end',lab,{{0x236,0x237},{0x22c,0x22d},{0x234,0x235}},'designed',{design='em_lab_books'})
+add('birch_computer',lab,{{0x212,0x213},{0x21a,0x21b},{0x222,0x223}},'designed',{design='em_lab_computer'})
+add('birch_research_desk',lab,{{0x20b,0x20c,0x20d,0x20e},{0x222,0x233,0x222,0x233}},'designed',{design='em_lab_desk'})
+add('birch_starter_desk',lab,{{0x229,0x23a},{0x231,0x242}},'designed',{design='em_lab_starter'})
+add('birch_machine',lab,{{0x214,0x215},{0x21c,0x21d},{0x247,0x23f}},'labMachine',{h=25,topY=0,bodyY=24,panelY=26})
+add('birch_server',lab,{{0x216},{0x21e},{0x292}},'designed',{design='em_lab_server'})
+add('birch_plant',lab,{{0x23c},{0x244}},'plant',{h=20,cutout=true})
 add('center_healer',center,{{0x222,0x223},{0x22a,0x22b}},'centerHealer',{h=13})
 add('center_screen',center,{{0x24a,0x24b},{0x252,0x253}},'cabinet',{h=28,base=12,depth=1.5,frontOffset=32.2,facade={2,10,28,16}})
 add('hoenn_center_front_desk',center,{{0x258,0x221,0x221,0x205,0x221,0x259}},'centerCounter',{h=7})
@@ -67,6 +77,9 @@ add('hoenn_mart_return',mart,{{0x244},{0x208}},'designed',{design='em_mart_retur
 add('hoenn_mart_plant',mart,{{0x215},{0x21d},{0x225}},'plant',{h=26,cutout=true})
 -- Whole native roof headers, walls and doors; the floor apron is excluded.
 M.exteriors={
+ {family='rse',name='littleroot_player_house',pair='general__petalburg',header=0,back=2,roofEnd=54,wallBottom=79,bevel=3,roofShape='gable',roofRise=16,openings={{48,57,65,78,door=true},{15,58,32,68}},rows={{0x208,0x209,0x209,0x209,0x20a},{0x210,0x211,0x211,0x211,0x212},{0x218,0x219,0x219,0x219,0x21a},{0x222,0x232,0x230,0x240,0x221},{0x22a,0x23a,0x238,0x248,0x229}}},
+ {family='rse',name='littleroot_rival_house',pair='general__petalburg',header=0,back=2,roofEnd=54,wallBottom=79,bevel=3,roofShape='gable',roofRise=16,openings={{15,57,32,78,door=true},{48,58,65,68}},rows={{0x208,0x209,0x209,0x209,0x20a},{0x210,0x211,0x211,0x211,0x212},{0x218,0x219,0x219,0x219,0x21a},{0x220,0x240,0x231,0x232,0x223},{0x228,0x248,0x239,0x23a,0x22b}}},
+ {family='rse',name='birch_lab',pair='general__petalburg',header=0,back=2,roofEnd=52,wallBottom=79,bevel=2,roofVent={16,0,48,32},openings={{64,57,79,78,door=true},{16,56,30,67},{32,56,46,67},{48,56,62,67}},rows={{0x20c,0x242,0x243,0x20d,0x20d,0x20d,0x20e},{0x214,0x24a,0x24b,0x215,0x215,0x215,0x216},{0x214,0x215,0x215,0x215,0x215,0x215,0x216},{0x21e,0x20f,0x20f,0x22c,0x241,0x22d,0x21f},{0x226,0x217,0x217,0x234,0x249,0x235,0x227}}},
  {family='rse',name='oldale_house',roofShape='gable',roofRise=13,openings={{17,42,29,62,door=true},{34,41,46,54}},pair='general__petalburg',header=2,back=2,roofEnd=33,wallBottom=63,bevel=3,rows={{0x26c,0x26d,0x26d,0x26e},{0x274,0x275,0x275,0x276},{0x27c,0x27f,0x27d,0x27e},{0x284,0x287,0x28f,0x286}}},
  {family='rse',kind='mart',name='oldale_mart',pair='general__petalburg',header=2,back=2,roofEnd=42,wallBottom=63,bevel=3,rows={{0x28,0x29,0x29,0x285},{0x30,0x31,0x32,0x33},{0x38,0x39,0x3a,0x3b},{0x60,0x41,0x42,0x43}}},
  {family='rse',kind='center',name='oldale_center',roofShape='barrel',roofRise=11,pair='general__petalburg',header=2,back=2,roofEnd=40,wallBottom=63,bevel=4,rows={{0x48,0x49,0x282,0x283},{0x50,0x51,0x52,0x53},{0x58,0x59,0x5a,0x5b},{0x60,0x61,0x62,0x63}}},
