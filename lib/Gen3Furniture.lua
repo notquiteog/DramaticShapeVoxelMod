@@ -81,8 +81,10 @@ local Designed=V and V.require('Gen3DesignedFurniture') or dofile((os.getenv('DS
 local Institution=V and V.require('Gen3InstitutionFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3InstitutionFurniture.lua')
 for _,r in ipairs(Institution)do recipes[#recipes+1]=r end
 Designed.install(recipes)
+local Hoenn=V and V.require('Gen3Hoenn') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3Hoenn.lua')
+for _,r in ipairs(Hoenn.recipes)do recipes[#recipes+1]=r end
 local function matched(mid,expected,r)
- return (r.kind=='escalator' and Center.canonical(mid) or mid)==expected
+ return (r.kind=='escalator' and r.family~='rse' and Center.canonical(mid) or mid)==expected
 end
 local Budget=V and V.require('BuildBudget') or {tick=function()end}
  -- Longest recipes win: the computer's top is also a cabinet top.
@@ -114,7 +116,7 @@ function M.extract(cells)
  table.sort(ordered,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
  for _,c in ipairs(ordered)do Budget.tick();if not c.prop and not c.stairs then
   for _,r in ipairs(choices(c.mid))do
-   if c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
+   if (Hoenn.active()==(r.family=='rse')) and c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
     local match=true;local parts={}
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]

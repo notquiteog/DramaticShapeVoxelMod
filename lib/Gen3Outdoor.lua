@@ -127,7 +127,7 @@ function M.image(ts,frame)
  local masks={}
  local artPair=V.require('Gen3Tilesets').canonical(ts.pair)
  masks=V.require('Gen3Furniture').cutouts(artPair)
- if not next(masks)then masks=plants end
+ if not next(masks)then masks=V.require('Gen3Hoenn').active() and {[4]=1,[0xd]=1,[0x15]=1} or plants end
  for mid,ground in pairs(masks)do
   local mask=M.mask(ts,mid,ground)
   local at=ts.midToSlot[mid]

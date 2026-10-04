@@ -74,7 +74,56 @@ function M.draw(id,A)
   B(l+9,.04,n+5,l+9.3,.3,n+10,dark)
   B(l+6,.04,n+9.7,l+9.3,.3,n+10,dark)
  end
- if id=='fr_processing_machine' then
+ -- Raised stock has independent fronts, tops and sides, including on islands.
+ local function stock(rect,l,n,w,d,b,h,columns)
+  columns=columns or 4
+  for j=0,columns-1 do
+   local span=w/columns;local x=l+j*span;local sx=rect[1]+rect[3]*j/columns
+   local mat=T(sx+rect[3]/columns*.5,rect[2]+rect[4]*.5)
+   local tall=h-(j%2)*.55
+   B(x+.25,b,n+.25,x+span-.3,tall,n+d,mat)
+   front({sx,rect[2],rect[3]/columns,rect[4]},x+.25,b,x+span-.3,tall,n+d+.02)
+   B(x+.5,tall,n+.5,x+span-.6,tall+.3,n+d-.3,T(sx+1,rect[2]+1))
+  end
+ end
+ if id=='em_mart_stock' then
+  local case,dark=T(2,16),T(4,29)
+  shelves(1,29,30,12,26,{{3,12,{2,33,28,10}},{14,23,{2,20,28,11}}},case,dark,true)
+  B(1,26,29,31,28,41,case);front({1,10,30,8},1,22,31,28,41.04)
+ elseif id=='em_mart_glass' then
+  local case,dark=T(1,20),T(7,24)
+  B(1,0,24,47,27,25,case);B(1,0,24,47,2,32,case)
+  for j=0,2 do local x=j*16
+   B(x+1,2,24,x+2,27,32,case);B(x+14,2,24,x+15,27,32,case)
+   front({x+2,1,12,26},x+2,2,x+14,26,31.8)
+   B(x+1,26,24,x+15,28,32,case)
+   B(x+12,9,32,x+13,18,32.5,dark)
+  end
+ elseif id=='em_mart_island' or id=='em_mart_sidecase' then
+  local w=A.width;local case,dark=T(3,42),T(4,25)
+  B(2,0,4,w-2,2,46,dark);B(2,2,3,w-2,4,45,case)
+  local spine=w==32 and 15 or 13
+  B(spine,4,4,spine+2,16,44,case)
+  for side=0,(w==32 and 1 or 0)do
+   local l,rr=side==0 and 2 or 18,side==0 and 13 or 30
+   for row=0,1 do local z=7+row*18
+    B(l,4,z,rr,5,z+15,case)
+    stock({l,5+row*18,rr-l,13},l+.6,z+1,rr-l-1.2,10,5,11,3)
+    B(l,5,z+14,rr,6.2,z+15,case)
+   end
+  end
+ elseif id=='em_mart_return' then
+  local case=T(2,12);B(1,0,7,15,5,41,case);B(1,5,7,15,7,41,T(8,3))
+  top({1,0,14,16},1,7,15,41,7.02)
+ elseif id=='em_center_medicine' then
+  local case,dark=T(2,15),T(3,35)
+  shelves(1,28,30,11,23,{{3,11,{2,33,28,7}},{13,20,{2,23,28,7}}},case,dark,true)
+  B(1,23,28,31,25,39,case)
+ elseif id=='em_center_terminal' then
+  local case,dark=T(8,6),T(4,13)
+  B(2,0,5,14,7,14,case);crt(2,4,12,8,18,{3,1,10,10},case,dark)
+  keyboard({3,11,10,4},3,11,10,4,7.1,case)
+ elseif id=='fr_processing_machine' then
   local metal,light,dark=T(7,28),T(7,20),T(25,26)
   local brass,red=T(22,18),T(8,25)
   -- Closed stepped cylinders, rather than the original perspective drawing
@@ -541,7 +590,7 @@ function M.draw(id,A)
   local case=T(10,14)
   B(3,0,14,15,6,59,case);B(12,6,11,15,12,60,case)
   for _,z in ipairs({16,39})do
-   B(2,6,z,12,7,z+20,case);top({3,z+1,8,18},3,z+1,11,z+19,7.02)
+   B(2,6,z,12,7,z+20,case);stock({3,z+1,8,18},3,z+1,8,14,7,11,3)
    B(2,7,z,3,8.5,z+20,case)
   end
  elseif id=='fr_lab_free_books' then
@@ -554,7 +603,7 @@ function M.draw(id,A)
   return M.draw('fr_lab_books',G)
  elseif id=='fr_mart_cooler' then
   for j=0,1 do local x=j*24
-   shelves(x+1,28,22,12,22,{{4,11,{x+3,29,18,6}},{12,19,{x+3,23,18,6}}},T(x+2,18),T(x+4,34))
+   shelves(x+1,28,22,12,22,{{4,11,{x+3,29,18,6}},{12,19,{x+3,23,18,6}}},T(x+2,18),T(x+4,34),true)
    B(x+2,21,28,x+22,24,40,T(x+2,15))
    front({x+2,15,20,6},x+2,21,x+22,24,40.02)
    B(x+20,8,40,x+21,17,40.5,T(x+2,18))
@@ -566,7 +615,7 @@ function M.draw(id,A)
    local l,r=q[1],q[2]
    for _,z in ipairs({16,39})do
     B(l,6,z,r,7,z+20,case);B(l+1,7,z+1,r-1,8,z+19,dark)
-    top({l+1,z+1,r-l-2,18},l+1,z+1,r-1,z+19,8.02)
+    stock({l+1,z+1,r-l-2,18},l+1,z+1,r-l-2,14,8,12,3)
     B(l,7,z,l+1,8.5,z+20,case);B(r-1,7,z,r,8.5,z+20,case)
    end
   end
@@ -662,13 +711,13 @@ function M.draw(id,A)
  elseif id=='gb_books' or id=='gb_mart_shelf' then
   shelves(1,20,14,10,26,{{3,12,{1,16,14,7}},{14,24,{1,7,14,7}}},T(1,1),T(2,15))
  elseif id=='gb_mart_cooler' then
-  shelves(1,20,14,10,25,{{3,11,{1,21,14,8}},{13,22,{1,9,14,10}}},T(1,1),T(2,16))
+  shelves(1,20,14,10,25,{{3,11,{1,21,14,8}},{13,22,{1,9,14,10}}},T(1,1),T(2,16),true)
   B(12,6,30,13,18,30.4,T(1,1))
  elseif id=='gb_mart_display' then
   local case=T(1,1)
   B(1,0,5,30,5,29,case);B(13,5,4,17,16,30,case)
   for _,q in ipairs({{1,12},{18,30}})do
-   B(q[1],5,6,q[2],7,28,case);top({q[1],5,q[2]-q[1],22},q[1],6,q[2],28,7.02)
+   B(q[1],5,6,q[2],7,28,case);stock({q[1],5,q[2]-q[1],22},q[1]+.5,7,q[2]-q[1]-1,18,7,11,3)
   end
  elseif id=='gb_seat' then cushion(1,1,14,13,{2,2,12,9},T(7,5),T(3,13))
  elseif id=='gb_receiver' then
@@ -689,7 +738,9 @@ function M.draw(id,A)
   local case=T(3,5)
   B(3,0,9,29,4,29,case);B(2,4,8,30,6,30,case)
   top({2,7,28,21},2,10,30,29,6.02)
-  B(4,6,16,28,12,19,case);front({4,0,24,7},4,6,28,12,19.02)
+  B(4,6,8,28,12,11,case);front({4,0,24,7},4,6,28,12,11.02)
+  for _,x in ipairs({2,28})do B(x,6,10,x+2,7.2,29,case)end
+  B(3,1,29,29,3,29.5,T(7,27))
 elseif id=='fr_lab_centrifuge' then
   -- Oak's lab bank: a 3x2 cabinet run whose six source cells are each half a
   -- machine, so it is built as real geometry rather than one stretched drawing.

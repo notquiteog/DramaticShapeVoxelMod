@@ -133,6 +133,7 @@ function M.of(primary,secondary,mid,behavior,collision)
  if behavior and require('src.core.game3.collision').isSurfable(behavior) then
   return {kind='water',reviewedSurface=true,behavior=behavior}
  end
+ if V and V.require then local H=V.require('Gen3Hoenn');if H.active() then return H.shape(primary,secondary,mid,behavior,collision)end end
  if primary=='general' and caves[secondary] and mid>=0x280 then
   if mid==0x282 or mid==0x283 then return {kind='rock',ground=0x281,height=mid==0x282 and 14 or 10} end
   if collision==7 and caveWalls[mid] then

@@ -15,6 +15,8 @@ local function claim(cells,g,rows)
  return g
 end
 function M.prepare(cells,gyms,families)
+ local H=V and V.require('Gen3Hoenn');local hoenn=H and H.active()
+ if hoenn then families=H.exteriors end
  local out={}
  for _,g in ipairs(gyms)do
   local b={cx=g.cx,cy=g.cy-1,pair=g.pair,kind='gym',variant=g.variant}
@@ -22,7 +24,7 @@ function M.prepare(cells,gyms,families)
   for y=0,4 do rows[y+1]={};for x=0,g.width-1 do rows[y+1][x+1]=cells[(b.cx+x)..':'..(b.cy+y)].mid end end
   if claim(cells,b,rows)then out[#out+1]=b end
  end
- for _,c in pairs(cells)do Budget.tick();if c.primary=='general' and not c.civic then
+ for _,c in pairs(cells)do Budget.tick();if not hoenn and c.primary=='general' and not c.civic then
   local rows,kind,cy
   if c.mid==760 and c.pair=='general__rom_082d4b9c' then
    kind,cy='mart',c.cy

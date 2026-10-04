@@ -38,7 +38,7 @@ function M.resolve(rs,x,y)
  if donor.biome=='forest' then
   local source=donor.shape;local spacing=source.spacing or 2
   return donor.mid,donor.pair,{kind='tree',ground=source.ground or 1,root=x%spacing==0 and y%spacing==0,
-   spacing=source.spacing,anchorX=source.anchorX,anchorZ=source.anchorZ,treeScale=source.treeScale},'forest'
+   treeRows=source.treeRows,treeFamily=source.treeFamily,treeTrim=source.treeTrim,spacing=source.spacing,anchorX=source.anchorX,anchorZ=source.anchorZ,treeScale=source.treeScale},'forest'
  elseif donor.biome=='mountain' then
   return 113,donor.pair,{kind='cliff',height=32,ground=1},'mountain'
  elseif donor.biome=='water' then

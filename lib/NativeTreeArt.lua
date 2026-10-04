@@ -160,14 +160,15 @@ function M.gen2(map,cx,cy,lift,donor)
 end
 function M.gen3(c)
  local ts=c.ts;local forest=c.shape.spacing==3
- local id=tostring(ts.imageData)..':'..tostring(ts.overImageData)..':'..tostring(forest)..':'..(c.shape.ground or 1)
- if entries[id]then return variant(entries[id],forest and 'tiered' or 'conifer',1,'tree')end
+ local family=c.shape.treeFamily or (forest and 'tiered' or 'conifer')
+ local id=tostring(ts.imageData)..':'..tostring(ts.overImageData)..':'..family..':'..(c.shape.ground or 1)
+ if entries[id]then return variant(entries[id],family,1,'tree')end
  -- Complete General drawings, not cropped root tiles. Forest has its own
  -- three-column family. Source IDs are scoped by the resolved tileset.
  -- Dense map borders use cropped overlap cells (20/22, 664, etc.).
  -- Those are not standalone trees. Reconstruct the complete original family
  -- from its cap, middle, rounded lower foliage and, in the forest, trunk.
- local rows=forest and {{1,641,1},{648,649,650},{656,657,658},{672,673,674},{675,676,677}}
+ local rows=c.shape.treeRows or forest and {{1,641,1},{648,649,650},{656,657,658},{672,673,674},{675,676,677}}
    or {{14,15},{28,29},{36,37}}
  local function pixel(mid,x,y)
   local slot=ts.midToSlot[mid];if not slot then return 0,0,0,0 end
@@ -181,7 +182,7 @@ function M.gen3(c)
  local ground=background(16,16,function(x,y)return pixel(c.shape.ground or 1,x,y)end)
  local result=card(id,#rows[1]*16,#rows*16,function(x,y)
   return pixel(rows[math.floor(y/16)+1][math.floor(x/16)+1],x%16,y%16)
- end,ground,forest and 16 or 8)
- return variant(result,forest and 'tiered' or 'conifer',1,'tree')
+ end,ground,c.shape.treeTrim or (forest and 16 or 8))
+ return variant(result,family,1,'tree')
 end
 return M

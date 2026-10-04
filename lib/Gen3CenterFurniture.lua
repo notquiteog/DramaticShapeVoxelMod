@@ -102,6 +102,9 @@ function M.append(p,source,box,sample,emit,uvFor)
   source(4,0,24,9,{x+4,20,z+12.02},{x+28,20,z+12.02},{x+28,13,z+12.02},{x+4,13,z+12.02})
   source(3,9,26,17,{x+3,13.03,z+12},{x+29,13.03,z+12},{x+29,13.03,z+28},{x+3,13.03,z+28})
   source(3,26,26,5,{x+3,13,z+30.02},{x+29,13,z+30.02},{x+29,6,z+30.02},{x+3,6,z+30.02})
+  for _,xx in ipairs({2,28})do box(x+xx,13,z+12,x+xx+2,14.2,z+28,white)end
+  box(x+5,2,z+30,x+27,3,z+30.5,shadow)
+  for _,xx in ipairs({6,10,14,18,22})do box(x+xx,7,z+30,x+xx+2,8,z+30.4,shadow)end
   return true
  elseif r.kind=='centerSeat' then
   local frame,cushion=sample(4,13),sample(8,5)
