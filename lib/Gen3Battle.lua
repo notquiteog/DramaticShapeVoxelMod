@@ -104,7 +104,9 @@ function M.install()
   G.clear(0,0,0,0)
   M.active=true;M.rendered=M.rendered+1
   drawing=true;Hud.begin()
+  local art=V.require('NativeBattleArt');local previousStage=art.staged;art.staged=true
   local drawn,err=pcall(original,game,w,h)
+  art.staged=previousStage
   drawing=false;Hud.finish()
   if not drawn then error(err,0)end
  end

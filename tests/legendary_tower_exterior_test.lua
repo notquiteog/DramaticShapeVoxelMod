@@ -2,7 +2,7 @@
 local checks=0
 local function check(v,msg) checks=checks+1; assert(v,msg) end
 local custom=true
-local CV={customTower=function() return custom end,towerWallStyle=function() return 'smoke_black' end}
+local CV={referenceBuildings=function()return false end,customTower=function() return custom end,towerWallStyle=function() return 'smoke_black' end}
 local Voxel3D={newMesh=function(v,i) return {v=v,i=i} end,draw=function() end}
 local Mat4={translate=function(x,y,z)return{x=x,y=y,z=z}end,mul=function(a,b)return{a=a,b=b}end}
 local modules={Voxel3D=Voxel3D,Mat4=Mat4,CommunityVisuals=CV}

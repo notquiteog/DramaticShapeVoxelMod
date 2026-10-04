@@ -169,6 +169,7 @@ function M.append(p,emit,uvFor)
   emit({{x1,y1,z1},{x1,y1,z0},{x1,y0,z0},{x1,y0,z1}},material,.7)
  end
  local function sample(sx,sy)
+  sx,sy=math.floor(sx),math.floor(sy)
   local t=uvFor(p.ts,r.rows[math.floor(sy/16)+1][math.floor(sx/16)+1])
   local u=t[1][1]+(t[2][1]-t[1][1])*(sx%16+.5)/16
   local v=t[1][2]+(t[3][2]-t[1][2])*(sy%16+.5)/16
@@ -412,7 +413,7 @@ function M.support(cells,gid,px,py,stationary)
 end
 function M.cutouts(pair)
  local out={}
- for _,r in ipairs(recipes)do if r.kind=='plant' and r.pair==pair then
+ for _,r in ipairs(recipes)do if Hoenn.active()==(r.family=='rse') and r.kind=='plant' and r.pair==pair then
   for _,row in ipairs(r.rows)do for _,mid in ipairs(row)do out[mid]=r.ground end end
  end end
  return out

@@ -168,9 +168,16 @@ local connectorPath, connectorPathN = signature('ROUTE_8', false, false, 35,
   false, 1, 1, true)
 local lavenderBattlePath35, lavenderBattlePath35N = signature('LAVENDER_TOWN', false, false, 35)
 local lavenderBattlePath57, lavenderBattlePath57N = signature('LAVENDER_TOWN', false, false, 57)
-check(lavenderBattlePath35N == connectorPathN
-    and same(lavenderBattlePath35, connectorPath),
-  'Lavender Battle Art paths keep the same Kanto road geometry as Route 8/12')
+-- Upstream 1.11.1 changes opt-in ROADS to cobblestones. CITY GROUND's
+-- default Lavender path must retain its established material independently.
+local legacyPath={.62484375,.66625,1.0257067482363,.56265625,.66625,1.0124705531807,
+ .56265625,.50041666666667,1.0179000899942,.62484375,.50041666666667,1.0239400936435}
+check(lavenderBattlePath35N==4 and #lavenderBattlePath35==#legacyPath,
+ 'Lavender default path retains its single flat quad')
+for i,v in ipairs(legacyPath)do check(math.abs(lavenderBattlePath35[i]-v)<1e-10,
+ 'Lavender default path retains pre-merge UV/shading '..i)end
+check(not same(lavenderBattlePath35,connectorPath),
+ 'opt-in route cobblestones do not replace the default Lavender material')
 check(lavenderBattlePath57N == lavenderBattlePath35N
     and same(lavenderBattlePath57, lavenderBattlePath35),
   'Lavender source $23/$39 path cells resolve to one continuous path material')
@@ -286,6 +293,7 @@ check(route10BattleTowerLawnN == route10ReferenceLawnN
 local Disk = assert(loadfile('lib/VoxelMeshDisk.lua'))({
   require = function(name)
     if name == 'CommunityVisuals' then return Community end
+    if name=='ForestTrees' or name=='CinnabarCoast' or name=='VermilionHarbor' or name=='CityStreets' then return {enabled=function()return false end,themes={}}end
     if name == 'StaticGeometry' then return { source = function(map) return map end } end
     if name == 'LoadTimings' then return { wrap = function(_, fn) return fn end } end
     return {}
@@ -351,6 +359,7 @@ check(palletCache ~= fingerprint('PALLET_TOWN', false, true),
 local TerrainAtlas = assert(loadfile('lib/TerrainAtlas.lua'))({
   require = function(name)
     if name == 'CommunityVisuals' then return Community end
+    if name=='ForestTrees' or name=='CinnabarCoast' or name=='VermilionHarbor' or name=='CityStreets' then return {enabled=function()return false end,themes={}}end
     if name == 'TowerGarden' then return modules.TowerGarden end
     return {}
   end,

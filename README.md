@@ -1,3 +1,11 @@
+## 1.29.0 — 2026-10-04
+
+Added structural roof overhangs, closed pitched/barrel profiles and recessed windows; corrected Gen3 far-side battle sizing while preserving native animation ownership. Gen3 actors still use the native screen plane; full world projection remains unfinished.
+
+Merged absol89 upstream 1.11.1 while retaining our cross-generation renderer. Added native Emerald Oldale buildings, four-cell trees and 41 Center/Mart furniture recipes. Refined stock displays and healing equipment in Crystal and FRLG. Emerald scenery remains a preview: many other Hoenn areas still need authored models.
+
+Tested against official Gen1Recomp 0.3.51. Existing games retain their native data and defaults. See Battle Art’s Emerald QA record for the exact integration coverage and remaining gaps.
+
 ## 1.28.9 — Broadcast rooms and Rocket equipment
 
 Crystal radio rooms now have dedicated broadcast receivers, mixing desks, microphones and low round stools. The complete 5F studio desk owns its stacked equipment and work surface together; cabinet materials no longer sample the empty floor strip above the source drawing.

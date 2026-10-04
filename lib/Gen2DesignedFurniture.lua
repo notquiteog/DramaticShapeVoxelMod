@@ -7,7 +7,7 @@ function M.build(t,data,perRow,aw,ah)
   return {(id%perRow*8+x%8+.5)/aw,(math.floor(id/perRow)*8+y%8+.5)/ah}
  end
  local function emit(p,uv,shade)p.uv=uv;p.shade=shade or 1;out[#out+1]=p end
- local function sample(x,y)local uv=tex(x,y);return {uv,uv,uv,uv}end
+ local function sample(x,y)local uv=tex(math.floor(x),math.floor(y));return {uv,uv,uv,uv}end
  local function box(l,b,n,r,h,s,uv)
   emit({{l,h,n},{l,h,s},{r,h,s},{r,h,n}},uv)
   emit({{l,b,s},{l,b,n},{r,b,n},{r,b,s}},uv,.65)

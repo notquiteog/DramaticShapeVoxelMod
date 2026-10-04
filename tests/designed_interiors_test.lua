@@ -1,7 +1,10 @@
 local V={};local modules={}
 function V.require(n)if not modules[n]then modules[n]=assert(loadfile('lib/'..n..'.lua'))(V)end;return modules[n]end
+local version='firered'
+package.loaded['src.core.GameVersion']={get=function()return version end}
 local F=V.require('Gen3Furniture');local n=0
 for _,r in ipairs(F.recipes)do if r.design then
+ version=r.family=='rse' and 'emerald' or 'firered'
  local cells={}
  for y,row in ipairs(r.rows)do for x,mid in ipairs(row)do cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,primary=r.primary or 'building',pair=r.pair or 'test',secondary=r.secondary or '',ts={}}end end
  local props=F.extract(cells);assert(#props==1 and props[1].recipe==r,'incomplete match '..r.name)

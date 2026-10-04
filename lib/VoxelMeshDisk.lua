@@ -89,7 +89,7 @@ local STATIC_PLAYTHROUGH = "bavc_static_mesh_v2"
 -- bed and the open bin. Old geometry must not mask these visual corrections.
 -- Flat foliage cards replace crown shells; metadata now stores anchor X/Z/Y.
 -- Authored interior components, floor borders and native wall backing.
-Disk.CACHE_REVISION = 82
+Disk.CACHE_REVISION = 84
 -- Patch releases which do not change emitted vertices must keep the existing
 -- world cache usable. This token matches the first static-mesh-cache-v2 build;
 -- CACHE_REVISION, not the public mod version, owns geometry compatibility.
@@ -631,8 +631,9 @@ function Disk.fingerprint(map, slot, masks, kind)
     parts[#parts + 1] = "crystal-hd2d"
   end
   if kind == "terrain" and tileset.id == "OVERWORLD"
-      and (CommunityVisuals.customRoads() or CommunityVisuals.customGrass()
-        or (mapId == "LAVENDER_TOWN" and CommunityVisuals.customCityGround())) then
+      and (CommunityVisuals.customRoads()
+        or (not CommunityVisuals.isCityGroundMap(map) and CommunityVisuals.customGrass())
+        or (CommunityVisuals.isCityGroundMap(map) and CommunityVisuals.customCityGround())) then
     parts[#parts + 1] = "rollback16-decor-water-wood-grass"
   end
   if kind == "terrain" and tileset.id == "OVERWORLD" and mapId == "LAVENDER_TOWN"

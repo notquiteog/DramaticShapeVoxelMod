@@ -25,7 +25,7 @@ function M.build(id,mx,mz,base,dirs,pier,emit)
   end end
   return true
  end
- local wood=style=='picket' or style=='woodland' 
+ local wood=style=='picket' or style=='woodland'
  local h=style=='picket' and 7.4 or 9.2
  local radius=style=='bridge' and pier and 1.5 or wood and .64 or .48
  local tone=style=='picket' and 1.1 or wood and .65 or .40

@@ -29,7 +29,8 @@ C.tower=S('tower',{'default','n64memory'}); C.towerWall=S('towerWall',{'smoke_bl
 C.caves=S('caves',{'default','n64memory'}); C.caveDetails=S('caveDetails',{'off','subtle','full'}); C.caveSound=S('caveSound',{'off','low','mid'})
 C.trees=S('trees',{'default','n64memory','n64memory_fast'}); C.treeDetail=S('treeDetail',{'full','balanced','handheld'},nil,2)
 for _,k in ipairs({'cutTrees','signs','cityGround','grass','roads','walls','courtyards','sky','forest'}) do C[k]=S(k,{'default','n64memory'}) end
-C.settings={C.casino,C.prizeRoom,C.tunnels,C.rocket,C.elevator,C.pillars,C.masonry,
+C.safari=S('communitySafari',{'default','n64memory'});C.kantoLife=S('communityKantoLife',{'off','natural'})
+  C.settings={C.safari,C.kantoLife,C.casino,C.prizeRoom,C.tunnels,C.rocket,C.elevator,C.pillars,C.masonry,
   C.tower,C.towerWall,C.caves,C.caveDetails,C.caveSound,C.trees,C.treeDetail,
   C.cutTrees,C.signs,C.cityGround,C.grass,C.roads,C.walls,C.courtyards,C.sky,C.forest}
 C.invalidations=0; function C.invalidate() C.invalidations=C.invalidations+1 end

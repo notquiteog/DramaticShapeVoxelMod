@@ -58,11 +58,12 @@ package.loaded['src.core.Version'] = {engine = '0.2.53'}
 package.loaded['src.core.Platform'] = {detect = function() return {os = 'Windows'} end}
 local setting = {get = function() return 'default' end}
 local visuals = setmetatable({layout = function() return 'default' end,
-  customForest = function() return false end, customSigns = function() return false end,
+  customForest = function() return false end, customRoads = function()return false end, customSigns = function() return false end,
   isCityGroundMap = function() return false end},
   {__index = function() return setting end})
 local disk = assert(loadfile('lib/VoxelMeshDisk.lua'))({require = function(name)
   if name == 'CommunityVisuals' then return visuals end
+  if name == 'ForestTrees' or name == 'CinnabarCoast' or name == 'VermilionHarbor' or name == 'CityStreets' then return {enabled=function()return false end,themes={}}end
   if name == 'StaticGeometry' then return {source = function(map) return map end} end
   if name == 'LoadTimings' then return {wrap = function(_, fn) return fn end} end
   return {}

@@ -9,15 +9,27 @@ function M.image(mon,back)
  local side=back and Art.playerSide()or'front'
  return Animated.picture(mon,side)
 end
-function M.fit(image,size,mirror)
+function M.fit(image,size,mirror,pixelScale)
  local cache=fitted[image];if not cache then cache={};fitted[image]=cache end
- local key=mirror and ('flip:'..size) or size
+ local key=tostring(size)..':'..tostring(mirror==true)..':'..tostring(pixelScale)
  if cache[key]then return cache[key]end
- local g=love.graphics;local c=g.newCanvas(size,size)
+ local g=love.graphics;local c=g.newCanvas(size,size,{dpiscale=1})
  g.push('all');g.setCanvas(c);g.origin();g.setShader();g.setScissor();g.setDepthMode();g.setBlendMode('alpha');g.clear(0,0,0,0);g.setColor(1,1,1,1)
- local w,h=image:getDimensions();local scale=math.min(size/w,size/h)
+ local w,h=image:getDimensions();local scale=math.min(size/w,size/h,pixelScale or math.huge)
  g.draw(image,(size-w*scale)/2+(mirror and w*scale or 0),size-h*scale,0,mirror and -scale or scale,scale);g.pop();c:setFilter('nearest','nearest');cache[key]=c
  return c
+end
+-- Gen 3's native animation compositor uses two screen-space rows. Keep its
+-- hit effects/withdrawal sequencing, but give the far row a depth cue and use
+-- one pixel pitch per source generation. Fitting each cropped mon to 64px
+-- independently made small fronts enormous and erased the artwork's scale.
+-- Gen 1/2 already project their actors through the world camera.
+function M.stagePixelScale(back)
+ if not M.staged then return nil end
+ local side=back and Art.playerSide()or 'front'
+ local setting=side=='back'and Art.backAnimationSetting or Art.frontAnimationSetting
+ local reference=({gen1=56,gen2=56,gen3=64,gen4=80,gen5=96})[setting:get()]or 64
+ return (64/reference)*(back and 1 or .68)
 end
 function M.settings()
  return {Art.setting,Art.frontAnimationSetting,Art.backAnimationSetting,Art.viewSetting,Art.duplicateSetting,Art.frontFlipSetting,Art.trainerSetting,Art.playerArtSetting,Art.playerAnimationSetting}
@@ -70,9 +82,13 @@ function M.install()
       mon.otSecretId=source.otSecretId;mon.isShiny=source.isShiny
      end
      local image=M.image(mon,side=='back')
-     if image then return Light.tag({image=M.fit(image,64,side=='back' and Art.playerSide()=='front' and Art.flipsPlayerFront()),w=64,h=64})end
+     if image then return Light.tag({image=M.fit(image,64,side=='back' and Art.playerSide()=='front' and Art.flipsPlayerFront(),M.stagePixelScale(side=='back')),w=64,h=64})end
     end
     local entry=original(species,form,...)
+    if active and M.staged and entry and entry.image and side=='front' then
+     local copy={};for k,v in pairs(entry)do copy[k]=v end
+     copy.image=M.fit(entry.image,64,false,.68);entry=copy
+    end
     return active and Light.tag(entry)or entry
    end
    undo[#undo+1]=function()P[key]=original end

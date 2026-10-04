@@ -54,7 +54,8 @@ local function fixture(stored)
     {'courtyards','communityCourtyards'},{'sky','communitySky'},
     {'forest','communityForest'},
   }) do C[entry[1]]=S(entry[2],{'default','n64memory'}) end
-  C.settings={C.casino,C.prizeRoom,C.tunnels,C.rocket,C.elevator,C.pillars,
+  C.safari=S('communitySafari',{'default','n64memory'});C.kantoLife=S('communityKantoLife',{'off','natural'})
+  C.settings={C.safari,C.kantoLife,C.casino,C.prizeRoom,C.tunnels,C.rocket,C.elevator,C.pillars,
     C.masonry,C.tower,C.towerWall,C.caves,C.caveDetails,C.caveSound,C.trees,
     C.treeDetail,C.cutTrees,C.signs,C.cityGround,C.grass,C.roads,C.walls,
     C.courtyards,C.sky,C.forest}

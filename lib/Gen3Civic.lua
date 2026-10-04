@@ -3,6 +3,7 @@
 local V=...
 local Budget=V and V.require('BuildBudget') or {tick=function()end,check=function()end}
 local M={}
+local Architecture=V and V.require('ArchitecturalDetails') or dofile('lib/ArchitecturalDetails.lua')
 local function claim(cells,g,rows)
  local parts={}
  for dy,row in ipairs(rows)do for dx,mid in ipairs(row)do
@@ -222,7 +223,26 @@ function M.append(g,emit)
  local wall,trim=uv(p.w*2+.5,.5,p.w*2+.5,.5),uv(p.w*2+2.5,.5,p.w*2+2.5,.5)
  local function face(v,tex,shade)emit(v,tex,shade or 1)end
  local function front(l,r,sy,ey,height,depth)
-  face({{x+l,height,z+depth},{x+r,height,z+depth},{x+r,0,z+depth},{x+l,0,z+depth}},uv(l+.05,sy+.05,r-.05,ey-.05))
+  local openings=g.custom and g.custom.openings
+  if not openings then
+   face({{x+l,height,z+depth},{x+r,height,z+depth},{x+r,0,z+depth},{x+l,0,z+depth}},uv(l+.05,sy+.05,r-.05,ey-.05));return
+  end
+  local xs,ys={l,r},{sy,ey}
+  for _,o in ipairs(openings)do xs[#xs+1]=o[1];xs[#xs+1]=o[3];ys[#ys+1]=o[2];ys[#ys+1]=o[4]end
+  table.sort(xs);table.sort(ys)
+  local function y(v)return height*(ey-v)/(ey-sy)end
+  for iy=1,#ys-1 do for ix=1,#xs-1 do
+   local a,b,c,d=xs[ix],xs[ix+1],ys[iy],ys[iy+1];local hole=false
+   for _,o in ipairs(openings)do if a>=o[1] and b<=o[3] and c>=o[2] and d<=o[4]then hole=true end end
+   if b>a and d>c and not hole then face({{x+a,y(c),z+depth},{x+b,y(c),z+depth},{x+b,y(d),z+depth},{x+a,y(d),z+depth}},uv(a+.03,c+.03,b-.03,d-.03))end
+  end end
+  local function localFace(v,tex,shade)
+   local out={};for i,q in ipairs(v)do out[i]={q[1]+x,q[2],q[3]+z+depth}end;face(out,tex,shade)
+  end
+  for _,o in ipairs(openings)do
+   Architecture.opening(localFace,o[1],y(o[4]),o[3],y(o[2]),-.8,trim,uv(o[1]+.05,o[2]+.05,o[3]-.05,o[4]-.05),o.door)
+   if o.door then Architecture.box(localFace,o[1]-2,0,-1,o[3]+2,.8,1,trim)end
+  end
  end
  if p.doorLeft>0 then front(0,p.doorLeft,p.wallTop,p.wallBottom,p.wall,p.front)end
  if p.doorRight<p.w then front(p.doorRight,p.w,p.wallTop,p.wallBottom,p.wall,p.front)end
@@ -240,6 +260,11 @@ function M.append(g,emit)
  local function height(xx,zz)
   return p.wall+p.bevel*math.min(1,xx/5,(p.w-xx)/5,(zz-p.back)/5,(p.front-zz)/7)
  end
+ if g.custom and g.custom.roofShape then
+  Architecture.roof(p,g.custom.roofShape,g.custom.roofRise,uv,function(v,t,shade)
+   local out={};for i,q in ipairs(v)do out[i]={x+q[1],q[2],z+q[3]}end;face(out,t,shade)
+  end,trim)
+ else
  local xs={0,5,p.w-5,p.w};local zs={p.back,p.back+5,p.front-7,p.front}
  for iz=1,3 do for ix=1,3 do
   local l,r,t,b=xs[ix],xs[ix+1],zs[iz],zs[iz+1]
@@ -247,9 +272,10 @@ function M.append(g,emit)
   local ey=p.back+(b-p.back)/(p.front-p.back)*(p.roofEnd-p.back)
   face({{x+l,height(l,t),z+t},{x+r,height(r,t),z+t},{x+r,height(r,b),z+b},{x+l,height(l,b),z+b}},uv(p.w+l+.05,sy+.05,p.w+r-.05,ey-.05),iz==3 and .92 or 1)
  end end
+ end
  -- The native perimeter projects beyond the recessed masonry. Close its
  -- underside and front/back lips as well as both side edges.
- if not (g.custom and g.custom.geometry=='tower') then
+ if not (g.custom and (g.custom.geometry=='tower' or g.custom.roofShape)) then
   local Eaves=V and V.require('RoofEaves') or assert(loadfile('lib/RoofEaves.lua'))()
   local function edge(a,b,dx,dz) Eaves.edge(a,b,dx,dz,trim,face)end
   edge({x,height(0,p.back),z+p.back},{x+p.w,height(p.w,p.back),z+p.back},0,-1.5)
@@ -293,14 +319,16 @@ function M.append(g,emit)
   local low=math.max(4,(p.wall-wh)*.58);local top=low+wh
   for _,fraction in ipairs({.30,.70})do
    local center=z+p.back+(p.front-p.back)*fraction
-   for _,sx in ipairs({boarded and 1.55 or 1.90,p.w-(boarded and 1.55 or 1.90)})do
-    face({{x+sx,top+.6,center-ww/2-.6},{x+sx,top+.6,center+ww/2+.6},{x+sx,low-.6,center+ww/2+.6},{x+sx,low-.6,center-ww/2-.6}},trim)
-    local offset=sx<p.w/2 and -.02 or .02
-    face({{x+sx+offset,top,center-ww/2},{x+sx+offset,top,center+ww/2},{x+sx+offset,low,center+ww/2},{x+sx+offset,low,center-ww/2}},glass)
+   for _,side in ipairs({-1,1})do
+    local sx=x+(side<0 and 2 or p.w-2)
+    Architecture.opening(function(v,t,shade)
+     local out={};for i,q in ipairs(v)do out[i]={sx+side*q[3],q[2],center+q[1]}end;face(out,t,shade)
+    end,-ww/2,low,ww/2,top,boarded and .5 or .05,trim,glass)
    end
    local centerX=x+p.w*fraction
-   face({{centerX+ww/2+.6,top+.6,z+p.back-(boarded and .45 or .04)},{centerX-ww/2-.6,top+.6,z+p.back-(boarded and .45 or .04)},{centerX-ww/2-.6,low-.6,z+p.back-(boarded and .45 or .04)},{centerX+ww/2+.6,low-.6,z+p.back-(boarded and .45 or .04)}},trim)
-   face({{centerX+ww/2,top,z+p.back-(boarded and .47 or .06)},{centerX-ww/2,top,z+p.back-(boarded and .47 or .06)},{centerX-ww/2,low,z+p.back-(boarded and .47 or .06)},{centerX+ww/2,low,z+p.back-(boarded and .47 or .06)}},glass)
+   Architecture.opening(function(v,t,shade)
+    local out={};for i,q in ipairs(v)do out[i]={centerX-q[1],q[2],z+p.back-q[3]}end;face(out,t,shade)
+   end,-ww/2,low,ww/2,top,boarded and .5 or .05,trim,glass)
   end
  end
  -- Thin foundation/eave courses and side windows continue the facade.

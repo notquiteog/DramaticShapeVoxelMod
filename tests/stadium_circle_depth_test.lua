@@ -40,6 +40,7 @@ local g = {
 local canvas = { getDimensions=function() return 320,288 end }
 local providerFails = false
 local overworld = {
+  arena=function()return nil end,
   providerBegin=function() return true end,
   providerFinish=function() end,
   providerRender=function(_, passes)

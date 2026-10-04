@@ -65,6 +65,12 @@ local V = {mod={
   log=logger,
 }}
 function V.require(name)
+  if name == 'SafariFooting' then return assert(loadfile('lib/SafariFooting.lua'))(V)end
+  if name == 'WaterFooting' then return assert(loadfile('lib/WaterFooting.lua'))(V)end
+  if name == 'BattleRaft' then return assert(loadfile('lib/BattleRaft.lua'))(V)end
+  if name == 'Voxel3D' then return {}end
+  if name == 'CommunityVisuals' then return {customRoads=function()return false end}end
+  if name == 'SafariBattleFX' then return assert(loadfile('lib/SafariBattleFX.lua'))(V)end
   if name == 'FlyMotion' then return assert(loadfile('lib/FlyMotion.lua'))() end
   return assert(({Mat4=Mat4,BattleArt=BattleArt})[name],name)
 end

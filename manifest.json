@@ -1,7 +1,7 @@
 {
   "id": "BATTLE_ART_VOXEL_FORK",
   "name": "BATTLE ART VOXEL FORK",
-  "version": "1.28.9",
+  "version": "1.29.0",
   "api": 2,
   "entry": "main.lua",
   "profile": "content",
@@ -29,6 +29,6 @@
     "engine_internals"
   ],
   "affects_link": false,
-  "description": "2.5D environments and native battle presentation for Gen 1, Crystal and FireRed/LeafGreen. Reviewed native-art scenery, furniture, gym/cave/interior profiles, lighting and water effects; shared settings inventory with functional native renderer, battle and interface adapters. Cross-generation feature parity remains incomplete; unsupported options stay visible with explicit limitations. See docs/NATIVE_PARITY_2026-09-22.md and docs/option-support.json.",
+  "description": "2.5D environments and native battle presentation for Gen 1, Crystal and FireRed/LeafGreen, plus an Emerald scenery preview. Reviewed native-art scenery, furniture, gym/cave/interior profiles, lighting and water effects; shared settings inventory with functional native renderer, battle and interface adapters. Cross-generation feature parity remains incomplete; unsupported options stay visible with explicit limitations. See docs/NATIVE_PARITY_2026-09-22.md and docs/option-support.json.",
   "github": "notquiteog/DramaticShapeVoxelMod"
 }

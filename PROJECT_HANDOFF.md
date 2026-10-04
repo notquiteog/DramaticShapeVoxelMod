@@ -1,3 +1,14 @@
+# Emerald and modeled architecture release — 2026-10-04
+
+Battle Art 1.29.0 integrates upstream 1.11.1, native Emerald scenery recipes,
+modeled building openings/roofs, Center/Mart furniture and corrected Gen3
+far-side battle sizing. See [the evidence and remaining work](docs/EMERALD_QA_2026-10-04.md).
+Current engine: official 0.3.51. Release set: Battle Art 1.29.0, Wilds 2.5.0, Online 0.9.0, Ride 0.5.0,
+Doubles 0.13.0 and Skies 1.14.0; all target main. Carts: Crystal 1.22.0,
+Yellow 1.10.0, and FR/LG/Emerald previews 0.9.0. Isolated Linux profiles only; no user save edits.
+Do not interpret older upstream handoff entries below as the current branch,
+version, test environment or completeness claim.
+
 # Desktop Test134 integration - 2026-09-30
 
 Integrated all Test134 code from `C:/Users/User/Desktop/Test134` into this

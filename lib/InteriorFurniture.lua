@@ -77,27 +77,33 @@ function M.draw(id,A)
  -- Raised stock has independent fronts, tops and sides, including on islands.
  local function stock(rect,l,n,w,d,b,h,columns)
   columns=columns or 4
-  for j=0,columns-1 do
-   local span=w/columns;local x=l+j*span;local sx=rect[1]+rect[3]*j/columns
-   local mat=T(sx+rect[3]/columns*.5,rect[2]+rect[4]*.5)
-   local tall=h-(j%2)*.55
-   B(x+.25,b,n+.25,x+span-.3,tall,n+d,mat)
-   front({sx,rect[2],rect[3]/columns,rect[4]},x+.25,b,x+span-.3,tall,n+d+.02)
-   B(x+.5,tall,n+.5,x+span-.6,tall+.3,n+d-.3,T(sx+1,rect[2]+1))
-  end
+  local rows=math.max(1,math.ceil(d/4.5))
+  for row=0,rows-1 do for j=0,columns-1 do
+   local span,depth=w/columns,d/rows
+   local x,z=l+j*span,n+row*depth
+   local sw,sh=rect[3]/columns,rect[4]/rows
+   local sx,sy=rect[1]+sw*j,rect[2]+sh*row
+   local mat=T(sx+sw*.5,sy+sh*.5)
+   local tall=h-((j+row)%3)*.35
+   B(x+.25,b,z+.25,x+span-.3,tall,z+depth-.4,mat)
+   front({sx,sy,sw,sh},x+.25,b,x+span-.3,tall,z+depth-.38)
+   top({sx,sy,sw,sh},x+.25,z+.25,x+span-.3,z+depth-.4,tall+.02)
+  end end
  end
  if id=='em_mart_stock' then
   local case,dark=T(2,16),T(4,29)
   shelves(1,29,30,12,26,{{3,12,{2,33,28,10}},{14,23,{2,20,28,11}}},case,dark,true)
   B(1,26,29,31,28,41,case);front({1,10,30,8},1,22,31,28,41.04)
  elseif id=='em_mart_glass' then
-  local case,dark=T(1,20),T(7,24)
-  B(1,0,24,47,27,25,case);B(1,0,24,47,2,32,case)
+  -- The wall lies at z=32: inset glass still needs to sit in front of it.
+  local case,dark=T(1,12),T(7,24)
+  B(1,0,29,47,27,30,case);B(1,0,29,47,2,39,case)
   for j=0,2 do local x=j*16
-   B(x+1,2,24,x+2,27,32,case);B(x+14,2,24,x+15,27,32,case)
-   front({x+2,1,12,26},x+2,2,x+14,26,31.8)
-   B(x+1,26,24,x+15,28,32,case)
-   B(x+12,9,32,x+13,18,32.5,dark)
+   B(x+1,2,29,x+2,27,39,case);B(x+14,2,29,x+15,27,39,case)
+   B(x+2,2,30,x+14,26,38,T(x+7,18))
+   front({x+2,10,12,18},x+2,2,x+14,26,38.8)
+   B(x+1,26,29,x+15,28,39,case)
+   B(x+12,9,39,x+13,18,39.5,dark)
   end
  elseif id=='em_mart_island' or id=='em_mart_sidecase' then
   local w=A.width;local case,dark=T(3,42),T(4,25)
