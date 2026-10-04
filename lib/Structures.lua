@@ -241,11 +241,13 @@ function Structures.buildCommunityFence(S, map, postCells)
     body   = { (ax + 2.5) / atlasW, (ay + 0.5) / atlasH },
     light  = { (ax + 3.5) / atlasW, (ay + 0.5) / atlasH },
   }
+  -- Skip the decoration palette row only when the expanded deck material is active.
+  local grainTop = map.tileset.id == "OVERWORLD" and CommunityVisuals.customRoads() and 1.25 or 0.5
   local grainUV = {
     { (ax + 0.50) / atlasW, (ay + 7.50) / atlasH },
     { (ax + 7.50) / atlasW, (ay + 7.50) / atlasH },
-    { (ax + 7.50) / atlasW, (ay + 0.50) / atlasH },
-    { (ax + 0.50) / atlasW, (ay + 0.50) / atlasH },
+    { (ax + 7.50) / atlasW, (ay + grainTop) / atlasH },
+    { (ax + 0.50) / atlasW, (ay + grainTop) / atlasH },
   }
   if gen2 then
     -- Pick actual texels from the fence drawing, not Kanto's timber slot.
@@ -298,17 +300,22 @@ function Structures.buildCommunityFence(S, map, postCells)
     quads[#quads + 1] = q
   end
 
-  local function box(x0, y0, z0, x1, y1, z1)
-    quad({ x0, y0, z1 }, { x1, y0, z1 },
-         { x1, y1, z1 }, { x0, y1, z1 }, "body", 0.94, true)
-    quad({ x1, y0, z0 }, { x0, y0, z0 },
-         { x0, y1, z0 }, { x1, y1, z0 }, "shadow", 0.78, true)
-    quad({ x0, y1, z0 }, { x1, y1, z0 },
-         { x1, y1, z1 }, { x0, y1, z1 }, "light", 1.00, true)
-    quad({ x0, y0, z0 }, { x0, y0, z1 },
-         { x0, y1, z1 }, { x0, y1, z0 }, "dark", 0.82)
-    quad({ x1, y0, z1 }, { x1, y0, z0 },
-         { x1, y1, z0 }, { x1, y1, z1 }, "body", 0.88)
+  local function box(x0,y0,z0,x1,y1,z1,metal)
+    local function face(a,b,c,d,shade)
+      quad(a,b,c,d,metal and 'dark' or 'body',shade,not metal)
+    end
+    face({x0,y0,z1},{x1,y0,z1},{x1,y1,z1},{x0,y1,z1},.89)
+    face({x1,y0,z0},{x0,y0,z0},{x0,y1,z0},{x1,y1,z0},.76)
+    face({x0,y1,z0},{x1,y1,z0},{x1,y1,z1},{x0,y1,z1},.97)
+    face({x0,y0,z0},{x0,y0,z1},{x0,y1,z1},{x0,y1,z0},.78)
+    face({x1,y0,z1},{x1,y0,z0},{x1,y1,z0},{x1,y1,z1},.86)
+  end
+  local function cap(x,z)
+    box(x-1.4,10.0,z-1.4,x+1.4,10.3,z+1.4,true)
+    local a={{x-1.4,10.3,z-1.4},{x+1.4,10.3,z-1.4},{x+1.4,10.3,z+1.4},{x-1.4,10.3,z+1.4}}
+    local b={{x-.95,10.75,z-.95},{x+.95,10.75,z-.95},{x+.95,10.75,z+.95},{x-.95,10.75,z+.95}}
+    for i=1,4 do local j=i%4+1;quad(a[i],a[j],b[j],b[i],'body',.9,true)end
+    quad(b[1],b[2],b[3],b[4],'body',1,true)
   end
 
   -- Preserve the standee path's synthesized floor behavior. Fence cells
@@ -337,28 +344,26 @@ function Structures.buildCommunityFence(S, map, postCells)
     Budget.tick()
     local x = node.cx * 16 + 8
     local z = node.cy * 16 + 8
-    -- A compact 4x4 post, deliberately lower and slimmer than the old
-    -- 16px standee. The cap rises just above the upper rail.
-    box(x - 2, 0, z - 2, x + 2, 13, z + 2)
-    if hdWood then
-      -- Beveled end grain catches light at turns without growing a full
-      -- collision-cell block or extending the rails into a walking lane.
-      local rim={{x-2,13,z-2},{x+2,13,z-2},{x+2,13,z+2},{x-2,13,z+2}}
-      local cap={{x-1.3,14,z-1.3},{x+1.3,14,z-1.3},{x+1.3,14,z+1.3},{x-1.3,14,z+1.3}}
-      for i=1,4 do local j=i%4+1;quad(rim[i],rim[j],cap[j],cap[i],"light",.92,true) end
-      quad(cap[1],cap[2],cap[3],cap[4],"light",1,true)
+    -- Slim timber posts with dark feet and beveled caps. Original nodes/openings remain.
+    box(x-1.1,0,z-1.1,x+1.1,10.0,z+1.1)
+    box(x-1.3,0,z-1.3,x+1.3,1.0,z+1.3,true)
+    cap(x,z)
+    -- Each east/south link is emitted once; three metal uprights per connected bay.
+    if nodes[(node.cx+1)..'|'..node.cy] then
+      box(x+1.1,2.8,z-.45,x+14.9,3.6,z+.45)
+      box(x+1.1,8.2,z-.55,x+14.9,9.05,z+.55)
+      for _,u in ipairs({4.5,8,11.5})do box(x+u-.17,3.6,z-.17,x+u+.17,8.2,z+.17,true)end
+      for _,u in ipairs({1.15,14.4})do
+        box(x+u,7.95,z-.65,x+u+.45,9.2,z+.65,true)
+      end
     end
-
-    -- Emit each connection once. Rails stop at the neighbouring post's
-    -- face, so corners and T-junctions meet cleanly without overlapping
-    -- blocks or doubling their end caps.
-    if nodes[(node.cx + 1) .. "|" .. node.cy] then
-      box(x + 2, 4, z - 1, x + 14, 6, z + 1)
-      box(x + 2, 8, z - 1, x + 14, 10, z + 1)
-    end
-    if nodes[node.cx .. "|" .. (node.cy + 1)] then
-      box(x - 1, 4, z + 2, x + 1, 6, z + 14)
-      box(x - 1, 8, z + 2, x + 1, 10, z + 14)
+    if nodes[node.cx..'|'..(node.cy+1)] then
+      box(x-.45,2.8,z+1.1,x+.45,3.6,z+14.9)
+      box(x-.55,8.2,z+1.1,x+.55,9.05,z+14.9)
+      for _,u in ipairs({4.5,8,11.5})do box(x-.17,3.6,z+u-.17,x+.17,8.2,z+u+.17,true)end
+      for _,u in ipairs({1.15,14.4})do
+        box(x-.65,7.95,z+u,x+.65,9.2,z+u+.45,true)
+      end
     end
   end
   return true
@@ -374,7 +379,7 @@ function Structures.buildLegendarySigns(S, map, x0, x1, y0, y1, data)
   if not CommunityVisuals.customSigns() then return false end
   local tilesetId = map.tileset and map.tileset.id
   local mapId = tostring(map.id or (map.def and map.def.id) or ""):upper()
-  local forestSign = tilesetId == "FOREST" and mapId == "VIRIDIAN_FOREST"
+  local forestSign = tilesetId == "FOREST" and (mapId == "VIRIDIAN_FOREST" or V.require("SafariReserve").enabled(map))
   if not (data and (tilesetId == "OVERWORLD" or forestSign)) then
     return false
   end
@@ -408,11 +413,13 @@ function Structures.buildLegendarySigns(S, map, x0, x1, y0, y1, data)
     body = { (ax + 3.5) / atlasW, (ay + 2.5) / atlasH },
     light = { (ax + 6.5) / atlasW, (ay + 1.5) / atlasH },
   }
+  -- Skip the decoration palette row only when the expanded deck material is active.
+  local grainTop = map.tileset.id == "OVERWORLD" and CommunityVisuals.customRoads() and 1.25 or 0.5
   local grain = {
     { (ax + 0.5) / atlasW, (ay + 7.5) / atlasH },
     { (ax + 7.5) / atlasW, (ay + 7.5) / atlasH },
-    { (ax + 7.5) / atlasW, (ay + 0.5) / atlasH },
-    { (ax + 0.5) / atlasW, (ay + 0.5) / atlasH },
+    { (ax + 7.5) / atlasW, (ay + grainTop) / atlasH },
+    { (ax + 0.5) / atlasW, (ay + grainTop) / atlasH },
   }
   -- Viridian's atlas has no Overworld timber donor at tile $3C. Pull three
   -- stable brown swatches from its own pixels instead, so the Legendary frame
@@ -714,6 +721,7 @@ function Structures.buildLegendarySigns(S, map, x0, x1, y0, y1, data)
   local function mapLabel(map)
     local id = tostring(map.id or (map.def and map.def.id) or ""):upper()
     if id == "VIRIDIAN_FOREST" then return "VIRIDIAN", "FOREST" end
+    if V.require("SafariReserve").maps[id] then return "SAFARI", id:match("_([^_]+)$") end
     local route = id:match("^ROUTE_(%d+)$")
     if route then return "ROUTE", tostring(tonumber(route) or route) end
 
@@ -749,7 +757,11 @@ function Structures.buildLegendarySigns(S, map, x0, x1, y0, y1, data)
     end
 
     local clue = (resolved or line or "") .. " " .. key
-    if clue:find("TRAINER", 1, true) and clue:find("TIP", 1, true) then
+    if V.require("SafariReserve").enabled(map) and clue:find("REST",1,true) then
+      return "REST", "HOUSE"
+    elseif V.require("SafariReserve").enabled(map) and clue:find("SECRET",1,true) then
+      return "SECRET", "HOUSE"
+    elseif clue:find("TRAINER", 1, true) and clue:find("TIP", 1, true) then
       return "TRAINER", "TIPS"
     elseif (clue:find("POKECENTER", 1, true)
             or (clue:find("POKEMON", 1, true)
@@ -862,6 +874,16 @@ function Structures.buildLegendarySigns(S, map, x0, x1, y0, y1, data)
     }) do
       panel(x + p[1], p[2], x + p[1] + 0.28, p[2] + 0.28,
             front + 0.035, "ink", 0.88)
+    end
+    if mapId=='ROUTE_17' then
+      -- Every original sign remains interactive at its original blocked cell.
+      -- A compact information bollard replaces the broad notice board.
+      -- Its marked traffic island is supplied by CyclingRoad, so there is no
+      -- invisible collision where the original sign used to stand.
+      for qi=firstSignQuad,#quads do for j=1,4 do
+        local p=quads[qi][j]
+        quads[qi][j]={x+2.7+(p[1]-x)*.43,p[2]*.69,z-1.6+(p[3]-(z-1.6))*.8}
+      end end
     end
     -- The tower-side marker welcomes players arriving from Route 10.
     -- Rotate the complete sign about its post, including readable glyphs.
@@ -998,7 +1020,7 @@ function Structures.forMap(map)
   -- AFTER the characters -- see VoxelScene -- so the southern tuft row
   -- still overdraws a walker's feet even though characters stamp over
   -- terrain.)
-  S = { shapeAt = shapeAt, tileAt = tileAt, outdoor = Map.isOutdoor(def),
+  S = { shapeAt = shapeAt, tileAt = tileAt, outdoor = Map.isOutdoor(def) or V.require("SafariReserve").enabled(map),
         gen2 = shapes.gen2Classes ~= nil,
         gen2WaterHeight = shapes.gen2Classes and shapes.gen2Classes.water.h,
         hideBareRing = hullRingOnly or nil,
@@ -1018,10 +1040,20 @@ function Structures.forMap(map)
   Buildings.build(S, map, pixels(tileset), perRow)
   if S.gen2 then V.require("Gen2Elevation").buildEdges(S,map)end
   V.require("Gen2Ledges").build(S,map)
+  V.require("SafariReserve").build(S,map)
+  if map.id=='VERMILION_CITY' and V.require('CommunityVisuals').referenceBuildings() then
+    V.require('ReferenceBuildings').build(S,map,pixels(tileset))
+  end
+  if S.outdoor and map.id~='VERMILION_CITY' and not V.require('SafariReserve').enabled(map) and V.require('CommunityVisuals').referenceBuildings() then
+    V.require('CityBuildings').build(S,map,pixels(tileset))
+  end
+  if V.require('RouteBorders').maps[map.id] and V.require('CommunityVisuals').customRoads() then
+    S.routeBorderTiles=V.require('RouteBorders').detect(S,map,pixels(tileset),perRow)
+  end
   if tileset.id == "PLATEAU" then
     V.require("FacadeEntrances").build(S, map, pixels(tileset), perRow)
   end
-  if map.id == 'SAFARI_ZONE_CENTER' then V.require('SafariGatehouse').build(S,map,pixels(tileset)) end
+  if map.id == 'SAFARI_ZONE_CENTER' and not V.require('SafariReserve').enabled(map) then V.require('SafariGatehouse').build(S,map,pixels(tileset)) end
 
   -- Fold doors into their buildings. A door cell is WALKABLE (the player
   -- steps onto it to warp), so it resolves to ground and punches a hole in
@@ -1438,6 +1470,8 @@ function Structures.forMap(map)
     end
     st.quads=solid
   end
+  if legendaryViridian then V.require('ForestExits').build(S,map,keyOf,data)end
+
   cache[map.id] = S
   return S
 end
@@ -2375,6 +2409,11 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
               roundCache[sig] = tpl
             end
             ground = tpl.bg or false
+            if test377Forest then
+              local trees=V.require('ForestTrees')
+              local tree=trees.template(trees.variant(cx,cy),CommunityVisuals.treeDetailLevel())
+              S.roundStamps[#S.roundStamps+1]=trees.stamp(tree,cx,cy,roundTemplateBase(tpl))
+            else
             local stamp = { quads = tpl.quads, mx = cx * 16 + 16, mz = cy * 16 + 16, r = 16 }
             if s.class == "foresttree" and CommunityVisuals.crystalHD(map) then
               -- The existing registry owns integer collision cells. Keep the
@@ -2386,6 +2425,7 @@ function Structures.buildCylinders(S, map, x0, x1, y0, y1, groundTiles)
               rounds[mapKey][cx.."|"..(cy+1)]=20
             end
             S.roundStamps[#S.roundStamps + 1] = stamp
+            end
           end
           local waterGround=false
           if s.class=="boulder" then
@@ -4821,6 +4861,9 @@ local function grassTemplate(map, data, tileId)
 end
 
 function Structures.buildGrass(S, map, x0, x1, y0, y1, data)
+  if V.require('SafariReserve').enabled(map) then
+    return V.require('SafariLandscape').grass(S,map,x0,x1,y0,y1)
+  end
   local templates = {}
   local quads = S.grassQuads
   local function isStandingGrassTile(tx, ty)
@@ -4854,14 +4897,25 @@ function Structures.buildGrass(S, map, x0, x1, y0, y1, data)
           templates[tileId] = tpl
         end
         local wx, wz = tx * 8, ty * 8
+        local varied=map.tileset.id=='OVERWORLD' and
+          ((CommunityVisuals.isCityGroundMap(map) and CommunityVisuals.customCityGround())
+          or (not CommunityVisuals.isCityGroundMap(map) and CommunityVisuals.customGrass()))
+        local C=varied and V.require('SurfaceCraft')
+        local angle=varied and (C.hash(tx,ty,501)-.5)*.48 or 0
+        local ca,sa=math.cos(angle),math.sin(angle)
+        local scale=varied and (.72+C.hash(tx,ty,502)*.06) or 1
+        local height=varied and (.84+C.hash(tx,ty,503)*.32) or 1
+        local jx=varied and (C.hash(tx,ty,504)-.5)*.24 or 0
+        local jz=varied and (C.hash(tx,ty,505)-.5)*.24 or 0
+        local function point(p)
+          local x,z=p[1]-4,p[3]-4
+          return {wx+4+(x*ca-z*sa)*scale+jx,p[2]*height,wz+4+(x*sa+z*ca)*scale+jz}
+        end
         local eastContinues = isStandingGrassTile(tx + 1, ty)
         for _, q in ipairs(tpl) do
           if not (q.tileBoundary == "east" and not eastContinues) then
             quads[#quads + 1] = {
-              { q[1][1] + wx, q[1][2], q[1][3] + wz },
-              { q[2][1] + wx, q[2][2], q[2][3] + wz },
-              { q[3][1] + wx, q[3][2], q[3][3] + wz },
-              { q[4][1] + wx, q[4][2], q[4][3] + wz },
+              point(q[1]),point(q[2]),point(q[3]),point(q[4]),
               uv = q.uv, shade = q.shade,
             }
           end
@@ -5037,6 +5091,16 @@ function Structures.buildFlowers(S, map, tw, th, x0, x1, y0, y1, data)
           flowers.append(quads,map,tx,ty,data,templates[3])
         end
       elseif s and s.art == "flower" then
+        local cityGarden=V.require('CityStreets').enabled(map.id,CommunityVisuals.customRoads(),map.tileset.id)
+          and (CommunityVisuals.isCityGroundMap(map) and CommunityVisuals.customCityGround()
+            or not CommunityVisuals.isCityGroundMap(map) and CommunityVisuals.customGrass())
+        if cityGarden and map:isWalkableCell(math.floor(tx/2),math.floor(ty/2)) then
+          -- Replace decorative standees with continuous lawn and authored beds.
+          -- Source tiles and engine collision/encounter tables remain untouched.
+          S.cityLawnCells=S.cityLawnCells or {};S.cityLawnCells[k]=true
+          S.skip[k]=nil;S.ground[k]=nil
+          S.shapeAt[k]={class='ground',flat=true,h=0,art='flat'}
+        else
         -- the tile's atlas slot carries only the standing cutout now, so
         -- EVERY flower position -- ring included -- paints synthesized
         -- ground instead of its own art: the commonest flat neighbour
@@ -5075,6 +5139,7 @@ function Structures.buildFlowers(S, map, tw, th, x0, x1, y0, y1, data)
               uv = q.uv, shade = q.shade,
             }
           end
+        end
         end
       end
     end

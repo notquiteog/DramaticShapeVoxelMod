@@ -120,12 +120,15 @@ ShadowMap.slack = ShadowMap.BIAS
 local SHADER = [[
   varying float vDepth;
   varying vec2 roomPosition;
+  varying float vForestOpaque;
 #ifdef VERTEX
 ]] .. V.require("CanopyBillboard").shader .. [[
+  attribute float VertexShade;
   uniform vec3 canopyEye;
   uniform mat4 lightVP;
   uniform mat4 model;
   vec4 position(mat4 transform_projection, vec4 vertex_position) {
+    vForestOpaque=step(6528.0,VertexShade)*(1.0-step(7040.0,VertexShade));
     vertex_position=placedVertex(vertex_position);
     vec4 world = faceCanopy(model,vertex_position,canopyEye);
     roomPosition=world.xz;
@@ -147,7 +150,7 @@ local SHADER = [[
       || roomPosition.x>roomBounds.z-0.03 || roomPosition.y>roomBounds.w-0.03)) discard;
     // the same alpha discard the main pass uses: a sprite card casts its
     // silhouette, not its 16x16 bounding box
-    if (Texel(tex, tc).a < 0.5) discard;
+    if (vForestOpaque < 0.5 && Texel(tex, tc).a < 0.5) discard;
     // pack into two channels: the high byte in red, the low in green.
     // Blue says WHAT cast this, which costs a channel that was zero anyway
     // and lets a surface decline one kind of caster -- water does, for the

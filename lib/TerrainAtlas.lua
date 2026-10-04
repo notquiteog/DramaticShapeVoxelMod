@@ -972,7 +972,7 @@ local function communityAtlas(map, colors, base, baked)
   -- CITY GROUND changes shared OVERWORLD donors per map. Keep both city maps
   -- isolated even on BATTLE ART: another Legendary Overworld atlas must never
   -- leak its grass donor into a city whose own row is disabled.
-  local perMap = (rocket or cityGroundMap or mapId == "ROUTE_10" or towerInterior
+  local perMap = (V.require("CityStreets").enabled(mapId,CommunityVisuals.customRoads(),tilesetId) or rocket or cityGroundMap or mapId == "ROUTE_10" or towerInterior
       or (map.renderer and map.renderer.gbcAtlas))
     and tostring(map.id or "") or ""
   local key = map.tileset.image .. "#ember107-rocket2-materials#" .. communityKey()
@@ -1527,7 +1527,7 @@ function TerrainAtlas.animate(map, colors, base, baked)
     and CommunityVisuals.customCaves()
     and "#legendary-natural-cave" or ""
   local key = map.tileset.image .. "#a#" .. paletteKey(colors or {})
-    .. "#community#" .. communityKey() .. caveMaterial .. (perMap or "") .. ((map.id or ""):match("^SAFARI_ZONE_") and ("#safari#"..map.id) or "")
+    .. "#community#" .. communityKey() .. caveMaterial .. (perMap or "") .. ((map.id or ""):match("^SAFARI_ZONE_") and ("#safari#"..map.id..":"..tostring(V.require("SafariReserve").enabled(map))) or "")
   local entry = animated[key]
   if entry == nil then
     entry = newEntry(map, base, baked)
@@ -1565,6 +1565,7 @@ local safariMaps={SAFARI_ZONE_CENTER=true,SAFARI_ZONE_EAST=true,SAFARI_ZONE_NORT
 -- Shared with the distant floor so it uses this terrain treatment too.
 function TerrainAtlas.safariGroundColor(map)
  if map and safariMaps[map.id] and map.tileset and map.tileset.id=='FOREST' then
+  if V.require("SafariReserve").enabled(map)then return {.23,.30,.15,1}end
   return {.48,.50,.265,1}
  end
 end
@@ -1574,8 +1575,9 @@ local function releaseSafari(entry)
 end
 local function safariGround(map,base,baked)
  if not(safariMaps[map.id]and map.tileset.id=='FOREST')then return base,baked end
+ local legendary=V.require("SafariReserve").enabled(map)
  local old=safariAtlases[map.id]
- if old and old.base==base then return old.image,old.data end
+ if old and old.base==base and old.legendary==legendary then return old.image,old.data end
  local ok,entry=pcall(function()
   local raw=baked
   if not raw then
@@ -1608,8 +1610,17 @@ local function safariGround(map,base,baked)
     end
    end end
   end
+  if legendary then
+   -- Calm water retains the native animation/reflection route. The source
+   -- atlas and every other FOREST map remain unchanged.
+   local sx,sy=20%perRow*8,math.floor(20/perRow)*8
+   for y=0,7 do for x=0,7 do
+    local v=math.sin(x*.7+y*.9)*.012+math.cos(y*1.4-x*.3)*.007
+    data:setPixel(sx+x,sy+y,.16+v,.29+v,.34+v,1)
+   end end
+  end
   local image=love.graphics.newImage(data);image:setFilter('nearest','nearest')
-  return {base=base,image=image,data=data}
+  return {base=base,image=image,data=data,legendary=legendary}
  end)
  if ok and entry then releaseSafari(old);safariAtlases[map.id]=entry;return entry.image,entry.data end
  return base,baked
@@ -1632,7 +1643,9 @@ function TerrainAtlas.forMap(map, colors)
     end
     return V.require("Gen2AtlasAnimation").apply(map, base, baked)
   end
-  return TerrainAtlas.animate(map, colors, base, baked) or base
+  local animatedBase=TerrainAtlas.animate(map, colors, base, baked) or base
+  if V.require("SafariReserve").enabled(map)then return V.require("SafariMaterials").apply(map,animatedBase)end
+  return V.require("DecorAtlas").apply(map,animatedBase)
 end
 
 -- Representative colour of one 4x4 border metatile AFTER the map's palette
@@ -1742,6 +1755,8 @@ end
 function TerrainAtlas.setLive(live)
   if Generation.isGen2() then V.require("Gen2AtlasAnimation").setLive(live) end
   if Generation.isGen2() then V.require("Gen2Materials").setLive(live) end
+  V.require("DecorAtlas").setLive(live)
+  V.require("SafariMaterials").setLive(live)
   for id,entry in pairs(safariAtlases)do if not live[id]then releaseSafari(entry);safariAtlases[id]=nil end end
   for key, entry in pairs(animated) do
     if entry and entry.mapId and not live[entry.mapId] then
@@ -1759,6 +1774,7 @@ end
 function TerrainAtlas.invalidate()
   if Generation.isGen2() then V.require("Gen2AtlasAnimation").invalidate() end
   if Generation.isGen2() then V.require("Gen2Materials").invalidate() end
+  V.require("SafariMaterials").invalidate()
   for _,entry in pairs(safariAtlases)do releaseSafari(entry)end
   safariAtlases={}
   cache = {}
