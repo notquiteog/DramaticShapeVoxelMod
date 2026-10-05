@@ -238,6 +238,15 @@ for i,r in ipairs(corner)do
  r.design=({'gb_corner_pair','gb_corner_cap','gb_corner_end','fr_corner_stool'})[i]
  r.groundTiles={{1,16},{17,18}};r.groundAligned=true
 end
-return {TILESET_GAME_CORNER=corner,TILESET_RADIO_TOWER=radio,TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
+local station={
+ item('crystal_station_seat',{{64,65},{66,67}},61,{},0),
+ item('crystal_station_platform_fence',{{8},{24}},62,{},0),
+ item('crystal_station_entry_rail',{{53,54},{55,56},{57,58},{59,60}},62,{},0),
+}
+for i,r in ipairs(station)do
+ r.design=({'gb_station_seat','gb_station_fence','gb_station_entry'})[i]
+ r.groundTiles={{i==1 and 61 or 62}};r.groundAligned=true
+end
+return {TILESET_TRAIN_STATION=station,TILESET_GAME_CORNER=corner,TILESET_RADIO_TOWER=radio,TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
   TILESET_HOUSE=commonHouse,TILESET_TRADITIONAL_HOUSE=traditional,TILESET_MART=mart,TILESET_POKECENTER=center,
   TILESET_PLAYERS_ROOM=bedroom}

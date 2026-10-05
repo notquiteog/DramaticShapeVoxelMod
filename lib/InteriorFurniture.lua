@@ -404,6 +404,32 @@ function M.draw(id,A)
    B(x,2,9,x+12,4,55,case)
    stock({x,14,12,40},x+.4,10,11.2,44,4,12,3)
   end
+ elseif id=='gb_station_seat' then
+  local yellow,edge=T(7,6),T(1,10)
+  -- One molded yellow chair per original 16-pixel seat, including its low
+  -- cushion, curved shoulder steps, rear shell and four metal feet.
+  for _,x in ipairs{3,11}do for _,z in ipairs{5,12}do
+   B(x,0,z,x+2,3.5,z+2,edge)
+  end end
+  B(1,3,5,15,4,15,edge);B(2,4,5,14,5,14,yellow)
+  top({2,8,12,5},2,5,14,14,5.02)
+  B(2,4,3,14,9,5,yellow);B(3,9,3,13,10,5,yellow)
+  front({2,2,12,6},2,5,14,9,5.02)
+  B(1,4,5,2,6,12,edge);B(14,4,5,15,6,12,edge)
+ elseif id=='gb_station_fence' then
+  local metal,dark=T(3,8),T(2,9)
+  -- Native pair of slim uprights per eight-pixel strip, with open gaps.
+  for _,x in ipairs{1,5}do
+   B(x,0,12,x+1.5,8,14,metal)
+   B(x-.2,7.8,11.8,x+1.7,8.4,14.2,metal)
+  end
+  B(0,2,12.5,8,3,13.5,dark);B(0,6,12.5,8,7,13.5,metal)
+ elseif id=='gb_station_entry' then
+  local case,edge=T(5,6),T(1,8)
+  B(3,0,1,13,2,31,edge);B(4,2,2,12,10,30,case)
+  B(3,10,1,13,11,31,edge)
+  top({3,1,10,29},3,1,13,31,11.02)
+  for _,x in ipairs{3,12}do B(x,0,28,x+1,10,31,edge)end
  elseif id=='gb_department_bench' then
   local edge,cloth=T(1,1),T(6,6)
   B(2,0,3,4,3,29,edge);B(12,0,3,14,3,29,edge)

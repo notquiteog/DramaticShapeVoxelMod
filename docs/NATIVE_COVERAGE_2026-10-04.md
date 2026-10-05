@@ -92,3 +92,14 @@ exclusions, wall returns, door/window hardware and Hoenn scenery scope. Final
 small material/cliff changes received focused reruns. No new release or universal
 visual/gameplay approval is implied. Hoenn special buildings, cliffs, additional
 caves/interiors, live exterior-window views and all-map visual review remain open.
+
+### Crystal station fittings
+
+Three additional complete patterns cover yellow seats, repeated open platform
+railings and entry housings in the station tileset. The seats have separate
+feet/cushions/backrests instead of a single extruded tile; source floor remains
+blue indoors and gray on the platform. Native collision/warp layout unchanged.
+Official 0.3.51 `crystal-station` fixture completed Goldenrod and Saffron; inspected
+Goldenrod overview and first-person. 277 designed-object recipes and focused
+source-bound tests pass. This is not a full station sign-off: train geometry,
+tracks, perimeter details and travel animation still need review.

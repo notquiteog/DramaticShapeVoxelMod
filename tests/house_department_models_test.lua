@@ -59,4 +59,7 @@ end
 for _,r in ipairs(assert(loadfile('data/gen2_furniture.lua'))().TILESET_GAME_CORNER)do
  geometry(r,#r.tiles[1]*8,#r.tiles*8)
 end
+for _,r in ipairs(assert(loadfile('data/gen2_furniture.lua'))().TILESET_TRAIN_STATION)do
+ if r.design~='gb_station_fence' then geometry(r,#r.tiles[1]*8,#r.tiles*8)end
+end
 print('PASS complete native furniture matches, parquet exclusion, source bounds and closed components')

@@ -1,3 +1,13 @@
+# Crystal station fittings — 2026-10-04
+
+Goldenrod/Saffron station seats now have native yellow cushions, backrests,
+arm supports and feet; platform fences have separate posts/open gaps, and
+entry rails have closed cases. Three complete source patterns, floor retained.
+Official 0.3.51 isolated `crystal-station` fixture completed both stations;
+inspected Goldenrod overview/first-person. 277 designed-object and furniture
+source-bound guards pass. Train body/track presentation and complete station
+wall detailing remain unfinished. No gameplay/train travel validation or release.
+
 # Native houses, Tower walls and Crystal cabinets — 2026-10-04
 
 Added eight Hoenn house patterns (50 total), Verdanturf stone fences, native
