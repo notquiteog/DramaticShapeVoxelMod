@@ -111,6 +111,7 @@ local function releaseGeometry(cache)
   if part.water then part.water:release() end
   for _,water in ipairs(part.waters or {})do water.mesh:release()end
  end
+ if cache.legendaryRoads then cache.legendaryRoads.mesh:release();cache.legendaryRoads.image:release()end
  if cache.rocketWalls then cache.rocketWalls.mesh:release();cache.rocketWalls.image:release()end
  for _,part in ipairs(cache.civics or {})do
   if part.mesh then part.mesh:release()end;if part.image then part.image:release()end
@@ -253,6 +254,7 @@ local function build(req,cache,previous)
   c.stageHidden=BattleClear.hits(cam,c.cx*16,c.cy*16,c.cx*16+(c.shape.kind=='tree' and 32 or 16),c.cy*16+32)
   if col then col.stageHidden=group and BattleClear.hits(cam,group.left,group.back,group.right,group.front)or c.stageHidden end
  end
+ cache.legendaryRoads=V.require('NativeLegendaryRoads').build(cells,def.id or Map.current)
  cache.rocketWalls=V.require('NativeRocketWalls').build(cells,def.id or Map.current)
  M.cliffCount=0
  local batches={};local wood,wi,leaf,li={},{},{},{}
@@ -578,6 +580,7 @@ local function terrain(draw)
    end
   end
  end
+ if cache.legendaryRoads then draw(cache.legendaryRoads.mesh,cache.legendaryRoads.image)end
  if cache.rocketWalls then draw(cache.rocketWalls.mesh,cache.rocketWalls.image)end
  for _,part in ipairs(cache.civics or {})do
   if not V.require('NativeLegendaryTower').draw(part.placement,draw)then draw(part.mesh,part.image)end

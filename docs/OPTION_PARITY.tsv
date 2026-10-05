@@ -225,7 +225,7 @@ generation	key	label	status	consumer	limitation
 3	communityMasonry	WALL & LEDGE COLOR	missing	false	No complete native generation adapter audited for this option.
 3	communityPillars	LEGENDARY PILLARS	missing	false	No complete native generation adapter audited for this option.
 3	communityPrizeRoom	PRIZE ROOM	missing	false	No complete native generation adapter audited for this option.
-3	communityRoads	ROADS & BRIDGES	missing	false	No complete native generation adapter audited for this option.
+3	communityRoads	ROADS & BRIDGES	partial	lib/NativeLegendaryRoads.lua; lib/RoadStoneGeometry.lua; lib/Gen3Scene.lua	Optional shared Lavender stone paving is clipped to the exact native sand-path pixels, with sub-pixel relief and unchanged grass/solid/collision cells. Other city/route road families and authored street furniture remain incomplete.
 3	communityRocket	ROCKET HIDEOUT	partial	lib/NativeRocketWalls.lua; lib/RocketRoom.lua; lib/Gen3Scene.lua	Optional shared steel walls, pipes, ribs and elevator panel fitted only into native blocked columns; exact elevator mural guarded by source pattern and collision. Floor, door gaps and puzzle logic stay native; side enclosures and other authored room fixtures remain incomplete.
 3	communitySigns	SIGNS	partial	lib/NativeLegendarySigns.lua; lib/Gen3Outdoor.lua	Optional Gen1 low chamfered sign shape fitted inside native sign cells, retaining the original plaque artwork. Generated location labels and special directional markers remain unported.
 3	communitySky	SKY & BACKGROUND	implemented	lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua	Native scene supersampling, day clock/light/sky, underlay and postprocess.
