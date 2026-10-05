@@ -11,7 +11,7 @@ function M.box(emit,l,b,n,r,h,f,material)
 end
 -- Local x = width, y = elevation, z = outward depth. Glass is set behind
 -- the frame, with a sloping sill and closed jambs on every viewing side.
-function M.opening(emit,l,b,r,h,depth,frame,glass,door)
+function M.opening(emit,l,b,r,h,depth,frame,glass,door,details)
  local t=door and 1.3 or .9
  local back,front=depth-.65,depth+.9
  M.box(emit,l-t,b,back,l,h+t,front,frame)
@@ -19,6 +19,9 @@ function M.opening(emit,l,b,r,h,depth,frame,glass,door)
  M.box(emit,l,b,back,r,b+t,front+.6,frame)
  M.box(emit,l,h,back,r,h+t,front,frame)
  emit({{l,h,depth},{r,h,depth},{r,b,depth},{l,b,depth}},glass,1)
+ -- Native panes already draw their own sash/handle. Do not superimpose a
+ -- second divider or put an invented handle on the opposite door edge.
+ if details=='native' then return end
  if not door then
   local mid=(l+r)/2
   M.box(emit,mid-.3,b,depth+.1,mid+.3,h,depth+.5,frame)

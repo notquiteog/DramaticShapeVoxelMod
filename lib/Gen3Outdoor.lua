@@ -110,17 +110,22 @@ function M.append(c,emit,uvFor)
    local px,py=unpack(s.postSample)
    face=sub(post,px,py,px+.1,py+.1);cap=face;rail=face
   end
+  if s.postSamples then
+   local function sample(p)return sub(post,p[1],p[2],p[1]+.1,p[2]+.1)end
+   face=sample(s.postSamples.face);cap=sample(s.postSamples.cap);rail=sample(s.postSamples.rail)
+  end
   local h=s.height or 10
+  local half=(s.postWidth or 2.8)/2
   local function stake(px,pz)
-   box(px-1.4,0,pz-1.4,px+1.4,h,pz+1.4,face)
-   box(px-1.5,h,pz-1.5,px+1.5,h+.6,pz+1.5,cap)
+   box(px-half,0,pz-half,px+half,h,pz+half,face)
+   box(px-half-.1,h,pz-half-.1,px+half+.1,h+.6,pz+half+.1,cap)
   end
   if vertical then
    for _,dz in ipairs(s.stop and {8} or {4,12})do stake(x+s.axis,z+dz)end
-   for _,h in ipairs({h*.3,h*.7})do box(x+s.axis-.6,h,z,x+s.axis+.6,h+1,z+(s.stop and 8 or 16),rail)end
+   for _,h in ipairs(s.rails or {h*.3,h*.7})do box(x+s.axis-.6,h,z,x+s.axis+.6,h+1,z+(s.stop and 8 or 16),rail)end
   else
    for _,dx in ipairs({4,12})do stake(x+dx,z+8)end
-   for _,h in ipairs({h*.3,h*.7})do
+   for _,h in ipairs(s.rails or {h*.3,h*.7})do
     box(x,h,z+7.4,x+16,h+1,z+8.6,rail)
     if s.turn then box(x+s.axis-.6,h,z+(s.turn=='north' and 0 or 8),x+s.axis+.6,h+1,z+(s.turn=='north' and 8 or 16),rail)end
    end

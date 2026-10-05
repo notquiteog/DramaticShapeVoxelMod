@@ -280,6 +280,11 @@ local function build(req,cache,previous)
     end
     end
    end
+  elseif column and column.indoor and shape.wallStyle=='tower' then
+   plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+   if not column.stageHidden and c.cy==column.last then
+    V.require('Gen3TowerWalls').append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)
+   end
   elseif column and column.indoor and c.secondary=='lab' then
    plane(b.v,b.i,x,z,uvFor(ts,0x289) or uv)
   elseif column then

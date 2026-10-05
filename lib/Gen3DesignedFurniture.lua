@@ -113,6 +113,10 @@ function M.install(recipes)
   add('sevii_dining_chair_'..mid,sevii,{{mid}},'fr_sevii_chair',0x109)
   recipes[#recipes].east=mid==0x167
  end
+ add('tower_reception_elbow','building__rom_082d4efc',{
+  {0x2c9,0x2ca,0x2ca,0x2ca,0x2ca,0x2ca},
+  {0x2d1,0x2d2,0x2d2,0x2d3,0x2d2,0x2d2}},'fr_tower_reception',0x282)
+ add('tower_reception_return','building__rom_082d4efc',{{0x2d4},{0x2c8},{0x2c8},{0x2d0}},'fr_tower_reception_return',0x282)
  -- Saffron has fluted columns and square floor teleport pads, not consoles
  -- and circular plinths. Complete columns include their cap, shaft and foot.
  add('saffron_column','building__rom_082d4d64',{{0x297},{0x29f},{0x2a7}},'fr_saffron_column',0x281)

@@ -40,15 +40,23 @@ function M.shape(primary,secondary,mid,behavior,collision)
    for k,v in pairs(fenceMauville[mid])do out[k]=v end
    return out
   end
+  if secondary=='verdanturf' and mid==0x34d then
+   return {kind='fence',ground=1,material=mid,height=7,postWidth=5.8,rails={6},
+    postSamples={face={4,10},cap={3,5},rail={6,5}}}
+  end
   if behavior and behavior>=0x38 and behavior<=0x3b and mid<0x200 then
    return {kind='ledge',ground=(mid>=0x10e and mid<=0x127) and 0x124 or 1,
     direction=({[0x38]='east',[0x39]='west',[0x3a]='north',[0x3b]='south'})[behavior]}
   end
-  if collision==7 and mid>=0x64 and mid<=0x97 then
-   return {kind='cliff',height=24,ground=1,cap=0x69,side=0x71}
+  -- Reviewed native cliff band: 64/65 are house facades; 6D..6F,
+  -- 7F and 8F are ground. Never turn blocked decorative ground into peaks.
+  if collision==7 and ((mid>=0x66 and mid<=0x6c) or
+    (mid>=0x70 and mid<=0x7e) or (mid>=0x80 and mid<=0x8e) or
+    (mid>=0x90 and mid<=0x9e)) then
+   return {kind='cliff',height=24,ground=1,cap=0x6c,side=0x71}
   end
   if collision==7 and behavior==0xc and mid<0x200 then
-   return {kind='cliff',height=24,ground=1,cap=0x69,side=0x71}
+   return {kind='cliff',height=24,ground=1,cap=0x6c,side=0x71}
   end
   if mid==3 then return {kind='sign',height=12,ground=1,hoenn=true}end
   if mid==4 then return {kind='flowers',height=6,ground=1}end

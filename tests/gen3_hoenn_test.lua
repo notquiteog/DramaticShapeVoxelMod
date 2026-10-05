@@ -43,3 +43,13 @@ local F=V.require('Gen3Furniture')
 local carpet={recipe={ground=1,groundRows={{2,3},{4,5}}},cx=8,cy=9}
 assert(F.groundAt({prop=carpet,cx=9,cy=10})==5,'carpet border lost beneath fixture')
 print('PASS Hoenn scenery scope, water/rock ownership, native ledge directions and carpet underlays')
+
+local fence=S.of('general','verdanturf',0x34d,0,7)
+assert(fence.kind=='fence' and fence.postWidth==5.8 and #fence.rails==1)
+assert(S.of('general','mossdeep',0x34d,0,7).kind=='flat','Verdanturf fence borrowed another town tile')
+print('PASS '..#H.exteriors..' complete Hoenn exterior patterns and native Verdanturf fence scope')
+
+for _,id in ipairs{0x64,0x65,0x6d,0x6e,0x6f,0x7f,0x8f}do
+ assert(S.of("general","mossdeep",id,0,7).kind~="cliff","ground or house became a cliff")
+end
+assert(S.of("general","mossdeep",0x9e,0,7).cap==0x6c,"cliff cap borrowed a grassy slope")

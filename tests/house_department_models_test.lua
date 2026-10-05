@@ -56,4 +56,7 @@ end
 for _,r in ipairs(assert(loadfile('data/gen2_furniture.lua'))().TILESET_MART)do
  if r.id:find('crystal_department_',1,true)==1 then geometry(r,#r.tiles[1]*8,#r.tiles*8)end
 end
+for _,r in ipairs(assert(loadfile('data/gen2_furniture.lua'))().TILESET_GAME_CORNER)do
+ geometry(r,#r.tiles[1]*8,#r.tiles*8)
+end
 print('PASS complete native furniture matches, parquet exclusion, source bounds and closed components')

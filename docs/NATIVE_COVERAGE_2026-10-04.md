@@ -59,3 +59,36 @@ Several Celadon shrubs remain native flat art pending complete drawings. Additio
 Hoenn city buildings, routes, caves and special interiors still need source-specific
 recipes. Cliff classifications need broader outdoor visual review. Gen1/2 require
 continued native-art audits too. Counts are not a claim of universal quality.
+
+## Second modeling pass
+
+- Eight additional complete Hoenn house patterns cover Verdanturf, Fallarbor
+  and Mossdeep, including Steven's house (50 exterior patterns total). Explicit
+  native door/window openings retain original sashes/handles; the shared builder
+  no longer overlays invented hardware on these source-specific openings.
+- Verdanturf's low gray fence now has native-sized stone posts and a single
+  pale rail; optional fence sampling does not change other fence defaults.
+- Pokémon Tower: correct green floor exclusions, purple panel walls with white
+  cornices, closed bounded returns at stepped north-wall joins, and a complete
+  L-shaped reception counter. The wider rectangular room shell and southern
+  polygon outline remain unfinished; this is not whole-Tower approval.
+- Crystal Goldenrod/Celadon Game Corners: separate gray pedestal stools and
+  paired red cabinets with the original pink/yellow panels. Dedicated geometry
+  retains the dark center seam and closed backs/ends. Final first-person render
+  confirms the side-panel depth offset eliminates coplanar flicker.
+- Hoenn atlas review excludes house-wall/ground IDs from the cliff band and
+  samples a rock-only cap. This does not implement complete terrace elevations.
+
+Evidence: same official Linux 0.3.51 isolated QA setup. Fixtures `more-houses`,
+`tower-walls`, `crystal-corner-source`, `crystal-corner`, and `hoenn-atlas` under
+`.scratch/coverage-20261004`. Inspected selected overview, side/rear and first-
+person captures; native source diagrams reviewed before recipe construction.
+The Crystal compatibility HUD labels itself Pokémon Gold; the isolated import
+and selected game for these runs are Crystal. No player save was modified.
+
+Standalone suite: 112 pass / 11 existing fail / 85 skip. Focused guards cover
+274 designed objects, source sampling bounds, closed components, native floor
+exclusions, wall returns, door/window hardware and Hoenn scenery scope. Final
+small material/cliff changes received focused reruns. No new release or universal
+visual/gameplay approval is implied. Hoenn special buildings, cliffs, additional
+caves/interiors, live exterior-window views and all-map visual review remain open.

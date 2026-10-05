@@ -182,6 +182,16 @@ function M.draw(id,A)
   B(3,4,3,13,5,13,wood);top({4,6,8,7},3,3,13,13,5.02)
   local x=A.recipe.east and 11 or 3
   B(x,5,3,x+2,10,13,wood)
+ elseif id=='fr_tower_reception' then
+  local gold,trim=T(8,16),T(8,12)
+  B(1,0,13,96,1,31,T(1,28));B(0,1,12,96,7,32,trim)
+  B(0,7,12,96,8,32,gold)
+  top({0,12,96,12},0,12,96,32,8.02)
+ elseif id=='fr_tower_reception_return' then
+  local gold,trim=T(7,24),T(2,24)
+  B(1,0,0,13,1,63,T(7,63));B(0,1,0,14,7,64,trim)
+  B(0,7,0,14,8,64,gold)
+  top({0,0,14,64},0,0,14,64,8.02)
  elseif id=='fr_saffron_column' then
   local stone=T(7,12)
   B(2,0,4,14,3,16,T(7,40));B(4,3,6,12,30,14,stone)
@@ -240,6 +250,32 @@ function M.draw(id,A)
   B(east and 0 or 12,19,1,east and 4 or 16,20,15,gold)
   S(sx,0,4,8,{inner,18,2},{inner,18,14},{outer,11,14},{outer,11,2})
   S(sx,8,4,5,{outer,10,2},{outer,10,14},{outer,6,14},{outer,6,2})
+ elseif id=='gb_corner_pair' or id=='gb_corner_cap' then
+  -- Crystal's two cabinets have a dark central seam, red shells and pale
+  -- outer control strips. Keep its pink/yellow panels on the sloped faces,
+  -- rather than using a pink screen pixel for every structural surface.
+  local red,trim,dark=T(14,8),T(3,8),T(15,8)
+  B(1,0,0,31,2,16,dark)
+  B(2,2,0,30,10,16,red)
+  B(14,10,0,18,18,16,dark)
+  for _,east in ipairs{false,true}do
+   local outer,inner=east and 30 or 2,east and 18 or 14
+   local sx=east and 17 or 2
+   S(sx,1,13,14,{inner,18,0},{inner,18,16},{outer,11,16},{outer,11,0})
+   B(math.min(outer,inner),10,0,math.max(outer,inner),11,16,trim)
+   local faceX=outer+(east and .02 or -.02)
+   S(east and 26 or 3,2,3,12,{faceX,10,0},{faceX,10,16},{faceX,5,16},{faceX,5,0})
+  end
+  -- Closed end cheeks avoid a hollow triangle when looking along the row.
+  for _,z in ipairs{0,16}do
+   A.face({{2,10,z},{14,18,z},{18,18,z},{30,10,z}},red)
+  end
+ elseif id=='gb_corner_end' then
+  local red,yellow=T(2,8),T(8,4)
+  B(1,0,1,31,2,15,red);B(2,2,2,30,17,14,red)
+  B(3,17,2,29,19,14,yellow)
+  front({1,0,30,15},1,2,31,18,14.02)
+  top({1,0,30,3},1,1,31,15,19.02)
  elseif id=='fr_corner_pair' or id=='fr_corner_pair_end' then
   local endcap=id=='fr_corner_pair_end'
   local wood,gold=T(11,8),T(13,5)

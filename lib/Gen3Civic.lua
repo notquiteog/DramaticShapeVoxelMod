@@ -261,7 +261,7 @@ function M.append(g,emit)
    local out={};for i,q in ipairs(v)do out[i]={q[1]+x,q[2],q[3]+z+depth}end;face(out,tex,shade)
   end
   for _,o in ipairs(openings)do
-   Architecture.opening(localFace,o[1],y(o[4]),o[3],y(o[2]),-.8,trim,uv(o[1]+.05,o[2]+.05,o[3]-.05,o[4]-.05),o.door)
+   Architecture.opening(localFace,o[1],y(o[4]),o[3],y(o[2]),-.8,trim,uv(o[1]+.05,o[2]+.05,o[3]-.05,o[4]-.05),o.door,'native')
    if o.door then Architecture.box(localFace,o[1]-2,0,-1,o[3]+2,.8,1,trim)end
   end
  end

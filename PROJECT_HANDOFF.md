@@ -1,3 +1,13 @@
+# Native houses, Tower walls and Crystal cabinets — 2026-10-04
+
+Added eight Hoenn house patterns (50 total), Verdanturf stone fences, native
+opening details, connected Pokémon Tower wall returns/reception counters, and
+four Crystal Game Corner cabinet/stool recipes. Corrected Hoenn cliff-band
+false positives. [Evidence and remaining gaps](docs/NATIVE_COVERAGE_2026-10-04.md#second-modeling-pass).
+Official 0.3.51 isolated renders; full suite 112 pass / 11 existing fail / 85 skip,
+with focused checks repeated after final cabinet/cliff adjustments. Unreleased.
+Every-tile visual coverage, live window portals and complete terraces remain open.
+
 # Native coverage checkpoint — 2026-10-04
 
 Completed another modeling/correction batch across Emerald and FRLG, including

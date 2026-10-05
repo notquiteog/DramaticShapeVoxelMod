@@ -226,6 +226,18 @@ local radio={
  item('crystal_broadcast_studio_desk',{{86,87,1,1,1,1},{88,89,7,7,7,36},{76,77,23,23,23,22}},1,{},0),
 }
 radio[1].design='gb_broadcast_studio'
-return {TILESET_RADIO_TOWER=radio,TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
+-- Complete native Goldenrod/Celadon paired cabinets and separate stools.
+-- Keep their checkerboard floor; the old block crops folded seats into desks.
+local corner={
+ item('crystal_corner_pair',{{160,161,162,163},{144,145,146,147}},1,{},0),
+ item('crystal_corner_cap',{{128,129,130,131},{144,145,146,147}},1,{},0),
+ item('crystal_corner_end',{{176,177,178,179},{192,193,194,195}},1,{},0),
+ item('crystal_corner_stool',{{10,11},{26,27}},1,{},0),
+}
+for i,r in ipairs(corner)do
+ r.design=({'gb_corner_pair','gb_corner_cap','gb_corner_end','fr_corner_stool'})[i]
+ r.groundTiles={{1,16},{17,18}};r.groundAligned=true
+end
+return {TILESET_GAME_CORNER=corner,TILESET_RADIO_TOWER=radio,TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
   TILESET_HOUSE=commonHouse,TILESET_TRADITIONAL_HOUSE=traditional,TILESET_MART=mart,TILESET_POKECENTER=center,
   TILESET_PLAYERS_ROOM=bedroom}
