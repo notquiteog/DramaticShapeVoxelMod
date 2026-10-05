@@ -1,7 +1,7 @@
 -- Sharing metadata (25-community-and-ecosystem.md 3.2).  Read by tooling
 -- and the manager detail pane; never by the loader's merge.
 return {
-  summary = "Diorama and staged Battle Art for Gen 1 and Gen 2. Crystal includes optional layered HD-2D foliage, low shrubs, furniture, flowers, irregular rock models, soft shores and lighting, plus native grid walking in first/third person.",
+  summary = "Voxel scenery and staged battles for Gen 1, Gen 2 and Gen 3, with native-art models, optional 2.5D foliage, terrain depth and first/third-person cameras.",
   author = "DramaticShape contributors / notquiteog fork",
   contact = "https://github.com/notquiteog/DramaticShapeVoxelMod",
   tags = { "graphics", "3d", "voxel", "render-pipeline", "presentation",

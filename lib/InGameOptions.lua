@@ -1,12 +1,26 @@
 -- Native options adapters. Each mod ships its own copy and supplies only its
 -- own public schema; no other mod or private manager implementation is needed.
 local M={}
-function M.install(mod,schema,title,categories)
+function M.install(mod,schema,title,categories,liveSettings)
  local active=true
  local function rows(game)
   local out={}
   for _,s in ipairs(schema)do
-   if s.pipeline then
+   local live=liveSettings and liveSettings[s.key]
+   if live and not s.readOnly then
+    -- Use the same live setting rows as Gen1, including preset overlays and
+    -- switching a manually edited child back to CUSTOM.
+    local row=live:row();local step=row.step
+    row.id=mod.id..':'..s.key
+    row.step=function(g,dir)
+     g=g or game
+     local result=step(g,dir)
+     require('src.mods.Runtime').emit('mod.options_changed',
+      {mod=mod.id,key=s.key,value=live.values[live:read()]})
+     return result
+    end
+    out[#out+1]=row
+   elseif s.pipeline then
     -- GB render pipelines already own their value and save bucket. Reuse
     -- that owner instead of creating a second, disconnected mod preference.
     local P=require('src.render.Pipelines')

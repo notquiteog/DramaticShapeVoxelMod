@@ -1,3 +1,26 @@
+# Modern UI release and native Legendary preset — 2026-10-05
+
+Gen3 loads LegendaryVisualsPreset, registers its master and uses the same live
+setting rows as Gen1. Effective labels agree with renderer values; child edits
+leave the preset for CUSTOM and retain raw preferences. Native direct-options
+migration persists once. Emerald runtime driver verifies FULL overlay, child
+edit, persistence and restoration. This is partial Legendary parity: capture
+beam/suction/audio and specialty model families remain missing.
+
+BattleTheme resolves optional Modern Pokemon UI v1 dynamically, with local
+fallback when absent/disabled/incompatible/failing. Gen3 battle styling now
+excludes Emerald's regional native menu namespaces. Modern UI standalone GB
+panels were visually found to become neon in Gen1's palette pass and overlap
+sprites; fixed to palette-safe colors and native player HUD bounds. Retained
+wrappers disarm on unload. Separate Modern UI repo is independently loadable.
+
+Full suite before the final menu guard: 161 passed, zero failed, 56 external
+fixture skips; the new FRLG/RSE menu-guard test also passes. Live ON/OFF captures
+inspected for Yellow/Crystal/LeafGreen/Emerald, standalone and with partners.
+Engine v0.3.51 is current as verified from its latest GitHub release. See
+ docs/NATIVE_UI_AUDIT_2026-10-05.md: Online and Ride custom dark menus are still
+native-style gaps. Remaining Ascendant/Legendary work is NOT certified complete.
+
 # Shared options and native camera parity — 2026-10-05 (unreleased)
 
 Extracted Gen1's category names/order into OptionCategories, consumed by both

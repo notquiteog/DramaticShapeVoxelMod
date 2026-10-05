@@ -35,3 +35,12 @@ through interior windows and remaining special terrain families are still gaps.
 The new optional Modern Pokemon UI owns opt-in HUD styling; scenery and gameplay
 mods retain native UI without it. This audit does not mean all referenced features
 have been imported.
+
+## 2026-10-05 update
+
+Modern UI is independently packaged with Battle Art's optional live theme
+consumer. Native Legendary master/profile controls now work in Gen3 for
+implemented consumers. This does not implement the remaining window portals,
+world-bearing celestial events, Gen3 RAM preload, specialty models or general
+loose-file replacement menu listed above. Native-UI audit findings are in
+NATIVE_UI_AUDIT_2026-10-05.md.

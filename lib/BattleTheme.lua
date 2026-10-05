@@ -1,5 +1,6 @@
 -- Original UI geometry following the user's lbDmiO.png reference: restrained
 -- silver status cards with pointers and four coloured corner commands.
+local V=...
 local M={apiVersion=1,paper={.77,.78,.76,1},ink={.19,.21,.20,1},
  edge={.27,.28,.26,1},selected={.88,.90,.84,1}}
 M.commands={fight={.83,.05,.09,1},pokemon={.10,.37,.04,1},bag={.76,.40,.08,1},run={.13,.27,.62,1}}
@@ -93,4 +94,18 @@ function M.commandHub(x,y)
  G.setColor(.07,.08,.07,1);G.setLineWidth(.6)
  G.polygon('line',{x,y-8,x+8,y,x,y+8,x-8,y})
 end
-return M
+-- Resolve at draw time: companions may load after Battle Art or be toggled
+-- off. The fallback is independent; no theme/provider is required to load.
+return setmetatable({}, {__index=function(_,key)
+ if V and V.mod and V.mod.find then
+  local ok,provider=pcall(V.mod.find,'MODERN_POKEMON_UI')
+  local api=ok and provider and provider.exports
+  if api and api.apiVersion==1 and type(api.enabled)=='function' then
+   local enabled,value=pcall(api.enabled)
+   local theme=api.battleTheme
+   if enabled and value==true and type(theme)=='table' and theme.apiVersion==1
+     and type(theme[key])==type(M[key]) then return theme[key] end
+  end
+ end
+ return M[key]
+end})

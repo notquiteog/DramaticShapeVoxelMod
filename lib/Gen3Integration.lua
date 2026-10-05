@@ -42,6 +42,7 @@ function M.install()
  local SceneOptions=V.require('Gen3SceneOptions')
  local BattleStage=V.require('Gen3Battle')
  local controls=V.require('Gen3CameraControls').new(M)
+ local legendary=V.require('LegendaryVisualsPreset')
  local uninstallBattle=BattleStage.install()
  local draw,present,update=FieldView.draw,Display.present,Player.update
  local function ready(game)return recovery:ready(Scene.context and Scene.context()or game.session)end
@@ -49,7 +50,7 @@ function M.install()
  local nativeArt=V.require('NativeBattleArt');nativeArt.install()
  local interfaceArt=V.require('NativeInterfaceArt')
  local uninstallInterface=interfaceArt.install()
- local sharedSettings={Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,
+ local sharedSettings={legendary.setting,Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,
   V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting}
  for _,setting in ipairs(V.require("NativeAtmosphere").settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(SceneOptions.settings)do sharedSettings[#sharedSettings+1]=setting end
@@ -62,7 +63,9 @@ function M.install()
  for _,setting in ipairs(nativeArt.settings())do schema[#schema+1]=setting:schema('Shared Battle Art sprite settings. ANIMATED uses installed atlases or bundled BW backs (dex 1–251); missing art falls back to static full-body images. ROM/MODDED preserves native/provider art.')end
  mod.options:define(schema)
  local Support=V.require('OptionSupport')
- V.require('InGameOptions').install(mod,Support.rows(schema,3),'BATTLE ART',V.require('OptionCategories'))
+ local liveSettings={}
+ for _,setting in ipairs(sharedSettings)do liveSettings[setting.key]=setting end
+ V.require('InGameOptions').install(mod,Support.rows(schema,3),'BATTLE ART',V.require('OptionCategories'),liveSettings)
  mod.exports.optionSupport=Support.inventory(3)
  local function field(game)return game and game.phase=='field' and game.session and not Battle.isActive() end
  local function looking(game)
@@ -141,6 +144,7 @@ function M.install()
  mod.hooks:wrap('core.update',function(next,game,dt,...)
   recovery:update(dt)
   BattleStage.update()
+  legendary.migrate(game)
   SceneOptions.update(dt)
   controls:update(dt,looking(game) and M.active,love.mouse)
   if BattleStage.active and Battle.isActive()then
@@ -187,6 +191,7 @@ function M.install()
   if payload and payload.mod==mod.id and payload.key==BattleStage.setting.key then BattleStage.setting:sync(payload.value) end
   if payload and payload.mod==mod.id then
    for _,setting in ipairs(sharedSettings)do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
+   if legendary.changed(payload.key)then Scene.invalidate()end
    for _,setting in ipairs(nativeArt.settings())do if payload.key==setting.key then setting:sync(payload.value)end end
    for _,setting in ipairs({Trees.setting,Trees.art})do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
   end

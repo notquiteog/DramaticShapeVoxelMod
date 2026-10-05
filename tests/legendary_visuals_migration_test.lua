@@ -90,6 +90,13 @@ check(game.mods.modOptions.BATTLE_ART_VOXEL_FORK.legendaryVisualsMode=='custom',
 check(P.mode()=='custom' and writes==1,'migration keeps CUSTOM effective and writes once')
 check(not P.migrate(game,save) and writes==1,'migration is idempotent')
 
+local native=fixture({communityTower='n64memory'})
+local writes3=0
+local game3={options={modOptions={}},mods={modOptions={}},persistOptions=function()writes3=writes3+1 end}
+check(native.migrate(game3),'native direct options migrate')
+check(game3.options.modOptions.BATTLE_ART_VOXEL_FORK.legendaryVisualsMode=='custom','native saved CUSTOM')
+check(writes3==1 and not native.migrate(game3),'native migration persists once')
+
 local explicit=fixture({legendaryVisualsMode='off',communityTower='n64memory'})
 check(explicit.mode()=='off','explicit master OFF wins over legacy child values')
 

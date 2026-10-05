@@ -8,8 +8,10 @@ M.scale=V.require('ModSetting').new('hudScale','HUD SCALE',{'scaled','og'},{'SCA
 M.settings={UI.battleUi,UI.hudColor,UI.textboxFill,M.scale}
 function M.covered()
  for _,name in ipairs({'bag_menu','party_menu','summary_menu','help_system','pokedex'})do
-  local menu=package.loaded['src.ui.game3.'..name]
-  if menu and menu.isOpen and menu.isOpen()then return true end
+  for _,prefix in ipairs({'src.ui.game3.','src.ui.game3.rse.'})do
+   local menu=package.loaded[prefix..name]
+   if menu and menu.isOpen and menu.isOpen()then return true end
+  end
  end
  return false
 end

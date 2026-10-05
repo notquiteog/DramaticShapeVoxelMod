@@ -146,7 +146,7 @@ end
 
 function P.migrate(game, save)
   if not legacyNeedsCustom then return false end
-  local opts = (save and save.options) or (game and game.save and game.save.options)
+  local opts = (save and save.options) or (game and ((game.save and game.save.options) or game.options))
   if type(opts) ~= "table" then return false end
   local id = (V.mod and V.mod.id) or "BATTLE_ART_VOXEL_FORK"
   opts.modOptions = opts.modOptions or {}
@@ -162,7 +162,8 @@ function P.migrate(game, save)
   end
   P.setting:sync(opts.modOptions[id][P.setting.key])
   legacyNeedsCustom = false
-  if game and game.writeOptions then pcall(game.writeOptions, game) end
+  if game and game.writeOptions then pcall(game.writeOptions, game)
+  elseif game and game.persistOptions then pcall(game.persistOptions, game) end
   return true
 end
 

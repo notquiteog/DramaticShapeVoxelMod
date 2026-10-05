@@ -1,3 +1,12 @@
+## 1.31.1 — 2026-10-05
+
+Shared native option categories, Crystal submenu repair, Gen3 camera zoom/input
+parity, native emote camera ownership, layered terrain support and a strict
+passing test baseline. Gen3 now supports the Legendary master preset for its
+implemented consumers and preserves CUSTOM preferences. Modern UI is an
+optional standalone theme provider; Emerald native menus exclude battle styling.
+Complete Legendary, Ascendant and cross-generation feature parity remain open.
+
 ## 1.31.0 — 2026-10-04
 
 Native-art modeling update: expanded Hoenn houses/service buildings, interior furniture, FRLG gym objects and Tower walls/counters, Crystal arcade cabinets and station fittings, native window details and cliff classification fixes. Mesh cache revision 85 refreshes stored geometry.
