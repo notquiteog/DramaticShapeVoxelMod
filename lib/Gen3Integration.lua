@@ -113,6 +113,10 @@ function M.install()
    if ev.phase=='pressed' then M.setLevel((M.level+1)%8,game) end
    return true
   end
+  if ev.key=='6' and (looking(game) or BattleStage.active)then
+   if ev.phase=='pressed'then SceneOptions.tilt:cycle(game,1)end
+   return true
+  end
   return next(game,ev)
  end)
  local stick={x=0,y=0}

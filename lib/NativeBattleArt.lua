@@ -32,7 +32,7 @@ function M.stagePixelScale(back)
  return (64/reference)*(M.world and 1 or back and 1 or .68)
 end
 function M.settings()
- return {Art.setting,Art.frontAnimationSetting,Art.backAnimationSetting,Art.viewSetting,Art.duplicateSetting,Art.frontFlipSetting,Art.trainerSetting,Art.playerArtSetting,Art.playerAnimationSetting}
+ return {Art.setting,Art.frontAnimationSetting,Art.backAnimationSetting,Art.viewSetting,Art.backPlacementSetting,Art.duplicateSetting,Art.frontFlipSetting,Art.trainerSetting,Art.playerArtSetting,Art.playerAnimationSetting}
 end
 function M.install()
  local gen=require('src.core.GameVersion').generation()

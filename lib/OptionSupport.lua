@@ -49,6 +49,7 @@ set(3,'battleUi textboxFill','implemented','lib/Gen3BattleOptions.lua; lib/Gen3B
 set(3,'hudColor hudScale','partial','lib/Gen3BattleOptions.lua; lib/Gen3BattleHud.lua','Live modern status-card palette/scale; original native HUD art remains engine-owned.')
 set(3,'modernBattleUI','implemented','lib/Gen3BattleHud.lua','Native battle status cards and command overlay.')
 set(3,'battleArt frontAnimatedSet backAnimatedSet playerView duplicateFix frontFlip','implemented','lib/NativeBattleArt.lua; lib/BattleArt.lua','Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.')
+set(3,'backPlacement','implemented','lib/Gen3BattleActors.lua','AUTO/WORLD project allied Pokemon; OG UI retains both native allied slots without duplicate world cards. Trainers retain world placement.')
 set(3,'arenaFill','partial','lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua','WHITE/GEN6/PNG and native location routing; missing image fails open. BLUE still needs a compatible Stadium provider.')
 set(3,'backdropOffset bossBg','implemented','lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua','Native location/boss identity, source-pixel crop and frozen battle day phase, using installed optional art.')
 set(3,'spriteLight','implemented','lib/Gen3BattleActors.lua; lib/Gen3Scene.lua','Native actor cards share world lighting, depth and cast shadows; native flashes/fades are baked into their live artwork.')
@@ -79,7 +80,9 @@ function M.rows(schema,gen)
  local out,seen={},{}
  for _,row in ipairs(schema)do out[#out+1]=row;seen[row.key]=true end
  for _,row in ipairs(M.inventory(gen))do
-  if not seen[row.key] and row.status~='alias' then
+  if not seen[row.key] and row.key=='tiltshift' and gen<3 then
+   out[#out+1]={key=row.key,label=row.label,pipeline='tiltshift'}
+  elseif not seen[row.key] and row.status~='alias' then
    local labels={implemented='SUPPORTED',partial='PARTIAL',missing='UNAVAILABLE',
     not_applicable='OTHER ENGINE',provider='PROVIDER'}
    local label=row.key=='tiltshift' and gen<3 and 'PIPELINE' or labels[row.status]

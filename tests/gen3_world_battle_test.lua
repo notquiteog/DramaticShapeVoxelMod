@@ -17,8 +17,9 @@ for _,k in ipairs({'draw','rectangle','circle','ellipse','line','polygon','point
 end
 love={graphics=g}
 local light,art={},{}
+local placement="auto"
 local R={vp=Mat.identity(),draw=function()end,seams=function()end,lighting=function()end}
-local modules={Mat4=Mat,Voxel3D=R,Gen3SpriteLight=light,NativeBattleArt=art,
+local modules={BattleArt={backPlacementSetting={get=function()return placement end}},Mat4=Mat,Voxel3D=R,Gen3SpriteLight=light,NativeBattleArt=art,
  SpriteHeadBounds={get=function()return {0,0,64,64}end},
  BattleBillboard={mesh=function()return {}end,yawToward=function()return 0 end},
  UiBackplates={spritesUnlit=function()return false end}}
@@ -59,5 +60,21 @@ local x=f:head(0,72,48)[1];R.vp=Mat.scale(3,3,3)
 assert(f:head(0,72,48)[1]==x,'HUD must retain the actor pass projection')
 local p=M.placement({center={0,0},yaw=math.pi/2},0,false,0)
 assert(math.abs(p[1]+24)<1e-6 and math.abs(p[3])<1e-6,'arena orientation is shared by every actor')
+-- Changing the live option must affect both allied slots, without moving
+-- enemies or the trainer and without producing duplicate world cards.
+for _,mode in ipairs({'ui','world','auto'})do
+ placement=mode
+ local nextFrame=M.new({double=true});local images={}
+ for id=0,5 do images[id]={};nextFrame:tag(images[id],id)end
+ nextFrame:capture(function()
+  nextFrame.inWorld=true
+  for id=0,5 do g.draw(images[id],72,80)end
+ end)
+ for id=0,5 do
+  local native=mode=='ui'and id<4 and id%2==0
+  assert((nextFrame.byId[id]==nil)==native,'wrong placement '..mode..':'..id)
+  if native then assert(nextFrame.native[id],'native ally lost attack anchor')end
+ end
+end
 M.release()
 print('PASS world battle capture, UI isolation, error unwind, grounded upright cards and retained HUD projection')

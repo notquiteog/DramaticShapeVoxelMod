@@ -39,3 +39,21 @@ local fallback=hook(function(_,r)return r end,game,{{id='cancel'}})
 assert(fallback[1].value()=='ON','unset toggle ignored true schema default')
 mods.A.options.get=get
 print('PASS independent native pages, false/choice/number persistence, events, unload composition and GB placement')
+
+-- A pipeline row is editable through its existing owner, never a second
+-- modOptions bucket, and must deduplicate the engine's own row.
+local level=0
+package.loaded['src.render.Pipelines']={level=function()return level end,
+ levelLabel=function(_,n)return tostring(n)end,cycle=function(_,d)level=(level+d)%4 end,
+ syncOptions=function(o)o.pipelines={tiltshift=level}end}
+Adapter.install(mods.A,{{key='tiltshift',label='T-SHIFT',pipeline='tiltshift'}},'A')
+local hook=mods.A.callbacks['ui.options.rows']
+local rows=hook(function(_,r)return r end,game,{{id='cancel'}})
+assert(rows[1].id=='pipeline:tiltshift' and rows[1].value()=='0')
+rows[1].step(game,1)
+assert(level==1 and game.options.pipelines.tiltshift==1 and rows[1].value()=='1')
+assert(game.options.modOptions.A.tiltshift==nil,'pipeline got a duplicate setting')
+local existing={id='pipeline:tiltshift'}
+rows=hook(function(_,r)return r end,game,{existing,{id='cancel'}})
+assert(#rows==2 and rows[1]==existing,'duplicate pipeline row')
+print('PASS GB pipeline settings retain live owner, persistence and deduplication')

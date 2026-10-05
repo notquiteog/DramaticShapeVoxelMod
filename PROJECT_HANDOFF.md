@@ -1,3 +1,31 @@
+# Option parity checkpoint — 2026-10-04 (unreleased)
+
+Gen3 now consumes BACK PLACEMENT for both allied Pokemon: AUTO/WORLD project
+into the scene; OG UI keeps the native slots, without duplicate world cards.
+The existing native setting list exposes and synchronizes it. Gen3 also
+supports the Gen1/2 `6` blur hotkey. GB support inventory now supplies a real
+pipeline-owned blur row instead of a read-only placeholder; it deduplicates
+the engine row and retains pipeline persistence/preset ownership.
+
+Official 0.3.51 isolated boots: Yellow/Crystal actual options-row change,
+persistence and restoration passed; FireRed/LeafGreen/Emerald battle modes,
+real editable settings row, persistence and press/release hotkey checks passed.
+FireRed OG UI screenshot inspected. Doubles slot ownership verified by unit
+tests, not a new live double battle. Five focused unit suites pass (including
+399 native consumer checks and 17 Gen2 battle-option checks).
+
+Full parity is NOT complete. OptionSupport source audit currently reports
+Gen2: 46 implemented, 29 partial, 13 missing, 2 provider, 2 not applicable.
+Gen3: 43 implemented, 7 partial, 40 missing, 1 provider, 1 alias.
+These are option counts, not device/rendering verification percentages.
+Remaining: Gen2 capture-ball FX/audio; Gen3 those effects plus original
+Legendary scenery control adapters, Crystal-style sprite-pack controls,
+RAM precache and standing trainer. Native atmosphere and UI also retain
+explicit partial entries. Do not enable empty controls or silently claim parity.
+Scratch fixtures/results: `.scratch/coverage-20261004/{options-parity,
+gb-option-parity}.lua` and `results/*-*-parity`. Latest terrain work remains
+unreleased too. No cart/mod version changes in this checkpoint.
+
 # Native terrain topology — 2026-10-04 (after 1.31.0)
 
 Recognize Emerald normal-behavior stair drawings, including Meteor Falls; stop

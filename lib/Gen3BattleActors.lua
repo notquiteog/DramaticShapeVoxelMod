@@ -54,6 +54,13 @@ local function drawOrigin(args)
 end
 function M:record(draw,image,args,primitive)
  local id=not primitive and self.tags[image]
+ -- Match Gen1/2: OG UI leaves both allied Pokemon in their native slots.
+ -- Trainers and opposing Pokemon still use world placement. Record the
+ -- native anchor for attack paths even though this draw stays on the UI.
+ if id and id<4 and id%2==0 and V.require('BattleArt').backPlacementSetting:get()=='ui' then
+  self:anchor(id,image)
+  return draw(image,unpack(args))
+ end
  local card=id and self.byId[id]
  if not card then
   card={id=id,tex=self:canvas(),ball=not primitive and image==self.ballImage}

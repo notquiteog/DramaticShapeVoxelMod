@@ -6,7 +6,19 @@ function M.install(mod,schema,title)
  local function rows(game)
   local out={}
   for _,s in ipairs(schema)do
-   if s.type=='toggle' or s.type=='choice' or s.type=='number' then
+   if s.pipeline then
+    -- GB render pipelines already own their value and save bucket. Reuse
+    -- that owner instead of creating a second, disconnected mod preference.
+    local P=require('src.render.Pipelines')
+    out[#out+1]={id='pipeline:'..s.pipeline,label=s.label,
+     value=function()return P.levelLabel(s.pipeline,P.level(s.pipeline))end,
+     step=function(g,dir)
+      g=g or game;P.cycle(s.pipeline,dir or 1)
+      P.syncOptions(g and ((g.save and g.save.options)or g.options))
+      if g and g.writeOptions then g:writeOptions()end
+      return true
+     end}
+   elseif s.type=='toggle' or s.type=='choice' or s.type=='number' then
     local choices=s.choices or {{'OFF',false},{'ON',true}}
     local function index()
      local value=mod.options:get(s.key)
