@@ -63,9 +63,72 @@ for _,r in ipairs(H.exteriors)do
  end end
  local found=Civic.prepare(cells,{},{});assert(#found==1 and found[1].family==r.name,r.name)
  local p=Civic.profile(found[1]);assert(p.wall>0 and p.wallBottom<=#r.rows*16,'roof/wall extent includes outside ground')
+ if r.kind=='center' or r.kind=='mart' then
+  assert((r.centerRoof or r.martRoof) and r.bodyBack==16,r.name..' missing authored roof/rear walking lane')
+  local badge,thickness,roof=0,false,{}
+  Civic.append(found[1],function(v,t)
+   for _,q in ipairs(v)do
+    if q[2]<p.wall then assert(q[3]>=16 and q[3]<64,'Center body occupies rear/front walking row')end
+    if q[3]==14 then roof[q[1]]=math.max(roof[q[1]] or 0,q[2])end
+   end
+   -- Badge triangles use the untouched facade half, above the eave.
+   if v[1][1]==32 and v[1][2]==31.5 and v[2][3]==61.46 then
+    badge=badge+1
+    for _,q in ipairs(v)do assert(q[3]==61.46 and q[2]>=23,'badge detached from front fascia')end
+   end
+   if v[1][3]==61 and v[2][3]==61.46 then thickness=true end
+  end)
+  assert(badge==32 and thickness,'native roof badge has no closed depth')
+  if r.kind=='center' then
+   assert(roof[8]==roof[12] and roof[12]==roof[16],'native lower roof shoulders lost')
+   assert(roof[32]-roof[16]>=10,'distinct raised middle hump flattened into one barrel')
+  else
+   assert(roof[8]==roof[32] and roof[32]==roof[56],'Mart plateau acquired a Center hump or house gable')
+   assert(roof[8]>roof[0],'Mart rolled roof edges flattened')
+  end
+  -- Closest native paving/sand underlay must replace the hardcoded lawn.
+  for _,c in pairs(cells)do c.civic=nil end
+  cells['1:4']={cx=1,cy=4,mid=0x777,pair=r.pair,collision=0,shape={kind='flat'}}
+  cells['2:4']={cx=2,cy=4,mid=0x778,pair=r.pair,collision=7,shape={kind='flat'}}
+  local floor=Civic.prepare(cells,{},{})[1]
+  assert(floor and Civic.ground(cells['2:3'])==0x777,'Center/Mart underlay ignored native ground or used solid decoration')
+ end
+ if r.openings and (r.name:match('^petalburg_city_.*home$') or r.name:match('^dewford_town_.*home$') or r.name=='dewford_town_hall' or r.name=='lavaridge_town_home') then
+  local g=found[1];local faces={}
+  Civic.append(g,function(v)faces[#faces+1]=v end)
+  local relief=0
+  for _,face in ipairs(faces)do for _,v in ipairs(face)do
+   if v[3]>p.front and v[2]<p.wall-2 then
+    assert(v[3]<g.depth*16,'timber post protrudes into path')
+    local inside=false
+    for _,post in ipairs(r.facadePosts or {})do inside=inside or v[1]>=post[1] and v[1]<=post[3]end
+    assert(inside,'relief escaped native timber stiles');relief=relief+1
+   end
+  end end
+  assert(relief>0,'native timber posts stayed flat')
+  for _,o in ipairs(r.openings)do
+   local pane=false
+   for _,v in ipairs(faces)do
+    if v[1][1]==o[1] and v[2][1]==o[3] and v[1][2]==p.wallBottom-o[2]
+      and v[3][2]==p.wallBottom-o[4] and v[1][3]==p.front-1 and v[3][3]==p.front-1 then pane=true end
+   end
+   assert(pane,r.name..' aperture has no recessed native pane')
+   if o.door then
+    local surface=Civic.doorSurface(g,math.floor(o[1]/16),3)
+    assert(surface and surface.w==o[3]-o[1] and surface.h==o[4]-o[2],r.name..' animated door lost source crop')
+    assert(surface.vertices[1][3]<p.front,'door animation floats in front of facade')
+   end
+  end
+ end
  if r.profile=='hoenn_gym' then
-  local g=found[1];local front,door=0,false
-  Civic.append(g,function(vertices)
+  local g=found[1];local front,door=0,false;local solidCheeks,canopyRims=0,0
+  Civic.append(g,function(vertices,tex)
+   local a,b=vertices[1],vertices[2]
+   if a[2]==22 and b[2]==22 and a[3]==64 and b[3]==79 then
+    assert(math.abs(tex[2][1]-tex[1][1])<.001,'gym cheek repeats projected diagonal artwork')
+    solidCheeks=solidCheeks+1
+   end
+   if a[2]==25.2 and b[2]==25.2 and vertices[3][2]==24 then canopyRims=canopyRims+1 end
    for _,v in ipairs(vertices)do
     assert(v[2]>=0 and v[2]<=28.1,'gym height escaped flat roof profile')
     -- Native last-row side cells are walkable. Body geometry must stop at
@@ -79,6 +142,7 @@ for _,r in ipairs(H.exteriors)do
     front=math.max(front,v[3])
    end
   end)
+  assert(solidCheeks==2 and canopyRims==4,'gym vestibule needs two solid cheeks and closed canopy rim')
   local surface=Civic.doorSurface(g,3,4)
   assert(surface and surface.w==14 and surface.h==16,'gym native door animation missing')
   assert(p.front==64 and front<=79 and p.wallBottom==71,'native ground cropped or footprint shifted')

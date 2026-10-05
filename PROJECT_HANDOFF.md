@@ -1,3 +1,30 @@
+# Hoenn service buildings and gym entrance polish — 2026-10-05 (unreleased)
+
+Emerald's standard Centers now use a closed chamfered shell, native recessed
+sliding doors, original sign, lower roof shoulders and a distinct raised middle
+hump. The emblem is attached to the fascia, not a standing sign. Marts use their
+own broad blue plateau roof with rolled edges. Native-map pattern audits found
+16 standard Centers and 12 standard Marts, including both Battle Frontier
+buildings; all now have matching recipes. This count excludes special buildings
+such as department stores. Roof materials exclude regional dirt/ash corner art.
+Under-building ground selects nearby walkable native floor rather than grass.
+
+Petalburg/Dewford/Lavaridge house families gained authored recessed windows and
+doors, bounded timber relief, and corrected native siding/trim samples. Six
+standard Emerald gym entrances now reinterpret the source's diagonal white
+strips as solid angled vestibule walls. Closed shallow beveled canopies use
+unprojected native gold roof art. Native door surfaces remain aligned; tests
+protect front/rear walking strips and door source dimensions. No collisions,
+warps, movement or saves changed.
+
+Validation: official engine0.3.52, disposable Emerald profile, native building
+composites inspected; production turntables/eye-height and native animated door
+sequences in .scratch/coverage-20261004/results/emerald-{building-doors,
+emerald-centers,emerald-services}. Centers and Marts source audit drivers live
+alongside those captures. Focused Civic/Hoenn tests pass; full suite179 passed,
+0 failed,56 skipped (.scratch/hoenn-services-gym-20261005-tests.log). This is
+scoped building work, not complete world coverage or a new published release.
+
 # Route 1 composite fence/tree edges — 2026-10-05 (unreleased)
 
 Reproduced the user's screenshot at the southern Route 1 gate above Pallet.

@@ -115,6 +115,26 @@ local r=hm:getPixel(64,32);assert(r<.55,'pale wall pixels remain on blue roof co
 r=hm:getPixel(64,40);assert(r==.39,'neutral roof outline retains facade corner')
 r=hm:getPixel(0,40);assert(r==.85,'roof cleanup changed original facade')
 print('PASS Hoenn roof corners exclude pale facade and retain neutral eave trim')
+hoenn.custom.wallSample={5,58};hoenn.custom.trimSample={1,40}
+source:setPixel(5,58,.65,.76,.92,1)
+source:setPixel(1,40,.28,.31,.40,1)
+local reviewed=M.material(hoenn)
+local rr,gg,bb=reviewed:getPixel(128,0)
+assert(rr==.65 and gg==.76 and bb==.92,'reviewed siding replaced by dominant trim color')
+rr,gg,bb=reviewed:getPixel(130,0)
+assert(rr==.28 and gg==.31 and bb==.40,'native structural trim recolored')
+assert(M.window({custom={openings={{17,45,31,62,door=true},{33,45,47,54}}}})[1]==33,
+ 'side window sampled door glass rather than reviewed window')
+hoenn.kind='center';hoenn.custom.centerRoof=true
+for yy=16,22 do for xx=0,63 do source:setPixel(xx,yy,.8,.2,.2,1)end end
+source:setPixel(20,16,1,.65,.4,1)
+source:setPixel(30,2,1,.65,.4,1)
+source:setPixel(8,2,.6,.35,.2,1) -- regional cliff behind the native roof
+local centerMat=M.material(hoenn)
+local cr,cg,cb=centerMat:getPixel(64+8,5)
+assert(cr==.8 and cg==.2 and cb==.2,'regional cliff color contaminated roof')
+cr,cg,cb=centerMat:getPixel(64+30,5)
+assert(cr==1 and cg==.65 and cb==.4,'raised middle stripe lost its original color')
 
 local door=M.doorSurface({kind='center',cx=24,cy=22,width=5,depth=5},26,26)
 assert(door and door.w==14 and door.h==15 and door.sourceX==417 and door.sourceY==416)

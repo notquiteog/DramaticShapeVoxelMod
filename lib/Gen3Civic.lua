@@ -92,12 +92,39 @@ function M.prepare(cells,gyms,families)
    end
   end end
  end
+ -- Continue actual neighboring ground under reviewed Centers. A hardcoded
+ -- grass tile creates green rectangles in ash, paving and island boardwalks.
+ for _,g in ipairs(out)do if g.custom and (g.custom.centerRoof or g.custom.martRoof) then
+  local candidates={}
+  for yy=g.cy-2,g.cy+g.depth+1 do for xx=g.cx-2,g.cx+g.width+1 do
+   local c=cells[xx..':'..yy]
+   if c and c.pair==g.pair and not c.civic and c.collision==0 and c.shape and c.shape.kind=='flat' then
+    candidates[#candidates+1]=c
+   end
+  end end
+  g.grounds={}
+  for yy=g.cy,g.cy+g.depth-1 do for xx=g.cx,g.cx+g.width-1 do
+   local best,distance
+   for _,c in ipairs(candidates)do
+    local d=(xx-c.cx)^2+(yy-c.cy)^2
+    if not distance or d<distance then best,distance=c,d end
+   end
+   if best then g.grounds[xx..':'..yy]=best.mid end
+  end end
+ end end
  return out
+end
+function M.ground(c)
+ return c.civic.grounds and c.civic.grounds[c.cx..':'..c.cy]
+  or (c.civic.variant=='saffron' and 0x2E5 or 1)
 end
 function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.centerRoof or r.martRoof then
+   return {w=64,h=64,back=14,front=60,wall=23,roofEnd=40,wallTop=40,wallBottom=63,bevel=0,doorLeft=0,doorRight=64,doorTop=40,doorBottom=63,doorHeight=23,projection=0}
+  end
   if r.profile=='hoenn_gym' then
    return {w=w,h=80,back=2,front=64,wall=26,roofEnd=42,wallTop=45,wallBottom=71,bevel=2,doorLeft=40,doorRight=72,doorTop=50,doorBottom=79,doorHeight=26,projection=15}
   end
@@ -268,10 +295,39 @@ function M.material(g)
    end
   end end
   if chosen then local rr,gg,bb=unpack(chosen);wall={rr,gg,bb,1};trim={rr*.65,gg*.65,bb*.65,1}end
+  -- Reviewed facades can identify their actual siding and structural trim.
+  -- A dominant-color guess otherwise mistakes yellow window frames for the
+  -- blue-white walls of Dewford's houses.
+  if g.custom.wallSample then wall={sourcePixel(g,unpack(g.custom.wallSample))}end
+  if g.custom.trimSample then trim={sourcePixel(g,unpack(g.custom.trimSample))}end
  end
  for y=0,p.h-1 do for x=p.w*2,p.w*2+3 do
   local c=x<p.w*2+2 and wall or trim;data:setPixel(x,y,unpack(c))
  end end
+ if g.custom and (g.custom.centerRoof or g.custom.martRoof) then
+  -- Build longitudinal roof panels from the actual stripe colors, rather
+  -- than draping the original perspective drawing over another perspective.
+  -- That double projection bent the stripes and stretched the logo.
+  local roofColors={}
+  local function rgbKey(r,g,b)return math.floor(r*255+.5)*65536+math.floor(g*255+.5)*256+math.floor(b*255+.5)end
+  -- These shared second-row tiles contain roof only. Upper regional tiles
+  -- also contain cliffs/ash/grass, whose colors must not become roof panels.
+  for yy=16,22 do for xx=4,59 do
+   local rr,gg,bb,aa=sourcePixel(g,xx,yy)
+   local paint=g.kind=='center' and rr>gg+.08 and rr>bb+.06 or g.kind=='mart' and bb>rr+.15 and bb>gg+.025
+   if aa>.9 and paint then roofColors[rgbKey(rr,gg,bb)]=true end
+  end end
+  for xx=0,p.w-1 do
+   local color
+   for yy=2,26 do
+    local rr,gg,bb,aa=sourcePixel(g,xx,yy)
+    if aa>.9 and roofColors[rgbKey(rr,gg,bb)] then color={rr,gg,bb,1};break end
+   end
+   color=color or {sourcePixel(g,12,30)}
+   for yy=0,30 do data:setPixel(p.w+xx,yy,unpack(color))end
+   for yy=31,40 do data:setPixel(p.w+xx,yy,sourcePixel(g,12,yy))end
+  end
+ end
  local image=love.graphics.newImage(data);image:setFilter('nearest','nearest');data:release()
  return image
 end
@@ -279,6 +335,9 @@ end
 -- glass and panes that reach the ground. Native source pixels stay private.
 function M.window(g)
  if g.custom and g.custom.profile=='hoenn_gym' then return {9,49,23,54}end
+ for _,o in ipairs(g.custom and g.custom.openings or {})do
+  if not o.door then return {o[1],o[2],o[3],o[4]}end
+ end
  if g.kind=='mart' or not(g.ts and g.ts.imageData)then return end
  local p=M.profile(g);local seen={};local best,score
  local function blue(x,y)
@@ -306,6 +365,7 @@ function M.window(g)
  return best
 end
 function M.append(g,emit)
+ if g.custom and (g.custom.centerRoof or g.custom.martRoof) then return V.require('HoennCivicBuilding').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='tower' then return V.require('Gen3TowerExterior').append(g,M.profile(g),emit)end
  local p=M.profile(g);local x,z=g.cx*16,g.cy*16
  local function uv(l,t,r,b)return {{l/(p.w*2+4),t/p.h},{r/(p.w*2+4),t/p.h},{r/(p.w*2+4),b/p.h},{l/(p.w*2+4),b/p.h}}end
@@ -314,7 +374,7 @@ function M.append(g,emit)
  local gymPorch=g.custom and g.custom.profile=='hoenn_gym'
  local civicCorners=(g.kind=='center' or g.kind=='mart') and p.w>=64
  local bodyBack=g.custom and g.custom.bodyBack or p.back
- if gymPorch and bodyBack>p.back then bodyBack=bodyBack+2 end -- keep rear window trim inside blocked cells
+ if gymPorch and bodyBack>p.back then bodyBack=bodyBack+2 end -- keep rear trim inside blocked cells
  local sideFront=p.front-(civicCorners and 6 or 0)
  local function facadeFace(v,tex,shade)
   if gymPorch then
@@ -390,17 +450,57 @@ function M.append(g,emit)
  end
  if p.doorLeft>0 then front(0,p.doorLeft,p.wallTop,p.wallBottom,p.wall,p.front)end
  if p.doorRight<p.w then front(p.doorRight,p.w,p.wallTop,p.wallBottom,p.wall,p.front)end
- front(p.doorLeft,p.doorRight,p.doorTop,p.doorBottom,p.doorHeight,p.front+p.projection)
+ if gymPorch then
+  -- The diagonal white strips in the top-down drawing depict the SIDE of
+  -- the vestibule. Rebuild those surfaces rather than stretching the drawn
+  -- perspective (and its stair-stepped outlines) down an upright wall.
+  front(48,64,p.doorTop,p.doorBottom,p.doorHeight,p.front+p.projection)
+  local porcelain=uv(44.1,68.1,44.2,68.2)
+  local joint=uv(46.1,76.1,46.2,76.2)
+  local function cheek(a,b,shade)
+   for _,band in ipairs({{0,2,joint},{2,22,porcelain},{22,24,trim},{24,26,trim}})do
+    face({{x+a,band[2],z+p.front},{x+b,band[2],z+p.front+p.projection},
+      {x+b,band[1],z+p.front+p.projection},{x+a,band[1],z+p.front}},band[3],shade)
+   end
+  end
+  cheek(40,48,.92);cheek(72,64,.80)
+ else
+  front(p.doorLeft,p.doorRight,p.doorTop,p.doorBottom,p.doorHeight,p.front+p.projection)
+ end
+ -- Native timber stiles have their own shallow, closed relief. Keep the
+ -- original face drawing and stop inside the last blocked tile, rather than
+ -- growing generic columns into the path or covering the doorway.
+ for _,post in ipairs(g.custom and g.custom.facadePosts or {})do
+  local a,t,b,d=unpack(post)
+  local top,bottom=p.wallBottom-t,p.wallBottom-d
+  local back,front=z+p.front,z+math.min(p.front+.6,g.depth*16-.1)
+  face({{x+a,top,front},{x+b,top,front},{x+b,bottom,front},{x+a,bottom,front}},uv(a,t,b,d))
+  face({{x+a,top,back},{x+a,top,front},{x+a,bottom,front},{x+a,bottom,back}},uv(a,t,a+.2,d),.8)
+  face({{x+b,top,front},{x+b,top,back},{x+b,bottom,back},{x+b,bottom,front}},uv(b-.2,t,b,d),.8)
+  face({{x+a,top,back},{x+b,top,back},{x+b,top,front},{x+a,top,front}},uv(a,t,b,t+.2))
+  face({{x+a,bottom,front},{x+b,bottom,front},{x+b,bottom,back},{x+a,bottom,back}},uv(a,d-.2,b,d),.7)
+ end
  -- Closed recessed body and entrance cheeks, with no upright floor pixels.
  for _,sx in ipairs({2,p.w-2})do
   face({{x+sx,p.wall,z+bodyBack},{x+sx,p.wall,z+sideFront},{x+sx,0,z+sideFront},{x+sx,0,z+bodyBack}},wall,.84)
  end
  face({{x+p.w-2,p.wall,z+bodyBack},{x+2,p.wall,z+bodyBack},{x+2,0,z+bodyBack},{x+p.w-2,0,z+bodyBack}},wall,.8)
+
  if gymPorch then
-  -- Only the blocked center cells support the projecting vestibule. Native
-  -- walkable strips below either wing remain empty. Its white angled
-  -- cheeks are the authored facade, not an extra rectangular shell.
-  face({{x+40,p.wall,z+p.front},{x+72,p.wall,z+p.front},{x+64,p.wall,z+p.front+p.projection},{x+48,p.wall,z+p.front+p.projection}},uv(p.w+40.05,42.05,p.w+71.95,49.95))
+  -- Closed shallow canopy: sample an unprojected patch of the native gold
+  -- roof, not the diagonal borders already drawn into its top-down facade.
+  local gold=uv(p.w+48.05,24.05,p.w+63.95,39.95)
+  local ring={{40,p.front},{72,p.front},{64,p.front+p.projection},{48,p.front+p.projection}}
+  local inner={{41,p.front},{71,p.front},{63.5,p.front+p.projection-1},{48.5,p.front+p.projection-1}}
+  local top={};for i,q in ipairs(inner)do top[i]={x+q[1],p.wall,z+q[2]}end
+  face(top,gold)
+  for i,a in ipairs(ring)do
+   local j=i%4+1;local b,c,d=ring[j],inner[j],inner[i]
+   face({{x+a[1],p.wall-.8,z+a[2]},{x+b[1],p.wall-.8,z+b[2]},
+    {x+c[1],p.wall,z+c[2]},{x+d[1],p.wall,z+d[2]}},trim,.95)
+   face({{x+a[1],p.wall-.8,z+a[2]},{x+b[1],p.wall-.8,z+b[2]},
+    {x+b[1],p.wall-2,z+b[2]},{x+a[1],p.wall-2,z+a[2]}},trim,.8)
+  end
  else
  for _,sx in ipairs({p.doorLeft,p.doorRight})do
   face({{x+sx,p.wall,z+p.front},{x+sx,p.wall,z+p.front+p.projection},{x+sx,0,z+p.front+p.projection},{x+sx,0,z+p.front}},trim,.9)

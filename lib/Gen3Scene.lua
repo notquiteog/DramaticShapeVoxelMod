@@ -265,7 +265,7 @@ local function build(req,cache,previous)
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
   elseif c.civic then
-   plane(b.v,b.i,x,z,uvFor(ts,c.civic.variant=='saffron' and 0x2E5 or 1) or uv)
+   plane(b.v,b.i,x,z,uvFor(ts,Civic.ground(c)) or uv)
   elseif shape.kind=='water' then
    plane(b.wv,b.wi,x,z,uv,.05)
   elseif shape.kind=='interiorFloor' then

@@ -1,5 +1,13 @@
 ## Unreleased
 
+- Rebuild Emerald's standard Centers and Marts with closed native-style walls,
+  recessed animated doors, distinct source-faithful roof profiles, and regional
+  ground materials; include the Battle Frontier shop and Center.
+- Polish six Emerald gym vestibules with solid angled white walls and closed
+  beveled gold canopies, preserving doors and native walking lanes.
+- Add recessed native openings and bounded timber detail to Petalburg,
+  Dewford and Lavaridge house families.
+
 - Model both Mauville wall machines with recessed displays and coin trays,
   and both metal bins with raised rims and recessed openings. Preserve native
   palette, blocked footprints and walking lanes; exclude wallpaper/carpet.
