@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Build Mauville's two slot-machine banks as separate back-to-back cabinets,
+  with projecting shelves, framed native panels and coin-return openings.
+  Keep the projected cap row and seating lanes free of solid geometry.
+
 - Model Mauville's two roulette tables with separate legs, supporting aprons,
   native felt layouts and raised wheels. Keep solids within their original
   blocked cells and exclude carpet pixels from the raised surfaces.

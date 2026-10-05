@@ -1,3 +1,20 @@
+# Mauville paired slot cabinets — 2026-10-05 (unreleased)
+
+Both complete 2x5 slot-bank patterns now build four back-to-back cabinet pairs
+(16 machines total), with separate bases, projecting control shelves, upper
+housings, face surrounds, closed ends and coin-return slots. Side-facing native
+panel artwork is rotated onto the correct outward face. Source cap row remains
+floor; all solid parts lie within four blocked rows. The native walkable chair
+cells retain flat artwork pending a seating solution that preserves movement.
+
+Verified Emerald v0.3.51 isolated QA_CASINO fixture: two banks and both roulette
+tables asserted, whole-room collision unchanged. Inspected first-person angled
+end/front views after revising the initial overly box-like profile. Screens and
+native source are in .scratch/coverage-20261004/results/emerald-casino-models
+and emerald-casino-source. Hoenn recipe, designed-object and footprint tests
+pass (168 Hoenn patterns, 367 designed objects). Other room furniture, wall,
+seating and all-world visual coverage remain unfinished. No new release.
+
 # Mauville roulette tables — 2026-10-05 (unreleased)
 
 Both native 2x3 roulette drawings now have four legs, a supporting apron,

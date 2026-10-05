@@ -506,6 +506,36 @@ function M.draw(id,A)
    B(x+2,7,27,x+9,8,30,case)
    top({x+2,21,7,3},x+2,27,x+9,30,8.02)
   end
+ elseif id=='em_slot_bank' then
+  local case,dark,trim=T(10,12),T(15,12),T(9,3)
+  -- Four back-to-back cabinet pairs. Projected top art in the first row
+  -- never becomes a solid: each pair occupies its native blocked row.
+  for i=0,3 do
+   local n,s=16+i*16,32+i*16
+   for _,east in ipairs{false,true}do
+    local l,r=east and 17 or .5,east and 31.5 or 15
+    B(l+1,0,n+1,r-1,2,s-1,dark)
+    B(l,2,n+.5,r,6,s-.5,case)
+    local upperL,upperR=east and l or l+2,east and r-2 or r
+    B(upperL,6,n+.5,upperR,14,s-.5,case)
+    B(l,6,n+.5,r,7,s-.5,trim)
+    B(upperL,14,n+.5,upperR,15,s-.5,trim)
+    top({east and 18 or 8,3+i*16,6,9},upperL+.5,n+1,upperR-.5,s-1,15.02)
+    local face=east and upperR or upperL
+    local lo,hi=east and face-.1 or face-.25,east and face+.25 or face+.1
+    B(lo,7.5,n+1,hi,13.5,s-1,dark)
+    -- Separate coin-return opening beneath the controls.
+    B(east and r-.1 or l-.1,3,n+5,east and r+.1 or l+.1,4,s-5,dark)
+    -- The native side-facing panel is rotated onto the cabinet front;
+    -- source X describes height, while source Y runs along the bank.
+    local x=east and upperR+.27 or upperL-.27
+    if east then
+     S(26,8+i*16,6,14,{x,13,n+1.5},{x,8,n+1.5},{x,8,s-1.5},{x,13,s-1.5})
+    else
+     S(0,8+i*16,6,14,{x,8,n+1.5},{x,13,n+1.5},{x,13,s-1.5},{x,8,s-1.5})
+    end
+   end
+  end
  elseif id=='em_roulette_table' then
   local wood,edge,gold=T(3,20),T(1,1),T(8,7)
   -- Four separate legs and an apron support the native felt/number layout.
