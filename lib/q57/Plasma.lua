@@ -132,7 +132,7 @@ function P.update(vertices,p)
     local neck=.12*ease(u/.34)
     local shoulder=.88*ease((u-.25)/.49)
     local cap=1-ease((u-.78)/.22)
-    local radius=breadth*(neck+shoulder)*cap*reach
+    local radius=breadth*(neck+shoulder)*cap*reach*math.max(0,math.min(3,p.volumeScale or 1))
     for side=0,SIDES do
       local v=side/SIDES;local a=v*PI*2
       local lobe=1+.14*math.sin(a*3-s*9+clock*3.5+phase)

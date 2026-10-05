@@ -5,7 +5,7 @@ local M={}
 local pending,arena,ground
 function M.settings()
  local p=V.require("PokeballSettings")
- return {p.enabled,p.size,p.captureSpeed,p.openTime,p.preset,p.streamers,p.audio,p.audioVolume}
+ return {p.enabled,p.size,p.captureSpeed,p.openTime,p.preset,p.streamers,p.beam,p.suction,p.fxScale,p.audio,p.audioVolume}
 end
 local ballNames={[1]='MASTER_BALL',[2]='ULTRA_BALL',[3]='GREAT_BALL',[4]='POKE_BALL'}
 local function call(name,...)

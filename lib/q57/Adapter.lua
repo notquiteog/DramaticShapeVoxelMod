@@ -43,7 +43,16 @@ function A.prepare(battle,arena,ground,n,entries)
       poses.enemy=p
     end
   end
-  if poses.enemy and n then poses.enemy.captureOwner=n end
+  if poses.enemy and n then
+    local p=poses.enemy;p.captureOwner=n
+    -- Retain the approved default volume; profile changes now genuinely affect
+    -- its breadth, while subject size, capture timing and gameplay stay native.
+    if not p.burst then
+      p.suction=not Settings.suctionEnabled or Settings.suctionEnabled()
+      p.volumeScale=(Settings.beamMult and Settings.beamMult()or 1.55)/1.55
+        *(Settings.fxScaleMult and Settings.fxScaleMult()or 1)
+    end
+  end
   for side,e in pairs(entries or {}) do
     if not poses[side] and e.shell and e.age and e.age<Release.DURATION then
       local point=arena[side]
@@ -84,7 +93,9 @@ function A.draw(battle)
       if p.ball then p.ball:drawBreakShell(p.burstProgress) end
     end
     if p.shell and p.timer<1.15 then p.shell:drawShell(0) end
-    local volumeVisible=p.burst or ((p.fade or 1)>.001 and (not p.release or p.pull<.995))
+    local disabled=p.captureOwner and not p.burst and (p.suction==false or (p.volumeScale or 1)<=0)
+    if disabled then drew=true;p.captureOwner.q57Used=true end -- suppress legacy fallback when deliberately OFF
+    local volumeVisible=not disabled and (p.burst or ((p.fade or 1)>.001 and (not p.release or p.pull<.995)))
     if volumeVisible and e.mesh and Material.draw(Voxel3D,e.mesh,nil,model,0,paint,false) then
       drew=true
       if p.captureOwner then p.captureOwner.q57Used=true end
