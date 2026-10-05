@@ -1,7 +1,7 @@
 -- Native options adapters. Each mod ships its own copy and supplies only its
 -- own public schema; no other mod or private manager implementation is needed.
 local M={}
-function M.install(mod,schema,title)
+function M.install(mod,schema,title,categories)
  local active=true
  local function rows(game)
   local out={}
@@ -76,6 +76,7 @@ function M.install(mod,schema,title)
     dst[#dst+1]=r
    end
    local out=group(kept,openPage)
+   if categories then members=categories.native(members,openPage,mod.id)end
    if #members>0 then out[#out+1]={id=mod.id..':settings',label=title or mod.id,group=true,
     value=function()return #members..' OPTIONS'end,
     activate=function()openPage(title or mod.id,members)end}end

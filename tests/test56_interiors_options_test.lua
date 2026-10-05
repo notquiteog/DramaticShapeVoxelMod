@@ -32,7 +32,7 @@ local managed={}
 for _,setting in ipairs(C.settings)do managed[setting]=true end
 local preset={setting=masterSetting,mode=function()return legendaryMode end,
   isMember=function(setting)return managed[setting]==true end}
-local env=setmetatable({V=V,CommunityVisuals=C,LegendaryVisualsPreset=preset},{__index=function(t,k)
+local env=setmetatable({Categories=dofile("lib/OptionCategories.lua"),V=V,CommunityVisuals=C,LegendaryVisualsPreset=preset},{__index=function(t,k)
   if _G[k]~=nil then return _G[k] end
   local proxy=setmetatable({},{__index=function(p,n)local value={};rawset(p,n,value);return value end})
   rawset(t,k,proxy);return proxy
@@ -45,11 +45,11 @@ local expected={casino='legendary_game_corner',prizeRoom='legendary_game_corner'
   cityGround='legendary_lavender',tunnels='legendary_interiors',rocket='legendary_interiors',
   elevator='legendary_interiors',treeDetail='legendary_nature'}
 local seen={}
-for _,group in ipairs(categories)do for _,setting in ipairs(group.settings)do
+for _,group in ipairs(categories)do for _,setting in ipairs(group.keys)do
   check(not seen[setting], 'a setting must not be stolen by a second submenu')
   seen[setting]=group.id
 end end
-for name,id in pairs(expected)do check(mapping[C[name]].id==id,'submenu placement: '..name)end
+for name,id in pairs(expected)do check(mapping[C[name].key].id==id,'submenu placement: '..name)end
 
 -- The master selector is always the first Legendary row. Preset-owned child
 -- pages disappear outside CUSTOM, while independent style/audio pages remain.

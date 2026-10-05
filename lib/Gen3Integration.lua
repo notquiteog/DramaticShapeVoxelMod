@@ -8,8 +8,8 @@ M.recovery=recovery
 local ModSetting=V.require('ModSetting')
 local Trees=V.require('TreePresentation')
 local Distance=V.require('RenderDistance')
-local mode=ModSetting.new('fireredCamera','2.5D CAMERA',{0,1,2,3,4,5,6,7},
- {'OFF','FULL','15','35','50','75','1ST','ROTATING 3RD'},4)
+local mode=ModSetting.new('fireredCamera','VOXEL',{0,1,2,3,4,5,6,7},
+ {'OFF','FULL','15','35','50','75','1ST','3RD'},4)
 local function free()return M.level>=6 end
 local dirs={'up','right','down','left'}
 function M.worldDirection(dir,yaw)
@@ -41,6 +41,7 @@ function M.install()
  local Scene=V.require('Gen3Scene')
  local SceneOptions=V.require('Gen3SceneOptions')
  local BattleStage=V.require('Gen3Battle')
+ local controls=V.require('Gen3CameraControls').new(M)
  local uninstallBattle=BattleStage.install()
  local draw,present,update=FieldView.draw,Display.present,Player.update
  local function ready(game)return recovery:ready(Scene.context and Scene.context()or game.session)end
@@ -61,10 +62,19 @@ function M.install()
  for _,setting in ipairs(nativeArt.settings())do schema[#schema+1]=setting:schema('Shared Battle Art sprite settings. ANIMATED uses installed atlases or bundled BW backs (dex 1–251); missing art falls back to static full-body images. ROM/MODDED preserves native/provider art.')end
  mod.options:define(schema)
  local Support=V.require('OptionSupport')
- V.require('InGameOptions').install(mod,Support.rows(schema,3),'BATTLE ART')
+ V.require('InGameOptions').install(mod,Support.rows(schema,3),'BATTLE ART',V.require('OptionCategories'))
  mod.exports.optionSupport=Support.inventory(3)
  local function field(game)return game and game.phase=='field' and game.session and not Battle.isActive() end
- local function looking(game)return field(game) or game and game.phase=='quest_log' end
+ local function looking(game)
+  if not(field(game) or game and game.phase=='quest_log')then return false end
+  for _,name in ipairs({'start_menu','option_menu','controls_menu','bag_menu','party_menu','summary_menu','pokedex','pc_menu','shop_menu'})do
+   for _,prefix in ipairs({'src.ui.game3.','src.ui.game3.rse.'})do
+    local menu=package.loaded[prefix..name]
+    if menu and menu.isOpen and menu.isOpen()then return false end
+   end
+  end
+  return true
+ end
  local uninstallRecap=V.require('Gen3Recap').install(M)
  FieldView.draw=function(game,w,h,opts)
   M.active=false
@@ -109,6 +119,12 @@ function M.install()
   return update(game,input)
  end
  mod.hooks:wrap('input.key',function(next,game,ev)
+  local input=game and game.input
+  local bound=input and (input.captureArmed or input.keyBindings and input.keyBindings[ev.key]~=nil)
+  if not bound and looking(game) and M.active and M.level==7 and (ev.key=='q' or ev.key=='e')then
+   if ev.phase=='pressed'then controls:step(ev.key=='q' and 1 or -1)end
+   return true
+  end
   if V.require('Gen3Hotkeys').handle(game,ev,M,SceneOptions,BattleStage,looking(game),field(game))then return true end
   return next(game,ev)
  end)
@@ -117,6 +133,8 @@ function M.install()
  mod.hooks:wrap('input.gamepad',function(next,game,ev)
   if ev.phase=='axis' then
    if ev.axis=='rightx'then stick.x=tonumber(ev.value)or 0 elseif ev.axis=='righty'then stick.y=tonumber(ev.value)or 0 end
+  elseif ev.phase=='pressed' and looking(game) and M.active and M.level==7 and (ev.button=='leftstick' or ev.button=='rightstick')then
+   controls:step(ev.button=='leftstick' and 1 or -1);return true
   elseif ev.phase=='removed'then stick.x,stick.y=0,0 end
   return next(game,ev)
  end)
@@ -124,6 +142,7 @@ function M.install()
   recovery:update(dt)
   BattleStage.update()
   SceneOptions.update(dt)
+  controls:update(dt,looking(game) and M.active,love.mouse)
   if BattleStage.active and Battle.isActive()then
    local camera=V.require('BattleCam')
    camera.stickOrbit(stick.x,math.min(dt,.1));camera.stickPitch(stick.y,math.min(dt,.1))
@@ -149,7 +168,9 @@ function M.install()
  mod.events:on('save.writing',function()V.require('DayNight').store()end)
  local dragging=false
  mod.hooks:wrap('input.wheel',function(next,game,dy)
-  if BattleStage.active and Battle.isActive()then V.require('BattleCam').stepZoom(dy);return true end
+  if not dy or dy==0 then return next(game,dy)end
+  if BattleStage.active and Battle.isActive()then V.require('BattleCam').stepZoom(dy>0 and -1 or 1);return true end
+  if looking(game) and M.active and controls:step(dy>0 and -1 or dy<0 and 1 or 0)then return true end
   return next(game,dy)
  end)
  mod.hooks:wrap('input.pointer',function(next,game,ev)
@@ -157,7 +178,7 @@ function M.install()
    if ev.button==2 then
     dragging=ev.phase=='pressed';return true
    end
-   if ev.phase=='moved' and dragging then M.look((ev.dx or 0)*.005,(ev.dy or 0)*.004);return true end
+   if ev.phase=='moved' and dragging then controls:pointer();M.look((ev.dx or 0)*.005,(ev.dy or 0)*.004);return true end
   else dragging=false end
   return next(game,ev)
  end)

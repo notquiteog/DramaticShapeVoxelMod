@@ -1,3 +1,47 @@
+# Shared options and native camera parity — 2026-10-05 (unreleased)
+
+Extracted Gen1's category names/order into OptionCategories, consumed by both
+GB generations and native Game3 pages. Every catalog key has exactly one
+category (except the migrated legacy battle-stage alias). Native artwork and
+UI rendering stay with each engine. Gen3 keeps the existing fireredCamera save
+key but shows VOXEL; its short 3RD label fits the native value column.
+
+Fixed a concrete Crystal menu bug: the native constructor ignores opts.rows.
+Submenus now set the native rows/view/sub fields, keep BACK, and retain the
+parent's options table. Conditional rebuilds keep that exit. Regression tests
+exercise the real native menu constructor for Gold, Silver and Crystal.
+
+Game3 now shares Gen1 third-person zoom bounds/step/easing, wheel direction,
+left/right-stick click zoom, and camera cycling that skips FULL. Q/E also
+operate the third-person boom when not rebound. Right-drag mouse look polls
+on engines without input.pointer; events and polling cannot double motion.
+Native FRLG and Emerald menus retain wheel/look ownership. First-person and
+survey zoom paths are not replaced. Camera collision, touch/pinch and every
+Gen1 cinematic feature are NOT claimed as ported by this change.
+
+Live verification (Gen1Recomp 0.3.51, isolated profiles): Yellow, Crystal,
+LeafGreen and Emerald WORLD pages, inversion changes reaching the camera,
+and restoring the original choice. Inspected Crystal/LeafGreen/Emerald menu
+captures; Crystal initially displayed the root again, then correctly displayed
+the WORLD controls after the constructor fix. LeafGreen third-person wheel
+shortened the boom; left-stick click restored it, with exclamation animation
+and right-stick look still working. Drivers: tools/qa/option-parity.lua and
+ tools/qa/gen3-camera-parity.lua. Evidence: .scratch/coverage-20261004/results/
+{yellow,crystal,leafgreen,emerald}-parity-options and leafgreen-parity-camera.
+No user saves changed. Full suite: 159 passed, zero failed, 56 historical
+fixture/source-art skips; 685 Lua files compiled; whitespace checks clean.
+
+Source inventory: docs/OPTION_PARITY.tsv, reproducible with
+`luajit tools/option-parity-report.lua`. Corrected Crystal weather/FSR consumers
+and optional Modern UI provider ownership. This inventory is NOT runtime QA:
+Gen2 still lists 16 missing and 29 partial options; Gen3 43 missing and six
+partial, including generation-specific art controls. Largest remaining ports:
+Legendary capture/audio/beam effects, special scenery families, Gen3 RAM
+precaching and optional standing-trainer provider integration. Gen3 FULL currently
+selects the camera angle but does not apply the Gen1 bundled presentation preset.
+Do not advertise
+full feature parity or turn these statuses green from menu visibility alone.
+
 # Exclamation/emote camera ownership — 2026-10-05 (unreleased)
 
 Reproduced in LeafGreen Pallet Town on Gen1Recomp 0.3.51: native

@@ -42,6 +42,7 @@ local GameVersion = require("src.core.GameVersion")
 -- The tables are also process-wide and `require` caches them, so a patch a
 -- Gen 1 load lands stays landed for every later load in this process. That is
 -- what the cart ORDER below is about.
+local NativeOptions = require("src.ui.gen2.OptionsMenu")
 local ENGINE = {
   ["src.world.OverworldController"] = require("src.world.OverworldController"),
   ["src.battle.BattleState"] = require("src.battle.BattleState"),
@@ -333,6 +334,34 @@ for _, cart in ipairs(carts) do
   T.check(chains["pokemon.sprite"] ~= nil,
     label .. ": the pokemon.sprite seam is claimed, so BATTLE ART's own "
       .. "sprites reach this cart")
+
+  if cart.generation==2 then
+    local options={modOptions={}}
+    local game={data=run.data,mods=run.loader,options=options,save={options=options},writeOptions=function()end}
+    local stack={states={}}
+    function stack:push(page)self.states[#self.states+1]=page end
+    function stack:top()return self.states[#self.states]end
+    game.stack=stack
+    local menu=NativeOptions.new(game,{options=options})
+    local category
+    for _,row in ipairs(menu.view)do if row.id==MOD_ID..":group:world"then category=row end end
+    T.check(category~=nil,label..": WORLD category exists")
+    if category then
+      category.activate(game)
+      local sub=stack:top()
+      T.check(sub.sub==true and sub.options==options,label..": native submenu retains parent options")
+      T.eq(sub.view[#sub.view].id,"cancel",label..": native submenu retains BACK")
+      local invert
+      for _,row in ipairs(sub.view)do if row.id==MOD_ID..":invertY"then invert=row end end
+      T.check(invert~=nil,label..": submenu contains requested controls")
+      if invert then
+        local old=lib("CameraSettings").invertY:get()
+        invert.step(game,1)
+        T.eq(lib("CameraSettings").invertY:get(),not old,label..": live camera observes submenu edit")
+        invert.step(game,-1)
+      end
+    end
+  end
 
   run.release()
 end

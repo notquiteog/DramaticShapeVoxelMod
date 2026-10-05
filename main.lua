@@ -1250,102 +1250,12 @@ local HOTKEYS = {
 -- every Legendary visual choice behind one top-level entry, then divides it
 -- into focused pages. Engines before that screen contract retain the original
 -- flat list, including v0.2.36; the mod manager schema also remains flat.
-local LEGENDARY_ROOT = {
-  id = "legendary_visuals", label = "LEGENDARY VISUALS",
-}
-
-local LEGENDARY_CATEGORIES = {
-  { id = "legendary_game_corner", label = "GAME CORNER", settings = {
-    CommunityVisuals.casino, CommunityVisuals.prizeRoom,
-  } },
-  { id = "legendary_lavender", label = "LAVENDER & CITIES", settings = {
-    CommunityVisuals.cityGround,
-  } },
-  { id = "legendary_interiors", label = "INTERIORS", settings = {
-    CommunityVisuals.tunnels, CommunityVisuals.rocket, CommunityVisuals.elevator,
-  } },
-  { id = "legendary_tower", label = "POKEMON TOWER", settings = {
-    CommunityVisuals.tower, CommunityVisuals.towerWall,
-    TowerFogSettings.details, TowerFogSettings.enabled,
-    TowerFogSettings.thickness,
-    TowerFogSettings.speed,
-  } },
-  { id = "legendary_caves", label = "CAVES", settings = {
-    CommunityVisuals.caves, CommunityVisuals.caveDetails,
-    CommunityVisuals.caveSound,
-  } },
-  { id = "legendary_pillars", label = "PILLARS & MASONRY", settings = {
-    CommunityVisuals.pillars, CommunityVisuals.masonry,
-  } },
-  { id = "legendary_signs", label = "SIGNS & PROPS", settings = {
-    CommunityVisuals.signs, CommunityVisuals.cutTrees,
-  } },
-  { id = "legendary_nature", label = "GRASS & TREES", settings = {
-    CommunityVisuals.grass,
-    CommunityVisuals.trees, CommunityVisuals.treeDetail,
-    CommunityVisuals.forest, CommunityVisuals.safari, ForestAtmos.setting, CommunityVisuals.kantoLife,
-  } },
-  { id = "legendary_structures", label = "ROADS & STRUCTURES", settings = {
-    CommunityVisuals.buildings, CommunityVisuals.roads, CommunityVisuals.walls,
-    CommunityVisuals.courtyards,
-  } },
-  { id = "legendary_sky", label = "SKY & BACKGROUND", settings = {
-    CommunityVisuals.sky,
-  } },
-  { id = "legendary_battle", label = "BATTLE PRESENTATION", settings = {
-    OverworldBattle.trainerBattleSetting,
-  } },
-  { id = "ember_legacy", label = "EMBER LEGACY", settings = {
-    PokeballSettings.enabled, PokeballSettings.audio, PokeballSettings.audioVolume, PokeballSettings.size,
-    PokeballSettings.suction, PokeballSettings.preset,
-    PokeballSettings.beam, PokeballSettings.streamers,
-    PokeballSettings.pokemonGlow,
-    PokeballSettings.suctionParticles, PokeballSettings.captureSpeed,
-    PokeballSettings.openTime, PokeballSettings.fxScale,
-  } },
-}
-
-local OPTION_CATEGORIES = {
-  { id = "world", label = "WORLD", settings = {
-    VoxelGrid.setting, WorldCurve.setting, WorldUnderlay.setting,
-    Water.setting, DayNight.setting, FirstPerson.invertYSetting,
-  } },
-  { id = "performance", label = "PERFORMANCE", settings = {
-    RenderDistance.setting, RamPrecache.setting,
-    Shadows.setting, AntiAlias.setting,V.require("SpatialUpscale").setting,
-  } },
-  { id = "pokemon", label = "POKEMON ART", settings = {
-    InterfaceSprites.setting, InterfaceSprites.scalingSetting,
-    BattleArt.setting, BattleArt.trainerSetting,
-    BattleArt.playerArtSetting, BattleArt.playerAnimationSetting,
-    BattleArt.frontAnimationSetting, BattleArt.backAnimationSetting,
-    BattleArt.duplicateSetting, BattleArt.viewSetting,
-    BattleArt.frontFlipSetting,
-  } },
-  { id = "battle", label = "BATTLE SCENE", settings = {
-    OverworldBattle.setting, OverworldBattle.hudScaleSetting,
-    BattleArt.backPlacementSetting,
-    UiBackplates.spriteLight, UiBackplates.battleUi,
-    UiBackplates.hudColor, UiBackplates.arenaFill,
-    UiBackplates.stadiumCircle, UiBackplates.backdropOffset,
-    UiBackplates.bossBg, UiBackplates.textboxFill,
-  } },
-}
-
-local ALL_OPTION_CATEGORIES = {}
-for _, category in ipairs(LEGENDARY_CATEGORIES) do
-  ALL_OPTION_CATEGORIES[#ALL_OPTION_CATEGORIES + 1] = category
-end
-for _, category in ipairs(OPTION_CATEGORIES) do
-  ALL_OPTION_CATEGORIES[#ALL_OPTION_CATEGORIES + 1] = category
-end
-
-local OPTION_CATEGORY = {}
-for _, category in ipairs(ALL_OPTION_CATEGORIES) do
-  for _, setting in ipairs(category.settings) do
-    OPTION_CATEGORY[setting] = category
-  end
-end
+local Categories = V.require("OptionCategories")
+local LEGENDARY_ROOT = Categories.legendaryRoot
+local LEGENDARY_CATEGORIES = Categories.legendary
+local OPTION_CATEGORIES = Categories.ordinary
+local ALL_OPTION_CATEGORIES = Categories.all
+local OPTION_CATEGORY = Categories.byKey
 
 -- Categorized OPTIONS first shipped in 0.2.37. Development trees keep the
 -- deliberately non-orderable 0.0.0-dev version, so they must advertise the
@@ -1386,7 +1296,7 @@ local function categorizedRows(rows)
   local customLegendary = LegendaryVisualsPreset.mode() == "custom"
   for _, row in ipairs(rows) do
     local setting = row.optionSetting
-    local category = setting and OPTION_CATEGORY[setting]
+    local category = setting and OPTION_CATEGORY[setting.key]
     local bucket
     if setting == LegendaryVisualsPreset.setting then
       bucket = legendaryMaster
@@ -1420,7 +1330,8 @@ local function categorizedRows(rows)
         local fresh = OptionsMenu.new(game)
         local group = findOptionGroup(fresh.view or fresh.rows, id)
         local current = (group and group.members) or members
-        local sub = OptionsMenu.new(game, { rows = current })
+        local sub = OptionsMenu.new(game, { rows = current,
+          options = game.options or (game.save and game.save.options) })
         sub.dramaticShapeCategory = id
         game.stack:push(sub)
       end,
@@ -2025,6 +1936,13 @@ do
     function OptionsMenu.new(game, opts)
       local menu = newMenu(game, opts)
       menu.dramaticShapeVisibility = visibilitySignature()
+      -- Crystal's native constructor does not implement opts.rows. Its own
+      -- subpages use explicit rows/view/sub, including a native BACK entry.
+      if Generation.isGen2() and opts and opts.rows then
+        menu.rows, menu.view, menu.sub = opts.rows, {}, true
+        for i,row in ipairs(opts.rows) do menu.view[i]=row end
+        menu.view[#menu.view+1]={id="cancel",label="BACK",cancel=true}
+      end
       if (opts and opts.rows) or not categorizedOptionsAvailable() then
         return menu
       end
@@ -2071,7 +1989,11 @@ do
           local group = findOptionGroup(rebuilt.view or rebuilt.rows,
                                         self.dramaticShapeCategory)
           self.rows = (group and group.members) or {}
-          self.view = self.rows
+          self.view = {}
+          for i,row in ipairs(self.rows) do self.view[i]=row end
+          if Generation.isGen2() then
+            self.view[#self.view+1]={id="cancel",label="BACK",cancel=true}
+          end
         else
           self.rows = rebuilt.rows
           self.view = rebuilt.view

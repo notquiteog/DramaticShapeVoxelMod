@@ -70,6 +70,8 @@ end
 for gen=1,3 do
  set(gen,'modernBattleUI battleUi hudColor textboxFill','provider','lib/ModernBattleUI.lua; lib/UiBackplates.lua','Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.')
 end
+set(2,'weather spatialUpscale','implemented','lib/Weather.lua; lib/SpatialUpscale.lua; lib/AntiAlias.lua; lib/VoxelScene.lua; main.lua','Shared GB world pipeline, update clock and postprocess, including Crystal.')
+set(2,'modernBattleUI battleUi hudColor textboxFill','provider','lib/ModernBattleUI.lua; lib/Gen2BattleUI.lua','Like Gen1, optional Modern Pokemon UI owns styling. Without a provider the native UI remains unchanged.')
 function M.inventory(gen)
  local out={}
  for _,row in ipairs(V.require('SettingsCatalog'))do

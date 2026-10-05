@@ -53,7 +53,7 @@ return {
  {key="emberLegacyAudio",label="EMBER LEGACY AUDIO",module="PokeballSettings"},
  {key="emberLegacyVolume",label="EMBER LEGACY VOLUME",module="PokeballSettings"},
  {key="fireredBattleStage",label="3D BATTLE STAGE",module="Gen3Battle"},
- {key="fireredCamera",label="2.5D CAMERA",module="Gen3Integration"},
+ {key="fireredCamera",label="VOXEL",module="Gen3Integration"},
  {key="frontAnimatedSet",label="ANIM FRONT GEN",module="BattleArt"},
  {key="frontFlip",label="FLIP FRONT SPRITE",module="BattleArt"},
  {key="full_body_backs",label="FULL-BODY BATTLE BACKS",module="CrystalSprites"},

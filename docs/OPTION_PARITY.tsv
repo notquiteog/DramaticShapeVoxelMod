@@ -1,0 +1,286 @@
+generation	key	label	status	consumer	limitation
+1	sceneryProps	ROCKS & PLANTS	not_applicable	false	Native Gen2/3 scenery controls; Gen1 uses the Legendary scenery families.
+1	weather	WEATHER	implemented	lib/Weather.lua; lib/VoxelScene.lua; lib/BattleScene.lua; lib/Gen3Scene.lua	Optional deterministic outdoor rain/snow/fog/storms on the world canvas, below UI. Does not change battle weather rules.
+1	spatialUpscale	FSR 1	implemented	lib/SpatialUpscale.lua; lib/AntiAlias.lua	Shared full-precision FSR 1 EASU/RCAS postprocess; native resolution UI. Shader availability checked; no temporal/frame generation.
+1	modernBattleUI	MODERN BATTLE UI	provider	lib/ModernBattleUI.lua; lib/UiBackplates.lua	Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.
+1	tiltshift	T-SHIFT	implemented	lib/TiltShift.lua	Gen1 source consumer; device validation is separate.
+1	crystalFront	CRYSTAL PLAYER FRONT	implemented	lib/CrystalSprites.lua	Gen1 source consumer; device validation is separate.
+1	crystalTrainers	CRYSTAL CUSTOM SPRITES	implemented	lib/CrystalSprites.lua	Gen1 source consumer; device validation is separate.
+1	crystalPlayerSprite	CRYSTAL PLAYER PORTRAIT	implemented	lib/CrystalSprites.lua	Gen1 source consumer; device validation is separate.
+1	crystalBattlePic	CRYSTAL TRAINER VIEW	implemented	lib/CrystalSprites.lua	Gen1 source consumer; device validation is separate.
+1	crystalAnimations	CRYSTAL ANIMATIONS	implemented	lib/CrystalSprites.lua	Gen1 source consumer; device validation is separate.
+1	aa	AA	implemented	lib/AntiAlias.lua	Gen1 source consumer; device validation is separate.
+1	arenaFill	ARENA FILL	implemented	lib/UiBackplates.lua	Gen1 source consumer; device validation is separate.
+1	atmos	FOREST FX	implemented	lib/ForestAtmos.lua	Gen1 source consumer; device validation is separate.
+1	backAnimatedSet	BACK ART SET	implemented	lib/BattleArt.lua	Gen1 source consumer; device validation is separate.
+1	backPlacement	BACK PLACEMENT	implemented	lib/BattleArt.lua	Gen1 source consumer; device validation is separate.
+1	backdropOffset	BG Y-OFFSET	implemented	lib/UiBackplates.lua	Gen1 source consumer; device validation is separate.
+1	battleArt	BATTLE ART	implemented	lib/BattleArt.lua	Gen1 source consumer; device validation is separate.
+1	battleUi	BATTLE ART UI	provider	lib/ModernBattleUI.lua; lib/UiBackplates.lua	Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.
+1	battles	3D-BTL	implemented	lib/OverworldBattle.lua	Gen1 source consumer; device validation is separate.
+1	bossBg	BOSS BG	implemented	lib/UiBackplates.lua	Gen1 source consumer; device validation is separate.
+1	communityCasino	CASINO	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communitySafari	SAFARI ZONE	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityKantoLife	KANTO AMBIENCE	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	vermilionBuildings	BUILDING STYLE	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityCaveDetails	CAVE DETAILS	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityCaveSound	CAVE SOUND	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityCaves	CAVES	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityCityGround	CITY GROUND	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityCourtyards	FENCES & COURTS	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityCutTrees	CUT TREES	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityElevator	ROCKET ELEVATOR	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityForest	VIRIDIAN FOREST	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityGrass	GRASS	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityMasonry	WALL & LEDGE COLOR	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityPillars	LEGENDARY PILLARS	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityPrizeRoom	PRIZE ROOM	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityRoads	ROADS & BRIDGES	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityRocket	ROCKET HIDEOUT	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communitySigns	SIGNS	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communitySky	SKY & BACKGROUND	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityTower	TOWER VISUALS	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityTowerWall	TOWER WALL	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityTreeDetail	TREE DETAIL	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityTrees	TREES	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityTunnels	TUNNELS	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	communityWalls	WALLS & LEDGES	implemented	lib/CommunityVisuals.lua	Gen1 source consumer; device validation is separate.
+1	curve	V-CURVE	implemented	lib/WorldCurve.lua	Gen1 source consumer; device validation is separate.
+1	daytime	DAYTIME	implemented	lib/DayNight.lua	Gen1 source consumer; device validation is separate.
+1	duplicateFix	DUPLICATE FIX	implemented	lib/BattleArt.lua	Gen1 source consumer; device validation is separate.
+1	emberLegacyAudio	EMBER LEGACY AUDIO	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	emberLegacyVolume	EMBER LEGACY VOLUME	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	fireredBattleStage	3D BATTLE STAGE	not_applicable	false	Native Gen3 camera/battle settings; Gen1 uses its voxel pipeline and 3D-BTL.
+1	fireredCamera	VOXEL	not_applicable	false	Native Gen3 camera/battle settings; Gen1 uses its voxel pipeline and 3D-BTL.
+1	frontAnimatedSet	ANIM FRONT GEN	implemented	lib/BattleArt.lua	Gen1 source consumer; device validation is separate.
+1	frontFlip	FLIP FRONT SPRITE	implemented	lib/BattleArt.lua	Gen1 source consumer; device validation is separate.
+1	full_body_backs	FULL-BODY BATTLE BACKS	implemented	lib/CrystalSprites.lua	Gen1 source consumer; device validation is separate.
+1	grid	V-GRID	implemented	lib/VoxelGrid.lua	Gen1 source consumer; device validation is separate.
+1	hdTreeTrunks	TREE TRUNKS	not_applicable	false	Native Gen2/3 scenery controls; Gen1 uses the Legendary scenery families.
+1	hudColor	HUD COLOR	provider	lib/ModernBattleUI.lua; lib/UiBackplates.lua	Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.
+1	hudScale	HUD SCALE	implemented	lib/OverworldBattle.lua	Gen1 source consumer; device validation is separate.
+1	interfaceScaling	INTERFACE SCALING	implemented	lib/InterfaceSprites.lua	Gen1 source consumer; device validation is separate.
+1	interfaceSprites	INTERFACE SPRITES	implemented	lib/InterfaceSprites.lua	Gen1 source consumer; device validation is separate.
+1	invertY	Y-CONTROL INVERT	implemented	lib/FirstPerson.lua	Gen1 source consumer; device validation is separate.
+1	legendaryPokeballs	EMBER LEGACY	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	legendaryVisualsMode	LEGENDARY VISUALS	implemented	lib/LegendaryVisualsPreset.lua	Gen1 source consumer; device validation is separate.
+1	playerAnimatedSet	PLAYER ANIM	implemented	lib/BattleArt.lua	Gen1 source consumer; device validation is separate.
+1	playerArtSet	PLAYER ART	implemented	lib/BattleArt.lua	Gen1 source consumer; device validation is separate.
+1	playerView	PLAYER	implemented	lib/BattleArt.lua	Gen1 source consumer; device validation is separate.
+1	pokeballBeam	BEAM STRENGTH	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	pokeballCapturePreset	CAPTURE FX PRESET	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	pokeballCaptureSpeed	CAPTURE SPEED	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	pokeballFxScale	FX SCALE	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	pokeballOpenTime	BALL OPEN TIME	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	pokeballPokemonGlow	POKEMON GLOW	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	pokeballSize	BALL SIZE	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	pokeballStreamers	STREAMERS	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	pokeballSuction	SUCTION FX	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	pokeballSuctionParticles	SUCTION PARTICLES	implemented	lib/PokeballSettings.lua	Gen1 source consumer; device validation is separate.
+1	ramPrecacheMb	RAM PRECACHE MB	implemented	lib/RamPrecache.lua	Gen1 source consumer; device validation is separate.
+1	renderDistance	R.DIST	implemented	lib/RenderDistance.lua	Gen1 source consumer; device validation is separate.
+1	shadowQuality	SHADOWS	implemented	lib/Shadows.lua	Gen1 source consumer; device validation is separate.
+1	spriteLight	SPRITE LIGHT	implemented	lib/UiBackplates.lua	Gen1 source consumer; device validation is separate.
+1	spritePack	SPRITE PACK (RESTART)	implemented	lib/CrystalSprites.lua	Gen1 source consumer; device validation is separate.
+1	stadiumCircle	STADIUM CIRCLE	provider	lib/StadiumBackground.lua	Requires the optional compatible Stadium scene provider; no provider means no consumer.
+1	standingTrainer	STANDING TRAINER	implemented	lib/OverworldBattle.lua	Gen1 source consumer; device validation is separate.
+1	surfaceArtwork	SCENERY TEXTURES	not_applicable	false	Native Gen2/3 scenery controls; Gen1 uses the Legendary scenery families.
+1	textboxFill	TEXTBOX FILL	provider	lib/ModernBattleUI.lua; lib/UiBackplates.lua	Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.
+1	towerDetails	TOWER DETAILS	implemented	lib/TowerFogSettings.lua	Gen1 source consumer; device validation is separate.
+1	towerFog	TOWER FOG	implemented	lib/TowerFogSettings.lua	Gen1 source consumer; device validation is separate.
+1	towerFogSpeed	FOG SPEED	implemented	lib/TowerFogSettings.lua	Gen1 source consumer; device validation is separate.
+1	towerFogThickness	FOG THICKNESS	implemented	lib/TowerFogSettings.lua	Gen1 source consumer; device validation is separate.
+1	trainerArtSet	TRAINER ART	implemented	lib/BattleArt.lua	Gen1 source consumer; device validation is separate.
+1	treeArtwork	TREE ART	not_applicable	false	Native Gen2/3 scenery controls; Gen1 uses the Legendary scenery families.
+1	water	WATER	implemented	lib/Water.lua	Gen1 source consumer; device validation is separate.
+1	worldFill	WORLD FILL	implemented	lib/WorldUnderlay.lua	Gen1 source consumer; device validation is separate.
+2	sceneryProps	ROCKS & PLANTS	implemented	lib/TreePresentation.lua; lib/NativeTreeArt.lua; lib/Gen2Rocks.lua; lib/Gen2VoxelRock.lua; lib/Gen3Cave.lua; lib/Gen3Outdoor.lua	Native solid rocks/bushes or source-art cutouts. Terrain/collision unchanged; actors, grass and flowers remain sprites.
+2	weather	WEATHER	implemented	lib/Weather.lua; lib/SpatialUpscale.lua; lib/AntiAlias.lua; lib/VoxelScene.lua; main.lua	Shared GB world pipeline, update clock and postprocess, including Crystal.
+2	spatialUpscale	FSR 1	implemented	lib/Weather.lua; lib/SpatialUpscale.lua; lib/AntiAlias.lua; lib/VoxelScene.lua; main.lua	Shared GB world pipeline, update clock and postprocess, including Crystal.
+2	modernBattleUI	MODERN BATTLE UI	provider	lib/ModernBattleUI.lua; lib/Gen2BattleUI.lua	Like Gen1, optional Modern Pokemon UI owns styling. Without a provider the native UI remains unchanged.
+2	tiltshift	T-SHIFT	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
+2	crystalFront	CRYSTAL PLAYER FRONT	implemented	lib/CrystalSprites.lua; lib/Crystal/main.lua	Integrated native Crystal provider, selected at restart.
+2	crystalTrainers	CRYSTAL CUSTOM SPRITES	implemented	lib/CrystalSprites.lua; lib/Crystal/main.lua	Integrated native Crystal provider, selected at restart.
+2	crystalPlayerSprite	CRYSTAL PLAYER PORTRAIT	implemented	lib/CrystalSprites.lua; lib/Crystal/main.lua	Integrated native Crystal provider, selected at restart.
+2	crystalBattlePic	CRYSTAL TRAINER VIEW	implemented	lib/CrystalSprites.lua; lib/Crystal/main.lua	Integrated native Crystal provider, selected at restart.
+2	crystalAnimations	CRYSTAL ANIMATIONS	implemented	lib/CrystalSprites.lua; lib/Crystal/main.lua	Integrated native Crystal provider, selected at restart.
+2	aa	AA	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
+2	arenaFill	ARENA FILL	partial	lib/BattleScene.lua; lib/Gen6Backdrop.lua; lib/BossBackdrop.lua	Shared stage consumes the controls; generation-specific location/boss routing is incomplete.
+2	atmos	FOREST FX	implemented	lib/NativeAtmosphere.lua; lib/ForestAtmos.lua	Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.
+2	backAnimatedSet	BACK ART SET	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.
+2	backPlacement	BACK PLACEMENT	implemented	lib/Gen2Staged.lua; lib/Gen2Battle.lua	OG UI restores the native player slot; AUTO/WORLD keep the player on the stage.
+2	backdropOffset	BG Y-OFFSET	partial	lib/BattleScene.lua; lib/Gen6Backdrop.lua; lib/BossBackdrop.lua	Shared stage consumes the controls; generation-specific location/boss routing is incomplete.
+2	battleArt	BATTLE ART	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.
+2	battleUi	BATTLE ART UI	provider	lib/ModernBattleUI.lua; lib/Gen2BattleUI.lua	Like Gen1, optional Modern Pokemon UI owns styling. Without a provider the native UI remains unchanged.
+2	battles	3D-BTL	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.
+2	bossBg	BOSS BG	partial	lib/BattleScene.lua; lib/Gen6Backdrop.lua; lib/BossBackdrop.lua	Shared stage consumes the controls; generation-specific location/boss routing is incomplete.
+2	communityCasino	CASINO	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communitySafari	SAFARI ZONE	missing	false	No complete native generation adapter audited for this option.
+2	communityKantoLife	KANTO AMBIENCE	missing	false	No complete native generation adapter audited for this option.
+2	vermilionBuildings	BUILDING STYLE	missing	false	No complete native generation adapter audited for this option.
+2	communityCaveDetails	CAVE DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
+2	communityCaveSound	CAVE SOUND	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityCaves	CAVES	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
+2	communityCityGround	CITY GROUND	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityCourtyards	FENCES & COURTS	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityCutTrees	CUT TREES	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityElevator	ROCKET ELEVATOR	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityForest	VIRIDIAN FOREST	implemented	lib/NativeAtmosphere.lua; lib/ForestAtmos.lua	Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.
+2	communityGrass	GRASS	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityMasonry	WALL & LEDGE COLOR	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityPillars	LEGENDARY PILLARS	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityPrizeRoom	PRIZE ROOM	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityRoads	ROADS & BRIDGES	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityRocket	ROCKET HIDEOUT	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communitySigns	SIGNS	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communitySky	SKY & BACKGROUND	implemented	lib/Sky.lua	Shared sky renderer consumes the selected sky style.
+2	communityTower	TOWER VISUALS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
+2	communityTowerWall	TOWER WALL	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityTreeDetail	TREE DETAIL	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityTrees	TREES	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityTunnels	TUNNELS	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityWalls	WALLS & LEDGES	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	curve	V-CURVE	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
+2	daytime	DAYTIME	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
+2	duplicateFix	DUPLICATE FIX	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.
+2	emberLegacyAudio	EMBER LEGACY AUDIO	missing	false	No complete native generation adapter audited for this option.
+2	emberLegacyVolume	EMBER LEGACY VOLUME	missing	false	No complete native generation adapter audited for this option.
+2	fireredBattleStage	3D BATTLE STAGE	not_applicable	false	Native Gen3 settings; Gen2 uses its voxel pipeline and 3D-BTL.
+2	fireredCamera	VOXEL	not_applicable	false	Native Gen3 settings; Gen2 uses its voxel pipeline and 3D-BTL.
+2	frontAnimatedSet	ANIM FRONT GEN	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.
+2	frontFlip	FLIP FRONT SPRITE	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.
+2	full_body_backs	FULL-BODY BATTLE BACKS	implemented	lib/CrystalSprites.lua; lib/Crystal/main.lua	Integrated native Crystal provider, selected at restart.
+2	grid	V-GRID	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
+2	hdTreeTrunks	TREE TRUNKS	implemented	lib/TreePresentation.lua; lib/ChunkMesher.lua	Native scenery rebuilds on option changes.
+2	hudColor	HUD COLOR	provider	lib/ModernBattleUI.lua; lib/Gen2BattleUI.lua	Like Gen1, optional Modern Pokemon UI owns styling. Without a provider the native UI remains unchanged.
+2	hudScale	HUD SCALE	partial	lib/Gen2BattleUI.lua	Changes the modern HUD scale; original native HUD scale is still engine-owned.
+2	interfaceScaling	INTERFACE SCALING	partial	lib/Gen2InterfaceArt.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua	Native Summary/Dex selected frames and FIT/FULL consume these controls. Eggs/Unown keep native art, Crystal retains ownership; other screens need dedicated coverage.
+2	interfaceSprites	INTERFACE SPRITES	partial	lib/Gen2InterfaceArt.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua	Native Summary/Dex selected frames and FIT/FULL consume these controls. Eggs/Unown keep native art, Crystal retains ownership; other screens need dedicated coverage.
+2	invertY	Y-CONTROL INVERT	implemented	lib/FirstPerson.lua; lib/Gen2CameraWalk.lua	Native Gen2 camera-relative walking and shared look input.
+2	legendaryPokeballs	EMBER LEGACY	missing	false	No complete native generation adapter audited for this option.
+2	legendaryVisualsMode	LEGENDARY VISUALS	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	playerAnimatedSet	PLAYER ANIM	implemented	lib/NativeBattleArt.lua; lib/AnimatedBattleArt.lua	Native trainer scenes consume static/animated selected art and real slide progress, with Crystal pack and missing-art fallback retained.
+2	playerArtSet	PLAYER ART	implemented	lib/NativeBattleArt.lua; lib/AnimatedBattleArt.lua	Native trainer scenes consume static/animated selected art and real slide progress, with Crystal pack and missing-art fallback retained.
+2	playerView	PLAYER	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.
+2	pokeballBeam	BEAM STRENGTH	missing	false	No complete native generation adapter audited for this option.
+2	pokeballCapturePreset	CAPTURE FX PRESET	missing	false	No complete native generation adapter audited for this option.
+2	pokeballCaptureSpeed	CAPTURE SPEED	missing	false	No complete native generation adapter audited for this option.
+2	pokeballFxScale	FX SCALE	missing	false	No complete native generation adapter audited for this option.
+2	pokeballOpenTime	BALL OPEN TIME	missing	false	No complete native generation adapter audited for this option.
+2	pokeballPokemonGlow	POKEMON GLOW	missing	false	No complete native generation adapter audited for this option.
+2	pokeballSize	BALL SIZE	missing	false	No complete native generation adapter audited for this option.
+2	pokeballStreamers	STREAMERS	missing	false	No complete native generation adapter audited for this option.
+2	pokeballSuction	SUCTION FX	missing	false	No complete native generation adapter audited for this option.
+2	pokeballSuctionParticles	SUCTION PARTICLES	missing	false	No complete native generation adapter audited for this option.
+2	ramPrecacheMb	RAM PRECACHE MB	implemented	lib/RamPrecache.lua; lib/VoxelMeshDisk.lua	Shared GB mesh cache budget and persistence path.
+2	renderDistance	R.DIST	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
+2	shadowQuality	SHADOWS	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
+2	spriteLight	SPRITE LIGHT	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.
+2	spritePack	SPRITE PACK (RESTART)	implemented	lib/CrystalSprites.lua; lib/Crystal/main.lua	Integrated native Crystal provider, selected at restart.
+2	stadiumCircle	STADIUM CIRCLE	provider	lib/StadiumBackground.lua	Requires the optional compatible Stadium scene provider; no provider means no consumer.
+2	standingTrainer	STANDING TRAINER	provider	lib/OverworldBattle.lua	Requires a compatible character renderer; native Gen2 trainer staging still needs a dedicated adapter.
+2	surfaceArtwork	SCENERY TEXTURES	implemented	lib/TreePresentation.lua; lib/ChunkMesher.lua	Native scenery rebuilds on option changes.
+2	textboxFill	TEXTBOX FILL	provider	lib/ModernBattleUI.lua; lib/Gen2BattleUI.lua	Like Gen1, optional Modern Pokemon UI owns styling. Without a provider the native UI remains unchanged.
+2	towerDetails	TOWER DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
+2	towerFog	TOWER FOG	implemented	lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua	Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.
+2	towerFogSpeed	FOG SPEED	implemented	lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua	Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.
+2	towerFogThickness	FOG THICKNESS	implemented	lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua	Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.
+2	trainerArtSet	TRAINER ART	implemented	lib/NativeBattleArt.lua; lib/AnimatedBattleArt.lua	Native trainer scenes consume static/animated selected art and real slide progress, with Crystal pack and missing-art fallback retained.
+2	treeArtwork	TREE ART	implemented	lib/TreePresentation.lua; lib/ChunkMesher.lua	Native scenery rebuilds on option changes.
+2	water	WATER	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
+2	worldFill	WORLD FILL	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
+3	sceneryProps	ROCKS & PLANTS	implemented	lib/TreePresentation.lua; lib/NativeTreeArt.lua; lib/Gen2Rocks.lua; lib/Gen2VoxelRock.lua; lib/Gen3Cave.lua; lib/Gen3Outdoor.lua	Native solid rocks/bushes or source-art cutouts. Terrain/collision unchanged; actors, grass and flowers remain sprites.
+3	weather	WEATHER	implemented	lib/Weather.lua; lib/VoxelScene.lua; lib/BattleScene.lua; lib/Gen3Scene.lua	Optional deterministic outdoor rain/snow/fog/storms on the world canvas, below UI. Does not change battle weather rules.
+3	spatialUpscale	FSR 1	implemented	lib/SpatialUpscale.lua; lib/AntiAlias.lua	Shared full-precision FSR 1 EASU/RCAS postprocess; native resolution UI. Shader availability checked; no temporal/frame generation.
+3	modernBattleUI	MODERN BATTLE UI	provider	lib/ModernBattleUI.lua; lib/UiBackplates.lua	Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.
+3	tiltshift	T-SHIFT	implemented	lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua	Native scene supersampling, day clock/light/sky, underlay and postprocess.
+3	crystalFront	CRYSTAL PLAYER FRONT	missing	false	No complete native generation adapter audited for this option.
+3	crystalTrainers	CRYSTAL CUSTOM SPRITES	missing	false	No complete native generation adapter audited for this option.
+3	crystalPlayerSprite	CRYSTAL PLAYER PORTRAIT	missing	false	No complete native generation adapter audited for this option.
+3	crystalBattlePic	CRYSTAL TRAINER VIEW	missing	false	No complete native generation adapter audited for this option.
+3	crystalAnimations	CRYSTAL ANIMATIONS	missing	false	No complete native generation adapter audited for this option.
+3	aa	AA	implemented	lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua	Native scene supersampling, day clock/light/sky, underlay and postprocess.
+3	arenaFill	ARENA FILL	partial	lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua	WHITE/GEN6/PNG and native location routing; missing image fails open. BLUE still needs a compatible Stadium provider.
+3	atmos	FOREST FX	implemented	lib/NativeAtmosphere.lua; lib/ForestAtmos.lua	Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.
+3	backAnimatedSet	BACK ART SET	implemented	lib/NativeBattleArt.lua; lib/BattleArt.lua	Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.
+3	backPlacement	BACK PLACEMENT	implemented	lib/Gen3BattleActors.lua	AUTO/WORLD project allied Pokemon; OG UI retains both native allied slots without duplicate world cards. Trainers retain world placement.
+3	backdropOffset	BG Y-OFFSET	implemented	lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua	Native location/boss identity, source-pixel crop and frozen battle day phase, using installed optional art.
+3	battleArt	BATTLE ART	implemented	lib/NativeBattleArt.lua; lib/BattleArt.lua	Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.
+3	battleUi	BATTLE ART UI	provider	lib/ModernBattleUI.lua; lib/UiBackplates.lua	Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.
+3	battles	3D-BTL	implemented	lib/Gen3Battle.lua	Shared 3D-BTL control, preserving native actors/attacks/UI and legacy FireRed OFF preferences.
+3	bossBg	BOSS BG	implemented	lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua	Native location/boss identity, source-pixel crop and frozen battle day phase, using installed optional art.
+3	communityCasino	CASINO	missing	false	No complete native generation adapter audited for this option.
+3	communitySafari	SAFARI ZONE	missing	false	No complete native generation adapter audited for this option.
+3	communityKantoLife	KANTO AMBIENCE	missing	false	No complete native generation adapter audited for this option.
+3	vermilionBuildings	BUILDING STYLE	missing	false	No complete native generation adapter audited for this option.
+3	communityCaveDetails	CAVE DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
+3	communityCaveSound	CAVE SOUND	missing	false	No complete native generation adapter audited for this option.
+3	communityCaves	CAVES	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
+3	communityCityGround	CITY GROUND	missing	false	No complete native generation adapter audited for this option.
+3	communityCourtyards	FENCES & COURTS	missing	false	No complete native generation adapter audited for this option.
+3	communityCutTrees	CUT TREES	missing	false	No complete native generation adapter audited for this option.
+3	communityElevator	ROCKET ELEVATOR	missing	false	No complete native generation adapter audited for this option.
+3	communityForest	VIRIDIAN FOREST	implemented	lib/NativeAtmosphere.lua; lib/ForestAtmos.lua	Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.
+3	communityGrass	GRASS	missing	false	No complete native generation adapter audited for this option.
+3	communityMasonry	WALL & LEDGE COLOR	missing	false	No complete native generation adapter audited for this option.
+3	communityPillars	LEGENDARY PILLARS	missing	false	No complete native generation adapter audited for this option.
+3	communityPrizeRoom	PRIZE ROOM	missing	false	No complete native generation adapter audited for this option.
+3	communityRoads	ROADS & BRIDGES	missing	false	No complete native generation adapter audited for this option.
+3	communityRocket	ROCKET HIDEOUT	missing	false	No complete native generation adapter audited for this option.
+3	communitySigns	SIGNS	missing	false	No complete native generation adapter audited for this option.
+3	communitySky	SKY & BACKGROUND	implemented	lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua	Native scene supersampling, day clock/light/sky, underlay and postprocess.
+3	communityTower	TOWER VISUALS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
+3	communityTowerWall	TOWER WALL	missing	false	No complete native generation adapter audited for this option.
+3	communityTreeDetail	TREE DETAIL	implemented	lib/NativeTreeArt.lua; lib/VoxelHull.lua	FULL/BALANCED/HANDHELD change native voxel tree resolution, with live geometry rebuild.
+3	communityTrees	TREES	missing	false	No complete native generation adapter audited for this option.
+3	communityTunnels	TUNNELS	missing	false	No complete native generation adapter audited for this option.
+3	communityWalls	WALLS & LEDGES	missing	false	No complete native generation adapter audited for this option.
+3	curve	V-CURVE	implemented	lib/Voxel3D.lua; lib/ShadowMap.lua	Native scene uses the shared geometry and shadow passes.
+3	daytime	DAYTIME	implemented	lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua	Native scene supersampling, day clock/light/sky, underlay and postprocess.
+3	duplicateFix	DUPLICATE FIX	implemented	lib/NativeBattleArt.lua; lib/BattleArt.lua	Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.
+3	emberLegacyAudio	EMBER LEGACY AUDIO	missing	false	No complete native generation adapter audited for this option.
+3	emberLegacyVolume	EMBER LEGACY VOLUME	missing	false	No complete native generation adapter audited for this option.
+3	fireredBattleStage	3D BATTLE STAGE	alias	lib/Gen3Battle.lua	Legacy saved key, migrated to the shared 3D-BTL control.
+3	fireredCamera	VOXEL	implemented	lib/Gen3Integration.lua; lib/Gen3Scene.lua	Native field camera and rotated directional intent.
+3	frontAnimatedSet	ANIM FRONT GEN	implemented	lib/NativeBattleArt.lua; lib/BattleArt.lua	Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.
+3	frontFlip	FLIP FRONT SPRITE	implemented	lib/NativeBattleArt.lua; lib/BattleArt.lua	Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.
+3	full_body_backs	FULL-BODY BATTLE BACKS	missing	false	No complete native generation adapter audited for this option.
+3	grid	V-GRID	implemented	lib/Voxel3D.lua; lib/ShadowMap.lua	Native scene uses the shared geometry and shadow passes.
+3	hdTreeTrunks	TREE TRUNKS	implemented	lib/Gen3Scene.lua; lib/TreePresentation.lua	Native tree material/geometry selection with live rebuild.
+3	hudColor	HUD COLOR	provider	lib/ModernBattleUI.lua; lib/UiBackplates.lua	Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.
+3	hudScale	HUD SCALE	partial	lib/Gen3BattleOptions.lua; lib/Gen3BattleHud.lua	Live modern status-card palette/scale; original native HUD art remains engine-owned.
+3	interfaceScaling	INTERFACE SCALING	implemented	lib/NativeInterfaceArt.lua	Native Summary/Pokedex scoped draw; animation-wide FIT/FULL and mon-aware Summary shininess. Other native screens keep their own art.
+3	interfaceSprites	INTERFACE SPRITES	implemented	lib/NativeInterfaceArt.lua	Native Summary/Pokedex scoped draw; animation-wide FIT/FULL and mon-aware Summary shininess. Other native screens keep their own art.
+3	invertY	Y-CONTROL INVERT	implemented	lib/Gen3Integration.lua: look	Shared preference changes mouse and right-stick vertical look.
+3	legendaryPokeballs	EMBER LEGACY	missing	false	No complete native generation adapter audited for this option.
+3	legendaryVisualsMode	LEGENDARY VISUALS	missing	false	No complete native generation adapter audited for this option.
+3	playerAnimatedSet	PLAYER ANIM	implemented	lib/Gen3TrainerArt.lua; lib/AnimatedBattleArt.lua	Selected native opponent fronts and player five-frame send-out sheets. Missing user art and scripted trainer roles retain native pictures.
+3	playerArtSet	PLAYER ART	implemented	lib/Gen3TrainerArt.lua; lib/AnimatedBattleArt.lua	Selected native opponent fronts and player five-frame send-out sheets. Missing user art and scripted trainer roles retain native pictures.
+3	playerView	PLAYER	implemented	lib/NativeBattleArt.lua; lib/BattleArt.lua	Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.
+3	pokeballBeam	BEAM STRENGTH	missing	false	No complete native generation adapter audited for this option.
+3	pokeballCapturePreset	CAPTURE FX PRESET	missing	false	No complete native generation adapter audited for this option.
+3	pokeballCaptureSpeed	CAPTURE SPEED	missing	false	No complete native generation adapter audited for this option.
+3	pokeballFxScale	FX SCALE	missing	false	No complete native generation adapter audited for this option.
+3	pokeballOpenTime	BALL OPEN TIME	missing	false	No complete native generation adapter audited for this option.
+3	pokeballPokemonGlow	POKEMON GLOW	missing	false	No complete native generation adapter audited for this option.
+3	pokeballSize	BALL SIZE	missing	false	No complete native generation adapter audited for this option.
+3	pokeballStreamers	STREAMERS	missing	false	No complete native generation adapter audited for this option.
+3	pokeballSuction	SUCTION FX	missing	false	No complete native generation adapter audited for this option.
+3	pokeballSuctionParticles	SUCTION PARTICLES	missing	false	No complete native generation adapter audited for this option.
+3	ramPrecacheMb	RAM PRECACHE MB	missing	false	No complete native generation adapter audited for this option.
+3	renderDistance	R.DIST	implemented	lib/Gen3Scene.lua: prepare	Native world refresh/build budget and horizon fade.
+3	shadowQuality	SHADOWS	implemented	lib/Voxel3D.lua; lib/ShadowMap.lua	Native scene uses the shared geometry and shadow passes.
+3	spriteLight	SPRITE LIGHT	implemented	lib/Gen3BattleActors.lua; lib/Gen3Scene.lua	Native actor cards share world lighting, depth and cast shadows; native flashes/fades are baked into their live artwork.
+3	spritePack	SPRITE PACK (RESTART)	missing	false	No complete native generation adapter audited for this option.
+3	stadiumCircle	STADIUM CIRCLE	provider	lib/StadiumBackground.lua	Requires the optional compatible Stadium scene provider; no provider means no consumer.
+3	standingTrainer	STANDING TRAINER	missing	false	No complete native generation adapter audited for this option.
+3	surfaceArtwork	SCENERY TEXTURES	implemented	lib/Gen3Scene.lua; lib/Voxel3D.lua	Native-palette surface grain on scenery only; camera-stable world coordinates, distance filtering and unchanged actor/UI art.
+3	textboxFill	TEXTBOX FILL	provider	lib/ModernBattleUI.lua; lib/UiBackplates.lua	Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.
+3	towerDetails	TOWER DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
+3	towerFog	TOWER FOG	implemented	lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua	Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.
+3	towerFogSpeed	FOG SPEED	implemented	lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua	Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.
+3	towerFogThickness	FOG THICKNESS	implemented	lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua	Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.
+3	trainerArtSet	TRAINER ART	implemented	lib/Gen3TrainerArt.lua; lib/AnimatedBattleArt.lua	Selected native opponent fronts and player five-frame send-out sheets. Missing user art and scripted trainer roles retain native pictures.
+3	treeArtwork	TREE ART	implemented	lib/Gen3Scene.lua; lib/TreePresentation.lua	Native tree material/geometry selection with live rebuild.
+3	water	WATER	implemented	lib/WaterSurfacePass.lua; lib/Gen3Scene.lua	Native surfable cells use shared FULL/SKY/OFF shaders with flat fallback.
+3	worldFill	WORLD FILL	implemented	lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua	Native scene supersampling, day clock/light/sky, underlay and postprocess.

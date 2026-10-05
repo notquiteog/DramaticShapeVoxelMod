@@ -9,7 +9,7 @@ function M.handle(game,ev,camera,scene,stage,looking,field)
  if input and (input.captureArmed or input.keyBindings and input.keyBindings[ev.key]~=nil)then return false end
  if ev.phase~='pressed' and ev.phase~='released'then return false end
  if ev.key=='3' and looking then
-  if ev.phase=='pressed'then camera.setLevel((camera.level+1)%8,game)end
+  if ev.phase=='pressed'then camera.setLevel(camera.level==0 and 2 or camera.level==1 and 4 or (camera.level+1)%8,game)end
   return true
  end
  if ev.key=='6' and (looking or stage.active)then

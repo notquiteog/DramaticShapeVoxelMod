@@ -88,7 +88,7 @@ local V={mod=mod};function V.require(name)
  if name=='NativeBattleArt' then return {settings=function()return {}end,install=function()end}end
  if name=='NativeInterfaceArt' then return {settings={},install=function()return function()end end}end
  if name=='BattleTheme' then return {}end
- if name=='Gen3Battle' then return {install=function()return function()end end,enabled=function()return true end,setting={schema=function()return {key='fireredBattleStage'}end,key='fireredBattleStage'}}end
+ if name=='Gen3Battle' then return {update=function()end,install=function()return function()end end,enabled=function()return true end,setting={schema=function()return {key='fireredBattleStage'}end,key='fireredBattleStage'}}end
  if name=='Gen3Scene' then return Scene end
  if name=='ModSetting' then return assert(loadfile(root..'/lib/ModSetting.lua'))(V) end
  return fallback.require(name)
@@ -99,6 +99,15 @@ Display.present(game);assert(A.active and draws==1 and native==0 and Tilt.angle=
 A.setLevel(7);A.yaw=math.pi/2
 Player.update(game,{isDown=function(_,key)return key=='up' or key=='b' end,wasPressed=function(_,key)return key=='up' end})
 assert(moves[1].right and not moves[1].up and moves[1].b and moves[1].pressed)
+love=love or {}
+local forwarded=0
+hooks['input.wheel'](function()forwarded=forwarded+1 end,game,1)
+hooks['core.update'](function()end,game,.1)
+assert(A.boomZoom<1 and forwarded==0,'third-person wheel did not reach boom')
+package.loaded['src.ui.game3.rse.option_menu']={isOpen=function()return true end}
+hooks['input.wheel'](function()forwarded=forwarded+1 end,game,1)
+assert(forwarded==1,'Emerald options failed to keep wheel ownership')
+package.loaded['src.ui.game3.rse.option_menu']=nil
 needsNative=true;Field.draw(game);assert(not A.active and native==1)
 Player.update(game,{isDown=function(_,key)return key=='up' end});assert(moves[2].up and not moves[2].right)
 needsNative=false;canDraw=false;Field.draw(game);assert(not A.active and native==2)

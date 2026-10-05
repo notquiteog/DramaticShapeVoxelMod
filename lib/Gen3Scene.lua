@@ -769,7 +769,7 @@ function M.draw(game,vw,vh,cam)
  S.level=cam.level;S.angle=math.rad(S.ANGLES_DEG[cam.level+1] or 35)
  R.canopyFacing=cam.battle or cam.level>=6
  if cam.level>=6 then
-  local dist=cam.level==6 and 0 or 75
+  local dist=cam.level==6 and 0 or 75*(cam.boomZoom or 1)
   local dx,dz=math.sin(cam.yaw),-math.cos(cam.yaw)
   local ground=M.groundAt(cx,cz+8-.001,not cam.battle and not cam.replay and Player.currentElevation or nil)
   local ey=48+ground
