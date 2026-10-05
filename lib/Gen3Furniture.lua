@@ -121,7 +121,8 @@ function M.extract(cells)
     local match=true;local parts={}
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
-     if not n or n.prop or n.stairs or n.pair~=c.pair or not matched(n.mid,mid,r) then match=false else parts[#parts+1]=n end
+     if not n or n.prop or n.stairs or n.pair~=c.pair or not matched(n.mid,mid,r)
+      or (r.blockedRows and r.blockedRows[dy] and n.collision~=nil and n.collision~=7) then match=false else parts[#parts+1]=n end
     end end
     if match then
      local p={recipe=r,cx=c.cx,cy=c.cy,pair=c.pair,ts=c.ts,w=#r.rows[1]*16,d=#r.rows*16}
@@ -179,6 +180,9 @@ function M.append(p,emit,uvFor)
  if r.spriteAlternative=='rock' and V and p.ts.imageData and V.require('TreePresentation').props:get()=='cards' then
   V.require('Gen3Cave').rock({cx=p.cx,cy=p.cy,ts=p.ts,mid=r.rows[1][1],shape={ground=r.ground,height=7}},emit,uvFor)
   return
+ end
+ if r.kind=='statue' and V then
+  V.require('Gen3Statue').append(p,emit,uvFor,box,source,sample);return
  end
  if Designed.append(p,source,box,sample,emit)then return end
  if Center.append(p,source,box,sample,emit,uvFor)then return end

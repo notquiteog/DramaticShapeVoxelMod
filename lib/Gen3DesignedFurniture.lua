@@ -48,6 +48,17 @@ function M.install(recipes)
  -- 0x2ed-0x2f2 are blue cases carrying orange canisters.
  add('lab_centrifuge_bank','oak_lab',{
   {0x2ed,0x2ee,0x2ef},{0x2f0,0x2f1,0x2f2}},'fr_lab_centrifuge',1)
+ for _,mid in ipairs{0x240,0x241}do
+  recipes[#recipes+1]={name='league_statue_'..mid,pair='building__rom_082d50c4',
+   rows={{mid},{0x249}},kind='statue',ground=0x310,blockedRows={[2]=true}}
+ end
+ -- Boundary variants retain the native wall cap beneath their base;
+ -- neighboring wall columns remain owned by the wall renderer.
+ for _,mid in ipairs{0x240,0x241}do
+  recipes[#recipes+1]={name='league_boundary_statue_'..mid,pair='building__rom_082d50c4',
+   rows={{mid},{0x290}},kind='statue',baseMid=0x249,ground=0x310,
+   groundRows={{0x310},{0x290}},blockedRows={[2]=true}}
+ end
  -- Agatha's 0x2a1 is floor-border artwork, not a pedestal.
  add('elite_ice_stack','building__rom_082d50c4',{{0x34a},{0x34d}},'fr_elite_ice',0x2a8)
  add('elite_stone_stack','building__rom_082d50c4',{{0x359},{0x35b}},'fr_elite_stone',0x2d0)

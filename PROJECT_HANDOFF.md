@@ -1,3 +1,36 @@
+# FRLG League statues — 2026-10-05 (unreleased)
+
+All ten Lance corridor statues now have closed native-art voxel sculptures
+and separate plinths. The figure is in BG2: previous under-layer-only contact
+sheets hid it. Gen3Statue uses upper-layer alpha (no floor-colour guessing),
+VoxelHull for the native sculpture silhouette, and caches templates per native
+atlas/mid. Figure depth is bounded to eight pixels, centered on the blocked
+base cell; all solids stay in that cell, never the walkable projected top row.
+Four boundary drawings use the same native 249 plinth and preserve 290 wall-cap
+art as ground. Neighboring wall columns remain owned by the wall renderer.
+New blockedRows metadata refuses matching a statue if its base is walkable.
+
+Verification: source engine v0.3.51, isolated FireRed AND LeafGreen QA profiles.
+`QA_LEAGUE=1 bash .scratch/coverage-20261004/run.sh GAME league-statue-audit`
+(GAME=firered/leafgreen, paths relative to /home/admin/Projects).
+Driver is the checked-in tools/qa/furniture-walkspace.lua copied into scratch.
+Each game: all five League room collision grids unchanged, all ten Lance
+statues matched, no scene errors. Inspected FireRed overview/first-person and
+LeafGreen overview/first-person/side captures. Results:
+.scratch/coverage-20261004/results/{firered,leafgreen}-league-statue-audit/.
+Additional LeafGreen Oak's Lab regression from league-statues-final inspected
+in preceding pass; no shared room-wall changes here. Scripts halted after load:
+these are render/collision fixtures, not completed gameplay or online tests.
+163 suites pass, 0 fail, 56 skipped for external fixtures; 333 lib Lua modules
+compile in LuaJIT. Logs .scratch/league-statues-tests.log. New test checks
+upper-layer alpha, sculpture/plinth bounds, template reuse, partial matches,
+boundary isolation, and walkable-base rejection. Tests do not certify perfect
+visual fidelity. Player saves untouched; QA processes exit themselves.
+
+Still unfinished: Champion chamber platform/walls/fixtures, League outer shell
+and side treatment, remaining seats/beds, broad all-game artistic coverage and
+partner feature parity. No release/version bump. No all-tiles completion claim.
+
 # FRLG League wall and fixture pass — 2026-10-05 (unreleased)
 
 Raised shared native orange League walls/closed rear doors (collision 7 only),

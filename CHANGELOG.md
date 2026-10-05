@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Model all ten Lance corridor statues from native upper-layer artwork,
+  with separate plinths, shared sculpture meshes and blocked-tile checks.
+  Preserve the native wall strip beneath the four boundary variants.
+
 - Raise the native FRLG League wall/door panels with room-specific floor
   colours. Close the wall joins behind ice, stone, column and horn fixtures.
 - Add bounded ice/stone stacks and mirrored Lance horn models; preserve
