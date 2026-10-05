@@ -23,3 +23,22 @@ scene.startNormalBall=function()error('GPU unavailable')end
 assert(s:startBallAnim(0,'POKE_BALL'))
 View:drawObjects(s.anim);assert(events[#events]=='nativeObjects')
 print('PASS Gen2 capture event order, one native RNG call, caught/escape, OFF and unavailable-stage fallback')
+local previous=V.require;local available=true;local played=true;local master
+V.require=function(k)
+ if k=='EmberLegacyAudio'then return {
+  nativeMaster=function(_,f)master=f end,
+  ready=function()return available end,
+  capture=function(event)events[#events+1]='ember:'..event;return played end,
+ }end
+ return previous(k)
+end
+scene.startNormalBall=event('start');s.game={options={sfxVol=2}}
+s:startBallAnim(0,'POKE_BALL');assert(master()==2/7)
+s.anim.hooks.sound('SFX_THROW_BALL');assert(events[#events]=='ember:throw')
+s.anim.hooks.sound('SFX_BALL_POOF');assert(events[#events]=='ember:open')
+s.anim.hooks.sound('Sfx_BallWobble');assert(events[#events]=='ember:shake')
+s.anim.hooks.sound('Sfx_BallBounce');assert(events[#events]=='ember:land')
+available=false;s.anim.hooks.sound('SFX_BALL_POOF');assert(events[#events]=='nativeSound')
+available=true;played=false;s.anim.hooks.sound('SFX_BALL_POOF');assert(events[#events]=='nativeSound')
+s.game.options.sfxVol=0;assert(master()==0)
+print('PASS Crystal optional audio master and native fallback on missing/failed playback')

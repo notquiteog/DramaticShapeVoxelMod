@@ -143,8 +143,8 @@ generation	key	label	status	consumer	limitation
 2	curve	V-CURVE	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
 2	daytime	DAYTIME	implemented	lib/VoxelScene.lua; lib/Voxel3D.lua; main.lua	Shared GB render pipeline, including native Gen2 tile atlas.
 2	duplicateFix	DUPLICATE FIX	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.
-2	emberLegacyAudio	EMBER LEGACY AUDIO	missing	false	No complete native generation adapter audited for this option.
-2	emberLegacyVolume	EMBER LEGACY VOLUME	missing	false	No complete native generation adapter audited for this option.
+2	emberLegacyAudio	EMBER LEGACY AUDIO	partial	lib/Gen2Capture.lua; lib/EmberLegacyAudio.lua	Native supported capture throw/poof/bounce/wobble events replace sound only after optional audio plays, with live native SFX master and selected volume. Optional files are not bundled; other native capture/send-out/recall sound ownership remains incomplete.
+2	emberLegacyVolume	EMBER LEGACY VOLUME	partial	lib/Gen2Capture.lua; lib/EmberLegacyAudio.lua	Native supported capture throw/poof/bounce/wobble events replace sound only after optional audio plays, with live native SFX master and selected volume. Optional files are not bundled; other native capture/send-out/recall sound ownership remains incomplete.
 2	fireredBattleStage	3D BATTLE STAGE	not_applicable	false	Native Gen3 settings; Gen2 uses its voxel pipeline and 3D-BTL.
 2	fireredCamera	VOXEL	not_applicable	false	Native Gen3 settings; Gen2 uses its voxel pipeline and 3D-BTL.
 2	frontAnimatedSet	ANIM FRONT GEN	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.

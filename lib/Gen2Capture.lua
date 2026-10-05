@@ -39,10 +39,26 @@ function M.install()
   local throw=self.ballThrow
   if not call('startNormalBall',item,throw.caught,3,self.battle)then return result end
   owner,runner=self,self.anim
+  local audioOK,audio=pcall(V.require,'EmberLegacyAudio')
+  if audioOK and audio then audio.nativeMaster(self.battle,function()
+    local opts=self.game and (self.game.options or self.game.save and self.game.save.options)or{}
+    return math.max(0,math.min(7,tonumber(opts.sfxVol)or 7))/7
+  end)end
+  local audioWobble=0
   local sound=runner.hooks and runner.hooks.sound
   if runner.hooks then runner.hooks.sound=function(name,...)
-   if owner==self and runner==self.anim and (tostring(name):upper():gsub('_','')=='SFXBALLPOOF'or tostring(name):upper():gsub('_','')=='BALLPOOF')then
-    call('normalBallAnimEvent','POOF_ANIM')
+   if owner==self and runner==self.anim and enabled(self)then
+    local key=tostring(name):upper():gsub('_',''):gsub('^SFX','')
+    local event=key=='BALLPOOF'and 'open'or key=='THROWBALL'and 'throw'
+     or key=='BALLWOBBLE'and 'shake'or key=='BALLBOUNCE'and 'land'
+    local index
+    if key=='BALLWOBBLE'then audioWobble=audioWobble+1;index=audioWobble
+    elseif key=='BALLBOUNCE'then index=1 end
+    if key=='BALLPOOF'then call('normalBallAnimEvent','POOF_ANIM')end
+    if event and audioOK and audio then
+     local ok,played=pcall(function()return audio.ready(event,index)and audio.capture(event,index)end)
+     if ok and played then return end
+    end
    end
    if sound then return sound(name,...)end
   end end
