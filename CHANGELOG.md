@@ -1,3 +1,9 @@
+## 1.31.0 — 2026-10-04
+
+Native-art modeling update: expanded Hoenn houses/service buildings, interior furniture, FRLG gym objects and Tower walls/counters, Crystal arcade cabinets and station fittings, native window details and cliff classification fixes. Mesh cache revision 85 refreshes stored geometry.
+
+Tested with official Gen1Recomp 0.3.51 isolated rendered fixtures including first-person views. Standalone suite: 112 passing, 11 existing failures, 85 skipped; final focused furniture/geometry checks pass. Full-world coverage, terrace elevations and live exterior-window portals remain unfinished. See docs/NATIVE_COVERAGE_2026-10-04.md for evidence and limitations.
+
 ## 1.30.0 — 2026-10-04
 
 Gen3 battle actors, trainers, balls and local attack artwork now render inside the world depth/shadow pass. Both sides share source-pixel scale; camera perspective supplies distance. Native battle logic and animation timing remain engine-owned. Added shared orbit/pitch/zoom, projected status-card anchors, wider doubles staging, camera-relative scenery clearing, grounded capture balls and cleanup on battle exit. Full-screen effects and menus retain their native screen presentation.
