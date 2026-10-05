@@ -2107,7 +2107,7 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         box(4.55,base+8.78,base+14.55,0.62,0.94,1.02,0.38)
         box(4.82,base+14.55,base+14.81,0.94,0.99,1.045,0.42)
         end
-      elseif V.require('LegendarySapling').gen2(map,cx,cy) then
+      elseif type(map.cellCollision)=='function' and V.require('LegendarySapling').gen2(map,cx,cy) then
         tQ,cQ=V.require('LegendarySapling').append(tV,tI,tQ,cV,cI,cQ,mx,mz,base,cx,cy,hash01)
       elseif type(map.cellCollision) == "function" then
         local style=V.require("TreePresentation")

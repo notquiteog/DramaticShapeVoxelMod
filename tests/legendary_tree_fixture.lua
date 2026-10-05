@@ -38,7 +38,7 @@ local V = { path = "." }
 function V.require(name)
   if mods[name] then return mods[name] end
   if name == "BuildBudget" or name == "VoxelMeshDisk" or name == "LoadTimings"
-    or name == "Gen2DepthTrees" or name == "Gen2Trees" or name == "LegendaryTreeCache" or name == "CommunityFlora" or name == "Mat4" then
+    or name == "LegendarySapling" or name == "Gen2DepthTrees" or name == "Gen2Trees" or name == "LegendaryTreeCache" or name == "CommunityFlora" or name == "Mat4" then
     mods[name] = assert(loadfile("lib/" .. name .. ".lua"))(V)
     if name == "LegendaryTreeCache" then
       local create = mods[name].new
@@ -50,7 +50,7 @@ function V.require(name)
 end
 mods.CacheTrace = { log = function(event, id, detail) F.events[#F.events + 1] = { event, id, detail } end }
 mods.Gen2Elevation={at=function()return 0 end}
-mods.TreePresentation={original=function()return false end,flat=function()return false end,setting={get=function()return "voxel" end},art={get=function()return "modeled" end},props={get=function()return "voxel" end}}
+mods.TreePresentation={voxel=function()return true end,original=function()return false end,flat=function()return false end,setting={get=function()return "voxel" end},art={get=function()return "modeled" end},props={get=function()return "voxel" end}}
 mods.DistrictBoundary={style=function()return false end}
 mods.CommunityVisuals = {
   treeDetail={get=function()return F.mode end},customRoads=function()return false end,
