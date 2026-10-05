@@ -9,6 +9,10 @@ end
 local trees={}
 for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1e4,0x1e5,0x1e6,0x1e7}do trees[id]=true end
 local roots={[0x1dc]=true,[0x1e4]=true,[0x1e6]=true}
+-- Fallarbor/Route 114 brown rock bands, also used by the Fossil Maniac's
+-- tunnel. Sand, rock-on-sand decorations and the blank border stay separate.
+local fallarborWalls={ [0x268]=true,[0x269]=true,[0x26a]=true,
+ [0x270]=true,[0x272]=true,[0x278]=true,[0x27a]=true }
 local treeRows={{0x1d4,0x1d5},{0x1dc,0x1dd}}
 local narrowTrees={}
 for _,id in ipairs{0xe,0xf,0x1e,0x1f,0x2e,0x2f,0x3e,0x3f,0xc6,0xc7,0xce,0xcf}do narrowTrees[id]=true end
@@ -25,6 +29,9 @@ function M.surface(primary,mid,collision)
  end
 end
 function M.shape(primary,secondary,mid,behavior,collision)
+ if primary=='general' and secondary=='fallarbor' and collision==7 and fallarborWalls[mid]then
+  return {kind='cliff',height=32,ground=0x279,cap=0x269,side=0x270}
+ end
  if secondary=='oceanic_museum' and collision==7 and (mid==0x204 or mid==0x20c)then
   return {kind='roomWall',ground=0x201}
  end

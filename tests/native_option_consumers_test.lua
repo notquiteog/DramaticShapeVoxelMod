@@ -78,6 +78,9 @@ check(not Pass.draw({{'mesh','atlas'}}) and plain==2,'curve depth prepass draws 
 local catalog=V.require('SettingsCatalog')
 local Support=V.require('OptionSupport')
 local seen={};for _,row in ipairs(catalog)do check(not seen[row.key],'duplicate catalog key');seen[row.key]=true end
+for _,setting in ipairs(V.require('CommunityVisuals').settings)do
+ check(seen[setting.key],'scenery option missing from parity inventory: '..setting.key)
+end
 for gen=1,3 do
  local inventory=Support.inventory(gen)
  check(#inventory==#catalog,'complete support inventory')

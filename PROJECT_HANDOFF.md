@@ -1,3 +1,36 @@
+# Native shortcuts and Fallarbor rock coverage — 2026-10-04 (unreleased)
+
+Gen3 now handles Gen1 shortcuts 5 (grid), 7 (curve), 8 (staged battles),
+and 9 (water), using the existing live settings/persistence. Field gates
+prevent changing these during battles/locked field sequences. Existing 3/6
+camera and tilt shortcuts remain available in their prior contexts; all six
+now defer to explicit gameplay bindings and key-binding capture. Native
+pressed/released calls verified persistence in FireRed, LeafGreen and Emerald
+on official 0.3.51. Unit tests cover release non-repetition, binding ownership,
+locked-field rejection and quest/battle camera/tilt behavior. No physical
+keyboard/controller claim from these driver calls.
+
+Added the three omitted CommunityVisuals options to the support inventory:
+SAFARI ZONE, KANTO AMBIENCE and BUILDING STYLE. Gen2/3 remain explicitly missing
+until adapters are audited. Regression checks require every CommunityVisuals
+setting to appear in the inventory; 437 native consumer checks pass.
+
+Emerald's Fossil Maniac tunnel uses general__fallarbor and INDOOR rather than
+CAVE. Its exact native map identity now receives cave walls/ceiling; shared
+Route 114 and unrelated indoor Fallarbor maps stay outside that exception.
+Seven reviewed blocked brown cliff drawings use joined rock terrain with
+native cap/face/sand samples. Walkable copies, blank border, sand and small
+rock decorations are excluded. These cliffs also cover shared Route 114 art.
+
+QA: isolated `.scratch/coverage-20261004/{field-hotkeys,fossil-source,
+fossil-before,fossil-after,fossil-final}.lua`. Inspected original source art,
+before/after tunnel first-person and Route 114 overview. Three-map fixture
+(tunnel, Route 114, adjoining house) asserts unchanged native layout/collision.
+Hotkey, Hoenn scope/recipe, enclosure and native consumer suites pass.
+User saves untouched. No version bump or release. Full-world coverage and
+parity are still unfinished: tunnel small rocks/mixed edge cells, other maps'
+geometry, capture effects and unsupported option adapters remain outstanding.
+
 # Native enclosure, forest controls and museum coverage — 2026-10-04
 
 Unreleased. Emerald General-primary indoor families now retain the shared
@@ -24,8 +57,8 @@ palace-source}.lua`. Museum/Space Center/Devon fixture retains identical native
 map/collision grids. Inspected museum overview and final first-person; Palace
 native room diagram checked against enclosure eligibility. Final census:
 Emerald 519 maps / 406 enclosures / 33 added; FireRed 426 / 340 / 0 added;
-LeafGreen 426 / 337 / 0 added. Different prior ship aliases explain room-count
-variation; no claim of a census-equivalent visual sign-off.
+LeafGreen 426 / 337 / 0 added. The FR/LG count difference has not been fully reconciled; this census
+is not a visual sign-off.
 305 designed objects, 114 Hoenn recipe/family checks, native atmosphere,
 interior enclosure/exterior exclusions and 399 native consumer checks pass.
 No complete full-world coverage or settings parity claim: museum counters,

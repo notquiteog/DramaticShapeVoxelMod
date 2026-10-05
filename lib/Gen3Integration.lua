@@ -109,14 +109,7 @@ function M.install()
   return update(game,input)
  end
  mod.hooks:wrap('input.key',function(next,game,ev)
-  if ev.key=='3' and looking(game) then
-   if ev.phase=='pressed' then M.setLevel((M.level+1)%8,game) end
-   return true
-  end
-  if ev.key=='6' and (looking(game) or BattleStage.active)then
-   if ev.phase=='pressed'then SceneOptions.tilt:cycle(game,1)end
-   return true
-  end
+  if V.require('Gen3Hotkeys').handle(game,ev,M,SceneOptions,BattleStage,looking(game),field(game))then return true end
   return next(game,ev)
  end)
  local stick={x=0,y=0}

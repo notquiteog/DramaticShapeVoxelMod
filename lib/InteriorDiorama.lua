@@ -23,6 +23,11 @@ function M.profile(def,gen)
   local pair=def.midLayout and def.midLayout.pair
   if not pair then return end
   spec=V.require('Gen3Tilesets').resolve(pair,require('src.import.gba.versions').TILESET_PAIRS)
+  -- This tunnel deliberately uses the Route 114 atlas and native INDOOR
+  -- header. Its original drawing is a closed rock passage, not a house.
+  -- Keep the exception map-scoped: Route 114 shares every one of these tiles.
+  if id=='EM_ROUTE114_FOSSIL_MANIACS_TUNNEL' and spec.primary=='general'
+    and spec.secondary=='fallarbor' then cave=true end
   -- General-primary room families share their atlas with outdoor maps.
   -- Map type alone is insufficient: event islands and ferry docks may also
   -- be tagged INDOOR to suppress native weather. Keep those open.

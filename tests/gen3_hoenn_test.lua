@@ -7,6 +7,15 @@ local H=V.require('Gen3Hoenn');local S=V.require('Gen3TileShape');local F=V.requ
 assert(H.active());assert(S.of('general','petalburg',0x1dc,0,1).root)
 assert(S.of('general','petalburg',0x14,0,1).kind=='flat','FRLG tree number must not leak into Emerald')
 assert(S.of('general','petalburg',1,0x10,0).kind=='water')
+for _,mid in ipairs({0x268,0x269,0x26a,0x270,0x272,0x278,0x27a})do
+ local cliff=S.of('general','fallarbor',mid,0,7)
+ assert(cliff.kind=='cliff' and cliff.ground==0x279 and cliff.height==32)
+ assert(S.of('general','fallarbor',mid,0,0).kind=='flat','walkable native floor raised')
+ assert(S.of('general','petalburg',mid,0,7).kind=='flat','Fallarbor art leaked to another atlas')
+end
+for _,mid in ipairs({0x277,0x279,0x2fd,0x2c7})do
+ assert(S.of('general','fallarbor',mid,0,7).kind=='flat','sand/decorations became rock wall')
+end
 local tree=S.of('general','petalburg',0x1dc,0,1)
 assert(#tree.treeRows==2 and #tree.treeRows[1]==2 and tree.treeFamily=='round')
 local count=0

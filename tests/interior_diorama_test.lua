@@ -5,6 +5,14 @@ local M=assert(loadfile('lib/InteriorDiorama.lua'))({require=function(name)asser
 assert(M.profile({tileset='CAVERN',width=5,height=5},1).cave)
 assert(M.profile({environment='CAVE',width=5,height=5},2).cave)
 assert(not M.profile({environment='TOWN',width=5,height=5},2))
+local tunnel={id='EM_ROUTE114_FOSSIL_MANIACS_TUNNEL',mapType=8,width=14,height=26,
+ midLayout={pair='general__fallarbor'}}
+local tunnelProfile=assert(M.profile(tunnel,3))
+assert(tunnelProfile.cave and tunnelProfile.theme=='cave' and tunnelProfile.height>=96)
+tunnel.id='EM_ROUTE114';tunnel.mapType=3
+assert(not M.profile(tunnel,3),'Route 114 acquired tunnel walls')
+tunnel.mapType=8
+assert(not M.profile(tunnel,3),'unreviewed Fallarbor map acquired tunnel walls')
 for _,gen in ipairs({1,2,3})do
  local def={id='VIRIDIAN_MART',tileset='MART',environment='INDOOR',width=6,height=5,mapType=8,
   midLayout={pair='network',midAt=function(_,x,y)return x>0 and x<5 and y<4 and 0x281 or 0 end}}
