@@ -60,6 +60,7 @@ set(3,'interfaceSprites interfaceScaling','implemented','lib/NativeInterfaceArt.
 set(3,'surfaceArtwork','implemented','lib/Gen3Scene.lua; lib/Voxel3D.lua','Native-palette surface grain on scenery only; camera-stable world coordinates, distance filtering and unchanged actor/UI art.')
 set(3,'communityTreeDetail','implemented','lib/NativeTreeArt.lua; lib/VoxelHull.lua','FULL/BALANCED/HANDHELD change native voxel tree resolution, with live geometry rebuild.')
 for gen=2,3 do
+ set(gen,'communityKantoLife','partial','lib/KantoLife.lua; lib/NativeHabitat.lua; lib/KantoLifeAudio.lua','Native outdoor grass/water/elevation habitats feed shared butterflies and night fireflies; OFF/LOW/NATURAL and SFX lifecycle work. Authored Gen1 city gardens and optional recorded audio still need native coverage/assets.')
  set(gen,'communityCaveSound','partial','lib/NativeCaveAudio.lua','Native cave classification, OFF/LOW/MID ambience, 16px footsteps, SFX volume and transition fades are wired. Optional Legendary cave/footstep audio assets are not bundled; absent files remain silent.')
  set(gen,'atmos communityForest','implemented','lib/NativeAtmosphere.lua; lib/ForestAtmos.lua','Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.')
  set(gen,'towerFog towerFogSpeed towerFogThickness','implemented','lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua','Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.')

@@ -65,11 +65,12 @@ function M.draw(state)
  local p=state.player or{};local px=(p.px or p.x or(p.cellX and p.cellX*16)or 0)+8
  local pz=(p.py or p.y or(p.cellY and p.cellY*16)or 0)+8
  local now=love.timer.getTime();local tick=math.floor(now*30)
- if not scanAt or now-scanAt>.25 then habitat=H.scan(map,V.require('Structures').forMap(map),px,pz);scanAt=now end
+ if not scanAt or now-scanAt>.25 then habitat=H.scan(map,not V.require('NativeHabitat').native(map)and V.require('Structures').forMap(map)or nil,px,pz);scanAt=now end
  local night=V.require('DayNight').windowLight();local weather=rawget(_G,'__ds_weather')or{}
  V.require('KantoLifeAudio').touch(map.id,profile,habitat,night,weather.raining,level)
  if tick~=lastTick then
-  local verts=M.vertices(habitat.green,now,night,profile,px,pz,level,weather.raining)
+  local verts,butterflies,flies=M.vertices(habitat.green,now,night,profile,px,pz,level,weather.raining)
+  M.last={map=map.id,anchors=#habitat.green,butterflies=butterflies,fireflies=flies,vertices=#verts}
   if #verts==0 then lastTick=nil;return end
   if not mesh then
    mesh=love.graphics.newMesh(V.require('Voxel3D').FORMAT,M.MAX_VERTICES,'triangles','dynamic')

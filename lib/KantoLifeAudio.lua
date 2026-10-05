@@ -32,9 +32,12 @@ local function load(t)
  if ok then t.source=source else if source then pcall(source.release,source)end;t.failed=true end
 end
 function M.update(game,dt)
- local map=game and game.overworld and game.overworld.map
+ local map=game and ((game.world and game.world.map)or(game.overworld and game.overworld.map))
+ if V.require('Generation').isGen3() and game and game.phase=='field'then
+  local native=require('src.core.game3.map');map={id=native.current}
+ end
  local active=map and map.id==mapId and love.timer.getTime()-beat<.3
- local opts=game and game.save and game.save.options
+ local opts=game and ((game.save and game.save.options)or game.options)
  local gain=active and math.max(0,math.min(7,tonumber(opts and opts.sfxVol)or 7))/7 or 0
  local pub=rawget(_G,'__ds_ceiling_config');if type(pub)=='function'then local ok,c=pcall(pub)
   if ok and type(c)=='table'then if c.ambience==false or c.ambience=='OFF'then gain=0 elseif c.ambience=='LOW'then gain=gain*.55 end end

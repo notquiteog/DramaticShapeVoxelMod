@@ -44,6 +44,7 @@ function M.install()
  local controls=V.require('Gen3CameraControls').new(M)
  local legendary=V.require('LegendaryVisualsPreset')
  local uninstallBattle=BattleStage.install()
+ V.require('KantoLifeAudio').install(mod)
  V.require('NativeCaveAudio').install(3,function()return M.level~=0 end)
  local draw,present,update=FieldView.draw,Display.present,Player.update
  local function ready(game)return recovery:ready(Scene.context and Scene.context()or game.session)end
@@ -52,7 +53,7 @@ function M.install()
  local nativeArt=V.require('NativeBattleArt');nativeArt.install()
  local interfaceArt=V.require('NativeInterfaceArt')
  local uninstallInterface=interfaceArt.install()
- local sharedSettings={legendary.setting,Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,V.require('CommunityVisuals').caveSound,
+ local sharedSettings={legendary.setting,Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,V.require('CommunityVisuals').caveSound,V.require('CommunityVisuals').kantoLife,
   V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting}
  for _,setting in ipairs(V.require("NativeAtmosphere").settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(SceneOptions.settings)do sharedSettings[#sharedSettings+1]=setting end
@@ -80,6 +81,7 @@ function M.install()
   end
   return true
  end
+ mod.hooks:wrap('core.quit_to_launcher',function(next,...)V.require('KantoLifeAudio').dispose();V.require('KantoLife').invalidate();return next(...)end)
  local uninstallRecap=V.require('Gen3Recap').install(M)
  FieldView.draw=function(game,w,h,opts)
   M.active=false

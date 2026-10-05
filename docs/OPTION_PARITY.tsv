@@ -116,7 +116,7 @@ generation	key	label	status	consumer	limitation
 2	bossBg	BOSS BG	partial	lib/BattleScene.lua; lib/Gen6Backdrop.lua; lib/BossBackdrop.lua	Shared stage consumes the controls; generation-specific location/boss routing is incomplete.
 2	communityCasino	CASINO	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
 2	communitySafari	SAFARI ZONE	missing	false	No complete native generation adapter audited for this option.
-2	communityKantoLife	KANTO AMBIENCE	missing	false	No complete native generation adapter audited for this option.
+2	communityKantoLife	KANTO AMBIENCE	partial	lib/KantoLife.lua; lib/NativeHabitat.lua; lib/KantoLifeAudio.lua	Native outdoor grass/water/elevation habitats feed shared butterflies and night fireflies; OFF/LOW/NATURAL and SFX lifecycle work. Authored Gen1 city gardens and optional recorded audio still need native coverage/assets.
 2	vermilionBuildings	BUILDING STYLE	missing	false	No complete native generation adapter audited for this option.
 2	communityCaveDetails	CAVE DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
 2	communityCaveSound	CAVE SOUND	partial	lib/NativeCaveAudio.lua	Native cave classification, OFF/LOW/MID ambience, 16px footsteps, SFX volume and transition fades are wired. Optional Legendary cave/footstep audio assets are not bundled; absent files remain silent.
@@ -211,7 +211,7 @@ generation	key	label	status	consumer	limitation
 3	bossBg	BOSS BG	implemented	lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua	Native location/boss identity, source-pixel crop and frozen battle day phase, using installed optional art.
 3	communityCasino	CASINO	missing	false	No complete native generation adapter audited for this option.
 3	communitySafari	SAFARI ZONE	missing	false	No complete native generation adapter audited for this option.
-3	communityKantoLife	KANTO AMBIENCE	missing	false	No complete native generation adapter audited for this option.
+3	communityKantoLife	KANTO AMBIENCE	partial	lib/KantoLife.lua; lib/NativeHabitat.lua; lib/KantoLifeAudio.lua	Native outdoor grass/water/elevation habitats feed shared butterflies and night fireflies; OFF/LOW/NATURAL and SFX lifecycle work. Authored Gen1 city gardens and optional recorded audio still need native coverage/assets.
 3	vermilionBuildings	BUILDING STYLE	missing	false	No complete native generation adapter audited for this option.
 3	communityCaveDetails	CAVE DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
 3	communityCaveSound	CAVE SOUND	partial	lib/NativeCaveAudio.lua	Native cave classification, OFF/LOW/MID ambience, 16px footsteps, SFX volume and transition fades are wired. Optional Legendary cave/footstep audio assets are not bundled; absent files remain silent.

@@ -9,6 +9,7 @@ local towns={
  INDIGO_PLATEAU={kind='rocky',insects=.35},
 }
 function M.profile(map)
+ if V.require('NativeHabitat').native(map)then return V.require('NativeHabitat').profile(map)end
  if not(map and map.tileset and map.def)then return end
  local id=map.id or '';local tid=map.tileset.id
  if id=='VIRIDIAN_FOREST'and tid=='FOREST'then
@@ -48,6 +49,7 @@ function M.gardenPlan(map,S)
  return S.cityStreetPlans91[variant]
 end
 function M.scan(map,S,px,pz)
+ if V.require('NativeHabitat').native(map)then return V.require('NativeHabitat').scan(map,px,pz)end
  local out={green={},water=0,greenLevel=0};local W,H=map.def.width*4,map.def.height*4
  local tid=map.tileset.id;local bestG,bestW=1e9,1e9
  local gx,gz=math.floor(px/32),math.floor(pz/32)

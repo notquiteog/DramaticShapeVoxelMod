@@ -895,7 +895,10 @@ function M.draw(game,vw,vh,cam)
   if not cam.replay then rideDust(game,cam);fieldEffects(R.draw,cam)end
  end
  R.battleOcclusion(nil)
- if not plate then atmosphere.draw(atmosphereMap) end
+ if not plate then
+  atmosphere.draw(atmosphereMap)
+  if not cam.battle and not cam.replay then V.require('KantoLife').draw({map=atmosphereMap,player=Player})end
+ end
  local canvas=Options.finish(R.endScene(),width,height)
  if not plate then
   local weather=V.require('Weather')
