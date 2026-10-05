@@ -437,7 +437,10 @@ local function build(req,cache,previous)
      if low<base then
       local ax,az=x+(d[1]>0 and 16 or 0),z+(d[2]>0 and 16 or 0)
       local bx,bz=ax+(d[1]==0 and 16 or 0),az+(d[2]==0 and 16 or 0)
-      quad(b.v,b.i,{{ax,low,az},{bx,low,bz},{bx,base,bz},{ax,base,az}},uv,.78)
+      -- Claimed source cells contain roof/window art. Their raised
+      -- foundation continues local ground, never another upright facade.
+      local retaining=c.civic and uvFor(ts,Civic.ground(c))or uv
+      quad(b.v,b.i,{{ax,low,az},{bx,low,bz},{bx,base,bz},{ax,base,az}},retaining or uv,.78)
      end
     end
    end

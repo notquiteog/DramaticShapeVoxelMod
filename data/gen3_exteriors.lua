@@ -14,7 +14,7 @@ return {
 {664,665,666,667,668},
 {672,206,674,675,676},
 }},
-{name='route_small_house',pair='viridian_outdoor',header=2,back=0,roofEnd=32,wallBottom=47,bevel=3,rows={
+{name='route_small_house',pair='viridian_outdoor',wallHeight=24,header=2,back=0,roofEnd=32,wallBottom=47,bevel=3,rows={
 {44,45,45,45,47},
 {52,54,54,53,55},
 {60,6,7,61,63},
@@ -34,7 +34,7 @@ return {
 {736,737,738,739,740,741,742},
 {744,745,746,747,748,749,750},
 }},
-{name='one_island_house',pair='sevii_outdoor',header=3,back=8,roofEnd=48,wallBottom=63,bevel=3,rows={
+{name='one_island_house',pair='sevii_outdoor',wallHeight=24,header=3,back=8,roofEnd=48,wallBottom=63,bevel=3,rows={
 {883,920,921,785,791},
 {646,647,670,670,671},
 {654,655,678,677,679},
@@ -79,7 +79,7 @@ return {
 {664,665,666,667,668},
 {672,673,674,675,676},
 }},
-{name='sevii_house',pair='sevii_outdoor',header=3,back=8,roofEnd=48,wallBottom=63,bevel=3,rows={
+{name='sevii_house',pair='sevii_outdoor',wallHeight=24,header=3,back=8,roofEnd=48,wallBottom=63,bevel=3,rows={
 {784,786,785,786,787},
 {646,647,670,670,671},
 {654,655,678,677,679},
@@ -91,7 +91,7 @@ return {
 {904,905,906,906,907},
 {662,663,686,685,687},
 }},
-{name='sevii_four_house',pair='general__rom_082d5064',header=3,back=8,roofEnd=48,wallBottom=63,bevel=3,rows={
+{name='sevii_four_house',pair='general__rom_082d5064',wallHeight=24,header=3,back=8,roofEnd=48,wallBottom=63,bevel=3,rows={
 {641,642,642,642,645},
 {649,650,651,652,653},
 {657,658,659,660,661},
@@ -102,7 +102,7 @@ return {
 {657,658,659,660,661},
 {665,666,667,668,669},
 }},
-{name='sevii_six_house',pair='general__rom_082d507c',header=3,back=8,roofEnd=48,wallBottom=63,bevel=3,rows={
+{name='sevii_six_house',pair='general__rom_082d507c',wallHeight=24,header=3,back=8,roofEnd=48,wallBottom=63,bevel=3,rows={
 {641,643,643,644,645},
 {649,650,651,652,653},
 {657,658,659,660,661},

@@ -92,13 +92,35 @@ function M.prepare(cells,gyms,families)
    end
   end end
  end
- -- Continue actual neighboring ground under reviewed Centers. A hardcoded
- -- grass tile creates green rectangles in ash, paving and island boardwalks.
- for _,g in ipairs(out)do if g.custom and (g.custom.centerRoof or g.custom.martRoof) then
+ -- Source roofs often occupy walkable cells behind the wall.
+ -- Keep the roof overhang, but begin its solid shell inside the first row
+ -- that actually blocks movement. Unknown collision data never changes a model.
+ for _,g in ipairs(out)do
+  local clear=0
+  for row=0,g.depth-1 do
+   local walkable,known,blocked=false,true,false
+   for col=0,g.width-1 do
+    local c=cells[(g.cx+col)..':'..(g.cy+row)]
+    if not c or c.collision==nil then known=false;break end
+    if c.collision==0 then walkable=true else blocked=true end
+   end
+   if not known or not walkable or (row>0 and blocked)then break end
+   clear=clear+1
+  end
+  if clear>0 and clear<g.depth then g.bodyBack=clear*16+2 end
+ end
+ -- Continue actual neighboring ground under complete building assemblies.
+ -- This also supplies raised foundations: original facade/roof pixels must
+ -- never be stretched down the retaining face below a building.
+ for _,g in ipairs(out)do
   local candidates={}
+  local service=g.custom and (g.custom.centerRoof or g.custom.martRoof)
   for yy=g.cy-2,g.cy+g.depth+1 do for xx=g.cx-2,g.cx+g.width+1 do
    local c=cells[xx..':'..yy]
-   if c and c.pair==g.pair and not c.civic and c.collision==0 and c.shape and c.shape.kind=='flat' then
+   if c and c.pair==g.pair and not c.civic and c.collision==0 and c.shape and c.shape.kind=='flat'
+    and (service or c.shape.reviewedSurface or c.mid==1) then
+    -- Unclassified flat tiles can contain decorative artwork. Only the
+    -- previously reviewed service assemblies accept their local floor set.
     candidates[#candidates+1]=c
    end
   end end
@@ -111,7 +133,7 @@ function M.prepare(cells,gyms,families)
    end
    if best then g.grounds[xx..':'..yy]=best.mid end
   end end
- end end
+ end
  return out
 end
 function M.ground(c)
@@ -135,7 +157,7 @@ function M.profile(g)
    local offset=(g.northRows or 0)*16
    return {w=w,h=g.depth*16,back=offset,front=offset+111,wall=143,roofEnd=offset-32,wallTop=offset-32,wallBottom=offset+111,bevel=0}
   end
-  return {w=w,h=g.depth*16,back=r.back,front=r.wallBottom,wall=r.wallBottom-r.roofEnd,roofEnd=r.roofEnd,wallTop=r.roofEnd,wallBottom=r.wallBottom,bevel=r.bevel,doorLeft=0,doorRight=w,doorTop=r.roofEnd,doorBottom=r.wallBottom,doorHeight=r.wallBottom-r.roofEnd,projection=0}
+  return {w=w,h=g.depth*16,back=r.back,front=r.wallBottom,wall=r.wallHeight or r.wallBottom-r.roofEnd,roofEnd=r.roofEnd,wallTop=r.roofEnd,wallBottom=r.wallBottom,bevel=r.bevel,doorLeft=0,doorRight=w,doorTop=r.roofEnd,doorBottom=r.wallBottom,doorHeight=r.wallHeight or r.wallBottom-r.roofEnd,projection=0}
  end
  if g.kind=='gym' then
   return {w=w,h=80,back=12,front=72,wall=28,roofEnd=48,wallTop=48,wallBottom=72,
@@ -372,10 +394,12 @@ function M.append(g,emit)
  local wall,trim=uv(p.w*2+.5,.5,p.w*2+.5,.5),uv(p.w*2+2.5,.5,p.w*2+2.5,.5)
  local function face(v,tex,shade)emit(v,tex,shade or 1)end
  local gymPorch=g.custom and g.custom.profile=='hoenn_gym'
+ local kantoGym=g.kind=='gym' and not g.custom
  local civicCorners=(g.kind=='center' or g.kind=='mart') and p.w>=64
- local bodyBack=g.custom and g.custom.bodyBack or p.back
+ local bodyBack=math.max(g.bodyBack or p.back,g.custom and g.custom.bodyBack or p.back)
  if gymPorch and bodyBack>p.back then bodyBack=bodyBack+2 end -- keep rear trim inside blocked cells
- local sideFront=p.front-(civicCorners and 6 or 0)
+ local wingFront=kantoGym and 64 or p.front
+ local sideFront=wingFront-(civicCorners and 6 or 0)
  local function facadeFace(v,tex,shade)
   if gymPorch then
    for _,q in ipairs(v)do local xx=q[1]-x
@@ -453,8 +477,8 @@ function M.append(g,emit)
    end
   end
  end
- if p.doorLeft>0 then front(0,p.doorLeft,p.wallTop,p.wallBottom,p.wall,p.front)end
- if p.doorRight<p.w then front(p.doorRight,p.w,p.wallTop,p.wallBottom,p.wall,p.front)end
+ if p.doorLeft>0 then front(0,p.doorLeft,p.wallTop,p.wallBottom,p.wall,wingFront)end
+ if p.doorRight<p.w then front(p.doorRight,p.w,p.wallTop,p.wallBottom,p.wall,wingFront)end
  if gymPorch then
   -- The diagonal white strips in the top-down drawing depict the SIDE of
   -- the vestibule. Rebuild those surfaces rather than stretching the drawn
@@ -514,7 +538,7 @@ function M.append(g,emit)
   end
  else
  for _,sx in ipairs({p.doorLeft,p.doorRight})do
-  face({{x+sx,p.wall,z+p.front},{x+sx,p.wall,z+p.front+p.projection},{x+sx,0,z+p.front+p.projection},{x+sx,0,z+p.front}},trim,.9)
+  face({{x+sx,p.wall,z+wingFront},{x+sx,p.wall,z+p.front+p.projection},{x+sx,0,z+p.front+p.projection},{x+sx,0,z+wingFront}},trim,.9)
  end
  face({{x+p.doorLeft,p.wall,z+p.front},{x+p.doorRight,p.wall,z+p.front},{x+p.doorRight,p.wall,z+p.front+p.projection},{x+p.doorLeft,p.wall,z+p.front+p.projection}},trim)
  end

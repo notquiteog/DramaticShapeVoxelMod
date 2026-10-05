@@ -120,6 +120,13 @@ for _,r in ipairs(H.exteriors)do
    end
   end
  end
+ if r.bodyBack==18 then
+  Civic.append(found[1],function(vertices)
+   for _,v in ipairs(vertices)do
+    if v[2]<16 then assert(v[3]>=16,r.name..' body intrudes into walkable rear roof-art row')end
+   end
+  end)
+ end
  if r.profile=='hoenn_gym' then
   local g=found[1];local front,door=0,false;local solidCheeks,canopyRims=0,0;local squareTop,closedSoffit=false,false
   Civic.append(g,function(vertices,tex)

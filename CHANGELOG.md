@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Keep recognized Gen3 building walls inside blocked rear rows while retaining
+  roof overhangs; recess Kanto gym wings and raise five short-house families
+  for walking clearance. Raised foundations no longer repeat roof/window art.
+
 - Correct Emerald gym canopies to parallel sides and square corners; close
   their undersides for first-person views while preserving native footprints.
 

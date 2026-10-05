@@ -145,3 +145,40 @@ local house={kind='house',cx=2,cy=4,width=5,depth=5,custom={back=2,roofEnd=54,wa
 local hd=M.doorSurface(house,5,8)
 assert(hd and hd.w==17 and hd.h==21 and hd.vertices[1][2]==22 and hd.vertices[3][2]==1)
 print('PASS native door animation matches authored entrance dimensions and recess')
+-- Houses/gyms need local terrain below them too, not only service buildings.
+-- A solid ornament or the source roof must never become a foundation donor.
+do
+ local recipe={name='ground_fixture',pair='fixture',rows={{900,901},{902,903}},header=2}
+ local cells={}
+ for y,row in ipairs(recipe.rows)do for x,mid in ipairs(row)do
+  cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair='fixture',primary='fixture',collision=7}
+ end end
+ cells['0:2']={cx=0,cy=2,mid=77,pair='fixture',collision=0,shape={kind='flat',reviewedSurface=true}}
+ cells['1:2']={cx=1,cy=2,mid=88,pair='fixture',collision=7,shape={kind='flat'}}
+ cells['0:-1']={cx=0,cy=-1,mid=99,pair='fixture',collision=0,shape={kind='flat'}}
+ assert(#M.prepare(cells,{}, {recipe})==1)
+ for y=0,1 do for x=0,1 do assert(M.ground(cells[x..':'..y])==77,'building foundation sampled roof/decor instead of local ground')end end
+end
+print('PASS complete-building foundation donors reject solid decorations and source facade pixels')
+do
+ local recipe={name='rear_lane',pair='fixture',rows={{900,901},{902,903},{904,905}},header=3,back=8,roofEnd=20,wallBottom=47,bevel=2}
+ local function build(top)
+  local cells={}
+  for y,row in ipairs(recipe.rows)do for x,mid in ipairs(row)do
+   cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair='fixture',primary='fixture',collision=y==1 and top or 7}
+  end end
+  return M.prepare(cells,{}, {recipe})[1]
+ end
+ local g=build(0);assert(g.bodyBack==18,'rear roof-art lane must remain walkable')
+ M.append(g,function(vertices)for _,v in ipairs(vertices)do if v[2]<16 then assert(v[3]>=16,'rear wall blocks native roof-art lane')end end end)
+ assert(not build(7).bodyBack,'blocked source roof row should retain authored rear wall')
+ local gym={kind='gym',cx=0,cy=0,width=7,depth=5}
+ M.append(gym,function(vertices)for _,v in ipairs(vertices)do
+  if v[2]<16 and(v[1]<40 or v[1]>72)then assert(v[3]<=64,'gym wing blocks walkable front strips')end
+ end end)
+ for _,r in ipairs(dofile('data/gen3_exteriors.lua'))do if r.wallHeight then
+  local p=M.profile({width=#r.rows[1],depth=#r.rows,custom=r})
+  assert(p.wall>=24 and p.doorHeight==p.wall,'short projected house facade needs full actor clearance and aligned door')
+ end end
+end
+print('PASS native rear lanes, gym front paths and short-house headroom')

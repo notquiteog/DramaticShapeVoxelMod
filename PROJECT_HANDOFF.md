@@ -1,3 +1,30 @@
+# Gen3 building footprints — 2026-10-05 (unreleased)
+
+Recognized Civic models now use native collision rows to keep rear walls out
+of walking lanes while preserving source roof overhangs. Kanto gym wings end
+at z64, leaving the native front strip clear; entrance remains projected.
+Five short FRLG house families use 24px walls/doors for headroom. Explicit
+Verdanturf/Steven home rear bounds remain recorded in recipes. No native
+collision, warps, movement or save changes.
+
+Raised Civic foundations sample ground instead of source roof/window pixels.
+New donors outside previously reviewed service assemblies must be classified
+reviewed surfaces or native grass1; unknown flat decorations are excluded.
+Foundation material refinement and remaining flat foliage are still needed.
+
+Engine0.3.52: full suite 182 passed /0 failed /56 skipped. New runtime
+building-footprint-census.lua flags face bounding boxes overlapping central
+8x8 walkable cells at y1.5..16: Emerald57 recognized assemblies /0 flagged,
+LeafGreen103 /0 flagged (before:4 and69). This is a bounded geometry audit,
+NOT exhaustive coverage or a proof of collision safety. FireRed QA profile
+failed to boot this pass; shared FRLG code is covered through LeafGreen.
+Artifacts: .scratch/coverage-20261004/results/*-building-footprints-after.
+Latest Emerald building-doors completed14 placements/56 directional captures
+plus eye/door views across Verdanturf and Mossdeep; inspected rear houses and
+Mossdeep gym retaining faces. Prior LeafGreen Pewter gym/Three Island rear/
+Route2 eye captures inspected. Camera is QA-controlled production rendering.
+Player saves untouched. Full-world models/parity remain incomplete.
+
 # Square Hoenn gym canopies — 2026-10-05 (unreleased)
 
 User corrected the canopy: native angled outlines indicate projected artwork,
