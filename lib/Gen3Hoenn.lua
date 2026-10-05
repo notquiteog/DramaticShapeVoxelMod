@@ -29,6 +29,7 @@ function M.surface(primary,mid,collision)
  end
 end
 function M.shape(primary,secondary,mid,behavior,collision)
+ if secondary=="inside_of_truck"then return {kind="flat",reviewedSurface=true}end
  if primary=='building' and secondary=='generic_building' and collision==7
    and (mid==0x3c9 or mid==0x3d1 or mid==0x215 or mid==0x21d)then
   return {kind='roomWall',ground=mid>=0x3c9 and 0x3d9 or 0x229}
@@ -193,6 +194,15 @@ for _,primary in ipairs({'general','building'})do
  facility('devon_plans',{{0x3a5,0x3a6},{0x3ad,0x3ae}},'em_office_plans',0x380)
  facility('devon_stool',{{0x3a7}},'em_office_stool',0x380,{seat={height=5,hips=4,z=8}})
 end
+-- The moving truck uses cargo art, not the general atlas's house objects.
+add('hoenn_truck_cargo','general__inside_of_truck',{
+ {0x201,0x202,0x203,0x204,0x205},{0x209,0x20a,0x20b,0x20c,0x208},
+ {0x211,0x212,0x213,0x214,0x210},{0x219,0x21a,0x21b,0x21c,0x218},
+ {0x221,0x222,0x223,0x224,0x220}},'designed',{
+ primary='general',design='em_truck_cargo',ground=0x214,
+ groundRows={{0x214,0x214,0x214,0x214,0x214},{0x214,0x214,0x214,0x214,0x208},
+ {0x214,0x214,0x214,0x214,0x210},{0x214,0x214,0x214,0x214,0x218},
+ {0x214,0x214,0x214,0x214,0x214}}})
 -- Littleroot's furniture is separate from the generic Hoenn house atlas.
 local startHouse='building__brendans_mays_house'
 local function starting(name,rows,design,extra)
@@ -204,6 +214,7 @@ starting('sink_hob',{{0x231,0x232},{0x239,0x23a}},'em_start_kitchen')
 starting('kitchen_cabinet',{{0x233,0x234},{0x23b,0x23c}},'em_start_cabinet')
 starting('living_tv',{{0x240,0x241},{0x248,0x249}},'em_start_tv')
 starting('living_drawers',{{0x242},{2},{0x24a}},'em_start_dresser')
+starting('living_drawers_variant',{{0x242},{3},{0x24a}},'em_start_dresser')
 starting('bedroom_drawers',{{0x256},{2},{0x25d}},'em_start_dresser')
 starting('computer_left',{{0x252,0x254},{0x25a,0x25b},{0x262,0x263}},'em_start_pc_left')
 starting('computer_right',{{0x254,0x251},{0x258,0x259},{0x260,0x261}},'em_start_pc_right')
@@ -218,7 +229,7 @@ starting('bed_right',{{0x280,0x281,0x282},{0x288,0x289,0x28a},{0x290,0x291,0x292
 starting('dining_table',{{0x21a,0x21b},{0x222,0x223},{0x22a,0x22b}},'em_start_table',
  {ground=0x2a1,groundRows={{0x2a1,0x2a1},{0x2a1,0x2a1},{0x2a9,0x2a9}}})
 for _,a in ipairs{{0x219,'left'},{0x221,'left'},{0x21c,'right'},{0x224,'right'}}do
- starting('dining_chair_'..a[1],{{a[1]}},'em_home_chair_'..a[2],{ground=0x2a1})
+ starting('dining_chair_'..a[1],{{a[1]}},'em_start_seat_pad',{ground=0x2a1})
 end
 local center='building__pokemon_center'
 local lab='building__lab'

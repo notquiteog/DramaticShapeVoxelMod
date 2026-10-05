@@ -304,65 +304,82 @@ function M.draw(id,A)
   B(4,4,4,12,5,12,metal);B(4.5,5,4.5,11.5,6,11.5,blue)
   top({5,5,6,5},4.5,4.5,11.5,11.5,6.02)
  elseif id=='em_start_window' then
-  -- Original 15x11 frame and 13x9 glazing: no wallpaper stretched into the
-  -- pane. A deep sill and closed reveals give the native glass real depth.
-  local frame=T(0,8);local sill=T(2,19)
-  B(0,19,29,15,20,33,sill)
-  B(0,20,29,1,30,32.5,frame);B(14,20,29,15,30,32.5,frame)
-  B(1,29,29,14,30,32.5,frame)
-  B(1,20,29,14,29,29.2,frame)
-  front({1,9,13,9},1,20,14,29,29.3)
-  -- Native central divider, extended through the recess instead of floating
-  -- on the glass. The original reflection pixels remain unchanged.
-  B(7,20,29.3,8,29,32.5,T(7,10))
+  local frame,sill=T(0,8),T(2,19)
+  -- Keep the window attached to the wall face, not hovering over the aisle.
+  B(0,19,16,15,20,17.5,sill)
+  B(0,20,16,1,30,17,frame);B(14,20,16,15,30,17,frame)
+  B(1,29,16,14,30,17,frame)
+  B(1,20,16,14,29,16.1,frame)
+  front({1,9,13,9},1,20,14,29,16.12)
+  B(7,20,16.12,8,29,17,T(7,10))
+ elseif id=='em_start_seat_pad' then
+  B(2,0,3,14,.6,14,T(6,10))
+  top({2,3,12,11},2,3,14,14,.62)
  elseif id=='em_start_picture' then
   local frame=T(1,11)
-  B(1,18,31,15,27,32,frame)
-  B(1,18,32,2,27,32.5,frame);B(14,18,32,15,27,32.5,frame)
-  B(2,18,32,14,19,32.5,frame);B(2,26,32,14,27,32.5,frame)
-  front({2,11,12,8},2,19,14,26,32.2)
+  B(1,18,15,15,27,16,frame)
+  B(1,18,16,2,27,16.5,frame);B(14,18,16,15,27,16.5,frame)
+  B(2,18,16,14,19,16.5,frame);B(2,26,16,14,27,16.5,frame)
+  front({2,11,12,8},2,19,14,26,16.2)
  elseif id=='em_start_clock' then
   local rim=T(7,8)
-  B(4,15,31,12,29,32,rim);B(2,17,31,14,27,32,rim)
-  B(1,20,31,15,24,32,rim)
-  front({2,9,12,13},2,16,14,28,32.02)
+  B(4,15,15,12,29,16,rim);B(2,17,15,14,27,16,rim)
+  B(1,20,15,15,24,16,rim)
+  front({2,9,12,13},2,16,14,28,16.02)
+ elseif id=='em_truck_cargo' then
+  local metal,edge=T(3,20),T(1,28)
+  local function cargo(l,n,r,z,h,rect)
+   B(l,0,n,r,h,z,metal)
+   B(l,h-1,n,r,h,n+1,edge);B(l,h-1,z-1,r,h,z,edge)
+   front(rect,l+.4,1,r-.4,h-.5,z+.01)
+  end
+  -- Every solid base is inside the original blocked cells. Perspective
+  -- fronts from the ROM become vertical faces, never obstacles on the floor.
+  for z=0,64,16 do
+   cargo(.2,z+.2,15.8,z+15.8,20+(z%32==0 and 2 or 0),{0,0,16,32})
+  end
+  cargo(16,.2,31.8,15.8,17,{16,16,16,16})
+  cargo(32,.2,79.8,15.8,20,{32,16,32,16})
+  for x=16,64,16 do cargo(x+.2,64,x+15.8,79.8,17,{16,64,16,16})end
+  cargo(16,48,31.8,63.8,10,{16,48,16,16})
+  cargo(32,48,47.8,63.8,22,{32,48,16,32})
  elseif id=='em_start_bed' then
   local wood,cloth=T(14,20),T(20,31)
-  -- The native bed occupies the middle of a three-cell drawing. Keep its
-  -- single-bed proportions instead of turning the surrounding floor into bed.
-  for _,x in ipairs{14,32}do for _,z in ipairs{19,43}do B(x,0,z,x+2,4,z+2,wood)end end
-  B(13,3,18,35,5,45,wood);B(14,5,19,34,7,44,cloth)
-  top({14,23,20,21},14,22,34,44,7.02)
-  B(15,7,19,33,8.3,24,T(20,21));top({15,19,18,5},15,19,33,24,8.32)
-  B(13,3,17,35,11,19,wood);front({13,16,22,5},13,7,35,11,19.02)
-  B(13,3,44,35,6,46,wood)
+  -- Only the centre foot cell is impassable. The apparent long head in the
+  -- ROM is perspective; keep the complete 3D bed inside that native cell.
+  for _,x in ipairs{16.3,29.7}do for _,z in ipairs{32.3,45.7}do B(x,0,z,x+1.8,4,z+1.8,wood)end end
+  B(16.2,3,32.2,31.8,5,47.8,wood);B(17,5,33,31,7,47,cloth)
+  top({14,23,20,21},17,36,31,47,7.02)
+  B(17,7,33,31,8.3,36,T(20,21));top({15,19,18,5},17,33,31,36,8.32)
+  B(16.2,3,32.2,31.8,11,33,wood);front({13,16,22,5},16.2,7,31.8,11,33.02)
+  B(16.2,3,47,31.8,6,47.8,wood)
  elseif id=='em_start_table' then
   local wood=T(5,34)
   desk(1,1,31,30,7,wood);top({1,0,30,28},1,1,31,30,7.02)
  elseif id=='em_start_dresser' then
   local case,trim=T(2,19),T(1,28)
-  B(1,0,25,15,23,39,case);B(2,23,26,14,25,38,case)
-  front({1,17,14,15},1,10,15,23,39.02)
+  B(1,0,17,15,23,31,case);B(2,23,18,14,25,30,case)
+  front({1,17,14,15},1,10,15,23,31.02)
   for _,x in ipairs{2,8}do
-   B(x,1,39,x+5,9,39.5,trim)
-   front({x,32,5,9},x,1,x+5,9,39.52)
+   B(x,1,31,x+5,9,31.5,trim)
+   front({x,32,5,9},x,1,x+5,9,31.52)
   end
  elseif id=='em_start_pc_left' or id=='em_start_pc_right' then
   local right=id=='em_start_pc_right';local x=right and 16 or 0
   local wood,case,dark=T(x+2,30),T(x+1,13),T(x+5,20)
-  desk(0,25,32,38,8,wood)
-  crt(x+1,24,14,10,26,{x+2,17,12,8},case,dark)
-  keyboard({x+2,26,12,4},x+2,31,12,6,8.1,case)
+  desk(0,17,32,31,8,wood)
+  crt(x+1,17,14,10,26,{x+2,17,12,8},case,dark)
+  keyboard({x+2,26,12,4},x+2,25,12,5,8.1,case)
   local book=right and 0 or 16
-  B(book+2,8,27,book+14,11,35,T(book+4,25))
-  top({book+2,22,12,9},book+2,27,book+14,35,11.02)
-  desk(x+2,39,x+14,47,4,wood)
-  B(x+2,4,39,x+14,5,47,T(x+8,36))
-  B(x+2,4,46,x+14,9,48,wood)
+  B(book+2,8,21,book+14,11,29,T(book+4,25))
+  top({book+2,22,12,9},book+2,21,book+14,29,11.02)
+  -- Walkable seating is a low pad, not a waist-high solid chair.
+  B(x+2,0,39,x+14,.5,47,T(x+8,36))
+  top({x+2,32,12,12},x+2,39,x+14,47,.52)
  elseif id=='em_start_console' then
   local case,dark=T(6,14),T(4,21)
-  B(3,0,12,12,9,23,case);B(4,9,13,11,10,22,case)
-  front({3,10,9,12},3,1,12,9,23.02)
+  B(3,0,1,12,9,15,case);B(4,9,2,11,10,14,case)
+  front({3,10,9,12},3,1,12,9,15.02)
   B(5,0,26,13,1,30,dark);top({5,24,8,6},5,26,13,30,1.02)
   B(4,.1,22,4.4,.5,28,dark);B(4,.1,27.6,6,.5,28,dark)
  elseif id=='em_start_fridge' then
@@ -388,8 +405,8 @@ function M.draw(id,A)
   B(3,5,28,10,6,28.6,dark);B(15,5,28,22,6,28.6,dark)
  elseif id=='em_start_tv' then
   local wood,case,dark=T(3,24),T(1,3),T(3,17)
-  B(1,0,14,31,6,29,wood);front({1,18,30,8},1,1,31,6,29.02)
-  crt(1,14,30,8,24,{2,1,28,14},case,dark)
+  B(1,0,1,31,6,15,wood);front({1,18,30,8},1,1,31,6,15.02)
+  crt(1,1,30,8,24,{2,1,28,14},case,dark)
  elseif id=='fr_department_glass' then
   local case=T(1,18)
   B(1,0,8,31,2,37,case);B(2,2,9,30,11,36,T(4,24))

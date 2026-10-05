@@ -59,7 +59,7 @@ function M.profile(def,gen)
  end
  local name=(id..' '..ts):upper()
  local theme=name:find('MART') and 'shop' or name:find('CENTER') and 'center' or name:find('LAB') and 'lab' or 'home'
- if spec and spec.secondary=='rom_082d4d94' then theme='ship' end
+ if spec and (spec.secondary=='rom_082d4d94' or spec.secondary=='inside_of_truck') then theme='ship' end
  if cave then theme=(name:find('ICE') or name:find('SEAFOAM')) and 'ice' or 'cave' end
  local unit=gen==3 and 16 or 32
  local b={0,0,def.width*unit,def.height*unit}
@@ -75,7 +75,9 @@ function M.profile(def,gen)
   if x1<=x0 or z1<=z0 then return end
   b={x0*16,z0*16,x1*16,z1*16}
   local secondary=V.require('Gen3Tilesets').resolve(def.midLayout.pair,require('src.import.gba.versions').TILESET_PAIRS).secondary
-  if secondary=='lab' or secondary=='pokemon_center' or def.midLayout.pair=='player_house' or def.midLayout.pair=='house' or theme=='shop' or secondary=='rom_082d4d94' then
+  if secondary=='brendans_mays_house' then
+   b[2]=(z0+1)*16-.12
+  elseif secondary=='lab' or secondary=='pokemon_center' or def.midLayout.pair=='player_house' or def.midLayout.pair=='house' or theme=='shop' or secondary=='rom_082d4d94' then
    -- The first two rows are the north wall drawing, not extra floor behind
    -- the cabinets. Its continuous backing sits just behind the native facade.
    b[2]=math.min(b[4]-16,(z0+2)*16)-.12
@@ -139,7 +141,7 @@ function M.geometry(p,side,opened)
   local start,finish=horizontal and x0 or z0,horizontal and x1 or z1
   local line=side==1 and z0 or side==3 and z1 or side==2 and x1 or x0
   local outward=(side==1 or side==4)and -1 or 1
-  local function part(a,y0,c,y1,swatch,depth)
+  local function rawPart(a,y0,c,y1,swatch,depth)
    local function strip(l,r,at)
     local near,far=at-outward*math.max(0,(depth or 3)-3),at+outward*(depth or 3)
     if horizontal then box(l,y0,math.min(near,far),r,y1,math.max(near,far),swatch)
@@ -157,6 +159,21 @@ function M.geometry(p,side,opened)
      if r>l then strip(l,r,at)end
     end
    else strip(a,c,line)end
+  end
+  local doors=p.doorways and p.doorways[side] or {}
+  local doorHeight=math.min(30,h-4)
+  local function part(a,y0,c,y1,swatch,depth)
+   local cuts={a,c}
+   for _,q in ipairs(doors)do
+    if q[1]>a and q[1]<c then cuts[#cuts+1]=q[1]end
+    if q[2]>a and q[2]<c then cuts[#cuts+1]=q[2]end
+   end
+   table.sort(cuts)
+   for i=1,#cuts-1 do
+    local l,r=cuts[i],cuts[i+1];local lo=y0
+    for _,q in ipairs(doors)do if (l+r)/2>q[1] and (l+r)/2<q[2] and y1>0 then lo=math.max(lo,doorHeight)end end
+    if r>l and y1>lo then rawPart(l,lo,r,y1,swatch,depth)end
+   end
   end
   if side==1 and p.northFront then
    -- Closed returns around the stair bay, with backing behind the flight.
@@ -193,6 +210,13 @@ function M.geometry(p,side,opened)
    for _,a in ipairs({start,finish-2})do part(a,0,a+2,h,2,3.6)end
    -- Window openings belong to native artwork/model recipes. Do not invent
    -- luminous side-wall panels in every room (including windowless rooms).
+  end
+  -- Open exits have a visible frame even when the near wall is cut away.
+  -- Jambs sit OUTSIDE the warp opening; no slab blocks the walking lane.
+  for _,q in ipairs(doors)do
+   rawPart(q[1]-1.5,0,q[1],doorHeight,2,4.2)
+   rawPart(q[2],0,q[2]+1.5,doorHeight,2,4.2)
+   rawPart(q[1]-1.5,doorHeight,q[2]+1.5,doorHeight+1.5,3,4.2)
   end
  end
  return verts,indices
@@ -251,6 +275,33 @@ function M.forMap(map,gen)
   if #p.northRecesses>0 then
    p.northFront=p.bounds[2]
    for _,q in ipairs(p.northRecesses)do p.bounds[2]=math.min(p.bounds[2],q[3])end
+  end
+ end
+ if not p.cave then
+  p.doorways={{},{},{},{}}
+  local b=p.bounds
+  for _,warp in ipairs(def.warps or {})do
+   local x,y=tonumber(warp.x),tonumber(warp.y)
+   if x and y then
+    local side
+    if y==0 then side=1
+    elseif (y+1)*16>=b[4]-.01 then side=3
+    elseif x*16<=b[1]+.01 then side=4
+    elseif (x+1)*16>=b[3]-.01 then side=2 end
+    if side then
+     local a=(side==1 or side==3)and x*16 or y*16
+     p.doorways[side][#p.doorways[side]+1]={a,a+16}
+    end
+   end
+  end
+  for side,doors in ipairs(p.doorways)do
+   table.sort(doors,function(a,b)return a[1]<b[1]end)
+   local merged={}
+   for _,q in ipairs(doors)do
+    local last=merged[#merged]
+    if last and q[1]<=last[2]then last[2]=math.max(last[2],q[2])else merged[#merged+1]=q end
+   end
+   p.doorways[side]=merged
   end
  end
  p.meshes={};cache[def]=p;return p

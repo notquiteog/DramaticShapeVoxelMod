@@ -1,3 +1,41 @@
+# Interior exit frames and walkable-space corrections — 2026-10-04 (unreleased)
+
+User reports missing indoor exit doors and models protruding into traversable
+space, specifically Emerald's starting truck and room. Shared InteriorDiorama
+now uses boundary warp cells to cut actual wall apertures and draw door jambs
+and lintels, including camera-facing cutaway walls. Adjacent warp cells merge
+into one opening; interior stair warps do not become perimeter doors. Cave
+passage handling is unchanged. Frames are offset from wall faces and their
+jambs stop at the lintel to avoid coplanar flicker. These are open doorways,
+not animated door leaves or live views of the outside.
+
+Emerald truck: replaced generic furniture fallback with a complete native
+cargo recipe, separate cargo cases, clean native metal floor, preserved bright
+exit ramp, and metal-toned enclosure. All cargo solids lie in native blocked
+cells. Starter furniture: desk/monitor, dresser, console and TV bodies now
+stay in their blocked footprint; bed occupies its actual impassable centre
+cell rather than its walkable perspective artwork. Walkable seating is low
+pads. Added the missing living-room dresser tile variant. Wall picture, clock
+and window are attached to the corrected starter-house north wall plane.
+Native collision, warp data, scripted behavior and interactions are unchanged.
+
+Evidence: official 0.3.51, isolated Emerald door-footprint/door-footprint-after
+fixtures in .scratch/coverage-20261004. Inspected original 2D truck artwork,
+before/after truck and both Brendan-house floors, plus first-person truck exit.
+Fixture confirms unchanged collision grids and actual Player.tryMove succeeds
+through the truck lane but fails into native cargo. Fixture scripts halt story
+VM for geometry inspection; this is not a full new-game cutscene test.
+Yellow Oak lab and Crystal Elm lab gb-doors fixtures also pass; inspected
+Yellow first-person and Crystal overview exit frames. Shared shell tests cover
+all three engines and merged doorway apertures. Tests: 337 complete designed
+objects, 146 Hoenn recipes, native wall crops, Center/additional furniture,
+interior shells and new interior_walkspace_test pass. No user saves modified.
+
+Remaining: other maps/props can still have footprint mismatches; no full-world
+collision-to-geometry certification. FireRed/LeafGreen-specific objects were
+not changed this pass. Doors/windows do not yet show a live exterior. No new
+mod/cart release or version bump in this pass.
+
 # Optional modern UI ownership and upstream inventory — 2026-10-04 (unreleased)
 
 User requires native UI by default, a separate optional modern UI mod, preserved
