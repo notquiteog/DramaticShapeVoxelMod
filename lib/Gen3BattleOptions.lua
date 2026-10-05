@@ -10,9 +10,9 @@ M.settings={UI.battleUi,UI.hudColor,UI.textboxFill,M.scale}
 -- through the public loader once, including absent optional generation menus.
 local nativeModules={}
 local function native(name)
- if package.loaded[name]then return package.loaded[name]end
+ if type(package.loaded[name])=='table'then return package.loaded[name]end
  if nativeModules[name]==nil then
-  local ok,value=pcall(require,name);nativeModules[name]=ok and value or false
+  local ok,value=pcall(require,name);nativeModules[name]=ok and type(value)=='table'and value or false
  end
  return nativeModules[name]or nil
 end
