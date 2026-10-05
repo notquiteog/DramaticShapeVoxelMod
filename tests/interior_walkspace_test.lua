@@ -1,5 +1,5 @@
 local F=dofile('lib/InteriorFurniture.lua')
-local footprints={em_lilycove_stone_display={0,16,80,64},em_lilycove_picture_wall={0,16,32,32},em_lilycove_gallery={0,32,64,48},fr_bed={16,32,32,48},fr_lorelei_bed={16,16,32,32},fr_home_bookcase={0,16,32,32},fr_room_pc={0,16,32,32},fr_roof_room_desk={0,16,32,32},
+local footprints={em_lilycove_ball_sculpture={0,0,16,16},em_lilycove_wall_return={0,16,16,80},em_lilycove_stone_display={0,16,80,64},em_lilycove_picture_wall={0,16,32,32},em_lilycove_gallery={0,32,64,48},fr_bed={16,32,32,48},fr_lorelei_bed={16,16,32,32},fr_home_bookcase={0,16,32,32},fr_room_pc={0,16,32,32},fr_roof_room_desk={0,16,32,32},
  fr_office_table={0,0,32,32},fr_executive_table={0,16,48,32},fr_sofa={0,0,48,16},fr_museum_bookcase={0,16,32,32},fr_center_storage={0,16,32,32},fr_department_glass={0,16,32,48},fr_department_stock={0,16,32,64},fr_lab_free_books={0,16,32,32},fr_condo_sofa={0,0,64,16},
  fr_condo_workstation={0,16,48,32},em_start_pc_left={0,16,32,32},em_start_pc_right={0,16,32,32},
  em_start_dresser={0,16,16,32},em_start_console={0,0,16,16},
@@ -124,3 +124,15 @@ assert(F.draw('em_lilycove_counter',{sample=function()return{}end,source=functio
   assert(r<=16 or l>=80 or s<=32 or n>=64,'counter sealed staff aisle')
  end}))
 print('PASS hollow museum counter retains native staff aisle')
+local widths,front,back,pedestal={},false,false,false
+assert(F.draw('em_lilycove_ball_sculpture',{sample=function()return{}end,source=function()end,
+ box=function(l,b,n,r,h,s)
+  if h<=3 then pedestal=true;assert(h<=3,'ball pedestal too tall')
+  else
+   widths[b]=math.max(widths[b]or 0,r-l)
+   front=front or s>=13;back=back or n<=3
+   assert(b>=3,'ball intersects pedestal')
+  end
+ end}))
+assert(pedestal and front and back and widths[8]>widths[13],'Poké Ball must have a separate base and rounded volume')
+print('PASS museum Poké Ball is round in depth and supported above a low separate plinth')

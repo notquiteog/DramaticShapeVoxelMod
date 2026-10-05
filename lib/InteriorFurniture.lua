@@ -506,6 +506,30 @@ function M.draw(id,A)
    B(x+2,7,27,x+9,8,30,case)
    top({x+2,21,7,3},x+2,27,x+9,30,8.02)
   end
+ elseif id=='em_lilycove_ball_sculpture' then
+  local base,light,dark=T(3,14),T(7,2),T(7,0)
+  -- A low separate plinth supports the original green stone Poké Ball.
+  -- Voxel slices form a sphere in all three axes, not an extruded sprite.
+  B(.5,0,1,15.5,2,15,base)
+  B(.5,2,1,15.5,3,15,T(3,11))
+  for y=0,10 do for z=0,10 do
+   local dy,dz=y-5,z-5
+   local half=math.sqrt(math.max(0,5.5*5.5-dy*dy-dz*dz))
+   local radius=math.floor(half)
+   if dy*dy+dz*dz<=5.5*5.5 then
+    local material=(y==5)and dark or(y>5 and light or base)
+    B(8-radius-.5,3+y,8+z-5-.5,8+radius+.5,4+y,8+z-5+.5,material)
+   end
+  end end
+  B(6,7,12.8,10,11,13.7,dark)
+  B(7,8,13.7,9,10,14,light)
+ elseif id=='em_lilycove_wall_return' then
+  local foot=A.recipe and A.recipe.foot or 16
+  local wall,cap,trim=T(8,56),T(8,34),T(8,77)
+  B(0,0,foot,16,30,79.8,wall)
+  B(0,0,foot,16,2,79.8,trim)
+  B(0,30,foot,16,31,79.8,cap)
+  front({0,48,16,32},0,0,16,30,79.82)
  elseif id=='em_lilycove_stone_display' then
   local body,cap,stone=T(8,56),T(8,44),T(36,20)
   -- The projected upper row is floor. Chamfered plinth and a freestanding

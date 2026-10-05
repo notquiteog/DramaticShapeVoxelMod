@@ -186,9 +186,18 @@ for _,rows in ipairs{
   design='em_lilycove_picture_wall',ground=0x203,blockedRows={[2]=true},
   wallSample={0,({[0x21c]=16,[0x21d]=16,[0x22f]=24})[rows[1][1]]or 2}})
 end
+for _,spec in ipairs{
+ {name='north_return',rows={{0x211},{0x211},{0x204},{0x20c},{0x214}},collision={{7},{7},{0x90},{7},{7}},foot=0},
+ {name='partition_return',rows={{0x212},{0x28b},{0x204},{0x20c},{0x214}},collision={{0},{7},{0x90},{7},{7}},foot=16},
+}do
+ add('hoenn_lilycove_'..spec.name,'building__lilycove_museum',spec.rows,'designed',{
+  design='em_lilycove_wall_return',ground=0x203,collisionRows=spec.collision,foot=spec.foot})
+end
 add('hoenn_lilycove_floor_statue','building__lilycove_museum',{{0x22b},{0x233}},'carvedStatue',{
  ground=0x202,backgroundMids={0x202,0x203},blockedRows={[2]=true}})
--- Whole hollow counter: its native central staff space remains open.
+add('hoenn_lilycove_small_sculpture','building__lilycove_museum',{{0x22c}},'designed',{
+ design='em_lilycove_ball_sculpture',ground=0x202,blockedRows={[1]=true}})
+-- Complete display and hollow counter preserve their native walking cells.
 add('hoenn_lilycove_stone_display','building__lilycove_museum',{
  {0x23a,0x23b,0x23b,0x23b,0x23c},
  {0x242,0x228,0x229,0x22a,0x244},

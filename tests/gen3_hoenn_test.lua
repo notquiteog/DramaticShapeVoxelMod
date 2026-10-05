@@ -33,7 +33,7 @@ for _,r in ipairs(H.recipes)do
   local exact={};for key,c in pairs(cells)do local q={};for k,v in pairs(c)do if k~='prop'then q[k]=v end end;q.collision=r.collisionRows[q.cy+1][q.cx+1];exact[key]=q end
   assert(#F.extract(exact)==1,r.name..' native footprint rejected')
   for _,c in pairs(exact)do c.prop=nil end
-  exact['2:1'].collision=0
+  local changed=false;for _,c in pairs(exact)do if c.collision~=0 then c.collision=0;changed=true;break end end;assert(changed)
   assert(#F.extract(exact)==0,r.name..' placed over walking lane')
  end
  if r.design=='em_lilycove_gallery' then

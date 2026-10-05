@@ -28,7 +28,9 @@ return function(game)
   if os.getenv('QA_GALLERY')=='1' then assert(V.require('Gen3Stairs').prepare(cells)==1,'missing museum flight')end
   if id=='EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F' then
    local designs={};for _,p in ipairs(props)do designs[p.recipe.design or '']=true end
-   assert(designs.em_lilycove_counter and designs.em_lilycove_stone_display,'missing museum assemblies')
+   assert(designs.em_lilycove_counter and designs.em_lilycove_stone_display and designs.em_lilycove_wall_return,'missing museum assemblies')
+   local small,returns=0,0;for _,p in ipairs(props)do if p.recipe.design=='em_lilycove_ball_sculpture' then small=small+1 end;if p.recipe.design=='em_lilycove_wall_return'then returns=returns+1 end end
+   assert(small==1 and returns==2,'missing small sculpture or wall ends')
   end
   if id=='EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_2F' then local n=0;for _,p in ipairs(props)do if p.recipe.kind=='carvedStatue'then n=n+1 end end;assert(n==2,'expected both native museum sculptures')end
   if id=='FR_POKEMON_LEAGUE_LANCES_ROOM' then local count=0;for _,p in ipairs(props)do if p.recipe.kind=='statue'then count=count+1 end end;assert(count==10,'expected all ten native League statues');print('[statues]',count)end
@@ -46,7 +48,7 @@ return function(game)
   if os.getenv('QA_GALLERY')=='1' and id:match('_2F$')then Player.reset(3,8,'up')end
   C.setLevel(6,game);C.yaw=0;C.pitch=0;U.wait(15);U.shot(game,dir..'/'..id..'-first.png')
   if id=='EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F' then
-   for _,view in ipairs{{'counter',4,11,0},{'counter-side',8,11,-math.pi/2},{'display',17,10,0},{'display-back',17,5,math.pi}}do
+   for _,view in ipairs{{'counter',4,11,0},{'counter-side',8,11,-math.pi/2},{'display',17,10,0},{'display-back',17,5,math.pi},{'small-sculpture',18,12,0},{'small-sculpture-side',20,11,-math.pi/2},{'wall-return',9,10,0}}do
     assert(d.midLayout:collAt(view[2],view[3])==0,'view must stand in native walking lane')
     Player.reset(view[2],view[3],'up');C.yaw=view[4];C.pitch=.15;U.wait(15)
     U.shot(game,dir..'/'..id..'-'..view[1]..'.png')

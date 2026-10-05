@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Give Lilycove's small exhibit a separate round Poké Ball on a low flat
+  pedestal, retaining its native stone palette. Model both wall returns with
+  closed sides and original skirting; preserve all native walking lanes.
+
 - Model Lilycove Museum's complete hollow counter and raised stone exhibit.
   Preserve the staff aisle and native collision footprint; keep checker-floor
   pixels off raised tops and retain original countertop signs and stone carving.

@@ -1,3 +1,25 @@
+# Lilycove Poké Ball exhibit and wall returns — 2026-10-05 (unreleased)
+
+The small exhibit is a separate volumetric Poké Ball on a low, flat plinth,
+not a relief embedded in its base. Native green sculpture colors retained;
+closed voxel sphere, equatorial seam and front button fit the single blocked
+cell. Both five-row wall-return drawings now have closed sides/caps and native
+front skirting. Exact collision-row recipes preserve the walkable projected
+row of the partition return and all existing routes.
+
+Verified Emerald v0.3.51 with QA_GALLERY=1 tools/qa/furniture-walkspace.lua;
+.scratch/coverage-20261004/results/emerald-gallery-statues contains native,
+overview, front/side ball and first-person wall-end captures, inspected after
+final changes. Driver asserts both returns, small exhibit and unchanged native
+collision. Shape tests check separate low base, rounded depth, narrowed top,
+solid bounds and mismatch rejection. Full suite: 170 passed, 0 failed, 56
+skipped (.scratch/museum-ball-tests.log). Earlier adapter failure is resolved
+by parity agent's 0570903 fixture update. No user saves changed.
+
+Earned painting overlays, remaining upstairs wall variants and exhaustive
+other-map visual coverage are still unfinished. Modern UI and parity agents
+continue independently; their uncommitted files excluded from this batch.
+
 # Lilycove hollow counter and stone exhibit — 2026-10-05 (unreleased)
 
 Complete native 6x5 counter and 5x4 stone-display recipes now use exact collision
