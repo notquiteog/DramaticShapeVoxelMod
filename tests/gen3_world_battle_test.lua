@@ -19,7 +19,7 @@ love={graphics=g}
 local light,art={},{}
 local placement="auto"
 local R={vp=Mat.identity(),draw=function()end,seams=function()end,lighting=function()end}
-local modules={BattleArt={backPlacementSetting={get=function()return placement end}},Mat4=Mat,Voxel3D=R,Gen3SpriteLight=light,NativeBattleArt=art,
+local modules={Gen3Capture={active=function()return false end,prepare=function()end,draw=function()end},BattleArt={backPlacementSetting={get=function()return placement end}},Mat4=Mat,Voxel3D=R,Gen3SpriteLight=light,NativeBattleArt=art,
  SpriteHeadBounds={get=function()return {0,0,64,64}end},
  BattleBillboard={mesh=function()return {}end,yawToward=function()return 0 end},
  UiBackplates={spritesUnlit=function()return false end}}

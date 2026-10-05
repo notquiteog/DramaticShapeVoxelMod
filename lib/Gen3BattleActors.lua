@@ -61,6 +61,7 @@ function M:record(draw,image,args,primitive)
   self:anchor(id,image)
   return draw(image,unpack(args))
  end
+ if not id and V.require("Gen3Capture").active(self.st)then return end
  local card=id and self.byId[id]
  if not card then
   card={id=id,tex=self:canvas(),ball=not primitive and image==self.ballImage}
@@ -130,6 +131,7 @@ end
 function M:prepare(camera,ground,eye)
  self.points={}
  for id=0,5 do self.points[id]=M.placement(camera,id,self.st.double,ground)end
+ V.require("Gen3Capture").prepare(self,ground)
  -- Hidden actors still anchor native send-out/capture particle paths.
  for id=0,3 do if not self.native[id]then self:anchor(id)end end
  for _,c in ipairs(self.cards)do
@@ -148,6 +150,8 @@ function M:draw(shadow)
  for _,c in ipairs(self.cards)do
   if not shadow or c.id or c.ball then draw(mesh,c.tex,c.model,0)end
  end
+ if not shadow then R.lighting(true)end
+ V.require("Gen3Capture").draw(self.st,shadow and V.require("ShadowMap")or nil)
  if not shadow then R.lighting(true);R.seams(true)end
 end
 function M:head(id,x,y)

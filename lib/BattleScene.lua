@@ -1017,43 +1017,7 @@ local function updateSendout(battle)
     end
   end
 end
--- Shared by voxel arenas and the Stadium flat-scene overlay.
-function BattleScene.drawTrainerAndBall(state, battle, arena, groundY, safariTrainer)
-  local q57Drawn=Q57.draw(battle)
-  -- Entrance uses q57 release energy only; no legacy smoke fallback.
-  local providerTrainer = false
-  if battle and battle.safari then
-    if safariTrainer==nil then safariTrainer=V.require('SafariBattleFX').drawTrainer(state,battle,arena,groundY)end
-    providerTrainer=safariTrainer==true
-  elseif CharacterRenderers.battleActive() then
-    providerTrainer = CharacterRenderers.first("drawBattleTrainer", {
-      state = state, battle = battle, arena = arena, groundY = groundY,
-      host = { Voxel3D = Voxel3D, Mat4 = Mat4,
-               ShadowMap = ShadowMap },
-      setHandWorld = function(value)
-        CharacterRenderers.setBattleHand(value)
-      end,
-    })
-  end
-  if not providerTrainer
-      and rawget(_G, "RED3D_TRAINER_INTRO_ACTIVE") == true then
-    local direct = rawget(_G, "RED3D_DIRECT_BATTLE_DRAW")
-    if type(direct) == "function" then
-      _G.RED3D_BATTLE_ART_DIRECT_CALLS =
-        (tonumber(_G.RED3D_BATTLE_ART_DIRECT_CALLS) or 0) + 1
-      local okDirect, didDraw = pcall(direct, arena, groundY,
-                                       Voxel3D, Mat4)
-      _G.RED3D_BATTLE_ART_DIRECT_RESULT = okDirect
-        and (didDraw and "DRAW OK" or "NO DRAW") or "CALL ERROR"
-    end
-  elseif not providerTrainer
-      and rawget(_G, "RED3D_DIRECT_BATTLE_STATUS") == "DRAW OK" then
-    _G.RED3D_DIRECT_BATTLE_STATUS = "BATTLE DONE"
-  end
-
-  -- The Legendary capture prop shares this scene's depth buffer, camera,
-  -- lighting and shadows. Its intake beam follows the opponent's moving
-  -- chest so there is no flat duplicate ball or detached overlay.
+local function drawCaptureBall(battle,arena,groundY,q57Drawn)
   if normalBall and normalBall.ball then
     if normalBall.phase == "escape" and not q57Drawn and not normalBall.q57Used then
       -- Draw smoke directly: shell highlights/celebrations cannot interrupt
@@ -1094,6 +1058,59 @@ function BattleScene.drawTrainerAndBall(state, battle, arena, groundY, safariTra
         BattleBillboard.PULL)
     end
   end
+end
+
+-- Native renderers already own their camera/depth target and explicit floor.
+-- Reuse only capture presentation; do not install Gen1 actor/UI assumptions.
+function BattleScene.prepareNativeCapture(arena,battle,groundY)
+  normalBallTick(arena,groundY)
+  Q57.prepare(battle,arena,groundY,normalBall,{})
+end
+function BattleScene.drawNativeCapture(arena,battle,groundY)
+  drawCaptureBall(battle,arena,groundY,Q57.draw(battle))
+end
+function BattleScene.castNativeCapture(shadow)
+  if normalBall and normalBall.ball then normalBall.ball:cast(shadow) end
+end
+
+-- Shared by voxel arenas and the Stadium flat-scene overlay.
+function BattleScene.drawTrainerAndBall(state, battle, arena, groundY, safariTrainer)
+  local q57Drawn=Q57.draw(battle)
+  -- Entrance uses q57 release energy only; no legacy smoke fallback.
+  local providerTrainer = false
+  if battle and battle.safari then
+    if safariTrainer==nil then safariTrainer=V.require('SafariBattleFX').drawTrainer(state,battle,arena,groundY)end
+    providerTrainer=safariTrainer==true
+  elseif CharacterRenderers.battleActive() then
+    providerTrainer = CharacterRenderers.first("drawBattleTrainer", {
+      state = state, battle = battle, arena = arena, groundY = groundY,
+      host = { Voxel3D = Voxel3D, Mat4 = Mat4,
+               ShadowMap = ShadowMap },
+      setHandWorld = function(value)
+        CharacterRenderers.setBattleHand(value)
+      end,
+    })
+  end
+  if not providerTrainer
+      and rawget(_G, "RED3D_TRAINER_INTRO_ACTIVE") == true then
+    local direct = rawget(_G, "RED3D_DIRECT_BATTLE_DRAW")
+    if type(direct) == "function" then
+      _G.RED3D_BATTLE_ART_DIRECT_CALLS =
+        (tonumber(_G.RED3D_BATTLE_ART_DIRECT_CALLS) or 0) + 1
+      local okDirect, didDraw = pcall(direct, arena, groundY,
+                                       Voxel3D, Mat4)
+      _G.RED3D_BATTLE_ART_DIRECT_RESULT = okDirect
+        and (didDraw and "DRAW OK" or "NO DRAW") or "CALL ERROR"
+    end
+  elseif not providerTrainer
+      and rawget(_G, "RED3D_DIRECT_BATTLE_STATUS") == "DRAW OK" then
+    _G.RED3D_DIRECT_BATTLE_STATUS = "BATTLE DONE"
+  end
+
+  -- The Legendary capture prop shares this scene's depth buffer, camera,
+  -- lighting and shadows. Its intake beam follows the opponent's moving
+  -- chest so there is no flat duplicate ball or detached overlay.
+  drawCaptureBall(battle,arena,groundY,q57Drawn)
   if battle and battle.safari then V.require('SafariBattleFX').draw(battle,arena,groundY)end
   return providerTrainer
 end

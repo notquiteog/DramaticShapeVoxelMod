@@ -86,6 +86,7 @@ local V={mod=mod};function V.require(name)
  if name=='RenderDistance' then renderDistance=renderDistance or assert(loadfile(root..'/lib/RenderDistance.lua'))(V);return renderDistance end
  if name=='TreePresentation' then treeStyle=treeStyle or assert(loadfile(root..'/lib/TreePresentation.lua'))(V);return treeStyle end
  if name=='Generation' then return {isGen3=function()return true end} end
+ if name=='Gen3Capture' then return {settings=function()return{}end,install=function()return function()end end}end
  if name=='NativeCrystalField' then return {install=function()return function()end end}end
  if name=='NativeBattleArt' then return {settings=function()return {}end,install=function()end}end
  if name=='NativeInterfaceArt' then return {settings={},install=function()return function()end end}end
