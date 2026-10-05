@@ -506,6 +506,27 @@ function M.draw(id,A)
    B(x+2,7,27,x+9,8,30,case)
    top({x+2,21,7,3},x+2,27,x+9,30,8.02)
   end
+ elseif id=='em_game_corner_machine' then
+  local shell,dark=T(2,8),T(1,12)
+  -- Independent cabinet, upper lightbox, recessed display and coin tray.
+  -- The cloud wallpaper above the source cabinet is deliberately excluded.
+  B(.5,0,17,15.5,1,31,dark)
+  B(1,1,17.5,15,26,30.5,shell)
+  B(.5,24,18,15.5,27,31,dark)
+  front({1,3,14,6},1,21,15,26,31.02)
+  B(1,12,30.5,2,21,31,dark);B(14,12,30.5,15,21,31,dark)
+  B(2,12,30.5,14,13,31,dark);B(2,20,30.5,14,21,31,dark)
+  front({2,10,12,7},2,13,14,20,30.62)
+  front({1,18,14,13},1,1,15,12,30.52)
+  B(4,3,30.5,12,3.7,31.5,shell)
+ elseif id=='em_game_corner_bin' then
+  local metal,rim,dark=T(5,11),T(5,3),T(7,7)
+  -- Faceted can with an actual recessed opening and raised rim.
+  B(4,0,3,12,8,13,metal);B(3,1,4,13,8,12,metal)
+  B(4,8,4,12,8.3,12,dark)
+  B(4,8,3,12,9,4.2,rim);B(4,8,11.8,12,9,13,rim)
+  B(3,8,4,4.2,9,12,rim);B(11.8,8,4,13,9,12,rim)
+  front({5,10,6,5},4,1,12,7,13.02)
  elseif id=='em_slot_bank' then
   local case,dark,trim=T(10,12),T(15,12),T(9,3)
   -- Four back-to-back cabinet pairs. Projected top art in the first row

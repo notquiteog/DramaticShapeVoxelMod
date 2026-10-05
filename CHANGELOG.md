@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Model both Mauville wall machines with recessed displays and coin trays,
+  and both metal bins with raised rims and recessed openings. Preserve native
+  palette, blocked footprints and walking lanes; exclude wallpaper/carpet.
+
 - Build Mauville's two slot-machine banks as separate back-to-back cabinets,
   with projecting shelves, framed native panels and coin-return openings.
   Keep the projected cap row and seating lanes free of solid geometry.

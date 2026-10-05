@@ -1,3 +1,22 @@
+# Mauville wall machines and bins — 2026-10-05 (unreleased)
+
+Two native wall-machine drawings now use independent closed cabinets, upper
+lightboxes, recessed framed displays and projecting coin trays. Cloud wallpaper
+is excluded from cabinet faces. Both metal bins have separate faceted bodies,
+raised rims and recessed openings. Front crop excludes surrounding carpet and
+projected rim; source palette retained. Complete machine recipes require both
+blocked rows; bins require blocked cells. Native collision remains unchanged.
+
+Emerald v0.3.51 isolated QA_CASINO native/overview/first-person front/side checks,
+including both machines and both bins, in .scratch/coverage-20261004/results/
+emerald-casino-models. Fixed screen occlusion and bin carpet contamination before
+final visual review. Focused pattern/UV/walkspace tests pass; full shared suite
+172 passed/0 failed/56 skipped (.scratch/casino-models-tests.log). Full suite
+includes parity agent's current tests; its work is not part of this commit.
+
+Game Corner counter, palms, signs, walls and seating remain unfinished; no
+all-world coverage or full feature parity claim. No release in this batch.
+
 # Mauville paired slot cabinets — 2026-10-05 (unreleased)
 
 Both complete 2x5 slot-bank patterns now build four back-to-back cabinet pairs

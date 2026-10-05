@@ -26,7 +26,7 @@ return function(game)
   local FF=V.require('Gen3Furniture');local PP=V.require('Gen3Tilesets');local pair=PP.canonical(d.midLayout.pair);local spec=PP.resolve(d.midLayout.pair,require('src.import.gba.versions').TILESET_PAIRS);local cells={}
   for y=0,d.height-1 do for x=0,d.width-1 do cells[x..':'..y]={cx=x,cy=y,mid=d.midLayout:midAt(x,y),collision=d.midLayout:collAt(x,y),primary=spec.primary,secondary=spec.secondary,pair=pair,ts={}}end end
   local props=FF.extract(cells)
-  if id=='EM_MAUVILLE_CITY_GAME_CORNER' then local n=0;for _,p in ipairs(props)do if p.recipe.design=='em_roulette_table'then n=n+1 end end;assert(n==2,'both roulette tables required');local banks=0;for _,p in ipairs(props)do if p.recipe.design=='em_slot_bank'then banks=banks+1 end end;assert(banks==2,'both complete slot banks required')end
+  if id=='EM_MAUVILLE_CITY_GAME_CORNER' then local n=0;for _,p in ipairs(props)do if p.recipe.design=='em_roulette_table'then n=n+1 end end;assert(n==2,'both roulette tables required');local banks=0;for _,p in ipairs(props)do if p.recipe.design=='em_slot_bank'then banks=banks+1 end end;assert(banks==2,'both complete slot banks required');local machines,bins=0,0;for _,p in ipairs(props)do if p.recipe.design=='em_game_corner_machine'then machines=machines+1 elseif p.recipe.design=='em_game_corner_bin'then bins=bins+1 end end;assert(machines==2 and bins==2,'missing wall machines or bins')end
   if os.getenv('QA_GALLERY')=='1' then assert(V.require('Gen3Stairs').prepare(cells)==1,'missing museum flight')end
   if id=='EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F' then
    local designs={};for _,p in ipairs(props)do designs[p.recipe.design or '']=true end
@@ -50,7 +50,7 @@ return function(game)
   if os.getenv('QA_GALLERY')=='1' and id:match('_2F$')then Player.reset(3,8,'up')end
   C.setLevel(6,game);C.yaw=0;C.pitch=0;U.wait(15);U.shot(game,dir..'/'..id..'-first.png')
   if id=='EM_MAUVILLE_CITY_GAME_CORNER' then
-   for _,view in ipairs{{'roulette-front',14,10,0},{'roulette-side',12,7,math.pi/2},{'slots-front',5,6,-math.pi/2},{'slots-end',4,10,-.5}}do
+   for _,view in ipairs{{'roulette-front',14,10,0},{'roulette-side',12,7,math.pi/2},{'slots-front',5,6,-math.pi/2},{'slots-end',4,10,-.5},{'machines',1,4,0},{'bin',3,3,-.6}}do
     assert(d.midLayout:collAt(view[2],view[3])==0);Player.reset(view[2],view[3],'up');C.yaw=view[4];C.pitch=.2;U.wait(15);U.shot(game,dir..'/'..id..'-'..view[1]..'.png')
    end
   end

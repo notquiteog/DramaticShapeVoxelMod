@@ -225,6 +225,14 @@ add('hoenn_lilycove_counter','building__lilycove_museum',{
  design='em_lilycove_counter',ground=0x202,
  collisionRows={{0,0,0,0,0,0},{7,0x90,0x90,0x90,0x90,7},
  {0x90,0,0,0,0,0x90},{0x90,0,0,0,0,0x90},{7,0x90,0x90,0x90,0x90,7}}})
+for _,pair in ipairs{{0x20e,0x216},{0x20f,0x217}}do
+ add('hoenn_mauville_wall_machine_'..pair[1],'building__mauville_game_corner',{{pair[1]},{pair[2]}},'designed',{
+  design='em_game_corner_machine',ground=0x202,blockedRows={[1]=true,[2]=true}})
+end
+for _,mid in ipairs{0x22e,0x236}do
+ add('hoenn_mauville_bin_'..mid,'building__mauville_game_corner',{{mid}},'designed',{
+  design='em_game_corner_bin',ground=0x202,blockedRows={[1]=true}})
+end
 add('hoenn_mauville_slot_bank','building__mauville_game_corner',{
  {0x224,0x225},{0x22c,0x22d},{0x22c,0x22d},{0x22c,0x22d},{0x234,0x235}},'designed',{
  design='em_slot_bank',ground=0x202,
