@@ -1,3 +1,24 @@
+# Route 1 composite fence/tree edges — 2026-10-05 (unreleased)
+
+Reproduced the user's screenshot at the southern Route 1 gate above Pallet.
+Pallet-secondary metatiles 2AA/2AB/2B2/2BA combine thin fences with partial
+canopies; they fell through to flat rendering. Scoped recipes now replace all
+four with matching General metal fence models, aligned to EC/ED corner axes.
+Adjacent tree roots retain ownership of the complete trees; composite foliage
+is no longer painted on the ground. Models stay inside their blocked cells;
+no native collision, grass encounter, warp or walking-path edits.
+
+Official engine 0.3.52, isolated LeafGreen QA profile, native atlas inspected,
+production overhead and eye-height Route 1 gate captures reviewed. Shared
+FRLG Pallet tileset fix applies to both games; this run was LeafGreen.
+Evidence: .scratch/coverage-20261004/frlg-route-edge.lua and results/
+leafgreen-frlg-route-edge/garden{1,2}.png; source frlg-composite-atlas.
+Viridian garden checked too: ordinary side fences already modeled correctly.
+Regression tests cover corner alignment, full rail span, cell bounds, absence
+of flat composite foliage and secondary/interior scoping. Full suite:
+175 passed, 0 failed, 56 skipped (.scratch/frlg-gate-20261005-tests.log).
+This resolves the identified gate, not an exhaustive world visual audit.
+
 # Hoenn gym entrances and native walking lanes — 2026-10-05 (unreleased)
 
 Petalburg, Rustboro, Dewford, Mauville, Lavaridge and Mossdeep gym drawings now

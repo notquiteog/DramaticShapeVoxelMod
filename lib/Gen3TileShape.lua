@@ -81,6 +81,13 @@ local localProps={
  pallet_town={
   [0x284]={kind='fence',ground=0x285,material=0x284},
   [0x287]={kind='fence',ground=0x285,material=0x287},
+  -- Route 1's entrance uses composite fence/canopy art from this secondary
+  -- tileset. The adjoining native tree roots already own the complete trees;
+  -- retaining these drawings on the floor leaves sliced flat foliage behind.
+  [0x2AA]={kind='fence',ground=1,material=0xE7,axis=4},
+  [0x2AB]={kind='fence',ground=1,material=0xE7,axis=12},
+  [0x2B2]={kind='fence',ground=1,material=0xE7,axis=4},
+  [0x2BA]={kind='fence',ground=1,material=0xE7,axis=12},
  },
  rom_082d4b54={
   [0x336]={kind='fence',ground=1,material=0xE7},

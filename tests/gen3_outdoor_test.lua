@@ -71,6 +71,22 @@ for _,mid in ipairs({0xE6,0xE7,0xE8,0xE9,0xEC,0xED,0xF0,0xF1,0xF2,0xF3,0xF4,0xF5
  assert(#geometry(mid)>=20,'fence has no posts and rails')
  assert(S.of('building','lab',mid).kind~='fence','outdoor fence leaked into an interior')
 end
+-- Route 1 gate: the secondary composite tiles must join the General corner
+-- above them, replace the flat canopy fragments, and stay in blocked cells.
+for _,row in ipairs({{0x2AA,0xEC,4},{0x2AB,0xED,12},{0x2B2,0xEC,4},{0x2BA,0xED,12}})do
+ local mid,corner,axis=unpack(row)
+ local s=S.of('general','pallet_town',mid)
+ assert(s.kind=='fence' and s.axis==axis and s.ground==1 and s.material==0xE7)
+ assert(S.of('general','pallet_town',corner).axis==axis,'gate rail misses corner')
+ local front,back=false,false
+ for _,face in ipairs(geometry(mid))do for _,p in ipairs(face)do
+  assert(p[2]~=.015,'composite canopy fragment retained on floor')
+  front=front or p[3]==64;back=back or p[3]==80
+ end end
+ assert(front and back,'gate rail does not span its cell')
+ assert(S.of('general','viridian_city',mid).kind~='fence','secondary IDs leaked')
+ assert(S.of('building','lab',mid).kind~='fence','gate leaked into lab')
+end
 for _,mid in ipairs({0x87,0x97,0xB0,0xB1,0xC0,0xC1,0xC8,0xC9})do
  local max=0;for _,face in ipairs(geometry(mid))do for _,p in ipairs(face)do max=math.max(max,p[2])end end
  assert(max==2.5,'ledge is no longer a low mound')
