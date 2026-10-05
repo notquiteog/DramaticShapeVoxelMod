@@ -455,6 +455,63 @@ function M.draw(id,A)
    B(x+2,7,27,x+9,8,30,case)
    top({x+2,21,7,3},x+2,27,x+9,30,8.02)
   end
+ elseif id=='em_museum_wall_case' then
+  local case=T(2,27)
+  B(1,0,40,31,34,43,case)
+  -- Bottom eight source pixels are carpet/shadow, not cabinet material.
+  front({1,0,30,40},1,1,31,33,43.1)
+  B(0,0,40,1,34,44,case);B(31,0,40,32,34,44,case)
+  B(0,33,40,32,34,44,case);B(0,0,40,32,1,44,case)
+ elseif id=='em_museum_divider' then
+  local paint,trim=T(8,20),T(1,48)
+  B(4,0,0,12,28,62,paint)
+  B(3.5,0,0,12.5,3,62.5,trim)
+  B(3.5,27,0,12.5,28,62.5,paint)
+ elseif id=='em_museum_cylinder' then
+  local cream,blue,glass=T(8,3),T(3,17),T(8,16)
+  local function drum(b,h,mat,inset)
+   inset=inset or 0
+   for _,r in ipairs({{3,10,13,26},{2,12,14,24},{4,9,12,27}})do
+    B(r[1]+inset,b,r[2]+inset,r[3]-inset,h,r[4]-inset,mat)
+   end
+  end
+  drum(0,2,blue);drum(2,3,cream);drum(3,19,glass,.7)
+  drum(19,20,blue);drum(20,22,cream)
+  for _,x in ipairs({3,12})do B(x,3,24,x+1,19,25,cream)end
+  front({4,10,8,16},4,3,12,19,25.1)
+ elseif id=='em_museum_glass' then
+  local case=T(3,25)
+  B(1,0,14,15,1.5,28,case);B(2,1.5,15,14,21,27,T(8,12))
+  front({2,2,12,25},2,1.5,14,21,27.02)
+  for _,x in ipairs({1,14})do B(x,1.5,14,x+1,22,28,case)end
+  B(1,21,14,15,22,28,case)
+ elseif id=='em_museum_terminal' then
+  local case,dark=T(13,18),T(3,24)
+  B(3,0,12,25,2,28,dark);B(4,2,13,24,9,27,case)
+  B(3,9,12,25,10,28,case)
+  crt(5,11,12,11,21,{5,10,8,5},case,dark)
+  keyboard({4,17,17,5},4,21,18,5,10.1,case)
+ elseif id=='em_museum_ship' or id=='em_museum_parts' then
+  local cream,edge=T(8,14),T(3,24)
+  -- The artwork has rounded display islands, never tall storage cabinets.
+  B(3,0,9,61,7,28,edge);B(1,7,9,63,9,27,cream)
+  B(3,7,7,61,9,29,cream)
+  if id=='em_museum_ship' then
+   local hull,blue=T(25,6),T(18,7)
+   B(18,9,14,44,10.5,23,blue)
+   B(16,10.5,15,47,12,22,hull);B(19,12,15,43,13,22,hull)
+   B(22,13,16,38,16,21,hull);B(24,16,16,36,17,21,hull)
+   for x=23,36,4 do B(x,14,21,x+2,15,21.2,blue)end
+   B(27,17,17,29,19,19,blue);B(32,17,17,34,19,19,blue)
+  else
+   local white,blue=T(18,7),T(12,8)
+   for _,a in ipairs({{18,18,8},{37,18,4}})do
+    local x,z,r=a[1],a[2],a[3]
+    B(x-r,9,z-r*.6,x+r,10,z+r*.6,blue)
+    B(x-r*.75,10,z-r*.7,x+r*.75,12,z+r*.7,white)
+    B(x-r*.4,12,z-r*.4,x+r*.4,14,z+r*.4,blue)
+   end
+  end
  elseif id=='em_space_controls' then
   local case,dark=T(math.min(20,A.width-2),17),T(1,21)
   -- Three inclined instrument panels, with closed rear shells, plinths,

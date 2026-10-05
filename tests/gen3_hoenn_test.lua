@@ -78,3 +78,15 @@ for _,primary in ipairs({'general','building'})do
  end
 end
 print('PASS science-room wall/fence scope and walkable artwork exclusions')
+
+for _,mid in ipairs({0x204,0x20c})do
+ assert(S.of('building','oceanic_museum',mid,0,7).kind=='roomWall')
+ assert(S.of('building','oceanic_museum',mid,0,0).kind=='flat','walkable museum copy folded up')
+ assert(S.of('building','generic_building',mid,0,7).kind=='flat','museum wall escaped atlas scope')
+end
+
+local museumFaces=0
+V.require('InteriorFurniture').draw('em_museum_wall_case',{
+ box=function()end,sample=function()return{}end,
+ source=function(x,y,w,h)assert(y+h<=40,'museum carpet wrapped onto upright glass cabinet');museumFaces=museumFaces+1 end})
+assert(museumFaces>0)

@@ -42,3 +42,13 @@ assert(l3.ground(32,32)==12 and not l3.walk(3,2) and not l3.walk(8,0))
 values.towerFog='off';M.draw(g3);assert(#mists==2,'OFF allocated/drew mist')
 assert(not M.mistLayout(forest),'mist leaked into forest')
 print('PASS native atmosphere dimensions, opt-in/off, map identity, fog thickness/speed and Gen1 isolation')
+
+values.atmos='low';values.communityForest='n64memory'
+local woods=M.gen3({mapType=3,width=20,height=20},'EM_PETALBURG_WOODS')
+assert(M.kind(woods)=='forest' and M.fog(woods),'Hoenn forest omitted from shared controls')
+M.draw(woods);assert(draws[#draws][2].level=='low')
+values.atmos='off';assert(not M.fog(woods));local n=#draws;M.draw(woods);assert(#draws==n)
+values.atmos='full';values.communityForest='default';assert(not M.fog(woods))
+assert(not M.kind(M.gen3({mapType=1,width=20,height=20},'EM_PETALBURG_CITY')),'town became a forest')
+assert(M.kind({id='NATIVE_FOREST',cellCollision=function()end,def={environment='FOREST'}})=='forest')
+print('PASS Hoenn/native forest controls, OFF and town/Gen1 isolation')

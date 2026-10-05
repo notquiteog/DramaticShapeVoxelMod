@@ -29,7 +29,7 @@ return {
  {key="communityCourtyards",label="FENCES & COURTS",module="CommunityVisuals"},
  {key="communityCutTrees",label="CUT TREES",module="CommunityVisuals"},
  {key="communityElevator",label="ROCKET ELEVATOR",module="CommunityVisuals"},
- {key="communityForest",label="VIRIDIAN FOREST",module="CommunityVisuals"},
+ {key="communityForest",label="FOREST STYLE",module="CommunityVisuals"},
  {key="communityGrass",label="GRASS",module="CommunityVisuals"},
  {key="communityMasonry",label="WALL & LEDGE COLOR",module="CommunityVisuals"},
  {key="communityPillars",label="LEGENDARY PILLARS",module="CommunityVisuals"},

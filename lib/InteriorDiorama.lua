@@ -23,7 +23,13 @@ function M.profile(def,gen)
   local pair=def.midLayout and def.midLayout.pair
   if not pair then return end
   spec=V.require('Gen3Tilesets').resolve(pair,require('src.import.gba.versions').TILESET_PAIRS)
-  if not cave and spec.primary~='building' and spec.secondary~='rom_082d4d94' then return end
+  -- General-primary room families share their atlas with outdoor maps.
+  -- Map type alone is insufficient: event islands and ferry docks may also
+  -- be tagged INDOOR to suppress native weather. Keep those open.
+  local rooms={facility=true,bike_shop=true,contest=true,inside_ship=true,
+   battle_frontier=true,battle_palace=true,inside_of_truck=true,battle_tent=true}
+  if not cave and spec.primary~='building' and spec.secondary~='rom_082d4d94'
+    and not rooms[spec.secondary] then return end
  elseif gen==2 then
   if def.environment~='INDOOR' and def.environment~='GATE' and not cave then return end
  else

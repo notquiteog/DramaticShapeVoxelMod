@@ -1,3 +1,37 @@
+# Native enclosure, forest controls and museum coverage — 2026-10-04
+
+Unreleased. Emerald General-primary indoor families now retain the shared
+room enclosure/cutaway/first-person ceiling. Census: 33 newly eligible rooms
+across facility, bike shop, contest, ship, Frontier reception/Palace, truck and
+battle tent families. Map type alone was unsafe: weather-suppressed event
+islands and ferry docks also report INDOOR. Preserve the explicit family guard;
+all ten such FRLG exterior candidates remain open, as do Hoenn event islands.
+Gen1/2 ownership is unchanged. This is not visual approval of all 33 rooms.
+
+Petalburg Woods and native FOREST environments reach the shared forest effect
+controls. Stable key communityForest now displays FOREST STYLE across all
+three generations. Official 0.3.51 Emerald native options events verified
+LOW/OFF/default consumers and rendered forest without changing defaults.
+
+Eight Oceanic Museum source patterns now cover cylinder/glass exhibits,
+terminals, two display islands with modeled ship/parts, wall cases and a
+solid divider. Native yellow/blue plain wall bands stand vertically. Source
+crop ends before carpet/shadow pixels; initial material/crop problems were
+corrected against native pixels and first-person renders.
+
+QA: `.scratch/coverage-20261004/{museum,forest-options,room-census,
+palace-source}.lua`. Museum/Space Center/Devon fixture retains identical native
+map/collision grids. Inspected museum overview and final first-person; Palace
+native room diagram checked against enclosure eligibility. Final census:
+Emerald 519 maps / 406 enclosures / 33 added; FireRed 426 / 340 / 0 added;
+LeafGreen 426 / 337 / 0 added. Different prior ship aliases explain room-count
+variation; no claim of a census-equivalent visual sign-off.
+305 designed objects, 114 Hoenn recipe/family checks, native atmosphere,
+interior enclosure/exterior exclusions and 399 native consumer checks pass.
+No complete full-world coverage or settings parity claim: museum counters,
+other exhibits/stairs, unreviewed geometry, capture effects, sprite-pack and
+remaining native scenery controls still need work. No version bump/release.
+
 # Hoenn science rooms — 2026-10-04 (unreleased)
 
 Added native Space Center/Devon workstations (separate CRTs, keyboards and

@@ -25,6 +25,9 @@ function M.surface(primary,mid,collision)
  end
 end
 function M.shape(primary,secondary,mid,behavior,collision)
+ if secondary=='oceanic_museum' and collision==7 and (mid==0x204 or mid==0x20c)then
+  return {kind='roomWall',ground=0x201}
+ end
  if secondary=='facility' then
   if mid==0x373 or mid==0x374 then
    return {kind='fence',ground=0x2f0,material=mid,height=7,
@@ -110,6 +113,19 @@ add('hoenn_home_plant',house,{{0x290},{0x298}},'plant',{h=22,cutout=true,ground=
 -- Rustic homes have their own timber furniture and floor palette.
 home('rustic_tv',{{0x2b1,0x2b2},{0x2b9,0x2ba},{0x2c1,0x2c2}},'em_home_tv',0x229)
 home('rustic_books',{{0x2be,0x2bf},{0x2c6,0x2c7},{0x2ce,0x2cf}},'em_home_books',0x229)
+-- Oceanic Museum's complete displays retain the native cream/blue art.
+local museum='building__oceanic_museum'
+local function exhibit(name,rows,design)
+ add('hoenn_museum_'..name,museum,rows,'designed',{design=design,ground=0x201})
+end
+exhibit('wall_case',{{0x208,0x209},{0x210,0x211},{0x218,0x219}},'em_museum_wall_case')
+exhibit('tall_wall_case',{{0x226,0x227},{0x22e,0x22f},{0x236,0x237}},'em_museum_wall_case')
+exhibit('divider',{{0x225},{0x225},{0x22d},{0x235}},'em_museum_divider')
+exhibit('cylinder',{{0x220},{0x228}},'em_museum_cylinder')
+exhibit('glass_case',{{0x221},{0x229}},'em_museum_glass')
+exhibit('terminal',{{0x253,0x254},{0x25b,0x25c}},'em_museum_terminal')
+exhibit('ship',{{0x22a,0x230,0x231,0x22c},{0x232,0x233,0x233,0x234}},'em_museum_ship')
+exhibit('parts',{{0x238,0x239,0x240,0x22c},{0x232,0x233,0x233,0x234}},'em_museum_parts')
 -- Space Center and Devon use the same complete equipment drawings in two
 -- native atlas pairs. Match both editions of the floor, never arbitrary IDs.
 for _,primary in ipairs({'general','building'})do

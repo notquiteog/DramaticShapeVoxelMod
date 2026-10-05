@@ -141,7 +141,7 @@ CommunityVisuals.sky = ModSetting.new(
 )
 
 CommunityVisuals.forest = ModSetting.new(
-  "communityForest", "VIRIDIAN FOREST",
+  "communityForest", "FOREST STYLE",
   { "default", "n64memory" }, { "BATTLE ART", "LEGENDARY VISUALS" }
 )
 

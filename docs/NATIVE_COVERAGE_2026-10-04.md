@@ -121,3 +121,19 @@ patterns pass, alongside focused existing furniture regressions. Devon rear
 fixture faces outside the room, so it does not establish rear-view approval.
 Museum exhibits, additional Devon floors, stair-adjacent wall returns and full
 room boundaries still need work. These maps are not claimed fully finished.
+
+### Native room ownership and Oceanic Museum
+
+Restored enclosure eligibility for 33 Emerald indoor maps whose primary atlas
+is General: office, contest, ship and other explicitly scoped room families.
+Do not generalize this to every INDOOR-tagged map: FRLG docks and Hoenn event
+islands use that tag too. Complete FR/LG/Emerald census preserves those exterior
+exceptions. Gen1/2 enclosure branches are unchanged.
+
+Added eight Museum patterns with closed exhibit cases, pedestal terminals,
+display islands, miniature ship/parts, wall cases and a divider. Kept native
+cream/blue materials; excluded the lower carpet pixels from upright glass.
+Native plain wall bands stand up; additional wall decorations/counters/stairs
+remain unfinished. Official 0.3.51 source diagrams and final first-person view
+inspected. Native layout/collision grids unchanged. Focused geometry, scope,
+source-crop and enclosure tests pass; this does not certify every room/tile.

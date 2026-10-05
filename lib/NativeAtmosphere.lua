@@ -23,7 +23,8 @@ function M.kind(map)
  local id=tostring(map.id or '')
  local native=map.nativeGeneration==3 or type(map.cellCollision)=='function'
  if not native then return end -- existing Gen1 scene ownership is untouched
- if id=='ILEX_FOREST' or id=='FR_VIRIDIAN_FOREST' or id=='FR_THREE_ISLAND_BERRY_FOREST' or id=='FR_SIX_ISLAND_PATTERN_BUSH' then return 'forest' end
+ if id=='ILEX_FOREST' or id=='FR_VIRIDIAN_FOREST' or id=='FR_THREE_ISLAND_BERRY_FOREST' or id=='FR_SIX_ISLAND_PATTERN_BUSH' or id=='EM_PETALBURG_WOODS'
+   or (map.def or {}).environment=='FOREST' then return 'forest' end
  if id:match('^TIN_TOWER_') or id:match('^BURNED_TOWER_') or id:match('^FR_POKEMON_TOWER_') then return 'tower' end
  local def=map.def or {}
  if def.environment=='CAVE' or map.nativeType==4 then return 'cave' end

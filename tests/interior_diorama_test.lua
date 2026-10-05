@@ -73,3 +73,19 @@ Pairs.bind({FR_SSANNE_1F_ROOM1=ship})
 assert(M.profile(ship,3).theme=='ship','edition alias lost ship room styling')
 ship.mapType=1
 assert(not M.profile(ship,3),'ship exterior acquired an interior enclosure')
+
+-- Native map type, not the atlas name, distinguishes a room from outdoors.
+for _,pair in ipairs({'general__facility','general__contest','general__inside_ship'})do
+ local def={id='EM_TEST_ROOM',mapType=8,width=8,height=8,
+  midLayout={pair=pair,midAt=function()return 0x201 end}}
+ local room=assert(M.profile(def,3),'General-primary indoor room lost its enclosure')
+ assert(room.bounds[3]==128)
+ for _,t in ipairs({1,2,3,6})do def.mapType=t;assert(not M.profile(def,3),'outdoor area enclosed')end
+end
+print('PASS native Gen3 indoor types retain shells across shared outdoor atlases')
+
+for _,pair in ipairs({'harbor','general__rom_082d4b24','general__rustboro','general__fortree','general__dewford','general__island_harbor'})do
+ assert(not M.profile({id='EVENT_OUTDOORS',mapType=8,width=8,height=8,
+  midLayout={pair=pair,midAt=function()return 1 end}},3),'weather-suppressed outdoors acquired ceiling')
+end
+print('PASS ferry docks, event islands and ship exterior retain an open sky')
