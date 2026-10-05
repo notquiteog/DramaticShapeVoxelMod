@@ -24,5 +24,8 @@ warp,moving=false,false;assert(Scene.nativeRequired(g),'unrelated special animat
 active=false;fx._anims={1};assert(Scene.nativeRequired(g),'unmodeled effect lost native renderer')
 fx._anims={{kind='dust'}};assert(not Scene.nativeRequired(g),'ledge landing dust stole camera')
 fx._anims={{kind='dust'},{kind='flash'}};assert(Scene.nativeRequired(g),'unsupported overlapping effect bypassed')
+fx._anims={{kind='emote'}};assert(not Scene.nativeRequired(g),'exclamation stole voxel camera')
+fx._anims={{kind='exclamation'},{kind='dust'}};assert(not Scene.nativeRequired(g),'legacy emote plus dust stole camera')
+fx._anims={{kind='emote'},{kind='flash'}};assert(Scene.nativeRequired(g),'unsupported effect no longer falls back')
 fx._anims={};battle=true;assert(Scene.nativeRequired(g),'battle transition lost native renderer')
 print('PASS escalator phase gaps preserve camera; unrelated native effects unchanged')

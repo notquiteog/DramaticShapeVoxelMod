@@ -75,10 +75,12 @@ local function materials()
   bark=love.graphics.newImage(data);data:release()
  end
 end
--- Landing dust uses the native effect painter on a small world-space card.
+-- Landing dust and emotes use native painters on upright world-space cards.
 -- Unsupported full-screen effects still retain their native presentation.
 function M.nativeEffects(anims)
- for _,a in ipairs(anims or {})do if type(a)~='table' or a.kind~='dust' then return true end end
+ for _,a in ipairs(anims or {})do
+  if type(a)~='table' or (a.kind~='dust' and not V.require('Gen3EmoteCards').supports(a.kind))then return true end
+ end
  return false
 end
 function M.nativeRequired(game)
@@ -698,6 +700,7 @@ local function fieldEffects(draw,cam)
   effect('landing-dust-'..i,16,8,function()fx.drawFront(x,z+8,nil)end,
    {{x+8-dx,8,z+16-dz},{x+8+dx,8,z+16+dz},{x+8+dx,0,z+16+dz},{x+8-dx,0,z+16-dz}},M.groundAt(x+8,z+16-.001))
  end end
+ V.require('Gen3EmoteCards').draw(fx,cam,M.groundAt,effect)
  local doors=require('src.core.game3.doors');local a=doors._activeAnim
  if a then
   local x,z=a.x*16,a.y*16+16.15

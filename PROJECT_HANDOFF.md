@@ -1,3 +1,26 @@
+# Exclamation/emote camera ownership — 2026-10-05 (unreleased)
+
+Reproduced in LeafGreen Pallet Town on Gen1Recomp 0.3.51: native
+FieldEffects.startExclamation made Gen3Scene.nativeRequired true and disabled
+Gen3Integration.active until the effect ended. Added native emote cards to
+Gen3's supported effects. The engine collector supplies the original glyph,
+frame and bounce; only coordinates are projected into the voxel scene. Cards
+stay upright, follow free-camera yaw, retain terrain support and depth, and
+never advance script/animation timers. Unsupported effects retain native fallback.
+
+Before/after isolated QA: .scratch/coverage-20261004/results/leafgreen-emote-camera
+(before.log/png and run.log/exclamation.png), plus emerald-emote-camera.
+Confirmed 3D stays active during the bubble, right-stick yaw changes, and native
+completion fires exactly once. Inspected both rendered bubbles. The fixture
+invokes the real native effect on a stationary player, with story VM halted;
+it is not a full trainer-approach/battle transition playthrough. User saves untouched.
+Unit checks cover static/first/rotating-third card orientation, height/bounce,
+frame preservation, empty effects, and emote+dust versus unsupported overlaps.
+Full suite with engine/generated fixtures: 157 passed, zero failed, 56 external
+historical-fixture skips (.scratch/emote-20261005/tests.log).
+Gen1/2 camera gates unchanged; their existing dialogue/movement ownership tests
+remain in the suite. No cart/release versions changed.
+
 # Terrain support and strict test baseline — 2026-10-05 (unreleased)
 
 Fortree's native 0x170 bridge cells now have a raised deck, underside and thin
