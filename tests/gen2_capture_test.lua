@@ -18,7 +18,8 @@ View:drawObjects(s.anim);assert(events[#events]=='nativeObjects')
 s:update();assert(events[#events-1]=='finish');enabled=true
 s.ballThrow.caught=false;s:startBallAnim(0,'GREAT_BALL');s.result=2;s:pokeballWobble();assert(events[#events]=='SHOWPIC_ANIM')
 M.finish();staged=false;s:startBallAnim(0,'POKE_BALL');View:present(s.anim,function()error('not staged')end);assert(events[#events]=='nativeDraw')
-staged=true;scene.startNormalBall=function()error('GPU unavailable')end
+staged=true;local prior=#events;s:startBallAnim(0,'LOVE_BALL');View:drawObjects(s.anim);assert(events[#events]=='nativeObjects'and #events==prior+1)
+scene.startNormalBall=function()error('GPU unavailable')end
 assert(s:startBallAnim(0,'POKE_BALL'))
 View:drawObjects(s.anim);assert(events[#events]=='nativeObjects')
 print('PASS Gen2 capture event order, one native RNG call, caught/escape, OFF and unavailable-stage fallback')

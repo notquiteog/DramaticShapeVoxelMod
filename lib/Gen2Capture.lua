@@ -2,6 +2,7 @@
 -- Native RNG, inventory, result, animation clock and queue remain authoritative.
 local V=...
 local M={}
+local supported={POKE_BALL=true,GREAT_BALL=true,ULTRA_BALL=true,MASTER_BALL=true}
 local owner,runner
 local function scene()return V.require('BattleScene')end
 local function call(name,...)
@@ -33,7 +34,7 @@ function M.install()
   M.finish()
   local result=start(self,param,item,...)
   -- No animation or no scene means stock presentation retains ownership.
-  if not(enabled(self)and self.ballThrow and self.anim and
+  if not(supported[item]and enabled(self)and self.ballThrow and self.anim and
     V.require('Gen2Battle').stagedMon(self:activeMon('enemy')))then return result end
   local throw=self.ballThrow
   if not call('startNormalBall',item,throw.caught,3,self.battle)then return result end
