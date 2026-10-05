@@ -56,7 +56,13 @@ function M.plant(c,emit,uv)
   -- only the upright card collapses a meadow into separated green stripes.
   emit({{x,.025,z},{x+16,.025,z},{x+16,.025,z+16},{x,.025,z+16}},uv,1)
  end
- emit({{x,h,z+8},{x+16,h,z+8},{x+16,.001,z+8},{x,.001,z+8}},uv,1,{x+8,z+8,.001})
+ local points={{x,h,z+8},{x+16,h,z+8},{x+16,.001,z+8},{x,.001,z+8}}
+ local anchor={x+8,z+8,.001}
+ if V and c.shape.kind=='grass'then
+  local transform,center=V.require('NativeGrassStyle').transform(x,z,16)
+  if transform then for i,p in ipairs(points)do points[i]=transform(p)end;anchor=center end
+ end
+ emit(points,uv,1,anchor)
  return true
 end
 function M.append(c,emit,uvFor)

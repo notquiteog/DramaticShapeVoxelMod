@@ -120,6 +120,7 @@ events['mod.options_changed']({mod=mod.id,key='fireredCamera',value=7});assert(A
 assert(#definedSchema==schemaLength,'option changes appended duplicate Crystal rows')
 assert(treeStyle.flat(),'flat trunks must be default')
 events['mod.options_changed']({mod=mod.id,key='hdTreeTrunks',value='solid'});assert(not treeStyle.flat() and SceneInvalidated,'tree option did not refresh scene')
+SceneInvalidated=false;events['mod.options_changed']({mod=mod.id,key='communityGrass',value='n64memory'});assert(SceneInvalidated,'grass option did not refresh scene')
 fail=true;Field.draw(game);assert(native==3 and not A.active)
 Field.draw(game);assert(native==4 and draws==3,'failed GPU must stop retrying each frame')
 local restored=false;hooks['core.quit_to_launcher'](function()restored=true end);assert(restored)

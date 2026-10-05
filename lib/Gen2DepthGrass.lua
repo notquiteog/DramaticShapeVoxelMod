@@ -39,9 +39,16 @@ function M.append(out,map,tx,ty,data,tileId,templates)
     templates[tileId]=tpl
   end
   local base=V and type(map.cellCollision)=='function' and V.require('Gen2Elevation').at(map,tx*8+4,ty*8+4)or 0
+  local transform,center
+  if V then transform,center=V.require('NativeGrassStyle').transform(tx*8,ty*8,8)end
   for _,q in ipairs(tpl)do
     local f={uv=q.uv,shade=q.shade,canopy=not q.flat and {tx*8+4,ty*8+4,base+.001} or nil}
-    for i=1,4 do f[i]={q[i][1]+tx*8,q[i][2]+base,q[i][3]+ty*8}end
+    for i=1,4 do
+      local p={q[i][1]+tx*8,q[i][2],q[i][3]+ty*8}
+      if transform and not q.flat then p=transform(p)end
+      p[2]=p[2]+base;f[i]=p
+    end
+    if transform and not q.flat then f.canopy={center[1],center[2],base+.001}end
     out[#out+1]=f
   end
   return true
