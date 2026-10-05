@@ -1056,6 +1056,7 @@ end
 -- and FILL's fractional scale. v1.68 drew a second slab into shot.canvas using
 -- shot.scale, which is why HALF only lined up in FIXED.
 local function drawStyledTextArea(battle, draw)
+  if not V.require("ModernBattleUI").providerEnabled() then return draw(battle) end
   local graphics = love.graphics
   local style = UiBackplates.textboxFillStyle()
   local whiteInk = UiBackplates.textboxUsesWhiteInk()

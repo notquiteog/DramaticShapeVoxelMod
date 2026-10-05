@@ -67,6 +67,9 @@ for gen=1,3 do
  set(gen,'spatialUpscale','implemented','lib/SpatialUpscale.lua; lib/AntiAlias.lua','Shared full-precision FSR 1 EASU/RCAS postprocess; native resolution UI. Shader availability checked; no temporal/frame generation.')
  set(gen,'stadiumCircle','provider','lib/StadiumBackground.lua','Requires the optional compatible Stadium scene provider; no provider means no consumer.')
 end
+for gen=1,3 do
+ set(gen,'modernBattleUI battleUi hudColor textboxFill','provider','lib/ModernBattleUI.lua; lib/UiBackplates.lua','Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.')
+end
 function M.inventory(gen)
  local out={}
  for _,row in ipairs(V.require('SettingsCatalog'))do

@@ -18,7 +18,7 @@ function M.install(stage)
  local Font=require('src.ui.game3.frlg_font')
  local Message=require('src.ui.game3.message')
  local panel,text,message=Chrome.drawPanel,Font.draw,Message.drawText
- local function active()return M.drawing and stage.active and not M.covered()end
+ local function active()return V.require('ModernBattleUI').providerEnabled() and M.drawing and stage.active and not M.covered()end
  Chrome.drawPanel=function(mode,...)
   if not active()then return panel(mode,...)end
   if UI.uiHidden('text')then return end

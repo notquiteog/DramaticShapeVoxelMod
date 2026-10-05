@@ -729,7 +729,7 @@ end
 local TreePresentation=V.require("TreePresentation")
 local SETTINGS = {
   { V.require("Weather").setting, "Optional outdoor rain, snow, drifting fog and storms. AUTO uses a deterministic map schedule. Visual only; native battle weather and gameplay stay unchanged.", full=true },
-  { V.require('ModernBattleUI').setting, "Compact status cards above every battler and window-resolution commands. Native menus return when disabled.", full=true },
+  { V.require('ModernBattleUI').setting, "With optional Modern Pokemon UI enabled: compact overhead status cards and window-resolution commands. Without that provider, native menus remain unchanged.", full=true },
   { V.require("CrystalSprites").setting, "Crystal animation, shiny effects and portraits in Gen 1/2. SELECTED ART uses the existing Battle Art collections. Restart the game after changing this pack.", full=true },
   { V.require("CrystalSprites").fullBody, "Animated Gen 5 full-body backs on 2.5D battle stages with the Crystal pack. Normal menus retain Crystal art.", full=true },
   { TreePresentation.props, "Native rocks and bushes as solid models (default) or original cutout sprites. People, Pokemon, grass and flowers keep their sprite art.", full=true, when=function()return Generation.isGen2()end },

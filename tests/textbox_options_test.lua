@@ -15,9 +15,11 @@ function ModSetting.new(key, label, values, labels, defaultIndex)
   return setting
 end
 
+local providerEnabled = true
 local V = {
   require = function(name)
     if name == "ModSetting" then return ModSetting end
+    if name == "ModernBattleUI" then return {providerEnabled=function() return providerEnabled end} end
     error("unexpected module " .. tostring(name))
   end,
 }
@@ -81,3 +83,12 @@ settings.stadiumCircle:sync("OFF")
 eq(UiBackplates.stadiumCircleScale(), 0, "OFF hides Stadium circles")
 
 print("textbox_options_test: PASS")
+
+providerEnabled = false
+settings.hudColor:sync("INVERTED")
+settings.textboxFill:sync("OFF")
+settings.battleUi:sync("HIDE")
+eq(UiBackplates.hudUsesColor(), true, "native ink without provider")
+eq(UiBackplates.hudUsesColorShadow(), false, "no added native glyph shadow")
+eq(UiBackplates.textboxMode(), "WHITE", "native paper without provider")
+eq(UiBackplates.uiHidden("hud"), false, "native HUD remains visible")

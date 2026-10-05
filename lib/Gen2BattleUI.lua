@@ -8,7 +8,7 @@ local Stage=V.require('OverworldBattle')
 local Theme=V.require('BattleTheme')
 local screen
 local function active(state)
- return state and Stage.enabled() and Stage.shot() and not state.tutorial
+ return Mode.providerEnabled() and state and Stage.enabled() and Stage.shot() and not state.tutorial
 end
 local function modern(state)
  if not active(state) or not Mode.enabled() then return false end
@@ -19,6 +19,7 @@ local function modern(state)
  return not (state.battle and state.battle.doubles)
 end
 function M.backplate(state,x,y,w,h)
+ if not Mode.providerEnabled() then return false end
  if UI.uiHidden('hud') or modern(state) then return true end
  if UI.hudUsesColor() then return false end
  local g=love.graphics;g.push('all');g.setShader();g.setColor(.06,.08,.1,.94)

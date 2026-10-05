@@ -1,3 +1,38 @@
+# Optional modern UI ownership and upstream inventory — 2026-10-04 (unreleased)
+
+User requires native UI by default, a separate optional modern UI mod, preserved
+upstream Legendary features/settings, current partners, and no hard companion
+dependencies. See docs/UPSTREAM_COMPATIBILITY_2026-10-04.md for audit and limits.
+
+Fetched configured remotes: no missing upstream commits in voxel, Wild Skies or
+spawn. Partner origin/main branches were current. All 72 literal upstream setting
+keys retained; VIRIDIAN FOREST label restored without altering saved keys/values.
+Do NOT claim complete Legendary native Gen2/3 scenery parity from this inventory.
+
+ModernBattleUI now checks optional MODERN_POKEMON_UI API v1. No provider (or OFF)
+means native HUD/textbox styling, no hidden panels or added glyph shadows. Gen1
+styled textbox path delegates directly when absent. Gen2/3 hooks and doubles
+modern HUD obey the same opt-in. Existing preference values are preserved.
+Other legacy UI interactions (forced layouts, sprite packs, partner overlays)
+still need a complete audit; full native-UI isolation is not yet certified.
+
+New sibling `modern-ui` is a standalone local preview. Native settings in all
+engines; Gen1/2 frame adapters and Gen3 scoped native healthbox palette; optional
+voxel public stage integration enables projected cards/commands. Standalone
+modern commands/game-wide menu replacement remain unimplemented. No remote or
+release created. Do not add it to carts as a mandatory dependency.
+
+Focused checks pass: UI provider absent/OFF/error/version, textbox controls,
+Gen2/3 battle options, 437 native consumer checks, Legendary migration/profile,
+Gen3 doubles 53 contracts, Gen2 doubles HUD, standalone 3-engine mocked framing,
+and audit_partner_contracts.py. Full old SDK suite cannot run without tests.modkit.
+Emerald official 0.3.51 runtime menu ON/OFF passed and captures inspected with all
+partners and in a separate ONLY-Modern-UI profile. Fixed standalone panel oversize
+found in first capture by recolouring native healthboxes and their text wipe
+rectangles together. Gen1/2 standalone visual QA and full battle matrix pending.
+Fixtures in .scratch/coverage-20261004/modern-ui*.lua, results/emerald-modern-ui*;
+only scratch profiles were modified. Existing carts/user saves untouched.
+
 # Interior false-shadow fix and regional furniture — 2026-10-04 (unreleased)
 
 User reported implausible diagonal shadows across home walls. Root cause was

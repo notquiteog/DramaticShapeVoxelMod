@@ -1,7 +1,7 @@
 local checks=0
 local function check(v,msg)checks=checks+1;assert(v,msg)end
 local modules={};local hooks={}
-local V={mod={hooks={wrap=function(_,key,fn)hooks[key]=fn end}}}
+local V={mod={find=function()return {exports={apiVersion=1,enabled=function()return true end}}end,hooks={wrap=function(_,key,fn)hooks[key]=fn end}}}
 function V.require(name)if not modules[name]then modules[name]=assert(loadfile('lib/'..name..'.lua'))(V)end;return modules[name]end
 local UI=V.require('UiBackplates');local Mode=V.require('ModernBattleUI')
 Mode.setting:setIndex(2)

@@ -20,6 +20,7 @@ local theme={scale=function()return 3 end,paper={1,1,1,1},statusCard=function()d
 -- Assign separately so the callback captures the local table.
 theme.statusCard=function()draw.paper=theme.paper end
 V.require=function(name)
+ if name=='ModernBattleUI'then return {providerEnabled=function()return true end}end
  if name=='ModSetting'then return setting end
  if name=='BattleTheme'then return theme end
  if name=='UiBackplates'then

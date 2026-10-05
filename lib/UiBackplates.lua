@@ -47,6 +47,7 @@ UiBackplates.battleUi = ModSetting.new("battleUi", "BATTLE ART UI",
   { "BOTH", "TEXTBOX", "HUD", "HIDE" })
 
 function UiBackplates.uiHidden(surface)
+  if not V.require('ModernBattleUI').providerEnabled() then return false end
   local mode = UiBackplates.battleUi:get()
   if surface == "hud" then return mode == "TEXTBOX" or mode == "HIDE" end
   if surface == "text" then return mode == "HUD" or mode == "HIDE" end
@@ -66,11 +67,13 @@ UiBackplates.hudColor = ModSetting.new("hudColor", "HUD COLOR",
   { "COLOR", "INVERTED" }, { "COLOR", "INVERTED" })
 
 function UiBackplates.hudUsesColor()
+  if not V.require("ModernBattleUI").providerEnabled() then return true end
   return UiBackplates.arenaWhite()
          or UiBackplates.hudColor:get() == "COLOR"
 end
 
 function UiBackplates.hudUsesColorShadow()
+  if not V.require("ModernBattleUI").providerEnabled() then return false end
   return not UiBackplates.arenaWhite()
          and UiBackplates.hudColor:get() == "COLOR"
 end
@@ -160,6 +163,7 @@ UiBackplates.textboxFill = ModSetting.new("textboxFill", "TEXTBOX FILL",
 -- ARENA FILL: WHITE keeps the latest-build presentation: black ink on opaque
 -- paper. On the 3D arena, the player's explicit textbox choice owns the box.
 function UiBackplates.textboxMode()
+  if not V.require("ModernBattleUI").providerEnabled() then return "WHITE" end
   if UiBackplates.arenaWhite() then return "WHITE" end
   return UiBackplates.textboxFill:get()
 end

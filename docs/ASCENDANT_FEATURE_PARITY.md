@@ -11,7 +11,7 @@ Scope confirmed by the user: rendering, camera, atmosphere and quality of life; 
 | Daytime, sky and biome atmosphere | Shared lighting, native forest/cave/tower controls | VASC's world-bearing celestial/event system, native moving ground mist |
 | Connected-map scenery and void fill | Native biome donors, stable placements, render-distance controls | Complete edge/corner/art review |
 | Preload and caching | GB budgeted generation/disk/RAM cache; native Gen3 scene dependency cache | Equivalent native RAM preload control |
-| 3D battle staging and minimal status cards | Shared Gen1/2 world stage, Gen3 native UI over the field | Gen3 world-space actors/director; full battle feature parity |
+| 3D battle staging and minimal status cards | Shared world stages and world-space actors across Gen1/2/3; optional modern projected HUD | Full battle transition/animation parity and wider visual QA |
 | User sprite and music providers | Battle Art collections; optional Ride/Skies/Wilds providers | VASC general loose-file replacement menu and complete KASC quality-of-life menu audit |
 
 ## Five independent core mods
@@ -23,3 +23,15 @@ Scope confirmed by the user: rendering, camera, atmosphere and quality of life; 
 - **Doubles:** existing native adapters and optional Online provider. No new mechanics changes in this batch; complete special-move, replacement, cancellation and native link validation remains open.
 
 This inventory is a work list, not a full-parity certification. No new hard companion dependency is introduced.
+
+
+## Upstream refresh, 2026-10-04
+
+Kanto Ascendant `40582034` is current with its origin/main at this audit. Its
+README delegates scenery to separate renderers; it does not bundle all the
+Voxel Ascendant assets. No unlicensed Kanto assets were copied. Existing weather,
+render-distance, map-boundary fill and atmosphere adaptations remain. Live views
+through interior windows and remaining special terrain families are still gaps.
+The new optional Modern Pokemon UI owns opt-in HUD styling; scenery and gameplay
+mods retain native UI without it. This audit does not mean all referenced features
+have been imported.
