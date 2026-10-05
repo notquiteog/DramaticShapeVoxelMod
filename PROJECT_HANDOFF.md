@@ -1,3 +1,30 @@
+# Hoenn native wall openings — 2026-10-04 (unreleased)
+
+Three complete generic-building source patterns replace 58 flat wall fixtures:
+21 round windows, 35 wallpaper sections and two broken-wall tunnel entrances.
+Windows preserve the native circular glass artwork with recessed panes and
+raised casement bars. They do not yet show a live exterior. Tunnel openings
+have authored stepped jambs matching the native pixel silhouette, with the
+dark source mouth recessed six pixels. Back/sides are closed. Native warps,
+collision and gameplay remain untouched. Remaining plain upper wall fragments
+behind cabinets use the existing bounded wall-column treatment.
+
+QA on official Gen1Recomp 0.3.51: isolated Emerald windows-after/windows-final
+fixtures under `.scratch/coverage-20261004`, with original artwork from the
+existing homes-source captures. Inspected Lilycove motel 2F first-person and
+Fossil Maniac house first-person/overview; the doorway now joins the wallpaper
+instead of leaving isolated upright panels. Repeated fixture includes the
+Fortree homes/shop and asserts native layout/collision equality. Test capture
+options belong only to the scratch profile; user saves untouched.
+
+Focused tests: source crop/footprint/recess depth, interior enclosure, 127
+Hoenn recipes and 318 designed objects pass. Refreshed Emerald inventory:
+519 maps, 75 pairs, 495 enabled scenes, 112 maps with matched fixtures and
+1,570 instances. The fixture count includes wall panels, not just furniture.
+This is not all-map visual approval. Room corners/returns, other window/door
+families, live exterior window views and other games' unfinished coverage
+remain open. Full-world coverage and parity are NOT complete. No release.
+
 # Fortree and Hoenn home furniture — 2026-10-04 (unreleased)
 
 Ten additional complete patterns model 27 previously flat furniture instances:

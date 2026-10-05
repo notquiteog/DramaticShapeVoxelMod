@@ -548,6 +548,47 @@ function M.draw(id,A)
    B(r[1],3.7,r[2],r[3],4.5,r[4],metal)
    B(r[1]+.4,4.5,r[2]+.4,r[3]-.4,5,r[4]-.4,seat)
   end
+ elseif id=='em_home_tunnel_entrance' then
+  -- Authored pixel steps follow the native broken plaster opening. Each
+  -- strip has real jamb depth; the dark tunnel mouth is six pixels behind.
+  local plaster=T(2,12)
+  B(0,19,26,48,32,32,plaster)
+  front({0,0,48,13},0,19,48,32,32.02)
+  local bands={{13,14,24,26},{14,15,21,28},{15,16,15,30},
+   {16,17,18,32},{17,18,17,34},{18,19,17,33},{19,20,17,31},
+   {20,21,16,31},{21,23,16,30},{23,24,16,31},{24,25,17,31},
+   {25,26,17,30},{26,32,18,30}}
+  for _,q in ipairs(bands)do
+   local y,yy,l,r=q[1],q[2],q[3],q[4]
+   B(0,32-yy,26,l,32-y,32,plaster)
+   B(r,32-yy,26,48,32-y,32,plaster)
+   front({0,y,l,yy-y},0,32-yy,l,32-y,32.02)
+   front({r,y,48-r,yy-y},r,32-yy,48,32-y,32.02)
+   front({l,y,r-l,yy-y},l,32-yy,r,32-y,26.02)
+  end
+ elseif id=='em_home_round_window' or id=='em_home_wallpaper' then
+  local plaster,trim=T(1,13),T(1,27)
+  B(0,0,28,16,32,31,plaster)
+  -- Full-height sides and back are closed, including behind the window.
+  B(0,0,31,16,3,32,trim);B(0,29,31,16,32,32,T(1,3))
+  if id=='em_home_wallpaper'then
+   front({0,0,16,32},0,0,16,32,32.02)
+  else
+   -- Native circular window occupies x2..14 / y10..22 in the source.
+   -- Keep it recessed; crop surrounding wallpaper into four solid panels.
+   B(0,22,31,16,29,32,plaster);B(0,3,31,16,10,32,plaster)
+   B(0,10,31,2,22,32,plaster);B(14,10,31,16,22,32,plaster)
+   front({0,0,16,10},0,22,16,32,32.02)
+   front({0,22,16,10},0,0,16,10,32.02)
+   front({0,10,2,12},0,10,2,22,32.02)
+   front({14,10,2,12},14,10,16,22,32.02)
+   front({2,10,12,12},2,10,14,22,31.03)
+   local frame=T(8,15)
+   -- Narrow casement bars project from the pane, leaving the original
+   -- glass pixels visible on all four sides.
+   B(7.5,11,31.05,8.5,21,31.7,frame)
+   B(3,15.5,31.05,13,16.5,31.7,frame)
+  end
  elseif id=='em_fortree_support' then
   -- Closed, faceted trunk at the native footprint. Its far side has bark
   -- too; the tall source band is not laid flat beneath the column.

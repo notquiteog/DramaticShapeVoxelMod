@@ -30,8 +30,8 @@ function M.surface(primary,mid,collision)
 end
 function M.shape(primary,secondary,mid,behavior,collision)
  if primary=='building' and secondary=='generic_building' and collision==7
-   and (mid==0x3c9 or mid==0x3d1)then
-  return {kind='roomWall',ground=0x3d9}
+   and (mid==0x3c9 or mid==0x3d1 or mid==0x215 or mid==0x21d)then
+  return {kind='roomWall',ground=mid>=0x3c9 and 0x3d9 or 0x229}
  end
  if primary=='general' and secondary=='fallarbor' and collision==7 and fallarborWalls[mid]then
   return {kind='cliff',height=32,ground=0x279,cap=0x269,side=0x270}
@@ -128,6 +128,11 @@ home('rustic_bookcase',{{0x316,0x317},{0x2ae,0x2af},{0x2b6,0x2b7}},'em_home_rust
 home('rustic_glass_low',{{0x306,0x307},{0x30e,0x30f}},'em_home_glass_low',0x229)
 home('rustic_appliance',{{0x21e},{0x240}},'em_home_appliance',0x229)
 home('table_rustic_empty',{{0x24e,0x25f},{0x256,0x257}},'em_home_table',0x229)
+-- Complete two-row wallpaper/window drawings. The pane sits behind a real
+-- frame; the native circle and crossbars are preserved rather than replaced.
+home('round_window',{{0x217},{0x21f}},'em_home_round_window',0x229)
+home('wallpaper',{{0x215},{0x21d}},'em_home_wallpaper',0x229)
+home('tunnel_entrance',{{0x2ed,0x2ee,0x2ef},{0x2f5,0x2f6,0x2f7}},'em_home_tunnel_entrance',0x229)
 -- Fortree rooms use a separate timber palette and a real central trunk.
 -- Match the whole support so its repeated artwork is not four small trees.
 home('fortree_support',{{0x3be,0x3bf},{0x3be,0x3bf},{0x3be,0x3bf},{0x3c6,0x3c7}},'em_fortree_support',0x3d9)
