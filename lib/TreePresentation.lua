@@ -13,7 +13,7 @@ function M.original()return M.art:get()~='illustrated' end
 function M.voxel()return M.art:get()=='modeled' end
 function M.flat()return M.setting:get()=='flat' end
 function M.changed(key)
- if key~=M.setting.key and key~=M.art.key and key~=M.surfaces.key and key~=M.props.key and key~="communityTreeDetail" and key~="communityGrass" then return end
+ if key~=M.setting.key and key~=M.art.key and key~=M.surfaces.key and key~=M.props.key and key~="communityTreeDetail" and key~="communityGrass" and key~="communityForest" then return end
  if V.require('Generation').isGen3() then V.require('Gen3Scene').invalidate()
  else V.require('CommunityVisuals').invalidate() end
 end

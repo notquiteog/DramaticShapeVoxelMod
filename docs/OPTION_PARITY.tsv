@@ -125,7 +125,7 @@ generation	key	label	status	consumer	limitation
 2	communityCourtyards	FENCES & COURTS	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
 2	communityCutTrees	CUT TREES	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
 2	communityElevator	ROCKET ELEVATOR	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
-2	communityForest	VIRIDIAN FOREST	implemented	lib/NativeAtmosphere.lua; lib/ForestAtmos.lua	Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.
+2	communityForest	VIRIDIAN FOREST	partial	lib/NativeAtmosphere.lua; lib/ForestAtmos.lua	Native forest identity, dimensions, fog and rays consume this option; full authored Gen1 forest geometry is not yet adapted to every native Gen2 forest.
 2	communityGrass	GRASS	partial	lib/NativeGrassStyle.lua; lib/Gen2DepthGrass.lua; lib/Gen3Outdoor.lua	Shared Gen1 deterministic Legendary tuft width, height and yaw variation uses native grass artwork and keeps original flat ground/collision. Authored Legendary ground recoloring and city-specific turf remain separate, incomplete adapters.
 2	communityMasonry	WALL & LEDGE COLOR	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
 2	communityPillars	LEGENDARY PILLARS	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
@@ -220,7 +220,7 @@ generation	key	label	status	consumer	limitation
 3	communityCourtyards	FENCES & COURTS	missing	false	No complete native generation adapter audited for this option.
 3	communityCutTrees	CUT TREES	missing	false	No complete native generation adapter audited for this option.
 3	communityElevator	ROCKET ELEVATOR	missing	false	No complete native generation adapter audited for this option.
-3	communityForest	VIRIDIAN FOREST	implemented	lib/NativeAtmosphere.lua; lib/ForestAtmos.lua	Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.
+3	communityForest	VIRIDIAN FOREST	partial	lib/NativeLegendaryForest.lua; lib/NativeAtmosphere.lua; lib/ForestTrees.lua	Native forest atmosphere and optional shared Gen1 Viridian trees are live. Gen3 trees share GPU prototypes and fit original art bounds; native cards and default models remain unchanged. Other native forest geometry/details remain incomplete.
 3	communityGrass	GRASS	partial	lib/NativeGrassStyle.lua; lib/Gen2DepthGrass.lua; lib/Gen3Outdoor.lua	Shared Gen1 deterministic Legendary tuft width, height and yaw variation uses native grass artwork and keeps original flat ground/collision. Authored Legendary ground recoloring and city-specific turf remain separate, incomplete adapters.
 3	communityMasonry	WALL & LEDGE COLOR	missing	false	No complete native generation adapter audited for this option.
 3	communityPillars	LEGENDARY PILLARS	missing	false	No complete native generation adapter audited for this option.

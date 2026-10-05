@@ -84,6 +84,7 @@ local function variant(c,family,rows,shape)
 end
 function M.appendModel(c,v,i,q,x,y,z)
  if not c then return q end
+ if c.appendModel then return c:appendModel(v,i,q,x,y,z)end
  local Hull=V.require('VoxelHull')
  local detail=V.require('CommunityVisuals').treeDetail:get()
  local step=detail=='full' and 1 or detail=='handheld' and 4 or 2
