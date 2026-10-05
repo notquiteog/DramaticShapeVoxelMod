@@ -75,7 +75,9 @@ function M.profile(def,gen)
   if x1<=x0 or z1<=z0 then return end
   b={x0*16,z0*16,x1*16,z1*16}
   local secondary=V.require('Gen3Tilesets').resolve(def.midLayout.pair,require('src.import.gba.versions').TILESET_PAIRS).secondary
-  if secondary=='brendans_mays_house' then
+  if id=='FR_ROCKET_HIDEOUT_ELEVATOR' and V.require('NativeRocketWalls').enabled(id) then
+   b[2]=math.min(b[4]-16,(z0+3)*16)-4.12
+  elseif secondary=='brendans_mays_house' then
    b[2]=(z0+1)*16-.12
   elseif secondary=='lab' or secondary=='pokemon_center' or def.midLayout.pair=='player_house' or def.midLayout.pair=='house' or theme=='shop' or secondary=='rom_082d4d94' then
    -- The first two rows are the north wall drawing, not extra floor behind
@@ -225,6 +227,10 @@ function M.forMap(map,gen)
  local def=map and map.def or map
  if not def then return end
  local entry=cache[def]
+ local elevator=gen==3 and def.id=='FR_ROCKET_HIDEOUT_ELEVATOR' and V.require('NativeRocketWalls').enabled(def.id)or false
+ if entry and entry.legendaryElevator~=elevator then
+  for _,mesh in pairs(entry.meshes or {})do mesh:release()end;entry=nil
+ end
  if entry~=nil then return entry or nil end
  local p=M.profile(def,gen)
  if not p then cache[def]=false;return end
@@ -304,7 +310,7 @@ function M.forMap(map,gen)
    p.doorways[side]=merged
   end
  end
- p.meshes={};cache[def]=p;return p
+ p.legendaryElevator=elevator;p.meshes={};cache[def]=p;return p
 end
 -- Recess north-wall backing behind corrected fixture footprints. Moving a
 -- desk into its real blocked row must not bury it in the synthetic shell.

@@ -6,6 +6,7 @@ local palette={{.10,.12,.14},{.23,.26,.28},{.48,.34,.16},{.77,.60,.30},
  {.29,.32,.33},{.34,.37,.38},{.87,.79,.59},{.055,.065,.08},
  {.72,.12,.10},{.18,.45,.32},{.98,.12,.065},{.42,.44,.48},
  {.27,.29,.32},{.28,.30,.33},{.35,.37,.38},{.28,.13,.10}}
+function M.palette()return palette end
 local function key(x,y)return (y+64)*4096+x+64 end
 function M.accepts(map)
  local choice=map and map.id=="ROCKET_HIDEOUT_ELEVATOR" and "elevator" or "rocket"
@@ -301,20 +302,20 @@ function M.geometry(r,part)
     if edge==0 then box(-3.5,y-1.1,3.7,1,2.2,2,8)end
    end
    if r.elevator then
-    if part=='west' or part=='east' or part=='south'then
+    if part=='west' or part=='east' or part=='south' or r.nativeElevator then
      box(-4,19,3.6,8,.9,1.4,12)
      if edge==0 then box(-3.6,17.8,3.4,.8,2,1.6,8)end
     end
     if part=='north' then
      -- Door face is behind the source warp cells; no blocker across entry.
-     if p.x>=32 and p.x<64 then
+     if not r.nativeElevator and p.x>=32 and p.x<64 then
       box(-4,0,3.3,8,36,.45,8)
       front(-3.75,.7,3.8,7.5,34.5,6)
       if p.x==40 or p.x==48 then box(p.x==40 and 3.5 or -4,0,3.85,.5,36,.15,8)end
       box(-4,36,3.7,8,1.2,.5,12)
       box(-4,38,3.6,8,4,.35,8)
       front(-3,39.2,4,6,.65,9)
-     elseif p.x==24 then
+     elseif (r.nativeElevator and p.x==0)or(not r.nativeElevator and p.x==24)then
       box(-4,14,3.4,7,17,.6,8)
       front(-3.4,14.6,4.05,5.8,15.8,12)
       front(-2.8,26,4.1,4.6,3.5,8)
