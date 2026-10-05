@@ -28,6 +28,13 @@ local Dex={draw=function()seen=P.frontPic(1025,0);return 'dex'end}
 package.loaded['src.core.game3.pokemon']=P
 package.loaded['src.ui.game3.summary_menu']=Summary
 package.loaded['src.ui.game3.pokedex']=Dex
+local monFront=function(mon)return P.frontPic(mon.species,0)end;P.monFrontPic=monFront
+local framePic=function()return{image=img('native-evolution')}end
+local Anim={framePic=framePic};package.loaded['src.core.game3.mon_anim']=Anim
+local Evolution={_mon={species=1025,personality=700,isShiny=true},draw=function()seen=Anim.framePic(1026,0,true)end}
+local Hof={draw=function()seen=P.monFrontPic({species=1027,personality=800,isShiny=true})end}
+package.loaded['src.ui.game3.evolution_scene']=Evolution
+package.loaded['src.ui.game3.hall_of_fame']=Hof
 local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated})[name],name)end}
 local Native=assert(loadfile('lib/NativeInterfaceArt.lua'))(V)
 local initialSummary,initialDex=Summary.draw,Dex.draw
@@ -43,5 +50,9 @@ check(not ok and P.frontPic==original,'native error restores sprite provider')
 fail=false;selected='off';Summary.draw();check(seen.image.id=='rom','OFF retains native art')
 selected='modded';Dex.draw();check(seen.image.id=='rom','MODDED retains provider art')
 selected='battle_art';Summary._party[1].isEgg=true;Summary.draw();check(seen.image.id=='rom','eggs retain native species rules')
+Evolution.draw();check(lastMon.species==26 and lastMon.personality==700 and seen.image==fitImages.full[1],'evolution native frame path preserves changing species and shiny identity')
+check(Anim.framePic==framePic,'native frame provider restored')
+Hof.draw();check(lastMon.species==27 and lastMon.personality==800 and lastMon.isShiny,'Hall-of-Fame mon identity retained')
+check(P.monFrontPic==monFront,'native mon reader restored')
 undo();check(Summary.draw==initialSummary and Dex.draw==initialDex,'unload restores native owners')
 print('PASS '..checks..' native interface art checks')

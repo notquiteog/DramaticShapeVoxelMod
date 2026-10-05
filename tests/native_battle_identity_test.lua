@@ -1,3 +1,4 @@
+package.loaded['src.core.game3.battle']={_st={}}
 local checks=0
 local function check(v,why)checks=checks+1;assert(v,why)end
 local mons={{species=25,mon={personality=1,isShiny=true}},{species=25,mon={personality=2,isShiny=false}},
@@ -26,7 +27,7 @@ package.loaded['src.core.game3.battle.anim']=Anim
 local flipped=true;local Art={playerSide=function()return 'front'end,flipsPlayerFront=function()return flipped end}
 local Animated={picture=function(mon,side)seen[#seen+1]={mon=mon,side=side};return {mon=mon}end}
 local hooks={}
-local V={require=function(name)return assert(({NativeFullBody={install=function()end,image=function()return nil end},BattleArt=Art,AnimatedBattleArt=Animated,Gen3SpriteLight={scope=function(fn,...)return fn(...)end,tag=function(v)return v end},Gen3TrainerArt={install=function()return function()end end}})[name],name)end,
+local V={require=function(name)return assert(({NativeCrystalArt={active=function()return false end,front=function()return false end,begin=function()end},NativeFullBody={install=function()end,image=function()return nil end},BattleArt=Art,AnimatedBattleArt=Animated,Gen3SpriteLight={scope=function(fn,...)return fn(...)end,tag=function(v)return v end},Gen3TrainerArt={install=function()return function()end end}})[name],name)end,
  mod={hooks={wrap=function(_,key,fn)hooks[key]=fn end}}}
 local Adapter=assert(loadfile('lib/NativeBattleArt.lua'))(V)
 local mirrored={}

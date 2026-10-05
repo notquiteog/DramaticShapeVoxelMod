@@ -4,6 +4,7 @@ local V=...
 local Art=V.require('BattleArt')
 local Animated=V.require('AnimatedBattleArt')
 local M={}
+local function crystal()return M.crystal end
 local aliases={['bug-catcher']='bug-catcher',['fisherman']='fisher',psychic='psychic-tr',
  ['black-belt']='blackbelt',['pokemon-maniac']='pokemaniac',['rocket-grunt']='rocket',
  ['team-rocket']='rocket',['young-couple']=false,['sis-and-bro']=false}
@@ -40,7 +41,8 @@ function M.install(active,fit)
    local st=Battle._st
    if st and not st.link and tonumber(id)==tonumber(st.trainerPicId)then
     local info=st.trainerId and Trainers.info(st.trainerId)
-    local key=M.key(st,info);local image=key and Art.trainerImage(key)
+    local key=M.key(st,info);local C=crystal();local image
+    if C and C.active()then image=C.opponent(key)else image=key and Art.trainerImage(key)end
     if image then return tagged({image=fit(image,64),w=64,h=64},5)end
    end
   end
@@ -53,7 +55,9 @@ function M.install(active,fit)
    if st and not st.pokedude and not st.tutorial and not st.safari then
     local frames,key={},'';local width,height=0,0
     for i,progress in ipairs({0,1,25,49,72})do
-     local image=Animated.playerTrainerPicture(progress)
+     local C=crystal();local image,mirror
+     if C and C.active()then image,mirror=C.player()else image=Animated.playerTrainerPicture(progress)end
+     if mirror and image then image=fit(image,64,true)end
      if not image then return tagged(back(gender,...),4)end
      frames[i]=image;key=key..tostring(image)..':'
      local w,h=image:getDimensions();width=math.max(width,w);height=math.max(height,h)

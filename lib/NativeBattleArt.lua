@@ -5,8 +5,17 @@ local Art=V.require('BattleArt')
 local Animated=V.require('AnimatedBattleArt')
 local M={}
 local fitted=setmetatable({},{__mode='k'})
+function M.playerSide()return M.crystal and M.crystal.front()and'front'or Art.playerSide()end
 function M.image(mon,back)
- local side=back and Art.playerSide()or'front'
+ local side=back and M.playerSide()or'front'
+ if M.crystal and M.crystal.active()then
+  if M.world and side=='back' and M.fullBody then
+   local image=M.fullBody.image(mon);if image then return image,true end
+  end
+  local image=M.crystal.image(mon,side)
+  if image then return image,false,56 end
+  return nil,false -- absent Crystal species keep the native engine/provider
+ end
  if M.world and side=='back' and Art.ownsSpeciesArt() and Art.setting:get()~='rom' and M.fullBody then
   local image=M.fullBody.image(mon);if image then return image,true end
  end
@@ -28,29 +37,32 @@ end
 -- one pixel pitch per source generation. Fitting each cropped mon to 64px
 -- independently made small fronts enormous and erased the artwork's scale.
 -- Gen 1/2 already project their actors through the world camera.
-function M.stagePixelScale(back,fullBody)
+function M.stagePixelScale(back,fullBody,referenceSize)
  if not M.staged and not M.world then return nil end
- local side=back and Art.playerSide()or 'front'
+ local side=back and M.playerSide()or 'front'
  local setting=side=='back'and Art.backAnimationSetting or Art.frontAnimationSetting
- local reference=({gen1=56,gen2=56,gen3=64,gen4=80,gen5=96})[fullBody and 'gen5' or setting:get()]or 64
+ local reference=referenceSize or ({gen1=56,gen2=56,gen3=64,gen4=80,gen5=96})[fullBody and 'gen5' or setting:get()]or 64
  return (64/reference)*(M.world and 1 or back and 1 or .68)
 end
 function M.settings()
  local settings={Art.setting,Art.frontAnimationSetting,Art.backAnimationSetting,Art.viewSetting,Art.backPlacementSetting,Art.duplicateSetting,Art.frontFlipSetting,Art.trainerSetting,Art.playerArtSetting,Art.playerAnimationSetting}
  if M.fullBody then settings[#settings+1]=M.fullBody.setting end
+ if M.crystal then settings[#settings+1]=M.crystal.pack end
  return settings
 end
 function M.install()
  local gen=require('src.core.GameVersion').generation()
- if gen==3 then M.fullBody=V.require('NativeFullBody');M.fullBody.install()end
+ if gen==3 then M.crystal=V.require('NativeCrystalArt');M.fullBody=V.require('NativeFullBody');M.fullBody.install()end
  local undo={}
  if gen==3 then
   local P=require('src.core.game3.pokemon');local UI=require('src.core.game3.battle.ui')
   local Anim=require('src.core.game3.battle.anim')
   local active=false;local artMon,explicitArtMon,artId;local draw=UI.draw
   local Light=V.require('Gen3SpriteLight')
+  V.require('Gen3TrainerArt').crystal=M.crystal
   undo[#undo+1]=V.require('Gen3TrainerArt').install(function()return active end,M.fit)
   UI.draw=function(...)
+   M.crystal.begin(require('src.core.game3.battle')._st)
    local prior,priorMon,priorExplicit=active,artMon,explicitArtMon;active,artMon,explicitArtMon=true,nil,nil
    local r={pcall(Light.scope,draw,...)};active,artMon,explicitArtMon=prior,priorMon,priorExplicit
    if not r[1]then error(r[2],0)end;return unpack(r,2)
@@ -88,8 +100,8 @@ function M.install()
       mon.personality=source.personality;mon.otId=source.otId
       mon.otSecretId=source.otSecretId;mon.isShiny=source.isShiny
      end
-     local image,fullBody=M.image(mon,side=='back')
-     if image then return Light.tag({image=M.fit(image,64,side=='back' and Art.playerSide()=='front' and Art.flipsPlayerFront(),M.stagePixelScale(side=='back',fullBody)),w=64,h=64},artId)end
+     local image,fullBody,referenceSize=M.image(mon,side=='back')
+     if image then return Light.tag({image=M.fit(image,64,side=='back' and M.playerSide()=='front' and Art.flipsPlayerFront(),M.stagePixelScale(side=='back',fullBody,referenceSize)),w=64,h=64},artId)end
     end
     local entry=original(species,form,...)
     if active and M.staged and not M.world and entry and entry.image and side=='front' then
@@ -120,8 +132,8 @@ function M.install()
      local source=artMon and (artMon.mon or artMon)
      local mon={species=P.national(species),isShiny=shiny}
      if source then for _,k in ipairs({'personality','otId','otSecretId','isShiny'})do mon[k]=source[k]end end
-     local image=M.image(mon,false)
-     if image then return Light.tag({image=M.fit(image,64,false,M.stagePixelScale(false)),w=64,h=64},artId)end
+     local image,fullBody,referenceSize=M.image(mon,false)
+     if image then return Light.tag({image=M.fit(image,64,false,M.stagePixelScale(false,fullBody,referenceSize)),w=64,h=64},artId)end
     end
     local entry=original(species,frame,shiny)
     return active and Light.tag(entry,artId)or entry

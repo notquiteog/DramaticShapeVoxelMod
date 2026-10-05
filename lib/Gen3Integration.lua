@@ -52,6 +52,9 @@ function M.install()
  local fullPreset=V.require('Gen3FullPreset').new(M.level)
  local nativeArt=V.require('NativeBattleArt');nativeArt.install()
  local interfaceArt=V.require('NativeInterfaceArt')
+ interfaceArt.crystal=V.require('NativeCrystalArt')
+ local uninstallCrystalField=V.require('NativeCrystalField').install()
+ mod.hooks:wrap('core.quit_to_launcher',function(next,...)uninstallCrystalField();return next(...)end)
  local uninstallInterface=interfaceArt.install()
  local sharedSettings={legendary.setting,Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,V.require('CommunityVisuals').caveSound,V.require('CommunityVisuals').kantoLife,
   V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting}
@@ -63,6 +66,7 @@ function M.install()
  for _,setting in ipairs(sharedSettings)do
   schema[#schema+1]=setting:schema(setting.key=='spatialUpscale' and V.require('SpatialUpscale').description or 'Shared renderer option; applies immediately to the native Gen 3 presentation.')
  end
+ for _,row in ipairs(V.require('NativeCrystalArt').schemas())do schema[#schema+1]=row end
  for _,setting in ipairs(nativeArt.settings())do schema[#schema+1]=setting:schema('Shared Battle Art sprite settings. ANIMATED uses installed atlases or bundled BW backs (dex 1–251); missing art falls back to static full-body images. ROM/MODDED preserves native/provider art.')end
  mod.options:define(schema)
  local Support=V.require('OptionSupport')
@@ -197,7 +201,8 @@ function M.install()
   if payload and payload.mod==mod.id then
    for _,setting in ipairs(sharedSettings)do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
    if legendary.changed(payload.key)then Scene.invalidate()end
-   for _,setting in ipairs(nativeArt.settings())do if payload.key==setting.key then setting:sync(payload.value)end end
+   for _,row in ipairs(V.require('NativeCrystalArt').schemas())do schema[#schema+1]=row end
+ for _,setting in ipairs(nativeArt.settings())do if payload.key==setting.key then setting:sync(payload.value)end end
    for _,setting in ipairs({Trees.setting,Trees.art})do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
   end
   if payload and payload.mod==mod.id and payload.key==mode.key then
