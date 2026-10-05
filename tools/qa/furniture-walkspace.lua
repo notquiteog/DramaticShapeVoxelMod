@@ -11,6 +11,7 @@ return function(game)
  if version~='emerald' and os.getenv('QA_HOMES')=='1'then maps={'FR_PLAYERS_HOUSE_2F','FR_CELADON_CITY_CONDOMINIUMS_ROOF_ROOM','FR_SEVEN_ISLAND_HOUSE_ROOM1','FR_FOUR_ISLAND_LORELEIS_HOUSE','FR_ROCKET_HIDEOUT_B4F','FR_FIVE_ISLAND_ROCKET_WAREHOUSE'}end
  if version~='emerald' and os.getenv('QA_SEATS')=='1'then maps={'FR_POKEMON_LEAGUE_AGATHAS_ROOM','FR_BATTLE_COLOSSEUM_2P','FR_CELADON_CITY_GAME_CORNER','FR_SSANNE_1F_ROOM1'}end
  if version~='emerald' and os.getenv('QA_LEAGUE')=='1'then maps={'FR_POKEMON_LEAGUE_LORELEIS_ROOM','FR_POKEMON_LEAGUE_BRUNOS_ROOM','FR_POKEMON_LEAGUE_AGATHAS_ROOM','FR_POKEMON_LEAGUE_LANCES_ROOM','FR_POKEMON_LEAGUE_CHAMPIONS_ROOM'}end
+ if version~='emerald' and os.getenv('QA_BEDS')=='1'then maps={'FR_PLAYERS_HOUSE_2F','FR_FOUR_ISLAND_LORELEIS_HOUSE','FR_PLAYERS_HOUSE_1F'}end
  for _,id in ipairs(maps)do
   local d=assert(game.data.maps[id]);Map.ensureMidLayout(game,id,d)
   local px,py
@@ -31,6 +32,10 @@ return function(game)
   C.setLevel(0,game);U.wait(3);U.shot(game,dir..'/'..id..'-native.png')
   C.setLevel(3,game);U.wait(100);U.shot(game,dir..'/'..id..'-overview.png')
   local views={FR_POKEMON_LEAGUE_LANCES_ROOM={8,19},FR_PLAYERS_HOUSE_2F={2,3},FR_CELADON_CITY_CONDOMINIUMS_ROOF_ROOM={5,6},FR_SEVEN_ISLAND_HOUSE_ROOM1={4,3},FR_FOUR_ISLAND_LORELEIS_HOUSE={10,6},FR_ROCKET_HIDEOUT_B4F={19,9},FR_FIVE_ISLAND_ROCKET_WAREHOUSE={17,7},FR_CELADON_CITY_POKEMON_CENTER_1F={3,4},FR_PEWTER_CITY_MUSEUM_1F={18,4},FR_CELADON_CITY_DEPARTMENT_STORE_2F={8,13},FR_CELADON_CITY_DEPARTMENT_STORE_5F={8,10},FR_FOUR_ISLAND_POKEMON_DAY_CARE={8,6},FR_OAKS_LAB={3,4},FR_CELADON_CITY_CONDOMINIUMS_3F={2,10},FR_CELADON_CITY_CONDOMINIUMS_2F={2,11},FR_SILPH_CO_2F={34,18},FR_SILPH_CO_10F={16,16},EM_FORTREE_CITY_HOUSE3={1,4},EM_RUSTBORO_CITY_HOUSE3={8,3},EM_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB={3,3}};local pos=views[id];if pos and d.midLayout:collAt(pos[1],pos[2])==0 then Player.reset(pos[1],pos[2],'up')end
+  if os.getenv('QA_BEDS')=='1' then
+   local bedView=({FR_PLAYERS_HOUSE_2F={2,8},FR_FOUR_ISLAND_LORELEIS_HOUSE={1,5}})[id]
+   if bedView then assert(d.midLayout:collAt(bedView[1],bedView[2])==0);Player.reset(bedView[1],bedView[2],'up')end
+  end
   C.setLevel(6,game);C.yaw=0;C.pitch=0;U.wait(15);U.shot(game,dir..'/'..id..'-first.png')
   if id=='FR_POKEMON_LEAGUE_LANCES_ROOM' then Player.reset(6,17,'right');C.yaw=math.pi/2;U.wait(15);U.shot(game,dir..'/'..id..'-statue-side.png')end
   local n=0;for y=0,d.height-1 do for x=0,d.width-1 do n=n+1;assert(native[n]==d.midLayout:collAt(x,y),'renderer changed native collision')end end

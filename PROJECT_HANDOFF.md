@@ -1,3 +1,33 @@
+# FRLG bed footprints and house stair width — 2026-10-05 (unreleased)
+
+Compared native bedroom/Lorelei artwork and imported collisions. Only the
+centre foot cell is blocked: fr_bed local (1,2), fr_lorelei_bed (1,1).
+Rebuilt complete low beds within those cells, with separate feet, frame,
+headboard, mattress, pillow and native blanket art. No native collision or
+warps changed. Census now records zero flags for both beds (previously one
+per bed). Seat/sofa flags remain unresolved, not silently removed.
+
+User flagged starting-bedroom staircase width while reviewing the capture.
+Gen3HouseStairs previously gave the projected front fascia floor depth: tread
+Z17..43. Narrowed to Z17..31 with rails/stringers/well sides moved together,
+restoring newly exposed floor. Horizontal two-cell run and original landing
+rug remain. Applied to ascending and descending player-house assemblies.
+Regression protects the physical flight from returning to a second lane.
+
+Evidence: source engine v0.3.51, isolated FireRed/LeafGreen QA profiles and
+companions. Native and rendered bed captures in GAME-beds-final; final stair
+and bed fixtures in leafgreen-beds-stairs under .scratch/coverage-20261004/results.
+Inspected bedroom overview before/after, both floors' final stairs overview,
+and Lorelei close view (partly obscured by native NPCs). Room collision grids
+unchanged. Repeat QA_BEDS=1 with tools/qa/furniture-walkspace.lua copied to the
+scratch runner. No manual warp traversal claimed. Full suite: 164 passed,
+0 failed, 56 external skips (.scratch/beds-stairs-tests.log).
+
+Refreshed Emerald footprint census: only chair/cushion/stool families flagged;
+this measures authored boxes against central actor walkspace, not every surface
+or every game's visual completeness. Full-world coverage, seats, exterior
+families and the reported black patches remain open. No release bump.
+
 # FRLG fence artwork correction — 2026-10-05 (unreleased)
 
 User screenshots: Pallet repeated perpendicular rail prongs, flat fence art

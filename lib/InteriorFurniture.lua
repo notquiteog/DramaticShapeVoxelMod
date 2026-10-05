@@ -177,13 +177,6 @@ function M.draw(id,A)
  elseif id=='fr_condo_books' then
   shelves(1,27,30,13,26,{{3,10,{2,34,28,7}},{12,19,{2,25,28,7}}},T(2,20),T(4,33),true)
   B(1,20,27,31,28,40,T(1,14));front({1,11,30,10},1,20,31,28,40.02)
- elseif id=='fr_lorelei_bed' then
-  local wood,cloth=T(14,6),T(21,20)
-  B(13,2,3,35,4,29,wood);B(14,4,5,34,6,28,cloth)
-  top({14,6,20,21},14,5,34,28,6.02)
-  B(15,6,5,33,7,10,T(20,8));top({15,5,18,5},15,5,33,10,7.02)
-  B(12,2,2,36,10,4,wood);B(12,2,28,36,5,30,wood)
-  for _,x in ipairs{13,33}do for _,z in ipairs{3,27}do B(x,0,z,x+2,3,z+2,wood)end end
  elseif id=='fr_lorelei_table' then
   local wood=T(2,24)
   desk(2,2,30,28,7,wood);top({2,1,28,25},2,2,30,28,7.02)
@@ -1230,14 +1223,21 @@ function M.draw(id,A)
    keyboard({0,0,w,h-3},1,1,w-2,h-4,6.1,mat)
    front({0,h-3,w,3},1,4,w-1,6,h-1.01)
   end
- elseif id=='fr_bed' then
-  local metal,white=T(15,16),T(17,25)
-  B(13,0,16,15,7,46,metal);B(33,0,16,35,7,46,metal)
-  B(13,5,15,35,8,17,metal);B(13,0,44,35,3,46,metal)
-  B(15,2,18,33,4.5,44,white)
-  top({14,24,20,19},14,23,34,44,4.52)
-  B(16,4.5,18,32,5.8,23,white)
-  top({16,20,16,4},16,18,32,23,5.82)
+ elseif id=='fr_bed' or id=='fr_lorelei_bed' then
+  -- The upper drawing is projected height: only the centre foot cell is
+  -- blocked in either native room. Keep rails, pillow and mattress there.
+  local lorelei=id=='fr_lorelei_bed'
+  local z=lorelei and 16 or 32
+  local frame,cloth=T(lorelei and 14 or 15,lorelei and 6 or 16),T(lorelei and 21 or 17,lorelei and 20 or 25)
+  for _,x in ipairs{16.3,29.9}do for _,dz in ipairs{.3,13.9}do B(x,0,z+dz,x+1.8,3,z+dz+1.8,frame)end end
+  B(16.2,2,z+.2,31.8,4,z+15.8,frame)
+  B(17,4,z+1.2,31,5.5,z+14.8,cloth)
+  top(lorelei and {14,10,20,17} or {14,24,20,19},17,z+4.8,31,z+14.8,5.52)
+  B(17.5,5.5,z+1.3,30.5,6.6,z+4.8,T(lorelei and 20 or 17,lorelei and 8 or 25))
+  top(lorelei and {15,5,18,5} or {16,20,16,4},17.5,z+1.3,30.5,z+4.8,6.62)
+  B(16.2,2,z+.2,31.8,8,z+1,frame)
+  B(16.2,2,z+15,31.8,5,z+15.8,frame)
+  for _,x in ipairs{16.2,31}do B(x,2,z+1,x+.8,5,z+15,frame)end
  elseif id=='fr_room_pc' then
   local wood,case,dark=T(17,22),T(3,13),T(7,22)
   desk(1,19,31,31,7,wood)

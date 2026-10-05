@@ -1,5 +1,10 @@
 ## Unreleased
 
+- Keep the FRLG bedroom and Lorelei beds inside their native blocked foot
+  cells, with separate frames, pillows and native blanket art. Narrow player
+  house stair flights to the native tread width; projected fascia no longer
+  becomes a second lane, and newly exposed floor is restored.
+
 - Correct Pallet fence rails projecting into paths; use each native picket
   material. Model missing Fuchsia fences and foliage-covered shared sections,
   and correct reviewed endpoint directions. Resolve Fuchsia through the shared

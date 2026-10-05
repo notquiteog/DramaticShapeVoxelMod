@@ -28,7 +28,7 @@ function M.append(g,emit,uvFor)
  local x0,x1=down and 0 or 16,down and 32 or 48
  -- Tiling the actual clean floor avoids baking stair shadows/rails into it.
  for y=0,2 do for x=0,2 do
-  if not down or x==2 or y==0 then
+  if not down or x==2 or y~=1 then
    face({{x*16,0,y*16},{x*16+16,0,y*16},{x*16+16,0,y*16+16},{x*16,0,y*16+16}},floor)
   end
  end end
@@ -39,15 +39,17 @@ function M.append(g,emit,uvFor)
   local uv=assert(uvFor(g.ts,g.r.rows[y/16+1][rx/16+1]))
   face({{rx,.02,y},{rx+16,.02,y},{rx+16,.02,y+16},{rx,.02,y+16}},uv)
  end
+ -- The bottom source row depicts the front fascia, not a second lane.
+ -- The flight is one cell wide across Z; its horizontal run stays two cells.
  local wood=down and color(10,32)or color(19,17)
  local tread=down and color(22,23)or color(25,18)
  local trim=down and color(9,36)or color(20,33)
  -- Ascending right / descending left are both higher toward positive X.
  for i=0,7 do
   local x=x0+i*4;local h=down and (-24+i*3)or (i+1)*3
-  box(x,h-1.2,17,x+4,h,43,tread)
-  box(x,h-3,17,x+.7,h-1.2,43,wood)
-  box(x-.2,h-.65,16.7,x+.7,h+.02,43.3,trim)
+  box(x,h-1.2,17,x+4,h,31,tread)
+  box(x,h-3,17,x+.7,h-1.2,31,wood)
+  box(x-.2,h-.65,16.7,x+.7,h+.02,31.3,trim)
  end
  -- Closed sloped rectangular beams: no gaps at stair corners or exposed
  -- underside. Handrails use the same slope as the supporting stringers.
@@ -61,7 +63,7 @@ function M.append(g,emit,uvFor)
   face({{x1,b-thickness,z+width},{x1,b-thickness,z},{x1,b,z},{x1,b,z+width}},trim,.8)
   face({{x0,a-thickness,z+width},{x0,a-thickness,z},{x1,b-thickness,z},{x1,b-thickness,z+width}},wood,.6)
  end
- for _,z in ipairs({15.5,43.5})do
+ for _,z in ipairs({15.5,31.5})do
   beam(z,1,-1,4)
   if not down then
    beam(z-.3,1.6,7,1.4)
@@ -74,10 +76,10 @@ function M.append(g,emit,uvFor)
  if down then
   -- Enclose the cut-out on three sides and at its bottom. Leave its
   -- landing edge open so the descending flight reads as a stairwell.
-  box(0,-27,15,32,0,16,wood);box(0,-27,44,32,0,48,wood)
-  box(0,-27,16,1,0,44,wood);box(0,-28,16,32,-27,44,wood)
-  box(0,0,15,32,1,16,trim);box(0,0,44,32,1,46,trim)
-  box(31.3,-3,16,32,0,44,wood)
+  box(0,-27,15,32,0,16,wood);box(0,-27,32,32,0,34,wood)
+  box(0,-27,16,1,0,32,wood);box(0,-28,16,32,-27,32,wood)
+  box(0,0,15,32,1,16,trim);box(0,0,32,32,1,34,trim)
+  box(31.3,-3,16,32,0,32,wood)
  end
 end
 return M

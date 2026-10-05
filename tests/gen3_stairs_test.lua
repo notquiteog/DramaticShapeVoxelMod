@@ -9,6 +9,10 @@ for _,r in ipairs(recipes)do
  assert(S.prepare(cells)==1,'missing complete native flight')
  local n,lo,hi=0,math.huge,-math.huge
  for _,c in pairs(cells)do S.append(c,function(p,t)
+  if r.design=='house' then
+   local solid=false;for _,v in ipairs(p)do if math.abs(v[2])>.03 then solid=true end end
+   if solid then for _,v in ipairs(p)do assert(v[3]<=34,'house flight extrudes the projected fascia into a second lane')end end
+  end
   n=n+1;for i,v in ipairs(p)do for _,k in ipairs(v)do assert(k==k and math.abs(k)<128)end;assert(t[i]);lo=math.min(lo,v[2]);hi=math.max(hi,v[2])end
  end,uv)end
  assert(n>20,'missing stair sides/treads')
