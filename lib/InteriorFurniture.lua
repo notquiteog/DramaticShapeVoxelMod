@@ -11,6 +11,9 @@ M.placement={
  em_lab_books={z=-8,back=18},em_lab_computer={z=-11,back=15},
  em_lab_desk={z=-11,back=0},em_lab_server={z=-9,back=18},
  fr_mart_cooler={z=-13,back=19},
+ fr_lab_pc={z=-9,back=1},fr_lab_terminal={z=-10,back=17},
+ fr_lab_server={z=-10,back=21},fr_lab_books={z=-8,back=5},
+ fr_condo_books={z=-9,back=18},
  em_home_tv={z=-8,back=16},em_home_books={z=-8,back=16},
  em_home_fridge={z=-8,back=16},em_home_rustic_books={z=-8,back=16},
  em_home_glass_tall={z=-8,back=15},em_home_drawers={z=-14,back=0},
@@ -144,7 +147,7 @@ function M.draw(id,A)
   desk(2,5,14,17,4,wood);top({2,3,12,9},2,5,14,17,4.02)
  elseif id=='fr_condo_meeting_table' then
   local wood=T(12,25)
-  local points={{15,8},{49,8},{62,21},{62,43},{49,55},{15,55},{2,43},{2,21}}
+  local points={{15,17},{49,17},{62,27},{62,49},{49,62},{15,62},{2,49},{2,27}}
   -- An eight-sided table, with a continuous top and closed bevel/fascia.
   for j,a in ipairs(points)do
    local b=points[j%#points+1]
@@ -152,22 +155,22 @@ function M.draw(id,A)
    A.face({{a[1],6.5,a[2]},{b[1],6.5,b[2]},{b[1],8,b[2]},{a[1],8,a[2]}},wood,.85)
   end
   for _,x in ipairs{13,47}do for _,z in ipairs{18,43}do B(x,0,z,x+3,6.5,z+3,wood)end end
-  top({14,13,36,34},14,14,50,49,8.02)
+  top({14,17,36,30},14,18,50,56,8.02)
  elseif id=='fr_condo_workstation' then
   local wood,case,dark=T(2,27),T(8,12),T(11,15)
-  desk(1,18,46,38,8,wood)
+  desk(1,18,46,31,8,wood)
   crt(7,16,15,11,24,{8,10,13,10},case,dark)
-  keyboard({9,21,13,4},9,26,13,7,8.1,case)
+  keyboard({9,21,13,4},9,25,13,5,8.1,case)
   B(2,8,19,6,20,28,case);front({2,10,4,14},2,8,6,20,28.02)
-  B(31,8,23,43,9.6,34,T(35,21));top({31,16,12,14},31,23,43,34,9.62)
+  B(31,8,23,43,9.6,31,T(35,21));top({31,16,12,14},31,23,43,31,9.62)
  elseif id=='fr_condo_sofa' then
   local w=A.width;local cloth,frame=T(8,17),T(1,15)
-  B(3,1,10,w-3,4,28,frame);B(3,4,10,w-3,6,27,cloth)
-  B(2,4,7,w-2,12,11,frame)
-  front({3,10,w-6,8},3,6,w-3,11,11.02)
-  top({3,18,w-6,7},3,11,w-3,27,6.02)
-  B(1,1,8,3,8,28,frame);B(w-3,1,8,w-1,8,28,frame)
-  for _,x in ipairs{3,w-5}do B(x,0,23,x+2,2,27,frame)end
+  B(3,1,3,w-3,4,15,frame);B(3,4,3,w-3,6,15,cloth)
+  B(2,4,0,w-2,12,3,frame)
+  front({3,10,w-6,8},3,6,w-3,11,3.02)
+  top({3,18,w-6,7},3,3,w-3,15,6.02)
+  B(1,1,1,3,8,16,frame);B(w-3,1,1,w-1,8,16,frame)
+  for _,x in ipairs{3,w-5}do B(x,0,12,x+2,2,15,frame)end
  elseif id=='fr_condo_books' then
   shelves(1,27,30,13,26,{{3,10,{2,34,28,7}},{12,19,{2,25,28,7}}},T(2,20),T(4,33),true)
   B(1,20,27,31,28,40,T(1,14));front({1,11,30,10},1,20,31,28,40.02)

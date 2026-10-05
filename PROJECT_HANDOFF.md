@@ -1,3 +1,45 @@
+# FRLG office/lab native footprints — 2026-10-05 (unreleased)
+
+Silph tape/monitor terminals fit their blocked first row; server banks fit
+rows 0/1. Oak's lab computer, terminal, server and bookcases no longer extend
+into their native walking lanes. Freestanding bookcase end pieces use the
+same blocked middle row as the complete shelves. Condo workstations retain
+CRT, keyboard and book components in row 1; sofas fit row 0; bookcases fit
+their blocked rows. Octagonal meeting-table polygon now starts in blocked
+row 1, rather than crossing the walking row. Original palettes/source art
+retained; no gameplay collision changed.
+
+Initial render exposed lab wallpaper masking corrected fixtures. Added the
+canonical oak_lab atlas to straight rear-wall handling, and made lab wallpaper
+follow that rear plane. Re-rendered: computer/shelves visible, straight wall.
+QA baseline now records collision AFTER native map-load/door scripts settle;
+Silph applies legitimate collision changes while loading. All five final
+fixtures preserve that settled collision through native/3D camera renders.
+
+Engine source v0.3.51, LeafGreen isolated QA profile, companions enabled:
+FR_SILPH_CO_2F/10F, FR_CELADON_CITY_CONDOMINIUMS_2F/3F, FR_OAKS_LAB.
+Native source exports and before/after captures:
+.scratch/coverage-20261004/results/leafgreen-kanto-offices-before and
+leafgreen-kanto-offices-verified2. First-person terminal/lab/bookcase and
+room overview captures inspected. Condo 2F first-person fixture remains
+poorly framed behind a partition; overview confirms sofa footprint only.
+Run tools/qa/furniture-walkspace.lua with QA_OFFICES=1 to reproduce.
+No player save modified; scripts halted for camera inspection, not a manual
+walkthrough or complete story test. FireRed shares recipes but was not booted.
+
+Full authored-box census: 263 interiors / 1,254 objects / 205 flagged instances,
+down from 265. Corrected designs have zero remaining flagged instances;
+generic books still has four OTHER flagged placements in Pewter Museum.
+Census is central-8x8 low box overlap only: does not certify every cell,
+polygon, ground texture, exterior or Gen1/2. The octagonal tabletop has a
+separate polygon footprint regression. Remaining 205 flags need review;
+seats may intentionally be walkable and need actor-support verification.
+
+Validation: 162 suites pass, 0 fail, 56 external-fixture skips; 347 production
+Lua files compile with LuaJIT; diff whitespace check passes. Test logs:
+.scratch/kanto-office-final-tests.log. Census: leafgreen-kanto-footprint-office.
+No release/cart change. Other-world coverage remains unfinished.
+
 # Museum/facility walkspace pass — 2026-10-05 (unreleased)
 
 Reviewed native art and collision rows for Oceanic Museum 1F, Mossdeep Space

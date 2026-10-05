@@ -1,5 +1,6 @@
 local F=dofile('lib/InteriorFurniture.lua')
-local footprints={em_start_pc_left={0,16,32,32},em_start_pc_right={0,16,32,32},
+local footprints={fr_lab_free_books={0,16,32,32},fr_condo_sofa={0,0,64,16},
+ fr_condo_workstation={0,16,48,32},em_start_pc_left={0,16,32,32},em_start_pc_right={0,16,32,32},
  em_start_dresser={0,16,16,32},em_start_console={0,0,16,16},
  em_start_tv={0,0,32,16},em_start_bed={16,32,32,48},em_lab_starter={0,16,32,32},em_museum_wall_case={0,16,32,32},em_museum_cylinder={0,16,16,32},em_office_computer={0,16,32,32},em_office_desk={0,16,32,32}}
 for name,b in pairs(footprints)do
@@ -14,7 +15,7 @@ for name,b in pairs(footprints)do
  assert(count>0)
 end
 -- Repeated shop/house/Center fixtures must stay in the native blocked row.
-local firstRow={em_space_controls=true,em_home_sofa=true,em_home_appliance=true,em_fortree_drawers=true,em_lab_desk=true,em_home_sink=true,em_home_drawers=true,fr_kitchen=true}
+local firstRow={fr_lab_pc=true,fr_lab_books=true,em_space_controls=true,em_home_sofa=true,em_home_appliance=true,em_fortree_drawers=true,em_lab_desk=true,em_home_sink=true,em_home_drawers=true,fr_kitchen=true}
 for id in pairs(F.placement)do
  local seen=0;local limit=firstRow[id] and 16 or 32
  assert(F.draw(id,{sample=function()return{}end,source=function()end,width=32,
@@ -74,3 +75,12 @@ assert(recessed and normal)
 D.setRecesses(p,{})
 assert(p.bounds[2]==32 and #p.northRecesses==0 and released==2,'removed fixture left stale bay')
 print('PASS shared furniture footprints and north-wall recess cache/geometry')
+
+-- Polygon tops count too: the native condo table's first row is walkable.
+local faces=0
+assert(F.draw('fr_condo_meeting_table',{sample=function()return{}end,
+ box=function(l,b,n,r,h,s)assert(n>=16 and s<=64)end,
+ source=function(x,y,w,h,...)for _,v in ipairs{...}do assert(v[3]>=16 and v[3]<=64)end end,
+ face=function(vs)faces=faces+1;for _,v in ipairs(vs)do assert(v[3]>=16 and v[3]<=64)end end}))
+assert(faces>0)
+print('PASS FRLG lab, condo desks/sofas and polygon table walkspace')

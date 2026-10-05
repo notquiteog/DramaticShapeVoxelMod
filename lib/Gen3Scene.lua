@@ -213,7 +213,7 @@ local function build(req,cache,previous)
  -- depth corrections must not turn its cornice into a cabinet-shaped zigzag.
  local roomProfile=Interior.forMap(def,3)
  local sourcePair=Pairs.canonical(def.midLayout.pair)
- if roomProfile and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='building__rom_082d4bcc')then
+ if roomProfile and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='building__rom_082d4bcc')then
   local north=roomProfile.originalNorth or roomProfile.bounds[2]
   for _,q in ipairs(cache.furnitureRecesses)do north=math.min(north,q[3])end
   cache.northWallFront=north+.04
@@ -447,10 +447,10 @@ local function build(req,cache,previous)
  for _,c in pairs(cells)do if c.secondary=='lab' and c.cy==0 and c.mid~=0 then
   local b=batches[c.pair];local uv=uvFor(c.ts,0x69)
   if uv and not labWall[c.cx] then
-   labWall[c.cx]=true;local x=c.cx*16
-   quad(b.v,b.i,{{x,32,32},{x+16,32,32},{x+16,16,32},{x,16,32}},uv)
+   labWall[c.cx]=true;local x=c.cx*16;local f=wallFront(c.cx,32)
+   quad(b.v,b.i,{{x,32,f},{x+16,32,f},{x+16,16,f},{x,16,f}},uv)
    local u,t=(uv[1][1]+uv[2][1])*.5,uv[1][2]+(uv[3][2]-uv[1][2])*.8
-   quad(b.v,b.i,{{x,16,32},{x+16,16,32},{x+16,0,32},{x,0,32}},swatch(c.ts,u,t))
+   quad(b.v,b.i,{{x,16,f},{x+16,16,f},{x+16,0,f},{x,0,f}},swatch(c.ts,u,t))
   end
  end end
  -- Complete native wallpaper behind claimed furniture. The drawing's

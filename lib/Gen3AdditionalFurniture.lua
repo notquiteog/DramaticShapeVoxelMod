@@ -29,9 +29,9 @@ reception('bend',{{0x29E,0x2A6,0x294},{0x2AC,0x29C,0x2A4}},
  {{3,0,16,22},{16,14,48,22},{32,22,48,32}},{8,5},{24,26})
 reception('south',{{0x293},{0x29B}},{{0,0,16,27}},{8,5},{4,30})
 local office='rom_082d4ecc'
-cabinet('silph_server',office,{{0x37D},{0x385},{0x37E}},0x334,{0,12,16,28},28,40,{1,13})
-cabinet('silph_tape_terminal',office,{{0x37B},{0x383}},0x334,{0,2,16,22},22,24,{1,3})
-cabinet('silph_monitor_terminal',office,{{0x37C},{0x384}},0x334,{0,2,16,22},22,24,{1,3})
+cabinet('silph_server',office,{{0x37D},{0x385},{0x37E}},0x334,{0,12,16,28},28,31,{1,13})
+cabinet('silph_tape_terminal',office,{{0x37B},{0x383}},0x334,{0,2,16,22},22,15,{1,3})
+cabinet('silph_monitor_terminal',office,{{0x37C},{0x384}},0x334,{0,2,16,22},22,15,{1,3})
 plant('silph_potted_plant',office,{{0x34D},{0x355}},0x334)
 plant('silph_edge_potted_plant',office,{{0x34E},{0x356}},0x335)
 local power='rom_082d4e9c'

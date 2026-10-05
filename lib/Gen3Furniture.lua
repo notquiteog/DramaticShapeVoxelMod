@@ -21,11 +21,11 @@ local recipes={
  {name='lab_terminal',secondary='lab',rows={{0x06D},{0x2A6},{0x2B6}},kind='cabinet',h=25,ground=0x289,depth=12,facade={0,17,16,29}},
  {name='lab_side_terminal',secondary='lab',rows={{0x29F}},kind='cabinet',h=16,ground=0x289,depth=9,facade={1,0,12,16}},
  {name='lab_aquarium',secondary='lab',rows={{0x98},{0xA0}},kind='cabinet',h=28,ground=0x289,depth=11,frontOffset=34},
- {name='lab_books_left',secondary='lab',rows={{0x73},{0x283}},kind='cabinet',h=24,ground=0x289,depth=11,facade={1,0,14,27}},
- {name='lab_books_right',secondary='lab',rows={{0x74},{0x284}},kind='cabinet',h=24,ground=0x289,depth=11,facade={1,0,14,27}},
- {name='lab_books_free_left',secondary='lab',rows={{0x28B},{0x73},{0x283}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
- {name='lab_books_free_right',secondary='lab',rows={{0x28C},{0x74},{0x284}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
- {name='lab_books_free_corner',secondary='lab',rows={{0x2BA},{0x73},{0x287}},kind='cabinet',h=24,ground=0x289,depth=16,facade={1,16,14,27}},
+ {name='lab_books_left',secondary='lab',rows={{0x73},{0x283}},kind='cabinet',frontOffset=15,h=24,ground=0x289,depth=11,facade={1,0,14,27}},
+ {name='lab_books_right',secondary='lab',rows={{0x74},{0x284}},kind='cabinet',frontOffset=15,h=24,ground=0x289,depth=11,facade={1,0,14,27}},
+ {name='lab_books_free_left',secondary='lab',rows={{0x28B},{0x73},{0x283}},kind='cabinet',frontOffset=31,h=24,ground=0x289,depth=14,facade={1,16,14,27}},
+ {name='lab_books_free_right',secondary='lab',rows={{0x28C},{0x74},{0x284}},kind='cabinet',frontOffset=31,h=24,ground=0x289,depth=14,facade={1,16,14,27}},
+ {name='lab_books_free_corner',secondary='lab',rows={{0x2BA},{0x73},{0x287}},kind='cabinet',frontOffset=31,h=24,ground=0x289,depth=14,facade={1,16,14,27}},
  -- A full-depth top centers the three starters at local z=13. The second
  -- source row includes the front apron/legs, not a reason to halve the top.
  -- Upright actors on the approach row stand at z=32, clear of its z=25 edge.

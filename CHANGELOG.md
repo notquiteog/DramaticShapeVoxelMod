@@ -1,5 +1,8 @@
 ## Unreleased
 
+- FRLG Silph terminals, condo desks/sofas/table and Oak lab fixtures fit
+  native blocked rows; lab wallpaper stays behind the corrected models.
+
 - Emerald museum vessels use closed rounded models; display cases, facility
   desks/control banks and household sofas fit their native blocked tiles.
 

@@ -10,6 +10,8 @@ for _,r in ipairs(F.recipes)do if r.design then
  local props=F.extract(cells);assert(#props==1 and props[1].recipe==r,'incomplete match '..r.name)
  local count,hi=0,0
  F.append(props[1],function(q,uv)
+  local front=({silph_server=32,silph_tape_terminal=16,silph_monitor_terminal=16,lab_books_free_corner=32,lab_books_free_right=32,lab_books_free_left=32})[r.name]
+  if front then for _,v in ipairs(q)do assert(v[3]<=front,r.name..' crosses native blocked footprint')end end
   if r.design=='fr_mart_counter' then
    for _,v in ipairs(q)do if v[2]>3 then assert(v[3]>=23,'checkout cabinetry occupies the clerk aisle')end end
   elseif r.design=='fr_mart_cooler' then
