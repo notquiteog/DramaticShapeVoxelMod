@@ -506,6 +506,18 @@ function M.draw(id,A)
    B(x+2,7,27,x+9,8,30,case)
    top({x+2,21,7,3},x+2,27,x+9,30,8.02)
   end
+ elseif id=='em_roulette_table' then
+  local wood,edge,gold=T(3,20),T(1,1),T(8,7)
+  -- Four separate legs and an apron support the native felt/number layout.
+  -- The source's bottom carpet/shadow strip is not part of the table.
+  for _,x in ipairs{2,26}do for _,z in ipairs{3,39}do B(x,0,z,x+4,7,z+4,wood)end end
+  B(1,5,1,31,7,44,wood)
+  B(.5,7,.5,31.5,8,44.5,edge)
+  top({1,1,30,39},1,1,31,44,8.02)
+  -- Raised octagonal roulette rim and recessed native wheel face.
+  B(4,8,3,12,8.7,15,gold);B(2,8,5,14,8.7,13,gold)
+  top({2,2,12,12},2,3,14,15,8.72)
+  B(7,8.72,8,9,9.3,10,T(7,7))
  elseif id=='em_lilycove_ball_sculpture' then
   local base,light,dark=T(3,14),T(7,2),T(7,0)
   -- A low separate plinth supports the original green stone Poké Ball.

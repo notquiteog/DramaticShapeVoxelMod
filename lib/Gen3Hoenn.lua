@@ -225,6 +225,9 @@ add('hoenn_lilycove_counter','building__lilycove_museum',{
  design='em_lilycove_counter',ground=0x202,
  collisionRows={{0,0,0,0,0,0},{7,0x90,0x90,0x90,0x90,7},
  {0x90,0,0,0,0,0x90},{0x90,0,0,0,0,0x90},{7,0x90,0x90,0x90,0x90,7}}})
+add('hoenn_mauville_roulette','building__mauville_game_corner',{
+ {0x222,0x223},{0x22a,0x22b},{0x232,0x233}},'designed',{
+ design='em_roulette_table',ground=0x202,blockedRows={[1]=true,[2]=true,[3]=true}})
 local museum='building__oceanic_museum'
 local function exhibit(name,rows,design)
  add('hoenn_museum_'..name,museum,rows,'designed',{design=design,ground=0x201})

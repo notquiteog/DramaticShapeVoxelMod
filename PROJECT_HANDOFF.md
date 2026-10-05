@@ -1,3 +1,20 @@
+# Mauville roulette tables — 2026-10-05 (unreleased)
+
+Both native 2x3 roulette drawings now have four legs, a supporting apron,
+closed tabletop, raised octagonal wheel and central spindle. Original felt,
+number and wheel artwork retained; bottom carpet/shadow strip excluded.
+Complete-pattern matching requires all six native blocked cells. Source and
+runtime captures are in .scratch/coverage-20261004/results/emerald-casino-source
+and emerald-casino-models. QA_CASINO=1 tools/qa/furniture-walkspace.lua checks
+both assemblies, first-person front/side viewing cells and unchanged collision.
+Inspected native source, overview and first-person side. Gold wheel sample
+corrected after source pixel review. Hoenn patterns (167), designed objects
+(366) and shared walkspace tests pass. Engine v0.3.51; isolated save profile.
+
+Game Corner slot banks, seating, counter, palms, signs and remaining room
+models are still unfinished. This is incremental coverage, not room/all-world
+completion. Existing generation-parity and Modern UI agents work independently.
+
 # Museum upper rear wall — 2026-10-05 (unreleased)
 
 Added four complete native wall patterns (17 assemblies) for the upstairs

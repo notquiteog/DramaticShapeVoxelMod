@@ -1,3 +1,9 @@
+## Unreleased
+
+- Model Mauville's two roulette tables with separate legs, supporting aprons,
+  native felt layouts and raised wheels. Keep solids within their original
+  blocked cells and exclude carpet pixels from the raised surfaces.
+
 ## 1.31.3 — 2026-10-05
 
 - Give Lilycove's small exhibit a separate round Poké Ball on a low flat

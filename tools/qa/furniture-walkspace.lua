@@ -13,6 +13,7 @@ return function(game)
  if version~='emerald' and os.getenv('QA_LEAGUE')=='1'then maps={'FR_POKEMON_LEAGUE_LORELEIS_ROOM','FR_POKEMON_LEAGUE_BRUNOS_ROOM','FR_POKEMON_LEAGUE_AGATHAS_ROOM','FR_POKEMON_LEAGUE_LANCES_ROOM','FR_POKEMON_LEAGUE_CHAMPIONS_ROOM'}end
  if version~='emerald' and os.getenv('QA_BEDS')=='1'then maps={'FR_PLAYERS_HOUSE_2F','FR_FOUR_ISLAND_LORELEIS_HOUSE','FR_PLAYERS_HOUSE_1F'}end
  if version=='emerald' and os.getenv('QA_GALLERY')=='1'then maps={'EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_2F','EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F'}end
+ if version=='emerald' and os.getenv('QA_CASINO')=='1'then maps={'EM_MAUVILLE_CITY_GAME_CORNER'}end
  for _,id in ipairs(maps)do
   local d=assert(game.data.maps[id]);Map.ensureMidLayout(game,id,d)
   local px,py
@@ -25,6 +26,7 @@ return function(game)
   local FF=V.require('Gen3Furniture');local PP=V.require('Gen3Tilesets');local pair=PP.canonical(d.midLayout.pair);local spec=PP.resolve(d.midLayout.pair,require('src.import.gba.versions').TILESET_PAIRS);local cells={}
   for y=0,d.height-1 do for x=0,d.width-1 do cells[x..':'..y]={cx=x,cy=y,mid=d.midLayout:midAt(x,y),collision=d.midLayout:collAt(x,y),primary=spec.primary,secondary=spec.secondary,pair=pair,ts={}}end end
   local props=FF.extract(cells)
+  if id=='EM_MAUVILLE_CITY_GAME_CORNER' then local n=0;for _,p in ipairs(props)do if p.recipe.design=='em_roulette_table'then n=n+1 end end;assert(n==2,'both roulette tables required')end
   if os.getenv('QA_GALLERY')=='1' then assert(V.require('Gen3Stairs').prepare(cells)==1,'missing museum flight')end
   if id=='EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F' then
    local designs={};for _,p in ipairs(props)do designs[p.recipe.design or '']=true end
@@ -47,6 +49,11 @@ return function(game)
   end
   if os.getenv('QA_GALLERY')=='1' and id:match('_2F$')then Player.reset(3,8,'up')end
   C.setLevel(6,game);C.yaw=0;C.pitch=0;U.wait(15);U.shot(game,dir..'/'..id..'-first.png')
+  if id=='EM_MAUVILLE_CITY_GAME_CORNER' then
+   for _,view in ipairs{{'roulette-front',14,10,0},{'roulette-side',12,7,math.pi/2}}do
+    assert(d.midLayout:collAt(view[2],view[3])==0);Player.reset(view[2],view[3],'up');C.yaw=view[4];C.pitch=.2;U.wait(15);U.shot(game,dir..'/'..id..'-'..view[1]..'.png')
+   end
+  end
   if id=='EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F' then
    for _,view in ipairs{{'counter',4,11,0},{'counter-side',8,11,-math.pi/2},{'display',17,10,0},{'display-back',17,5,math.pi},{'small-sculpture',18,12,0},{'small-sculpture-side',20,11,-math.pi/2},{'wall-return',9,10,0}}do
     assert(d.midLayout:collAt(view[2],view[3])==0,'view must stand in native walking lane')
