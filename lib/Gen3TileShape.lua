@@ -171,6 +171,15 @@ function M.of(primary,secondary,mid,behavior,collision)
   if gymWalls[mid] then return {kind='roomWall',ground=mid>=0x2C0 and 0x2C0 or 0x294} end
   if mid==0x2A2 or mid==0x2A3 or mid==0x2A4 then return {kind='rock',ground=0x294,height=14} end
  end
+ -- Safari/Fuchsia broad crowns are a separate native drawing, not the
+ -- narrow General trees. Keep water/edge composite cells outside this set.
+ if primary=='general'and secondary=='rom_082d4b54'then
+  local row=math.floor(mid/8)*8;local col=mid%8
+  if col>=5 and col<=7 and (row==0x2F0 or row==0x2F8 or row==0x300 or row==0x308 or row==0x310 or row==0x318 or row==0x320)then
+   return {kind='tree',ground=1,safariTree=true,root=false,anchorX=8,anchorZ=8,
+    treeRows={{0x2F5,0x2F6,0x2F7},{0x2FD,0x2FE,0x2FF},{0x305,0x306,0x307},{0x30D,0x30E,0x30F}},treeFamily='round',treeTrim=0}
+  end
+ end
  if primary=='general' and (secondary=='rom_082d4dc4' or secondary=='viridian_forest') and forestTrees[mid] then
   return {kind='tree',ground=1,root=mid==676,spacing=3,anchorX=8,anchorZ=8,treeScale=1.5}
  end

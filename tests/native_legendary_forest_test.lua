@@ -2,7 +2,7 @@ local active,voxel=false,true
 local cache={}
 local V={}
 function V.require(k)
- if k=='CommunityVisuals'then return {customForest=function()return active end,treeDetail={get=function()return 'handheld'end}}end
+ if k=='CommunityVisuals'then return {customForest=function()return active end,customSafari=function()return active end,treeDetailLevel=function()return "handheld"end,treeDetail={get=function()return 'handheld'end}}end
  if k=='TreePresentation'then return {voxel=function()return voxel end}end
  if k=='BuildBudget'then return {tick=function()end}end
  if not cache[k]then cache[k]=assert(loadfile('lib/'..k..'.lua'))(V)end
@@ -27,3 +27,13 @@ for _,p in ipairs(v)do
 end
 assert(high>76.9 and material[19]and material[20],'missing trunk/crown materials')
 print('PASS optional native forest: default/card/unrelated-map fallback, shared Gen1 geometry/materials, original tree footprint and height')
+
+for _,id in ipairs{'CENTER','EAST','NORTH','WEST'}do
+ local safari=M.card(art,c,'FR_SAFARI_ZONE_'..id)
+ assert(safari.legendarySafari and not safari.legendaryForest)
+ assert(M.card(art,c,'FR_SAFARI_ZONE_'..id..'_REST_HOUSE')==art)
+ local vs,ix={},{};V.require('NativeTreeArt').appendModel(safari,vs,ix,0,0,0,0)
+ for _,p in ipairs(vs)do assert(math.abs(p[1])<=24.001 and math.abs(p[3])<=24.001 and p[2]>=0 and p[2]<=72.001)end
+end
+active=false;assert(M.card(art,c,'FR_SAFARI_ZONE_CENTER')==art)
+print('PASS native Safari model scope, default fallback and bounds')

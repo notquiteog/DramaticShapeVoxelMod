@@ -210,7 +210,7 @@ generation	key	label	status	consumer	limitation
 3	battles	3D-BTL	implemented	lib/Gen3Battle.lua	Shared 3D-BTL control, preserving native actors/attacks/UI and legacy FireRed OFF preferences.
 3	bossBg	BOSS BG	implemented	lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua	Native location/boss identity, source-pixel crop and frozen battle day phase, using installed optional art.
 3	communityCasino	CASINO	missing	false	No complete native generation adapter audited for this option.
-3	communitySafari	SAFARI ZONE	missing	false	No complete native generation adapter audited for this option.
+3	communitySafari	SAFARI ZONE	partial	lib/NativeLegendaryForest.lua; lib/SafariLandscape.lua	Optional shared Gen1 Safari tree models fit original native tree drawings and share GPU instances in all four Kanto Safari outdoor maps. Native terrain, huts, fences and other Safari-specific scenery are not yet adapted to the Legendary reserve model set.
 3	communityKantoLife	KANTO AMBIENCE	partial	lib/KantoLife.lua; lib/NativeHabitat.lua; lib/KantoLifeAudio.lua	Native outdoor grass/water/elevation habitats feed shared butterflies and night fireflies; OFF/LOW/NATURAL and SFX lifecycle work. Authored Gen1 city gardens and optional recorded audio still need native coverage/assets.
 3	vermilionBuildings	BUILDING STYLE	missing	false	No complete native generation adapter audited for this option.
 3	communityCaveDetails	CAVE DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
