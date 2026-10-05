@@ -86,7 +86,7 @@ function M.install(stage)
    end
    if mode=='target' then
     local target=Ui.targetCursor();local b=st.battlers and st.battlers[target]
-    M.menu.target=b and State.displayName(b)or ''
+    M.menu.target=b and ((target%2==1 and 'FOE 'or 'ALLY ')..State.displayName(b))or ''
    end
   end
   -- Only command screens have their native bottom strip replaced. Messages,
@@ -169,7 +169,7 @@ function M.install(stage)
   if M.menu and not UI.uiHidden('text') then
    local x,y=w-168,h-62
    local title=M.menu.target and ('TARGET: '..M.menu.target)or nil
-   if title then label(title,x+4,y-10,152)end
+   if title then Theme.panel(x+2,y-13,160,12);Theme.text(title,x+4,y-10,152,Theme.ink)end
    Theme.commandHub(x+82,y+29)
    for i,entry in ipairs(M.menu.entries)do
     local pos=M.menu.mode=='menu' and ({1,3,2,4})[i]or i
