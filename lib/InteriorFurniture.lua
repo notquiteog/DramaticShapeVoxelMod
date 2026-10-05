@@ -5,6 +5,8 @@ local M={}
 -- Authored placements: ROM front/shadow rows are not extra floor depth.
 -- Move whole component assemblies; keep all source crops and proportions.
 M.placement={
+ em_space_controls={z=-16,back=0},em_home_sofa={z=-14,back=0},
+ em_museum_glass={z=2,back=16},
  em_home_appliance={z=-16,back=1},em_fortree_drawers={z=-15,back=0},
  em_lab_books={z=-8,back=18},em_lab_computer={z=-11,back=15},
  em_lab_desk={z=-11,back=0},em_lab_server={z=-9,back=18},
@@ -498,12 +500,19 @@ function M.draw(id,A)
    top({x+2,21,7,3},x+2,27,x+9,30,8.02)
   end
  elseif id=='em_museum_wall_case' then
-  local case=T(2,27)
-  B(1,0,40,31,34,43,case)
-  -- Bottom eight source pixels are carpet/shadow, not cabinet material.
-  front({1,0,30,40},1,1,31,33,43.1)
-  B(0,0,40,1,34,44,case);B(31,0,40,32,34,44,case)
-  B(0,33,40,32,34,44,case);B(0,0,40,32,1,44,case)
+  -- The source is a rounded glass vessel, plus eight pixels of wallpaper
+  -- at its right. Neither that wallpaper nor the carpet is cabinet skin.
+  local cream,blue,gold=T(8,2),T(4,20),T(8,37)
+  local function drum(b,h,mat,inset)
+   inset=inset or 0
+   for _,q in ipairs{{0,21,24,27},{1,19,23,29},{3,17,21,31}}do
+    B(q[1]+inset,b,q[2]+inset,q[3]-inset,h,q[4]-inset,mat)
+   end
+  end
+  drum(0,4,gold);drum(4,5,cream);drum(5,29,blue,.7)
+  drum(29,31,cream);drum(31,32,cream,1)
+  front({3,8,18,27},3,5,21,29,30.32)
+  for _,x in ipairs{2,21}do B(x,5,29,x+1,29,30,cream)end
  elseif id=='em_museum_divider' then
   local paint,trim=T(8,20),T(1,48)
   B(4,0,0,12,28,62,paint)
@@ -513,14 +522,14 @@ function M.draw(id,A)
   local cream,blue,glass=T(8,3),T(3,17),T(8,16)
   local function drum(b,h,mat,inset)
    inset=inset or 0
-   for _,r in ipairs({{3,10,13,26},{2,12,14,24},{4,9,12,27}})do
+   for _,r in ipairs({{3,18,13,30},{2,20,14,28},{4,17,12,31}})do
     B(r[1]+inset,b,r[2]+inset,r[3]-inset,h,r[4]-inset,mat)
    end
   end
   drum(0,2,blue);drum(2,3,cream);drum(3,19,glass,.7)
   drum(19,20,blue);drum(20,22,cream)
-  for _,x in ipairs({3,12})do B(x,3,24,x+1,19,25,cream)end
-  front({4,10,8,16},4,3,12,19,25.1)
+  for _,x in ipairs({3,12})do B(x,3,28,x+1,19,29,cream)end
+  front({4,10,8,16},4,3,12,19,30.32)
  elseif id=='em_museum_glass' then
   local case=T(3,25)
   B(1,0,14,15,1.5,28,case);B(2,1.5,15,14,21,27,T(8,12))
@@ -569,18 +578,20 @@ function M.draw(id,A)
   end
  elseif id=='em_office_computer' or id=='em_office_desk' or id=='em_office_plans' then
   local case,dark=T(22,15),T(1,27)
-  -- A work surface with four separate legs and open knee space. Native
-  -- perspective legs are not stretched across a filled vertical slab.
-  desk(1,7,31,26,9,case)
-  B(1,8,7,31,9,26,T(22,15))
-  front({1,24,30,3},1,7.6,31,9,26.02)
+  -- Computer/empty desks have a walkable perspective row above their
+  -- blocked base. Plans tables use both blocked rows and keep their depth.
+  local plans=id=='em_office_plans'
+  local back,frontZ=plans and 7 or 16,plans and 26 or 31
+  desk(1,back,31,frontZ,9,case)
+  B(1,8,back,31,9,frontZ,T(22,15))
+  front({1,24,30,3},1,7.6,31,9,frontZ+.02)
   if id=='em_office_computer' then
-   top({17,12,13,11},17,8,30,24,9.03)
-   crt(2,8,13,10.5,21,{2,9,11,9},case,dark)
-   keyboard({2,20,12,4},2.5,17,12,5,9.1,case)
-  elseif id=='em_office_plans' then
+   top({17,12,13,11},17,17,30,30,9.03)
+   crt(2,17,13,10.5,21,{2,9,11,9},case,dark)
+   keyboard({2,20,12,4},2.5,25,12,5,9.1,case)
+  elseif plans then
    top({2,2,28,20},2,8,30,25,9.03)
-  else top({2,12,28,11},2,8,30,25,9.03)end
+  else top({2,12,28,11},2,17,30,30,9.03)end
  elseif id=='em_office_stool' then
   local metal,dark,seat=T(8,10),T(4,13),T(8,4)
   -- Bevelled circular cushion, central pedestal and a broad low foot.

@@ -1,3 +1,38 @@
+# Museum/facility walkspace pass — 2026-10-05 (unreleased)
+
+Reviewed native art and collision rows for Oceanic Museum 1F, Mossdeep Space
+Center 1F/2F and Rustboro House1. Closed rounded cream/blue museum vessels
+replace thin wall slabs; wallpaper on the source's right edge is excluded.
+Small museum cylinders/glass cases fit the blocked second row. Facility
+computer desks retain CRT/keyboards but move their supports into the native
+blocked second row; two-row plans tables retain their original footprint.
+Control banks and household sofas fit their blocked first row. No native
+collision, scripts, input or saves modified.
+
+Emerald authored-box census now flags 213 placements (previous 241): only
+82 right chairs, 47 left chairs, 54 cushions and 30 stools remain. These
+walkable native seats still need actor-support review, not automatic removal.
+The 28 corrected non-seat placements pass the central 8x8 footprint test.
+This does NOT certify every tile, collision edge, arbitrary mesh face,
+exterior or other generation. The same censused corrected recipes cover
+other maps, but only the four listed rooms were visually inspected this pass.
+
+Official engine v0.3.51, isolated profile, companions enabled; native,
+overview and first-person driver captures inspected. Evidence:
+.scratch/coverage-20261004/results/emerald-institutions-{before,after,verified};
+source crops retained only in scratch. Census emerald-footprint-institutions.
+Run tools/qa/furniture-walkspace.lua with QA_INSTITUTIONS=1 for these four
+rooms and collision-immutability assertions. Fixed this driver's remaining
+LeafGreen double atlas resolution as in the census. Scene scripts halted for
+inspection: no manual walking/controller or complete playthrough claim.
+All fixture processes exited; user saves untouched.
+
+Validation: 162 suites pass, 0 fail, 56 external-fixture skips. Footprint
+regressions cover vessel/desk bounds and control/sofa placement. Broader
+world/source-art coverage, other generations' footprint audit, seating
+support and museum's remaining generic wall/door art remain unfinished.
+No release/cart changes this pass.
+
 # Native walkspace/model correction — 2026-10-05 (unreleased)
 
 Compared live imported source art, native collision rows and renders for

@@ -1,10 +1,10 @@
 local F=dofile('lib/InteriorFurniture.lua')
 local footprints={em_start_pc_left={0,16,32,32},em_start_pc_right={0,16,32,32},
  em_start_dresser={0,16,16,32},em_start_console={0,0,16,16},
- em_start_tv={0,0,32,16},em_start_bed={16,32,32,48},em_lab_starter={0,16,32,32}}
+ em_start_tv={0,0,32,16},em_start_bed={16,32,32,48},em_lab_starter={0,16,32,32},em_museum_wall_case={0,16,32,32},em_museum_cylinder={0,16,16,32},em_office_computer={0,16,32,32},em_office_desk={0,16,32,32}}
 for name,b in pairs(footprints)do
  local count=0
- assert(F.draw(name,{sample=function()return{}end,source=function()end,
+ assert(F.draw(name,{sample=function()return{}end,source=function()end,width=32,
  box=function(l,y,n,r,h,s)
   if h>1.5 then
    count=count+1
@@ -14,17 +14,17 @@ for name,b in pairs(footprints)do
  assert(count>0)
 end
 -- Repeated shop/house/Center fixtures must stay in the native blocked row.
-local firstRow={em_home_appliance=true,em_fortree_drawers=true,em_lab_desk=true,em_home_sink=true,em_home_drawers=true,fr_kitchen=true}
+local firstRow={em_space_controls=true,em_home_sofa=true,em_home_appliance=true,em_fortree_drawers=true,em_lab_desk=true,em_home_sink=true,em_home_drawers=true,fr_kitchen=true}
 for id in pairs(F.placement)do
  local seen=0;local limit=firstRow[id] and 16 or 32
- assert(F.draw(id,{sample=function()return{}end,source=function()end,
+ assert(F.draw(id,{sample=function()return{}end,source=function()end,width=32,
  box=function(l,y,n,r,h,s)
   if h>1.5 then seen=seen+1;assert(s<=limit,id..' enters the front walking lane')end
  end}))
  assert(seen>0,id..' lost its solid model')
 end
 local blocked={'11111','10000','10000','11100','11111'}
-assert(F.draw('em_truck_cargo',{sample=function()return{}end,source=function()end,
+assert(F.draw('em_truck_cargo',{sample=function()return{}end,source=function()end,width=32,
  box=function(l,y,n,r,h,s)
   for cy=math.floor(n/16),math.ceil(s/16)-1 do for cx=math.floor(l/16),math.ceil(r/16)-1 do
    assert(blocked[cy+1]:sub(cx+1,cx+1)=='1','cargo overlaps walkable tile')

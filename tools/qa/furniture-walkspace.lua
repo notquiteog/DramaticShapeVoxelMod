@@ -5,6 +5,7 @@ return function(game)
  game:_handleBootAction({action='new_game',start={map=version=='emerald'and'EM_OLDALE_TOWN'or'FR_PALLET_TOWN',x=7,y=8,facing='down'}})
  local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib;V.require('VoxelGrid').set(false,game);local Map=require('src.core.game3.map');local Player=require('src.core.game3.player');local C=V.require('Gen3Integration')
  local maps=version=='emerald'and{'EM_OLDALE_TOWN_MART','EM_RUSTBORO_CITY_HOUSE3','EM_FORTREE_CITY_HOUSE3','EM_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB'}or{'FR_VIRIDIAN_CITY_POKEMON_CENTER_1F','FR_CERULEAN_CITY_MART','FR_ROUTE_2_HOUSE'}
+ if version=='emerald' and os.getenv('QA_INSTITUTIONS')=='1'then maps={'EM_SLATEPORT_CITY_OCEANIC_MUSEUM_1F','EM_MOSSDEEP_CITY_SPACE_CENTER_1F','EM_MOSSDEEP_CITY_SPACE_CENTER_2F','EM_RUSTBORO_CITY_HOUSE1'}end
  for _,id in ipairs(maps)do
   local d=assert(game.data.maps[id]);Map.ensureMidLayout(game,id,d)
   local native={};for y=0,d.height-1 do for x=0,d.width-1 do native[#native+1]=d.midLayout:collAt(x,y)end end
@@ -13,7 +14,7 @@ return function(game)
   assert(px,'no walkable viewing cell');assert(Map.load(nil,game,id,{x=px,y=py,facing='up'}));U.wait(20)
   local space=require('src.core.game3.scripting.space');space.runOnFrame=function()end;local vm=space.getVm();if vm then vm:halt(true)end;require('src.ui.game3.message').reset()
   Player.reset(px,py,'up');Player.setVisible(true)
-  local FF=V.require('Gen3Furniture');local PP=V.require('Gen3Tilesets');local pair=PP.canonical(d.midLayout.pair);local spec=PP.resolve(pair,require('src.import.gba.versions').TILESET_PAIRS);local cells={}
+  local FF=V.require('Gen3Furniture');local PP=V.require('Gen3Tilesets');local pair=PP.canonical(d.midLayout.pair);local spec=PP.resolve(d.midLayout.pair,require('src.import.gba.versions').TILESET_PAIRS);local cells={}
   for y=0,d.height-1 do for x=0,d.width-1 do cells[x..':'..y]={cx=x,cy=y,mid=d.midLayout:midAt(x,y),collision=d.midLayout:collAt(x,y),primary=spec.primary,secondary=spec.secondary,pair=pair,ts={}}end end
   for _,p in ipairs(FF.extract(cells))do if p.recipe.design then
    local rows={};for y=p.cy-1,p.cy+#p.recipe.rows do local row={};for x=p.cx,p.cx+#p.recipe.rows[1]-1 do row[#row+1]=tostring(d.midLayout:collAt(x,y))end;rows[#rows+1]=table.concat(row,',')end

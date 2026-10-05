@@ -1,5 +1,8 @@
 ## Unreleased
 
+- Emerald museum vessels use closed rounded models; display cases, facility
+  desks/control banks and household sofas fit their native blocked tiles.
+
 - Correct Emerald household/lab furniture and FRLG mart cabinet footprints
   against native walkability; preserve source lids and avoid floor textures.
 - Restore the Emerald shop wall clock and FRLG shop notice; remove a false
