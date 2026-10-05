@@ -47,6 +47,7 @@ function M.install()
  local draw,present,update=FieldView.draw,Display.present,Player.update
  local function ready(game)return recovery:ready(Scene.context and Scene.context()or game.session)end
  mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original battle background.'),Trees.art:schema('Solid voxel trees carved from the original game art (default), original flat cards, or illustrated cards.'),Trees.setting:schema('For card trees: flat trunks follow the crown, or use modeled trunks. Original model trees are fully solid.'),mode:schema('Gen 3 2.5D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
+ local fullPreset=V.require('Gen3FullPreset').new(M.level)
  local nativeArt=V.require('NativeBattleArt');nativeArt.install()
  local interfaceArt=V.require('NativeInterfaceArt')
  local uninstallInterface=interfaceArt.install()
@@ -145,6 +146,7 @@ function M.install()
   recovery:update(dt)
   BattleStage.update()
   legendary.migrate(game)
+  fullPreset:update(M.level,game)
   SceneOptions.update(dt)
   controls:update(dt,looking(game) and M.active,love.mouse)
   if BattleStage.active and Battle.isActive()then

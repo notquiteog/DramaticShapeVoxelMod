@@ -1,3 +1,33 @@
+# Native FULL preset parity — 2026-10-05 (unreleased)
+
+Audited existing option inventory; full parity is NOT complete. Gen3 FULL
+previously only selected a camera angle. Gen3FullPreset now applies the same
+supported GB presentation values on entry: maximum tilt-shift, no world curve,
+FULL water, staged battles ON, player back view. FULL pins DAYTIME to SYNC.
+Other choices apply only on entry: users can edit battles/art afterward; loading
+an already-FULL save doesn't overwrite those edits. Leaving FULL releases the
+clock without reverting user choices. Native Game3 framing/UI remain engine-owned,
+not rewritten through GB-only Zoom or battle-panel APIs. The native menu still
+shows its existing rows (Gen1 hides some while FULL); this is not full menu
+conditional-visibility parity. No changes to Gen1/2 consumers.
+
+Runtime verification: v0.3.51 isolated LeafGreen and Emerald profiles;
+`bash .scratch/coverage-20261004/run.sh GAME full-preset` with copied checked-in
+`tools/qa/gen3-full-preset.lua`. Driver explicitly dispatches core.update (raw
+source drivers otherwise bypass mod updates). Both passed preset entry, settings
+reaching their consumer objects, battle edit retention, clock release and restore.
+Inspected both full-preset.png renders: diorama blur/night clock active, native
+UI remains crisp. Results .scratch/coverage-20261004/results/GAME-full-preset/.
+No battle gameplay QA in this test; no player saves touched. 164 suites passed,
+0 failed, 56 external-fixture skips; logs .scratch/full-preset-tests.log.
+
+Updated docs/OPTION_PARITY.tsv from tools/option-parity-report.lua. Missing
+options remain 16 (Gen2), 47 (Gen3), plus partial/provider cases. Outstanding
+Legendary capture/audio/beam effects, native specialty scenery, Gen3 RAM
+precache, standing-trainer integration and Crystal-specific art options need
+real implementations/adapters, not editable placeholders. Inventory is source
+coverage only, not proof of every option on every platform. No release bump.
+
 # FRLG League statues — 2026-10-05 (unreleased)
 
 All ten Lance corridor statues now have closed native-art voxel sculptures

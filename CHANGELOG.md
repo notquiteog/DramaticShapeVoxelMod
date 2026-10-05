@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Make native Gen3 FULL apply the shared diorama presentation defaults on
+  entry and follow the synchronized day clock; preserve subsequent battle/art
+  edits and do not reapply the preset merely when loading a saved FULL view.
+
 - Model all ten Lance corridor statues from native upper-layer artwork,
   with separate plinths, shared sculpture meshes and blocked-tile checks.
   Preserve the native wall strip beneath the four boundary variants.

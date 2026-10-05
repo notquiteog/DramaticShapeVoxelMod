@@ -241,7 +241,7 @@ generation	key	label	status	consumer	limitation
 3	emberLegacyAudio	EMBER LEGACY AUDIO	missing	false	No complete native generation adapter audited for this option.
 3	emberLegacyVolume	EMBER LEGACY VOLUME	missing	false	No complete native generation adapter audited for this option.
 3	fireredBattleStage	3D BATTLE STAGE	alias	lib/Gen3Battle.lua	Legacy saved key, migrated to the shared 3D-BTL control.
-3	fireredCamera	VOXEL	implemented	lib/Gen3Integration.lua; lib/Gen3Scene.lua	Native field camera and rotated directional intent.
+3	fireredCamera	VOXEL	implemented	lib/Gen3Integration.lua; lib/Gen3Scene.lua; lib/Gen3FullPreset.lua	Native camera and rotated directional intent; FULL applies shared presentation defaults on entry and pins the clock, preserving later battle/art edits. Native framing replaces GB-specific Zoom/battle-panel configuration.
 3	frontAnimatedSet	ANIM FRONT GEN	implemented	lib/NativeBattleArt.lua; lib/BattleArt.lua	Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.
 3	frontFlip	FLIP FRONT SPRITE	implemented	lib/NativeBattleArt.lua; lib/BattleArt.lua	Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.
 3	full_body_backs	FULL-BODY BATTLE BACKS	missing	false	No complete native generation adapter audited for this option.
