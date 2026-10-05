@@ -1,3 +1,14 @@
+# Native terrain topology — 2026-10-04 (after 1.31.0)
+
+Recognize Emerald normal-behavior stair drawings, including Meteor Falls; stop
+reading its seaweed behavior as FireRed stairs. Shared minimum-rise topology
+handles unequal flights and south-up mound access; Fortree bridge decks no
+longer merge side crossings. Mesh revision 86 refreshes retained Gen2 geometry.
+[Evidence, census and limitations](docs/TERRAIN_LEVELS_2026-10-04.md).
+All 1,759 Gen2/3 imported-map fields build without height conflicts. Gen1's
+existing native profiles are retained. Walk/camera tests pass; full-world visual
+coverage and complete under-bridge actor-layer rendering are NOT claimed.
+
 # Crystal station fittings — 2026-10-04
 
 Goldenrod/Saffron station seats now have native yellow cushions, backrests,

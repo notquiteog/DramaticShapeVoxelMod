@@ -7,7 +7,7 @@ return function(game)
  local P=require('src.render.Pipelines')
  local f=assert(io.open(dir..'/coverage.tsv','w'));local total={maps=0,raised=0,flights=0,conflicts=0}
  if gen==3 then
-  game:_handleBootAction({action='new_game',start={map='FR_PALLET_TOWN',x=10,y=9,facing='down'}})
+  game:_handleBootAction({action='new_game',start={map=require('src.core.GameVersion').get()=='emerald' and 'EM_LITTLEROOT_TOWN' or 'FR_PALLET_TOWN',x=10,y=9,facing='down'}})
   local Map=require('src.core.game3.map');local E=V.require('Gen3Elevation')
   for id,d in pairs(game.data.maps)do
    Map.ensureMidLayout(game,id,d)
@@ -27,6 +27,10 @@ return function(game)
  f:close();print('[elevation census]',total.maps,total.raised,total.flights,total.conflicts)
  local targets=gen==3 and {{'FR_VICTORY_ROAD_1F',10,10},{'FR_MT_EMBER_EXTERIOR',29,32},{'FR_SEVEN_ISLAND_SEVAULT_CANYON',15,18},{'FR_CERULEAN_CITY_GYM',9,9},{'FR_SSANNE_EXTERIOR',32,9},{'FR_OAKS_LAB',5,6}}or
   {{'DARK_CAVE_BLACKTHORN_ENTRANCE',19,8},{'BURNED_TOWER_B1F',10,8},{'BLACKTHORN_CITY',13,15},{'OLIVINE_PORT',10,10},{'DANCE_THEATER',1,5},{'VIOLET_GYM',4,9},{'BLACKTHORN_GYM_1F',6,8},{'GOLDENROD_MAGNET_TRAIN_STATION',9,11},{'ELMS_LAB',5,6}}
+ if gen==3 and require('src.core.GameVersion').get()=='emerald' then
+  targets={{'EM_MOSSDEEP_CITY',26,23},{'EM_SOOTOPOLIS_CITY',20,34},
+   {'EM_JAGGED_PASS',14,20},{'EM_ROUTE119',21,47},{'EM_METEOR_FALLS_1F_1R',27,13}}
+ end
  for _,p in ipairs(targets)do
   game.input:reset();if game.stack then game.stack:clear()end
   if gen==3 then

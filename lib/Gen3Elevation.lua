@@ -23,12 +23,18 @@ function M.field(def)
  local deck=def.id=="FR_CERULEAN_CITY_GYM" or def.id=="FR_SSANNE_EXTERIOR" or def.id=="FR_THREE_ISLAND_PORT"
  local f=Levels.build(l.width,l.height,function(x,y)
   local raw=l:cellAt(x,y);local beh=behaviors[raw.mid]
-  local step=beh==0x2A;local jump=beh and beh>=0x38 and beh<=0x3F
   local shape=shapes.of(spec.primary,spec.secondary,raw.mid,beh,raw.coll)
+  local step=shape.kind=='steps';local jump=beh and beh>=0x38 and beh<=0x3F
   return {floor=raw.coll~=7 and not step and not jump,step=step,drop=drop[beh],layer=raw.elev,behavior=beh,
-   kind=shape.kind,seed=shape.kind~='water' and (deck or (outdoor or cave)and raw.elev==4)and 6 or 0}
+   kind=shape.kind,stairUpper=def.id and def.id:sub(1,3)=='EM_' and beh==0xc,seed=shape.kind~='water' and (deck or (outdoor or cave)and raw.elev==4)and 6 or 0}
  end,function(a,b,d)
   local layer=a.layer==b.layer or a.layer==0 or b.layer==0 or a.layer==15 or b.layer==15
+  -- A variable-layer bridge is a deck, not a doorway joining both the
+  -- upper path and the ground passing underneath it. Native Hoenn bridge
+  -- crossings connect their banks east/west; their side edges stay separate.
+  if spec.secondary=='fortree' and (a.layer==15 or b.layer==15) then
+   layer=a.layer==b.layer or d<=2
+  end
   return layer and (a.kind=='water')==(b.kind=='water') and not blocked[d][a.behavior] and not blocked[opposite[d]][b.behavior]
  end,6,V.require('BuildBudget').tick)
  f.signature=signature

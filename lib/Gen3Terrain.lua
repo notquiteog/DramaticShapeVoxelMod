@@ -31,7 +31,11 @@ function M.height(cells,x,z,height)
    local dz=math.max(y*16-z,0,z-(y+1)*16)
    local d=math.sqrt(dx*dx+dz*dz)
    local h=c.base or 0
-   if c.floor and c.floor.high then h=(c.floorHigh or c.floor.high)-(c.floor.high-c.floor.low)*math.max(0,math.min(1,(z-y*16)/16))end
+   if c.floor and c.floor.high then
+    local t=math.max(0,math.min(1,(z-y*16)/16))
+    if c.floor.reverse then t=1-t end
+    h=(c.floorHigh or c.floor.high)-(c.floor.high-c.floor.low)*t
+   end
    if d<distance then distance,boundary=d,h
    elseif d==distance then boundary=math.max(boundary,h)end
   end

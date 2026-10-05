@@ -29,6 +29,10 @@ function M.build(w,h,read,compatible,rise,tick)
    while cells[key(x,bottom)]and cells[key(x,bottom)].step do bottom=bottom+1 end
    local south=cells[key(x,bottom)]
    local flight={x=x,top=y,bottom=bottom,high=north and north.group,low=south and south.group,rise=(bottom-y)*(rise or 6)}
+   -- Native mound-top artwork can be SOUTH of its access stair. The
+   -- stair pixels alone do not encode uphill direction in Hoenn.
+   flight.reverse=north and south and south.stairUpper and not north.stairUpper
+   if flight.reverse then flight.high,flight.low=flight.low,flight.high end
    f.flights[#f.flights+1]=flight
    if flight.high and flight.low and flight.high~=flight.low then
     local high,low=flight.high,flight.low
@@ -54,21 +58,33 @@ function M.build(w,h,read,compatible,rise,tick)
    end
   end
  end end
- for _,root in ipairs(f.groups)do if root.height==nil then
-  root.height=0;local queue={root};local head=1;local minimum=0
-  while queue[head]do local a=queue[head];head=head+1
-   for _,edge in ipairs(a.edges)do local b,delta=edge[1],edge[2];local target=a.height+delta
-    if b.height==nil then b.height=target;minimum=math.min(minimum,target);queue[#queue+1]=b
-    elseif b.height~=target then f.conflicts[#f.conflicts+1]={a=a,b=b,delta=delta}end
-   end
+ -- Landings have one height even when two paths use different-length
+ -- flights. Each flight supplies a minimum rise; extra rise is distributed
+ -- over its existing treads, never a gap at its upper/lower landing.
+ -- Solve the uphill DAG in linear time, preserving explicit floor datums.
+ local ready,head={},1
+ for _,g in ipairs(f.groups)do
+  g.height=0;g.pending=0
+  for _,c in ipairs(g.cells)do g.height=math.max(g.height,c.seed or 0)end
+  for _,e in ipairs(g.edges)do if e[2]<0 then g.pending=g.pending+1 end end
+  if g.pending==0 then ready[#ready+1]=g end
+ end
+ while ready[head]do local a=ready[head];head=head+1
+  for _,e in ipairs(a.edges)do if e[2]>0 then
+   local b=e[1];b.height=math.max(b.height,a.height+e[2])
+   b.pending=b.pending-1;if b.pending==0 then ready[#ready+1]=b end
+  end end
+ end
+ -- A directed uphill cycle cannot describe real terrain. Keep the native
+ -- floor visible at its source datum, report it, and never keep increasing
+ -- heights on every visit. Correct native map/collision data is untouched.
+ for _,g in ipairs(f.groups)do
+  if g.pending>0 then
+   f.conflicts[#f.conflicts+1]={group=g,reason='uphill cycle'}
+   g.height=0;for _,c in ipairs(g.cells)do g.height=math.max(g.height,c.seed or 0)end
   end
-  local offset=0
-  for _,g in ipairs(queue)do for _,c in ipairs(g.cells)do offset=math.max(offset,(c.seed or 0)-(g.height-minimum))end end
-  for _,g in ipairs(queue)do
-   g.height=g.height-minimum+offset
-   for _,c in ipairs(g.cells)do c.height=g.height end
-  end
- end end
+  for _,c in ipairs(g.cells)do c.height=g.height end
+ end
  for _,s in ipairs(f.flights)do
   local low=s.low and s.low.height or 0
   local high=s.high and s.high.height or low+s.rise
@@ -76,7 +92,12 @@ function M.build(w,h,read,compatible,rise,tick)
   if high<low then high=low end
   for y=s.top,s.bottom-1 do local c=cells[key(s.x,y)]
    local fraction=(y-s.top)/(s.bottom-s.top)
-   c.high=high-(high-low)*fraction;c.low=high-(high-low)*(fraction+1/(s.bottom-s.top));c.height=c.low
+   if s.reverse then
+    c.low=low+(high-low)*fraction;c.high=low+(high-low)*(fraction+1/(s.bottom-s.top));c.reverse=true
+   else
+    c.high=high-(high-low)*fraction;c.low=high-(high-low)*(fraction+1/(s.bottom-s.top))
+   end
+   c.height=c.low
   end
  end
  -- Stable, full-map nearest support under props. It cannot change when a
@@ -132,7 +153,10 @@ end
 function M.at(f,x,z)
  local c=f and f.cells[key(math.floor(x/16),math.floor(z/16))]
  if not c then return 0 end
- if c.high then return c.high-(c.high-c.low)*math.min(3,math.max(0,math.floor(z%16/4)))/4 end
+ if c.high then
+  local band=math.min(3,math.max(0,math.floor(z%16/4)))
+  return c.reverse and c.low+(c.high-c.low)*(band+1)/4 or c.high-(c.high-c.low)*band/4
+ end
  return c.height or 0
 end
 return M

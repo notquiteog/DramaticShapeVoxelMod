@@ -24,3 +24,21 @@ local b={x=2,y=0,w=2,h=2,floorField=room(0)}
 local c={x=2,y=2,w=2,h=2,floorField=room(12)}
 T.align({a,b,c});assert(a.floorOffset==0 and b.floorOffset==6 and c.floorOffset==-6,'connected maps have different seam heights')
 T.align({c,b,a});assert(c.floorOffset==0 and b.floorOffset==12 and a.floorOffset==6,'map-origin reversal changed relative ground levels')
+
+-- A short flight and a longer flight can reach the same two terraces.
+-- The shorter flight must meet the common landing rather than tear a seam.
+local unequal=T.build(3,4,function(x,y)
+ return {floor=y==0 or y==3 or x==0 and y==1,
+  step=x==0 and y==2 or x==2 and (y==1 or y==2)}
+end,nil,6)
+assert(#unequal.conflicts==0)
+assert(T.at(unequal,8,8)==12 and T.at(unequal,40,8)==12)
+assert(unequal.cells['0:2'].high==12 and unequal.cells['0:2'].low==0)
+assert(unequal.cells['2:1'].high==12 and unequal.cells['2:2'].low==0)
+print('PASS unequal-length stair flights share closed upper/lower landings')
+
+local reverse=T.build(1,4,function(x,y)return{floor=y==0 or y==3,step=y==1 or y==2,stairUpper=y==3}end,nil,6)
+assert(T.at(reverse,8,8)==0 and T.at(reverse,8,56)==12)
+assert(T.at(reverse,8,16)==1.5 and T.at(reverse,8,44)==12)
+assert(reverse.cells['0:1'].reverse and reverse.cells['0:2'].low==6)
+print('PASS south-up mound access uses the same tread heights as actor support')

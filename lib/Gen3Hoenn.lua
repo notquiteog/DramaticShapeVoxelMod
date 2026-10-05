@@ -26,6 +26,14 @@ function M.surface(primary,mid,collision)
 end
 function M.shape(primary,secondary,mid,behavior,collision)
  if primary=='general' then
+  -- Hoenn stairs use NORMAL behavior, not FRLG's 0x2A (seaweed here).
+  -- Match native tread artwork and retain blocked copies as scenery.
+  if collision~=7 and ((mid==0xaf or mid==0xcf) or
+    secondary=='sootopolis' and (mid==0x244 or mid==0x245) or
+    secondary=='lavaridge' and mid==0x2af or
+    secondary=='meteor_falls' and mid==0x202) then
+   return {kind='steps',height=6}
+  end
   if trees[mid]then return {kind='tree',ground=1,root=roots[mid],anchorX=16,anchorZ=8,treeRows=treeRows,treeFamily='round',treeTrim=0}end
   if narrowTrees[mid]then
    return {kind='tree',ground=1,root=true,anchorX=8,anchorZ=8,

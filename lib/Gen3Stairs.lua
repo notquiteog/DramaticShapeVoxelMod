@@ -127,7 +127,7 @@ function M.append(c,emit,uvFor)
   -- Rock terrace stair bands keep their short native rise, not a full story.
   for n=0,3 do
    local rise=c.floor and c.floor.high and (c.floor.high-c.floor.low)or 6
-   local z=n*4;local h=rise*(1-n/4)
+   local z=n*4;local h=rise*(c.floor and c.floor.reverse and (n+1)/4 or (1-n/4))
    local uv={tex(c.mid,0,z),tex(c.mid,16,z),tex(c.mid,16,z+4),tex(c.mid,0,z+4)}
    for x=0,15,8 do box(x,0,z,x+8,h,z+4,solid(c.mid,x+4,z+2))end
    face({{ox,h,oz+z},{ox+16,h,oz+z},{ox+16,h,oz+z+4},{ox,h,oz+z+4}},uv,1)

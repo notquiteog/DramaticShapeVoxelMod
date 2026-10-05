@@ -53,3 +53,15 @@ for _,id in ipairs{0x64,0x65,0x6d,0x6e,0x6f,0x7f,0x8f}do
  assert(S.of("general","mossdeep",id,0,7).kind~="cliff","ground or house became a cliff")
 end
 assert(S.of("general","mossdeep",0x9e,0,7).cap==0x6c,"cliff cap borrowed a grassy slope")
+
+for _,id in ipairs{0xaf,0xcf}do
+ assert(S.of('general','mossdeep',id,0,0).kind=='steps','Hoenn normal-behavior stairs flattened')
+end
+assert(S.of('general','sootopolis',0x244,0,0).kind=='steps')
+assert(S.of('general','lavaridge',0x2af,0,0).kind=='steps')
+assert(S.of('general','mossdeep',0x244,0,0).kind~='steps','local stair ID leaked')
+assert(S.of('general','mossdeep',0xcf,0,7).kind=='tree','blocked tree artwork became stairs')
+assert(S.of('general','mossdeep',0x100,0x2a,0).kind~='steps','Emerald seaweed became stairs')
+
+assert(S.of('general','meteor_falls',0x202,8,43).kind=='steps','cave encounter stairs flattened')
+assert(S.of('general','mossdeep',0x202,8,43).kind~='steps','Meteor Falls stairs leaked')
