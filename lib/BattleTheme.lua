@@ -4,19 +4,19 @@ local V=...
 local M={apiVersion=1,paper={.77,.78,.76,1},ink={.19,.21,.20,1},
  edge={.27,.28,.26,1},selected={.88,.90,.84,1}}
 M.commands={fight={.83,.05,.09,1},pokemon={.10,.37,.04,1},bag={.76,.40,.08,1},run={.13,.27,.62,1}}
-function M.panel(x,y,w,h,selected)
+function M.panel(x,y,w,h,selected,style)
  local G=love.graphics
  G.setColor(.06,.07,.06,.4);G.rectangle('fill',x+.5,y+1,w,h,1,1)
  G.setColor(unpack(M.edge));G.rectangle('fill',x,y,w,h,1,1)
- G.setColor(unpack(selected and M.selected or M.paper));G.rectangle('fill',x+1,y+1,w-2,h-2)
+ G.setColor(unpack(style and style.paper or selected and M.selected or M.paper));G.rectangle('fill',x+1,y+1,w-2,h-2)
  G.setColor(.94,.94,.90,1);G.line(x+1,y+1,x+w-1,y+1)
 end
-function M.statusCard(x,y,w,h,tip,selected)
+function M.statusCard(x,y,w,h,tip,selected,style)
  local G=love.graphics
  tip=math.max(x+6,math.min(x+w-6,tip or x+w/2))
  G.setColor(unpack(M.edge));G.polygon('fill',{tip-6,y+h-1,tip+6,y+h-1,tip,y+h+6})
- G.setColor(unpack(M.paper));G.polygon('fill',{tip-4.5,y+h-1,tip+4.5,y+h-1,tip,y+h+4.5})
- M.panel(x,y,w,h,selected)
+ G.setColor(unpack(style and style.paper or M.paper));G.polygon('fill',{tip-4.5,y+h-1,tip+4.5,y+h-1,tip,y+h+4.5})
+ M.panel(x,y,w,h,selected,style)
 end
 function M.button(x,y,w,h,kind,selected,flip)
  local G=love.graphics;local c=M.commands[kind]or {.22,.34,.52,1}

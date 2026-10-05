@@ -10,6 +10,7 @@ return function(game)
  V.require('Gen3Battle').setting:setIndex(1,game)
  V.require('BattleArt').backPlacementSetting:setIndex(2,game)
  V.require('PokeballSettings').enabled:setIndex(off and 1 or 2,game)
+ if os.getenv('CAPTURE_DARK')=='1' then V.require('UiBackplates').hudColor:setIndex(2,game) end
  local Party=require('src.core.game3.party');game.session.party={};assert(Party.giveMon(game.session,6,35))
  local Bag=require('src.core.game3.bag');game.session.bag=Bag.new();assert(Bag.add(game.session.bag,item,1))
  local B=require('src.core.game3.battle');local UI=require('src.core.game3.battle.ui')

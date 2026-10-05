@@ -18,7 +18,7 @@ local setting={new=function(key,_,values)
 end}
 local theme={scale=function()return 3 end,paper={1,1,1,1},statusCard=function()draw.paper=theme and theme.paper end}
 -- Assign separately so the callback captures the local table.
-theme.statusCard=function()draw.paper=theme.paper end
+theme.statusCard=function(x,y,w,h,tip,selected,style)draw.paper=style and style.paper or theme.paper end
 V.require=function(name)
  if name=='ModernBattleUI'then return {providerEnabled=function()return true end}end
  if name=='ModSetting'then return setting end
@@ -42,6 +42,9 @@ Chrome.drawPanel('menu');assert(nativePanel==2,'bag retained wrong chrome')
 Font.draw('Bag',10,122,{colors='bag'});assert(color=='bag')
 Message.drawText();assert(nativeMessage==1)
 package.loaded['src.ui.game3.bag_menu']=nil
+for _,phase in ipairs({'pokedex_reg','catch_naming','evolving'})do package.loaded['src.core.game3.battle']={_phase=phase};assert(O.covered(),'native fullscreen phase leaked HUD: '..phase)end
+package.loaded['src.core.game3.battle']={_phase='catch_dex_return'};assert(not O.covered())
+package.loaded['src.core.game3.battle']=nil
 settings.hudColor.value='INVERTED';local paper=theme.paper;O.card();assert(draw.paper[1]<.1 and theme.paper==paper)
 assert(O.ink()[1]>.9)
 assert(O.hudScale(1920,1080)==3);settings.hudScale.value='og';assert(O.hudScale(1920,1080)==6.75)

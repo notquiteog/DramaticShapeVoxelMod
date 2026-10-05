@@ -7,10 +7,14 @@ M.ui=UI
 M.scale=V.require('ModSetting').new('hudScale','HUD SCALE',{'scaled','og'},{'SCALED','OG'})
 M.settings={UI.battleUi,UI.hudColor,UI.textboxFill,M.scale}
 function M.covered()
+ local ok,battle=pcall(require,'src.core.game3.battle')
+ if not ok then battle=nil end
+ local phase=battle and battle._phase
+ if phase=='pokedex_reg'or phase=='catch_naming'or phase=='evolving'then return true end
  for _,name in ipairs({'bag_menu','party_menu','summary_menu','help_system','pokedex'})do
   for _,prefix in ipairs({'src.ui.game3.','src.ui.game3.rse.'})do
-   local menu=package.loaded[prefix..name]
-   if menu and menu.isOpen and menu.isOpen()then return true end
+   local found,menu=pcall(require,prefix..name)
+   if found and menu and menu.isOpen and menu.isOpen()then return true end
   end
  end
  return false
@@ -51,11 +55,9 @@ function M.hudScale(w,h)
  return V.require('BattleTheme').scale(w,h)
 end
 function M.ink()return UI.hudUsesColor()and {.19,.21,.20,1}or{.96,.98,1,1}end
-function M.card(...)
- local Theme=V.require('BattleTheme')
- local paper=Theme.paper
- if not UI.hudUsesColor()then Theme.paper={.07,.10,.13,.96}end
- local ok,err=pcall(Theme.statusCard,...);Theme.paper=paper
- if not ok then error(err,0)end
+function M.card(x,y,w,h,tip,selected)
+ local style=not UI.hudUsesColor()and {paper={.07,.10,.13,.96}}or nil
+ return V.require('BattleTheme').statusCard(x,y,w,h,tip,selected,style)
 end
+
 return M
