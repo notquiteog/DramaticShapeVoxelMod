@@ -2,8 +2,29 @@
 -- rectangles refer to the complete native drawing, never a replacement atlas.
 -- Both adapters use these closed components, preserving native palette/art.
 local M={}
+-- Authored placements: ROM front/shadow rows are not extra floor depth.
+-- Move whole component assemblies; keep all source crops and proportions.
+M.placement={
+ em_home_tv={z=-8,back=16},em_home_books={z=-8,back=16},
+ em_home_fridge={z=-8,back=16},em_home_rustic_books={z=-8,back=16},
+ em_home_glass_tall={z=-8,back=15},em_home_drawers={z=-14,back=0},
+ em_home_sink={z=-14,back=0},em_center_medicine={z=-8,back=20},
+ em_mart_stock={z=-10,back=19},em_mart_glass={z=-9,back=20},
+ fr_center_pc={z=-11,back=15},fr_upper_pc={z=-11,back=15},
+ fr_mart_cooler={z=-9,back=19},fr_cupboard={z=-8,back=20},
+ fr_living_tv={z=-8,back=19},fr_kitchen={z=-15,back=3},
+}
 function M.draw(id,A)
  local B,S,T=A.box,A.source,A.sample
+ local placement=M.placement[id]
+ if placement then
+  local box,source=B,S;local z=placement.z
+  B=function(l,b,n,r,h,s,uv)return box(l,b,n+z,r,h,s+z,uv)end
+  S=function(x,y,w,h,a,b,c,d)
+   local function move(p)return{p[1],p[2],p[3]+z}end
+   return source(x,y,w,h,move(a),move(b),move(c),move(d))
+  end
+ end
  local function front(r,l,b,rr,h,z)
   S(r[1],r[2],r[3],r[4],{l,h,z},{rr,h,z},{rr,b,z},{l,b,z})
  end

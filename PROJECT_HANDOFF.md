@@ -1,3 +1,46 @@
+# Shared Gen3 furniture footprint audit — 2026-10-05 (unreleased)
+
+Corrected 16 authored component assemblies: Center PCs/medicine shelves,
+Mart stock/glass cases/coolers, household TVs/books/cupboards/fridges/sinks.
+Move complete native-textured assemblies into their blocked footprint instead
+of using the artwork's perspective apron as additional floor depth. Gen3
+north-wall shell and native wallpaper now recess behind those assemblies;
+otherwise the corrected Mart coolers were hidden behind the wallpaper.
+All gameplay collision, warps and interactions remain unchanged. Gen1/2
+furniture placements and cave shells are unchanged.
+
+Repeatable engine driver: tools/qa/furniture-footprint-census.lua. It audits
+resolved authored props in Gen3 indoor maps against native collision and
+reports low solids intersecting a walkable cell's central 8x8px region.
+Flags are review candidates: chairs/seats can be intentional. This does not
+certify every tile, generic geometry, source-art accuracy or gameplay access.
+Emerald flags fell 474 -> 281 (193 placements); FireRed 330 -> 253 (77).
+LeafGreen post-change census completed: 263 indoor maps, 1187 authored props.
+No before-change LeafGreen measurement was taken.
+
+Evidence: official engine 0.3.51, isolated profiles and fresh teleported
+fixtures, existing companions enabled. Scratch coverage-20261004 contains
+footprint-census[-after] outputs and common-fixtures native/overview/first
+captures. Inspected Emerald Oldale Center/Mart and Slateport house, FireRed
+Viridian Center, Cerulean Mart and Route 2 house. Cerulean Mart was rechecked
+in first person after moving the separate wallpaper layer. Grid was disabled
+for final captures. Fixture story VM halted for geometry inspection; this is
+not a full playthrough. No user saves modified. All fixture processes exited.
+
+Validation: interior_walkspace_test (16 shared families, exit frames, wall
+recess merging/cache invalidation), interior_diorama_test,
+designed_interiors_test (337 objects), gen3_center_furniture_test and
+gen3_additional_furniture_test pass. System LuaJIT compiled 683 Lua files;
+unchanged tests/battle_art_voxel_fork_test.lua exceeds LuaJIT's 200-local
+limit at line 2604 (also reproduced from HEAD). Python compile helper cannot
+run under system Python because its Lupa luajit21 backend is unavailable.
+Changed production files compile and boot successfully.
+
+Remaining: flagged seats/stools need actor-support review; Mart return
+counters, lab/office furniture, museum cases, native generic cabinets/racks
+and remaining Gen2 footprints are not certified. No exhaustive world coverage
+or all-five-mod feature parity claim. No release/cart pins changed in this batch.
+
 # Interior exit frames and walkable-space corrections — 2026-10-04 (unreleased)
 
 User reports missing indoor exit doors and models protruding into traversable

@@ -155,7 +155,7 @@ function M.geometry(p,side,opened)
     table.sort(cuts)
     for i=1,#cuts-1 do
      local l,r=cuts[i],cuts[i+1];local at=p.northFront
-     for _,q in ipairs(p.northRecesses)do if (l+r)/2>q[1] and (l+r)/2<q[2]then at=q[3]end end
+     for _,q in ipairs(p.northRecesses)do if (l+r)/2>q[1] and (l+r)/2<q[2]then at=math.min(at,q[3])end end
      if r>l then strip(l,r,at)end
     end
    else strip(a,c,line)end
@@ -305,6 +305,31 @@ function M.forMap(map,gen)
   end
  end
  p.meshes={};cache[def]=p;return p
+end
+-- Recess north-wall backing behind corrected fixture footprints. Moving a
+-- desk into its real blocked row must not bury it in the synthetic shell.
+function M.setRecesses(p,fixtures)
+ if not p or p.gen~=3 or p.cave then return end
+ p.originalNorth=p.originalNorth or p.bounds[2]
+ local cuts={};local keys={}
+ for _,q in ipairs(fixtures or {})do
+  if q[3]<p.originalNorth and q[2]>p.bounds[1] and q[1]<p.bounds[3] then
+   cuts[#cuts+1]=q;keys[#keys+1]=table.concat(q,',')
+  end
+ end
+ table.sort(keys);local signature=table.concat(keys,';')
+ if p.recessSignature==signature then return end
+ p.recessSignature=signature;p.northFront=p.originalNorth;p.bounds[2]=p.originalNorth
+ table.sort(cuts,function(a,b)return a[1]<b[1]end)
+ local merged={}
+ for _,q in ipairs(cuts)do
+  local last=merged[#merged]
+  if last and last[2]==q[1] and last[3]==q[3]then last[2]=q[2]
+  else merged[#merged+1]={q[1],q[2],q[3]}end
+  p.bounds[2]=math.min(p.bounds[2],q[3])
+ end
+ p.northRecesses=merged
+ for key,mesh in pairs(p.meshes or {})do mesh:release();p.meshes[key]=nil end
 end
 function M.setOpenings(p,openings)
  if not p then return end

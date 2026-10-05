@@ -196,6 +196,12 @@ local function build(req,cache,previous)
  local civics=Civic.prepare(cells,gyms,V.data("gen3_exteriors"));M.civicCount=#civics
  M.stairCount=Stairs.prepare(cells)
  local props=Furniture.extract(cells)
+ cache.furnitureRecesses={}
+ local placements=V.require('InteriorFurniture').placement
+ for _,p in ipairs(props)do
+  local placement=placements[p.recipe.design]
+  if placement then cache.furnitureRecesses[#cache.furnitureRecesses+1]={p.cx*16,(p.cx*16)+p.w,p.cy*16+placement.back-.15}end
+ end
  cache.openings={}
  for _,p in ipairs(props)do if p.recipe.noGround and p.recipe.down then
   cache.openings[#cache.openings+1]={p.cx*16,p.cy*16,(p.cx*16)+p.w,(p.cy*16)+p.d}
@@ -397,6 +403,13 @@ local function build(req,cache,previous)
    end
   end
  end
+ local function wallFront(cx,front)
+  local x=cx*16+8
+  for _,q in ipairs(cache.furnitureRecesses)do
+   if x>q[1] and x<q[2]then front=math.min(front,q[3]+.04)end
+  end
+  return front
+ end
  local labWall={}
  for _,c in pairs(cells)do if c.secondary=='lab' and c.cy==0 and c.mid~=0 then
   local b=batches[c.pair];local uv=uvFor(c.ts,0x69)
@@ -414,7 +427,7 @@ local function build(req,cache,previous)
   local house=c.pair=='player_house' or c.pair=='house'
   local shop=c.pair=='building__rom_082d4bcc'
   if house or shop then
-   local b=batches[c.pair];local x=c.cx*16;local f=31.92
+   local b=batches[c.pair];local x=c.cx*16;local f=wallFront(c.cx,31.92)
    local upper=uvFor(c.ts,house and 0x20 or 0x285)
    local lower=uvFor(c.ts,house and 0x28 or 0x285)
    if upper and lower then
@@ -794,6 +807,7 @@ function M.draw(game,vw,vh,cam)
   Shadow.finish('firered')
  end
  local room=not cam.battle and Interior.forMap(M.sceneDef,3) or nil
+ Interior.setRecesses(room,cache.furnitureRecesses)
  Interior.setOpenings(room,cache.openings)
  Interior.configure(room)
  local bounds=M.distance.bounds
