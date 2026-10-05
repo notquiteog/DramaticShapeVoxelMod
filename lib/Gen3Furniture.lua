@@ -41,6 +41,7 @@ local function recipe(name,pair,rows,kind,h,ground,extra)
  recipes[#recipes+1]=r
 end
 local mart='building__rom_082d4bcc'
+recipe('mart_wall_notice',mart,{{0x286},{0x28E}},'cabinet',28,0x281,{base=12,depth=1.5,frontOffset=32.2,facade={2,10,12,18}})
 recipe('mart_rear_display',mart,{{0x287},{0x28F}},'cabinet',24,0x281,{facade={0,16,16,16}})
 recipe('mart_rear_books',mart,{{0x292,0x293,0x294},{0x29A,0x29B,0x29C},{0x2A2,0x2A3,0x2A4}},'cabinet',30,0x281,{facade={0,16,48,32}})
 recipe('mart_checkout',mart,{{0x2A8,0x2A9,0x2AA},{0x2B0,0x2B1,0x2B2}},'counter',12,0x281,{top=16})

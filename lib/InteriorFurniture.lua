@@ -5,6 +5,10 @@ local M={}
 -- Authored placements: ROM front/shadow rows are not extra floor depth.
 -- Move whole component assemblies; keep all source crops and proportions.
 M.placement={
+ em_home_appliance={z=-16,back=1},em_fortree_drawers={z=-15,back=0},
+ em_lab_books={z=-8,back=18},em_lab_computer={z=-11,back=15},
+ em_lab_desk={z=-11,back=0},em_lab_server={z=-9,back=18},
+ fr_mart_cooler={z=-13,back=19},
  em_home_tv={z=-8,back=16},em_home_books={z=-8,back=16},
  em_home_fridge={z=-8,back=16},em_home_rustic_books={z=-8,back=16},
  em_home_glass_tall={z=-8,back=15},em_home_drawers={z=-14,back=0},
@@ -671,7 +675,7 @@ function M.draw(id,A)
   local case,edge=T(7,4),T(2,14)
   B(1,0,17,15,25,30,case)
   B(2,25,18,14,26,29,case)
-  front({1,2,14,26},1,1,15,25,30.02)
+  front({1,0,14,24},1,1,15,25,30.02)
   B(2,9,30,14,9.5,30.3,edge)
   B(3,15,30,4,19,30.7,edge)
  elseif id=='em_home_tv' then
@@ -739,7 +743,7 @@ function M.draw(id,A)
   -- A freestanding double shelf: solid back and end panels, individually
   -- raised books and readable native spines on both open tiers.
   shelves(1,26,30,13,25,{{3,11,{2,29,28,7}},{14,22,{2,20,28,7}}},T(1,20),T(4,28),true)
-  B(1,25,26,31,26.5,39,T(3,14));top({1,4,30,10},1,26,31,39,26.52)
+  B(1,25,26,31,26.5,39,T(3,18));top({1,17,30,2},1,26,31,39,26.52)
  elseif id=='em_lab_computer' then
   local case,dark,wood=T(13,16),T(12,12),T(26,24)
   desk(1,27,31,42,8,wood)
@@ -755,11 +759,12 @@ function M.draw(id,A)
    top(q,x,12,x+w,12+d,9.42)
   end
  elseif id=='em_lab_starter' then
-  local wood,dark=T(3,11),T(17,25)
-  B(2,0,9,30,1,29,dark);B(1,1,8,31,8,28,wood)
-  B(0,8,7,32,9,29,wood);top({1,2,30,13},1,8,31,27,9.02)
-  front({1,16,30,13},1,1,31,8,28.02)
-  B(15.6,1,28,16.4,8,28.2,dark)
+  local wood,dark=T(3,17),T(17,25)
+  -- Upper source row is bare floor; the cupboards occupy row two.
+  B(2,0,18,30,1,31,dark);B(1,1,17,31,8,31,wood)
+  B(0,8,16,32,9,32,wood);top({1,16,30,3},1,17,31,31,9.02)
+  front({1,19,30,11},1,1,31,8,31.02)
+  B(15.6,1,31,16.4,8,31.2,dark)
  elseif id=='em_lab_server' then
   local case,dark=T(2,20),T(5,28)
   B(1,0,27,15,25,40,case)
@@ -793,9 +798,6 @@ function M.draw(id,A)
     B(l,5,z+14,rr,6.2,z+15,case)
    end
   end
- elseif id=='em_mart_return' then
-  local case=T(2,12);B(1,0,7,15,5,41,case);B(1,5,7,15,7,41,T(8,3))
-  top({1,0,14,16},1,7,15,41,7.02)
  elseif id=='em_center_medicine' then
   local case,dark=T(2,15),T(3,35)
   shelves(1,28,30,11,23,{{3,11,{2,33,28,7}},{13,20,{2,23,28,7}}},case,dark,true)

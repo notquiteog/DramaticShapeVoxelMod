@@ -13,7 +13,7 @@ for _,r in ipairs(F.recipes)do if r.design then
   if r.design=='fr_mart_counter' then
    for _,v in ipairs(q)do if v[2]>3 then assert(v[3]>=23,'checkout cabinetry occupies the clerk aisle')end end
   elseif r.design=='fr_mart_cooler' then
-   for _,v in ipairs(q)do assert(v[3]>=32 and v[3]<=45,'cabinet pushes through the north wall or into the aisle')end
+   for _,v in ipairs(q)do assert(v[3]>=19 and v[3]<=32,'cabinet pushes through the north wall or into the aisle')end
   end
   count=count+1;for i,p in ipairs(q)do assert(p[1]==p[1] and p[2]>=0);hi=math.max(hi,p[2]);assert(uv[i][1]>=0 and uv[i][1]<=1 and uv[i][2]>=0 and uv[i][2]<=1,'UV '..r.name)end
  end,function()return{{0,0},{1,0},{1,1},{0,1}}end)

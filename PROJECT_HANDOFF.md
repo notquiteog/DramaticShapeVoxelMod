@@ -1,3 +1,49 @@
+# Native walkspace/model correction — 2026-10-05 (unreleased)
+
+Compared live imported source art, native collision rows and renders for
+Emerald Oldale Mart, Rustboro House3, Fortree House3 and Birch's Lab; FR/LG
+Cerulean Mart, with Viridian Center/Route2 House as neighboring checks.
+Moved home appliances, drawers, lab shelves/computers/desks/servers into
+blocked rows. Birch cupboard upper row is floor: only the lower blocked row
+now carries its solid cabinet; native floor no longer textures its top.
+Bookcase lids use the actual white lid, not floor/cushion source pixels.
+FRLG mart coolers return to their blocked footprint (fixes the recent polish
+regression). Rectangular shop/lab north walls stay straight behind the
+corrected furniture; mounted notices/windows follow the same wall plane.
+Added FRLG mart wall notice. Removed Emerald's invented return counter:
+its two cells are clock wallpaper and walkable floor. The clock is restored
+on its original wall drawing. Native collision/scripts remain unchanged.
+
+Full Emerald authored-prop census: 281 -> 241 flagged instances, including
+13 removed false counter claims. Corrected designs have zero flagged solids.
+Census flags are review candidates (many seats), NOT all proven defects.
+Fixed census double-canonicalizing LeafGreen atlas names; preloads all layouts,
+binds aliases and sorts map/report traversal. Earlier LeafGreen aggregate
+comparisons are invalid due to this harness flaw. New complete baseline:
+263 interiors, 1254 designed props, 265 flagged candidates; all 12 mart
+coolers now pass. Emerald: 708 designed props, 241 remaining flags.
+The census only checks authored box solids intersecting central walkable
+8x8 footprints below actor height. It does not certify every terrain cell,
+wall, card, exterior, smaller edge overlap or any Gen1/2 object.
+
+QA engine official 0.3.51, isolated profiles, companions present. Drivers:
+tools/qa/furniture-walkspace.lua and furniture-footprint-census.lua.
+Evidence .scratch/coverage-20261004/results/{emerald,leafgreen}-footprint-
+rooms-before/after and {emerald,firered}-footprint-final-rooms (native,
+overview, first-person); source crops under emerald-footprint-sources.
+Final census {emerald,leafgreen}-footprint-final. Rooms assert native collision
+unchanged after renders. Source images remain scratch-only. These are
+teleported fixture captures, not controller movement/playthrough proof.
+162 suites passed, 0 failed, 56 fixture-dependent skips; 339 designed-object
+checks and walkspace tests repeated after final source-crop corrections.
+All production LuaJIT compilation passed before those simple crop changes.
+Fixture processes exited, player saves/install untouched. No release.
+
+Remaining coverage is substantial: current candidates include seating,
+office/museum fixtures, generic cabinets/racks; source-faithful wallpaper,
+other interiors, all exterior/terrain geometry and Gen1/2 walkspaces still
+need exhaustive review. Do not claim every tile or every game is finished.
+
 # Shared rendering optimization — 2026-10-05 (unreleased)
 
 All generations now skip equal model/sunModel uniform uploads in visible and

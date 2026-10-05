@@ -113,3 +113,9 @@ V.require('InteriorFurniture').draw('em_museum_wall_case',{
  box=function()end,sample=function()return{}end,
  source=function(x,y,w,h)assert(y+h<=40,'museum carpet wrapped onto upright glass cabinet');museumFaces=museumFaces+1 end})
 assert(museumFaces>0)
+
+for _,mid in ipairs{0x222,0x244}do
+ assert(H.shape('building','shop',mid,0,7).kind=='roomWall','clock wallpaper became a floor prop')
+ assert(H.shape('building','shop',mid,0,0).kind=='flat','walkable clock alias became solid')
+end
+for _,r in ipairs(H.recipes)do assert(r.name~='hoenn_mart_return','wallpaper/floor claimed as checkout')end

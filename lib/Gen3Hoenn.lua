@@ -29,6 +29,9 @@ function M.surface(primary,mid,collision)
  end
 end
 function M.shape(primary,secondary,mid,behavior,collision)
+ if primary=='building' and secondary=='shop' and collision==7 and (mid==0x222 or mid==0x244)then
+  return {kind='roomWall',ground=0x201}
+ end
  if secondary=="inside_of_truck"then return {kind="flat",reviewedSurface=true}end
  if primary=='building' and secondary=='generic_building' and collision==7
    and (mid==0x3c9 or mid==0x3d1 or mid==0x215 or mid==0x21d)then
@@ -280,7 +283,8 @@ for _,a in ipairs{{0x230,0x231},{0x221,0x231}}do
 end
 add('hoenn_mart_glass',mart,{{0x213,0x213,0x213},{0x21b,0x21b,0x21b}},'designed',{design='em_mart_glass'})
 add('hoenn_mart_counter',mart,{{0x318,0x239,0x23a},{0x320,0x241,0x242}},'counter',{h=7,top=16,join=true})
-add('hoenn_mart_return',mart,{{0x244},{0x208}},'designed',{design='em_mart_return'})
+-- 244 is the clock's lower wallpaper row; 208 is walkable floor.
+-- Leave both to the native wall/floor renderer, never invent a counter.
 add('hoenn_mart_plant',mart,{{0x215},{0x21d},{0x225}},'plant',{h=26,cutout=true})
 -- Whole native roof headers, walls and doors; the floor apron is excluded.
 M.exteriors={

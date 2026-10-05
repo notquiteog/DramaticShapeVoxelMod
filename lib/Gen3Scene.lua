@@ -209,6 +209,16 @@ local function build(req,cache,previous)
   local placement=placements[p.recipe.design]
   if placement then cache.furnitureRecesses[#cache.furnitureRecesses+1]={p.cx*16,(p.cx*16)+p.w,p.cy*16+placement.back-.15}end
  end
+ -- Reviewed rectangular shops/labs have a straight north wall. Furniture
+ -- depth corrections must not turn its cornice into a cabinet-shaped zigzag.
+ local roomProfile=Interior.forMap(def,3)
+ local sourcePair=Pairs.canonical(def.midLayout.pair)
+ if roomProfile and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='building__rom_082d4bcc')then
+  local north=roomProfile.originalNorth or roomProfile.bounds[2]
+  for _,q in ipairs(cache.furnitureRecesses)do north=math.min(north,q[3])end
+  cache.northWallFront=north+.04
+  cache.furnitureRecesses={{roomProfile.bounds[1],roomProfile.bounds[3],north}}
+ end
  cache.openings={}
  for _,p in ipairs(props)do if p.recipe.noGround and p.recipe.down then
   cache.openings[#cache.openings+1]={p.cx*16,p.cy*16,(p.cx*16)+p.w,(p.cy*16)+p.d}
@@ -217,6 +227,13 @@ local function build(req,cache,previous)
   local s=c.stairs;cache.openings[#cache.openings+1]={s.cx*16,s.cy*16,(s.cx+s.width)*16,(s.cy+#s.r.rows)*16}
  end end
  Shapes.layout(cells)
+ if cache.northWallFront then
+  for _,c in pairs(cells)do local col=c.column
+   if col and col.indoor and col.first<=1 and col.last<=1 then
+    col.front=cache.northWallFront;col.back=col.front-4
+   end
+  end
+ end
  for _,c in pairs(cells)do if c.gym then c.column=Buildings.column(c.gym)end end
  Elevation.bind(cells,regions)
  cache.floorRegions=regions
@@ -419,6 +436,7 @@ local function build(req,cache,previous)
   end
  end
  local function wallFront(cx,front)
+  if cache.northWallFront then return cache.northWallFront end
   local x=cx*16+8
   for _,q in ipairs(cache.furnitureRecesses)do
    if x>q[1] and x<q[2]then front=math.min(front,q[3]+.04)end
@@ -456,7 +474,13 @@ local function build(req,cache,previous)
   local b=batches[p.pair]
   local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout
-  Furniture.append(p,function(vertices,uv,shade,anchor)quad(cutout and b.pv or b.v,cutout and b.pi or b.i,vertices,uv,shade,anchor)end,uvFor)
+  Furniture.append(p,function(vertices,uv,shade,anchor)
+   if cache.northWallFront and p.cy==0 and p.recipe.frontOffset and (p.recipe.depth or 99)<=2 then
+    local shift=cache.northWallFront-31.92
+    for _,v in ipairs(vertices)do v[3]=v[3]+shift end
+   end
+   quad(cutout and b.pv or b.v,cutout and b.pi or b.i,vertices,uv,shade,anchor)
+  end,uvFor)
   Elevation.lift(b.v,start,p.groundHeight or 0);Elevation.lift(b.pv,plantStart,p.groundHeight or 0)
  end end
  cache.civics={}

@@ -1,5 +1,12 @@
 ## Unreleased
 
+- Correct Emerald household/lab furniture and FRLG mart cabinet footprints
+  against native walkability; preserve source lids and avoid floor textures.
+- Restore the Emerald shop wall clock and FRLG shop notice; remove a false
+  counter claim and keep reviewed shop/lab walls straight behind furniture.
+- Make the native footprint census deterministic and fix LeafGreen atlas
+  resolution in the audit.
+
 - All generations avoid redundant transform uploads in visible/shadow passes;
   in-place animated matrices remain live. Inactive mesh budgets do less work.
 - Gen3 reuses its per-frame water list and cached healing-device references.
