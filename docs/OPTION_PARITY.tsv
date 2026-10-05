@@ -227,7 +227,7 @@ generation	key	label	status	consumer	limitation
 3	communityPrizeRoom	PRIZE ROOM	missing	false	No complete native generation adapter audited for this option.
 3	communityRoads	ROADS & BRIDGES	missing	false	No complete native generation adapter audited for this option.
 3	communityRocket	ROCKET HIDEOUT	missing	false	No complete native generation adapter audited for this option.
-3	communitySigns	SIGNS	missing	false	No complete native generation adapter audited for this option.
+3	communitySigns	SIGNS	partial	lib/NativeLegendarySigns.lua; lib/Gen3Outdoor.lua	Optional Gen1 low chamfered sign shape fitted inside native sign cells, retaining the original plaque artwork. Generated location labels and special directional markers remain unported.
 3	communitySky	SKY & BACKGROUND	implemented	lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua	Native scene supersampling, day clock/light/sky, underlay and postprocess.
 3	communityTower	TOWER VISUALS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
 3	communityTowerWall	TOWER WALL	missing	false	No complete native generation adapter audited for this option.

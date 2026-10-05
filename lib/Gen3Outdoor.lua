@@ -95,6 +95,7 @@ function M.append(c,emit,uvFor)
   emit({{x1,y1,z1},{x1,y1,z0},{x1,y0,z0},{x1,y0,z1}},tex,.9)
  end
  if s.kind=='sign' then
+  if V.require('NativeLegendarySigns').draw(c,emit,uv)then return true end
   if s.hoenn then
    local white,blue=sub(uv,3,6,3,6),sub(uv,5,8,5,8)
    for _,px in ipairs({2,12})do box(x+px,0,z+6,x+px+2,8,z+10,white)end
