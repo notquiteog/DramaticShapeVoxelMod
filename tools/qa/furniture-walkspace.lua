@@ -25,6 +25,8 @@ return function(game)
   local FF=V.require('Gen3Furniture');local PP=V.require('Gen3Tilesets');local pair=PP.canonical(d.midLayout.pair);local spec=PP.resolve(d.midLayout.pair,require('src.import.gba.versions').TILESET_PAIRS);local cells={}
   for y=0,d.height-1 do for x=0,d.width-1 do cells[x..':'..y]={cx=x,cy=y,mid=d.midLayout:midAt(x,y),collision=d.midLayout:collAt(x,y),primary=spec.primary,secondary=spec.secondary,pair=pair,ts={}}end end
   local props=FF.extract(cells)
+  if os.getenv('QA_GALLERY')=='1' then assert(V.require('Gen3Stairs').prepare(cells)==1,'missing museum flight')end
+  if id=='EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_2F' then local n=0;for _,p in ipairs(props)do if p.recipe.kind=='carvedStatue'then n=n+1 end end;assert(n==2,'expected both native museum sculptures')end
   if id=='FR_POKEMON_LEAGUE_LANCES_ROOM' then local count=0;for _,p in ipairs(props)do if p.recipe.kind=='statue'then count=count+1 end end;assert(count==10,'expected all ten native League statues');print('[statues]',count)end
   for _,p in ipairs(props)do if p.recipe.design or p.recipe.kind=='statue' then
    local rows={};for y=p.cy-1,p.cy+#p.recipe.rows do local row={};for x=p.cx,p.cx+#p.recipe.rows[1]-1 do row[#row+1]=tostring(d.midLayout:collAt(x,y))end;rows[#rows+1]=table.concat(row,',')end
@@ -39,6 +41,7 @@ return function(game)
   end
   if os.getenv('QA_GALLERY')=='1' and id:match('_2F$')then Player.reset(3,8,'up')end
   C.setLevel(6,game);C.yaw=0;C.pitch=0;U.wait(15);U.shot(game,dir..'/'..id..'-first.png')
+  if id=='EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_2F' then Player.reset(11,4,'up');C.pitch=.15;U.wait(15);U.shot(game,dir..'/'..id..'-statue.png')end
   if id=='FR_POKEMON_LEAGUE_LANCES_ROOM' then Player.reset(6,17,'right');C.yaw=math.pi/2;U.wait(15);U.shot(game,dir..'/'..id..'-statue-side.png')end
   local n=0;for y=0,d.height-1 do for x=0,d.width-1 do n=n+1;assert(native[n]==d.midLayout:collAt(x,y),'renderer changed native collision')end end
   assert(not C.lastError,tostring(C.lastError));print('[PASS]',id,px,py)

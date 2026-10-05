@@ -506,6 +506,14 @@ function M.draw(id,A)
    B(x+2,7,27,x+9,8,30,case)
    top({x+2,21,7,3},x+2,27,x+9,30,8.02)
   end
+ elseif id=='em_lilycove_picture_wall' then
+  local w=A.width
+  local spot=A.recipe and A.recipe.wallSample or {0,2}
+  local wall,trim=T(spot[1],spot[2]),T(w-1,28)
+  B(0,0,16,w,30,31.8,wall)
+  B(0,0,16,w,2,31.8,trim)
+  B(0,30,16,w,31,31.8,wall)
+  front({0,0,w,32},0,0,w,30,31.82)
  elseif id=='em_lilycove_gallery' then
   local green,cap,edge=T(5,22),T(20,11),T(2,15)
   -- Back, sides and recessed front retain the native green display wall.

@@ -1,6 +1,10 @@
 -- Reviewed native stair assemblies including their landing. Exact four-cell
 -- matches prevent borrowing floors/walls from unrelated furniture drawings.
 return {
+ -- Lilycove Museum uses the same complete north-facing framed flight,
+ -- with floor-specific artwork rather than the generic house palette.
+ {pair='building__lilycove_museum',rows={{0x205,0x206,0x207},{0x20d,0x20e,0x20f}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',floor=0x203,down=false},
+ {pair='building__lilycove_museum',rows={{0x26a,0x26b,0x26c},{0x272,0x273,0x274}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',floor=0x270,down=true},
  -- Facility flights retain their own gray/red materials and surrounding floor.
  {pair='general__facility',rows={{0x2b3,0x2b4,0x2b5},{0x2bb,0x2bc,0x2bd}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',floor=0x2f0,down=false},
  {pair='general__facility',rows={{0x2c3,0x2c4,0x2c5},{0x2cb,0x2cc,0x2cd}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',floor=0x2f0,down=true},

@@ -173,6 +173,21 @@ add('hoenn_lilycove_gallery','building__lilycove_museum',{
  design='em_lilycove_gallery',ground=0x268,blockedRows={[3]=true},
  groundRows={{0x268,0x269,0x268,0x269},{0x269,0x268,0x269,0x268},
  {0x268,0x269,0x268,0x269},{0x269,0x268,0x269,0x268}}})
+for _,pair in ipairs{{0x284,0x28c},{0x285,0x28d}}do
+ add('hoenn_lilycove_statue_'..pair[1],'building__lilycove_museum',{{pair[1]},{pair[2]}},'carvedStatue',{
+  ground=0x270,groundRows={{0x289},{0x270}},blockedRows={[2]=true}})
+end
+for _,rows in ipairs{
+ {{0x20b},{0x213}},{{0x218,0x219},{0x220,0x221}},{{0x21a,0x21b},{0x222,0x223}},
+ {{0x21c},{0x224}},{{0x21d},{0x225}},{{0x21e,0x21f},{0x226,0x227}},
+ {{0x22d,0x22e},{0x235,0x236}},{{0x22f},{0x237}},
+}do
+ add('hoenn_lilycove_picture_wall_'..rows[1][1],'building__lilycove_museum',rows,'designed',{
+  design='em_lilycove_picture_wall',ground=0x203,blockedRows={[2]=true},
+  wallSample={0,({[0x21c]=16,[0x21d]=16,[0x22f]=24})[rows[1][1]]or 2}})
+end
+add('hoenn_lilycove_floor_statue','building__lilycove_museum',{{0x22b},{0x233}},'carvedStatue',{
+ ground=0x202,backgroundMids={0x202,0x203},blockedRows={[2]=true}})
 local museum='building__oceanic_museum'
 local function exhibit(name,rows,design)
  add('hoenn_museum_'..name,museum,rows,'designed',{design=design,ground=0x201})

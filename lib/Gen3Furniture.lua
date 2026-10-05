@@ -181,6 +181,9 @@ function M.append(p,emit,uvFor)
   V.require('Gen3Cave').rock({cx=p.cx,cy=p.cy,ts=p.ts,mid=r.rows[1][1],shape={ground=r.ground,height=7}},emit,uvFor)
   return
  end
+ if r.kind=='carvedStatue' and V then
+  V.require('Gen3CarvedStatue').append(p,emit,uvFor,box,sample);return
+ end
  if r.kind=='statue' and V then
   V.require('Gen3Statue').append(p,emit,uvFor,box,source,sample);return
  end

@@ -1,5 +1,5 @@
 local F=dofile('lib/InteriorFurniture.lua')
-local footprints={em_lilycove_gallery={0,32,64,48},fr_bed={16,32,32,48},fr_lorelei_bed={16,16,32,32},fr_home_bookcase={0,16,32,32},fr_room_pc={0,16,32,32},fr_roof_room_desk={0,16,32,32},
+local footprints={em_lilycove_picture_wall={0,16,32,32},em_lilycove_gallery={0,32,64,48},fr_bed={16,32,32,48},fr_lorelei_bed={16,16,32,32},fr_home_bookcase={0,16,32,32},fr_room_pc={0,16,32,32},fr_roof_room_desk={0,16,32,32},
  fr_office_table={0,0,32,32},fr_executive_table={0,16,48,32},fr_sofa={0,0,48,16},fr_museum_bookcase={0,16,32,32},fr_center_storage={0,16,32,32},fr_department_glass={0,16,32,48},fr_department_stock={0,16,32,64},fr_lab_free_books={0,16,32,32},fr_condo_sofa={0,0,64,16},
  fr_condo_workstation={0,16,48,32},em_start_pc_left={0,16,32,32},em_start_pc_right={0,16,32,32},
  em_start_dresser={0,16,16,32},em_start_console={0,0,16,16},

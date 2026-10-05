@@ -1,3 +1,38 @@
+# Lilycove museum sculptures, walls and flights — 2026-10-05 (unreleased)
+
+Three tall sculptures now have cached closed voxel hulls from their native
+opaque artwork and separate closed pedestals. Unlike the League statues,
+these figures are on the opaque base layer: mask only border-connected native
+background. Ground-floor statue uses reviewed checker floor palette; upstairs
+uses each row's border background. Enclosed highlights stay. Figure depth is
+8px; all solids stay inside blocked lower cells. Recipes require complete
+native art and blocked bases. No native collision or warps altered.
+
+Added eight complete picture-wall patterns retaining original paintings,
+yellow wall and pink skirting on closed walls. Only blocked base rows carry
+solids. Native cap samples are explicitly reviewed (small paintings fill most
+of their tiles; arbitrary edge samples produced dark caps, fixed after render).
+Added exact 3x2 native ascending/descending museum stair recipes using existing
+north-facing Hoenn frame/flight geometry, floor-specific native materials.
+
+Verification: v0.3.51 isolated Emerald profile, companions on. Native images
+and cell grids: emerald-lilycove-source and emerald-gallery-statue-source in
+.scratch/coverage-20261004/results. QA_GALLERY=1 tools/qa/furniture-walkspace.lua
+via scratch gallery-statues driver asserts both upstairs sculptures, each
+stair assembly and unchanged full room collision grids. Inspected both floors'
+final overviews and upstairs first-person sculpture closeup. Final wall-cap
+rerender inspected after source sampling fix. Tests: sculpture mask/bounds/
+cache, all Hoenn recipes and family isolation, shared walkspace, stair assembly
+and designed-interior crop checks pass. Full suite 168 passed/0 failed/56
+external skips (.scratch/museum-tests.log); targeted tests rerun after final
+cap sample and additional patterned-floor regression.
+
+Still incomplete: downstairs counter, large display platform and short bust,
+wall returns/corners, earned painting overlays and broad other-map coverage.
+No manual warp traversal or all-angle/all-map artistic sign-off claimed.
+Parity agent continues independently; its uncommitted changes are not part of
+this museum commit. No captures/ROM pixels or user save changes committed.
+
 # Native full-body backs and cave-audio adapter — 2026-10-05 (unreleased)
 
 Gen3 FULL-BODY BATTLE BACKS uses existing Crystal/full_body normal/shiny assets

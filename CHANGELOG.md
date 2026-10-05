@@ -1,5 +1,10 @@
 ## Unreleased
 
+- Model Lilycove Museum's three tall sculptures from their native opaque art,
+  removing only connected background pixels and keeping pedestals in blocked
+  base cells. Add eight native picture-wall patterns and both framed stair
+  flights; use clean wall samples for caps instead of painting pixels.
+
 - Expose FULL-BODY BATTLE BACKS on Gen3 staged allied cards using the existing
   normal/shiny animated provider. Preserve selected-art OFF behavior, ROM/MODDED
   ownership, native forms/species fallback and unstaged UI; no duplicate actor.
