@@ -2039,6 +2039,7 @@ OverworldBattle.install()
 Gen2Battle.install()
 if Generation.isGen2() then
  local uninstallGen2UI=V.require('Gen2BattleUI').install()
+ V.require('NativeCaveAudio').install(2,function()return require('src.render.Pipelines').level('voxel')>0 end)
  mod.hooks:wrap('core.quit_to_launcher',function(next,...)uninstallGen2UI();return next(...)end)
 end
 V.require("NativeBattleArt").install()

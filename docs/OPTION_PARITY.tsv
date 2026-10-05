@@ -119,7 +119,7 @@ generation	key	label	status	consumer	limitation
 2	communityKantoLife	KANTO AMBIENCE	missing	false	No complete native generation adapter audited for this option.
 2	vermilionBuildings	BUILDING STYLE	missing	false	No complete native generation adapter audited for this option.
 2	communityCaveDetails	CAVE DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
-2	communityCaveSound	CAVE SOUND	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communityCaveSound	CAVE SOUND	partial	lib/NativeCaveAudio.lua	Native cave classification, OFF/LOW/MID ambience, 16px footsteps, SFX volume and transition fades are wired. Optional Legendary cave/footstep audio assets are not bundled; absent files remain silent.
 2	communityCaves	CAVES	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
 2	communityCityGround	CITY GROUND	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
 2	communityCourtyards	FENCES & COURTS	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
@@ -214,7 +214,7 @@ generation	key	label	status	consumer	limitation
 3	communityKantoLife	KANTO AMBIENCE	missing	false	No complete native generation adapter audited for this option.
 3	vermilionBuildings	BUILDING STYLE	missing	false	No complete native generation adapter audited for this option.
 3	communityCaveDetails	CAVE DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
-3	communityCaveSound	CAVE SOUND	missing	false	No complete native generation adapter audited for this option.
+3	communityCaveSound	CAVE SOUND	partial	lib/NativeCaveAudio.lua	Native cave classification, OFF/LOW/MID ambience, 16px footsteps, SFX volume and transition fades are wired. Optional Legendary cave/footstep audio assets are not bundled; absent files remain silent.
 3	communityCaves	CAVES	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
 3	communityCityGround	CITY GROUND	missing	false	No complete native generation adapter audited for this option.
 3	communityCourtyards	FENCES & COURTS	missing	false	No complete native generation adapter audited for this option.
@@ -244,7 +244,7 @@ generation	key	label	status	consumer	limitation
 3	fireredCamera	VOXEL	implemented	lib/Gen3Integration.lua; lib/Gen3Scene.lua; lib/Gen3FullPreset.lua	Native camera and rotated directional intent; FULL applies shared presentation defaults on entry and pins the clock, preserving later battle/art edits. Native framing replaces GB-specific Zoom/battle-panel configuration.
 3	frontAnimatedSet	ANIM FRONT GEN	implemented	lib/NativeBattleArt.lua; lib/BattleArt.lua	Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.
 3	frontFlip	FLIP FRONT SPRITE	implemented	lib/NativeBattleArt.lua; lib/BattleArt.lua	Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.
-3	full_body_backs	FULL-BODY BATTLE BACKS	missing	false	No complete native generation adapter audited for this option.
+3	full_body_backs	FULL-BODY BATTLE BACKS	implemented	lib/NativeFullBody.lua; lib/NativeBattleArt.lua; lib/Crystal/full_body.lua	Integrated normal/shiny full-body animated backs on staged allied cards. ROM/MODDED, front view, unstaged battles and unavailable species/forms retain their existing artwork; no second actor draw.
 3	grid	V-GRID	implemented	lib/Voxel3D.lua; lib/ShadowMap.lua	Native scene uses the shared geometry and shadow passes.
 3	hdTreeTrunks	TREE TRUNKS	implemented	lib/Gen3Scene.lua; lib/TreePresentation.lua	Native tree material/geometry selection with live rebuild.
 3	hudColor	HUD COLOR	provider	lib/ModernBattleUI.lua; lib/UiBackplates.lua	Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.

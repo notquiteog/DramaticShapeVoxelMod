@@ -33,7 +33,7 @@ end},image={newImageData=function(path,h)
  if type(path)=='number'then return cell(path,h)end
  local def=assert(definitions[path],path);local c=cell(def.width*def.columns,def.height*math.ceil(def.frames/def.columns));c.source=path;return c
 end}}
-local modules={BattleArt=Art,Gen3SpriteLight={scope=function(fn,...)return fn(...)end,tag=function(v)return v end},Gen3TrainerArt={install=function()return function()end end}}
+local modules={NativeFullBody={install=function()end,image=function()return nil end},BattleArt=Art,Gen3SpriteLight={scope=function(fn,...)return fn(...)end,tag=function(v)return v end},Gen3TrainerArt={install=function()return function()end end}}
 local hooks={}
 local V={data=data,require=function(name)return assert(modules[name],name)end,mod={assets={path=function(_,p)return p end},hooks={wrap=function(_,name,fn)hooks[name]=fn end}}}
 local Animated=assert(loadfile('lib/AnimatedBattleArt.lua'))(V);modules.AnimatedBattleArt=Animated

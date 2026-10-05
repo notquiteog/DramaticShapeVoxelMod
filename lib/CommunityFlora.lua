@@ -7586,7 +7586,7 @@ function Flora.drawCommunityCaveAtmosphere(state)
   if not map then return end
 
   local detail = visuals.caveDetailLevel()
-  local sound = visuals.caveSoundLevel()
+  local sound = V.require("Generation").isGen2() and "off" or visuals.caveSoundLevel()
   local t = now()
   local dt = MOUND.caveAtmosphereT
              and math.max(0, math.min(0.1, t - MOUND.caveAtmosphereT)) or 0

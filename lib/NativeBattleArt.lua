@@ -7,7 +7,11 @@ local M={}
 local fitted=setmetatable({},{__mode='k'})
 function M.image(mon,back)
  local side=back and Art.playerSide()or'front'
- return Animated.picture(mon,side)
+ if M.world and side=='back' and Art.ownsSpeciesArt() and Art.setting:get()~='rom' and M.fullBody then
+  local image=M.fullBody.image(mon);if image then return image,true end
+ end
+ local image=Animated.picture(mon,side)
+ return image,false
 end
 function M.fit(image,size,mirror,pixelScale)
  local cache=fitted[image];if not cache then cache={};fitted[image]=cache end
@@ -24,18 +28,21 @@ end
 -- one pixel pitch per source generation. Fitting each cropped mon to 64px
 -- independently made small fronts enormous and erased the artwork's scale.
 -- Gen 1/2 already project their actors through the world camera.
-function M.stagePixelScale(back)
+function M.stagePixelScale(back,fullBody)
  if not M.staged and not M.world then return nil end
  local side=back and Art.playerSide()or 'front'
  local setting=side=='back'and Art.backAnimationSetting or Art.frontAnimationSetting
- local reference=({gen1=56,gen2=56,gen3=64,gen4=80,gen5=96})[setting:get()]or 64
+ local reference=({gen1=56,gen2=56,gen3=64,gen4=80,gen5=96})[fullBody and 'gen5' or setting:get()]or 64
  return (64/reference)*(M.world and 1 or back and 1 or .68)
 end
 function M.settings()
- return {Art.setting,Art.frontAnimationSetting,Art.backAnimationSetting,Art.viewSetting,Art.backPlacementSetting,Art.duplicateSetting,Art.frontFlipSetting,Art.trainerSetting,Art.playerArtSetting,Art.playerAnimationSetting}
+ local settings={Art.setting,Art.frontAnimationSetting,Art.backAnimationSetting,Art.viewSetting,Art.backPlacementSetting,Art.duplicateSetting,Art.frontFlipSetting,Art.trainerSetting,Art.playerArtSetting,Art.playerAnimationSetting}
+ if M.fullBody then settings[#settings+1]=M.fullBody.setting end
+ return settings
 end
 function M.install()
  local gen=require('src.core.GameVersion').generation()
+ if gen==3 then M.fullBody=V.require('NativeFullBody');M.fullBody.install()end
  local undo={}
  if gen==3 then
   local P=require('src.core.game3.pokemon');local UI=require('src.core.game3.battle.ui')
@@ -81,8 +88,8 @@ function M.install()
       mon.personality=source.personality;mon.otId=source.otId
       mon.otSecretId=source.otSecretId;mon.isShiny=source.isShiny
      end
-     local image=M.image(mon,side=='back')
-     if image then return Light.tag({image=M.fit(image,64,side=='back' and Art.playerSide()=='front' and Art.flipsPlayerFront(),M.stagePixelScale(side=='back')),w=64,h=64},artId)end
+     local image,fullBody=M.image(mon,side=='back')
+     if image then return Light.tag({image=M.fit(image,64,side=='back' and Art.playerSide()=='front' and Art.flipsPlayerFront(),M.stagePixelScale(side=='back',fullBody)),w=64,h=64},artId)end
     end
     local entry=original(species,form,...)
     if active and M.staged and not M.world and entry and entry.image and side=='front' then

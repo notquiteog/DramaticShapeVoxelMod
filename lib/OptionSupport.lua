@@ -50,6 +50,7 @@ set(3,'battleUi textboxFill','implemented','lib/Gen3BattleOptions.lua; lib/Gen3B
 set(3,'hudColor hudScale','partial','lib/Gen3BattleOptions.lua; lib/Gen3BattleHud.lua','Live modern status-card palette/scale; original native HUD art remains engine-owned.')
 set(3,'modernBattleUI','implemented','lib/Gen3BattleHud.lua','Native battle status cards and command overlay.')
 set(3,'battleArt frontAnimatedSet backAnimatedSet playerView duplicateFix frontFlip','implemented','lib/NativeBattleArt.lua; lib/BattleArt.lua','Native displayed-battler read seam retains PID/OT/shiny identity for all four slots; unusual forms/substitutes/ghosts keep native fallback.')
+set(3,'full_body_backs','implemented','lib/NativeFullBody.lua; lib/NativeBattleArt.lua; lib/Crystal/full_body.lua','Integrated normal/shiny full-body animated backs on staged allied cards. ROM/MODDED, front view, unstaged battles and unavailable species/forms retain their existing artwork; no second actor draw.')
 set(3,'backPlacement','implemented','lib/Gen3BattleActors.lua','AUTO/WORLD project allied Pokemon; OG UI retains both native allied slots without duplicate world cards. Trainers retain world placement.')
 set(3,'arenaFill','partial','lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua','WHITE/GEN6/PNG and native location routing; missing image fails open. BLUE still needs a compatible Stadium provider.')
 set(3,'backdropOffset bossBg','implemented','lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua','Native location/boss identity, source-pixel crop and frozen battle day phase, using installed optional art.')
@@ -59,6 +60,7 @@ set(3,'interfaceSprites interfaceScaling','implemented','lib/NativeInterfaceArt.
 set(3,'surfaceArtwork','implemented','lib/Gen3Scene.lua; lib/Voxel3D.lua','Native-palette surface grain on scenery only; camera-stable world coordinates, distance filtering and unchanged actor/UI art.')
 set(3,'communityTreeDetail','implemented','lib/NativeTreeArt.lua; lib/VoxelHull.lua','FULL/BALANCED/HANDHELD change native voxel tree resolution, with live geometry rebuild.')
 for gen=2,3 do
+ set(gen,'communityCaveSound','partial','lib/NativeCaveAudio.lua','Native cave classification, OFF/LOW/MID ambience, 16px footsteps, SFX volume and transition fades are wired. Optional Legendary cave/footstep audio assets are not bundled; absent files remain silent.')
  set(gen,'atmos communityForest','implemented','lib/NativeAtmosphere.lua; lib/ForestAtmos.lua','Native forest identity, real world dimensions, depth-aware rays and fog; shared atmosphere clock and OFF control.')
  set(gen,'towerFog towerFogSpeed towerFogThickness','implemented','lib/NativeAtmosphere.lua; lib/TowerGraveMist.lua','Native tower fog and rolling ground banks use the shared visibility, thickness and continuously integrated speed controls.')
  set(gen,'communityCaves communityCaveDetails communityTower towerDetails','partial','lib/NativeAtmosphere.lua','Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.')

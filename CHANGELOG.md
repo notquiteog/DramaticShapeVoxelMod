@@ -1,5 +1,12 @@
 ## Unreleased
 
+- Expose FULL-BODY BATTLE BACKS on Gen3 staged allied cards using the existing
+  normal/shiny animated provider. Preserve selected-art OFF behavior, ROM/MODDED
+  ownership, native forms/species fallback and unstaged UI; no duplicate actor.
+- Wire native Gen2/3 CAVE SOUND lifecycle and shared OFF/LOW/MID settings,
+  footsteps, volume and fades. Optional sound files are absent from this
+  distribution, so missing assets remain silent and support is partial.
+
 - Model Lilycove Museum's five upstairs gallery partitions with closed backs,
   sides and pale caps, retaining native green panel/frame artwork. Keep solids
   in blocked base rows and restore checker floor beneath projected art/shadows.

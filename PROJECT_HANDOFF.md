@@ -1,3 +1,33 @@
+# Native full-body backs and cave-audio adapter — 2026-10-05 (unreleased)
+
+Gen3 FULL-BODY BATTLE BACKS uses existing Crystal/full_body normal/shiny assets
+through NativeFullBody. Applies only to world-stage allied back cards with
+owned non-ROM art; OFF, front view, MODDED, missing species/forms and unstaged
+UI keep their existing provider. Pixel pitch uses Gen5 source resolution.
+Gen1/2 installation unchanged; no extra actor draw layer introduced.
+
+LeafGreen v0.3.51 isolated runtime: 267 provider draws / 24 animated frames;
+live ON/OFF, distinct normal/shiny canvases, species386 fallback, unstaged
+scope and one actor per side passed. Parent inspected full-body-on capture;
+agent inspected ON/OFF. Results .scratch/coverage-20261004/results/
+leafgreen-full-body-native/, reproducible tools/qa/gen3-full-body.lua.
+Live singles verified; no new doubles/network gameplay QA (existing slot
+identity tests pass). Full suite 166 passed, 0 failed, 56 external-fixture
+skips (.scratch/gallery-final-tests.log).
+
+NativeCaveAudio shares CAVE SOUND OFF/LOW/MID, loads optional packaged assets,
+tracks 16px footsteps excluding map entry/teleports, uses SFX volume, fades on
+leaving caves/battles/camera-off and releases on quit. Gen2 old atmosphere
+sound mixer is disabled to avoid duplication. Unit audio mocks exercise actual
+playback lifecycle; Crystal and LeafGreen runtime verify native routing,
+classification and silent missing-asset behavior. Optional MP3s are NOT bundled;
+audible runtime playback not claimed. Remains partial in OPTION_PARITY.tsv.
+Repro tools/qa/native-cave-audio.lua; logs crystal-cave-audio-g2 and
+leafgreen-cave-audio in the same scratch results tree.
+
+Full parity incomplete: missing Gen2=16 / Gen3=40 plus partial/provider cases.
+No cart release, native gameplay/UI ownership preserved, user saves untouched.
+
 # Tall-grass blobs — companion fix 2026-10-05
 
 Kanto Wilds commit a93a025d (pushed main) fixes the reproduced Gen3 hidden-land
