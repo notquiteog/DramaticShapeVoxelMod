@@ -95,3 +95,25 @@ for _,dy in ipairs{0,16}do
  box=function(l,b,n,r,h,f)assert(l>=0 and r<=16 and n>=0 and f<=32,'column protrudes from blocked rows')end}))
 end
 print('PASS freestanding and wall-column blocked footprints')
+
+for _,id in ipairs{'fr_elite_ice','fr_elite_stone','fr_elite_horn'}do
+ local n=0
+ local function check(vs)for _,v in ipairs(vs)do assert(v[1]>=0 and v[1]<=16 and v[3]>=0 and v[3]<=32,id..' crosses native blocked rows');n=n+1 end end
+ assert(F.draw(id,{recipe={},sample=function()return{}end,source=function(x,y,w,h,...)check({...})end,
+ box=function(l,b,n,r,h,f)check{{l,b,n},{r,h,f}}end,face=check}))
+ assert(n>0)
+end
+print('PASS League ice/stone solid and polygon footprints')
+
+for _,fixture in ipairs{'ice','stone','column','horn'}do
+ local count=0
+ local function check(vs)for _,v in ipairs(vs)do
+  assert(v[1]>=0 and v[1]<=16 and v[3]>=28 and v[3]<48,'League wall fixture crosses into walkable apron')
+  count=count+1
+ end end
+ assert(F.draw('fr_elite_wall',{recipe={fixture=fixture},sample=function()return{}end,
+  box=function(l,b,n,r,h,f)check{{l,b,n},{r,h,f}}end,
+  source=function(x,y,w,h,...)check({...})end,face=check}))
+ assert(count>0)
+end
+print('PASS complete League wall fixtures stop before the walkable apron')

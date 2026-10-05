@@ -234,6 +234,16 @@ function M.layout(cells)
     -- or move it a cell behind the neighboring window.
     if col.first<=1 and col.last<=1 then col.first=0;col.last=1;col.walls=2 end
     col.height=32;col.front=(col.last+1)*16;col.back=col.front-4
+    if c.shape.wallStyle=='league' then
+     -- Shared wall art borders ice, stone and purple courts. Sample the
+     -- actual adjacent native floor instead of painting all bases purple.
+     for _,y in ipairs{col.last+1,col.first-1}do
+      for _,dx in ipairs{0,-1,1}do
+       local n=cells[(c.cx+dx)..':'..y]
+       if not col.ground and n and n.pair==c.pair and n.collision==0 and not n.prop then col.ground=n.mid end
+      end
+     end
+    end
    else
     local k=c.pair..':'..col.first..':'..col.roofType
     local band=bands[k] or {};bands[k]=band

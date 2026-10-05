@@ -1,5 +1,10 @@
 ## Unreleased
 
+- Raise the native FRLG League wall/door panels with room-specific floor
+  colours. Close the wall joins behind ice, stone, column and horn fixtures.
+- Add bounded ice/stone stacks and mirrored Lance horn models; preserve
+  native walkable aprons and collision maps.
+
 - Restore native League/Game Corner floor markings and Colosseum wall/court
   tiles instead of invented pedestals, end caps and spectator stands.
 - Model Agatha’s purple-and-gold columns inside native blocked rows and

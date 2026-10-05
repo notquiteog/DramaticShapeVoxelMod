@@ -321,7 +321,7 @@ local function build(req,cache,previous)
   elseif column and column.indoor and c.secondary=='lab' then
    plane(b.v,b.i,x,z,uvFor(ts,0x289) or uv)
   elseif column then
-   plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+   plane(b.v,b.i,x,z,uvFor(ts,column.ground or shape.ground) or uv)
    if not column.stageHidden then
    if shape.kind=='wall' or shape.kind=='roomWall' then
     local row=c.cy-(column.first+column.roofs)

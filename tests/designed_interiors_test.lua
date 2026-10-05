@@ -52,3 +52,16 @@ for _,mid in ipairs{0x2f6,0x2fa}do
  assert(S.of('building','rom_082d4c44',mid,nil,0).kind=='flat','wall leaked into walkable aliases')
 end
 print('PASS native floor exclusions and collision-scoped Colosseum walls')
+
+for _,mid in ipairs{0x284,0x285,0x286,0x287,0x28b,0x293}do
+ assert(S.of('building','rom_082d50c4',mid,nil,7).kind=='roomWall')
+ assert(S.of('building','rom_082d50c4',mid,nil,0).kind=='flat','open native door became a wall')
+end
+for _,floor in ipairs{0x2b1,0x2f0}do
+ local cells={['0:1']={cx=0,cy=1,pair='league',mid=0x284,collision=7,shape={kind='roomWall',wallStyle='league'}},
+  ['0:2']={cx=0,cy=2,pair='league',mid=0x285,collision=7,shape={kind='roomWall',wallStyle='league'}},
+  ['0:3']={cx=0,cy=3,pair='league',mid=floor,collision=0,shape={kind='flat'}}}
+ S.layout(cells);assert(cells['0:1'].column.ground==floor)
+ assert(cells['0:1'].column.front==48 and cells['0:1'].column.back==44,'wall crosses native walking row')
+end
+print('PASS native League doors and room-specific wall footing')

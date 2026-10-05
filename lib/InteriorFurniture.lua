@@ -1563,6 +1563,65 @@ elseif id=='fr_rocket_console' then
   B(5,11,4.4,26,12.6,15.2,screen)
   B(3,15,4,29,15,16,shade)
   top({3,5,13,9},2,3,30,17,18.02)
+elseif id=='fr_elite_horn' then
+  local dy=A.recipe.faceY or 0
+  local gold,pink,stone=T(7,dy+(A.recipe.single and 12 or 22)),T(7,dy+(A.recipe.single and 6 or 17)),T(8,dy+(A.recipe.single and 1 or 7))
+  -- Gold socket and pink collar support a curved, tapered stone horn.
+  -- The source's final foot/shadow row stays entirely walkable.
+  B(3,0,3,13,2,29,T(5,dy+28));B(2,2,2,14,5,30,gold)
+  B(4,5,4,12,9,28,pink)
+  local sign=A.recipe.mirror and -1 or 1
+  local rings={{8,9,5,11},{8,13,5,10},{8+sign,19,4,7},{8+sign*3,24,2,3},{8+sign*2,28,0,0}}
+  local function point(r,k)local a=k*math.pi/4;return{r[1]+math.cos(a)*r[3],r[2],16+math.sin(a)*r[4]}end
+  for j=1,#rings-1 do for k=0,7 do
+   A.face({point(rings[j],k),point(rings[j],k+1),point(rings[j+1],k+1),point(rings[j+1],k)},stone,.72+.28*(k%4)/3)
+  end end
+  for k=0,7 do A.face({{8,9,16},point(rings[1],k+1),point(rings[1],k),{8,9,16}},pink,1)end
+elseif id=='fr_elite_wall' then
+  -- Closed wall and its original two-row panel, aligned with adjacent bays.
+  B(0,0,28,16,32,32,T(4,5))
+  front({0,0,16,32},0,0,16,32,32.01)
+  local function move(p)return{p[1],p[2],32+p[3]*.5}end
+  M.draw('fr_elite_'..A.recipe.fixture,{
+   recipe={faceY=32,single=true,mirror=A.recipe.mirror},
+   sample=T,
+   box=function(l,b,n,r,h,f,uv)B(l,b,32+n*.5,r,h,32+f*.5,uv)end,
+   source=function(x,y,w,h,a,b,c,d)S(x,y,w,h,move(a),move(b),move(c),move(d))end,
+   face=function(vs,uv,shade)local out={};for i,p in ipairs(vs)do out[i]=move(p)end;A.face(out,uv,shade)end,
+  })
+elseif id=='fr_elite_ice' then
+  local dy=(A.recipe or {}).faceY or 0
+  local blue,edge=T(7,dy+10),T(6,dy+2)
+  -- Two separate bevelled blocks retain the native blue/white ice faces.
+  for i=0,((A.recipe or {}).single and 0 or 1) do
+   local y=i*13;local sy=dy+((A.recipe or {}).single and 0 or (i==0 and 16 or 0))
+   B(3,y,3,13,y+1,29,edge);B(2,y+1,2,14,y+11,30,blue)
+   B(3,y+11,3,13,y+13,29,edge)
+   front({1,sy+2,14,12},2,y+1,14,y+11,30.02)
+   top({2,sy,12,3},3,3,13,29,y+13.02)
+  end
+elseif id=='fr_elite_stone' then
+  -- Hand-shaped, closed faceted stones; no box of floor art underneath.
+  local outline={{-4,-13},{4,-13},{7,-8},{6,9},{3,13},{-4,12},{-7,7},{-6,-8}}
+  for i=0,((A.recipe or {}).single and 0 or 1) do
+   local base=i*13;local sy=((A.recipe or {}).faceY or 0)+((A.recipe or {}).single and 0 or (i==0 and 16 or 0))
+   local rings={{.68,0},{1,3},{.92,10},{.48,13}}
+   for j=1,#rings-1 do
+    local lo,hi=rings[j],rings[j+1]
+    for k,p in ipairs(outline)do local q=outline[k%#outline+1]
+     A.face({{8+p[1]*lo[1],base+lo[2],16+p[2]*lo[1]},
+      {8+q[1]*lo[1],base+lo[2],16+q[2]*lo[1]},
+      {8+q[1]*hi[1],base+hi[2],16+q[2]*hi[1]},
+      {8+p[1]*hi[1],base+hi[2],16+p[2]*hi[1]}},T(6+(k%3),sy+4+j*2),1)
+    end
+   end
+   for _,r in ipairs{rings[1],rings[#rings]}do
+    for k,p in ipairs(outline)do local q=outline[k%#outline+1]
+     A.face({{8,base+r[2],16},{8+p[1]*r[1],base+r[2],16+p[2]*r[1]},
+      {8+q[1]*r[1],base+r[2],16+q[2]*r[1]},{8,base+r[2],16}},T(7,sy+3),1)
+    end
+   end
+  end
 elseif id=='fr_elite_column' then
   -- Purple shell, gold inset flutes and pale stepped foot from the native
   -- complete drawing. Both blocked rows carry the closed column footprint.

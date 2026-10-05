@@ -49,10 +49,23 @@ function M.install(recipes)
  add('lab_centrifuge_bank','oak_lab',{
   {0x2ed,0x2ee,0x2ef},{0x2f0,0x2f1,0x2f2}},'fr_lab_centrifuge',1)
  -- Agatha's 0x2a1 is floor-border artwork, not a pedestal.
+ add('elite_ice_stack','building__rom_082d50c4',{{0x34a},{0x34d}},'fr_elite_ice',0x2a8)
+ add('elite_stone_stack','building__rom_082d50c4',{{0x359},{0x35b}},'fr_elite_stone',0x2d0)
+ for _,v in ipairs{{0x370,0x378,0x368,false},{0x371,0x379,0x369,true}}do
+  add('elite_horn_'..v[1],'building__rom_082d50c4',{{v[1]},{v[2]}},'fr_elite_horn',0x310)
+  recipes[#recipes].mirror=v[4]
+ end
  add('elite_column','building__rom_082d50c4',{{0x354},{0x355}},'fr_elite_column',0x2f0)
- for _,mid in ipairs{0x362,0x363}do
-  add('elite_wall_column_'..mid,'building__rom_082d50c4',{{mid},{0x356},{0x360}},'fr_elite_column',0x2f0)
-  recipes[#recipes].faceY=16
+ -- Claim the complete wall drawing as well as its foreground fixture.
+ -- The final apron stays ground; solids stop at the last blocked row.
+ for _,v in ipairs{
+  {0x284,0x343,0x349,0x341,'ice',0x2a8},{0x286,0x344,0x349,0x341,'ice',0x2a8},
+  {0x284,0x352,0x34b,0x350,'stone',0x2d0},{0x286,0x353,0x34b,0x350,'stone',0x2d0},
+  {0x284,0x34f,0x372,0x36a,'horn',0x310},{0x286,0x357,0x373,0x36b,'horn',0x310,true},
+  {0x284,0x362,0x356,0x360,'column',0x2f0},{0x286,0x363,0x356,0x360,'column',0x2f0},
+ }do
+  add('elite_wall_'..v[2],'building__rom_082d50c4',{{v[1]},{v[2]},{v[3]},{v[4]}},'fr_elite_wall',v[6])
+  recipes[#recipes].fixture=v[5];recipes[#recipes].mirror=v[7]
  end
  -- Celadon condominium rooms contain sofas, shared desks and tables, not
  -- beds/kitchens. Complete source drawings replace former wall-ID guesses.

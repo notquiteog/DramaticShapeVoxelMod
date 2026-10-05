@@ -1,3 +1,35 @@
+# FRLG League wall and fixture pass — 2026-10-05 (unreleased)
+
+Raised shared native orange League walls/closed rear doors (collision 7 only),
+using adjacent native floor colour instead of purple in all rooms. Authored
+ice/stone stacks and mirrored curved horns; retained Agatha's column model.
+Complete four-row wall-fixture recipes include the original two-row wall
+panel, preventing missing wall bays. Only the blocked rows contain solids;
+the final walkable source apron remains floor. Free horns match two rows so
+both lower court fixtures still match when their apron becomes the doorway.
+
+Evidence: engine v0.3.51, isolated LeafGreen QA profile; player saves untouched.
+Driver: .scratch/coverage-20261004/league-complete.lua via
+`QA_LEAGUE=1 bash .scratch/coverage-20261004/run.sh leafgreen league-complete`
+(paths relative to /home/admin/Projects). Native/overview/first-person captures
+under .scratch/coverage-20261004/results/leafgreen-league-complete/.
+Inspected Lorelei, Bruno, Agatha and Lance fixture/wall captures; also inspected
+Champion overview and unrelated Oak's Lab overview. All six rooms retained
+exact native collision arrays after rendering. Scripts halted after Map.load:
+this proves geometry/collision preservation, NOT a played League campaign.
+332 lib/*.lua files compiled with LuaJIT; 162 suites passed, 0 failed,
+56 skipped (missing external fixtures). Designed-object test covers 347 cases.
+New bounds assertions cover source faces, boxes and polygon vertices; wall
+fixtures stop before the native walkable apron. Logs in
+.scratch/league-tests-final.log and .scratch/league-20261005/logs/.
+
+Remaining: Lance corridor statues still flat (upper art absent from the simple
+metatile contact sheet, requires source-layer review), Champion platform/wall
+and fixtures, League outer beige shell and side treatment, broader seats/beds,
+all-world artistic coverage and partner parity. This is NOT full coverage or
+100-percent visual fidelity. FireRed shares these canonical recipes but this
+batch's runtime captures used LeafGreen only. No release/version bump.
+
 # FRLG arena/League/source-art correction — 2026-10-05 (unreleased)
 
 Native atlas + collision review found three invented objects: Agatha's
