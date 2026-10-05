@@ -636,6 +636,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  local contact=cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]
  if contact and contact.prop then floor=contact.prop.groundHeight or floor end
  local height=floor+(opts.lift or 0)
+ if V.require('NativeLegendarySapling').draw(gid,x,z,height,spr.image,draw,reflectPlane)then return end
  if draw~=Shadow.draw and not reflectPlane and (opts.depthOffset or 0)==0 then
   V.require("ActorContact").draw(x+8,z+16,floor,height-floor,spr.width)
  end
@@ -933,6 +934,7 @@ end
 function M.invalidate()Boundary.clear();stream:clear();cache={}end
 function M.release()
  V.require("NativeLegendaryTower").clear()
+ V.require("NativeLegendarySapling").clear()
  if dustMesh then dustMesh:release();dustMesh=nil end
  if dustImage then dustImage:release();dustImage=nil end
  for _,c in pairs(effectCanvases)do c:release()end;effectCanvases={}

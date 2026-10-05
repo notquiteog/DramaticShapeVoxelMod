@@ -218,7 +218,7 @@ generation	key	label	status	consumer	limitation
 3	communityCaves	CAVES	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
 3	communityCityGround	CITY GROUND	missing	false	No complete native generation adapter audited for this option.
 3	communityCourtyards	FENCES & COURTS	missing	false	No complete native generation adapter audited for this option.
-3	communityCutTrees	CUT TREES	missing	false	No complete native generation adapter audited for this option.
+3	communityCutTrees	CUT TREES	partial	lib/NativeLegendarySapling.lua; lib/LegendarySapling.lua; lib/Gen3Scene.lua	Optional exact shared supported sapling on native Cut object IDs with live engine visibility/removal. Original artwork and flat presentation remain available; complete native Cut animation parity remains engine-owned.
 3	communityElevator	ROCKET ELEVATOR	missing	false	No complete native generation adapter audited for this option.
 3	communityForest	VIRIDIAN FOREST	partial	lib/NativeLegendaryForest.lua; lib/NativeAtmosphere.lua; lib/ForestTrees.lua	Native forest atmosphere and optional shared Gen1 Viridian trees are live. Gen3 trees share GPU prototypes and fit original art bounds; native cards and default models remain unchanged. Other native forest geometry/details remain incomplete.
 3	communityGrass	GRASS	partial	lib/NativeGrassStyle.lua; lib/Gen2DepthGrass.lua; lib/Gen3Outdoor.lua	Shared Gen1 deterministic Legendary tuft width, height and yaw variation uses native grass artwork and keeps original flat ground/collision. Authored Legendary ground recoloring and city-specific turf remain separate, incomplete adapters.

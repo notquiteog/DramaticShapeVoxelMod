@@ -1,0 +1,28 @@
+return function(game)
+ assert(love.filesystem.getIdentity():match('%-qa$'))
+ local U=dofile('tests/drivers/util.lua');local dir=assert(os.getenv('SHOT_DIR'))
+ local update=game.update;game.update=function(self,dt)return require('src.mods.Runtime').call('core.update',update,self,dt)end
+ game:_handleBootAction({action='new_game',start={map='FR_ROUTE_2',x=8,y=18,facing='up'}})
+ require('src.ui.game3.map_preview_screen').reset()
+ local space=require('src.core.game3.scripting.space');space.runOnFrame=function()end;local vm=space.getVm();if vm then vm:halt(true)end
+ local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib
+ local Map=require('src.core.game3.map');local P=require('src.core.game3.player');local Collision=require('src.core.game3.collision')
+ U.wait(100)
+ local def=Map.currentDef();local found
+ local Objects=require('src.core.game3.objects');local id=require('src.core.game3.field_moves').GFX_IDS.CUT_TREE
+ for _,o in pairs(Objects._byId)do local gid=o.graphicsId or(o.def and(o.def.graphicsId or o.def.graphics));if tonumber(gid)==id then found=o;break end end
+ assert(found,'native cut tree absent')
+ P.reset(found.px/16,found.py/16+2,'up')
+ local C=V.require('Gen3Integration');C.setLevel(3,game)
+ V.require('LegendaryVisualsPreset').setting:setIndex(2,game)
+ V.require('TreePresentation').art:setIndex(3,game)
+ local Models=V.require('NativeLegendarySapling');local original=Models.draw;local applied=0
+ Models.draw=function(...)local yes=original(...);if yes then applied=applied+1 end;return yes end
+ for _,index in ipairs{1,2}do
+  V.require('CommunityVisuals').cutTrees:setIndex(index,game)
+  V.require('TreePresentation').changed('communityCutTrees');U.wait(220)
+  assert(C.active);U.shot(game,dir..'/sapling-'..index..'.png')
+ end
+ assert(applied>0,'no native Cut trees replaced');print('[PASS native Legendary Cut saplings]',applied,Map.current,def.id)
+ Models.draw=original;love.event.quit()
+end
