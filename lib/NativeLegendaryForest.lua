@@ -4,7 +4,9 @@ local V=...
 local M={}
 local prototypes={}
 function M.card(card,c,mapId)
- if not(card and mapId=='FR_VIRIDIAN_FOREST' and c.shape.spacing==3
+ local nativeForest=mapId=='FR_VIRIDIAN_FOREST'and c.shape and c.shape.spacing==3
+  or mapId=='ILEX_FOREST'and card and card.w==32
+ if not(card and nativeForest
    and V.require('CommunityVisuals').customForest()
    and V.require('TreePresentation').voxel())then return card end
  local Trees=V.require('ForestTrees')

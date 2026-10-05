@@ -2112,6 +2112,7 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         if style.original() then
           local native=V.require("NativeTreeArt")
           local card=native.gen2(map,cx,cy,lift)
+          card=V.require('NativeLegendaryForest').card(card,{cx=cx,cy=cy},map.id)
           if (lift==3 and style.props:get()=="modeled") or (lift~=3 and style.voxel()) then
             spatialPart.nativeGroups=spatialPart.nativeGroups or {}
             if not MOUND.treeContext().nativeInstances or not native.addInstance(card,spatialPart.nativeGroups,mx,base,mz)then
@@ -7519,7 +7520,9 @@ function Flora.drawCommunityForest(state, atlasFor)
   local visuals = V.require("CommunityVisuals")
   if not visuals.customForest() then return end
   local map = state and state.map
-  if not (map and isCanopy(map)) then
+  -- Native forests own their complete tree silhouettes and depth-aware
+  -- atmosphere; the Gen1 stitched tile roof would bury their camera/actors.
+  if not (map and isCanopy(map)) or type(map.cellCollision)=="function" then
     if canopyCache and canopyCache.mesh then pcall(canopyCache.mesh.release, canopyCache.mesh) end
     canopyCache = nil
     return

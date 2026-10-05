@@ -12,6 +12,8 @@ local M=V.require('NativeLegendaryForest');local art={w=48,h=80,bottom=8}
 local c={cx=3,cy=5,shape={spacing=3}}
 assert(M.card(art,c,'FR_VIRIDIAN_FOREST')==art)
 active=true;assert(M.card(art,c,'FR_ROUTE_1')==art)
+local wide={w=32,h=32};assert(M.card(wide,c,'ILEX_FOREST')~=wide,'Crystal broad forest trees not adapted')
+local narrow={w=16,h=32};assert(M.card(narrow,c,'ILEX_FOREST')==narrow,'two-cell border trees merged into one')
 voxel=false;assert(M.card(art,c,'FR_VIRIDIAN_FOREST')==art);voxel=true
 local model=M.card(art,c,'FR_VIRIDIAN_FOREST');assert(model~=art and model.legendaryForest)
 assert(M.card(art,c,'FR_VIRIDIAN_FOREST')==model,'prototype not shared')
