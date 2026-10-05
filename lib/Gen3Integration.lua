@@ -57,7 +57,7 @@ function M.install()
  local uninstallCrystalField=V.require('NativeCrystalField').install()
  mod.hooks:wrap('core.quit_to_launcher',function(next,...)uninstallCrystalField();return next(...)end)
  local uninstallInterface=interfaceArt.install()
- local sharedSettings={V.require('CommunityVisuals').signs,V.require('CommunityVisuals').safari,V.require('CommunityVisuals').grass,legendary.setting,Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,V.require('CommunityVisuals').caveSound,V.require('CommunityVisuals').kantoLife,
+ local sharedSettings={V.require('CommunityVisuals').towerWall,V.require('CommunityVisuals').signs,V.require('CommunityVisuals').safari,V.require('CommunityVisuals').grass,legendary.setting,Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,V.require('CommunityVisuals').caveSound,V.require('CommunityVisuals').kantoLife,
   V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting}
  for _,setting in ipairs(V.require("Gen3Capture").settings())do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(V.require("NativeAtmosphere").settings)do sharedSettings[#sharedSettings+1]=setting end

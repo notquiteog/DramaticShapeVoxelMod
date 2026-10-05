@@ -207,8 +207,8 @@ local PALETTES = {
   },
 }
 
-local function ensure()
-  if not mesh then
+local function ensure(textureOnly)
+  if not mesh and not textureOnly then
     local v,i=M.geometry(); mesh=Voxel3D.newMesh(v,i)
   end
   local style=CommunityVisuals.towerWallStyle()
@@ -223,6 +223,12 @@ local function ensure()
   if d.release then pcall(d.release,d) end
   texture:setFilter("nearest","nearest")
   return mesh,texture
+end
+
+-- Native renderers reuse the authored palette without requiring a Gen1 map.
+function M.texture()
+  local _,image=ensure(true)
+  return image
 end
 
 function M.drawMap(map, transform, renderer)

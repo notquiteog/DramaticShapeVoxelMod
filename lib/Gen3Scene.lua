@@ -570,7 +570,9 @@ local function terrain(draw)
    end
   end
  end
- for _,part in ipairs(cache.civics or {})do draw(part.mesh,part.image)end
+ for _,part in ipairs(cache.civics or {})do
+  if not V.require('NativeLegendaryTower').draw(part.placement,draw)then draw(part.mesh,part.image)end
+ end
  draw(cache.wood,bark);draw(cache.leaves,TreeStyle.original() and V.require('NativeTreeArt').image() or foliage)
  for _,batch in ipairs(cache.treeInstances or {})do draw(batch,V.require('NativeTreeArt').image())end
 end
@@ -930,6 +932,7 @@ function M.draw(game,vw,vh,cam)
 end
 function M.invalidate()Boundary.clear();stream:clear();cache={}end
 function M.release()
+ V.require("NativeLegendaryTower").clear()
  if dustMesh then dustMesh:release();dustMesh=nil end
  if dustImage then dustImage:release();dustImage=nil end
  for _,c in pairs(effectCanvases)do c:release()end;effectCanvases={}

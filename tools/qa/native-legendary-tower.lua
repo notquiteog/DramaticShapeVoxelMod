@@ -1,0 +1,29 @@
+return function(game)
+ assert(love.filesystem.getIdentity():match('%-qa$'))
+ local U=dofile('tests/drivers/util.lua');local dir=assert(os.getenv('SHOT_DIR'))
+ local update=game.update;game.update=function(self,dt)return require('src.mods.Runtime').call('core.update',update,self,dt)end
+ game:_handleBootAction({action='new_game',start={map='FR_LAVENDER_TOWN',x=18,y=9,facing='up'}})
+ require('src.ui.game3.map_preview_screen').reset()
+ local space=require('src.core.game3.scripting.space');space.runOnFrame=function()end;local vm=space.getVm();if vm then vm:halt(true)end
+ local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib
+ local Map=require('src.core.game3.map');local P=require('src.core.game3.player');local Collision=require('src.core.game3.collision')
+ local def=Map.currentDef();P.reset(18,9,'up')
+ local C=V.require('Gen3Integration');C.setLevel(3,game)
+ V.require('LegendaryVisualsPreset').setting:setIndex(2,game)
+ V.require('TreePresentation').art:setIndex(3,game)
+ local Models=V.require('NativeLegendaryTower');local original=Models.draw;local applied=0
+ Models.draw=function(...)local yes=original(...);if yes then applied=applied+1 end;return yes end
+ for _,index in ipairs{1,2}do
+  V.require('CommunityVisuals').tower:setIndex(index,game)
+  V.require('TreePresentation').changed('communityTower');U.wait(220)
+  assert(C.active);U.shot(game,dir..'/tower-'..index..'.png')
+ end
+ for _,index in ipairs{2,3}do
+  V.require('CommunityVisuals').towerWall:setIndex(index,game)
+  V.require('TreePresentation').changed('communityTowerWall');U.wait(120)
+  U.shot(game,dir..'/wall-'..index..'.png')
+ end
+ C.setLevel(5,game);P.reset(18,16,'up');U.wait(80);U.shot(game,dir..'/tower-high.png')
+ assert(applied>0,'no native trees replaced');print('[PASS native Legendary tower]',applied,Map.current,def.id)
+ Models.draw=original;love.event.quit()
+end

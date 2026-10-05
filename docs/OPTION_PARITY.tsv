@@ -229,8 +229,8 @@ generation	key	label	status	consumer	limitation
 3	communityRocket	ROCKET HIDEOUT	missing	false	No complete native generation adapter audited for this option.
 3	communitySigns	SIGNS	partial	lib/NativeLegendarySigns.lua; lib/Gen3Outdoor.lua	Optional Gen1 low chamfered sign shape fitted inside native sign cells, retaining the original plaque artwork. Generated location labels and special directional markers remain unported.
 3	communitySky	SKY & BACKGROUND	implemented	lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua	Native scene supersampling, day clock/light/sky, underlay and postprocess.
-3	communityTower	TOWER VISUALS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
-3	communityTowerWall	TOWER WALL	missing	false	No complete native generation adapter audited for this option.
+3	communityTower	TOWER VISUALS	partial	lib/NativeLegendaryTower.lua; lib/NativeAtmosphere.lua	Optional shared Gothic Lavender exterior fits native podium width/depth and preserves entrance and collision; native interiors consume atmosphere but complete authored room geometry remains incomplete.
+3	communityTowerWall	TOWER WALL	implemented	lib/NativeLegendaryTower.lua; lib/LegendaryTowerExterior.lua; lib/Gen3Scene.lua	SMOKE BLACK/STORM WHITE/PEARL WHITE use the shared authored palette on the optional native Lavender Gothic tower, including shadows and native podium elevation. BATTLE ART keeps its original tower artwork.
 3	communityTreeDetail	TREE DETAIL	implemented	lib/NativeTreeArt.lua; lib/VoxelHull.lua	FULL/BALANCED/HANDHELD change native voxel tree resolution, with live geometry rebuild.
 3	communityTrees	TREES	missing	false	No complete native generation adapter audited for this option.
 3	communityTunnels	TUNNELS	missing	false	No complete native generation adapter audited for this option.
