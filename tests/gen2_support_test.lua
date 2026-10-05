@@ -249,6 +249,9 @@ for _, cart in ipairs(carts) do
     local state = setmetatable({ game = { options = { battleBg = "world" } },
       BG_WORLD_DIM = .31 }, { __index = ENGINE["src.ui.gen2.BattleState"] })
     T.eq(state:bgMode(), "world", label .. ": world backdrop retained")
+    state.game.options.battleBg="white"
+    T.eq(state:bgMode(), "world", label .. ": staged route owns a fresh WHITE profile")
+    T.eq(state.game.options.battleBg,"white",label .. ": native preference preserved")
     T.eq(state.BG_WORLD_DIM, 0, label .. ": no dark margin overlay in 3D-BTL")
     local Chrome = ENGINE["src.ui.gen2.Chrome"]
     local paletteFill, fills = Chrome.paletteFill, 0

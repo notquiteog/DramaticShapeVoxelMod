@@ -162,6 +162,10 @@ function Gen2Battle.install()
           savedDim[self] = { value = rawget(self, "BG_WORLD_DIM") }
         end
         self.BG_WORLD_DIM = 0
+        -- The native screen may still retain WHITE (fresh profiles or a
+        -- setting changed without opening Options). Claim the actual draw
+        -- route; merely suppressing its panel would hide the whole arena.
+        return "world"
       elseif savedDim[self] then
         self.BG_WORLD_DIM = savedDim[self].value
         savedDim[self] = nil
