@@ -104,7 +104,7 @@ function M.install()
    end
   end
   local layout=Theme.layoutStatusCards(items,w,h)
-  local ink=UI.hudUsesColor() and {.08,.1,.12,1} or {1,1,.96,1}
+  local ink=Theme.ink -- The optional provider's silver cards always need dark ink.
   for _,item in ipairs(items)do
    local entry=mons[item.id];local mon,side=entry.mon,entry.side
    local p=layout[item.id];local x,y=p.x,p.y
@@ -124,7 +124,7 @@ function M.install()
   local entries,index={}
   if state.phase=='menu'then
    index=state.menuIndex
-   for i,label in ipairs(state:menuLabels())do entries[i]={name=label,kind=({'fight','bag','pokemon','run'})[i]}end
+   for i,label in ipairs(state:menuLabels())do entries[i]={name=label,kind=({'fight','pokemon','bag','run'})[i]}end
   elseif state.phase=='moves'then
    index=state.moveIndex
    for i,move in ipairs(state:playerMoves())do
