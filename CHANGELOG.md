@@ -1,4 +1,4 @@
-## Unreleased
+## 1.31.3 — 2026-10-05
 
 - Give Lilycove's small exhibit a separate round Poké Ball on a low flat
   pedestal, retaining its native stone palette. Model both wall returns with
