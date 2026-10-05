@@ -22,7 +22,7 @@ No battle gameplay QA in this test; no player saves touched. 164 suites passed,
 0 failed, 56 external-fixture skips; logs .scratch/full-preset-tests.log.
 
 Updated docs/OPTION_PARITY.tsv from tools/option-parity-report.lua. Missing
-options remain 16 (Gen2), 47 (Gen3), plus partial/provider cases. Outstanding
+options remain 16 (Gen2), 42 (Gen3), plus partial/provider cases. Outstanding
 Legendary capture/audio/beam effects, native specialty scenery, Gen3 RAM
 precache, standing-trainer integration and Crystal-specific art options need
 real implementations/adapters, not editable placeholders. Inventory is source
