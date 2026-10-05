@@ -5,6 +5,7 @@ local M={}
 -- Authored placements: ROM front/shadow rows are not extra floor depth.
 -- Move whole component assemblies; keep all source crops and proportions.
 M.placement={
+ fr_department_glass={z=9,back=17},fr_department_stock={z=9,back=17},
  em_space_controls={z=-16,back=0},em_home_sofa={z=-14,back=0},
  em_museum_glass={z=2,back=16},
  em_home_appliance={z=-16,back=1},em_fortree_drawers={z=-15,back=0},
@@ -437,19 +438,23 @@ function M.draw(id,A)
   local wood,case,dark=T(3,24),T(1,3),T(3,17)
   B(1,0,1,31,6,15,wood);front({1,18,30,8},1,1,31,6,15.02)
   crt(1,1,30,8,24,{2,1,28,14},case,dark)
+ elseif id=='fr_daycare_cushion' then
+  -- Walkable native floor seat: keep its tuft and stitched edge on a low pad.
+  B(2,0,4,14,.45,14,T(3,12));B(3,.45,4,13,.8,13,T(6,6))
+  top({2,4,12,10},2,4,14,14,.82)
  elseif id=='fr_department_glass' then
   local case=T(1,18)
   B(1,0,8,31,2,37,case);B(2,2,9,30,11,36,T(4,24))
   for _,x in ipairs{1,15,29}do B(x,2,8,x+2,12,37,case)end
   B(1,11,8,31,12,10,case);B(1,11,35,31,12,37,case)
-  top({2,14,28,25},2,10,30,35,11.5)
+  top({2,16,28,23},2,10,30,35,11.5)
   front({1,40,30,5},1,2,31,4,37.02)
  elseif id=='fr_department_stock' then
   local case=T(2,20)
-  B(1,0,8,31,2,56,case);B(15,2,8,17,17,56,case)
+  B(1,0,8,31,2,54,case);B(15,2,8,17,17,54,case)
   for _,x in ipairs{2,18}do
-   B(x,2,9,x+12,4,55,case)
-   stock({x,14,12,40},x+.4,10,11.2,44,4,12,3)
+   B(x,2,9,x+12,4,53,case)
+   stock({x,16,12,38},x+.4,10,11.2,42,4,12,3)
   end
  elseif id=='gb_station_seat' then
   local yellow,edge=T(7,6),T(1,10)
@@ -1125,6 +1130,18 @@ function M.draw(id,A)
   B(4,10.5,7,12,12,12,cap)
   B(3.5,1.5,12.8,12.5,2.5,13.3,dark)
   front({3,2,10,11},3,2.5,13,10.5,13.02)
+ elseif id=='fr_museum_bookcase' then
+  -- The white header is a single panel, not part of each book spine.
+  local frame,dark=T(1,22),T(4,25)
+  shelves(1,20,30,11,27,{{8,13,{3,28,26,4}},{16,21,{3,22,26,4}}},frame,dark,true)
+  B(2,21,21,30,26,30.5,T(5,15))
+  front({2,12,28,9},2,21,30,26,30.52)
+  B(2,1,21,30,7,30.5,frame);front({2,32,28,6},2,1,30,7,30.52)
+ elseif id=='fr_center_storage' then
+  local frame,dark=T(2,22),T(6,29)
+  shelves(1,18,30,13,29,{{3,8,{3,32,26,4}},{11,16,{3,25,26,4}}},frame,dark,true)
+  B(2,17,19,30,28,30.5,T(7,16))
+  front({2,12,28,12},2,17,30,28,30.52)
  elseif id=='fr_native_books' or id=='fr_native_monitor' or id=='fr_native_rack' then
   local r=A.recipe;local w,h=A.width,A.height;local face=r.facade or {0,0,w,h}
   local z=r.frontOffset or h-1;local height=r.h or h-2;local rear=z-(r.depth or 11)

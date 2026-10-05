@@ -7,6 +7,7 @@ return function(game)
  local maps=version=='emerald'and{'EM_OLDALE_TOWN_MART','EM_RUSTBORO_CITY_HOUSE3','EM_FORTREE_CITY_HOUSE3','EM_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB'}or{'FR_VIRIDIAN_CITY_POKEMON_CENTER_1F','FR_CERULEAN_CITY_MART','FR_ROUTE_2_HOUSE'}
  if version=='emerald' and os.getenv('QA_INSTITUTIONS')=='1'then maps={'EM_SLATEPORT_CITY_OCEANIC_MUSEUM_1F','EM_MOSSDEEP_CITY_SPACE_CENTER_1F','EM_MOSSDEEP_CITY_SPACE_CENTER_2F','EM_RUSTBORO_CITY_HOUSE1'}end
  if version~='emerald' and os.getenv('QA_OFFICES')=='1'then maps={'FR_SILPH_CO_2F','FR_SILPH_CO_10F','FR_CELADON_CITY_CONDOMINIUMS_2F','FR_CELADON_CITY_CONDOMINIUMS_3F','FR_OAKS_LAB'}end
+ if version~='emerald' and os.getenv('QA_RETAIL')=='1'then maps={'FR_CELADON_CITY_POKEMON_CENTER_1F','FR_PEWTER_CITY_MUSEUM_1F','FR_CELADON_CITY_DEPARTMENT_STORE_2F','FR_CELADON_CITY_DEPARTMENT_STORE_5F','FR_FOUR_ISLAND_POKEMON_DAY_CARE'}end
  for _,id in ipairs(maps)do
   local d=assert(game.data.maps[id]);Map.ensureMidLayout(game,id,d)
   local px,py
@@ -24,7 +25,7 @@ return function(game)
   end end
   C.setLevel(0,game);U.wait(3);U.shot(game,dir..'/'..id..'-native.png')
   C.setLevel(3,game);U.wait(100);U.shot(game,dir..'/'..id..'-overview.png')
-  local views={FR_OAKS_LAB={3,4},FR_CELADON_CITY_CONDOMINIUMS_3F={2,10},FR_CELADON_CITY_CONDOMINIUMS_2F={2,11},FR_SILPH_CO_2F={34,18},FR_SILPH_CO_10F={16,16},EM_FORTREE_CITY_HOUSE3={1,4},EM_RUSTBORO_CITY_HOUSE3={8,3},EM_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB={3,3}};local pos=views[id];if pos and d.midLayout:collAt(pos[1],pos[2])==0 then Player.reset(pos[1],pos[2],'up')end
+  local views={FR_CELADON_CITY_POKEMON_CENTER_1F={3,4},FR_PEWTER_CITY_MUSEUM_1F={18,4},FR_CELADON_CITY_DEPARTMENT_STORE_2F={8,13},FR_CELADON_CITY_DEPARTMENT_STORE_5F={8,10},FR_FOUR_ISLAND_POKEMON_DAY_CARE={8,6},FR_OAKS_LAB={3,4},FR_CELADON_CITY_CONDOMINIUMS_3F={2,10},FR_CELADON_CITY_CONDOMINIUMS_2F={2,11},FR_SILPH_CO_2F={34,18},FR_SILPH_CO_10F={16,16},EM_FORTREE_CITY_HOUSE3={1,4},EM_RUSTBORO_CITY_HOUSE3={8,3},EM_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB={3,3}};local pos=views[id];if pos and d.midLayout:collAt(pos[1],pos[2])==0 then Player.reset(pos[1],pos[2],'up')end
   C.setLevel(6,game);C.yaw=0;C.pitch=0;U.wait(15);U.shot(game,dir..'/'..id..'-first.png')
   local n=0;for y=0,d.height-1 do for x=0,d.width-1 do n=n+1;assert(native[n]==d.midLayout:collAt(x,y),'renderer changed native collision')end end
   assert(not C.lastError,tostring(C.lastError));print('[PASS]',id,px,py)

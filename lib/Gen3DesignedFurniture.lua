@@ -151,10 +151,8 @@ function M.install(recipes)
  add('colosseum_stand_a','building__rom_082d4c44',{{0x30a}},'fr_stadium_stand',1)
  add('colosseum_stand_b','building__rom_082d4c44',{{0x2f6}},'fr_stadium_stand',1)
  add('colosseum_stand_c','building__rom_082d4c44',{{0x2fa}},'fr_stadium_stand',1)
- -- Four Island Day Care, building__rom_082d4f74, 5 maps. Toy racking at
- -- 0x309, read off the native sheet against
- -- FR_FOUR_ISLAND_POKEMON_DAY_CARE's layout.
- add('daycare_toy_rack','building__rom_082d4f74',{{0x309}},'fr_store_shelf',1)
+ -- Native walkable Day Care cushions, not merchandise racks.
+ add('daycare_cushion','building__rom_082d4f74',{{0x309}},'fr_daycare_cushion',0x309)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)
  add('house_left_plant','player_house',{{0x57},{0x5f}},nil)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
@@ -172,7 +170,7 @@ function M.install(recipes)
  end
  add('mart_edge_island','building__rom_082d4bcc',{{0x296},{0x29e},{0x2a6},{0x2ae}},'fr_mart_sidecase',0x281)
  add('lab_free_books','oak_lab',{{0x28b,0x28c},{0x73,0x74},{0x283,0x284}},'fr_lab_free_books',0x289)
- local designs={kitchen_sink_hob='fr_kitchen',center_terminal='fr_center_pc',
+ local designs={museum_bookcase='fr_museum_bookcase',center_vending='fr_center_storage',kitchen_sink_hob='fr_kitchen',center_terminal='fr_center_pc',
   center_2f_terminal_758='fr_upper_pc',lab_computer='fr_lab_pc',
   lab_terminal='fr_lab_terminal',lab_server='fr_lab_server',mart_rear_books='fr_mart_cooler',mart_checkout_return='fr_mart_register',mart_checkout='fr_mart_counter',mart_checkout_end='fr_mart_counter_end'}
  for _,r in ipairs(recipes)do

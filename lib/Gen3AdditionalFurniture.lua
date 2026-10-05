@@ -13,7 +13,7 @@ local function plant(name,pair,rows,ground)
 end
 local museum='rom_082d4c2c'
 cabinet('museum_bookcase',museum,{{0x2CD,0x2CE},{0x2D5,0x2D6},{0x2DD,0x2DE}},
- 0x281,{0,12,32,27},27,39,{1,12})
+ 0x281,{0,12,32,27},27,31,{1,12})
 plant('museum_potted_tree',museum,{{0x2AE},{0x2B6}},0x281)
 plant('museum_edge_potted_tree',museum,{{0x2CA},{0x2CB}},0x282)
 recipes[#recipes+1]={name='museum_fossil_case',primary='building',pair='building__'..museum,

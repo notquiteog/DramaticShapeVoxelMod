@@ -1,3 +1,36 @@
+# FRLG retail/museum/Day Care fidelity — 2026-10-05 (unreleased)
+
+Reviewed original imported artwork and collision in Celadon Center 1F,
+Pewter Museum 1F, Celadon Department Store 2F/5F, Four Island Day Care.
+Day Care metatile 0x309 is a walkable tufted cushion, not merchandise racking:
+replaced that erroneous model with a low stitched pad, retaining its original
+carpet tile beneath it. Department stock islands/glass cases start in their
+blocked second row; removed parquet from their source top crops. Center
+storage and museum bookcases fit their blocked rows and use separately
+authored headers, two stocked shelves, closed cases and source book spines.
+The white/green header is no longer repeated on individual book fronts.
+Rear shells/columns stay behind these fixtures; corresponding Center wall
+maps/screens stay mounted on the wall. No native collision edits.
+
+LeafGreen engine v0.3.51, isolated profile with companions. All five rooms
+captured native/overview/first-person; inspected cabinet close-ups, department
+island and room overviews. All five settled native collision grids unchanged
+through rendering. Driver: tools/qa/furniture-walkspace.lua QA_RETAIL=1.
+Native art crops and captures (scratch only):
+.scratch/coverage-20261004/results/leafgreen-retail-{before,final}.
+No manual walking, FireRed boot, all-angle or complete-world visual claim.
+Some surrounding wallpaper remains floor-oriented: outside this fixture pass.
+
+Full LeafGreen box census: 263 interiors / 1,254 objects; flags 205 -> 166.
+39 corrected placements (18 Center cabinets, 4 museum shelves, 9 department
+displays, 8 Day Care cushions). All changed designs now have zero flags.
+This checks only central 8x8 walkspace intersections with low authored boxes;
+not every tile/polygon, generic wall or exterior. Remaining seats and other
+furniture still need review. Gen1/2 and Emerald unaffected this pass.
+162 suites pass / 0 fail / 56 external-fixture skips; 347 production Lua files
+compile under LuaJIT; diff check clean. .scratch/retail-final-tests.log.
+QA processes exited, user saves untouched, no release/cart modifications.
+
 # FRLG office/lab native footprints — 2026-10-05 (unreleased)
 
 Silph tape/monitor terminals fit their blocked first row; server banks fit

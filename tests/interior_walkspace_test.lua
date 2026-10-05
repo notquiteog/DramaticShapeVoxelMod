@@ -1,5 +1,5 @@
 local F=dofile('lib/InteriorFurniture.lua')
-local footprints={fr_lab_free_books={0,16,32,32},fr_condo_sofa={0,0,64,16},
+local footprints={fr_museum_bookcase={0,16,32,32},fr_center_storage={0,16,32,32},fr_department_glass={0,16,32,48},fr_department_stock={0,16,32,64},fr_lab_free_books={0,16,32,32},fr_condo_sofa={0,0,64,16},
  fr_condo_workstation={0,16,48,32},em_start_pc_left={0,16,32,32},em_start_pc_right={0,16,32,32},
  em_start_dresser={0,16,16,32},em_start_console={0,0,16,16},
  em_start_tv={0,0,32,16},em_start_bed={16,32,32,48},em_lab_starter={0,16,32,32},em_museum_wall_case={0,16,32,32},em_museum_cylinder={0,16,16,32},em_office_computer={0,16,32,32},em_office_desk={0,16,32,32}}
@@ -17,7 +17,7 @@ end
 -- Repeated shop/house/Center fixtures must stay in the native blocked row.
 local firstRow={fr_lab_pc=true,fr_lab_books=true,em_space_controls=true,em_home_sofa=true,em_home_appliance=true,em_fortree_drawers=true,em_lab_desk=true,em_home_sink=true,em_home_drawers=true,fr_kitchen=true}
 for id in pairs(F.placement)do
- local seen=0;local limit=firstRow[id] and 16 or 32
+ local seen=0;local limit=({fr_department_glass=48,fr_department_stock=64})[id] or (firstRow[id] and 16 or 32)
  assert(F.draw(id,{sample=function()return{}end,source=function()end,width=32,
  box=function(l,y,n,r,h,s)
   if h>1.5 then seen=seen+1;assert(s<=limit,id..' enters the front walking lane')end

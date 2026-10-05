@@ -207,13 +207,16 @@ local function build(req,cache,previous)
  local placements=V.require('InteriorFurniture').placement
  for _,p in ipairs(props)do
   local placement=placements[p.recipe.design]
+  if p.recipe.name=='center_vending' or p.recipe.name=='museum_bookcase' then
+   placement={back=p.recipe.frontOffset-p.recipe.depth}
+  end
   if placement then cache.furnitureRecesses[#cache.furnitureRecesses+1]={p.cx*16,(p.cx*16)+p.w,p.cy*16+placement.back-.15}end
  end
  -- Reviewed rectangular shops/labs have a straight north wall. Furniture
  -- depth corrections must not turn its cornice into a cabinet-shaped zigzag.
  local roomProfile=Interior.forMap(def,3)
  local sourcePair=Pairs.canonical(def.midLayout.pair)
- if roomProfile and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='building__rom_082d4bcc')then
+ if roomProfile and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
   local north=roomProfile.originalNorth or roomProfile.bounds[2]
   for _,q in ipairs(cache.furnitureRecesses)do north=math.min(north,q[3])end
   cache.northWallFront=north+.04

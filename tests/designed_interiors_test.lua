@@ -10,7 +10,7 @@ for _,r in ipairs(F.recipes)do if r.design then
  local props=F.extract(cells);assert(#props==1 and props[1].recipe==r,'incomplete match '..r.name)
  local count,hi=0,0
  F.append(props[1],function(q,uv)
-  local front=({silph_server=32,silph_tape_terminal=16,silph_monitor_terminal=16,lab_books_free_corner=32,lab_books_free_right=32,lab_books_free_left=32})[r.name]
+  local front=({center_vending=32,museum_bookcase=32,silph_server=32,silph_tape_terminal=16,silph_monitor_terminal=16,lab_books_free_corner=32,lab_books_free_right=32,lab_books_free_left=32})[r.name]
   if front then for _,v in ipairs(q)do assert(v[3]<=front,r.name..' crosses native blocked footprint')end end
   if r.design=='fr_mart_counter' then
    for _,v in ipairs(q)do if v[2]>3 then assert(v[3]>=23,'checkout cabinetry occupies the clerk aisle')end end
@@ -19,7 +19,7 @@ for _,r in ipairs(F.recipes)do if r.design then
   end
   count=count+1;for i,p in ipairs(q)do assert(p[1]==p[1] and p[2]>=0);hi=math.max(hi,p[2]);assert(uv[i][1]>=0 and uv[i][1]<=1 and uv[i][2]>=0 and uv[i][2]<=1,'UV '..r.name)end
  end,function()return{{0,0},{1,0},{1,1},{0,1}}end)
- if r.design=='em_start_seat_pad' then assert(count>=7 and hi<1,'walkable seating must stay flush')
+ if r.design=='em_start_seat_pad' or r.design=='fr_daycare_cushion' then assert(count>=7 and hi<1,'walkable seating must stay flush')
  elseif r.design=='fr_saffron_telepad' then assert(count>=7 and hi<.5,'teleport pad must stay flush')
  else assert(count>10,r.name) end;if r.design=='fr_bed'then assert(hi<=8,'bed upright')end
  if r.design=='fr_tower_grave'then assert(hi==12,'grave must have an upright headstone')end

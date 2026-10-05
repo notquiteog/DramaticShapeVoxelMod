@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Restore FRLG Day Care cushions instead of false merchandise racks.
+- Author museum/Center shelf headers and book rows separately; fit cabinets
+  and department-store displays to native blocked tiles without floor art.
+
 - FRLG Silph terminals, condo desks/sofas/table and Oak lab fixtures fit
   native blocked rows; lab wallpaper stays behind the corrected models.
 
