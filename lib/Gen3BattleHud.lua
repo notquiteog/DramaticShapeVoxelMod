@@ -62,10 +62,7 @@ function M.install(stage)
   Options.drawing=false
   capturing=false
   if not stage.active or not Mode.enabled() then return end
-  for _,name in ipairs({'bag_menu','party_menu','summary_menu','help_system'})do
-   local owner=package.loaded['src.ui.game3.'..name]
-   if owner and owner.isOpen and owner.isOpen()then M.covered=true;return end
-  end
+  if Options.covered()then M.covered=true;return end
   if Battle._phase~='command' or not Battle._st or Battle._st.safari then return end
   local mode=Ui._mode
   if mode~='menu' and mode~='moves' and mode~='target' then return end
@@ -183,7 +180,7 @@ function M.install(stage)
  end
  V.mod.hooks:wrap('render.hud',function(inner,game,viewport)
   local result=inner(game,viewport)
-  if stage.active and not M.covered and Battle.isActive() and (next(M.cards)~=nil or M.menu) then
+  if stage.active and not M.covered and not Options.covered() and Battle.isActive() and (next(M.cards)~=nil or M.menu) then
    local G=love.graphics;G.push('all');G.setShader();G.setScissor()
    local ok,err=pcall(paint);G.pop()
    if not ok then error(err,0)end
