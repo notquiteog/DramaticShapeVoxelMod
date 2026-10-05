@@ -1,3 +1,19 @@
+## Follow-up on engine 0.3.52
+
+Ride Gen3 mount menus/notices now delegate to native Window/Font, with compact
+scrolling and guarded graphics restoration. Emerald and LeafGreen native frames
+and text inspected; inherited Modern UI styling is optional. Online crossgen
+room/chat panels and bubbles now delegate to native GB Font or Gen3 Window/Font;
+ONLINE fits the native pause menu. Yellow/Crystal/Emerald/LeafGreen menu/chat
+captures inspected; Emerald bubble inspected, GB bubble visibility needs a
+non-busy gameplay fixture. Original strings/network payloads and native input
+owners remain unchanged. Evidence: .scratch/coverage-20261004/results/*-ride-native-ui
+and *-online-native-ui. This supersedes the two dark-panel findings below.
+
+Modern UI now owns shared menu/dialogue panel restyling as a separate opt-in.
+Dedicated full-screen redesigns and broader partner overlays remain unfinished.
+No claim that every added overlay or every native UI surface has been audited.
+
 # Native UI audit — 2026-10-05
 
 Engine: official Gen1Recomp v0.3.51 (latest release checked with GitHub).

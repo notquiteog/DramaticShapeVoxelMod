@@ -44,3 +44,27 @@ implemented consumers. This does not implement the remaining window portals,
 world-bearing celestial events, Gen3 RAM preload, specialty models or general
 loose-file replacement menu listed above. Native-UI audit findings are in
 NATIVE_UI_AUDIT_2026-10-05.md.
+
+## Compatibility refresh — 2026-10-05, after 1.31.4
+
+Fetched all configured partner remotes. absol89 upstream/master (303b522) is
+fully contained in this fork; Wilds and Skies have no unmerged upstream/main
+commits. Kanto Ascendant reference HEAD/origin/main both40582034. Other partner
+origin branches are current with local released code plus the changes below.
+
+All seven current manifests have no required companion mods. This is a manifest
+check, not proof of flawless arbitrary-mod compatibility. Native network room,
+shared ground/sky authority, ride poses and doubles capability contracts remain
+optional. No campaign/quest/species expansion was imported from Ascendant.
+
+For third-party content, use engine map/quest registries and supported exports:
+Wilds registerSpriteProvider; Skies registerSpriteSource and shared-sky provider;
+Doubles partner/trainer-pair/ally/scene/veto registration; Modern UI's optional
+interface panel API. Region authors must retain native collision/warp ownership.
+Dedicated scenery registration and full custom-region interoperability tests are
+still gaps; a registered sprite provider does not establish support for every
+custom region. Never replace native input or require a companion just to skin UI.
+
+Legendary Cut-sapling geometry now has tested native Crystal and Gen3 adapters.
+Missing/partial consumers continue to be tracked by option-support.json, rather
+than treating menu presence as complete feature parity.
