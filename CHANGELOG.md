@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Restore FRLG bedroom bookcases misidentified as televisions; correct
+  home/office desks, dressers, sofas and machinery walkspace footprints.
+- Keep house rear walls straight while preserving native posters/windows.
+
 - Restore FRLG Day Care cushions instead of false merchandise racks.
 - Author museum/Center shelf headers and book rows separately; fit cabinets
   and department-store displays to native blocked tiles without floor art.

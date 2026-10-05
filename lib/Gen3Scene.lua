@@ -216,7 +216,7 @@ local function build(req,cache,previous)
  -- depth corrections must not turn its cornice into a cabinet-shaped zigzag.
  local roomProfile=Interior.forMap(def,3)
  local sourcePair=Pairs.canonical(def.midLayout.pair)
- if roomProfile and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
+ if roomProfile and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='player_house' or sourcePair=='house' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
   local north=roomProfile.originalNorth or roomProfile.bounds[2]
   for _,q in ipairs(cache.furnitureRecesses)do north=math.min(north,q[3])end
   cache.northWallFront=north+.04
@@ -462,7 +462,9 @@ local function build(req,cache,previous)
  for _,c in pairs(cells)do if c.cy==0 and c.mid~=0 and c.mid~=8 then
   local house=c.pair=='player_house' or c.pair=='house'
   local shop=c.pair=='building__rom_082d4bcc'
-  if house or shop then
+  local below=cells[c.cx..':1']
+  -- Fill only furniture claims; keep native posters/windows on unclaimed walls.
+  if (house and (c.prop or (below and below.prop))) or shop then
    local b=batches[c.pair];local x=c.cx*16;local f=wallFront(c.cx,31.92)
    local upper=uvFor(c.ts,house and 0x20 or 0x285)
    local lower=uvFor(c.ts,house and 0x28 or 0x285)
@@ -478,7 +480,7 @@ local function build(req,cache,previous)
   local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout
   Furniture.append(p,function(vertices,uv,shade,anchor)
-   if cache.northWallFront and p.cy==0 and p.recipe.frontOffset and (p.recipe.depth or 99)<=2 then
+   if cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
     local shift=cache.northWallFront-31.92
     for _,v in ipairs(vertices)do v[3]=v[3]+shift end
    end

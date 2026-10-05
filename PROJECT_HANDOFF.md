@@ -1,3 +1,46 @@
+# FRLG homes and industrial walkspace — 2026-10-05 (unreleased)
+
+Compared native art/collision for starting bedroom, Celadon roof room, Seven
+Island House Room1, Lorelei's house, Rocket Hideout B4F and Five Island
+warehouse. The starting bedroom/neighbor green cabinet was incorrectly
+modeled as a television: restored a two-shelf bookcase with green header.
+Sevii bookcases use the same reviewed native cabinet structure. Bedroom PC
+and dresser fit their blocked rows; the blue native floor seat is a low pad.
+Roof-room desk retains its books and woven top without floor pixels.
+Sevii cupboard and Lorelei display fit their blocked rows. Rocket sofas fit
+one blocked row, ordinary desks two; executive desks have a separate terminal
+and fit one blocked row. Processing-machine access fitting stays in the
+blocked upper arm of its L-shaped native footprint; trimmed chassis edge.
+
+Straightened house rear walls behind the corrected furniture. Wallpaper
+completion now fills only claimed furniture columns, preserving native
+posters/windows on untouched columns (a render check caught the poster
+being covered by generic wallpaper). Neighboring starting-house 1F and
+rival's house checked with intact windows/poster and straight rear walls.
+No native gameplay/collision or saves changed.
+
+Engine v0.3.51 / LeafGreen isolated profile / companions enabled. Native,
+overview and first-person captures: .scratch/coverage-20261004/results/
+leafgreen-homes-{before,verified}, plus leafgreen-homes-neighbors.
+Before fixture also inspected Hotel, but its walkable sofa remains unresolved.
+All six target rooms and two neighbors preserve settled native collision.
+QA_HOMES=1 tools/qa/furniture-walkspace.lua repeats the six targets.
+First-person Hideout capture includes transient native floor/story overlay;
+no claim of resolving that separate visual issue or full manual playthrough.
+Sevii/Lorelei generic rear-wall texture orientation still needs authoring.
+
+Authored-box census now 143 flagged placements (was 166): remaining stools,
+chairs, cushions, Colosseum stands, corner seating caps, two beds, Hotel sofa,
+and Agatha pedestal. These need actor-support/geometry review; not an excuse
+to alter native collision or erase the native furniture. This census checks
+only low boxes against central 8x8 walkspace, not every tile/mesh/exterior.
+No claim of all-world coverage or Gen1/2 parity completion.
+
+162 test suites passed, 0 failed, 56 external-fixture skips; production LuaJIT
+compile and diff checks pass. .scratch/homes-final-tests.log. Census:
+leafgreen-homes-census/footprints.csv. QA processes exited, player saves
+untouched. Changes unreleased; no cart/version update this pass.
+
 # FRLG retail/museum/Day Care fidelity — 2026-10-05 (unreleased)
 
 Reviewed original imported artwork and collision in Celadon Center 1F,

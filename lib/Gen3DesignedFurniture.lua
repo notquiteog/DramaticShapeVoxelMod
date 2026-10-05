@@ -38,7 +38,7 @@ function M.install(recipes)
  add('room_computer','player_house',{{0x287,0x20},{0x28f,0x86},{0x297,0x5a}},'fr_room_pc')
  add('room_dresser','player_house',{{0x30},{0x38}},'fr_room_dresser')
  add('room_console','player_house',{{0x35},{0x28e},{0x296}},'fr_console',0x45)
- add('room_television','player_house',{{0x2b,0x2c},{0x33,0x34},{0x3b,0x3c}},'fr_television')
+ add('room_television','player_house',{{0x2b,0x2c},{0x33,0x34},{0x3b,0x3c}},'fr_home_bookcase')
  add('living_television','player_house',{{0x2d},{0x35},{0x3d}},'fr_living_tv')
  add('living_cupboard','player_house',{{0x2e,0x2f},{0x36,0x37},{0x3e,0x3f}},'fr_cupboard')
  add('neighbor_wall_picture','house',{{0x184},{0x185}},'fr_wall_picture')
@@ -104,7 +104,7 @@ function M.install(recipes)
  -- Cerulean's robbed house and Seven Island: 14f is the entrance rug,
  -- 285 wallpaper/bookcase art and 14d a shelf foot. None is a bed.
  local sevii='building__rom_082d4e24'
- add('sevii_bookcase',sevii,{{0x13d,0x13e},{0x145,0x146},{0x14d,0x14e}},'fr_sevii_books',0x109)
+ add('sevii_bookcase',sevii,{{0x13d,0x13e},{0x145,0x146},{0x14d,0x14e}},'fr_home_bookcase',0x109)
  add('sevii_wardrobe',sevii,{{0x17b,0x17c,0x17d},{0x181,0x181,0x181},{0x182,0x182,0x182}},'fr_sevii_wardrobe',0x109)
  add('sevii_planter',sevii,{{0x156},{0x15e}},nil,0x109)
  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true

@@ -5,6 +5,8 @@ local M={}
 -- Authored placements: ROM front/shadow rows are not extra floor depth.
 -- Move whole component assemblies; keep all source crops and proportions.
 M.placement={
+ fr_room_dresser={z=-16,back=0},fr_room_pc={z=0,back=18},
+ fr_home_bookcase={z=0,back=18},fr_sevii_wardrobe={z=-10,back=17},fr_lorelei_display={z=-9,back=5},
  fr_department_glass={z=9,back=17},fr_department_stock={z=9,back=17},
  em_space_controls={z=-16,back=0},em_home_sofa={z=-14,back=0},
  em_museum_glass={z=2,back=16},
@@ -141,8 +143,8 @@ function M.draw(id,A)
   shelves(1,26,30,13,24,{{3,11,{2,32,28,8}},{13,21,{2,23,28,8}}},T(1,21),T(3,31),true)
  elseif id=='fr_roof_room_desk' then
   local wood=T(2,16)
-  desk(1,3,31,23,6,wood);top({1,1,30,16},1,3,31,23,6.02)
-  B(4,6,7,14,7.4,16,T(6,5));top({4,2,10,10},4,7,14,16,7.42)
+  desk(1,17,31,31,6,wood);top({1,16,30,9},1,17,31,31,6.02)
+  B(4,6,18,14,7.4,27,T(6,20));top({4,17,10,7},4,18,14,27,7.42)
  elseif id=='fr_roof_room_stool' then
   local wood=T(4,12)
   desk(2,5,14,17,4,wood);top({2,3,12,9},2,5,14,17,4.02)
@@ -836,7 +838,7 @@ function M.draw(id,A)
    end
   end
   for _,x in ipairs({3,27})do for _,z in ipairs({23,40})do B(x,0,z,x+4,3,z+4,dark)end end
-  B(2,3,22,33,5,45,metal)
+  B(2,3,22,32,5,45,metal)
   B(3,5,23,17,14,42,metal);B(17,5,23,32,17,44,metal)
   B(18,17,23,31,21,34,light);B(18,17,34,31,19,42,light)
   front({18,32,12,12},18,6,30,17,44.02)
@@ -852,7 +854,7 @@ function M.draw(id,A)
   B(14,26,28,19,28,30,metal)
   -- Side pipe and two round access fittings, all inside the native footprint.
   B(32,9,29,36,11,32,metal);B(34,5,29,36,11,32,metal)
-  drum(36,36,4,7,3,metal);drum(36,36,7,8,2,light)
+  drum(36,29,4,7,3,metal);drum(36,29,7,8,2,light)
   drum(5,41,5,8,3,metal);drum(5,41,8,9,2,light)
   front({8,33,4,10},8,5,12,13,42.02)
   for z=26,39,3 do B(1.8,6,z,2.02,11,z+.7,dark)end
@@ -1058,18 +1060,25 @@ function M.draw(id,A)
   B(3,3,3,13,4.5,13,mat);top({3,2,10,8},3,3,13,13,4.52)
  elseif id=='fr_sofa' then
   local mat,dark=T(8,17),T(3,26)
-  for _,x in ipairs({3,42})do for _,z in ipairs({10,26})do B(x,0,z,x+3,3,z+3,dark)end end
-  B(2,3,9,46,5,29,dark);B(2,5,9,46,16,12,mat)
-  B(1,5,10,5,11,29,mat);B(43,5,10,47,11,29,mat)
+  for _,x in ipairs{3,42}do for _,z in ipairs{2,12}do B(x,0,z,x+3,3,z+3,dark)end end
+  B(2,3,1,46,5,15,dark);B(2,5,0,46,16,3,mat)
+  B(1,5,1,5,11,16,mat);B(43,5,1,47,11,16,mat)
   for i=0,2 do
    local l=5+i*12.6
-   B(l,5,12,l+12,8,28,mat);top({4+i*13,16,12,10},l,12,l+12,28,8.02)
-   front({4+i*13,3,12,12},l,8,l+12,15,12.02)
+   B(l,5,3,l+12,8,15,mat);top({4+i*13,16,12,10},l,3,l+12,15,8.02)
+   front({4+i*13,3,12,12},l,8,l+12,15,3.02)
   end
  elseif id=='fr_office_table' then
-  local w,h=A.width,A.height;local mat=T(12,20)
-  desk(2,8,w-2,h-5,9,mat)
-  top({2,3,w-4,h-19},2,8,w-2,h-5,9.02)
+  local w=A.width;local mat=T(12,20)
+  desk(2,1,w-2,31,9,mat)
+  top({2,3,w-4,27},2,1,w-2,31,9.02)
+ elseif id=='fr_executive_table' then
+  local mat,case,dark=T(12,20),T(39,22),T(44,23)
+  desk(2,17,46,31,9,mat)
+  top({2,16,30,13},2,17,33,31,9.02)
+  -- Native terminal at the right end has its own closed shell and screen.
+  crt(34,18,11,11,22,{38,19,8,8},case,dark)
+  keyboard({35,27,10,3},34,27,11,3,9.1,case)
  elseif id=='fr_round_table' then
   local w=A.width;local cx=w/2
   local mat,dark=T(cx,11),T(8,54)
@@ -1137,7 +1146,7 @@ function M.draw(id,A)
   B(2,21,21,30,26,30.5,T(5,15))
   front({2,12,28,9},2,21,30,26,30.52)
   B(2,1,21,30,7,30.5,frame);front({2,32,28,6},2,1,30,7,30.52)
- elseif id=='fr_center_storage' then
+ elseif id=='fr_center_storage' or id=='fr_home_bookcase' then
   local frame,dark=T(2,22),T(6,29)
   shelves(1,18,30,13,29,{{3,8,{3,32,26,4}},{11,16,{3,25,26,4}}},frame,dark,true)
   B(2,17,19,30,28,30.5,T(7,16))
@@ -1227,13 +1236,12 @@ function M.draw(id,A)
   top({16,20,16,4},16,18,32,23,5.82)
  elseif id=='fr_room_pc' then
   local wood,case,dark=T(17,22),T(3,13),T(7,22)
-  desk(1,32,31,44,7,wood)
-  top({16,16,16,7},16,33,31,43,7.02)
-  crt(1,31,14,9,21,{2,17,12,9},case,dark)
-  keyboard({2,27,12,4},2,39,12,4,7.1,case)
-  B(3,0,44,5,4,48,wood);B(11,0,44,13,4,48,wood)
-  B(3,3,43,13,4,47,T(7,40));top({3,38,10,6},3,43,13,47,4.02)
-  B(3,4,47,13,9,48,T(7,40))
+  desk(1,19,31,31,7,wood)
+  top({16,16,16,7},16,20,31,30,7.02)
+  crt(1,18,14,9,21,{2,17,12,9},case,dark)
+  keyboard({2,27,12,4},2,26,12,4,7.1,case)
+  -- The native blue floor seat stays low in the walkable approach row.
+  B(3,0,35,13,.6,45,T(7,40));top({3,38,10,6},3,35,13,45,.62)
  elseif id=='fr_room_dresser' then
   local wood,dark=T(3,12),T(2,24)
   for _,x in ipairs({2,12})do for _,z in ipairs({18,28})do B(x,0,z,x+2,3,z+2,dark)end end
