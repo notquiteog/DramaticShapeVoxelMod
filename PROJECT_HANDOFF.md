@@ -1,3 +1,27 @@
+# Hoenn gym entrances and native walking lanes — 2026-10-05 (unreleased)
+
+Petalburg, Rustboro, Dewford, Mauville, Lavaridge and Mossdeep gym drawings now
+use a flat main roof, separate low entrance canopy, angled projecting vestibule,
+three recessed native windows and aligned native animated doorway. Side walls
+stop before the native walkable last-row strips. Five gyms have walkable rear
+roof-art rows: their body and rear window trim now sit inside blocked cells,
+while the roof remains an overhead overhang. Petalburg retains its blocked rear.
+Lavaridge's overlapped sign is a separate closed sign/post within its blocked
+cell; the hidden wall uses the native unoccluded metatiles from the same atlas.
+Native collisions/warps unchanged. Side/rear windows use authored pane art,
+size and height rather than accidentally sampling the wall below the pane.
+
+Native source drawings/collision rows inspected for all six; engine0.3.52
+production front/side/back/eye-height and native door sequences captured in
+.scratch/coverage-20261004/results/emerald-building-doors. Source composites in
+emerald-hoenn-gym-source and .scratch/hoenn-gyms-native.png. Lavaridge sign crop
+corrected after rendered review; final Lavaridge/Rustboro rerun verified.
+Bounds regressions protect front/rear walking lanes and sign cell. Full suite
+174 passed / 0 failed / 56 skipped (.scratch/hoenn-gyms-20261005-final-tests.log).
+Shared suite includes concurrent parity work; no full-world completion claim.
+Next active report: partial flat tree edges and disconnected fence variants in
+user screenshot; location clarification pending, checking FRLG outdoor variants.
+
 # Gen3 building silhouettes, source materials and native doors — 2026-10-05 (unreleased)
 
 Reworked the shared civic building renderer: closed roof soffits and independent

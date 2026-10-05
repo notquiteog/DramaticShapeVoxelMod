@@ -63,6 +63,27 @@ for _,r in ipairs(H.exteriors)do
  end end
  local found=Civic.prepare(cells,{},{});assert(#found==1 and found[1].family==r.name,r.name)
  local p=Civic.profile(found[1]);assert(p.wall>0 and p.wallBottom<=#r.rows*16,'roof/wall extent includes outside ground')
+ if r.profile=='hoenn_gym' then
+  local g=found[1];local front,door=0,false
+  Civic.append(g,function(vertices)
+   for _,v in ipairs(vertices)do
+    assert(v[2]>=0 and v[2]<=28.1,'gym height escaped flat roof profile')
+    -- Native last-row side cells are walkable. Body geometry must stop at
+    -- their northern edge; only the blocked middle vestibule may project.
+    local sign=r.gymSign and v[1]>=81 and v[1]<=95 and v[3]>=73 and v[3]<=77.05
+    if v[2]<24 and not sign then
+     if v[1]<32 or v[1]>80 then assert(v[3]<=64,'gym wing intrudes into native walking strip')end
+     if v[3]>64 then assert(v[1]>=32 and v[1]<=80,'porch escaped its blocked cells')end
+    end
+    if v[2]<24 and r.bodyBack==16 then assert(v[3]>=16,'rear wall/window intrudes into native walking row')end
+    front=math.max(front,v[3])
+   end
+  end)
+  local surface=Civic.doorSurface(g,3,4)
+  assert(surface and surface.w==14 and surface.h==16,'gym native door animation missing')
+  assert(p.front==64 and front<=79 and p.wallBottom==71,'native ground cropped or footprint shifted')
+ end
+
 end
 version='leafgreen';assert(not H.active());assert(S.of('general','pallet_town',0x14,0,1).kind=='tree')
 print('PASS '..count..' native Hoenn furniture recipes, family isolation and four-cell tree artwork')

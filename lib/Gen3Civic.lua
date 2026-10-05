@@ -98,6 +98,9 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.profile=='hoenn_gym' then
+   return {w=w,h=80,back=2,front=64,wall=26,roofEnd=42,wallTop=45,wallBottom=71,bevel=2,doorLeft=40,doorRight=72,doorTop=50,doorBottom=79,doorHeight=26,projection=15}
+  end
   if r.profile=='one_island_center' then
    return {w=w,h=96,back=8,front=95,wall=31,roofEnd=64,wallTop=64,wallBottom=95,bevel=6,doorLeft=40,doorRight=72,doorTop=48,doorBottom=95,doorHeight=38,projection=2}
   end
@@ -147,8 +150,8 @@ function M.doorSurface(g,tx,ty)
   end
  end end
 end
-local function sourcePixel(g,x,y)
- local mid=g.rows[math.floor(y/16)+1][math.floor(x/16)+1]
+local function sourcePixel(g,x,y,override)
+ local mid=override or g.rows[math.floor(y/16)+1][math.floor(x/16)+1]
  local ts=g.ts;local slot=assert(ts.midToSlot[mid]);local px,py=slot%ts.cols*16+x%16,math.floor(slot/ts.cols)*16+y%16
  local r,b,c,a=ts.imageData:getPixel(px,py)
  if ts.overImageData then
@@ -176,6 +179,13 @@ function M.material(g)
   local vent=g.custom and g.custom.roofVent
   if vent and x>=vent[1]and x<vent[3]and y>=vent[2]and y<vent[4]then rr,gg,bb,aa=sourcePixel(g,64,y)end
   data:setPixel(x+p.w,y,rr,gg,bb,aa)
+  -- Lavaridge's sign overlaps the right wall in the top-down drawing.
+  -- Restore the native unoccluded wall; keep the original sign in the
+  -- second material half for its separate freestanding model below.
+  if g.custom and g.custom.gymSign and x>=80 and y>=48 then
+   local mid=y<64 and 0x1c4 or 0x1cc
+   if g.ts.midToSlot[mid] then data:setPixel(x,y,sourcePixel(g,x,y,mid))end
+  end
  end end
  -- Exterior masking is for the cutout facade, never holes in a solid roof.
  -- Fill masked pixels from the nearest retained roof pixel on the
@@ -268,6 +278,7 @@ end
 -- Reuse one real facade window for unseen elevations, excluding tall door
 -- glass and panes that reach the ground. Native source pixels stay private.
 function M.window(g)
+ if g.custom and g.custom.profile=='hoenn_gym' then return {9,49,23,54}end
  if g.kind=='mart' or not(g.ts and g.ts.imageData)then return end
  local p=M.profile(g);local seen={};local best,score
  local function blue(x,y)
@@ -300,9 +311,17 @@ function M.append(g,emit)
  local function uv(l,t,r,b)return {{l/(p.w*2+4),t/p.h},{r/(p.w*2+4),t/p.h},{r/(p.w*2+4),b/p.h},{l/(p.w*2+4),b/p.h}}end
  local wall,trim=uv(p.w*2+.5,.5,p.w*2+.5,.5),uv(p.w*2+2.5,.5,p.w*2+2.5,.5)
  local function face(v,tex,shade)emit(v,tex,shade or 1)end
+ local gymPorch=g.custom and g.custom.profile=='hoenn_gym'
  local civicCorners=(g.kind=='center' or g.kind=='mart') and p.w>=64
+ local bodyBack=g.custom and g.custom.bodyBack or p.back
+ if gymPorch and bodyBack>p.back then bodyBack=bodyBack+2 end -- keep rear window trim inside blocked cells
  local sideFront=p.front-(civicCorners and 6 or 0)
  local function facadeFace(v,tex,shade)
+  if gymPorch then
+   for _,q in ipairs(v)do local xx=q[1]-x
+    if q[3]>z+p.front and xx>=40 and xx<=72 then q[3]=q[3]-math.max(0,48-xx,xx-64)*p.projection/8 end
+   end
+  end
   if civicCorners then
    for _,q in ipairs(v)do
     local xx=q[1]-x
@@ -333,7 +352,13 @@ function M.append(g,emit)
    end
    if #openings==0 then openings=nil end
   end
+  if openings then
+   local retained={}
+   for _,o in ipairs(openings)do if o[1]>=l and o[3]<=r and o[2]>=sy and o[4]<=ey then retained[#retained+1]=o end end
+   openings=#retained>0 and retained or nil
+  end
   local xs,ys={l,r},{sy,ey}
+  if gymPorch then for _,cut in ipairs({48,64})do if cut>l and cut<r then xs[#xs+1]=cut end end end
   if civicCorners then
    for _,cut in ipairs({8,p.w-8})do if cut>l and cut<r then xs[#xs+1]=cut end end
   end
@@ -368,13 +393,20 @@ function M.append(g,emit)
  front(p.doorLeft,p.doorRight,p.doorTop,p.doorBottom,p.doorHeight,p.front+p.projection)
  -- Closed recessed body and entrance cheeks, with no upright floor pixels.
  for _,sx in ipairs({2,p.w-2})do
-  face({{x+sx,p.wall,z+p.back},{x+sx,p.wall,z+sideFront},{x+sx,0,z+sideFront},{x+sx,0,z+p.back}},wall,.84)
+  face({{x+sx,p.wall,z+bodyBack},{x+sx,p.wall,z+sideFront},{x+sx,0,z+sideFront},{x+sx,0,z+bodyBack}},wall,.84)
  end
- face({{x+p.w-2,p.wall,z+p.back},{x+2,p.wall,z+p.back},{x+2,0,z+p.back},{x+p.w-2,0,z+p.back}},wall,.8)
+ face({{x+p.w-2,p.wall,z+bodyBack},{x+2,p.wall,z+bodyBack},{x+2,0,z+bodyBack},{x+p.w-2,0,z+bodyBack}},wall,.8)
+ if gymPorch then
+  -- Only the blocked center cells support the projecting vestibule. Native
+  -- walkable strips below either wing remain empty. Its white angled
+  -- cheeks are the authored facade, not an extra rectangular shell.
+  face({{x+40,p.wall,z+p.front},{x+72,p.wall,z+p.front},{x+64,p.wall,z+p.front+p.projection},{x+48,p.wall,z+p.front+p.projection}},uv(p.w+40.05,42.05,p.w+71.95,49.95))
+ else
  for _,sx in ipairs({p.doorLeft,p.doorRight})do
   face({{x+sx,p.wall,z+p.front},{x+sx,p.wall,z+p.front+p.projection},{x+sx,0,z+p.front+p.projection},{x+sx,0,z+p.front}},trim,.9)
  end
  face({{x+p.doorLeft,p.wall,z+p.front},{x+p.doorRight,p.wall,z+p.front},{x+p.doorRight,p.wall,z+p.front+p.projection},{x+p.doorLeft,p.wall,z+p.front+p.projection}},trim)
+ end
  -- Flat plateau with a narrow, chamfered perimeter, not a central ridge.
  local function height(xx,zz)
   return p.wall+p.bevel*math.min(1,xx/5,(p.w-xx)/5,(zz-p.back)/5,(p.front-zz)/7)
@@ -438,44 +470,54 @@ function M.append(g,emit)
   for _,sx in ipairs({l,r})do face({{x+sx,top,z+back},{x+sx,top,z+front},{x+sx,bottom,z+front},{x+sx,bottom,z+back}},brick,.9)end
   face({{x+l,top,z+back},{x+r,top,z+back},{x+r,top,z+front},{x+l,top,z+front}},uv(chimney[1]+2.05,chimney[2]+10.05,chimney[3]-2.05,chimney[2]+24.05),.9)
  end
+ if g.custom and g.custom.gymSign then
+  local rim=uv(p.w+81.1,59.1,p.w+81.2,59.2)
+  local post=uv(p.w+87.1,76.1,p.w+87.2,76.2)
+  Architecture.box(face,x+86,0,z+73,x+90,3,z+76,post)
+  Architecture.box(face,x+81,2,z+74,x+95,22,z+77,rim)
+  face({{x+81,22,z+77.04},{x+95,22,z+77.04},{x+95,2,z+77.04},{x+81,2,z+77.04}},uv(p.w+81.05,57.05,p.w+94.95,76.95))
+ end
  -- Continue the facade's horizontal siding and real window art around
  -- the closed shell. The back never repeats the shop sign or doorway.
  local boarded=g.kind=='house' and not(g.custom and g.custom.geometry=='tower')
  if boarded then
   local boards=V and V.require('HouseCladding') or dofile('lib/HouseCladding.lua')
-  boards.side(x+2,z+p.back,z+p.front,p.wall,p.wall,-1,wall,face)
-  boards.side(x+p.w-2,z+p.back,z+p.front,p.wall,p.wall,1,wall,face)
-  boards.back(x+2,x+p.w-2,z+p.back,p.wall,wall,face)
+  boards.side(x+2,z+bodyBack,z+p.front,p.wall,p.wall,-1,wall,face)
+  boards.side(x+p.w-2,z+bodyBack,z+p.front,p.wall,p.wall,1,wall,face)
+  boards.back(x+2,x+p.w-2,z+bodyBack,p.wall,wall,face)
  end
  local window=M.window(g)
  for yy=5,(boarded and 0 or p.wall-3),6 do
   for _,sx in ipairs({1.94,p.w-1.94})do
-   face({{x+sx,yy+.22,z+p.back},{x+sx,yy+.22,z+sideFront},{x+sx,yy,z+sideFront},{x+sx,yy,z+p.back}},wall,.78)
+   face({{x+sx,yy+.22,z+bodyBack},{x+sx,yy+.22,z+sideFront},{x+sx,yy,z+sideFront},{x+sx,yy,z+bodyBack}},wall,.78)
   end
-  face({{x+p.w-2,yy+.22,z+p.back-.02},{x+2,yy+.22,z+p.back-.02},{x+2,yy,z+p.back-.02},{x+p.w-2,yy,z+p.back-.02}},wall,.74)
+  face({{x+p.w-2,yy+.22,z+bodyBack-.02},{x+2,yy+.22,z+bodyBack-.02},{x+2,yy,z+bodyBack-.02},{x+p.w-2,yy,z+bodyBack-.02}},wall,.74)
  end
  if window then
   local glass=uv(window[1]+.05,window[2]+.05,window[3]-.05,window[4]-.05)
   local wh=math.min(10,p.wall*.4);local ww=math.min(22,(window[3]-window[1])*wh/(window[4]-window[2]))
-  local low=math.max(4,(p.wall-wh)*.58);local top=low+wh
+  local low=math.max(4,(p.wall-wh)*.58)
+  if gymPorch then wh,ww,low=5,14,17 end
+  local top=low+wh
+  local frame=gymPorch and uv(8.1,49.1,8.2,49.2) or trim
   for _,fraction in ipairs({.30,.70})do
-   local center=z+p.back+(p.front-p.back)*fraction
+   local center=z+bodyBack+(p.front-bodyBack)*fraction
    for _,side in ipairs({-1,1})do
     local sx=x+(side<0 and 2 or p.w-2)
     Architecture.opening(function(v,t,shade)
      local out={};for i,q in ipairs(v)do out[i]={sx+side*q[3],q[2],center+q[1]}end;face(out,t,shade)
-    end,-ww/2,low,ww/2,top,boarded and .5 or .05,trim,glass)
+    end,-ww/2,low,ww/2,top,boarded and .5 or .05,frame,glass,false,gymPorch and 'native' or nil)
    end
    local centerX=x+p.w*fraction
    Architecture.opening(function(v,t,shade)
-    local out={};for i,q in ipairs(v)do out[i]={centerX-q[1],q[2],z+p.back-q[3]}end;face(out,t,shade)
-   end,-ww/2,low,ww/2,top,boarded and .5 or .05,trim,glass)
+    local out={};for i,q in ipairs(v)do out[i]={centerX-q[1],q[2],z+bodyBack-q[3]}end;face(out,t,shade)
+   end,-ww/2,low,ww/2,top,boarded and .5 or .05,frame,glass,false,gymPorch and 'native' or nil)
   end
  end
  -- Thin foundation/eave courses and side windows continue the facade.
  for _,sx in ipairs({boarded and 1.72 or 1.95,p.w-(boarded and 1.72 or 1.95)})do
   for _,y in ipairs({1,p.wall-1})do
-   face({{x+sx,y+1,z+p.back},{x+sx,y+1,z+sideFront},{x+sx,y,z+sideFront},{x+sx,y,z+p.back}},trim,.88)
+   face({{x+sx,y+1,z+bodyBack},{x+sx,y+1,z+sideFront},{x+sx,y,z+sideFront},{x+sx,y,z+bodyBack}},trim,.88)
   end
  end
 end
