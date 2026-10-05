@@ -6,15 +6,24 @@ local UI=V.require('UiBackplates')
 M.ui=UI
 M.scale=V.require('ModSetting').new('hudScale','HUD SCALE',{'scaled','og'},{'SCALED','OG'})
 M.settings={UI.battleUi,UI.hudColor,UI.textboxFill,M.scale}
+-- The mod sandbox has a separate package.loaded from engine modules. Resolve
+-- through the public loader once, including absent optional generation menus.
+local nativeModules={}
+local function native(name)
+ if package.loaded[name]then return package.loaded[name]end
+ if nativeModules[name]==nil then
+  local ok,value=pcall(require,name);nativeModules[name]=ok and value or false
+ end
+ return nativeModules[name]or nil
+end
 function M.covered()
- local ok,battle=pcall(require,'src.core.game3.battle')
- if not ok then battle=nil end
+ local battle=native('src.core.game3.battle')
  local phase=battle and battle._phase
  if phase=='pokedex_reg'or phase=='catch_naming'or phase=='evolving'then return true end
  for _,name in ipairs({'bag_menu','party_menu','summary_menu','help_system','pokedex'})do
   for _,prefix in ipairs({'src.ui.game3.','src.ui.game3.rse.'})do
-   local found,menu=pcall(require,prefix..name)
-   if found and menu and menu.isOpen and menu.isOpen()then return true end
+   local menu=native(prefix..name)
+   if menu and menu.isOpen and menu.isOpen()then return true end
   end
  end
  return false
