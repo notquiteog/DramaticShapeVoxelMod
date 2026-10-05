@@ -4188,6 +4188,7 @@ function Structures.buildObject(S, map, region, cluster,
     end
   end
 
+  local nativeSignFirst=#quads+1
   if S.gen2 and pinnedShape and pinnedShape.class == "signpost"
       and bw <= 16 and bh <= 16 and comps[1] then
     -- The source's light line under the cap is open to the background flood.
@@ -4249,6 +4250,40 @@ function Structures.buildObject(S, map, region, cluster,
                { x + 1, y + 1, z1 }, OBJ_SHADE.side)
         end
       end
+    end
+  end
+
+  if S.gen2 and pinnedShape and pinnedShape.class=="signpost"
+      and bw==16 and bh==16 and CommunityVisuals.customSigns()then
+    -- Replace just this sign's solid draw, keeping the established ground
+    -- synthesis below. Native per-tile UVs cannot be treated as one atlas rect.
+    local chosen,best=nil,-1
+    local image=pixels(map.tileset)
+    for key,i in pairs(solidPx)do
+      local r,g,b=image:getPixel(srcU[i],srcV[i])
+      if r+g+b>best then chosen,best=key,r+g+b end
+    end
+    if chosen then
+      local i=solidPx[chosen];local t={(srcU[i]+.5)/atlasW,(srcV[i]+.5)/atlasH}
+      local replacement={}
+      V.require('NativeLegendarySigns').draw({cx=wx0/16,cy=cluster.minY/2,trim={t,t,t,t},
+        face=function(x,z,emit)
+          for py=2,11 do for px=1,14 do
+            local source=solidPx[py*bw+px]
+            if source then
+              local p={(srcU[source]+.5)/atlasW,(srcV[source]+.5)/atlasH}
+              local xa=x-5.85+(px-1)*11.7/14;local xb=xa+11.7/14
+              local ya=11.95-(py-2)*5.8/10;local yb=ya-5.8/10
+              emit({{xa,ya,z-.96},{xb,ya,z-.96},{xb,yb,z-.96},{xa,yb,z-.96}},{p,p,p,p},1)
+            end
+          end end
+        end},function(q,uv,shade)
+          for _,p in ipairs(q)do p[2]=p[2]+baseY end
+          q.uv=uv;q.shade=shade;q.visualObjectId=visualObjectId
+          replacement[#replacement+1]=q
+        end,{{0,0},{1,0},{1,1},{0,1}})
+      for i=#quads,nativeSignFirst,-1 do quads[i]=nil end
+      for _,q in ipairs(replacement)do quads[#quads+1]=q end
     end
   end
 

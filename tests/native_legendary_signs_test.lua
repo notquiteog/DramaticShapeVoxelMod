@@ -16,3 +16,7 @@ end
 assert(not M.draw({cx=2,cy=3},emit,uv)and n==0)
 on=true;assert(M.draw({cx=2,cy=3},emit,uv)and n>30)
 print('PASS optional native wayfinder, native UV, closed silhouette and cell bounds')
+
+local custom=false
+assert(M.draw({cx=2,cy=3,trim={{.15,.25},{.15,.25},{.15,.25},{.15,.25}},face=function(x,z,e)custom=true;assert(x==40 and z==60)end},emit,uv))
+assert(custom,'noncontiguous native atlas face callback omitted')

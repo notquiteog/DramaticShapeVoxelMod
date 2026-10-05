@@ -10,7 +10,7 @@ function M.draw(c,emit,uv)
   local v=uv[1][2]+(uv[3][2]-uv[1][2])*py/16
   return {{u,v},{u,v},{u,v},{u,v}}
  end
- local trim=tex(3,3)
+ local trim=c.trim or tex(3,3)
  local G=V.require('CityMesh').new({trim[1][1],trim[1][2]})
  G.box(-1.2,0,-2.25,1.2,6,-.95,nil,1)
  G.box(-1.7,0,-2.5,1.7,.75,-.7,nil,.92)
@@ -31,6 +31,7 @@ function M.draw(c,emit,uv)
   if type(shade)=='table'then shade=(shade[1]+shade[2]+shade[3]+shade[4])/4 end
   emit(p,trim,shade)
  end
+ if c.face then c.face(x,z,emit);return true end
  local function t(px,py)return {uv[1][1]+(uv[2][1]-uv[1][1])*px/16,uv[1][2]+(uv[3][2]-uv[1][2])*py/16}end
  emit({{x-5.85,11.95,z-.96},{x+5.85,11.95,z-.96},{x+5.85,6.15,z-.96},{x-5.85,6.15,z-.96}},
   {t(1,2),t(15,2),t(15,12),t(1,12)},1)

@@ -132,7 +132,7 @@ generation	key	label	status	consumer	limitation
 2	communityPrizeRoom	PRIZE ROOM	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
 2	communityRoads	ROADS & BRIDGES	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
 2	communityRocket	ROCKET HIDEOUT	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
-2	communitySigns	SIGNS	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
+2	communitySigns	SIGNS	partial	lib/Structures.lua; lib/NativeLegendarySigns.lua	Optional shared low chamfered sign models on complete native 16px sign clusters, retaining source glyph pixels, visual identity and floor synthesis. Nonstandard sign extents and generated location text remain native/unported.
 2	communitySky	SKY & BACKGROUND	implemented	lib/Sky.lua	Shared sky renderer consumes the selected sky style.
 2	communityTower	TOWER VISUALS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
 2	communityTowerWall	TOWER WALL	partial	lib/CommunityVisuals.lua; lib/ChunkMesher.lua	Shared profiles exist, but complete native Gen2 map-family parity is not established.
