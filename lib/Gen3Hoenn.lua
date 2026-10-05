@@ -25,6 +25,19 @@ function M.surface(primary,mid,collision)
  end
 end
 function M.shape(primary,secondary,mid,behavior,collision)
+ if secondary=='facility' then
+  if mid==0x373 or mid==0x374 then
+   return {kind='fence',ground=0x2f0,material=mid,height=7,
+    postWidth=1.8,postSample={3,4},rails={2,6},stop=mid==0x374}
+  end
+  -- Native Space Center window band and Devon office wallpaper. The
+  -- bottom floor/shadow rows stay horizontal; no furniture is folded up.
+  if collision==7 and (mid==0x2f8 or mid==0x300 or
+    mid==0x388 or mid==0x389 or mid==0x390 or mid==0x391)then
+   return {kind='roomWall',ground=mid>=0x380 and 0x380 or 0x2f0}
+  end
+  if mid==0x2f0 or mid==0x380 then return {kind='flat',reviewedSurface=true}end
+ end
  if primary=='general' then
   -- Hoenn stairs use NORMAL behavior, not FRLG's 0x2A (seaweed here).
   -- Match native tread artwork and retain blocked copies as scenery.
@@ -97,6 +110,26 @@ add('hoenn_home_plant',house,{{0x290},{0x298}},'plant',{h=22,cutout=true,ground=
 -- Rustic homes have their own timber furniture and floor palette.
 home('rustic_tv',{{0x2b1,0x2b2},{0x2b9,0x2ba},{0x2c1,0x2c2}},'em_home_tv',0x229)
 home('rustic_books',{{0x2be,0x2bf},{0x2c6,0x2c7},{0x2ce,0x2cf}},'em_home_books',0x229)
+-- Space Center and Devon use the same complete equipment drawings in two
+-- native atlas pairs. Match both editions of the floor, never arbitrary IDs.
+for _,primary in ipairs({'general','building'})do
+ local pair=primary..'__facility'
+ local function facility(name,rows,design,ground,extra)
+  local r={primary=primary,design=design,ground=ground}
+  for k,v in pairs(extra or {})do r[k]=v end
+  add('hoenn_facility_'..primary..'_'..name,pair,rows,'designed',r)
+ end
+ facility('space_controls',{{0x2ba,0x2b8,0x2b9},{0x377,0x375,0x376}},'em_space_controls',0x2f0)
+ facility('space_controls_pair',{{0x2b8,0x2b9},{0x376,0x376}},'em_space_controls',0x2f0)
+ facility('space_controls_end',{{0x2b9},{0x376}},'em_space_controls',0x2f0)
+ facility('space_computer',{{0x363,0x364},{0x36b,0x36c}},'em_office_computer',0x2f0)
+ facility('space_desk',{{0x362,0x364},{0x36a,0x36c}},'em_office_desk',0x2f0)
+ facility('space_plans',{{0x368,0x369},{0x370,0x371}},'em_office_plans',0x2f0)
+ facility('space_stool',{{0x361}},'em_office_stool',0x2f0,{seat={height=5,hips=4,z=8}})
+ facility('devon_computer',{{0x3a3,0x3a4},{0x3ab,0x3ac}},'em_office_computer',0x380)
+ facility('devon_plans',{{0x3a5,0x3a6},{0x3ad,0x3ae}},'em_office_plans',0x380)
+ facility('devon_stool',{{0x3a7}},'em_office_stool',0x380,{seat={height=5,hips=4,z=8}})
+end
 -- Littleroot's furniture is separate from the generic Hoenn house atlas.
 local startHouse='building__brendans_mays_house'
 local function starting(name,rows,design,extra)

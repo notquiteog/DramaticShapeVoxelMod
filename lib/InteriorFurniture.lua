@@ -455,6 +455,42 @@ function M.draw(id,A)
    B(x+2,7,27,x+9,8,30,case)
    top({x+2,21,7,3},x+2,27,x+9,30,8.02)
   end
+ elseif id=='em_space_controls' then
+  local case,dark=T(math.min(20,A.width-2),17),T(1,21)
+  -- Three inclined instrument panels, with closed rear shells, plinths,
+  -- and separate native switches instead of a vertical texture extrusion.
+  for panel=0,A.width/16-1 do local x=panel*16
+   B(x+1,0,17,x+15,1.5,31,dark)
+   B(x+.5,1.5,16,x+15.5,10,30,case)
+   B(x+.5,10,16,x+15.5,17,18,case)
+   B(x+.5,10,18,x+1.5,16,29,case)
+   B(x+14.5,10,18,x+15.5,16,29,case)
+   S(x+1,1,14,14,{x+1,17,18},{x+15,17,18},{x+15,10,30},{x+1,10,30})
+   front({x+1,17,14,13},x+1,1.5,x+15,10,30.02)
+  end
+ elseif id=='em_office_computer' or id=='em_office_desk' or id=='em_office_plans' then
+  local case,dark=T(22,15),T(1,27)
+  -- A work surface with four separate legs and open knee space. Native
+  -- perspective legs are not stretched across a filled vertical slab.
+  desk(1,7,31,26,9,case)
+  B(1,8,7,31,9,26,T(22,15))
+  front({1,24,30,3},1,7.6,31,9,26.02)
+  if id=='em_office_computer' then
+   top({17,12,13,11},17,8,30,24,9.03)
+   crt(2,8,13,10.5,21,{2,9,11,9},case,dark)
+   keyboard({2,20,12,4},2.5,17,12,5,9.1,case)
+  elseif id=='em_office_plans' then
+   top({2,2,28,20},2,8,30,25,9.03)
+  else top({2,12,28,11},2,8,30,25,9.03)end
+ elseif id=='em_office_stool' then
+  local metal,dark,seat=T(8,10),T(4,13),T(8,4)
+  -- Bevelled circular cushion, central pedestal and a broad low foot.
+  B(4,0,5,12,.8,11,dark);B(5,0,4,11,.8,12,dark)
+  B(6.5,.8,6.5,9.5,3.7,9.5,metal)
+  for _,r in ipairs({{3,5,13,11},{4,4,12,12},{5,3,11,13}})do
+   B(r[1],3.7,r[2],r[3],4.5,r[4],metal)
+   B(r[1]+.4,4.5,r[2]+.4,r[3]-.4,5,r[4]-.4,seat)
+  end
  elseif id=='em_home_tv' then
   local wood,case,dark=T(4,34),T(1,18),T(4,22)
   -- Low closed media cabinet with a full-depth CRT above it.

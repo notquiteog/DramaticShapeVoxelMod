@@ -12,7 +12,7 @@ assert(#tree.treeRows==2 and #tree.treeRows[1]==2 and tree.treeFamily=='round')
 local count=0
 for _,r in ipairs(H.recipes)do
  local cells={};for y,row in ipairs(r.rows)do for x,mid in ipairs(row)do
-  cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair=r.pair,primary='building',ts={}}
+  cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair=r.pair,primary=r.primary or 'building',ts={}}
  end end
  local props=F.extract(cells);assert(#props==1 and props[1].recipe==r,r.name)
  version='firered';assert(#F.extract(cells)==0,'Hoenn recipe claimed FRLG art: '..r.name);version='emerald'
@@ -65,3 +65,16 @@ assert(S.of('general','mossdeep',0x100,0x2a,0).kind~='steps','Emerald seaweed be
 
 assert(S.of('general','meteor_falls',0x202,8,43).kind=='steps','cave encounter stairs flattened')
 assert(S.of('general','mossdeep',0x202,8,43).kind~='steps','Meteor Falls stairs leaked')
+
+for _,primary in ipairs({'general','building'})do
+ for _,mid in ipairs({0x2f8,0x300,0x388,0x389,0x390,0x391})do
+  assert(S.of(primary,'facility',mid,0,7).kind=='roomWall')
+  assert(S.of(primary,'facility',mid,0,0).kind=='flat','walkable wallpaper folded up')
+  assert(S.of(primary,'generic_building',mid,0,7).kind~='roomWall','facility wall alias leaked')
+ end
+ for _,mid in ipairs({0x373,0x374})do
+  assert(S.of(primary,'facility',mid,0,7).kind=='fence')
+  assert(S.of(primary,'generic_building',mid,0,7).kind~='fence','facility railing alias leaked')
+ end
+end
+print('PASS science-room wall/fence scope and walkable artwork exclusions')

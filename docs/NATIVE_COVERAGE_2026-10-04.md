@@ -103,3 +103,21 @@ Official 0.3.51 `crystal-station` fixture completed Goldenrod and Saffron; inspe
 Goldenrod overview and first-person. 277 designed-object recipes and focused
 source-bound tests pass. This is not a full station sign-off: train geometry,
 tracks, perimeter details and travel animation still need review.
+
+### Hoenn science rooms
+
+Space Center and Devon offices now match 51 additional native furniture
+instances using twenty atlas-scoped recipes: CRT workstations with keyboards,
+open-legged plan tables, pedestal stools and inclined instrument banks.
+The shared original-art model builder closes backs and sides. Native window
+bands and office wallpaper stand vertically; Space Center rails retain gaps.
+Eight three-cell-wide facility stair recipes preserve landing behavior and
+use recessed flights with native gray/red materials instead of flat openings.
+
+QA: official 0.3.51 `science-source` and `science` fixtures. Source diagrams,
+selected overview/first-person renders reviewed; map/collision grids unchanged.
+297 designed-object checks, 106 Hoenn recipe/family checks and 68 staircase
+patterns pass, alongside focused existing furniture regressions. Devon rear
+fixture faces outside the room, so it does not establish rear-view approval.
+Museum exhibits, additional Devon floors, stair-adjacent wall returns and full
+room boundaries still need work. These maps are not claimed fully finished.

@@ -29,7 +29,7 @@ function M.append(g,emit,uvFor)
  local wood=color(24,g.r.down and 29 or 31)
  local dark=color(17,14)
  local wall=color(4,14)
- local floor=assert(uvFor(g.ts,0x201))
+ local floor=assert(uvFor(g.ts,g.r.floor or 0x201))
  for _,a in ipairs{{0,12},{36,48}}do
   face({{a[1],0,0},{a[2],0,0},{a[2],0,32},{a[1],0,32}},floor)
   box(a[1],0,7,a[2],32,30,wall)

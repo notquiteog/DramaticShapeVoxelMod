@@ -1,3 +1,29 @@
+# Hoenn science rooms — 2026-10-04 (unreleased)
+
+Added native Space Center/Devon workstations (separate CRTs, keyboards and
+open-legged tables), plan tables, pedestal stools, inclined control banks,
+window/wall bands and upper-floor railings. Twenty pair-scoped recipes map to
+51 actual furniture instances across the complete Emerald inventory; recipe
+counts include alternate general/building atlas guards, not twenty new types.
+Eight complete facility stair patterns use recessed up/down flights with their
+own gray/red materials and floor; native landing behavior remains required.
+
+Official 0.3.51 isolated `science-source.lua` source diagrams and `science.lua`
+render fixture under `.scratch/coverage-20261004`. Both Space Center floors
+and Devon 2F render in static/orbit/first-person; layout and collision unchanged.
+Inspected Space Center overview/first-person and Devon overview after fixes.
+The rear Devon capture faces out of the room and is NOT a rear-model sign-off.
+Focused suites: 297 designed objects, 106 Hoenn furniture recipes, 68 stair
+patterns, plus starting/additional/Center/depth-furniture tests pass. The old
+astra_furniture_support test needs ASTRA_FURNITURE_BASELINE and was not run.
+
+Emerald inventory remains 519 maps / 75 atlas pairs, 495 supported scenes,
+103 maps with matched furniture, 1,468 matched furniture objects (before the
+last stair additions; furniture total unaffected). This is a coverage census,
+NOT all-map visual approval. Remaining science-room gaps include stair-adjacent
+wall returns, Devon 1F/3F fittings, museum exhibits and room boundary completion.
+Full-world tile coverage and feature parity remain unfinished. No release.
+
 # Option parity checkpoint — 2026-10-04 (unreleased)
 
 Gen3 now consumes BACK PLACEMENT for both allied Pokemon: AUTO/WORLD project
