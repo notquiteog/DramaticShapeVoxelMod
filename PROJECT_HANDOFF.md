@@ -1,3 +1,19 @@
+# Emerald stair artwork correction — 2026-10-04
+
+Replaced the new freestanding gray Littleroot stairs with native golden treads
+inside a framed wall recess. Separate up/down materials avoid sampling the
+purple outline as wood; closed jambs/lintel/returns replace tall banisters.
+Native layout, warps, collision and actor movement remain untouched.
+
+Official 0.3.51 isolated Emerald fixture: `.scratch/coverage-20261004/starting.lua`;
+results in `results/emerald-starting`. Inspected Brendan 1F overview/first,
+Brendan 2F overview/first and May 2F overview. All four house fixtures completed
+and asserted unchanged native grids. Stair tests: 32 up / 28 down assemblies;
+Crystal stair/foundation guards also pass. This is not an all-games stair visual
+sign-off. Descending steps are naturally hidden below floor level at a level
+first-person view. Other uncommitted coverage work remains in the checkout;
+do not mistake it for a reviewed release. No new release for this correction.
+
 # Shared houses and department stores — 2026-10-04
 
 Post-1.30.0 main work: 15 Emerald house recipes add 298 fixtures across 46 more

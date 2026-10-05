@@ -22,7 +22,7 @@ function M.prepare(cells)
      group.cells[z*width+x+1]=q
     end end
     local landing=group.cells[r.landing and (r.landing[2]*width+r.landing[1]+1) or ((#r.rows-1)*width+(r.east and 1 or 2))]
-    local expected=r.down and (r.east and 0x6E or 0x6F)or(r.east and 0x6C or 0x6D)
+    local expected=r.expectedBehavior or (r.down and (r.east and 0x6E or 0x6F)or(r.east and 0x6C or 0x6D))
     if landing and (landing.collision==7 or landing.behavior and landing.behavior~=expected)then match=false end
     if match then
      group.landing=landing
@@ -66,6 +66,9 @@ function M.append(c,emit,uvFor)
  if g then
   if g.owner~=c then return end
   local r=g.r
+  if r.design=='hoenn_house' then
+   return V.require('Gen3HoennStairs').append(g,emit,uvFor)
+  end
   if r.design=='house' then
    return V.require('Gen3HouseStairs').append(g,emit,uvFor)
   end

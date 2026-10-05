@@ -12,7 +12,11 @@ for _,r in ipairs(recipes)do
   n=n+1;for i,v in ipairs(p)do for _,k in ipairs(v)do assert(k==k and math.abs(k)<128)end;assert(t[i]);lo=math.min(lo,v[2]);hi=math.max(hi,v[2])end
  end,uv)end
  assert(n>20,'missing stair sides/treads')
- assert(r.down and lo<0 and hi<2 or not r.down and lo<=0 and hi>16,'wrong flight direction')
+ if r.design=='hoenn_house' then
+  assert(lo==(r.down and -17 or -1) and hi==32,'recess or native wall frame missing')
+ else
+  assert(r.down and lo<0 and hi<2 or not r.down and lo<=0 and hi>16,'wrong flight direction')
+ end
  counts[r.down and 'down' or 'up']=counts[r.down and 'down' or 'up']+1
  for _,c in pairs(cells)do c.stairs=nil end
  cells['1:1'].mid=-1;assert(S.prepare(cells)==0,'partial artwork borrowed an unrelated tile')
