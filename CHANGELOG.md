@@ -1,3 +1,10 @@
+## Unreleased
+
+- Correct Pallet fence rails projecting into paths; use each native picket
+  material. Model missing Fuchsia fences and foliage-covered shared sections,
+  and correct reviewed endpoint directions. Resolve Fuchsia through the shared
+  FireRed/LeafGreen tileset alias. Native collisions remain unchanged.
+
 ## 1.31.2 — 2026-10-05
 
 - Make native Gen3 FULL apply the shared diorama presentation defaults on

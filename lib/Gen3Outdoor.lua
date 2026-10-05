@@ -102,6 +102,26 @@ function M.append(c,emit,uvFor)
   box(x+1,5,z+7.6,x+15,12,z+9.2,trim)
   emit({{x+1,12,z+9.23},{x+15,12,z+9.23},{x+15,5,z+9.23},{x+1,5,z+9.23}},sub(uv,1,2,15,12),1)
  elseif s.kind=='fence' then
+  -- Fence drawings partially covered by a tree must keep their green
+  -- ground artwork, without leaving a second flat metal fence underneath.
+  if s.coveredGround and c.ts.imageData then
+   local at,ref=c.ts.midToSlot[c.mid],c.ts.midToSlot[0xE7]
+   if at and ref then
+    local colors={}
+    for py=0,15 do for px=0,15 do colors[colorKey(pixel(c.ts,ref%c.ts.cols*16+px,math.floor(ref/c.ts.cols)*16+py))]=true end end
+    for py=0,15 do
+     local start
+     for px=0,16 do
+      local keep=px<16 and not colors[colorKey(pixel(c.ts,at%c.ts.cols*16+px,math.floor(at/c.ts.cols)*16+py))]
+      if keep and not start then start=px end
+      if not keep and start then
+       emit({{x+start,.015,z+py},{x+px,.015,z+py},{x+px,.015,z+py+1},{x+start,.015,z+py+1}},sub(uv,start,py,px,py+1),1)
+       start=nil
+      end
+     end
+    end
+   end
+  end
   local vertical=s.axis and not s.turn
   local post=uvFor(c.ts,s.material or (s.wood and 0xE6 or 0xE7)) or uv
   local face,cap=sub(post,3,6,6,14),sub(post,3,3,6,6)
@@ -122,7 +142,7 @@ function M.append(c,emit,uvFor)
   end
   if vertical then
    for _,dz in ipairs(s.stop and {8} or {4,12})do stake(x+s.axis,z+dz)end
-   for _,h in ipairs(s.rails or {h*.3,h*.7})do box(x+s.axis-.6,h,z,x+s.axis+.6,h+1,z+(s.stop and 8 or 16),rail)end
+   for _,h in ipairs(s.rails or {h*.3,h*.7})do box(x+s.axis-.6,h,z+(s.stop=='south' and 8 or 0),x+s.axis+.6,h+1,z+(s.stop and s.stop~='south' and 8 or 16),rail)end
   else
    for _,dx in ipairs({4,12})do stake(x+dx,z+8)end
    for _,h in ipairs(s.rails or {h*.3,h*.7})do

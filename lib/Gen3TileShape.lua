@@ -73,14 +73,19 @@ fence(0xF0,true,4);fence(0xF1,true,12)
 fence(0xF2,true,12,nil,true);fence(0xF3,true,4,nil,true)
 fence(0xF4,false,4);fence(0xF5,false,12)
 fence(0xFC,false,4,'north');fence(0xFD,false,12,'north')
--- Standalone metal endpoints use the opposite hand to their source neighbour.
-fence(0xEE,false,4,nil,true);fence(0xEF,false,12,nil,true)
+-- Reviewed metal end caps retain the side and continuation of their native art.
+fence(0xEE,false,12,nil,'south');fence(0xEF,false,12,nil,true)
+fence(0xF6,false,12,nil,'north');fence(0x1F0,false,4,nil,'south')
+for _,mid in ipairs{0xD6,0xD7}do fence(mid,false);fences[mid].coveredGround=true end
 local localProps={
  pallet_town={
-  [0x284]={kind='fence',ground=0x285,axis=4,turn='south'},
-  [0x287]={kind='fence',ground=0x285,axis=4,turn='south'},
+  [0x284]={kind='fence',ground=0x285,material=0x284},
+  [0x287]={kind='fence',ground=0x285,material=0x287},
  },
  rom_082d4b54={
+  [0x336]={kind='fence',ground=1,material=0xE7},
+  [0x337]={kind='fence',ground=1,material=0xE7,axis=12,turn='south'},
+  [0x33F]={kind='fence',ground=1,material=0xE7,axis=12},
   [0x296]={kind='sign',height=12,ground=1},
   [0x308]={kind='fence',ground=0x300,wood=true,material=0x308},
   [0x309]={kind='fence',ground=0x301,wood=true,material=0x308},

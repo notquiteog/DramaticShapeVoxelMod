@@ -1,3 +1,35 @@
+# FRLG fence artwork correction — 2026-10-05 (unreleased)
+
+User screenshots: Pallet repeated perpendicular rail prongs, flat fence art
+beneath foliage, black patches in Route 1 grass. Fixed Pallet 284/287 as straight
+native-material pickets, shared EE/F6/1F0 endpoint directions, D6/D7 covered
+fences, Fuchsia 336/337/33F models. Fuchsia recipes use canonical rom_082d4b54;
+LeafGreen live imported rom_082d4b34 resolves through Gen3Tilesets.bind.
+Ground strips keep native foliage without duplicate flat metal. Every fence
+vertex remains in its own cell; production native collision is never modified.
+EF retains its prior unverified recipe (not extrapolated from the EE drawing).
+
+Source runtime v0.3.51, isolated QA profiles with all seven companions. Native
+composited atlas inspected, rather than inferring corners from adjacency.
+LeafGreen fences-final: 10 cases / 30 captures plus canopy GPU checks passed.
+Inspected endpoint/alias overview and rotating views, covered foliage view and
+Pallet first-person view. Some camera captures are obscured by NPCs/buildings;
+those are not visual passes. Paths under .scratch/coverage-20261004/results/.
+Repro driver tools/qa/gen3-fence-coverage.lua additionally compares every map
+collision cell and preserves target metatile. Requires DS_MOD_PATH and SHOT_DIR.
+Final FireRed fences-checked run: all 30 captures, unchanged full collision
+grids and canopy GPU checks passed; inspected Pallet overview confirms straight
+rails while genuine boundary corners remain connected.
+Focused regressions and complete suite: 164 passed, 0 failed, 56 fixture skips;
+.scratch/fences-tests.log. No player save touched, captures remain untracked.
+
+Black patches remain OPEN: current Route 1 daytime and forced NIGHT captures
+with companion spawns did not reproduce them (leafgreen-outdoor-source and
+firered-outdoor-night). User clarification pending about current cart and whether
+patches move. No speculative shadow or spawn patch applied. Building models
+were not changed in this pass. Full world coverage and visual polish remain
+incomplete; these fence checks do not establish all-tile/all-game quality.
+
 # Native FULL preset parity — 2026-10-05 (unreleased)
 
 Audited existing option inventory; full parity is NOT complete. Gen3 FULL

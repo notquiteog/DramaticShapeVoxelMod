@@ -112,3 +112,50 @@ for _,mid in ipairs({0xC0,0xC1,0xC8,0xC9})do
  assert(sides[48]==2.5 and sides[64]==2.5,'sand/grass transition was tapered into a false end')
 end
 print('PASS sand/grass ledge joins retain continuous height and native caps')
+
+-- Pallet's two shade variants are straight paired pickets, not corners.
+for _,mid in ipairs{0x284,0x287}do
+ local shape=S.of('general','pallet_town',mid)
+ assert(shape.kind=='fence' and not shape.turn and not shape.axis)
+ local count=0
+ O.append({cx=0,cy=0,mid=mid,ts={},shape=shape},function(vs)
+  for _,v in ipairs(vs)do assert(v[1]>=0 and v[1]<=16 and v[3]>=6.4 and v[3]<=9.6,'straight fence grew a perpendicular spur')end
+  count=count+1
+ end,function(_,id)assert(id==mid,'borrowed unrelated fence material');return uv end)
+ assert(count>0)
+end
+assert(S.of('general','viridian_outdoor',0xEC).turn=='south','real general corner lost its turn')
+print('PASS native Pallet straight pickets, source material and true-corner isolation')
+for _,case in ipairs{{0xEE,12,8,16},{0xF6,12,0,8},{0x1F0,4,8,16}}do
+ local shape=S.of('general','viridian_outdoor',case[1]);assert(shape.kind=='fence' and shape.axis==case[2])
+ local rails=0
+ O.append({cx=0,cy=0,mid=case[1],ts={},shape=shape},function(vs)
+  local lo,hi=16,0
+  for _,p in ipairs(vs)do assert(p[1]>=0 and p[1]<=16 and p[3]>=0 and p[3]<=16);lo=math.min(lo,p[3]);hi=math.max(hi,p[3])end
+  if hi-lo==8 then assert(lo==case[3] and hi==case[4],'endpoint rail points into the wrong neighbor');rails=rails+1 end
+ end,function()return uv end)
+ assert(rails>0)
+end
+for _,case in ipairs{{0x336,nil},{0x337,'south'},{0x33F,nil}}do
+ local s=S.of('general','rom_082d4b54',case[1]);assert(s.kind=='fence' and s.turn==case[2])
+ assert(S.of('general','pallet_town',case[1]).kind~='fence','Fuchsia alias escaped its tileset')
+end
+for _,mid in ipairs{0xD6,0xD7}do
+ local ts={cols=2,midToSlot={[mid]=0,[0xE7]=1},imageData={}}
+ function ts.imageData:getPixel(x,y)if x<8 then return 0,1,0,1 end;return .5,.5,.5,1 end
+ local planes=0
+ O.append({cx=0,cy=0,mid=mid,ts=ts,shape=S.of('general','viridian_outdoor',mid)},function(vs)
+  if vs[1][2]==.015 then
+   planes=planes+1;for _,v in ipairs(vs)do assert(v[1]<=8,'metal fence leaked into flat foliage layer')end
+  end
+ end,function()return uv end)
+ assert(planes==16,'native foliage missing from covered fence')
+end
+print('PASS endpoint direction, Fuchsia scope and covered-fence foliage separation')
+
+local T=V.require('Gen3Tilesets')
+T.bind({FR_FUCHSIA_CITY={pair='general__rom_082d4b34'}})
+local spec=T.resolve('general__rom_082d4b34',{})
+assert(spec.secondary=='rom_082d4b54')
+assert(S.of(spec.primary,spec.secondary,0x336).kind=='fence','LeafGreen imported alias lost Fuchsia model')
+T.bind(nil)
