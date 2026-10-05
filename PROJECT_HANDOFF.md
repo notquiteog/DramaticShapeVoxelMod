@@ -1,3 +1,12 @@
+# Museum upper rear wall — 2026-10-05 (unreleased)
+
+Added four complete native wall patterns (17 assemblies) for the upstairs
+museum rear wall, stepped wings and corner joins. Closed backs/sides and
+source colors fit blocked cells; no collision edits. QA_GALLERY native and
+rendered overview inspected on Emerald v0.3.51; driver asserts all 17 matches.
+162+4 Hoenn recipe patterns, designed-object and walking-space tests pass.
+Still no claim of exhaustive world coverage or every-angle approval.
+
 # Lilycove Poké Ball exhibit and wall returns — 2026-10-05 (unreleased)
 
 The small exhibit is a separate volumetric Poké Ball on a low, flat plinth,

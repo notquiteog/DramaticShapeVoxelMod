@@ -173,6 +173,17 @@ add('hoenn_lilycove_gallery','building__lilycove_museum',{
  design='em_lilycove_gallery',ground=0x268,blockedRows={[3]=true},
  groundRows={{0x268,0x269,0x268,0x269},{0x269,0x268,0x269,0x268},
  {0x268,0x269,0x268,0x269},{0x269,0x268,0x269,0x268}}})
+-- Native stepped rear wall: two-row middle, deeper wings and corner joins.
+for _,spec in ipairs{
+ {name='rear',rows={{0x281},{0x289}}},
+ {name='wing',rows={{0x279},{0x281},{0x289}}},
+ {name='left_corner',rows={{0x27a},{0x282},{0x28a}}},
+ {name='right_corner',rows={{0x278},{0x280},{0x288}}},
+}do
+ add('hoenn_lilycove_upper_'..spec.name,'building__lilycove_museum',spec.rows,'designed',{
+  design='em_lilycove_upper_wall',ground=0x270,blockedRows={[1]=true,[2]=true,[3]=#spec.rows==3},
+  corner=spec.name:match('corner')~=nil})
+end
 for _,pair in ipairs{{0x284,0x28c},{0x285,0x28d}}do
  add('hoenn_lilycove_statue_'..pair[1],'building__lilycove_museum',{{pair[1]},{pair[2]}},'carvedStatue',{
   ground=0x270,groundRows={{0x289},{0x270}},blockedRows={[2]=true}})

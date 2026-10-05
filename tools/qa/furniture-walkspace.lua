@@ -32,7 +32,7 @@ return function(game)
    local small,returns=0,0;for _,p in ipairs(props)do if p.recipe.design=='em_lilycove_ball_sculpture' then small=small+1 end;if p.recipe.design=='em_lilycove_wall_return'then returns=returns+1 end end
    assert(small==1 and returns==2,'missing small sculpture or wall ends')
   end
-  if id=='EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_2F' then local n=0;for _,p in ipairs(props)do if p.recipe.kind=='carvedStatue'then n=n+1 end end;assert(n==2,'expected both native museum sculptures')end
+  if id=='EM_LILYCOVE_CITY_LILYCOVE_MUSEUM_2F' then local n=0;for _,p in ipairs(props)do if p.recipe.kind=='carvedStatue'then n=n+1 end end;assert(n==2,'expected both native museum sculptures');local walls=0;for _,p in ipairs(props)do if p.recipe.design=='em_lilycove_upper_wall'then walls=walls+1 end end;assert(walls==17,'expected complete stepped rear wall')end
   if id=='FR_POKEMON_LEAGUE_LANCES_ROOM' then local count=0;for _,p in ipairs(props)do if p.recipe.kind=='statue'then count=count+1 end end;assert(count==10,'expected all ten native League statues');print('[statues]',count)end
   for _,p in ipairs(props)do if p.recipe.design or p.recipe.kind=='statue' then
    local rows={};for y=p.cy-1,p.cy+#p.recipe.rows do local row={};for x=p.cx,p.cx+#p.recipe.rows[1]-1 do row[#row+1]=tostring(d.midLayout:collAt(x,y))end;rows[#rows+1]=table.concat(row,',')end

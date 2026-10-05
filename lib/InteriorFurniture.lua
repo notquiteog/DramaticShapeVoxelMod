@@ -566,6 +566,16 @@ function M.draw(id,A)
   B(0,0,16,w,2,31.8,trim)
   B(0,30,16,w,31,31.8,wall)
   front({0,0,w,32},0,0,w,30,31.82)
+ elseif id=='em_lilycove_upper_wall' then
+  local rows=A.recipe and #A.recipe.rows or 2
+  local sourceY=(rows-2)*16
+  local south=rows*16-.2
+  local north=(A.recipe and A.recipe.corner)and 16 or (rows-1)*16
+  local green,cap,trim=T(8,sourceY+8),T(8,2),T(8,rows*16-3)
+  B(0,0,north,16,27,south,green)
+  B(0,0,north,16,2,south,trim)
+  B(0,27,north,16,28,south,cap)
+  front({0,sourceY,16,32},0,0,16,27,south+.02)
  elseif id=='em_lilycove_gallery' then
   local green,cap,edge=T(5,22),T(20,11),T(2,15)
   -- Back, sides and recessed front retain the native green display wall.
