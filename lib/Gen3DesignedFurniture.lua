@@ -174,7 +174,7 @@ function M.install(recipes)
  add('lab_free_books','oak_lab',{{0x28b,0x28c},{0x73,0x74},{0x283,0x284}},'fr_lab_free_books',0x289)
  local designs={kitchen_sink_hob='fr_kitchen',center_terminal='fr_center_pc',
   center_2f_terminal_758='fr_upper_pc',lab_computer='fr_lab_pc',
-  lab_terminal='fr_lab_terminal',lab_server='fr_lab_server',mart_rear_books='fr_mart_cooler'}
+  lab_terminal='fr_lab_terminal',lab_server='fr_lab_server',mart_rear_books='fr_mart_cooler',mart_checkout_return='fr_mart_register',mart_checkout='fr_mart_counter',mart_checkout_end='fr_mart_counter_end'}
  for _,r in ipairs(recipes)do
   if designs[r.name]then r.design=designs[r.name]end
   if r.kind=='cabinet' and not r.design then r.design='fr_native_cabinet' end

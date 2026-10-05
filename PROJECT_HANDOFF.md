@@ -1,3 +1,28 @@
+# Native mart polish — 2026-10-05 (unreleased)
+
+Replaced FRLG mart's flat till and open-legged checkout with authored register,
+sloped keypad, drawer, closed L-counter and a separate low clerk cushion.
+Rebuilt island racks with neutral native side panels and independent stock;
+labels are on outward faces rather than stretched across their tops. Rear
+cabinets now stand in front of the north wall: no cabinet-shaped wallpaper
+recess. Thin framed pictures use a shallow inset so wallpaper cannot hide art.
+
+Evidence: isolated official v0.3.51 source engine, fresh native FR/LG fixtures.
+Before: .scratch/coverage-20261004/results/leafgreen-common-fixtures.
+After: .scratch/coverage-20261004/results/leafgreen-mart-final (overview/first).
+Native source atlas inspected via firered-mart-source/island.png. The two
+versions share this matched tileset. Common fixtures also boot the Viridian
+Center and Route2 house; no runtime errors. Driver common-fixtures.lua and
+mart-final.lua under the same scratch root. Player saves/install untouched;
+all fixture processes quit. Captures are fixture QA, not manual movement QA.
+
+Full suite: 162 passed / 0 failed / 56 external-fixture skips, followed by
+339 designed-object checks after the thin-frame inset fix. Added assertions
+that high checkout surfaces stay outside the clerk aisle and wall cabinets
+stay inside their intended footprint. Native collision/gameplay unchanged.
+No release this pass. Broader interior/exterior polish remains incomplete;
+this pass covers the FRLG shared mart models and shallow wall displays.
+
 # Terrain depth follow-through — 2026-10-05 (after 1.31.1, unreleased)
 
 Existing terrain topology/stairs/platform/bridge geometry remains in place.

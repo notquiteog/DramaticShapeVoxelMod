@@ -1,3 +1,9 @@
+## Unreleased
+
+- FRLG marts: modeled tills, solid checkout cabinetry, shallow clerk cushions,
+  cream-sided stock racks and cabinets positioned in front of the native wall.
+- Thin wall displays keep their native artwork visible above the wallpaper.
+
 ## 1.31.1 — 2026-10-05
 
 Shared native option categories, Crystal submenu repair, Gen3 camera zoom/input

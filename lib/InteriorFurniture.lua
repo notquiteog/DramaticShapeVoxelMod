@@ -11,7 +11,7 @@ M.placement={
  em_home_sink={z=-14,back=0},em_center_medicine={z=-8,back=20},
  em_mart_stock={z=-10,back=19},em_mart_glass={z=-9,back=20},
  fr_center_pc={z=-11,back=15},fr_upper_pc={z=-11,back=15},
- fr_mart_cooler={z=-9,back=19},fr_cupboard={z=-8,back=20},
+ fr_cupboard={z=-8,back=20},
  fr_living_tv={z=-8,back=19},fr_kitchen={z=-15,back=3},
 }
 function M.draw(id,A)
@@ -1146,7 +1146,9 @@ function M.draw(id,A)
   B(1,base,rear,2,height,z,mat);B(w-2,base,rear,w-1,height,z,mat)
   B(1,height-1,rear,w-1,height,z,mat);B(1,base,rear,w-1,base+1.5,z,mat)
   B(2,base+1.5,rear,w-2,height-1,z-1,mat)
-  front(face,2,base+1.5,w-2,height-1,z-.98)
+  -- Thin wall displays cannot use a cabinet-depth recess: it puts the
+  -- picture behind the room's wallpaper, leaving an apparently blank frame.
+  front(face,2,base+1.5,w-2,height-1,z-(depth<=2 and .08 or .98))
   -- Wide shelves retain every item in the source facade while central
   -- uprights divide physically separate storage bays.
   if w>=32 then for x=16,w-8,16 do B(x-.4,base+1.5,z-.8,x+.4,height-1,z,mat)end end
@@ -1267,12 +1269,29 @@ function M.draw(id,A)
   shelves(1,31,14,10,26,{{2,12,{1,29,14,13}},{14,24,{1,12,14,15}}},case,dark)
  elseif id=='fr_lab_books' then
   shelves(1,13,30,10,22,{{3,10,{2,12,28,6}},{12,19,{2,5,28,6}}},T(1,2),T(3,13))
- elseif id=='fr_mart_sidecase' then
-  local case=T(10,14)
-  B(3,0,14,15,6,59,case);B(12,6,11,15,12,60,case)
-  for _,z in ipairs({16,39})do
-   B(2,6,z,12,7,z+20,case);stock({3,z+1,8,18},3,z+1,8,14,7,11,3)
-   B(2,7,z,3,8.5,z+20,case)
+ elseif id=='fr_mart_sidecase' or id=='fr_mart_island' then
+  -- Native islands are cream-sided, double-sided racks. Product labels
+  -- belong on the outward faces, never stretched across the stock's lids.
+  local wide=id=='fr_mart_island'
+  local case,trim=T(14,23),T(10,53)
+  local spine=wide and 16 or 14
+  B(2,0,14,wide and 30 or 15,2,60,trim)
+  B(spine-1,2,12,spine+1,15,60,case)
+  for _,side in ipairs(wide and {-1,1} or {-1})do
+   local l,r=side<0 and 2 or spine+1,side<0 and spine-1 or 30
+   for row=0,1 do
+    local z=16+row*23
+    B(l,2,z,r,4,z+20,case)
+    B(l,4,z,l+1,10,z+20,case);B(r-1,4,z,r,10,z+20,case)
+    for j=0,2 do
+     local n=z+2+j*5.5;local sx=side<0 and 4 or 24
+     local sy=(row==0 and {19,22,27} or {37,40,44})[j+1]
+     local mat=T(sx+2,sy+1)
+     B(l+1.2,4,n,r-1.2,9,n+4.5,mat)
+     local face=side<0 and l+1.18 or r-1.18
+     S(sx,sy,3,2,{face,9,n},{face,9,n+4.5},{face,4,n+4.5},{face,4,n})
+    end
+   end
   end
  elseif id=='fr_lab_free_books' then
   local G={sample=function(x,y)return T(x,y+16)end,
@@ -1282,23 +1301,41 @@ function M.draw(id,A)
     S(x,y+16,w,h,a,b,c,d)
    end}
   return M.draw('fr_lab_books',G)
- elseif id=='fr_mart_cooler' then
-  for j=0,1 do local x=j*24
-   shelves(x+1,28,22,12,22,{{4,11,{x+3,29,18,6}},{12,19,{x+3,23,18,6}}},T(x+2,18),T(x+4,34),true)
-   B(x+2,21,28,x+22,24,40,T(x+2,15))
-   front({x+2,15,20,6},x+2,21,x+22,24,40.02)
-   B(x+20,8,40,x+21,17,40.5,T(x+2,18))
+ elseif id=='fr_mart_counter' or id=='fr_mart_counter_end' then
+  local long=id=='fr_mart_counter'
+  local w=long and 48 or 16
+  local n=long and 23 or 0
+  local case=T(long and 2 or 1,28)
+  -- Continuous closed cabinetry; the source floor above the horizontal
+  -- glass case must not become a deep tabletop in the clerk's aisle.
+  B(0,0,n+.5,w,6.2,31,case)
+  B(0,6.2,n,w,7,32,T(long and 1 or 0,17))
+  if long then
+   top({0,17,48,10},0,n,48,32,7.02)
+   front({0,27,48,5},0,0,48,6.2,32.02)
+   cushion(1,1,14,14,{0,0,16,16},T(4,4),T(1,1))
+  else
+   top({0,0,16,24},0,0,16,32,7.02)
+   front({0,26,16,6},0,0,16,6.2,32.02)
   end
- elseif id=='fr_mart_island' then
-  local case,dark=T(10,14),T(2,30)
-  B(3,0,14,29,6,59,case);B(13,6,11,19,12,60,case)
-  for _,q in ipairs({{2,8},{19,29}})do
-   local l,r=q[1],q[2]
-   for _,z in ipairs({16,39})do
-    B(l,6,z,r,7,z+20,case);B(l+1,7,z+1,r-1,8,z+19,dark)
-    stock({l+1,z+1,r-l-2,18},l+1,z+1,r-l-2,14,8,12,3)
-    B(l,7,z,l+1,8.5,z+20,case);B(r-1,7,z,r,8.5,z+20,case)
-   end
+ elseif id=='fr_mart_register' then
+  local case,dark=T(11,18),T(5,21)
+  -- A full counter pedestal supports the till, display and sloped keypad.
+  B(1,0,17,15,6,31,case);B(0,6,16,16,7,32,case)
+  B(3,7,19,14,9,29,dark)
+  B(8,9,18,14,16,22,case)
+  front({8,12,6,7},8.5,10,13.5,15,22.02)
+  B(3,9,22,14,10,29,case)
+  S(2,18,7,10,{3,12,22},{8,12,22},{8,10.02,29},{3,10.02,29})
+  front({4,28,10,2},3,7.5,14,9,29.02)
+ elseif id=='fr_mart_cooler' then
+  -- The first source row is wallpaper. Keep it on the room wall; the
+  -- cabinets stand in front of that wall with cream tops and closed backs.
+  for j=0,1 do local x=j*24
+   local case=T(x+2,18)
+   shelves(x+1,32,22,12,25,{{4,12,{x+3,29,18,6}},{14,22,{x+3,23,18,6}}},case,T(x+4,34),true)
+   B(x+1,24,32,x+23,25,44,case)
+   front({x+2,37,20,6},x+2,0,x+22,4,44.02)
   end
  elseif id=='gb_picture' then
   local frame=T(1,1)
