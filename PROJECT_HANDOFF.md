@@ -19,9 +19,10 @@ QA: official 0.3.51, isolated Emerald fresh fixture, native source diagrams in
 `.scratch/coverage-20261004/homes-source.lua`; before/after/final/view fixtures
 cover Fortree houses 1/2, decoration shop, Fossil Maniac house and Lilycove motel
 2F in overview/orbit/first-person. Original map/collision arrays unchanged.
-Inspected first-person shop and house 2, Fortree overview, Fossil house and motel
-overviews. Initial house 2 first-person was obscured by an NPC; homes-view moves
-the test camera one cell sideways. No collision/gameplay changes or user saves.
+Inspected first-person shop, Fortree overview, Fossil house and motel
+overviews. House 2 first-person remains obscured by an NPC even after moving
+the fixture camera one cell sideways; this is NOT a first-person sign-off
+for that cabinet. No collision/gameplay changes or user saves.
 
 Focused tests: 315 designed objects, 124 Hoenn recipes, native wall scope,
 partial-support rejection, enclosure and starting/additional furniture pass.
