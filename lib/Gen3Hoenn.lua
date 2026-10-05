@@ -29,6 +29,10 @@ function M.surface(primary,mid,collision)
  end
 end
 function M.shape(primary,secondary,mid,behavior,collision)
+ if primary=='building' and secondary=='generic_building' and collision==7
+   and (mid==0x3c9 or mid==0x3d1)then
+  return {kind='roomWall',ground=0x3d9}
+ end
  if primary=='general' and secondary=='fallarbor' and collision==7 and fallarborWalls[mid]then
   return {kind='cliff',height=32,ground=0x279,cap=0x269,side=0x270}
  end
@@ -119,7 +123,19 @@ home('cushion',{{0x244}},'em_home_cushion',0x229)
 add('hoenn_home_plant',house,{{0x290},{0x298}},'plant',{h=22,cutout=true,ground=0x223})
 -- Rustic homes have their own timber furniture and floor palette.
 home('rustic_tv',{{0x2b1,0x2b2},{0x2b9,0x2ba},{0x2c1,0x2c2}},'em_home_tv',0x229)
-home('rustic_books',{{0x2be,0x2bf},{0x2c6,0x2c7},{0x2ce,0x2cf}},'em_home_books',0x229)
+home('rustic_glass_cabinet',{{0x2be,0x2bf},{0x2c6,0x2c7},{0x2ce,0x2cf}},'em_home_glass_tall',0x229)
+home('rustic_bookcase',{{0x316,0x317},{0x2ae,0x2af},{0x2b6,0x2b7}},'em_home_rustic_books',0x229)
+home('rustic_glass_low',{{0x306,0x307},{0x30e,0x30f}},'em_home_glass_low',0x229)
+home('rustic_appliance',{{0x21e},{0x240}},'em_home_appliance',0x229)
+home('table_rustic_empty',{{0x24e,0x25f},{0x256,0x257}},'em_home_table',0x229)
+-- Fortree rooms use a separate timber palette and a real central trunk.
+-- Match the whole support so its repeated artwork is not four small trees.
+home('fortree_support',{{0x3be,0x3bf},{0x3be,0x3bf},{0x3be,0x3bf},{0x3c6,0x3c7}},'em_fortree_support',0x3d9)
+home('fortree_drawers',{{0x3e0},{0x3e8}},'em_fortree_drawers',0x3d9)
+home('fortree_cabinet',{{0x3e3,0x3e4},{0x3eb,0x3ec}},'em_fortree_cabinet',0x3d9)
+home('fortree_appliance',{{0x21e},{0x3d3}},'em_home_appliance',0x3d9)
+home('fortree_counter_left',{{0x3ed,0x3ee,0x3cf},{0x3f5,0x3f6,0x3d7}},'em_fortree_counter',0x3d9)
+home('fortree_counter_right',{{0x3ce,0x3ee,0x3ef},{0x3d6,0x3f6,0x3f7}},'em_fortree_counter',0x3d9)
 -- Oceanic Museum's complete displays retain the native cream/blue art.
 local museum='building__oceanic_museum'
 local function exhibit(name,rows,design)

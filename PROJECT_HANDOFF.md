@@ -1,3 +1,36 @@
+# Fortree and Hoenn home furniture — 2026-10-04 (unreleased)
+
+Ten additional complete patterns model 27 previously flat furniture instances:
+Fortree central tree supports, drawers, cabinets, appliances, two shop counters;
+rustic bookcase, low glass cabinet, appliance and empty table variants. All six
+Fortree interiors now have matched furniture. Eleven existing rustic cabinet
+instances used a bookshelf model despite native glass-front art; they now use
+closed cabinetry with the original fronts and separate worktops. Reviewed
+Fortree orange siding bands stand vertically. Edge/diagonal wall drawings still
+need authored transitions; room-shell fallback is not native-art completion.
+
+The central support is one closed twelve-sided trunk matching the complete
+2x4 source drawing, not repeated small trees. Removed an overlapping internal
+box top after rendered QA exposed z-fighting. Furniture uses native artwork
+and separate depth-bearing structures. Partial tree drawings cannot claim the
+whole model. Atlas, primary, edition and blocked-wall guards remain required.
+
+QA: official 0.3.51, isolated Emerald fresh fixture, native source diagrams in
+`.scratch/coverage-20261004/homes-source.lua`; before/after/final/view fixtures
+cover Fortree houses 1/2, decoration shop, Fossil Maniac house and Lilycove motel
+2F in overview/orbit/first-person. Original map/collision arrays unchanged.
+Inspected first-person shop and house 2, Fortree overview, Fossil house and motel
+overviews. Initial house 2 first-person was obscured by an NPC; homes-view moves
+the test camera one cell sideways. No collision/gameplay changes or user saves.
+
+Focused tests: 315 designed objects, 124 Hoenn recipes, native wall scope,
+partial-support rejection, enclosure and starting/additional furniture pass.
+Full Emerald source census: 519 maps, 75 pairs, 495 enabled scenes, 111 maps
+with matched furniture, 1,512 objects. This census is NOT a visual sign-off.
+Remaining gaps include Fortree wall corners/returns, source windows/doorways,
+other interior/exterior fixtures and unresolved settings adapters. All-game
+coverage/parity remain unfinished. No version bump or release.
+
 # Native shortcuts and Fallarbor rock coverage — 2026-10-04 (unreleased)
 
 Gen3 now handles Gen1 shortcuts 5 (grid), 7 (curve), 8 (staged battles),

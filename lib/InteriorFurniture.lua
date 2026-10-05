@@ -548,6 +548,53 @@ function M.draw(id,A)
    B(r[1],3.7,r[2],r[3],4.5,r[4],metal)
    B(r[1]+.4,4.5,r[2]+.4,r[3]-.4,5,r[4]-.4,seat)
   end
+ elseif id=='em_fortree_support' then
+  -- Closed, faceted trunk at the native footprint. Its far side has bark
+  -- too; the tall source band is not laid flat beneath the column.
+  local cx,cz,r,h=16,49,14,44
+  for i=0,11 do
+   local a,b=i*math.pi/6,(i+1)*math.pi/6
+   local x,z=cx+math.cos(a)*r,cz+math.sin(a)*r
+   local xx,zz=cx+math.cos(b)*r,cz+math.sin(b)*r
+   S(3+(i%4)*6,0,6,52,{x,h,z},{xx,h,zz},{xx,0,zz},{x,0,z})
+   S(6,12,6,6,{cx,h,cz},{xx,h,zz},{x,h,z},{cx,h,cz})
+   S(6,12,6,6,{cx,0,cz},{x,0,z},{xx,0,zz},{cx,0,cz})
+  end
+ elseif id=='em_fortree_drawers' then
+  local wood,edge=T(3,14),T(1,18)
+  B(1,0,16,15,13,30,wood)
+  B(0,13,15,16,14,31,wood)
+  for i=0,1 do
+   front({2,8+i*9,12,8},2,6.5-i*5,14,12-i*5,30.02)
+   B(6,8.5-i*5,30,10,9-i*5,30.6,edge)
+  end
+ elseif id=='em_fortree_cabinet' or id=='em_fortree_counter' then
+  local w=id=='em_fortree_counter' and 48 or 32
+  local wood=T(6,17)
+  B(1,0,17,w-1,8,29,wood)
+  B(0,8,15,w,9.5,31,wood)
+  top({1,7,w-2,12},1,16,w-1,30,9.52)
+  front({1,22,w-2,7},1,1,w-1,8,29.02)
+ elseif id=='em_home_rustic_books' then
+  shelves(1,24,30,14,27,{{3,10,{2,34,28,6}},{13,24,{2,18,28,11}}},T(1,18),T(4,20),true)
+ elseif id=='em_home_glass_low' or id=='em_home_glass_tall' then
+  local tall=id=='em_home_glass_tall'
+  local h,n=tall and 14 or 10,tall and 24 or 14
+  local wood=T(3,tall and 32 or 26)
+  B(1,0,n,31,h-1,n+14,wood)
+  B(0,h-1,n-1,32,h,n+15,wood)
+  top({1,tall and 10 or 1,30,tall and 8 or 13},1,n,31,n+14,h+.02)
+  front({1,tall and 18 or 16,30,tall and 21 or 14},1,1,31,h-1,n+14.02)
+  -- Door divider and feet retain real depth from side/rear views.
+  B(15.5,1,n+14,16.5,h-1,n+14.4,wood)
+  for _,x in ipairs({2,27})do B(x,0,n+1,x+3,2,n+13,wood)end
+ elseif id=='em_home_appliance' then
+  local case,edge=T(7,4),T(2,14)
+  B(1,0,17,15,25,30,case)
+  B(2,25,18,14,26,29,case)
+  front({1,2,14,26},1,1,15,25,30.02)
+  B(2,9,30,14,9.5,30.3,edge)
+  B(3,15,30,4,19,30.7,edge)
  elseif id=='em_home_tv' then
   local wood,case,dark=T(4,34),T(1,18),T(4,22)
   -- Low closed media cabinet with a full-depth CRT above it.

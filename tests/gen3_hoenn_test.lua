@@ -7,6 +7,11 @@ local H=V.require('Gen3Hoenn');local S=V.require('Gen3TileShape');local F=V.requ
 assert(H.active());assert(S.of('general','petalburg',0x1dc,0,1).root)
 assert(S.of('general','petalburg',0x14,0,1).kind=='flat','FRLG tree number must not leak into Emerald')
 assert(S.of('general','petalburg',1,0x10,0).kind=='water')
+for _,mid in ipairs({0x3c9,0x3d1})do
+ assert(S.of('building','generic_building',mid,0,7).kind=='roomWall')
+ assert(S.of('building','generic_building',mid,0,0).kind=='flat','walkable Fortree tile folded')
+ assert(S.of('building','shop',mid,0,7).kind=='flat','Fortree siding leaked to shop')
+end
 for _,mid in ipairs({0x268,0x269,0x26a,0x270,0x272,0x278,0x27a})do
  local cliff=S.of('general','fallarbor',mid,0,7)
  assert(cliff.kind=='cliff' and cliff.ground==0x279 and cliff.height==32)
@@ -24,6 +29,15 @@ for _,r in ipairs(H.recipes)do
   cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair=r.pair,primary=r.primary or 'building',ts={}}
  end end
  local props=F.extract(cells);assert(#props==1 and props[1].recipe==r,r.name)
+ if r.design=='em_fortree_support'then
+  assert(#r.rows==4 and #r.rows[1]==2 and r.ground==0x3d9,'support lost its full native drawing')
+  local missing={};for key,c in pairs(cells)do
+   local copy={};for k,v in pairs(c)do if k~='prop'then copy[k]=v end end
+   missing[key]=copy
+  end
+  missing['1:3']=nil
+  assert(#F.extract(missing)==0,'partial support became a truncated tree')
+ end
  version='firered';assert(#F.extract(cells)==0,'Hoenn recipe claimed FRLG art: '..r.name);version='emerald'
  count=count+1
 end
