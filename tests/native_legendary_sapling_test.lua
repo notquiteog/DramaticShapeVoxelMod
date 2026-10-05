@@ -24,3 +24,9 @@ assert(M.draw(82,32,48,16,'native',draw)and built==1)
 assert(not M.draw(82,32,48,16,'native',function()error('GPU unavailable')end)and M.lastError)
 M.clear();assert(released==1)
 print('PASS native Cut sapling: engine identity, OFF/card fallback, footprint, cache and failure fallback')
+
+package.preload['src.world.gen2.Permissions']=function()return {isCutTree=function(c)return c==18 end}end
+local S=V.require('LegendarySapling');local coll=18;local map={cellCollision=function()return coll end}
+assert(S.gen2(map,0,0));coll=19;assert(not S.gen2(map,0,0),'headbutt tree must retain original shape')
+coll=18;enabled=false;assert(not S.gen2(map,0,0));enabled=true;voxel=false;assert(not S.gen2(map,0,0));voxel=true
+assert(not S.gen2({},0,0),'Gen1 must keep its registry owner')

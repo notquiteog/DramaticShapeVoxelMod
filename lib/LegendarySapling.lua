@@ -3,6 +3,12 @@
 local V=...
 local Voxel3D=V.require('Voxel3D')
 local M={}
+function M.gen2(map,cx,cy)
+ if not(map and type(map.cellCollision)=='function')then return false end
+ if not V.require('CommunityVisuals').customCutTrees()or not V.require('TreePresentation').voxel()then return false end
+ local ok,P=pcall(require,'src.world.gen2.Permissions')
+ return ok and P.isCutTree(map:cellCollision(cx,cy))or false
+end
 function M.append(tV,tI,tQ,cV,cI,cQ,mx,mz,base,cx,cy,hash01)
         -- TEST47 CITY-SUPPORTED SAPLING:
         -- The cuttable prop is deliberately NOT the smallest mature tree any
