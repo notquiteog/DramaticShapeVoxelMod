@@ -1,4 +1,4 @@
-## Unreleased
+## 1.31.2 — 2026-10-05
 
 - Make native Gen3 FULL apply the shared diorama presentation defaults on
   entry and follow the synchronized day clock; preserve subsequent battle/art
