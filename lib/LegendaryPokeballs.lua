@@ -68,6 +68,7 @@ local function clearOwner(owner)
 end
 
 function Bridge.finish()
+  if V.require("Generation").isGen2() then V.require("Gen2Capture").finish() end
   Audio.clear()
   clearOwner(activeOwner)
   activeOwner = nil
@@ -83,6 +84,7 @@ function Bridge.changed()
 end
 
 function Bridge.install()
+  if V.require("Generation").isGen2() then return V.require("Gen2Capture").install() end
   local okState, BattleState = pcall(require, "src.battle.BattleState")
   local okAnim, AnimPlayer = pcall(require, "src.battle.AnimPlayer")
   if not (okState and okAnim and type(BattleState) == "table"
