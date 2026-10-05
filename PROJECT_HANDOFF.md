@@ -1,3 +1,34 @@
+# Shared rendering optimization — 2026-10-05 (unreleased)
+
+All generations now skip equal model/sunModel uniform uploads in visible and
+shadow passes. Cache stores 16-value snapshots, detecting matrices animated in
+place; pass/shader resets and failed-send retries prevent stale transforms.
+BuildBudget.tick avoids inactive counters/modulo outside cooperative builds.
+Gen3 shares its water list between shadow/visible passes and stores healing
+prop references at scene build instead of scanning every cell during healing.
+No model, shader effect, shadow resolution or render-distance reduction.
+
+Official engine 0.3.51; isolated Yellow Viridian Forest, Crystal Ilex Forest,
+LeafGreen Viridian Forest, Emerald Petalburg Woods. 2560x1440, high shadows,
+180-frame submission census; companion Pokemon remain live. Requested versus
+actual matrix uploads: Yellow 11921/9564; Crystal 18046/9499; LeafGreen
+16324/14704; Emerald 23314/21694 (approximately 20/47/10/7 percent avoided).
+Driver tools/qa/render-submissions.lua. Logs/captures under
+.scratch/coverage-20261004/results/<game>-render-perf-count; before/after
+comparison at .scratch/render-opt-20261005/comparison.png visually inspected.
+These counts isolate avoided submissions within a sample. Separate-run CPU
+measurements were mixed, and some runs were concurrent: NOT evidence of an
+end-to-end FPS improvement or a GPU/frame-time claim. No automated quality
+reduction. Cold builds, repeated Gen3 shadow rendering and GPU-heavy forests
+remain candidates for further profiling; optimization is not exhausted.
+
+Validation: 162 suites passed, 0 failed, 56 external-fixture skips; all 347
+production files compiled with installed LuaJIT (Python Lupa helper unavailable).
+Matrix tests cover mutation, equal distinct tables, per-uniform state, shader/
+pass resets, and failures. Shadow-OFF mock includes the new cache dependency
+and still proves zero GPU access. Isolated fixture processes closed; normal
+user saves/install untouched. No cart or release update this pass.
+
 # Native mart polish — 2026-10-05 (unreleased)
 
 Replaced FRLG mart's flat till and open-legged checkout with authored register,

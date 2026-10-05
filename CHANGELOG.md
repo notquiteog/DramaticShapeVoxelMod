@@ -1,5 +1,9 @@
 ## Unreleased
 
+- All generations avoid redundant transform uploads in visible/shadow passes;
+  in-place animated matrices remain live. Inactive mesh budgets do less work.
+- Gen3 reuses its per-frame water list and cached healing-device references.
+
 - FRLG marts: modeled tills, solid checkout cabinetry, shallow clerk cushions,
   cream-sided stock racks and cabinets positioned in front of the native wall.
 - Thin wall displays keep their native artwork visible above the wallpaper.

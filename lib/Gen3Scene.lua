@@ -198,6 +198,11 @@ local function build(req,cache,previous)
  local civics=Civic.prepare(cells,gyms,V.data("gen3_exteriors"));M.civicCount=#civics
  M.stairCount=Stairs.prepare(cells)
  local props=Furniture.extract(cells)
+ cache.healer,cache.healScreen=nil,nil
+ for _,p in ipairs(props)do
+  if p.recipe.name=='center_healer'then cache.healer=p end
+  if p.recipe.name=='center_screen'then cache.healScreen=p end
+ end
  cache.furnitureRecesses={}
  local placements=V.require('InteriorFurniture').placement
  for _,p in ipairs(props)do
@@ -709,11 +714,7 @@ local function fieldEffects(draw,cam)
  end
  local heal=require('src.core.game3.pokecenter_heal')
  if heal.isActive()then
-  local prop,screen
-  for _,c in pairs(cache.cells or {})do if c.prop then
-   if c.prop.recipe.name=='center_healer'then prop=c.prop end
-   if c.prop.recipe.name=='center_screen'then screen=c.prop end
-  end end
+  local prop,screen=cache.healer,cache.healScreen
   if prop then
    local x,z,h=prop.cx*16,prop.cy*16,prop.recipe.h+.18+(prop.groundHeight or 0)
    effect('heal-balls',32,24,function()g.translate(-80,-28);heal.drawBalls()end,
@@ -807,12 +808,13 @@ function M.draw(game,vw,vh,cam)
  R.viewProjection(cx,cz,vw,vh)
  if cam.actors then cam.actors:prepare(cam,support,R.eye)end
  R.orbitGround=nil
+ local water=not plate and waterMeshes()or {}
  savedCanvas=love.graphics.getCanvas();love.graphics.push('all');saved=true
  if not plate and Shadow.begin(cx,cz,vw,vh) then
   local room=not cam.battle and Interior.forMap(M.sceneDef,3) or nil
   Shadow.roomClip(room and room.bounds)
   terrain(Shadow.draw)
-  for _,d in ipairs(waterMeshes())do Shadow.draw(d[1],d[2])end
+  for _,d in ipairs(water)do Shadow.draw(d[1],d[2])end
   if not cam.battle then
    Shadow.sprites(true);actors(game,cam,Shadow.draw);Shadow.sprites(false)
   elseif cam.actors then
@@ -845,7 +847,6 @@ function M.draw(game,vw,vh,cam)
   Interior.draw(room)
   terrain(R.draw)
  end
- local water=not plate and waterMeshes()or {}
  if cam.battle then
   for _,d in ipairs(water)do R.draw(d[1],d[2])end
   R.battleOcclusion(nil)

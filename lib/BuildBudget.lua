@@ -46,6 +46,7 @@ end
 -- Cheap enough to sprinkle through inner loops: one modulo most calls,
 -- a clock read every 32nd (every fourth during visible world builds).
 function B.tick()
+  if not buildCo then return end
   local n = B.n + 1
   B.n = n
   if n % tickEvery ~= 0 then return end

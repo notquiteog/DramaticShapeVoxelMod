@@ -28,6 +28,7 @@
 local V = ...
 
 local Mat4 = V.require("Mat4")
+local drawUniforms = V.require("DrawUniforms").new()
 local Voxel = V.require("VoxelState")
 local Shadows = V.require("Shadows")
 
@@ -555,6 +556,7 @@ end
 -- Begin the sun pass. Returns false when it could not start, in which case
 -- the caller must not draw into it or call finish.
 function ShadowMap.begin(cx, cy, vw, vh)
+  drawUniforms.reset()
   -- Native adapters can call begin directly without available(). OFF must
   -- skip allocation and submission as well as sampling in the scene shader.
   if Shadows.off() then
@@ -640,7 +642,7 @@ function ShadowMap.draw(mesh, texture, model)
   local batch=mesh;mesh=Instances.mesh(mesh)
   local sh = getShader()
   if texture then mesh:setTexture(texture) end
-  pcall(sh.send, sh, "model", "row", model or IDENTITY)
+  drawUniforms.matrix(sh,"model",model or IDENTITY)
   Instances.draw(batch,sh)
 end
 

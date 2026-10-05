@@ -2030,8 +2030,8 @@ function Voxel3D.draw(mesh, texture, model, pull, sunModel)
   end
   if texture then mesh:setTexture(texture) end
   -- LOVE defaults matrix uniforms to column-major; Mat4 is row-major
-  pcall(sh.send, sh, "model", "row", model or IDENTITY)
-  pcall(sh.send, sh, "sunModel", "row", sunModel or model or IDENTITY)
+  drawUniforms.matrix(sh,"model",model or IDENTITY)
+  drawUniforms.matrix(sh,"sunModel",sunModel or model or IDENTITY)
   drawUniforms.send(sh,"pull",pull or 0)
   Instances.draw(batch,sh)
 end
