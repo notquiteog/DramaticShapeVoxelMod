@@ -10,6 +10,10 @@ return function(game)
  V.require('Gen3Battle').setting:setIndex(1,game)
  V.require('BattleArt').backPlacementSetting:setIndex(2,game)
  V.require('PokeballSettings').enabled:setIndex(off and 1 or 2,game)
+ local streamer=tonumber(os.getenv('CAPTURE_STREAMERS'))
+ local settings=V.require('PokeballSettings')
+ if streamer then settings.preset:setIndex(5,game);settings.streamers:setIndex(streamer,game)end
+ local trailSeen=false
  if os.getenv('CAPTURE_DARK')=='1' then V.require('UiBackplates').hudColor:setIndex(2,game) end
  local Party=require('src.core.game3.party');game.session.party={};assert(Party.giveMon(game.session,6,35))
  local Bag=require('src.core.game3.bag');game.session.bag=Bag.new();assert(Bag.add(game.session.bag,item,1))
@@ -17,16 +21,22 @@ return function(game)
  B.start({playerParty=game.session.party,foe={species=19,level=3},wild=true,session=game.session})
  for i=1,500 do if B._phase=='command'then break end;U.tap(game,'a');U.wait(2)end
  U.wait(15);assert(B._phase=='command')
- local Ball=V.require('Pokeball');local draw=Ball.draw;local draws=0;Ball.draw=function(self,...)draws=draws+1;return draw(self,...)end
+ local Ball=V.require('Pokeball');local draw=Ball.draw;local draws=0;Ball.draw=function(self,...)draws=draws+1
+  if self.phase=='throw'and self.trail and #self.trail>=2 then
+   trailSeen=true
+   if streamer then assert(settings.streamerMult()==(streamer==1 and 0 or 1),'CUSTOM streamer value ignored')end
+  end
+  return draw(self,...)end
  if escape then B._st.rng=function(lo,hi)return hi end end
  local command=UI.takeCommand;UI.takeCommand=function()UI.takeCommand=command;UI._mode='none';return{kind='bag',itemId=item}end
  for i=1,300 do if B._phase=='catching'then break end;U.tap(game,'a');U.wait(2)end
  assert(B._phase=='catching','no native capture '..tostring(B._phase))
  for i=1,(off and 5 or 150)do if V.require('Gen3Capture').status().started then break end;U.tap(game,'a');U.wait(2)end
- for i=1,900 do U.wait(1);if i==250 or i==450 or i==750 then U.shot(game,dir..'/capture-'..i..'.png')end end
+ for i=1,900 do U.wait(1);if i==15 or i==30 or i==250 or i==450 or i==750 then U.shot(game,dir..'/capture-'..i..'.png')end end
  for k,v in pairs(V.require('Gen3Capture').status())do print('QA capture',k,v)end
  print('QA state',B._st.wild,B._st.double,B._st.safari,V.require('PokeballSettings').active(),V.require('Gen3Battle').enabled())
  assert(off and draws==0 or not off and draws>0,'capture ownership mismatch');assert(not Bag.has(game.session.bag,item,1),'native inventory not consumed')
+ if streamer then assert(trailSeen,'throw trail not exercised')end
  print('[PASS Gen3 capture native inventory and draws]',draws,B._phase)
  for i=1,300 do if B._phase~='catching'then break end;U.tap(game,'a');U.wait(3)end
  U.shot(game,dir..'/final.png');print('QA final',B._phase)
