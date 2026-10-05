@@ -1,3 +1,34 @@
+# Tall-grass blobs — companion fix 2026-10-05
+
+Kanto Wilds commit a93a025d (pushed main) fixes the reproduced Gen3 hidden-land
+encounter artifact: presentation.lua baked the underwater dark oval for every
+hidden encounter. Land/cave hidden bodies are now transparent, water retains
+its marker, and cache keys distinguish terrain. Encounter behavior untouched.
+Parent inspected FireRed Route1 matched before/after overview; agent also
+verified actual input walking and native fallback. Evidence:
+.scratch/coverage-20261004/results/firered-grass-blobs{,-after,-walk}/.
+Presentation regression and 53 settings assertions passed. This closes the
+identified hidden-spawn blob, not every possible shadow defect. No cart release.
+
+# Lilycove gallery native coverage — 2026-10-05 (unreleased)
+
+Added complete four-by-four native drawing for Emerald Lilycove Museum 2F's
+five gallery partitions. Solid cabinetry is bounded to the single blocked base
+row (local y=2); projected cap and shadow rows retain checker floor. Closed
+backs/sides use native green, cap uses native pale artwork, front retains the
+native framed panel. Requires all four blocked base cells; incomplete patterns
+or walkable bases are rejected. Gen3Hoenn family scope prevents FRLG ID aliases.
+
+Source v0.3.51 isolated Emerald profile with companions. Native source capture
+and collision grid: .scratch/coverage-20261004/results/emerald-lilycove-source/.
+QA_GALLERY=1 tools/qa/furniture-walkspace.lua via scratch gallery.lua produces
+emerald-gallery/: both floors unchanged collision; all five recipes matched.
+Inspected native 1F/2F, final 2F overview and first-person face. Geometry bounds,
+recipe matching, family isolation, native source rectangles pass focused tests.
+Museum 1F, upper perimeter/statues, dynamic earned painting overlays and other
+special interiors remain unfinished/unverified. This is not every-tile coverage.
+No ROM art committed, player saves untouched, no release bump.
+
 # FRLG bed footprints and house stair width — 2026-10-05 (unreleased)
 
 Compared native bedroom/Lorelei artwork and imported collisions. Only the

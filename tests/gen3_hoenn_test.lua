@@ -29,6 +29,13 @@ for _,r in ipairs(H.recipes)do
   cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair=r.pair,primary=r.primary or 'building',ts={}}
  end end
  local props=F.extract(cells);assert(#props==1 and props[1].recipe==r,r.name)
+ if r.design=='em_lilycove_gallery' then
+  local blocked={};for key,c in pairs(cells)do local q={};for k,v in pairs(c)do if k~='prop'then q[k]=v end end;q.collision=q.cy==2 and 7 or 0;blocked[key]=q end
+  assert(#F.extract(blocked)==1,'complete gallery lost its blocked base')
+  for _,c in pairs(blocked)do c.prop=nil end
+  blocked['2:2'].collision=0
+  assert(#F.extract(blocked)==0,'gallery occupied native walking space')
+ end
  if r.design=='em_fortree_support'then
   assert(#r.rows==4 and #r.rows[1]==2 and r.ground==0x3d9,'support lost its full native drawing')
   local missing={};for key,c in pairs(cells)do

@@ -506,6 +506,19 @@ function M.draw(id,A)
    B(x+2,7,27,x+9,8,30,case)
    top({x+2,21,7,3},x+2,27,x+9,30,8.02)
   end
+ elseif id=='em_lilycove_gallery' then
+  local green,cap,edge=T(5,22),T(20,11),T(2,15)
+  -- Back, sides and recessed front retain the native green display wall.
+  -- The apparent cap row and cast-shadow row are floor, never solid depth.
+  B(.2,0,32.2,63.8,2,47.8,edge)
+  B(.5,2,32.5,63.5,27,47.5,green)
+  B(.2,27,32.2,63.8,28,47.8,cap)
+  B(.2,2,47,1.2,27,47.8,edge);B(62.8,2,47,63.8,27,47.8,edge)
+  front({1,16,62,31},1,2,63,27,47.82)
+  -- The native gold picture frame is a shallow raised rim, not a flat label.
+  local gold=T(17,33)
+  B(17,3.6,47.82,47,4.4,47.98,gold);B(17,12.5,47.82,47,13.3,47.98,gold)
+  B(17,4.4,47.82,17.8,12.5,47.98,gold);B(46.2,4.4,47.82,47,12.5,47.98,gold)
  elseif id=='em_museum_wall_case' then
   -- The source is a rounded glass vessel, plus eight pixels of wallpaper
   -- at its right. Neither that wallpaper nor the carpet is cabinet skin.

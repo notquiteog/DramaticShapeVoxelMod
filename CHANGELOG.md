@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Model Lilycove Museum's five upstairs gallery partitions with closed backs,
+  sides and pale caps, retaining native green panel/frame artwork. Keep solids
+  in blocked base rows and restore checker floor beneath projected art/shadows.
+
 - Keep the FRLG bedroom and Lorelei beds inside their native blocked foot
   cells, with separate frames, pillows and native blanket art. Narrow player
   house stair flights to the native tread width; projected fascia no longer

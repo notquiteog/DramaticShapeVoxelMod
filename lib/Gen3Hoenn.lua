@@ -165,6 +165,14 @@ home('fortree_appliance',{{0x21e},{0x3d3}},'em_home_appliance',0x3d9)
 home('fortree_counter_left',{{0x3ed,0x3ee,0x3cf},{0x3f5,0x3f6,0x3d7}},'em_fortree_counter',0x3d9)
 home('fortree_counter_right',{{0x3ce,0x3ee,0x3ef},{0x3d6,0x3f6,0x3f7}},'em_fortree_counter',0x3d9)
 -- Oceanic Museum's complete displays retain the native cream/blue art.
+-- Lilycove's five upstairs gallery partitions: complete native drawing,
+-- including its projected cap and floor shadow. Only the base row is solid.
+add('hoenn_lilycove_gallery','building__lilycove_museum',{
+ {0x264,0x265,0x266,0x267},{0x286,0x26e,0x26e,0x26f},
+ {0x28e,0x258,0x259,0x277},{0x27c,0x27d,0x27e,0x27f}},'designed',{
+ design='em_lilycove_gallery',ground=0x268,blockedRows={[3]=true},
+ groundRows={{0x268,0x269,0x268,0x269},{0x269,0x268,0x269,0x268},
+ {0x268,0x269,0x268,0x269},{0x269,0x268,0x269,0x268}}})
 local museum='building__oceanic_museum'
 local function exhibit(name,rows,design)
  add('hoenn_museum_'..name,museum,rows,'designed',{design=design,ground=0x201})
