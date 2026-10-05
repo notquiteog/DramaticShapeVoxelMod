@@ -88,3 +88,8 @@ local wide=gb.gen2(map,1,1,20);assert(wide.modelFamily=='broad')
 map.tileset.id='TILESET_KANTO'
 assert(gb.gen2(map,1,1,17).modelFamily=='round','Kanto round crown became a conifer')
 print('PASS native family routing and independent shared-art geometry variants')
+
+local narrow=native.gen3({ts=ts,shape={ground=1,treeRows={{14},{36}},treeFamily='conifer',treeTrim=0}})
+assert(narrow~=c and narrow.w==16 and narrow.h==32,'different native drawings shared a tree cache entry')
+assert(native.gen3({ts=ts,shape={ground=1,treeRows={{14},{36}},treeFamily='conifer',treeTrim=0}})==narrow)
+print('PASS native tree cache separates source drawings and crop policies')

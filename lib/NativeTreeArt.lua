@@ -161,7 +161,9 @@ end
 function M.gen3(c)
  local ts=c.ts;local forest=c.shape.spacing==3
  local family=c.shape.treeFamily or (forest and 'tiered' or 'conifer')
- local id=tostring(ts.imageData)..':'..tostring(ts.overImageData)..':'..family..':'..(c.shape.ground or 1)
+ local signature={}
+ for _,row in ipairs(c.shape.treeRows or {})do signature[#signature+1]=table.concat(row,',')end
+ local id=tostring(ts.imageData)..':'..tostring(ts.overImageData)..':'..family..':'..(c.shape.ground or 1)..':'..table.concat(signature,';')..':'..tostring(c.shape.treeTrim)
  if entries[id]then return variant(entries[id],family,1,'tree')end
  -- Complete General drawings, not cropped root tiles. Forest has its own
  -- three-column family. Source IDs are scoped by the resolved tileset.

@@ -12,7 +12,8 @@ for _,r in ipairs(F.recipes)do if r.design then
  F.append(props[1],function(q,uv)
   count=count+1;for i,p in ipairs(q)do assert(p[1]==p[1] and p[2]>=0);hi=math.max(hi,p[2]);assert(uv[i][1]>=0 and uv[i][1]<=1 and uv[i][2]>=0 and uv[i][2]<=1,'UV '..r.name)end
  end,function()return{{0,0},{1,0},{1,1},{0,1}}end)
- assert(count>10,r.name);if r.design=='fr_bed'then assert(hi<=8,'bed upright')end
+ if r.design=='fr_saffron_telepad' then assert(count>=7 and hi<.5,'teleport pad must stay flush')
+ else assert(count>10,r.name) end;if r.design=='fr_bed'then assert(hi<=8,'bed upright')end
  if r.design=='fr_tower_grave'then assert(hi==12,'grave must have an upright headstone')end
  n=n+1
 end end

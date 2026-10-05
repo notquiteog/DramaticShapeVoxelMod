@@ -150,6 +150,25 @@ function M.material(g)
   if vent and x>=vent[1]and x<vent[3]and y>=vent[2]and y<vent[4]then rr,gg,bb,aa=sourcePixel(g,64,y)end
   data:setPixel(x+p.w,y,rr,gg,bb,aa)
  end end
+ -- Hoenn's rounded roof drawings include scenery in their upper corners.
+ -- The solid roof prism must use roof paint there, never grass or paving.
+ -- Extend the actual red/blue roof stripe on each row into those corners;
+ -- facade pixels in the first half of the material remain untouched.
+ if g.custom and g.custom.family=='rse' and (g.kind=='center' or g.kind=='mart')then
+  for yy=p.back,p.roofEnd-1 do
+   local left,right
+   for xx=0,p.w-1 do
+    local rr,gg,bb,aa=sourcePixel(g,xx,yy)
+    local paint=g.kind=='center' and rr>gg+.06 and rr>bb+.04
+     or g.kind=='mart' and bb>rr+.06 and bb>gg+.025
+    if aa>.9 and paint then left=left or xx;right=xx end
+   end
+   if left and right then
+    for xx=0,left-1 do data:setPixel(p.w+xx,yy,sourcePixel(g,left,yy))end
+    for xx=right+1,p.w-1 do data:setPixel(p.w+xx,yy,sourcePixel(g,right,yy))end
+   end
+  end
+ end
  -- Isolate the raised emblem from the roof surrounding it. Walk inward
  -- from each edge; stop at its neutral outline, preserving the coloured
  -- Pokeball enclosed by that outline.

@@ -411,6 +411,13 @@ function M.support(cells,gid,px,py,stationary)
  end
  return 0
 end
+-- A fixture may straddle a carpet border. Keep the authored clean floor per
+-- claimed cell instead of replacing the whole drawing with one floor tile.
+function M.groundAt(c)
+ local p=c.prop;local r=p.recipe;local rows=r.groundRows
+ local row=rows and rows[c.cy-p.cy+1]
+ return row and row[c.cx-p.cx+1] or r.ground
+end
 function M.cutouts(pair)
  local out={}
  for _,r in ipairs(recipes)do if Hoenn.active()==(r.family=='rse') and r.kind=='plant' and r.pair==pair then

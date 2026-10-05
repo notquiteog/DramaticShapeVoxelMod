@@ -62,6 +62,25 @@ end
 function M.append(c,emit,uvFor)
  local s,x,z=c.shape,c.cx*16,c.cy*16
  local uv=assert(uvFor(c.ts,c.mid))
+ if s.kind=='ledge' and s.direction and s.direction~='south' then
+  local original=emit
+  local function rotate(a,b)
+   if s.direction=='east'then return b,16-a
+   elseif s.direction=='west'then return 16-b,a
+   else return 16-a,16-b end
+  end
+  emit=function(points,tex,shade)
+   local q,t={},{}
+   for i,p in ipairs(points)do
+    local xx,zz=rotate(p[1]-x,p[3]-z);q[i]={x+xx,p[2],z+zz}
+    local u=(tex[i][1]-uv[1][1])/(uv[2][1]-uv[1][1])*16
+    local v=(tex[i][2]-uv[1][2])/(uv[3][2]-uv[1][2])*16
+    u,v=rotate(u,v)
+    t[i]={uv[1][1]+u/16*(uv[2][1]-uv[1][1]),uv[1][2]+v/16*(uv[3][2]-uv[1][2])}
+   end
+   original(q,t,shade)
+  end
+ end
  local function box(x0,y0,z0,x1,y1,z1,tex)
   emit({{x0,y1,z0},{x1,y1,z0},{x1,y1,z1},{x0,y1,z1}},tex,1)
   emit({{x0,y1,z1},{x1,y1,z1},{x1,y0,z1},{x0,y0,z1}},tex,.85)
@@ -87,16 +106,21 @@ function M.append(c,emit,uvFor)
   local post=uvFor(c.ts,s.material or (s.wood and 0xE6 or 0xE7)) or uv
   local face,cap=sub(post,3,6,6,14),sub(post,3,3,6,6)
   local rail=sub(post,3,9,5,11)
+  if s.postSample then
+   local px,py=unpack(s.postSample)
+   face=sub(post,px,py,px+.1,py+.1);cap=face;rail=face
+  end
+  local h=s.height or 10
   local function stake(px,pz)
-   box(px-1.4,0,pz-1.4,px+1.4,10,pz+1.4,face)
-   box(px-1.5,10,pz-1.5,px+1.5,10.6,pz+1.5,cap)
+   box(px-1.4,0,pz-1.4,px+1.4,h,pz+1.4,face)
+   box(px-1.5,h,pz-1.5,px+1.5,h+.6,pz+1.5,cap)
   end
   if vertical then
    for _,dz in ipairs(s.stop and {8} or {4,12})do stake(x+s.axis,z+dz)end
-   for _,h in ipairs({3,7})do box(x+s.axis-.6,h,z,x+s.axis+.6,h+1,z+(s.stop and 8 or 16),rail)end
+   for _,h in ipairs({h*.3,h*.7})do box(x+s.axis-.6,h,z,x+s.axis+.6,h+1,z+(s.stop and 8 or 16),rail)end
   else
    for _,dx in ipairs({4,12})do stake(x+dx,z+8)end
-   for _,h in ipairs({3,7})do
+   for _,h in ipairs({h*.3,h*.7})do
     box(x,h,z+7.4,x+16,h+1,z+8.6,rail)
     if s.turn then box(x+s.axis-.6,h,z+(s.turn=='north' and 0 or 8),x+s.axis+.6,h+1,z+(s.turn=='north' and 8 or 16),rail)end
    end

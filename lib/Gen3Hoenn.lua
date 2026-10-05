@@ -10,12 +10,49 @@ local trees={}
 for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1e4,0x1e5,0x1e6,0x1e7}do trees[id]=true end
 local roots={[0x1dc]=true,[0x1e4]=true,[0x1e6]=true}
 local treeRows={{0x1d4,0x1d5},{0x1dc,0x1dd}}
+local narrowTrees={}
+for _,id in ipairs{0xe,0xf,0x1e,0x1f,0x2e,0x2f,0x3e,0x3f,0xc6,0xc7,0xce,0xcf}do narrowTrees[id]=true end
+local fenceMauville={
+ [0x280]={},[0x281]={},[0x291]={},[0x288]={axis=2},[0x282]={axis=2},[0x28a]={axis=14},
+ [0x273]={axis=2,turn='north'},[0x290]={axis=2,turn='north'},
+ [0x2b2]={axis=2,stop=true},[0x2ba]={axis=2,stop=true},
+}
+-- Ocean barrier rocks remain low, with their own water underlay. Resolve
+-- before the engine's surfable behavior because the artwork includes water.
+function M.surface(primary,mid,collision)
+ if primary=='general' and collision==7 and (mid==0xc5 or mid==0x18c or mid==0x194)then
+  return {kind='rock',ground=0x2d,height=6}
+ end
+end
 function M.shape(primary,secondary,mid,behavior,collision)
  if primary=='general' then
   if trees[mid]then return {kind='tree',ground=1,root=roots[mid],anchorX=16,anchorZ=8,treeRows=treeRows,treeFamily='round',treeTrim=0}end
+  if narrowTrees[mid]then
+   return {kind='tree',ground=1,root=true,anchorX=8,anchorZ=8,
+    treeRows={{0xe},{0xc7}},treeFamily='conifer',treeTrim=0}
+  end
+  if secondary=='dewford' and (mid==0x239 or mid==0x243 or mid==0x23a)then
+   return {kind='tree',ground=0x124,root=true,anchorX=8,anchorZ=8,
+    treeRows={{0x239},{0x23a}},treeFamily='conifer',treeTrim=0}
+  end
+  if secondary=='mauville' and fenceMauville[mid]then
+   local out={kind='fence',ground=1,material=0x288,postSample={2,3},height=7}
+   for k,v in pairs(fenceMauville[mid])do out[k]=v end
+   return out
+  end
+  if behavior and behavior>=0x38 and behavior<=0x3b and mid<0x200 then
+   return {kind='ledge',ground=(mid>=0x10e and mid<=0x127) and 0x124 or 1,
+    direction=({[0x38]='east',[0x39]='west',[0x3a]='north',[0x3b]='south'})[behavior]}
+  end
+  if collision==7 and mid>=0x64 and mid<=0x97 then
+   return {kind='cliff',height=24,ground=1,cap=0x69,side=0x71}
+  end
+  if collision==7 and behavior==0xc and mid<0x200 then
+   return {kind='cliff',height=24,ground=1,cap=0x69,side=0x71}
+  end
   if mid==3 then return {kind='sign',height=12,ground=1,hoenn=true}end
-  if mid==4 then return {kind='flowers',height=10,ground=1}end
-  if mid==0xd or mid==0x15 then return {kind='grass',height=4,ground=1}end
+  if mid==4 then return {kind='flowers',height=6,ground=1}end
+  if mid==0xd or mid==0x25 or mid==0x1c6 or mid==0x1c7 then return {kind='grass',height=4,ground=1}end
  end
  return {kind='flat'}
 end
@@ -44,6 +81,33 @@ add('hoenn_home_plant',house,{{0x290},{0x298}},'plant',{h=22,cutout=true,ground=
 -- Rustic homes have their own timber furniture and floor palette.
 home('rustic_tv',{{0x2b1,0x2b2},{0x2b9,0x2ba},{0x2c1,0x2c2}},'em_home_tv',0x229)
 home('rustic_books',{{0x2be,0x2bf},{0x2c6,0x2c7},{0x2ce,0x2cf}},'em_home_books',0x229)
+-- Littleroot's furniture is separate from the generic Hoenn house atlas.
+local startHouse='building__brendans_mays_house'
+local function starting(name,rows,design,extra)
+ extra=extra or {};extra.design=design;extra.ground=extra.ground or 0x201
+ add('hoenn_start_'..name,startHouse,rows,'designed',extra)
+end
+starting('fridge',{{0x230},{0x238}},'em_start_fridge')
+starting('sink_hob',{{0x231,0x232},{0x239,0x23a}},'em_start_kitchen')
+starting('kitchen_cabinet',{{0x233,0x234},{0x23b,0x23c}},'em_start_cabinet')
+starting('living_tv',{{0x240,0x241},{0x248,0x249}},'em_start_tv')
+starting('living_drawers',{{0x242},{2},{0x24a}},'em_start_dresser')
+starting('bedroom_drawers',{{0x256},{2},{0x25d}},'em_start_dresser')
+starting('computer_left',{{0x252,0x254},{0x25a,0x25b},{0x262,0x263}},'em_start_pc_left')
+starting('computer_right',{{0x254,0x251},{0x258,0x259},{0x260,0x261}},'em_start_pc_right')
+starting('console_left',{{0x265},{0x266}},'em_start_console')
+starting('console_right',{{0x257},{0x267}},'em_start_console')
+starting('wall_picture',{{0x250},{0x255}},'em_start_picture')
+starting('wall_clock_left',{{0x287},{0x28f}},'em_start_clock')
+starting('wall_clock_right',{{0x227},{0x22f}},'em_start_clock')
+starting('wall_window',{{0x21e},{0x226},{0x205}},'em_start_window')
+starting('bed_left',{{0x27b,0x27c,0x27d},{0x283,0x284,0x285},{0x28b,0x28c,0x28d}},'em_start_bed')
+starting('bed_right',{{0x280,0x281,0x282},{0x288,0x289,0x28a},{0x290,0x291,0x292}},'em_start_bed')
+starting('dining_table',{{0x21a,0x21b},{0x222,0x223},{0x22a,0x22b}},'em_start_table',
+ {ground=0x2a1,groundRows={{0x2a1,0x2a1},{0x2a1,0x2a1},{0x2a9,0x2a9}}})
+for _,a in ipairs{{0x219,'left'},{0x221,'left'},{0x21c,'right'},{0x224,'right'}}do
+ starting('dining_chair_'..a[1],{{a[1]}},'em_home_chair_'..a[2],{ground=0x2a1})
+end
 local center='building__pokemon_center'
 local lab='building__lab'
 add('birch_books',lab,{{0x210,0x211},{0x218,0x219},{0x220,0x221}},'designed',{design='em_lab_books'})
@@ -104,4 +168,5 @@ M.exteriors={
  {family='rse',kind='mart',name='oldale_mart',pair='general__petalburg',header=2,back=2,roofEnd=42,wallBottom=63,bevel=3,rows={{0x28,0x29,0x29,0x285},{0x30,0x31,0x32,0x33},{0x38,0x39,0x3a,0x3b},{0x60,0x41,0x42,0x43}}},
  {family='rse',kind='center',name='oldale_center',roofShape='barrel',roofRise=11,pair='general__petalburg',header=2,back=2,roofEnd=40,wallBottom=63,bevel=4,rows={{0x48,0x49,0x282,0x283},{0x50,0x51,0x52,0x53},{0x58,0x59,0x5a,0x5b},{0x60,0x61,0x62,0x63}}},
 }
+for _,r in ipairs(V and V.data and V.data('gen3_hoenn_exteriors') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/data/gen3_hoenn_exteriors.lua'))do r.family='rse';M.exteriors[#M.exteriors+1]=r end
 return M

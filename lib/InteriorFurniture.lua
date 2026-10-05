@@ -90,7 +90,271 @@ function M.draw(id,A)
    top({sx,sy,sw,sh},x+.25,z+.25,x+span-.3,z+depth-.4,tall+.02)
   end end
  end
- if id=='fr_department_glass' then
+ if id=='fr_hotel_table' then
+  local wood=T(4,18)
+  desk(2,5,30,26,6,wood);top({2,2,28,23},2,5,30,26,6.02)
+ elseif id=='fr_hotel_sofa' then
+  local frame,cloth=T(2,16),T(6,18)
+  B(2,1,9,14,4,44,frame);B(3,4,10,13,6,43,cloth)
+  B(1,3,8,3,11,44,frame);B(1,3,8,15,8,10,frame);B(1,3,42,15,8,44,frame)
+  top({3,12,10,29},3,10,13,42,6.02)
+  for _,z in ipairs{10,40}do B(11,0,z,13,2,z+2,frame)end
+ elseif id=='fr_tanoby_masonry' then
+  local stone=T(7,9)
+  B(0,0,12,16,15,28,stone);B(0,15,11,16,17,29,T(6,2))
+  top({0,0,16,12},0,11,16,29,17.02)
+  front({0,16,16,16},0,0,16,15,28.02)
+  -- Recessed mortar and a raised lintel emphasize the carved frieze.
+  B(0,2,28,16,3,28.3,T(7,26));B(0,12,28,16,13,28.3,T(7,20))
+ elseif id=='fr_roof_room_books' then
+  shelves(1,26,30,13,24,{{3,11,{2,32,28,8}},{13,21,{2,23,28,8}}},T(1,21),T(3,31),true)
+ elseif id=='fr_roof_room_desk' then
+  local wood=T(2,16)
+  desk(1,3,31,23,6,wood);top({1,1,30,16},1,3,31,23,6.02)
+  B(4,6,7,14,7.4,16,T(6,5));top({4,2,10,10},4,7,14,16,7.42)
+ elseif id=='fr_roof_room_stool' then
+  local wood=T(4,12)
+  desk(2,5,14,17,4,wood);top({2,3,12,9},2,5,14,17,4.02)
+ elseif id=='fr_condo_meeting_table' then
+  local wood=T(12,25)
+  local points={{15,8},{49,8},{62,21},{62,43},{49,55},{15,55},{2,43},{2,21}}
+  -- An eight-sided table, with a continuous top and closed bevel/fascia.
+  for j,a in ipairs(points)do
+   local b=points[j%#points+1]
+   A.face({{32,8,32},{a[1],8,a[2]},{b[1],8,b[2]},{32,8,32}},wood,1)
+   A.face({{a[1],6.5,a[2]},{b[1],6.5,b[2]},{b[1],8,b[2]},{a[1],8,a[2]}},wood,.85)
+  end
+  for _,x in ipairs{13,47}do for _,z in ipairs{18,43}do B(x,0,z,x+3,6.5,z+3,wood)end end
+  top({14,13,36,34},14,14,50,49,8.02)
+ elseif id=='fr_condo_workstation' then
+  local wood,case,dark=T(2,27),T(8,12),T(11,15)
+  desk(1,18,46,38,8,wood)
+  crt(7,16,15,11,24,{8,10,13,10},case,dark)
+  keyboard({9,21,13,4},9,26,13,7,8.1,case)
+  B(2,8,19,6,20,28,case);front({2,10,4,14},2,8,6,20,28.02)
+  B(31,8,23,43,9.6,34,T(35,21));top({31,16,12,14},31,23,43,34,9.62)
+ elseif id=='fr_condo_sofa' then
+  local w=A.width;local cloth,frame=T(8,17),T(1,15)
+  B(3,1,10,w-3,4,28,frame);B(3,4,10,w-3,6,27,cloth)
+  B(2,4,7,w-2,12,11,frame)
+  front({3,10,w-6,8},3,6,w-3,11,11.02)
+  top({3,18,w-6,7},3,11,w-3,27,6.02)
+  B(1,1,8,3,8,28,frame);B(w-3,1,8,w-1,8,28,frame)
+  for _,x in ipairs{3,w-5}do B(x,0,23,x+2,2,27,frame)end
+ elseif id=='fr_condo_books' then
+  shelves(1,27,30,13,26,{{3,10,{2,34,28,7}},{12,19,{2,25,28,7}}},T(2,20),T(4,33),true)
+  B(1,20,27,31,28,40,T(1,14));front({1,11,30,10},1,20,31,28,40.02)
+ elseif id=='fr_lorelei_bed' then
+  local wood,cloth=T(14,6),T(21,20)
+  B(13,2,3,35,4,29,wood);B(14,4,5,34,6,28,cloth)
+  top({14,6,20,21},14,5,34,28,6.02)
+  B(15,6,5,33,7,10,T(20,8));top({15,5,18,5},15,5,33,10,7.02)
+  B(12,2,2,36,10,4,wood);B(12,2,28,36,5,30,wood)
+  for _,x in ipairs{13,33}do for _,z in ipairs{3,27}do B(x,0,z,x+2,3,z+2,wood)end end
+ elseif id=='fr_lorelei_table' then
+  local wood=T(2,24)
+  desk(2,2,30,28,7,wood);top({2,1,28,25},2,2,30,28,7.02)
+ elseif id=='fr_lorelei_display' then
+  local frame=T(1,20)
+  B(1,0,14,31,3,40,frame);B(2,3,15,30,15,39,T(8,18))
+  for _,x in ipairs{1,29}do B(x,3,14,x+2,16,40,frame)end
+  B(1,15,14,31,16,16,frame);B(1,15,38,31,16,40,frame)
+  top({2,11,28,29},2,16,30,38,15.02)
+ elseif id=='fr_sevii_books' then
+  local wood=T(1,16)
+  shelves(1,24,30,12,21,{{2,8,{2,31,28,7}},{10,16,{2,24,28,6}}},wood,T(3,30),true)
+  B(1,20,24,31,27,36,wood);front({2,11,28,10},2,21,30,27,36.02)
+ elseif id=='fr_sevii_wardrobe' then
+  -- Three low cupboard doors over three drawers, exactly as the native
+  -- picture: not a tall two-door wardrobe with wallpaper on its front.
+  local wood=T(4,20)
+  B(0,0,28,48,2,41,wood);B(0,2,28,48,15,40,wood)
+  B(0,15,27,48,16,41,wood)
+  for x=0,32,16 do
+   B(x+.5,7,40,x+15.5,15,41,wood)
+   front({x,17,16,14},x+.5,7,x+15.5,15,41.02)
+   B(x+.5,2,40,x+15.5,6.5,41,wood)
+   front({x,31,16,9},x+.5,2,x+15.5,6.5,41.02)
+  end
+ elseif id=='fr_sevii_chair' then
+  local wood=T(7,9)
+  for _,x in ipairs{4,10}do for _,z in ipairs{4,10}do B(x,0,z,x+2,4,z+2,wood)end end
+  B(3,4,3,13,5,13,wood);top({4,6,8,7},3,3,13,13,5.02)
+  local x=A.recipe.east and 11 or 3
+  B(x,5,3,x+2,10,13,wood)
+ elseif id=='fr_saffron_column' then
+  local stone=T(7,12)
+  B(2,0,4,14,3,16,T(7,40));B(4,3,6,12,30,14,stone)
+  B(2,30,4,14,32,16,stone)
+  front({4,4,8,36},4,3,12,30,14.02)
+  for _,x in ipairs{5,8,11}do B(x,3,14,x+.4,30,14.4,T(5,16))end
+ elseif id=='fr_saffron_telepad' then
+  -- Preserve the square concentric native graphic on a nearly flush plate.
+  B(1,.01,1,15,.35,15,T(1,1))
+  top({1,1,14,14},1,1,15,15,.36)
+ elseif id=='fr_cinnabar_quiz' then
+  local white,gray=T(7,8),T(2,16)
+  B(2,0,15,25,2,30,gray);B(3,2,16,24,14,29,white)
+  B(3,14,17,15,23,25,white);B(4,15,24,14,22,25,gray)
+  front({4,7,10,11},4,15,14,22,25.05)
+  B(3,12,26,24,14,30,white)
+  top({3,18,21,7},3,26,24,30,14.03)
+  for _,x in ipairs{17,20}do B(x,14,27,x+1.5,15,28.5,T(x,21))end
+ elseif id=='fr_vermilion_bin' then
+  -- Eight closed metal panels, a recessed dark mouth, bright rolled lip and
+  -- external ribs. The art's gray opening is not stretched down a cube.
+  local shell,lip,dark=T(3,10),T(3,3),T(8,5)
+  local function ring(radius,y,i)
+   local a=(i-.5)*math.pi/4;return {8+radius*math.cos(a),y,8+radius*math.sin(a)}
+  end
+  for i=0,7 do
+   local a,b=ring(5.2,.5,i),ring(5.2,.5,i+1)
+   local c,d=ring(5.8,8,i+1),ring(5.8,8,i)
+   A.face({a,b,c,d},shell,.85)
+   A.face({d,c,ring(4,8,i+1),ring(4,8,i)},lip,1)
+   A.face({ring(4,8,i),ring(4,8,i+1),ring(4,5,i+1),ring(4,5,i)},shell,.65)
+   A.face({{8,.5,8},b,a,{8,.5,8}},shell,.6)
+   A.face({{8,5,8},ring(4,5,i),ring(4,5,i+1),{8,5,8}},dark,.65)
+   local q=ring(5.3,0,i+.5)
+   B(q[1]-.35,1,q[3]-.35,q[1]+.35,7,q[3]+.35,lip)
+  end
+ elseif id=='fr_vermilion_gate' then
+  local metal,gold,cyan,core=T(1,3),T(2,12),T(40,10),T(40,11)
+  for _,x in ipairs{0,73}do
+   B(x,0,6,x+7,22,15,metal);B(x,2,6,x+7,17,15,gold)
+   B(x,21,5,x+7,23,16,metal)
+  end
+  for _,h in ipairs{7,14}do
+   B(7,h-1,9,73,h+1,11,cyan)
+   B(7,h-.3,10.9,73,h+.3,11.1,core)
+   for _,x in ipairs{6,71}do B(x,h-2,8,x+3,h+2,12,cyan)end
+  end
+ elseif id=='fr_corner_half_east' or id=='fr_corner_half_west' then
+  local east=id=='fr_corner_half_east'
+  local l,r=east and 0 or 4,east and 12 or 16
+  local inner,outer=east and 4 or 12,east and 12 or 4
+  local sx=east and 11 or 1
+  local wood,gold=T(east and 3 or 11,8),T(east and 1 or 13,5)
+  B(l,0,1,r,2,15,wood);B(l,2,1,r,11,15,wood)
+  B(east and 0 or 13,11,1,east and 3 or 16,19,15,wood)
+  B(east and 0 or 12,19,1,east and 4 or 16,20,15,gold)
+  S(sx,0,4,8,{inner,18,2},{inner,18,14},{outer,11,14},{outer,11,2})
+  S(sx,8,4,5,{outer,10,2},{outer,10,14},{outer,6,14},{outer,6,2})
+ elseif id=='fr_corner_pair' or id=='fr_corner_pair_end' then
+  local endcap=id=='fr_corner_pair_end'
+  local wood,gold=T(11,8),T(13,5)
+  B(4,0,1,28,2,15,wood);B(5,2,1,27,11,15,wood)
+  B(13,11,1,19,19,15,wood);B(12,18,1,20,20,15,gold)
+  for _,east in ipairs{false,true}do
+   local outer,inner=east and 28 or 4,east and 20 or 12
+   local sx=east and 27 or 1
+   -- Native pale metal/green display strips face their respective stools.
+   S(sx,0,4,8,{inner,18,2},{inner,18,14},{outer,11,14},{outer,11,2})
+   B(math.min(inner,outer),10,1,math.max(inner,outer),11,15,gold)
+   S(sx,8,4,5,{outer,10,2},{outer,10,14},{outer,6,14},{outer,6,2})
+  end
+  if endcap then
+   B(4,0,15,28,2,19,wood);B(5,2,14,27,11,16,wood)
+   front({5,12,22,4},5,3,27,10,16.02)
+  end
+ elseif id=='fr_corner_pair_cap' then
+  local wood,gold=T(13,10),T(13,5)
+  B(5,0,9,27,11,16,wood);B(12,11,9,20,19,16,wood)
+  B(12,19,9,20,20,16,gold)
+  front({5,5,22,10},5,2,27,11,8.98)
+ elseif id=='fr_corner_stool' then
+  local metal,blue=T(5,13),T(8,7)
+  B(5,0,5,11,1,11,metal);B(7,1,7,9,4,9,metal)
+  B(4,4,4,12,5,12,metal);B(4.5,5,4.5,11.5,6,11.5,blue)
+  top({5,5,6,5},4.5,4.5,11.5,11.5,6.02)
+ elseif id=='em_start_window' then
+  -- Original 15x11 frame and 13x9 glazing: no wallpaper stretched into the
+  -- pane. A deep sill and closed reveals give the native glass real depth.
+  local frame=T(0,8);local sill=T(2,19)
+  B(0,19,29,15,20,33,sill)
+  B(0,20,29,1,30,32.5,frame);B(14,20,29,15,30,32.5,frame)
+  B(1,29,29,14,30,32.5,frame)
+  B(1,20,29,14,29,29.2,frame)
+  front({1,9,13,9},1,20,14,29,29.3)
+  -- Native central divider, extended through the recess instead of floating
+  -- on the glass. The original reflection pixels remain unchanged.
+  B(7,20,29.3,8,29,32.5,T(7,10))
+ elseif id=='em_start_picture' then
+  local frame=T(1,11)
+  B(1,18,31,15,27,32,frame)
+  B(1,18,32,2,27,32.5,frame);B(14,18,32,15,27,32.5,frame)
+  B(2,18,32,14,19,32.5,frame);B(2,26,32,14,27,32.5,frame)
+  front({2,11,12,8},2,19,14,26,32.2)
+ elseif id=='em_start_clock' then
+  local rim=T(7,8)
+  B(4,15,31,12,29,32,rim);B(2,17,31,14,27,32,rim)
+  B(1,20,31,15,24,32,rim)
+  front({2,9,12,13},2,16,14,28,32.02)
+ elseif id=='em_start_bed' then
+  local wood,cloth=T(14,20),T(20,31)
+  -- The native bed occupies the middle of a three-cell drawing. Keep its
+  -- single-bed proportions instead of turning the surrounding floor into bed.
+  for _,x in ipairs{14,32}do for _,z in ipairs{19,43}do B(x,0,z,x+2,4,z+2,wood)end end
+  B(13,3,18,35,5,45,wood);B(14,5,19,34,7,44,cloth)
+  top({14,23,20,21},14,22,34,44,7.02)
+  B(15,7,19,33,8.3,24,T(20,21));top({15,19,18,5},15,19,33,24,8.32)
+  B(13,3,17,35,11,19,wood);front({13,16,22,5},13,7,35,11,19.02)
+  B(13,3,44,35,6,46,wood)
+ elseif id=='em_start_table' then
+  local wood=T(5,34)
+  desk(1,1,31,30,7,wood);top({1,0,30,28},1,1,31,30,7.02)
+ elseif id=='em_start_dresser' then
+  local case,trim=T(2,19),T(1,28)
+  B(1,0,25,15,23,39,case);B(2,23,26,14,25,38,case)
+  front({1,17,14,15},1,10,15,23,39.02)
+  for _,x in ipairs{2,8}do
+   B(x,1,39,x+5,9,39.5,trim)
+   front({x,32,5,9},x,1,x+5,9,39.52)
+  end
+ elseif id=='em_start_pc_left' or id=='em_start_pc_right' then
+  local right=id=='em_start_pc_right';local x=right and 16 or 0
+  local wood,case,dark=T(x+2,30),T(x+1,13),T(x+5,20)
+  desk(0,25,32,38,8,wood)
+  crt(x+1,24,14,10,26,{x+2,17,12,8},case,dark)
+  keyboard({x+2,26,12,4},x+2,31,12,6,8.1,case)
+  local book=right and 0 or 16
+  B(book+2,8,27,book+14,11,35,T(book+4,25))
+  top({book+2,22,12,9},book+2,27,book+14,35,11.02)
+  desk(x+2,39,x+14,47,4,wood)
+  B(x+2,4,39,x+14,5,47,T(x+8,36))
+  B(x+2,4,46,x+14,9,48,wood)
+ elseif id=='em_start_console' then
+  local case,dark=T(6,14),T(4,21)
+  B(3,0,12,12,9,23,case);B(4,9,13,11,10,22,case)
+  front({3,10,9,12},3,1,12,9,23.02)
+  B(5,0,26,13,1,30,dark);top({5,24,8,6},5,26,13,30,1.02)
+  B(4,.1,22,4.4,.5,28,dark);B(4,.1,27.6,6,.5,28,dark)
+ elseif id=='em_start_fridge' then
+  local case,edge=T(4,9),T(1,17)
+  B(1,0,13,15,27,29,case);front({1,1,14,29},1,1,15,26,29.02)
+  B(1,17,29,15,17.5,29.2,edge)
+  B(3,11,29,4,15,29.5,edge)
+ elseif id=='em_start_kitchen' then
+  local wood,metal,dark=T(4,26),T(6,15),T(5,18)
+  B(0,0,14,32,8,30,wood);front({0,25,32,6},0,1,32,8,30.02)
+  B(0,8,13,32,9,16,metal);B(0,8,26,32,9,31,metal)
+  B(0,8,16,2,9,26,metal);B(14,8,16,32,9,26,metal)
+  B(2,6,16,14,6.6,26,dark)
+  B(2,6.6,16,3,9,26,metal);B(13,6.6,16,14,9,26,metal)
+  B(3,6.6,16,13,9,17,metal);B(3,6.6,25,13,9,26,metal)
+  top({17,16,13,8},17,17,30,26,9.02)
+  B(7,9,14,8,14,15,metal);B(7,13,14,8,14,20,metal)
+ elseif id=='em_start_cabinet' then
+  local wood,dark=T(2,7),T(4,25)
+  B(1,0,14,25,27,28,wood)
+  front({1,13,23,17},1,1,25,24,28.02)
+  B(12,1,28,13,24,28.3,wood)
+  B(3,5,28,10,6,28.6,dark);B(15,5,28,22,6,28.6,dark)
+ elseif id=='em_start_tv' then
+  local wood,case,dark=T(3,24),T(1,3),T(3,17)
+  B(1,0,14,31,6,29,wood);front({1,18,30,8},1,1,31,6,29.02)
+  crt(1,14,30,8,24,{2,1,28,14},case,dark)
+ elseif id=='fr_department_glass' then
   local case=T(1,18)
   B(1,0,8,31,2,37,case);B(2,2,9,30,11,36,T(4,24))
   for _,x in ipairs{1,15,29}do B(x,2,8,x+2,12,37,case)end

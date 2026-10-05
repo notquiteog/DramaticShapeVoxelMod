@@ -48,100 +48,99 @@ function M.install(recipes)
  -- 0x2ed-0x2f2 are blue cases carrying orange canisters.
  add('lab_centrifuge_bank','oak_lab',{
   {0x2ed,0x2ee,0x2ef},{0x2f0,0x2f1,0x2f2}},'fr_lab_centrifuge',1)
- -- Naval Rock, FireRed's Team Rocket base, on general__rom_082d501c -- 26
- -- maps and the largest Gen 3 tileset with no recipe at all. 0x289/0x28a are
- -- hazard-striped machinery and 0x282/0x283 the blue console units, read off the
- -- native sheet and intersected with FR_NAVEL_ROCK_1F's own midLayout.
- add('rocket_hazard_cabinet','general__rom_082d501c',{{0x289}},'fr_rocket_hazard_cabinet',1)
- add('rocket_hazard_cabinet_b','general__rom_082d501c',{{0x28a}},'fr_rocket_hazard_cabinet',1)
- add('rocket_console','general__rom_082d501c',{{0x282}},'fr_rocket_console',1)
- add('rocket_console_b','general__rom_082d501c',{{0x283}},'fr_rocket_console',1)
  -- Elite Four chambers, building__rom_082d50c4: 317 distinct metatiles over 5
  -- maps and no recipe at all. 0x2a1 is the single cell that breaks the floor
  -- pattern -- the chamber's centrepiece -- read off the native sheet and
  -- confirmed against FR_POKEMON_LEAGUE_AGATHAS_ROOM's own midLayout.
  add('elite_pedestal','building__rom_082d50c4',{{0x2a1}},'fr_elite_pedestal',1)
- -- Celadon Condominiums, building__rom_082d4f8c, 4 maps and no recipe. A
- -- genuinely furnished interior: kitchen runs, beds, wardrobes and plants, all
- -- read off the native sheet against FR_CELADON_CITY_CONDOMINIUMS_1F's layout.
- add('room_bed_a','building__rom_082d4f8c',{{0x289}},'fr_room_bed',1)
- add('room_bed_b','building__rom_082d4f8c',{{0x28c}},'fr_room_bed',1)
- add('condo_wardrobe_a','building__rom_082d4f8c',{{0x290}},'fr_condo_wardrobe',1)
- add('condo_wardrobe_b','building__rom_082d4f8c',{{0x291}},'fr_condo_wardrobe',1)
- add('condo_wardrobe_c','building__rom_082d4f8c',{{0x294}},'fr_condo_wardrobe',1)
- add('condo_kitchen_a','building__rom_082d4f8c',{{0x283}},'fr_condo_kitchen',1)
- add('condo_kitchen_b','building__rom_082d4f8c',{{0x285}},'fr_condo_kitchen',1)
- add('condo_plant','building__rom_082d4f8c',{{0x2a1}},'fr_condo_plant',1)
- -- Celadon Hotel, building__rom_082d4f44. The room beds are the same drawing
- -- as the Condominiums', so they reuse that design rather than duplicating it.
- add('hotel_bed_a','building__rom_082d4f44',{{0x28e}},'fr_room_bed',1)
- add('hotel_bed_b','building__rom_082d4f44',{{0x29d}},'fr_room_bed',1)
- add('hotel_bed_c','building__rom_082d4f44',{{0x29f}},'fr_room_bed',1)
- add('hotel_bed_d','building__rom_082d4f44',{{0x2a3}},'fr_room_bed',1)
- -- Tanoby Ruins, building__rom_082d5034, 7 maps. Dilford Chamber carries
- -- bookcases at 0x287/0x288, read off the native sheet against
- -- FR_SEVEN_ISLAND_TANOBY_RUINS_DILFORD_CHAMBER's layout.
- add('ruins_shelf_a','building__rom_082d5034',{{0x287}},'fr_ruins_shelf',1)
- add('ruins_shelf_b','building__rom_082d5034',{{0x288}},'fr_ruins_shelf',1)
- -- Four Island, building__rom_082d4f14, 8 maps. Lorelei's house draws a
- -- wooden table at 0x2e4/0x2e5/0x2e6 and a bed at 0x2ed.
- add('lorelei_table_a','building__rom_082d4f14',{{0x2e4}},'fr_house_table',1)
- add('lorelei_table_b','building__rom_082d4f14',{{0x2e5}},'fr_house_table',1)
- add('lorelei_table_c','building__rom_082d4f14',{{0x2e6}},'fr_house_table',1)
- add('lorelei_bed','building__rom_082d4f14',{{0x2ed}},'fr_room_bed',1)
+ -- Celadon condominium rooms contain sofas, shared desks and tables, not
+ -- beds/kitchens. Complete source drawings replace former wall-ID guesses.
+ local condo='building__rom_082d4f8c'
+ for _,top in ipairs{0x295,0x2f3}do
+  add('condo_workstation_'..top,condo,{{top,0x296,0x297},{0x29d,0x29e,0x29f},{0x2a5,0x2a6,0x2a7}},'fr_condo_workstation',0x281)
+ end
+ add('condo_meeting_table',condo,{{0x2c5,0x2c6,0x2c6,0x2c7},{0x2cd,0x2ce,0x2ce,0x2cf},{0x2d5,0x2d6,0x2d6,0x2d7},{0x2dd,0x2de,0x2de,0x2df}},'fr_condo_meeting_table',0x281)
+ add('condo_meeting_table_single_book',condo,{{0x2c5,0x2c6,0x2c6,0x2c7},{0x2cd,0x2d6,0x2ce,0x2cf},{0x2d5,0x2d6,0x2d6,0x2d7},{0x2dd,0x2de,0x2de,0x2df}},'fr_condo_meeting_table',0x281)
+ add('condo_sofa_wide',condo,{{0x2e5,0x2e6,0x2e6,0x2e7},{0x2e0,0x2e1,0x2e1,0x2e2}},'fr_condo_sofa',0x281)
+ add('condo_sofa',condo,{{0x2e5,0x2e6,0x2e7},{0x2e0,0x2e1,0x2e2}},'fr_condo_sofa',0x281)
+ add('condo_books',condo,{{0x2ed,0x2ee},{0x2f5,0x2f6},{0x2ef,0x2f7}},'fr_condo_books',0x281)
+ for _,a in ipairs{{0x2c9,0x2d1},{0x2ca,0x2d1},{0x2c8,0x2d0}}do
+  add('condo_planter_'..a[1],condo,{{a[1]},{a[2]}},nil,0x281)
+  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
+ end
+ -- Celadon Hotel is a lobby. Preserve its red carpet under cushions,
+ -- tables and sofa instead of interpreting wallpaper/floor IDs as beds.
+ local hotel='building__rom_082d4f44'
+ add('hotel_lobby_table',hotel,{{0x292,0x293},{0x29a,0x29b}},'fr_hotel_table',0x29e)
+ add('hotel_lobby_cushion',hotel,{{0x29f}},'gb_seat',0x29e)
+ add('hotel_lobby_sofa',hotel,{{0x2b0},{0x2b8},{0x2c0}},'fr_hotel_sofa',0x29e)
+ add('hotel_lobby_plant',hotel,{{0x281},{0x289}},nil,0x29e)
+ recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
+ -- Tanoby's relief is stone masonry, never bookshelves. Complete horizontal
+ -- masonry courses keep the source frieze upright with a closed stone cap.
+ for _,middle in ipairs{0x2b9,0x2d6}do
+  add('tanoby_masonry_'..middle,'building__rom_082d5034',{{0x2a1},{middle},{0x2bc}},'fr_tanoby_masonry',0x288)
+ end
+ -- Lorelei's orange rug is floor, not a line of miniature tables.
+ local lorelei='building__rom_082d4f14'
+ add('lorelei_native_bed',lorelei,{{0x2e8,0x2e9,0x2ea},{0x2f0,0x2f1,0x2f2}},'fr_lorelei_bed',0x286)
+ add('lorelei_native_table',lorelei,{{0x2eb,0x2ec},{0x2f3,0x2f4}},'fr_lorelei_table',0x2e5)
+ add('lorelei_bookcase',lorelei,{{0x2fa,0x2fb},{0x2fc,0x2fd},{0x2fe,0x2ff}},'fr_condo_books',0x286)
+ add('lorelei_display_case',lorelei,{{0x2ed,0x2ee},{0x2f5,0x2f6},{0x2ef,0x2f7}},'fr_lorelei_display',0x286)
  -- Complete Celadon displays; 0x2c0 is bare parquet, never stock.
  add('department_glass_case','building__rom_082d4e6c',{
   {0x317,0x317},{0x31f,0x31f},{0x327,0x327}},'fr_department_glass',0x2c0)
  add('department_stock_island','building__rom_082d4e6c',{
   {0x318,0x319},{0x320,0x321},{0x328,0x329},{0x330,0x331}},'fr_department_stock',0x2c0)
- -- Pokemon Tower, building__rom_082d4efc, 12 maps. It already carries the
- -- grave recipes; its bookcases and plants had none. Both objects are the same
- -- as ones authored elsewhere, so these reuse fr_ruins_shelf and fr_condo_plant
- -- rather than duplicating geometry.
- add('tower_bookcase_a','building__rom_082d4efc',{{0x288}},'fr_ruins_shelf',0x281)
- add('tower_bookcase_b','building__rom_082d4efc',{{0x28c}},'fr_ruins_shelf',0x281)
- add('tower_bookcase_c','building__rom_082d4efc',{{0x292}},'fr_ruins_shelf',0x281)
- add('tower_plant','building__rom_082d4efc',{{0x2a0}},'fr_condo_plant',1)
- -- Celadon Condominiums roof room, building__rom_082d4f5c, 2 maps. Rooftop
- -- plant at 0x288/0x28e, read off the native sheet against
- -- FR_CELADON_CITY_CONDOMINIUMS_ROOF_ROOM's layout.
- add('roof_ac_unit_a','building__rom_082d4f5c',{{0x288}},'fr_roof_ac_unit',1)
- add('roof_ac_unit_b','building__rom_082d4f5c',{{0x28e}},'fr_roof_ac_unit',1)
- -- Remaining furnished houses, all reusing fr_room_bed.
- -- Cerulean House 2, building__rom_082d4fa4: beds at 0x14f and 0x285.
- -- Seven Island house, building__rom_082d4e24: a bed at 0x14d.
- add('cerulean_house_bed_a','building__rom_082d4fa4',{{0x14f}},'fr_room_bed',1)
- add('cerulean_house_bed_b','building__rom_082d4fa4',{{0x285}},'fr_room_bed',1)
- add('sevii_house_bed','building__rom_082d4e24',{{0x14d}},'fr_room_bed',1)
- -- Saffron Gym, building__rom_082d4d64. A switch console at 0x2a7 and low
- -- round plinths at 0x293/0x294, read off the native sheet against
- -- FR_SAFFRON_CITY_GYM's layout.
- add('gym_switch_panel','building__rom_082d4d64',{{0x2a7}},'fr_gym_switch_panel',1)
- add('gym_disc_a','building__rom_082d4d64',{{0x293}},'fr_gym_disc',1)
- add('gym_disc_b','building__rom_082d4d64',{{0x294}},'fr_gym_disc',1)
- -- Cinnabar Gym, building__rom_082d4d7c: the same switch console as Saffron,
- -- at 0x2b0 rather than 0x2a7. Read off the native sheet against
- -- FR_CINNABAR_ISLAND_GYM's layout.
- add('cinnabar_gym_switch','building__rom_082d4d7c',{{0x2b0}},'fr_gym_switch_panel',1)
- -- The four remaining gyms, each read off its own native sheet and intersected
- -- with that gym's midLayout. Every gym has a distinct signature fixture.
- -- Cerulean (rom_082d4d1c) 0x2ae, Vermilion (rom_082d4d34) 0x2c8/0x2c9: switch
- --   hardware, reusing fr_gym_switch_panel.
- -- Viridian (rom_082d4cbc) 0x291: a potted tree.
- -- Celadon (rom_082d4d4c) 0x284/0x285: plant racks.
- add('cerulean_gym_switch','building__rom_082d4d1c',{{0x2ae}},'fr_gym_switch_panel',1)
- add('vermilion_gym_switch_a','building__rom_082d4d34',{{0x2c8}},'fr_gym_switch_panel',1)
- add('vermilion_gym_switch_b','building__rom_082d4d34',{{0x2c9}},'fr_gym_switch_panel',1)
- add('viridian_gym_plant','building__rom_082d4cbc',{{0x291}},'fr_gym_plant',1)
- add('celadon_gym_rack_a','building__rom_082d4d4c',{{0x284}},'fr_gym_plant_rack',1)
- add('celadon_gym_rack_b','building__rom_082d4d4c',{{0x285}},'fr_gym_plant_rack',1)
- -- Celadon Game Corner, building__rom_082d4cec, 3 maps, no recipe. Slot
- -- machines at 0x2b8/0x2b9/0x2ba/0x2bb, read off the native sheet against
- -- FR_CELADON_CITY_GAME_CORNER's layout.
- add('corner_slot_a','building__rom_082d4cec',{{0x2b8}},'fr_slot_machine',1)
- add('corner_slot_b','building__rom_082d4cec',{{0x2b9}},'fr_slot_machine',1)
- add('corner_slot_c','building__rom_082d4cec',{{0x2ba}},'fr_slot_machine',1)
- add('corner_slot_d','building__rom_082d4cec',{{0x2bb}},'fr_slot_machine',1)
+ -- Tower boundary tiles are walls; grave markers are handled above.
+ local roofRoom='building__rom_082d4f5c'
+ add('roof_room_books',roofRoom,{{0x2a1,0x2a1},{0x29b,0x29c},{0x2a3,0x2a4}},'fr_roof_room_books',0x29e)
+ add('roof_room_desk',roofRoom,{{0x291,0x292},{0x299,0x29a}},'fr_roof_room_desk',0x29e)
+ add('roof_room_stool',roofRoom,{{0x288},{0x290}},'fr_roof_room_stool',0x29e)
+ for _,rows in ipairs{{{0x281},{0x289}},{{0x282},{0x28a}}}do
+  add('roof_room_plant_'..rows[1][1],roofRoom,rows,nil,0x29e)
+  recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
+ end
+ -- Cerulean's robbed house and Seven Island: 14f is the entrance rug,
+ -- 285 wallpaper/bookcase art and 14d a shelf foot. None is a bed.
+ local sevii='building__rom_082d4e24'
+ add('sevii_bookcase',sevii,{{0x13d,0x13e},{0x145,0x146},{0x14d,0x14e}},'fr_sevii_books',0x109)
+ add('sevii_wardrobe',sevii,{{0x17b,0x17c,0x17d},{0x181,0x181,0x181},{0x182,0x182,0x182}},'fr_sevii_wardrobe',0x109)
+ add('sevii_planter',sevii,{{0x156},{0x15e}},nil,0x109)
+ recipes[#recipes].kind='plant';recipes[#recipes].h=24;recipes[#recipes].cutout=true
+ add('sevii_dining_table',sevii,{{0x165,0x166},{0x16d,0x16e}},'fr_lorelei_table',0x109)
+ for _,mid in ipairs{0x16f,0x167}do
+  add('sevii_dining_chair_'..mid,sevii,{{mid}},'fr_sevii_chair',0x109)
+  recipes[#recipes].east=mid==0x167
+ end
+ -- Saffron has fluted columns and square floor teleport pads, not consoles
+ -- and circular plinths. Complete columns include their cap, shaft and foot.
+ add('saffron_column','building__rom_082d4d64',{{0x297},{0x29f},{0x2a7}},'fr_saffron_column',0x281)
+ add('saffron_telepad','building__rom_082d4d64',{{0x293}},'fr_saffron_telepad',0x281)
+ -- Cinnabar's quiz hardware is two cells wide and two cells tall. 2b0 is
+ -- vertical partition artwork, never a free-standing quiz console.
+ for _,top in ipairs{{0x2c8,0x2c9},{0x290,0x2a0}}do
+  add('cinnabar_quiz_'..top[1],'building__rom_082d4d7c',{top,{0x298,0x2a8}},'fr_cinnabar_quiz',0x281)
+ end
+ -- Cerulean 2ae, Viridian 291 and Celadon 284 are wall/window artwork;
+ -- keep them out of furniture recipes. Celadon shrubs need whole drawings.
+ -- These wall-vent cells are not switch consoles. The puzzle objects are
+ -- the fifteen separate native bins at 2b8.
+ add('vermilion_puzzle_bin','building__rom_082d4d34',{{0x2b8}},'fr_vermilion_bin',0x281)
+ add('vermilion_electric_gate','building__rom_082d4d34',{{0x2a9,0x2aa,0x285,0x2ab,0x2ac},{0x2b1,0x2b2,0x28d,0x2b3,0x2b4}},'fr_vermilion_gate',0x281)
+ -- Whole paired cabinets preserve the narrow back-to-back island. Adjacent
+ -- blue cells are individual stools, not additional slot machines.
+ add('corner_pair','building__rom_082d4cec',{{0x2b8,0x2b9}},'fr_corner_pair',0x291)
+ add('corner_pair_end','building__rom_082d4cec',{{0x2c0,0x2c1},{0x2c8,0x2c9}},'fr_corner_pair_end',0x291)
+ add('corner_pair_cap','building__rom_082d4cec',{{0x2a8,0x2a9}},'fr_corner_pair_cap',0x291)
+ for _,east in ipairs{false,true}do
+  local suffix=east and 'east' or 'west'
+  add('corner_half_'..suffix,'building__rom_082d4cec',{{east and 0x2b9 or 0x2b8}},'fr_corner_half_'..suffix,0x291)
+  add('corner_half_end_'..suffix,'building__rom_082d4cec',{{east and 0x2c1 or 0x2c0},{east and 0x2c9 or 0x2c8}},'fr_corner_half_'..suffix,0x291)
+ end
+ for _,mid in ipairs{0x2aa,0x2ab,0x2b2,0x2b3,0x2ba,0x2bb}do
+  add('corner_stool_'..mid,'building__rom_082d4cec',{{mid}},'fr_corner_stool',0x291)
+ end
  -- Battle Colosseum, building__rom_082d4c44, 4 maps. Seating at 0x30a
  -- (upper tier) and 0x2f6/0x2fa (lower), read off the native sheet against
  -- FR_BATTLE_COLOSSEUM_2P's layout.

@@ -249,7 +249,7 @@ local function build(req,cache,previous)
    Terrain.append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)
   elseif c.prop then
    if not c.prop.recipe.noGround then
-    plane(b.v,b.i,x,z,uvFor(ts,c.prop.recipe.ground) or uvFor(ts,1) or uv)
+    plane(b.v,b.i,x,z,uvFor(ts,V.require('Gen3Furniture').groundAt(c)) or uvFor(ts,1) or uv)
    end
   elseif shape.kind=='tree' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)

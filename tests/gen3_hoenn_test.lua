@@ -29,3 +29,17 @@ for _,r in ipairs(H.exteriors)do
 end
 version='leafgreen';assert(not H.active());assert(S.of('general','pallet_town',0x14,0,1).kind=='tree')
 print('PASS '..count..' native Hoenn furniture recipes, family isolation and four-cell tree artwork')
+
+version='emerald'
+assert(S.of('general','mauville',0x288,0,7).kind=='fence')
+assert(S.of('general','petalburg',0x288,0,7).kind=='flat','secondary fence alias leaked')
+assert(S.of('general','petalburg',0xc5,0x10,7).kind=='rock','ocean rock swallowed by surfable water')
+assert(S.of('general','petalburg',0xc5,0x10,0).kind=='water','walkable water blocked by scenery')
+assert(S.of('general','petalburg',0x85,0x39,7).direction=='west')
+assert(S.of('general','petalburg',0x86,0x38,7).direction=='east')
+assert(S.of('general','petalburg',0x71,0xc,7).kind=='cliff')
+assert(S.of('general','petalburg',0x71,0xc,0).kind=='flat','walkable floor became a cliff')
+local F=V.require('Gen3Furniture')
+local carpet={recipe={ground=1,groundRows={{2,3},{4,5}}},cx=8,cy=9}
+assert(F.groundAt({prop=carpet,cx=9,cy=10})==5,'carpet border lost beneath fixture')
+print('PASS Hoenn scenery scope, water/rock ownership, native ledge directions and carpet underlays')

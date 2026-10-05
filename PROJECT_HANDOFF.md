@@ -1,3 +1,19 @@
+# Native coverage checkpoint — 2026-10-04
+
+Completed another modeling/correction batch across Emerald and FRLG, including
+native gym objects, Game Corner cabinets, Seven Island furniture, more Hoenn
+buildings and scenery. [Scope, QA and explicit remaining gaps](docs/NATIVE_COVERAGE_2026-10-04.md).
+Full suite 111 pass / 11 known fail / 85 skip; focused final checks pass.
+Every-tile coverage is unfinished; no cart/mod release for this checkpoint.
+
+# Native window fidelity — 2026-10-04
+
+Removed invented luminous side-wall windows from the shared room shell;
+recessed Emerald house windows now match native frame/glass proportions.
+[Research, QA and remaining exterior-view work](docs/NATIVE_WINDOWS_2026-10-04.md).
+Actual live exterior-map portals are not implemented. Keep this limitation
+explicit; painted sky panes are not equivalent. No release for this change.
+
 # Emerald stair artwork correction — 2026-10-04
 
 Replaced the new freestanding gray Littleroot stairs with native golden treads

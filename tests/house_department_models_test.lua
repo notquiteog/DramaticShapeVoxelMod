@@ -9,15 +9,26 @@ end
 local F=V.require('Gen3Furniture')
 local floor={['0:0']={cx=0,cy=0,mid=0x2c0,pair='building__rom_082d4e6c',primary='building',ts={}}}
 assert(#F.extract(floor)==0,'Celadon parquet became merchandise')
+-- Native wall/floor IDs formerly assigned arbitrary beds or consoles.
+for _,q in ipairs{{'building__rom_082d4fa4',0x14f},{'building__rom_082d4e24',0x14d},
+ {'building__rom_082d4d1c',0x2ae},{'building__rom_082d4cbc',0x291},
+ {'building__rom_082d4d4c',0x284},{'building__rom_082d4d7c',0x2b0},
+ {'building__rom_082d4d34',0x2c8},{'building__rom_082d4d64',0x294}}do
+ assert(#F.extract({['0:0']={cx=0,cy=0,mid=q[2],pair=q[1],primary='building',ts={}}})==0,'floor/wall became furniture')
+end
 local recipes={};V.require('Gen3DesignedFurniture').install(recipes)
 local chosen={}
-for _,r in ipairs(recipes)do if r.name:find('department_',1,true)==1 then chosen[#chosen+1]=r end end
-for _,r in ipairs(V.require('Gen3Hoenn').recipes)do if r.name:find('hoenn_home_',1,true)==1 and r.design then chosen[#chosen+1]=r end end
+for _,r in ipairs(recipes)do if r.design and (r.name:find('department_',1,true)==1 or r.name:find('sevii_',1,true)==1 or r.name:find('corner_',1,true)==1 or r.name:find('vermilion_',1,true)==1 or r.name:find('saffron_',1,true)==1 or r.name:find('cinnabar_',1,true)==1 or r.name:find('condo_',1,true)==1 or r.name:find('lorelei_',1,true)==1 or r.name:find('hotel_lobby_',1,true)==1 or r.name:find('tanoby_masonry_',1,true)==1 or r.name:find('roof_room_',1,true)==1)then chosen[#chosen+1]=r end end
+for _,r in ipairs(V.require('Gen3Hoenn').recipes)do if (r.name:find('hoenn_home_',1,true)==1 or r.name:find('hoenn_start_',1,true)==1) and r.design then chosen[#chosen+1]=r end end
 local function geometry(r,w,h)
  local boxes,faces=0,0
  local function coord(x,y)assert(x>=0 and y>=0 and x<w and y<h,r.design..' source sample overflow')end
  assert(V.require('InteriorFurniture').draw(r.design,{
-  width=w,height=h,
+  width=w,height=h,recipe=r,
+  face=function(q)
+   faces=faces+1
+   for _,p in ipairs(q)do assert(p[2]>=0 and p[2]==p[2])end
+  end,
   sample=function(x,y)coord(x,y);return {}end,
   source=function(x,y,sw,sh,a,b,c,d)
    coord(x,y);coord(x+sw-1,y+sh-1);faces=faces+1
@@ -28,7 +39,7 @@ local function geometry(r,w,h)
    assert(b>=0,r.design..' below floor');boxes=boxes+1
   end,
  }),r.design)
- assert(boxes>=3 and faces>=1,r.design..' missing modeled components')
+ assert(boxes>=(r.design=='fr_saffron_telepad' and 1 or 3) and (faces>=1 or r.design=='fr_vermilion_gate'),r.design..' missing modeled components')
 end
 for _,r in ipairs(chosen)do
  geometry(r,#r.rows[1]*16,#r.rows*16)

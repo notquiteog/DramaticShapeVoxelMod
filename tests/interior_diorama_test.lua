@@ -16,6 +16,7 @@ for _,gen in ipairs({1,2,3})do
   for _,point in ipairs(v)do
    assert(point[1]>=b[1]-4 and point[1]<=b[3]+4 and point[3]>=b[2]-4 and point[3]<=b[4]+4)
    if side<=4 then
+    assert(point[4]<=3.5/8,'room shell invented a luminous window absent from native art')
     local outside=side==1 and point[3]<=b[2] or side==2 and point[1]>=b[3]
      or side==3 and point[3]>=b[4] or side==4 and point[1]<=b[1]
     -- Only shallow trim may project into the room, never a solid wall cell.

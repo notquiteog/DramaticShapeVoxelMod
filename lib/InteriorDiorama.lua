@@ -186,20 +186,8 @@ function M.geometry(p,side,opened)
    part(start,h-2,finish,h+1.2,3,4)
    part(start,h-3.5,finish,h-2,2,3.5)
    for _,a in ipairs({start,finish-2})do part(a,0,a+2,h,2,3.6)end
-   -- Recessed luminous wall panels: narrow mullions preserve pixel-art
-   -- furniture as the visual focus. Only side walls receive new windows.
-   if (side==2 or side==4) and p.theme~='ship' then
-    for t=.28,.75,.44 do local c=start+(finish-start)*t
-     local function panel(lo,hi,y0,y1,swatch,offset)
-      local q=line-outward*offset
-      face({{q,y1,lo},{q,y1,hi},{q,y0,hi},{q,y0,lo}},swatch)
-     end
-     panel(c-6,c+6,14,33,3,.12)
-     panel(c-5,c+5,15,32,4,.18)
-     panel(c-.4,c+.4,15,32,2,.25)
-     panel(c-5,c+5,23,24,2,.25)
-    end
-   end
+   -- Window openings belong to native artwork/model recipes. Do not invent
+   -- luminous side-wall panels in every room (including windowless rooms).
   end
  end
  return verts,indices
