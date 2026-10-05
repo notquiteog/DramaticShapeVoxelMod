@@ -1,3 +1,7 @@
+## 1.31.4 — 2026-10-05
+
+Rebuild Emerald Centers and Marts, polish six gym vestibules and native house openings, repair Route 1 composite fences, and expand optional native-art Legendary presentation. Verified on Gen1Recomp 0.3.52: 179 tests passed, 0 failed, 56 skipped; native building turntables and door animations inspected. Full-world coverage and full feature parity remain in progress. Unverified cut-sapling development is excluded.
+
 ## Unreleased
 
 - Rebuild Emerald's standard Centers and Marts with closed native-style walls,
