@@ -493,7 +493,7 @@ local function build(req,cache,previous)
   local vertices,indices={},{}
   Civic.append(g,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
   Elevation.lift(vertices,0,g.groundHeight or 0)
-  local part={};cache.civics[#cache.civics+1]=part
+  local part={placement=g};cache.civics[#cache.civics+1]=part
   part.mesh=assert(R.newMesh(vertices,indices));part.image=Civic.material(g)
   Budget.check()
  end end
@@ -719,6 +719,7 @@ local function fieldEffects(draw,cam)
  local g=love.graphics
  local function effect(name,w,h,paint,verts,base)
   local c=effectCanvases[name]
+  if c and (c:getWidth()~=w or c:getHeight()~=h)then c:release();c=nil end
   if not c then c=g.newCanvas(w,h);c:setFilter('nearest','nearest');effectCanvases[name]=c end
   g.push('all');g.setCanvas(c);g.origin();g.setShader();g.setScissor();g.setDepthMode();g.setBlendMode('alpha');g.clear(0,0,0,0);g.setColor(1,1,1,1)
   local ok,err=pcall(paint);g.pop();if not ok then error(err,0)end
@@ -737,9 +738,18 @@ local function fieldEffects(draw,cam)
  V.require('Gen3EmoteCards').draw(fx,cam,M.groundAt,effect)
  local doors=require('src.core.game3.doors');local a=doors._activeAnim
  if a then
-  local x,z=a.x*16,a.y*16+16.15
-  effect('door',32,48,function()doors.draw(x,a.y*16-32,32,48)end,
-   {{x,48,z},{x+32,48,z},{x+32,0,z},{x,0,z}},M.groundAt(x+8,z))
+  local surface
+  for _,part in ipairs(cache.civics or {})do
+   if part.placement then surface=Civic.doorSurface(part.placement,a.x,a.y)end
+   if surface then break end
+  end
+  if surface then
+   effect('door',surface.w,surface.h,function()doors.draw(surface.sourceX,surface.sourceY,surface.w,surface.h)end,surface.vertices,surface.base)
+  else
+   local x,z=a.x*16,a.y*16+16.15
+   effect('door',32,48,function()doors.draw(x,a.y*16-32,32,48)end,
+    {{x,48,z},{x+32,48,z},{x+32,0,z},{x,0,z}},M.groundAt(x+8,z))
+  end
  end
  local heal=require('src.core.game3.pokecenter_heal')
  if heal.isActive()then

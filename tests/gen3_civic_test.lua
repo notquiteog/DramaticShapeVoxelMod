@@ -10,17 +10,36 @@ for _,kind in ipairs({'gym','center','mart'})do
    assert(uv[i][1]>0 and uv[i][1]<1 and uv[i][2]>0 and uv[i][2]<1,'material samples an adjacent source rectangle')
   end
  end)
- -- The first three faces are the facade: exterior ground rows stop at the
- -- wall base, while the middle rectangle owns the complete recessed door.
+ -- Facade ground rows stop at the wall base; openings may subdivide faces.
  assert(faces[1][2][3][2]<p.wallBottom/p.h)
- assert(faces[3][1][1][1]==48+p.doorLeft)
- assert(faces[3][1][1][3]==80+p.front+p.projection)
+ local entrance=false;for _,f in ipairs(faces)do for _,v in ipairs(f[1])do entrance=entrance or (v[1]==48+p.doorLeft and v[3]==80+p.front+p.projection)end end;assert(entrance,'projected entrance lost')
  local plateau=false
  for _,f in ipairs(faces)do
   local high=true;for _,a in ipairs(f[1])do high=high and a[2]==p.wall+p.bevel end
   if high then plateau=true end
  end
  assert(plateau,'roof has no flat plateau')
+ local soffit=false
+ for _,f in ipairs(faces)do
+  local flat=true;local corners={}
+  for _,v in ipairs(f[1])do
+   flat=flat and v[2]==p.wall
+   corners[(v[1]-48)..':'..(v[3]-80)]=true
+  end
+  soffit=soffit or (flat and corners['0:'..p.back] and corners[p.w..':'..p.back]
+   and corners['0:'..p.front] and corners[p.w..':'..p.front])
+ end
+ assert(soffit,'roof overhang is open from underneath')
+ if kind=='center' then
+  assert(p.roofEnd==53,'window band folded onto roof')
+  local corner=false;local recess=false
+  for _,f in ipairs(faces)do for _,v in ipairs(f[1])do
+   corner=corner or (v[1]==48 and v[2]==0 and v[3]==80+p.front-8)
+   recess=recess or (v[1]==48+33 and v[3]==80+p.front+p.projection-1)
+  end end
+  assert(corner,'native rounded facade still represented by flat rectangle')
+  assert(recess,'native doorway no longer recessed')
+ end
 end
 local rows={{0x28,0x29,0x2A,0x2B},{0x30,0x31,0x32,0x33},{0x38,0x39,0x3A,0x3B},{0x40,0x41,0x62,0x63}}
 local cells={}
@@ -60,3 +79,49 @@ assert(cap>0 and antenna>0,'connected native dome or antenna missing')
 local cornerCount=0;for _ in pairs(corners)do cornerCount=cornerCount+1 end
 assert(cornerCount==4,'tower podium did not fill all four square corners')
 print('PASS complete connected tower claim, mismatch isolation, closed dome and bounded source UVs')
+
+-- Roof opacity must not inherit the separate facade cutout, even for holes
+-- inside a row. A tiny image implementation exercises the real material path.
+local function imageData(w,h)
+ local pixels={}
+ return {getPixel=function(_,x,y)return unpack(pixels[y*w+x]or{0,0,0,0})end,
+ setPixel=function(_,x,y,...)pixels[y*w+x]={...}end,release=function()end}
+end
+love={image={newImageData=imageData},graphics={newImage=function(data)
+ data.setFilter=function()end;return data
+end}}
+local source=imageData(80,80)
+for y=0,79 do for x=0,79 do source:setPixel(x,y,.7,.2,.1,1)end end
+source:setPixel(0,20,.1,.8,.2,1)
+source:setPixel(10,20,0,0,0,0)
+local rows,slots={},{}
+for y=0,4 do rows[y+1]={};for x=0,4 do local n=y*5+x;rows[y+1][x+1]=n;slots[n]=n end end
+local mat=M.material({kind='center',width=5,depth=5,rows=rows,ts={cols=5,midToSlot=slots,imageData=source}})
+local _,_,_,facade=mat:getPixel(0,20)
+local _,_,_,edge=mat:getPixel(80,20)
+local _,_,_,hole=mat:getPixel(90,20)
+assert(facade==0 and edge==1 and hole==1,'facade mask leaked into solid roof')
+print('PASS opaque roof material preserves independent facade cutout')
+
+for y=0,63 do for x=0,63 do source:setPixel(x,y,.3,.45,.7,1)end end
+for y=2,5 do for x=0,63 do source:setPixel(x,y,.1,.8,.2,1)end end
+for y=37,41 do for x=0,63 do source:setPixel(x,y,.39,.39,.48,1)end end
+for y=30,41 do for _,x in ipairs({0,1,2,3,60,61,62,63})do source:setPixel(x,y,.85,.9,1,1)end end
+local hoenn={kind='mart',width=4,depth=4,rows=rows,ts={cols=5,midToSlot=slots,imageData=source},
+ custom={family='rse',back=2,roofEnd=42,wallBottom=63,bevel=3}}
+local hm=M.material(hoenn)
+local topR,topG,topB=hm:getPixel(80,3);assert(topB>topG and topB>topR,'rear roof contains surrounding grass')
+local r=hm:getPixel(64,32);assert(r<.55,'pale wall pixels remain on blue roof corners')
+r=hm:getPixel(64,40);assert(r==.39,'neutral roof outline retains facade corner')
+r=hm:getPixel(0,40);assert(r==.85,'roof cleanup changed original facade')
+print('PASS Hoenn roof corners exclude pale facade and retain neutral eave trim')
+
+local door=M.doorSurface({kind='center',cx=24,cy=22,width=5,depth=5},26,26)
+assert(door and door.w==14 and door.h==15 and door.sourceX==417 and door.sourceY==416)
+assert(door.vertices[1][3]==22*16+78+2-.95,'door animation detached from facade recess')
+assert(door.vertices[1][2]<16 and door.vertices[3][2]==0,'door became giant freestanding overlay')
+assert(not M.doorSurface({kind='center',cx=24,cy=22,width=5,depth=5},25,26),'animation claimed neighboring wall')
+local house={kind='house',cx=2,cy=4,width=5,depth=5,custom={back=2,roofEnd=54,wallBottom=79,bevel=3,openings={{48,57,65,78,door=true}}}}
+local hd=M.doorSurface(house,5,8)
+assert(hd and hd.w==17 and hd.h==21 and hd.vertices[1][2]==22 and hd.vertices[3][2]==1)
+print('PASS native door animation matches authored entrance dimensions and recess')

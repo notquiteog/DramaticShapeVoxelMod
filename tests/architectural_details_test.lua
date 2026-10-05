@@ -12,10 +12,10 @@ for _,n in pairs(edges)do assert(n==2,'open structural edge')end
 local minz,maxz=100,-100
 M.opening(function(v)for _,p in ipairs(v)do minz=math.min(minz,p[3]);maxz=math.max(maxz,p[3])end end,0,3,12,17,0,uv,uv)
 assert(minz<0 and maxz>1,'window needs a reveal and sill, not coincident cards')
-for _,style in ipairs({'gable','barrel'})do
+for _,style in ipairs({'gable','barrel','hipped_barrel'})do
  local top,faces=0,0
  M.roof({w=64,back=2,front=63,roofEnd=33,wall=30},style,13,function()return uv end,function(v)
-  faces=faces+1;for _,p in ipairs(v)do assert(p[2]>=28.8);top=math.max(top,p[2])end
+  faces=faces+1;for _,p in ipairs(v)do assert(p[2]>=28.8);top=math.max(top,p[2]);if style=='hipped_barrel' and p[3]>=63 then assert(p[2]<=30.05,'Hoenn front eave became a tall arched gable')end end
  end,uv)
  assert(top>=43 and faces>25,'authored roof missing rise or closed perimeter')
 end

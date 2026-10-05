@@ -1,3 +1,36 @@
+# Gen3 building silhouettes, source materials and native doors — 2026-10-05 (unreleased)
+
+Reworked the shared civic building renderer: closed roof soffits and independent
+opaque roof materials; removed facade/grass pixels from roof corners and empty
+rear rows; corrected FRLG Center roof/window boundary. Centers and Marts now
+have chamfered front corners. Authored doors/windows use native-art recesses,
+without added grey frames/sills. Center eaves use their roof palette. Hoenn
+Centers retain the rounded raised roof but slope down to a straight front eave
+instead of adding a tall solid arched front. Native emblem UV spacing follows
+the front slope length to avoid stretching the logo.
+
+Gen3 native opening/closing door frames now project into each known authored
+aperture, sharing its height, source crop, inset and terrain base. Frame timing,
+sound, warp logic and collision remain engine-owned. Unrecognized door recipes
+retain the earlier fallback and still need explicit review.
+
+Updated QA to official Gen1Recomp 0.3.52 (release SHA256 verified) and re-imported
+supplied LeafGreen/Emerald ROMs into isolated profiles for its new cache formats.
+No production save changes. Runtime: .scratch/runtime-0.3.52/engine. Coverage
+run.sh now uses it. Official source-tag test utilities supplement the packaged
+payload; no engine production code changes.
+
+Reviewed native art and production renders in Viridian, Littleroot and Oldale:
+12 building placements, four elevations plus close eye-height views; native
+opening/open/closing sequences on authored doors. Evidence:
+.scratch/coverage-20261004/results/{leafgreen,emerald}-building-doors.
+Full 0.3.52 suite: 173 passed, 0 failed, 56 skipped
+(.scratch/civic-20261005-doors-tests.log). Regression coverage includes roof
+opacity/material isolation, corner bounds, straight Hoenn front eave and door
+projection. This is a reviewed subset, not an all-building/AAA quality claim.
+Pallet's separate renderer, other regional variants and Gen1/Gen2 remain part
+of the broader visual audit. Parity/UI agents continue independently.
+
 # Mauville wall machines and bins — 2026-10-05 (unreleased)
 
 Two native wall-machine drawings now use independent closed cabinets, upper

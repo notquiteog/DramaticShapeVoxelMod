@@ -111,14 +111,41 @@ function M.profile(g)
   return {w=w,h=80,back=12,front=72,wall=28,roofEnd=48,wallTop=48,wallBottom=72,
    doorLeft=40,doorRight=72,doorTop=48,doorBottom=80,doorHeight=28,projection=8,bevel=3}
  elseif g.kind=='center' and g.depth==4 then
-  return {w=w,h=64,back=0,front=62,wall=24,roofEnd=40,wallTop=40,wallBottom=63,doorLeft=24,doorRight=56,doorTop=28,doorBottom=63,doorHeight=32,projection=2,bevel=6}
+  return {w=w,h=64,back=0,front=62,wall=26,roofEnd=37,wallTop=37,wallBottom=63,doorLeft=24,doorRight=56,doorTop=28,doorBottom=63,doorHeight=32,projection=2,bevel=6}
  elseif g.kind=='center' then
-  return {w=w,h=80,back=11,front=78,wall=24,roofEnd=56,wallTop=56,wallBottom=79,
+  return {w=w,h=80,back=11,front=78,wall=26,roofEnd=53,wallTop=53,wallBottom=79,
    doorLeft=24,doorRight=56,doorTop=44,doorBottom=79,doorHeight=32,projection=2,bevel=6}
  else
   return {w=w,h=64,back=3,front=62,wall=20,roofEnd=44,wallTop=44,wallBottom=63,
    doorLeft=16,doorRight=48,doorTop=28,doorBottom=63,doorHeight=32,projection=2,bevel=6}
  end
+end
+-- Match an animated native door to its authored facade aperture. Coordinates
+-- returned here are shared with the fixed mesh, so animation never grows into
+-- a freestanding 32x48 card or floats in front of the entrance.
+function M.doorSurface(g,tx,ty)
+ local p=M.profile(g);local openings=g.custom and g.custom.openings
+ if not openings then
+  if not g.custom and (g.kind=='center' or g.kind=='mart')then
+   local offset=g.kind=='center' and g.depth~=4 and 16 or 0
+   openings={{33,(g.kind=='center' and 48 or 47)+offset,47,63+offset,door=true}}
+  elseif g.custom and g.custom.family=='rse' and p.w==64 and p.h==64
+   and (g.kind=='mart' or g.kind=='center') and g.rows[4]
+   and g.rows[4][2]==(g.kind=='mart' and 0x41 or 0x61)
+   and g.rows[4][3]==(g.kind=='mart' and 0x42 or 0x62)then
+   openings={{17,45,31,61,door=true}}
+  end
+ end
+ for _,o in ipairs(openings or {})do if o.door then
+  local sx,sy=(tx-g.cx)*16,(ty-g.cy)*16
+  if sx<o[3] and sx+16>o[1] and sy<o[4] and sy+16>o[2]then
+   local top=p.doorHeight*(p.doorBottom-o[2])/(p.doorBottom-p.doorTop)
+   local bottom=p.doorHeight*(p.doorBottom-o[4])/(p.doorBottom-p.doorTop)
+   local x,z=g.cx*16,g.cy*16+p.front+p.projection-.95
+   return {w=o[3]-o[1],h=o[4]-o[2],sourceX=x+o[1],sourceY=g.cy*16+o[2],base=g.groundHeight or 0,
+    vertices={{x+o[1],top,z},{x+o[3],top,z},{x+o[3],bottom,z},{x+o[1],bottom,z}}}
+  end
+ end end
 end
 local function sourcePixel(g,x,y)
  local mid=g.rows[math.floor(y/16)+1][math.floor(x/16)+1]
@@ -150,23 +177,53 @@ function M.material(g)
   if vent and x>=vent[1]and x<vent[3]and y>=vent[2]and y<vent[4]then rr,gg,bb,aa=sourcePixel(g,64,y)end
   data:setPixel(x+p.w,y,rr,gg,bb,aa)
  end end
+ -- Exterior masking is for the cutout facade, never holes in a solid roof.
+ -- Fill masked pixels from the nearest retained roof pixel on the
+ -- same native row, preserving stripe alignment and leaving facade alpha alone.
+ for yy=p.back,p.roofEnd-1 do
+  local valid={}
+  for xx=0,p.w-1 do local _,_,_,a=data:getPixel(p.w+xx,yy)
+   if a>.9 then valid[#valid+1]=xx end
+  end
+  for xx=0,p.w-1 do
+   local _,_,_,a=data:getPixel(p.w+xx,yy)
+   if a<.9 and #valid>0 then
+    local nearest=valid[1]
+    for _,v in ipairs(valid)do if math.abs(v-xx)<math.abs(nearest-xx)then nearest=v end end
+    data:setPixel(p.w+xx,yy,data:getPixel(p.w+nearest,yy))
+   end
+  end
+ end
  -- Hoenn's rounded roof drawings include scenery in their upper corners.
  -- The solid roof prism must use roof paint there, never grass or paving.
  -- Extend the actual red/blue roof stripe on each row into those corners;
  -- facade pixels in the first half of the material remain untouched.
- if g.custom and g.custom.family=='rse' and (g.kind=='center' or g.kind=='mart')then
+ if g.kind=='center' or g.kind=='mart' then
+  local painted,empty={},{}
   for yy=p.back,p.roofEnd-1 do
    local left,right
    for xx=0,p.w-1 do
-    local rr,gg,bb,aa=sourcePixel(g,xx,yy)
+    local rr,gg,bb,aa=data:getPixel(p.w+xx,yy)
     local paint=g.kind=='center' and rr>gg+.06 and rr>bb+.04
-     or g.kind=='mart' and bb>rr+.06 and bb>gg+.025
+     or g.kind=='mart' and rr<.55 and bb>rr+.18 and bb>gg+.025
     if aa>.9 and paint then left=left or xx;right=xx end
    end
    if left and right then
-    for xx=0,left-1 do data:setPixel(p.w+xx,yy,sourcePixel(g,left,yy))end
-    for xx=right+1,p.w-1 do data:setPixel(p.w+xx,yy,sourcePixel(g,right,yy))end
-   end
+    painted[#painted+1]=yy
+    for xx=0,left-1 do data:setPixel(p.w+xx,yy,data:getPixel(p.w+left,yy))end
+    for xx=right+1,p.w-1 do data:setPixel(p.w+xx,yy,data:getPixel(p.w+right,yy))end
+   elseif yy>=p.roofEnd-5 then
+    -- Neutral eave-outline rows continue the central trim, not white walls.
+    for xx=0,7 do data:setPixel(p.w+xx,yy,sourcePixel(g,12,yy))end
+    for xx=p.w-8,p.w-1 do data:setPixel(p.w+xx,yy,sourcePixel(g,p.w-13,yy))end
+   else empty[#empty+1]=yy end
+  end
+  -- Rounded native silhouettes can start below the bounding rectangle.
+  -- Empty rear rows must continue roof stripes, never the surrounding grass.
+  for _,yy in ipairs(empty)do
+   local nearest
+   for _,row in ipairs(painted)do if not nearest or math.abs(row-yy)<math.abs(nearest-yy)then nearest=row end end
+   if nearest then for xx=0,p.w-1 do data:setPixel(p.w+xx,yy,data:getPixel(p.w+xx,nearest))end end
   end
  end
  -- Isolate the raised emblem from the roof surrounding it. Walk inward
@@ -243,26 +300,67 @@ function M.append(g,emit)
  local function uv(l,t,r,b)return {{l/(p.w*2+4),t/p.h},{r/(p.w*2+4),t/p.h},{r/(p.w*2+4),b/p.h},{l/(p.w*2+4),b/p.h}}end
  local wall,trim=uv(p.w*2+.5,.5,p.w*2+.5,.5),uv(p.w*2+2.5,.5,p.w*2+2.5,.5)
  local function face(v,tex,shade)emit(v,tex,shade or 1)end
+ local civicCorners=(g.kind=='center' or g.kind=='mart') and p.w>=64
+ local sideFront=p.front-(civicCorners and 6 or 0)
+ local function facadeFace(v,tex,shade)
+  if civicCorners then
+   for _,q in ipairs(v)do
+    local xx=q[1]-x
+    q[3]=q[3]-math.max(0,8-xx,xx-(p.w-8))
+   end
+  end
+  face(v,tex,shade)
+ end
  local function front(l,r,sy,ey,height,depth)
   local openings=g.custom and g.custom.openings
-  if not openings then
-   face({{x+l,height,z+depth},{x+r,height,z+depth},{x+r,0,z+depth},{x+l,0,z+depth}},uv(l+.05,sy+.05,r-.05,ey-.05));return
+  -- Hoenn service buildings reuse this exact two-cell sliding-door drawing.
+  -- Match its native cells, not a generic opening on every custom facade.
+  if not openings and g.custom and g.custom.family=='rse' and p.w==64 and p.h==64
+   and g.rows[4] and g.rows[4][2]==(g.kind=='mart' and 0x41 or 0x61)
+   and g.rows[4][3]==(g.kind=='mart' and 0x42 or 0x62)
+   and (g.kind=='mart' or g.kind=='center')then
+   openings={{17,45,31,61,door=true}}
+  end
+  if not g.custom and (g.kind=='center' or g.kind=='mart')then
+   local offset=g.kind=='center' and g.depth~=4 and 16 or 0
+   local candidates=g.kind=='center' and {
+    {10,37+offset,23,43+offset},{56,37+offset,69,43+offset},
+    {33,48+offset,47,63+offset,door=true},
+   }or{{33,47,47,63,door=true}}
+   openings={}
+   for _,o in ipairs(candidates)do
+    if o[1]>=l and o[3]<=r and o[2]>=sy and o[4]<=ey then openings[#openings+1]=o end
+   end
+   if #openings==0 then openings=nil end
   end
   local xs,ys={l,r},{sy,ey}
-  for _,o in ipairs(openings)do xs[#xs+1]=o[1];xs[#xs+1]=o[3];ys[#ys+1]=o[2];ys[#ys+1]=o[4]end
+  if civicCorners then
+   for _,cut in ipairs({8,p.w-8})do if cut>l and cut<r then xs[#xs+1]=cut end end
+  end
+  for _,o in ipairs(openings or {})do xs[#xs+1]=o[1];xs[#xs+1]=o[3];ys[#ys+1]=o[2];ys[#ys+1]=o[4]end
   table.sort(xs);table.sort(ys)
   local function y(v)return height*(ey-v)/(ey-sy)end
   for iy=1,#ys-1 do for ix=1,#xs-1 do
    local a,b,c,d=xs[ix],xs[ix+1],ys[iy],ys[iy+1];local hole=false
-   for _,o in ipairs(openings)do if a>=o[1] and b<=o[3] and c>=o[2] and d<=o[4]then hole=true end end
-   if b>a and d>c and not hole then face({{x+a,y(c),z+depth},{x+b,y(c),z+depth},{x+b,y(d),z+depth},{x+a,y(d),z+depth}},uv(a+.03,c+.03,b-.03,d-.03))end
+   for _,o in ipairs(openings or {})do if a>=o[1] and b<=o[3] and c>=o[2] and d<=o[4]then hole=true end end
+   if b>a and d>c and not hole then facadeFace({{x+a,y(c),z+depth},{x+b,y(c),z+depth},{x+b,y(d),z+depth},{x+a,y(d),z+depth}},uv(a+.03,c+.03,b-.03,d-.03))end
   end end
+  if not openings then return end
   local function localFace(v,tex,shade)
    local out={};for i,q in ipairs(v)do out[i]={q[1]+x,q[2],q[3]+z+depth}end;face(out,tex,shade)
   end
   for _,o in ipairs(openings)do
-   Architecture.opening(localFace,o[1],y(o[4]),o[3],y(o[2]),-.8,trim,uv(o[1]+.05,o[2]+.05,o[3]-.05,o[4]-.05),o.door,'native')
-   if o.door then Architecture.box(localFace,o[1]-2,0,-1,o[3]+2,.8,1,trim)end
+   do
+    -- The native drawing already contains the door/window surround. Recess
+    -- the pane into it; no second grey frame or projecting concrete sill.
+    local a,b,top,bottom=o[1],o[3],y(o[2]),y(o[4])
+    localFace({{a,top,-1},{b,top,-1},{b,bottom,-1},{a,bottom,-1}},uv(a+.05,o[2]+.05,b-.05,o[4]-.05))
+    localFace({{a,top,0},{a,top,-1},{a,bottom,-1},{a,bottom,0}},uv(a-.45,o[2]+.05,a-.05,o[4]-.05),.8)
+    localFace({{b,top,-1},{b,top,0},{b,bottom,0},{b,bottom,-1}},uv(b+.05,o[2]+.05,b+.45,o[4]-.05),.8)
+    localFace({{a,top,0},{b,top,0},{b,top,-1},{a,top,-1}},uv(a+.05,o[2]-.45,b-.05,o[2]-.05),.85)
+    localFace({{a,bottom,-1},{b,bottom,-1},{b,bottom,0},{a,bottom,0}},uv(a+.05,o[4]-.45,b-.05,o[4]-.05))
+
+   end
   end
  end
  if p.doorLeft>0 then front(0,p.doorLeft,p.wallTop,p.wallBottom,p.wall,p.front)end
@@ -270,7 +368,7 @@ function M.append(g,emit)
  front(p.doorLeft,p.doorRight,p.doorTop,p.doorBottom,p.doorHeight,p.front+p.projection)
  -- Closed recessed body and entrance cheeks, with no upright floor pixels.
  for _,sx in ipairs({2,p.w-2})do
-  face({{x+sx,p.wall,z+p.back},{x+sx,p.wall,z+p.front},{x+sx,0,z+p.front},{x+sx,0,z+p.back}},wall,.84)
+  face({{x+sx,p.wall,z+p.back},{x+sx,p.wall,z+sideFront},{x+sx,0,z+sideFront},{x+sx,0,z+p.back}},wall,.84)
  end
  face({{x+p.w-2,p.wall,z+p.back},{x+2,p.wall,z+p.back},{x+2,0,z+p.back},{x+p.w-2,0,z+p.back}},wall,.8)
  for _,sx in ipairs({p.doorLeft,p.doorRight})do
@@ -282,10 +380,14 @@ function M.append(g,emit)
   return p.wall+p.bevel*math.min(1,xx/5,(p.w-xx)/5,(zz-p.back)/5,(p.front-zz)/7)
  end
  if g.custom and g.custom.roofShape then
-  Architecture.roof(p,g.custom.roofShape,g.custom.roofRise,uv,function(v,t,shade)
+  local style=g.kind=='center' and g.custom.family=='rse' and g.custom.roofShape=='barrel' and 'hipped_barrel' or g.custom.roofShape
+  Architecture.roof(p,style,g.custom.roofRise,uv,function(v,t,shade)
    local out={};for i,q in ipairs(v)do out[i]={x+q[1],q[2],z+q[3]}end;face(out,t,shade)
   end,trim)
  else
+ -- Seal the soffit of the chamfered roof above the recessed wall shell.
+ -- Without this face, low side views see sky through the overhang cavity.
+ face({{x,p.wall,z+p.front},{x+p.w,p.wall,z+p.front},{x+p.w,p.wall,z+p.back},{x,p.wall,z+p.back}},trim,.68)
  local xs={0,5,p.w-5,p.w};local zs={p.back,p.back+5,p.front-7,p.front}
  for iz=1,3 do for ix=1,3 do
   local l,r,t,b=xs[ix],xs[ix+1],zs[iz],zs[iz+1]
@@ -298,14 +400,15 @@ function M.append(g,emit)
  -- underside and front/back lips as well as both side edges.
  if not (g.custom and (g.custom.geometry=='tower' or g.custom.roofShape)) then
   local Eaves=V and V.require('RoofEaves') or assert(loadfile('lib/RoofEaves.lua'))()
-  local function edge(a,b,dx,dz) Eaves.edge(a,b,dx,dz,trim,face)end
+  local eave=g.kind=='center' and uv(p.w+12.1,p.roofEnd-8.1,p.w+12.2,p.roofEnd-8.2) or trim
+  local function edge(a,b,dx,dz) Eaves.edge(a,b,dx,dz,eave,face)end
   edge({x,height(0,p.back),z+p.back},{x+p.w,height(p.w,p.back),z+p.back},0,-1.5)
   edge({x+p.w,height(p.w,p.front),z+p.front},{x,height(0,p.front),z+p.front},0,1.5)
   edge({x,height(0,p.front),z+p.front},{x,height(0,p.back),z+p.back},-1,0)
   edge({x+p.w,height(p.w,p.back),z+p.back},{x+p.w,height(p.w,p.front),z+p.front},1,0)
   for _,s in ipairs({{0,p.back,-1,-1.5},{p.w,p.back,1,-1.5},
     {0,p.front,-1,1.5},{p.w,p.front,1,1.5}})do
-   Eaves.corner({x+s[1],height(s[1],s[2]),z+s[2]},s[3],s[4],trim,face)
+   Eaves.corner({x+s[1],height(s[1],s[2]),z+s[2]},s[3],s[4],eave,face)
   end
  end
  local chimney=g.custom and g.custom.chimney
@@ -347,7 +450,7 @@ function M.append(g,emit)
  local window=M.window(g)
  for yy=5,(boarded and 0 or p.wall-3),6 do
   for _,sx in ipairs({1.94,p.w-1.94})do
-   face({{x+sx,yy+.22,z+p.back},{x+sx,yy+.22,z+p.front},{x+sx,yy,z+p.front},{x+sx,yy,z+p.back}},wall,.78)
+   face({{x+sx,yy+.22,z+p.back},{x+sx,yy+.22,z+sideFront},{x+sx,yy,z+sideFront},{x+sx,yy,z+p.back}},wall,.78)
   end
   face({{x+p.w-2,yy+.22,z+p.back-.02},{x+2,yy+.22,z+p.back-.02},{x+2,yy,z+p.back-.02},{x+p.w-2,yy,z+p.back-.02}},wall,.74)
  end
@@ -372,7 +475,7 @@ function M.append(g,emit)
  -- Thin foundation/eave courses and side windows continue the facade.
  for _,sx in ipairs({boarded and 1.72 or 1.95,p.w-(boarded and 1.72 or 1.95)})do
   for _,y in ipairs({1,p.wall-1})do
-   face({{x+sx,y+1,z+p.back},{x+sx,y+1,z+p.front},{x+sx,y,z+p.front},{x+sx,y,z+p.back}},trim,.88)
+   face({{x+sx,y+1,z+p.back},{x+sx,y+1,z+sideFront},{x+sx,y,z+sideFront},{x+sx,y,z+p.back}},trim,.88)
   end
  end
 end

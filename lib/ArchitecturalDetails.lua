@@ -35,17 +35,30 @@ function M.roof(p,style,rise,uv,emit,trim)
  local w,n,f=p.w,p.back,p.front
  local h=p.wall;local t=1.2
  local roofPaint=uv(p.w+w*.25,p.back+12,p.w+w*.25,p.back+12)
- local axis=style=='barrel' and 'x' or 'z'
+ local axis=(style=='barrel' or style=='hipped_barrel') and 'x' or 'z'
  local profile=axis=='x' and {{0,0},{8,rise*.65},{18,rise},{w-18,rise},{w-8,rise*.65},{w,0}}
   or {{n,0},{n+(f-n)*.22,rise},{f,0}}
  for i=1,#profile-1 do
   local a,b=profile[i],profile[i+1]
   local al,bl=a[1],b[1];local ah,bh=h+a[2],h+b[2]
   if axis=='x' then
-   emit({{al,ah,n},{bl,bh,n},{bl,bh,f},{al,ah,f}},uv(p.w+al,p.back,p.w+bl,p.roofEnd),1)
-   for _,z in ipairs({n,f})do
-    emit({{al,ah,z},{bl,bh,z},{bl,h-t,z},{al,h-t,z}},roofPaint,z==n and .75 or .94)
-    Eaves.edge({al,ah,z},{bl,bh,z},0,z==n and -1.5 or 1.5,roofPaint,emit)
+   if style=='hipped_barrel' then
+    -- Hoenn Centers have a rounded raised rear crown but a straight low
+    -- front eave. Carry the roof down over the entrance, not a giant solid
+    -- semicircular gable replacing the native lower roof band.
+    local shoulder=f-math.min(18,(f-n)*.36)
+    local sourceShoulder=p.roofEnd-math.min(p.roofEnd-p.back-1,math.sqrt((f-shoulder)^2+rise^2))
+    emit({{al,ah,n},{bl,bh,n},{bl,bh,shoulder},{al,ah,shoulder}},uv(p.w+al,p.back,p.w+bl,sourceShoulder),1)
+    emit({{al,ah,shoulder},{bl,bh,shoulder},{bl,h,f},{al,h,f}},uv(p.w+al,sourceShoulder,p.w+bl,p.roofEnd),.94)
+    emit({{al,ah,n},{bl,bh,n},{bl,h-t,n},{al,h-t,n}},roofPaint,.75)
+    Eaves.edge({al,ah,n},{bl,bh,n},0,-1.5,roofPaint,emit)
+    Eaves.edge({al,h,f},{bl,h,f},0,1.5,roofPaint,emit)
+   else
+    emit({{al,ah,n},{bl,bh,n},{bl,bh,f},{al,ah,f}},uv(p.w+al,p.back,p.w+bl,p.roofEnd),1)
+    for _,z in ipairs({n,f})do
+     emit({{al,ah,z},{bl,bh,z},{bl,h-t,z},{al,h-t,z}},roofPaint,z==n and .75 or .94)
+     Eaves.edge({al,ah,z},{bl,bh,z},0,z==n and -1.5 or 1.5,roofPaint,emit)
+    end
    end
   else
    local sy=i==1 and p.back or p.back+8;local ey=i==1 and p.back+8 or p.roofEnd
