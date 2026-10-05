@@ -150,9 +150,10 @@ function M.align(regions)
  end
  for _,r in ipairs(regions)do r.floorOffset=r.floorOffset or 0 end
 end
-function M.at(f,x,z)
+function M.at(f,x,z,layer)
  local c=f and f.cells[key(math.floor(x/16),math.floor(z/16))]
  if not c then return 0 end
+ if c.underpass and layer==c.underpass.layer then return c.underpass.height end
  if c.high then
   local band=math.min(3,math.max(0,math.floor(z%16/4)))
   return c.reverse and c.low+(c.high-c.low)*(band+1)/4 or c.high-(c.high-c.low)*band/4

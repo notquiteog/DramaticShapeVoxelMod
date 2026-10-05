@@ -143,7 +143,8 @@ function ChunkMesher.visualObjectVisible()
   error("BattleScene must not apply overworld replacement claims", 0)
 end
 
-local VoxelScene = {}
+local VoxelScene = {
+  drawWater=function(draws,_,draw)for _,d in ipairs(draws)do Voxel3D.draw(d.mesh,d.texture,d.model)end end,}
 function VoxelScene.prefetch(state)
   check(state.map == current, "current-map prefetch receives the overworld state")
   return currentTerrain, { neighborTerrain }, currentWater, { neighborWater },
@@ -182,6 +183,7 @@ local StadiumModels = {
   draw = function() return true end,
 }
 local DayNight = {
+  isOpenForest = function() return false end,
   applyRig = function() end,
   tint = function() return { 1, 1, 1 } end,
   isCanopy = function() return false end,
@@ -235,6 +237,7 @@ function namespace.require(name)
   } end
   if name == 'CavePerimeter' then return {draw = function() end} end
   if name == 'WorldUnderlay' then return {
+    drawWater=function()end,
     drawInterior = function() end, resolve = function() return nil end,
   } end
   if name == 'ForestAtmos' or name == 'ForestDressing' or name == 'Backdrop'

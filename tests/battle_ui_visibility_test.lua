@@ -5,6 +5,7 @@ V.require = function(name) return assert(modules[name], name) end
 modules.ModSetting = assert(loadfile("lib/ModSetting.lua"))(V)
 local ui = assert(loadfile("lib/UiBackplates.lua"))(V)
 modules.UiBackplates = ui
+modules.ModernBattleUI = { providerEnabled = function() return true end }
 local claimed = false
 package.loaded["src.mods.Runtime"] = {
   wantsHook = function() return claimed end,

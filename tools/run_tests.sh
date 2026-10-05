@@ -22,7 +22,9 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$root" || exit 2
 engine="${1:-}"
 [ -n "$engine" ] && export LUA_PATH="$engine/?.lua;$engine/?/init.lua;;"
+[ -n "$engine" ] && export ASTRA_ENGINE="$engine"
 export DS_MOD_PATH=.
+export ASTRA_CANDIDATE="${ASTRA_CANDIDATE:-$root}"
 pass=0; fail=0; skip=0
 for t in tests/*_test.lua; do
   name=$(basename "$t")
@@ -31,15 +33,6 @@ for t in tests/*_test.lua; do
   rc=$?
   needs_dataset=no
   needs_engine=no
-  # The astra_* A/B suites read ASTRA_FULL_BASELINE / ASTRA_GENERATED with a
-  # bare `assert(...)` and no message, so the only reliable signal is the file
-  # name plus the env being absent.
-  case "$name" in
-    astra_*) [ -z "${ASTRA_GENERATED:-}" ] && needs_dataset=yes ;;
-  esac
-  grep -q "ASTRA_GENERATED required" "$log" && needs_dataset=yes
-  grep -q "ASTRA_FULL_BASELINE" "$log" && needs_dataset=yes
-  grep -q "cannot open data/palettes_gbc" "$log" && needs_dataset=yes
   # These use the ENGINE's tests.modkit, which lives in the engine checkout and
   # is not part of this repository. Without an engine root they cannot run at
   # all, which is a missing harness rather than a broken suite.
@@ -47,16 +40,20 @@ for t in tests/*_test.lua; do
      || grep -q "module 'tests.harness' not found" "$log"; then
     needs_engine=yes
   fi
-  if [ "$needs_dataset" = yes ]; then
-    printf 'SKIP  %-52s (needs a generated dataset)\n' "$name"
+  missing=""
+  if [ $rc -ne 0 ] && ! grep -qE '^FAIL' "$log"; then
+    missing=$(python3 tools/test_prerequisites.py "$log")
+    [ -n "$missing" ] && needs_dataset=yes
+  fi
+  if [ $rc -eq 0 ] && ! grep -qE '^FAIL' "$log"; then
+    printf 'PASS  %-52s %s\n' "$name" "$(grep -oE '[0-9]+/[0-9]+ checks passed' "$log" | tail -1)"
+    pass=$((pass + 1))
+  elif [ "$needs_dataset" = yes ]; then
+    printf 'SKIP  %-52s (%s)\n' "$name" "$missing"
     skip=$((skip + 1))
   elif [ "$needs_engine" = yes ] && [ -z "$engine" ]; then
     printf 'SKIP  %-52s (needs the engine test harness)\n' "$name"
     skip=$((skip + 1))
-  elif [ $rc -eq 0 ] && ! grep -qE '^FAIL' "$log"; then
-    printf 'PASS  %-52s %s\n' "$name" \
-      "$(grep -oE '[0-9]+/[0-9]+ checks passed' "$log" | tail -1)"
-    pass=$((pass + 1))
   elif [ $rc -ne 0 ] && [ -z "$engine" ] \
        && grep -qE "module 'src\.|no file '.*/src/|src\.core|src\.world" "$log"; then
     printf 'SKIP  %-52s (needs an engine root)\n' "$name"
@@ -66,30 +63,13 @@ for t in tests/*_test.lua; do
     grep -E '^FAIL' "$log" | head -3 | sed 's/^/        /'
     fail=$((fail + 1))
   fi
+  if [ -n "${TEST_LOG_DIR:-}" ]; then mkdir -p "$TEST_LOG_DIR"; cp "$log" "$TEST_LOG_DIR/$name.log"; fi
   rm -f "$log"
 done
-# Suite-wide failures already known at this commit. The suite has a long tail of
-# red -- astra A/B harnesses that need a generated dataset, module-drift fixtures
-# and a handful of unimplemented features -- and this runner must not be the
-# thing that goes green by deleting them. So the baseline is asserted as a
-# CEILING: a new failure fails the run, a fixed one only lowers the count.
-#
-#   tools/TEST_BASELINE  "38 known-failing suites"
-# Regenerate deliberately, with the reason for each removal recorded in
-# PROJECT_HANDOFF.md, rather than by re-running until it is small.
-# The count is the LAST non-comment, non-blank line, so the prose above it
-# (which is full of numbers) cannot be mistaken for it.
-baseline=0
-if [ -f tools/TEST_BASELINE ]; then
-  baseline=$(grep -vE '^[[:space:]]*(#|$)' tools/TEST_BASELINE | tail -1 | tr -cd '0-9')
-  baseline=${baseline:-0}
-fi
-echo "== $pass passed, $fail failed, $skip skipped (baseline allows $baseline) =="
-if [ "$fail" -gt "$baseline" ]; then
-  echo "::error::$fail suites failed, $baseline are known-failing: this run introduced new failures"
+# Missing external resources are explicit skips; every executable failure is fatal.
+echo "== $pass passed, $fail failed, $skip skipped =="
+if [ "$fail" -ne 0 ]; then
+  echo "::error::$fail suites failed"
   exit 1
-fi
-if [ "$fail" -lt "$baseline" ]; then
-  echo "::notice::$fail failed, below the baseline of $baseline -- update tools/TEST_BASELINE"
 fi
 exit 0

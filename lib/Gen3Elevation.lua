@@ -26,7 +26,7 @@ function M.field(def)
   local shape=shapes.of(spec.primary,spec.secondary,raw.mid,beh,raw.coll)
   local step=shape.kind=='steps';local jump=beh and beh>=0x38 and beh<=0x3F
   return {floor=raw.coll~=7 and not step and not jump,step=step,drop=drop[beh],layer=raw.elev,behavior=beh,
-   kind=shape.kind,stairUpper=def.id and def.id:sub(1,3)=='EM_' and beh==0xc,seed=shape.kind~='water' and (deck or (outdoor or cave)and raw.elev==4)and 6 or 0}
+   mid=raw.mid,kind=shape.kind,stairUpper=def.id and def.id:sub(1,3)=='EM_' and beh==0xc,seed=spec.secondary=='fortree' and beh==0x170 and raw.elev==15 and 32 or shape.kind~='water' and (deck or (outdoor or cave)and raw.elev==4)and 6 or 0}
  end,function(a,b,d)
   local layer=a.layer==b.layer or a.layer==0 or b.layer==0 or a.layer==15 or b.layer==15
   -- A variable-layer bridge is a deck, not a doorway joining both the
@@ -37,13 +37,35 @@ function M.field(def)
   end
   return layer and (a.kind=='water')==(b.kind=='water') and not blocked[d][a.behavior] and not blocked[opposite[d]][b.behavior]
  end,6,V.require('BuildBudget').tick)
+ -- Fortree's native bridge behavior gets two cells of clearance so an
+ -- upright character/camera can pass underneath the deck.
+ -- A Fortree bridge keeps its deck and a separate, proven crossing below.
+ -- Require matching landings on both sides; never invent an underpass from
+ -- a collision-layer number alone. Store native floor art for the lower plane.
+ if spec.secondary=='fortree' then
+  for _,c in pairs(f.cells)do if c.layer==15 and c.behavior==0x170 then
+   local function bank(dy)
+    local y=c.y+dy
+    while y>=0 and y<f.height do
+     local n=f.cells[Levels.key(c.x,y)]
+     if n.layer~=15 then return n end
+     y=y+dy
+    end
+   end
+   local a,b=bank(-1),bank(1)
+   if a and b and a.floor and b.floor and a.layer==b.layer and a.layer~=0
+     and a.kind==b.kind and a.height==b.height and a.height<c.height then
+    c.underpass={layer=a.layer,height=a.height,mid=a.mid,kind=a.kind}
+   end
+  end end
+ end
  f.signature=signature
  cache[l]=f;return f
 end
 function M.cell(def,x,y)
  local f=M.field(def);return f and f.cells[Levels.key(x,y)]
 end
-function M.at(def,x,z)return Levels.at(M.field(def),x,z)end
+function M.at(def,x,z,layer)return Levels.at(M.field(def),x,z,layer)end
 function M.bind(cells,regions)
  for _,region in ipairs(regions)do region.floorField=M.field(region.def)end
  Levels.align(regions)

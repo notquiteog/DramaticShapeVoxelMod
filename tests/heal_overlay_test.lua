@@ -326,7 +326,7 @@ T.eq(select(3, HealOverlay.depthPoint(onPanel,
 
 -- an ENGINE file, so relative to the repo root this runs from, not to
 -- ROOT, which is where the MOD lives and is not the same place
-local pack = dofile("data/palettes_gbc.lua")
+local pack = dofile(assert(os.getenv("ASTRA_ENGINE"), "ASTRA_ENGINE required") .. "/data/palettes_gbc.lua")
 local palette, group = HealOverlay.objPalette(pack and pack.world)
 T.check(palette ~= nil, "the ADVANCED pack yields an object palette")
 T.eq(group, pack.world.spriteAssignment[0],

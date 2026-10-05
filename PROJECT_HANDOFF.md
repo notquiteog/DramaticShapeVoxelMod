@@ -1,3 +1,46 @@
+# Terrain support and strict test baseline — 2026-10-05 (unreleased)
+
+Fortree's native 0x170 bridge cells now have a raised deck, underside and thin
+fascia, with a separate lower floor only when matching walkable banks prove
+an underpass. Native player/NPC elevation selects deck versus lower support;
+first-person and orbit cameras follow that support. Collision and gameplay
+remain engine-owned. Ordinary variable-layer tiles cannot invent crossings.
+Gen1/2 terrain algorithms are unchanged. Fixed TerrainAtlas to consume the
+engine's public animClock API when provider wrappers obscure tick's internals.
+Water shaders qualify return/arguments consistently and retry the unqualified
+signature when the backend rejects explicit precision.
+
+Validation against official Gen1Recomp v0.3.51 source/runtime:
+- Full suite with engine and existing Yellow generated data: 156 PASS,
+  zero FAIL, 56 SKIP. Skips require historical snapshots/source atlases, not
+  replacement snapshots generated from the candidate. Logs:
+  .scratch/terrain-20261005/final.log and logs-final/. No failing-test allowance.
+- The 1,173-assertion SDK suite now compiles within LuaJIT's local limit and
+  exercises current menu/default/provider contracts. Fixed obsolete fixture
+  dependencies across companion, scenery, animation, HUD and geometry suites.
+  No feature was disabled in production to satisfy a test.
+- Engine-only suite runs in CI using pinned v0.3.51; resource skips are explicit,
+  actual failed assertions fail CI. All 678 production/test Lua sources in the
+  compile sweep passed; whitespace clean.
+- Native census: Crystal 388 maps / 17,530 raised cells / 69 flights;
+  FireRed and LeafGreen each 426 / 7,138 / 293; Emerald 519 / 21,862 / 317.
+  All four report zero uphill topology conflicts. This measures topology,
+  not visual approval of every tile.
+- Native walking: Crystal Dance Theater 0->6; LeafGreen Mt Ember 24->36.
+  Both max per-frame support delta 1.5. LeafGreen first-person camera 49.5
+  equals 36 terrain + 13.5 eye height. Inspected raised-floor first-person
+  and Emerald Route119 bridge underside/deck screenshots.
+
+Repeatable drivers: tests/elevation_review_driver.lua accepts
+TERRAIN_CENSUS_ONLY=1; tests/elevation_walk_driver.lua; and
+ tools/qa/bridge-underpass.lua. Use isolated *-qa profiles only.
+Evidence in .scratch/coverage-20261004/results/*-terrain-census-final,
+*-terrain-walk-final and emerald-bridge-review. No user saves changed.
+The bridge driver places fixture actors on both layers; it does not certify
+native traversal, companion followers, replay or battle placement under bridges.
+Those consumers still need layer-aware integration review. No claim of exhaustive
+visual perfection or multiplayer terrain verification. No release/cart pins changed.
+
 # Shared Gen3 furniture footprint audit — 2026-10-05 (unreleased)
 
 Corrected 16 authored component assemblies: Center PCs/medicine shelves,

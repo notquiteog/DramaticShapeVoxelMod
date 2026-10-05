@@ -26,11 +26,11 @@ for key in pairs(cells) do local c=assert(Shape.column(cells,key));assert(c.firs
 local Pairs=assert(loadfile(root..'/lib/Gen3Tilesets.lua'))()
 local generated=Pairs.resolve('general__rom_opaque',{})
 assert(generated.primary=='general' and generated.secondary=='rom_opaque')
-assert(not Pairs.supports({midLayout={pair='general__rom_opaque'},environment='INDOOR'},generated))
+assert(Pairs.supports({midLayout={pair='general__rom_opaque'},environment='INDOOR'},generated))
 assert(Pairs.supports({midLayout={pair='general__rom_opaque'},environment='TOWN'},generated))
-assert(not Pairs.supports({midLayout={},environment='TOWN',mapType=4},generated),'cave header lost to cached environment default')
-assert(not Pairs.supports({midLayout={},environment='TOWN',mapType=8},generated),'indoor header lost to cached environment default')
-assert(not Pairs.supports({midLayout={pair='unreviewed'}},{primary='building'}))
+assert(Pairs.supports({midLayout={},environment='TOWN',mapType=4},generated),'native cave support missing')
+assert(Pairs.supports({midLayout={},environment='TOWN',mapType=8},generated),'native interior support missing')
+assert(Pairs.supports({midLayout={pair='unreviewed'}},{primary='building'}),'shared native interiors must remain supported')
 local Furniture=assert(loadfile(root..'/lib/Gen3Furniture.lua'))()
 local fc={}
 for y,row in ipairs({{0x4C,0x4D},{0x54,0x55}})do for x,mid in ipairs(row)do
@@ -77,18 +77,21 @@ local Scene={nativeRequired=function()return needsNative end,
  restore=function()end,release=function()end,invalidate=function()SceneInvalidated=true end}
 local hooks,events={},{}
 local mod={id='BATTLE_ART_VOXEL_FORK',version='test',exports={},
- options={get=function()end,define=function()end},
+ options={get=function()end,define=function(_,schema)return schema end},
  hooks={wrap=function(_,key,fn)hooks[key]=fn end},events={on=function(_,key,fn)events[key]=fn end}}
 local treeStyle,renderDistance
+local fallback=require("tests.modload").namespace({Gen3Scene=Scene});fallback.mod=mod
 local V={mod=mod};function V.require(name)
  if name=='RenderDistance' then renderDistance=renderDistance or assert(loadfile(root..'/lib/RenderDistance.lua'))(V);return renderDistance end
  if name=='TreePresentation' then treeStyle=treeStyle or assert(loadfile(root..'/lib/TreePresentation.lua'))(V);return treeStyle end
  if name=='Generation' then return {isGen3=function()return true end} end
+ if name=='NativeBattleArt' then return {settings=function()return {}end,install=function()end}end
+ if name=='NativeInterfaceArt' then return {settings={},install=function()return function()end end}end
  if name=='BattleTheme' then return {}end
- if name=='Gen3Battle' then return {install=function()return function()end end,enabled=function()return true end,setting={schema=function()return {}end,key='fireredBattleStage'}}end
+ if name=='Gen3Battle' then return {install=function()return function()end end,enabled=function()return true end,setting={schema=function()return {key='fireredBattleStage'}end,key='fireredBattleStage'}}end
  if name=='Gen3Scene' then return Scene end
  if name=='ModSetting' then return assert(loadfile(root..'/lib/ModSetting.lua'))(V) end
- error(name)
+ return fallback.require(name)
 end
 local A=assert(loadfile(root..'/lib/Gen3Integration.lua'))(V);A.install()
 local game={phase='field',session={},options={}}

@@ -127,6 +127,7 @@ function love.graphics.setBlendMode(mode, alpha)
 end
 
 local fakeVoxel3D = {
+    metalRenderer=function()return false end,
   FACE_CORNERS = {},
   FACE_SHADE = {},
   eye = { 0, 16, 32 },
@@ -280,7 +281,10 @@ local function namespace(mod)
   return {
     mod = mod,
     require = function(name)
+      if name=='Platform' then return assert(loadfile('lib/Platform.lua'))() end
       local value = modules[name]
+      if name=='AtmosphereEffects' then return assert(loadfile('lib/AtmosphereEffects.lua'))({require=function()return assert(loadfile('lib/AtmosphereState.lua'))()end}) end
+      if name=='AtmosphereCamera' then return assert(loadfile('lib/AtmosphereCamera.lua'))() end
       assert(value, "unexpected module " .. tostring(name))
       return value
     end,
@@ -433,6 +437,7 @@ do
   assert(mutationHost.provider.register({
     api = 1,
     id = "test.visual-mutator",
+    render={opaque_after_terrain=function()end},
     priority = -10,
     requires = { "world_snapshot" },
     worldChanged = function(snapshot)
@@ -445,6 +450,7 @@ do
   assert(mutationHost.provider.register({
     api = 1,
     id = "test.visual-observer",
+    render={opaque_after_terrain=function()end},
     priority = 10,
     requires = { "world_snapshot" },
     worldChanged = function(snapshot)
@@ -459,6 +465,7 @@ do
   check(mutationHost:start(), "two-companion mutation host starts")
   check(mutationHost:update(0.016, visualState),
     "two-companion mutation snapshot dispatches")
+  assert(observedAfterMutation,mutationHost.lastSnapshotError or "no observer snapshot")
   equal(observedAfterMutation.id,
     "BATTLE_ART_VOXEL_FORK:signpost:PALLET_TOWN:1:0",
     "one companion cannot mutate the next companion's visual ID")
@@ -2303,8 +2310,8 @@ function cameraMat4.mul(a, b) return { a, b } end
 local cameraNamespace = {
   require = function(name)
     if name == "Mat4" then return cameraMat4 end
-    if name == "VoxelState" then return { angle = 0, FOCAL = 1 } end
-    return {}
+    if name == "VoxelState" then return { angle = 0, FOCAL = 1,isFirstPerson=function()return true end,isThirdPerson=function()return false end } end
+    return require("tests.modload").namespace().require(name)
   end,
 }
 local RealVoxel3D = assert(loadfile("lib/Voxel3D.lua"))(cameraNamespace)

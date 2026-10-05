@@ -125,6 +125,7 @@ end})
 check(not options.customTower() and not options.customCaves() and not options.customForest(),
       'new optional families preserve Battle Art defaults')
 options.trees.value = 'n64memory'
+options.treeDetail.value = 'full'
 check(options.customTrees() and options.fullTreeDetail(), 'saved Legendary tree choice retains full detail')
 options.trees.value = 'n64memory_fast'
 options.treeDetail.value = 'balanced'

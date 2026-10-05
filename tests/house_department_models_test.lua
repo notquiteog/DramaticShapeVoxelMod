@@ -39,7 +39,7 @@ local function geometry(r,w,h)
    assert(b>=0,r.design..' below floor');boxes=boxes+1
   end,
  }),r.design)
- assert(boxes>=(r.design=='fr_saffron_telepad' and 1 or 3) and (faces>=1 or r.design=='fr_vermilion_gate'),r.design..' missing modeled components')
+ assert((faces>=12 or boxes>=(r.design=='em_start_seat_pad' and 0 or r.design=='fr_saffron_telepad' and 1 or (r.design=='em_fortree_cabinet' or r.design=='em_fortree_counter') and 2 or 3)) and (faces>=1 or r.design=='fr_vermilion_gate'),r.design..' missing modeled components')
 end
 for _,r in ipairs(chosen)do
  geometry(r,#r.rows[1]*16,#r.rows*16)

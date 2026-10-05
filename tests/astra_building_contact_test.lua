@@ -11,7 +11,7 @@ end
 local H=dofile('tests/astra_fixture.lua')
 local root=os.getenv('ASTRA_CONTACT_ROOT') or '.'
 local B=assert(loadfile(root..'/lib/Buildings.lua'))({
-  require=function(n) assert(n=='BuildBudget'); return {tick=function() end} end,
+  require=function(n) if n=='BuildBudget'then return {tick=function()end}end;return require('tests.modload').namespace().require(n)end,
   data=function() return {} end,
 })
 local emit=H.upvalue(B.build,'emit')

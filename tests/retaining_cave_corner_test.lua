@@ -3,7 +3,7 @@ local engine=assert(os.getenv('ASTRA_ENGINE'),'ASTRA_ENGINE required');package.p
 local Map=require('src.world.Map');local gen=assert(os.getenv('ASTRA_GENERATED'),'ASTRA_GENERATED required')
 local maps=dofile(gen..'/maps.lua');local ts=dofile(gen..'/tilesets.lua')
 local root=os.getenv('ASTRA_CANDIDATE') or '.'
-local V={data=function()return dofile(root..'/data/voxel_heights.lua')end};local modules={BuildBudget={tick=function()end},CommunityVisuals=setmetatable({customWalls=function()return true end},{__index=function()return function()return false end end})}
+local V={data=function()return dofile(root..'/data/voxel_heights.lua')end};local modules={BuildBudget={tick=function()end},CommunityVisuals=setmetatable({casino={get=function()return 'default' end},tunnels={get=function()return 'default' end},rocket={get=function()return 'default' end},elevator={get=function()return 'default' end},customWalls=function()return true end},{__index=function()return function()return false end end})}
 function V.require(n)if not modules[n]then modules[n]=assert(loadfile(root..'/lib/'..n..'.lua'))(V)end;return modules[n]end
 local m=Map.new(maps.ROUTE_4,ts.OVERWORLD);local S=V.require('Structures').forMap(m)
 for y=8,11 do for x=36,37 do local k=(y+64)*4096+x+64;local r=S.runs[k]or{};print(x,y,'tile',S.tileAt[k],'fold',S.doorFold[k],'skip',S.skip[k],'door',r.door,'front',r.front,'retaining',r.kantoRetaining,'height',S.shapeAt[k]and S.shapeAt[k].h)end end

@@ -12,6 +12,11 @@ local pipeline = assert(Pipelines.get("voxel"))
 local Scene, Vox = V.require("VoxelScene"), V.require("Voxel3D")
 local Heal, AA = V.require("HealOverlay"), V.require("AntiAlias")
 local Gate = V.require("VoxelTransitionGate")
+-- Current Love ImageData includes release; the engine's headless stub omits it.
+local newImageData=love.image.newImageData
+love.image.newImageData=function(...)
+ local data=newImageData(...);data.release=data.release or function()end;return data
+end
 local canvas = {}
 Scene.render = function() return canvas end
 Vox.beginOverlay = function() return true end

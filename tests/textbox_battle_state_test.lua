@@ -31,6 +31,7 @@ local function drawStyled(state)
   graphics.setCanvas("ui")
   graphics.setColor(0, 0, 0, 1)
   TextboxStyle.withWhiteInk(graphics, { 0, 0, 0, 0.25 }, function()
+    state.bottomUIVisible = function() return true end
     BattleState.drawTextArea(state)
   end, function(drawInk)
     local destination = graphics.getCanvas()
@@ -50,7 +51,7 @@ local messages = {
   shown = {}, frame = 0,
 }
 drawStyled(messages)
-eq(messages.scrollPx, 6, "real BattleState scroll advances once")
+eq(messages.scrollPx, 8, "drawing never advances the engine-owned text clock")
 
 -- The real move menu has three overlapping boxes plus two 8x8 white tile
 -- wipes. Destination paper is their disjoint union, while every original

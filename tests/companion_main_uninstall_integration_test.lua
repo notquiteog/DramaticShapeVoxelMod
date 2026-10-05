@@ -83,18 +83,21 @@ function setting:cycle() return true end
 function setting:sync() return true end
 
 local settings = {
+  arenaFill=true,art=true,audio=true,audioVolume=true,backAnimationSetting=true,backPlacementSetting=true,backdropOffset=true,battleUi=true,fullBody=true,beam=true,bossBg=true,buildings=true,captureSpeed=true,casino=true,caveDetails=true,caveSound=true,caves=true,cityGround=true,courtyards=true,cutTrees=true,details=true,duplicateSetting=true,elevator=true,enabled=true,forest=true,frontAnimationSetting=true,frontFlipSetting=true,fxScale=true,grass=true,hudColor=true,hudScaleSetting=true,invertYSetting=true,kantoLife=true,masonry=true,openTime=true,pillars=true,playerAnimationSetting=true,playerArtSetting=true,pokemonGlow=true,preset=true,prizeRoom=true,props=true,roads=true,rocket=true,safari=true,scalingSetting=true,setting=true,signs=true,size=true,sky=true,speed=true,spriteLight=true,stadiumCircle=true,streamers=true,suction=true,suctionParticles=true,surfaces=true,textboxFill=true,thickness=true,tower=true,towerWall=true,trainerBattleSetting=true,trainerSetting=true,treeDetail=true,trees=true,tunnels=true,viewSetting=true,walls=true,
   setting = true, trainerSetting = true, playerArtSetting = true,
   playerAnimationSetting = true, frontAnimationSetting = true,
   backAnimationSetting = true, duplicateSetting = true, viewSetting = true,
   frontFlipSetting = true, backPlacementSetting = true,
   hudScaleSetting = true, spriteLight = true, hudColor = true,
   arenaFill = true, stadiumCircle = true, backdropOffset = true,
+  battleUi=true,fullBody=true,
   bossBg = true, textboxFill = true, invertYSetting = true,
 }
 
-local module = {}
+local module = {settings={}}
 return setmetatable(module, { __index = function(_, key)
-  if settings[key] then return setting end
+  if settings[key] or key:match("Setting$") then return setting end
+  if key=="schemas" then return function()return {}end end
   if key == "export" then return function() return {} end end
   if key == "installed" then return function() return false end end
   if key == "enabled" then return function() return true end end
@@ -123,6 +126,8 @@ function setting:cycle() return true end
 function setting:sync() return true end
 return {
   ANGLE_LABELS = { "OFF", "FULL" }, HOTKEY_ORDER = { 0, 1 }, setting = setting,
+  availableLevelLabels=function()return {"OFF","FULL","15","35","50","75","1ST","3RD"}end,
+  freeCamAvailable = function() return true end,
   isFirstPerson = function() return true end,
   isThirdPerson = function() return false end,
   isFull = function() return false end,
@@ -161,6 +166,7 @@ return setmetatable(M, { __index = function() return function() return true end 
 
 local meshResources, textureResources = {}, {}
 local voxel3D = {
+    metalRenderer=function()return false end,
   FACE_CORNERS = {}, FACE_SHADE = {}, eye = { 0, 16, 32 },
   camera = { eye = { 0, 16, 32 }, focus = { 0, 0, 0 },
     up = { 0, 1, 0 }, fov = math.rad(65) },
@@ -228,6 +234,8 @@ package.loaded["src.render.Tilt"] = { setLevel = function() end }
 package.loaded["src.ui.OptionsMenu"] = fakeOptionsMenu
 
 local actualModules = {
+  Platform=true,
+  Generation = true, AtmosphereEffects=true, AtmosphereState=true, AtmosphereCamera=true,
   CompanionLifecycle = true,
   VoxelCompanion = true,
   VoxelCompanionAPI = true,

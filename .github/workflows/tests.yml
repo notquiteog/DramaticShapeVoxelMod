@@ -23,17 +23,24 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y luajit
 
-      # No engine checkout: this repository is the mod, not the engine, and the
-      # release workflow only packages this tree. The ~31 suites that need
-      # src/ are reported as SKIP by the runner rather than failing, and
-      # everything that can run without the engine does run here.
-      #
-      # This job exists because nothing ran the suite automatically. A
-      # map.width read added in 1.28.5 broke the Gen 2 classifier suite, and it
-      # stayed red for several releases; a grass shape change in 1.27.1 and a
-      # ladder pin split in 1.24.0 each did the same to their own suite.
+      - name: Fetch the pinned engine test harness (no ROM required)
+        uses: actions/checkout@v4
+        with:
+          repository: bryanthaboi/gen1recomp
+          ref: v0.3.51
+          path: .test-engine
+
       - name: Run the Lua suite
-        run: bash tools/run_tests.sh
+        env:
+          TEST_LOG_DIR: test-results
+        run: bash tools/run_tests.sh "$PWD/.test-engine"
+
+      - name: Save test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lua-suite-logs
+          path: test-results
 
       - name: Compile every production module
         run: |

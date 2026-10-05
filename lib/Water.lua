@@ -1044,7 +1044,7 @@ vec2 waveUV(vec2 tc, vec2 col) {
 // can afford it -- the colour is a colour, and tc/sc arrived through
 // LOVE's mediump plumbing whatever this signature says -- and the maths
 // below runs on the stage default the moment the values touch a local.
-vec4 effect(mediump vec4 color, Image tex, mediump vec2 tc, mediump vec2 sc) {
+EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, EFFECT_PREC vec2 sc) {
   // THE DEPTH TEST, done here because the buffer that would have done it is
   // detached for the length of this pass so it can be READ (see the header).
   // Same comparison, same buffer, same result: a building in front of a pond
@@ -1321,8 +1321,9 @@ end
 
 Water._trainSource = trainSource       -- named for the suite
 
-local function source(grid, skyOnly)
-  local src = SHADER_SRC:gsub("//@CRATERS", (craterSource():gsub("%%", "%%%%")))
+local function source(grid, skyOnly, bare)
+  local src = (bare and "#define EFFECT_PREC\n" or "#define EFFECT_PREC mediump\n") .. SHADER_SRC
+  src = src:gsub("//@CRATERS", (craterSource():gsub("%%", "%%%%")))
   src = src:gsub("//@CELESTIAL", function()return Celestial.surface end)
   src = src:gsub("//@TRAINS", (trainSource():gsub("%%", "%%%%")))
   local head = ("#define RAY_STEPS %d\n#define RAY_REFINE %d\n"
@@ -1350,9 +1351,10 @@ function Water.shader(grid, skyOnly)
   local family = skyOnly and shaders.sky or shaders.full
   if family[grid] == nil then
     if not (love.graphics and love.graphics.newShader) then
-      shaders[grid] = false
+      family[grid] = false
     else
       local ok, sh = pcall(love.graphics.newShader, source(grid, skyOnly))
+      if not ok then ok, sh = pcall(love.graphics.newShader, source(grid, skyOnly, true)) end
       if not ok and V and V.mod and V.mod.log then
         -- once, where it can be read: the fallback is flat water, which is
         -- easy to look at and impossible to diagnose without this line

@@ -25,6 +25,8 @@ return function(game)
   end
  end
  f:close();print('[elevation census]',total.maps,total.raised,total.flights,total.conflicts)
+ assert(total.conflicts==0,'terrain topology contains conflicting levels')
+ if os.getenv('TERRAIN_CENSUS_ONLY')=='1' then love.event.quit();return end
  local targets=gen==3 and {{'FR_VICTORY_ROAD_1F',10,10},{'FR_MT_EMBER_EXTERIOR',29,32},{'FR_SEVEN_ISLAND_SEVAULT_CANYON',15,18},{'FR_CERULEAN_CITY_GYM',9,9},{'FR_SSANNE_EXTERIOR',32,9},{'FR_OAKS_LAB',5,6}}or
   {{'DARK_CAVE_BLACKTHORN_ENTRANCE',19,8},{'BURNED_TOWER_B1F',10,8},{'BLACKTHORN_CITY',13,15},{'OLIVINE_PORT',10,10},{'DANCE_THEATER',1,5},{'VIOLET_GYM',4,9},{'BLACKTHORN_GYM_1F',6,8},{'GOLDENROD_MAGNET_TRAIN_STATION',9,11},{'ELMS_LAB',5,6}}
  if gen==3 and require('src.core.GameVersion').get()=='emerald' then

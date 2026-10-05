@@ -1,7 +1,9 @@
 local recipes=dofile('data/gen2_furniture.lua')
 assert(recipes.TILESET_PLAYERS_HOUSE[1].id=='crystal_kitchen')
 assert(recipes.TILESET_HOUSE[#recipes.TILESET_HOUSE].id=='crystal_stool','inserting a kitchen changed the common-house stool')
-local desk=recipes.TILESET_PLAYERS_ROOM[1]
+local desk
+for _,r in ipairs(recipes.TILESET_PLAYERS_ROOM)do if r.id=='crystal_bedroom_workstation'then desk=r end end
+assert(desk)
 assert(desk.model=='room_desk' and #desk.tiles==4 and #desk.tiles[1]==4)
 local mesh=dofile('lib/Gen2RoomDesk.lua').build(desk,{},16,128,128)
 local maxY=0

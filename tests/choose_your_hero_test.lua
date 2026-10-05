@@ -65,7 +65,8 @@ for _,gen in ipairs({'gen1','gen2','gen3'}) do
  assets[dotted],assets[legacy]='custom-oak','legacy-oak'
   assert(api.trainerImage('prof-oak')=='legacy-oak')
   assert(api.trainerImage('prof.oak')=='custom-oak')
-  assert(api.introOakImage()=='custom-oak')
+  -- Intro Oak deliberately uses his dedicated back-static collection.
+  assert(api.introOakImage()==nil, 'trainer front art leaked into the intro')
   assets[dotted]=nil; assert(api.trainerImage('prof.oak')==nil)
   assert(api.trainerImage('prof-oak')=='legacy-oak')
   assets[legacy]=nil; assert(api.trainerImage('prof-oak')==nil)
@@ -79,7 +80,7 @@ setfenv(fn,{mod={hooks={wrap=function(_,name,callback) hook=callback end}},Battl
 local steps,speech={}, {oakPic='rom',oakTrueColor=false}
 local function next(s)assert(s==steps);return s end
 assert(hook(next,steps,speech)==steps and speech.oakPic=='rom')
-assets['assets/battle/front-static/gen3/prof.oak.png']='new-oak'
+assets['assets/battle/back-static/oak.png']='new-oak'
 hook(next,steps,speech);assert(speech.oakPic=='new-oak' and speech.oakTrueColor)
 assert(speech.oakPicOffsetY==8,"custom Oak intro moves below the top clip")
 api.setting.get=function()return 'rom' end

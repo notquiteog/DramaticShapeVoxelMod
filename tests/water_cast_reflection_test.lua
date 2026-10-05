@@ -159,8 +159,8 @@ T.eq(0 - anchorFor(0, 0), 2 * FLOAT,
 T.eq(anchorFor(0, 2), plane, "raised by the float, it hangs from the waterline")
 T.eq(anchorFor(0, 2 * FLOAT), 0,
   "raised by twice the float, it is joined at the character's own feet")
-T.check(Water.CAST_RAISE >= 2 * FLOAT,
-  "the shipped raise closes the geometric gap for a surfing player")
+T.eq(Water.CAST_RAISE, 0,
+  "physical reflections retain the actual water-plane distance")
 
 -- Past that it compensates for the sprite's own bottom padding, which the
 -- card knows nothing about: whatever empty space the art carries under
@@ -277,7 +277,7 @@ T.same(sent.fogInfo[1], {0,0,0,0}, "outdoor fade cannot leak indoors")
 local vox = io.open(root .. "/lib/Voxel3D.lua")
 local voxSrc = vox:read("*a")
 vox:close()
-T.check(voxSrc:find('{ "canvas", "depth", "mirror", "cast" }', 1, true) ~= nil,
+T.check(voxSrc:find('{ "canvas", "depth", "mirror", "cast", "castDepth", "underColor", "underDepth" }', 1, true) ~= nil,
   "releaseSlot frees the cast canvas with the rest of the slot")
 T.check(voxSrc:find("function Voxel3D.beginCast", 1, true) ~= nil,
   "the pass has an opening")

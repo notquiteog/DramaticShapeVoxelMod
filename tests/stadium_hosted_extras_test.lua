@@ -18,6 +18,7 @@ local scene={groundY=function()return 5 end,drawTrainerAndBall=function()
  calls[#calls+1]='draw'; if fail then error('companion failure') end; return true
 end}
 extract('lib/BattleScene.lua','function BattleScene.renderHostedExtras','-- Render the arena and hand back',{
+ updateSendout=function()end,Q57={prepare=function()end},V={require=function()return {ground=function(_,_,_,y)return y end}end},
  BattleScene=scene,Voxel3D=voxel,Mat4=Mat4,normalBallTick=function()ticks=ticks+1 end})
 local ctx={target={width=640,height=480,color='host'},camera={vp=Mat4.identity(),eye={1,2,3},focus={0,0,0}},
  graphics={push=function()calls[#calls+1]='push' end,origin=function()end,pop=function()calls[#calls+1]='pop' end}}
@@ -34,7 +35,7 @@ local g={setDepthMode=function()end,setMeshCullMode=function()end,setShader=func
  clear=function()error('host must not clear')end,setCanvas=function()error('host must not rebind')end}
 local api={shader=function()return shader end,eye={},camera={curve=0},viewProjection=function()error('use host VP')end}
 extract('lib/Voxel3D.lua','function Voxel3D.beginScene','-- Depth handling for the character pass',{
- Voxel3D=api,VoxelGrid={enabled=function()return false end},love={graphics=g},
+ Sky={resetDeferredBody=function()end,store=function()return{}end},drawUniforms={reset=function()end},Voxel3D=api,VoxelGrid={enabled=function()return false end},love={graphics=g},
  ShadowMap={active=function()error('stale world shadow')end,texture=function()return nil end,res=1},
  GlassMask={blank=function()return nil end},IDENTITY=Mat4.identity()})
 assert(api.beginScene(640,480,0,0,160,144,nil,nil,nil,{color='host',vp=Mat4.identity()}))

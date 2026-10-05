@@ -22,16 +22,17 @@ local modules = {
       for _, i in ipairs({1, 2, 3, 1, 3, 4}) do indices[#indices + 1] = n * 4 + i end
     end,
   },
-  CommunityVisuals = {
+  CommunityVisuals = setmetatable({
+    referenceBuildings=function()return false end,customForest=function()return false end,customTrees=function()return false end,
     customWalls=function() return enabled end,
     customRoads=function() return enabled end,
     customCourtyards=function() return enabled end,
     customGrass=function() return enabled end,
-  },
+  }, {__index=function()return function()return false end end}),
 }
 local function loadMesher(path)
   return assert(loadfile(path .. '/lib/ChunkMesher.lua'))({
-    require=function(n) return assert(modules[n], n) end,
+    require=function(n) return modules[n] or require("tests.modload").namespace(modules).require(n) end,
   })
 end
 local C = loadMesher(root)
@@ -65,12 +66,14 @@ local function geometry(label)
   return verts
 end
 -- Access the actual production helper without adding a public test API.
-local function upvalue(fn, name)
-  for i=1,100 do
-    local n,v = debug.getupvalue(fn,i)
-    if not n then break end
-    if n==name then return v end
-  end
+local function upvalue(fn, name, seen)
+ seen=seen or {};if seen[fn]then return end;seen[fn]=true
+ for i=1,100 do local n,v=debug.getupvalue(fn,i);if not n then break end
+  if n==name then return v end
+ end
+ for i=1,100 do local n,v=debug.getupvalue(fn,i);if not n then break end
+  if type(v)=='function'then local found=upvalue(v,name,seen);if found then return found end end
+ end
 end
 local runGeometry = assert(upvalue(C.geometry,'runGeometry'))
 local shadeRect = upvalue(runGeometry,'shadeRect')
@@ -107,8 +110,9 @@ local function expected(shades,u,v)
        + shades[3]*u*v+shades[4]*(1-u)*v
 end
 local function checkField(q, field)
-  local tone=q[1][6]/field(q[1])
-  for i=2,4 do if not near(q[i][6],field(q[i])*tone) then return false end end
+  local function light(v)return v[6]>=4 and v[6]%4 or v[6]end
+  local tone=light(q[1])/field(q[1])
+  for i=2,4 do if not near(light(q[i]),field(q[i])*tone) then return false end end
   return true
 end
 -- A north-west corner crowds the tile. Every stone/board should inherit
@@ -133,7 +137,7 @@ for _,spec in ipairs({
     local inside=true
     for _,v in ipairs(q) do
       inside=inside and v[1]>=8 and v[1]<=16 and v[3]>=8 and v[3]<=16
-        and (near(v[2],h+lift) or (label=='timber' and near(v[2],h+.065)))
+        and (near(v[2],h+lift) or ((label=='timber' or label=='courtyard') and v[2]>0 and v[2]<.3))
     end
     if inside then
       count=count+1

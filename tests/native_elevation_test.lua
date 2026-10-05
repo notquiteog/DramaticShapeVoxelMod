@@ -23,7 +23,7 @@ function layout:cellAt(x,y)return self.overrides[y*1024+x]or self.cells[y+1]end
 local defs={out={id='CAVE',mapType=4,midLayout=layout},inside={id='CENTER',mapType=8,midLayout={width=1,height=1,pair='fixture',cells={},overrides={},cellAt=function()return{mid=1,coll=0,elev=4}end}}}
 package.loaded['src.core.game3.scripting.interaction_scripts']={behaviors={fixture={[1]=0,[2]=42,[3]=0}}}
 package.loaded['src.import.gba.versions']={TILESET_PAIRS={}}
-local modules={TerrainLevels=T,Gen3Tilesets={resolve=function(pair)return{primary='general',secondary=pair=='bridge_fixture' and 'fortree' or 'cave'}end,outdoor=function()return false end},
+local modules={TerrainLevels=T,Gen3Tilesets={resolve=function(pair)return{primary='general',secondary=pair=='bridge_fixture' and 'fortree' or 'cave'}end,outdoor=function(d)return d.mapType==3 end},
  Gen3TileShape={of=function(_,_,_,behavior)return{kind=behavior==42 and 'steps' or 'flat'}end},BuildBudget={tick=function()end}}
 local G=assert(loadfile('lib/Gen3Elevation.lua'))({require=function(n)return assert(modules[n],n)end})
 assert(G.at(defs.inside,8,8)==0,'collision layer raised Center floor')
@@ -34,12 +34,44 @@ assert(G.field(defs.out)~=old,'native edit did not invalidate floor field')
 local v={{0,1,0,0,0,1,0,0,2}};G.lift(v,0,6);assert(v[1][2]==7 and v[1][9]==8,'tree billboard anchor not raised with vertices')
 print('PASS Gen2 shelves, source floors, cache invalidation, Gen1 isolation, Gen3 collision-layer exclusions and native immutability')
 
+package.loaded['src.core.game3.scripting.interaction_scripts'].behaviors.bridge_fixture={[4]=0x170}
 local bridge={width=3,height=3,pair='bridge_fixture',cells={},overrides={}}
 function bridge:cellAt(x,y)
- return{mid=1,coll=(x~=1 and y~=1)and 7 or 0,elev=y==1 and(x==1 and 15 or 4)or 3}
+ return{mid=(x==1 and y==1)and 4 or 1,coll=(x~=1 and y~=1)and 7 or 0,elev=y==1 and(x==1 and 15 or 4)or 3}
 end
 local b=G.field({id='EM_ROUTE119',mapType=3,midLayout=bridge})
 assert(b.cells['0:1'].group==b.cells['2:1'].group,'bridge no longer joins banks')
 assert(b.cells['1:0'].group~=b.cells['1:1'].group,'bridge swallowed the crossing underneath')
 assert(b.cells['1:2'].group~=b.cells['1:1'].group,'bridge side flattened into the deck')
 print('PASS native Fortree bridge bank connections stay separate from side crossings')
+
+assert(b.cells['1:1'].underpass,'native crossing was flattened into a deck')
+assert(T.at(b,24,24,3)==0 and T.at(b,24,24,4)==32,'bridge actor layers share one height')
+assert(T.at(b,24,24)==32,'unspecified presentation layer lost the deck')
+print('PASS separate bridge deck and underpass support')
+
+-- Variable elevation alone is not evidence of an underpass. Mismatched
+-- banks, missing banks and non-bridge metatiles must retain one support plane.
+local readBridge = bridge.cellAt
+bridge.cellAt = function(self,x,y)
+ local cell=readBridge(self,x,y)
+ if y==2 then cell.elev=5 end
+ return cell
+end
+G.invalidate()
+local mismatch=G.field({id='EM_ROUTE119',mapType=3,midLayout=bridge})
+assert(not mismatch.cells['1:1'].underpass,'mismatched bank layers invented a crossing')
+bridge.cellAt = function(self,x,y)
+ local cell=readBridge(self,x,y)
+ if y==0 then cell.coll=7 end
+ return cell
+end
+G.invalidate()
+local blocked=G.field({id='EM_ROUTE119',mapType=3,midLayout=bridge})
+assert(not blocked.cells['1:1'].underpass,'blocked bank invented a crossing')
+bridge.cellAt = readBridge
+package.loaded['src.core.game3.scripting.interaction_scripts'].behaviors.bridge_fixture[4]=0
+G.invalidate()
+local ordinary=G.field({id='EM_ROUTE119',mapType=3,midLayout=bridge})
+assert(not ordinary.cells['1:1'].underpass,'ordinary variable-layer art became a bridge')
+print('PASS underpass requires matching walkable banks and native bridge behavior')

@@ -32,7 +32,7 @@ local managed={}
 for _,setting in ipairs(C.settings)do managed[setting]=true end
 local preset={setting=masterSetting,mode=function()return legendaryMode end,
   isMember=function(setting)return managed[setting]==true end}
-local env=setmetatable({CommunityVisuals=C,LegendaryVisualsPreset=preset},{__index=function(t,k)
+local env=setmetatable({V=V,CommunityVisuals=C,LegendaryVisualsPreset=preset},{__index=function(t,k)
   if _G[k]~=nil then return _G[k] end
   local proxy=setmetatable({},{__index=function(p,n)local value={};rawset(p,n,value);return value end})
   rawset(t,k,proxy);return proxy

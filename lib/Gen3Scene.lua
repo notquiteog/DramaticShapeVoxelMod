@@ -389,11 +389,19 @@ local function build(req,cache,previous)
   Elevation.lift(b.v,starts[1],base);Elevation.lift(b.rv,starts[2],base)
   Elevation.lift(b.pv,starts[3],base);Elevation.lift(b.wv,starts[4],base)
   Elevation.lift(wood,starts[5],base);Elevation.lift(leaf,starts[6],base)
+  if c.floor and c.floor.underpass then
+   local u=c.floor.underpass
+   local water=u.kind=='water'
+   plane(water and b.wv or b.v,water and b.wi or b.i,x,z,uvFor(ts,u.mid) or uv,u.height+base-c.floor.height)
+   quad(b.v,b.i,{{x,base-1.5,z+16},{x+16,base-1.5,z+16},{x+16,base-1.5,z},{x,base-1.5,z}},uv,.65)
+  end
   if shape.kind~='cliff' and shape.kind~='caveWall' and shape.kind~='water' and not c.stairs and shape.kind~='steps' then
    for _,d in ipairs({{-1,0},{1,0},{0,-1},{0,1}})do
     local n=cells[(c.cx+d[1])..':'..(c.cy+d[2])]
     if n and n.shape.kind~='cliff' and n.shape.kind~='caveWall' and n.shape.kind~='steps' and not n.stairs then
      local low=n.base or 0
+     -- Bridge fascia must not become a solid retaining wall across the path.
+     if c.floor and c.floor.underpass then low=math.max(low,base-1.5)end
      if low<base then
       local ax,az=x+(d[1]>0 and 16 or 0),z+(d[2]>0 and 16 or 0)
       local bx,bz=ax+(d[1]==0 and 16 or 0),az+(d[2]==0 and 16 or 0)
@@ -586,7 +594,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
   mesh=R.newMesh(v,i);spriteMeshes[key]=mesh
  end
  local yaw=cam.level>=6 and -cam.yaw or 0
- local floor=M.groundAt(x+8,z+16-.001)
+ local floor=M.groundAt(x+8,z+16-.001,opts.elevation)
  local contact=cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]
  if contact and contact.prop then floor=contact.prop.groundHeight or floor end
  local height=floor+(opts.lift or 0)
@@ -604,11 +612,11 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  if draw==Shadow.draw then draw(mesh,spr.image,caster)
  else draw(mesh,spr.image,model,nil,caster) end
 end
-function M.groundAt(x,z)
+function M.groundAt(x,z,layer)
  for _,r in ipairs(cache.floorRegions or {})do
   local lx,lz=x-r.x*16,z-r.y*16
   if lx>=0 and lz>=0 and lx<r.w*16 and lz<r.h*16 then
-   return V.require('TerrainLevels').at(r.floorField,lx,lz)+(r.floorOffset or 0)
+   return V.require('TerrainLevels').at(r.floorField,lx,lz,layer)+(r.floorOffset or 0)
   end
  end
  return 0
@@ -633,7 +641,7 @@ local function actors(game,cam,draw)
   local support,depthOffset=Furniture.support(cache.cells,gid,eo.px or eo.cellX*16,eo.py or eo.cellY*16,not eo.moving)
   actor(gid,(eo.px or eo.cellX*16)+(eo.raiseX or 0),eo.py or eo.cellY*16,
    eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,
-   {bow=(eo.bowFrames or 0)>0 or eo.raiseHand,frame=eo.customFrame,upright=tonumber(gid)==92 or tonumber(gid)==94,depthOffset=depthOffset or 0,lift=support-(eo.raiseY or 0)},cam,draw)
+   {elevation=eo.currentElevation,bow=(eo.bowFrames or 0)>0 or eo.raiseHand,frame=eo.customFrame,upright=tonumber(gid)==92 or tonumber(gid)==94,depthOffset=depthOffset or 0,lift=support-(eo.raiseY or 0)},cam,draw)
  end
  -- Connected maps use the engine's ghost snapshots; never advance those
  -- actors here (doing that per render would reintroduce fast wandering NPCs).
@@ -645,7 +653,7 @@ local function actors(game,cam,draw)
     for _,eo in ipairs(live)do
      actor(eo.graphicsId or (eo.def and (eo.def.graphicsId or eo.def.graphics)),
       (eo.px or eo.cellX*16)+entry.ox*16,(eo.py or eo.cellY*16)+entry.oy*16,
-      eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,{},cam,draw)
+      eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,{elevation=eo.currentElevation},cam,draw)
     end
    else
     local event=space and space.bundle and space.bundle.events and space.bundle.events[entry.id]
@@ -665,7 +673,7 @@ local function actors(game,cam,draw)
  if cam.level~=6 and Player.isVisible() then
   actor(Sprites.playerGraphicsId(game),(Player.px or 0)+(Player.spriteXOffset or 0),Player.py or 0,
    Player.facing,Player.walkPhase(),Player.drawFlip(),
-   {fieldMove=(Player.fieldMoveAnim or 0)>0,lift=-(Player.spriteYOffset or 0)-(Player.jumpSpriteY and Player.jumpSpriteY()or 0)},cam,draw)
+   {elevation=Player.currentElevation,fieldMove=(Player.fieldMoveAnim or 0)>0,lift=-(Player.spriteYOffset or 0)-(Player.jumpSpriteY and Player.jumpSpriteY()or 0)},cam,draw)
  end
 end
 -- Project the engine-owned door/healing frames into the existing 3D room.
@@ -760,7 +768,7 @@ function M.draw(game,vw,vh,cam)
  if cam.level>=6 then
   local dist=cam.level==6 and 0 or 75
   local dx,dz=math.sin(cam.yaw),-math.cos(cam.yaw)
-  local ground=M.groundAt(cx,cz+8-.001)
+  local ground=M.groundAt(cx,cz+8-.001,not cam.battle and not cam.replay and Player.currentElevation or nil)
   local ey=48+ground
   if cam.level==6 then
    ey=ground+SpriteAnchor.eyeHeight(Sprites.getDraw(Sprites.playerGraphicsId(game)))
@@ -789,7 +797,7 @@ function M.draw(game,vw,vh,cam)
  local atmosphere=V.require("NativeAtmosphere")
  local atmosphereMap=atmosphere.gen3(M.sceneDef,Map.current)
  if atmosphere.kind(atmosphereMap)=="forest" then V.require("DayNight").applyRig(false) end
- R.orbitGround=M.groundAt(cx,cz+8-.001)
+ R.orbitGround=M.groundAt(cx,cz+8-.001,not cam.battle and not cam.replay and Player.currentElevation or nil)
  R.viewProjection(cx,cz,vw,vh)
  if cam.actors then cam.actors:prepare(cam,M.groundAt(cx,cz+8-.001),R.eye)end
  R.orbitGround=nil

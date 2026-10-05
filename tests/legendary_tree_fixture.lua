@@ -49,7 +49,11 @@ function V.require(name)
   return {}
 end
 mods.CacheTrace = { log = function(event, id, detail) F.events[#F.events + 1] = { event, id, detail } end }
+mods.Gen2Elevation={at=function()return 0 end}
+mods.TreePresentation={original=function()return false end,flat=function()return false end,setting={get=function()return "voxel" end},art={get=function()return "modeled" end},props={get=function()return "voxel" end}}
+mods.DistrictBoundary={style=function()return false end}
 mods.CommunityVisuals = {
+  treeDetail={get=function()return F.mode end},customRoads=function()return false end,
   crystalDepth=function(map)return F.depth and map and map.cellCollision~=nil end,
   crystalHD = function(map) return map and map.cellCollision ~= nil end,
   customTrees = function() return true end, customCutTrees = function() return true end,

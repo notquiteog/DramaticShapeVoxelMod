@@ -1312,6 +1312,11 @@ local function animFrame()
     local ok, f = pcall(TileRenderer.animFrame)
     if ok and type(f) == "number" then return f end
   end
+  -- Current engines expose the clock even when tick is wrapped by a provider.
+  if type(TileRenderer.animClock) == "function" then
+    local ok, frame = pcall(TileRenderer.animClock)
+    if ok and type(frame) == "number" then return frame end
+  end
   if clockUpvalue == nil then clockUpvalue = findClockUpvalue() end
   if clockUpvalue then
     local ok, _, value = pcall(debug.getupvalue, TileRenderer.tick, clockUpvalue)
