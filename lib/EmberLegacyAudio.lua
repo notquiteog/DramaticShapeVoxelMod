@@ -5,6 +5,19 @@ local A={errors={}}
 local cache,voices,session={}, {},nil
 local owner,style=nil,nil
 local serial=0
+local nativeMasters=setmetatable({},{__mode='k'})
+function A.nativeMaster(battle,read)
+ if battle then nativeMasters[battle]=read end
+end
+local function masterVolume()
+ local read=owner and nativeMasters[owner]
+ if read then
+  local ok,value=pcall(read)
+  if ok and tonumber(value)then return math.max(0,math.min(1,value))end
+ end
+ local options=owner and owner.game and owner.game.save and owner.game.save.options
+ return math.max(0,math.min(7,tonumber(options and options.sfxVol)or 7))/7
+end
 local function release(x) if x and x.release then pcall(x.release,x) end end
 local function stop(x) if x and x.stop then pcall(x.stop,x) end end
 function A.clear()
@@ -26,8 +39,7 @@ function A.sync(battle)
     local v=voices[i];local ok,playing=pcall(v.source.isPlaying,v.source)
     if not ok or not playing then release(v.source);table.remove(voices,i)
     else
-      local options=owner and owner.game and owner.game.save and owner.game.save.options
-      local master=math.max(0,math.min(7,tonumber(options and options.sfxVol) or 7))/7
+      local master=masterVolume()
       pcall(v.source.setVolume,v.source,(tonumber(Settings.audioVolume:get()) or .75)*master*v.gain)
     end
   end
@@ -77,8 +89,7 @@ function A.play(event,index,shiny,critical,gain)
   local name=filename(event,index,shiny,critical)
   local original=source(name);if not original then return false end
   local ok,s=pcall(original.clone,original);if not ok then A.errors[name]=tostring(s);return false end
-  local options=owner and owner.game and owner.game.save and owner.game.save.options
-  local master=math.max(0,math.min(7,tonumber(options and options.sfxVol) or 7))/7
+  local master=masterVolume()
   local played,err=pcall(function()
     s:setVolume((tonumber(Settings.audioVolume:get()) or .75)*master*(gain or 1));s:play()
   end)

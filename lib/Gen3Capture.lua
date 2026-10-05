@@ -5,7 +5,7 @@ local M={}
 local pending,arena,ground
 function M.settings()
  local p=V.require("PokeballSettings")
- return {p.enabled,p.size,p.captureSpeed,p.openTime,p.preset,p.streamers}
+ return {p.enabled,p.size,p.captureSpeed,p.openTime,p.preset,p.streamers,p.audio,p.audioVolume}
 end
 local ballNames={[1]='MASTER_BALL',[2]='ULTRA_BALL',[3]='GREAT_BALL',[4]='POKE_BALL'}
 local function call(name,...)
@@ -29,6 +29,16 @@ function M.install()
  local Audio=require('src.core.game3.audio')
  local SE=require('src.core.game3.se_ids')
  local begin,reset,sound=Seq.begin,Seq.reset,Audio.playSe
+ local function audioEvent(p,event,index)
+  local ok,a=pcall(V.require,'EmberLegacyAudio')
+  if not ok or not a then return false end
+  local good,played=pcall(function()
+   a.nativeMaster(p.st,function()return Audio._sfxVolume or 1 end)
+   if not a.ready(event,index)then return false end
+   return a.capture(event,index)
+  end)
+  return good and played==true
+ end
  Seq.reset=function(...)M.finish();return reset(...)end
  Seq.begin=function(st,item,caught,shakes,opts)
   local result=begin(st,item,caught,shakes,opts)
@@ -40,23 +50,25 @@ function M.install()
   return result
  end
  Audio.playSe=function(id,...)
-  local p=pending
+  local p=pending;local replaced=false
   if p and V.require('PokeballSettings').active()and V.require('Gen3Battle').enabled()then
    if id==SE.SE_BALL_THROW and not p.started then
     p.started=call('startNormalBall',p.item,p.caught,p.shakes,p.st)==true
+    if p.started then replaced=audioEvent(p,'throw')end
    elseif p.started then
     if id==SE.SE_BALL_OPEN then
      if p.opened and not p.caught then
-      call('normalBallAnimEvent','SHAKE_ANIM');call('normalBallAnimEvent','SHOWPIC_ANIM')
-     else p.opened=true;call('normalBallAnimEvent','POOF_ANIM')end
+      call('normalBallAnimEvent','SHAKE_ANIM');call('normalBallAnimEvent','SHOWPIC_ANIM');replaced=audioEvent(p,'breakout')
+     else p.opened=true;call('normalBallAnimEvent','POOF_ANIM');replaced=audioEvent(p,'open')end
     elseif id==SE.SE_BALL then
      call('normalBallAnimEvent','SHAKE_ANIM');call('normalBallTimedEvent','SFX_TINK')
+     p.audioShakes=(p.audioShakes or 0)+1;replaced=audioEvent(p,'shake',p.audioShakes)
     elseif id==SE.SE_BALL_CLICK then
-     call('normalBallAnimEvent','SHAKE_ANIM');call('normalBallCaughtEvent')
+     call('normalBallAnimEvent','SHAKE_ANIM');call('normalBallCaughtEvent');replaced=audioEvent(p,'success')
     end
    end
   elseif p then M.finish()end
-  return sound(id,...)
+  if not replaced then return sound(id,...)end
  end
  return function()Seq.begin,Seq.reset,Audio.playSe=begin,reset,sound;M.finish()end
 end
