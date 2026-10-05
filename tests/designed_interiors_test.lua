@@ -33,3 +33,22 @@ for _,list in pairs(recipes)do for _,r in ipairs(list)do if r.design then
  n=n+1
 end end end
 print('PASS '..n..' complete designed objects: atlas bounds, finite geometry, native matches, bed and cushion heights')
+
+-- Native floor decorations must not be claimed as physical furniture.
+version='firered'
+for _,case in ipairs{
+ {'building__rom_082d50c4',{{0x2a1}}},
+ {'building__rom_082d4cec',{{0x2a8,0x2a9}}},
+ {'building__rom_082d4c44',{{0x30a}}},
+}do
+ local cells={};for y,row in ipairs(case[2])do for x,mid in ipairs(row)do
+  cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair=case[1],primary='building',secondary=case[1]:sub(11),collision=0,ts={}}
+ end end
+ assert(#F.extract(cells)==0,'native floor claimed as invented furniture')
+end
+local S=V.require('Gen3TileShape')
+for _,mid in ipairs{0x2f6,0x2fa}do
+ assert(S.of('building','rom_082d4c44',mid,nil,7).kind=='roomWall')
+ assert(S.of('building','rom_082d4c44',mid,nil,0).kind=='flat','wall leaked into walkable aliases')
+end
+print('PASS native floor exclusions and collision-scoped Colosseum walls')

@@ -9,6 +9,7 @@ return function(game)
  if version~='emerald' and os.getenv('QA_OFFICES')=='1'then maps={'FR_SILPH_CO_2F','FR_SILPH_CO_10F','FR_CELADON_CITY_CONDOMINIUMS_2F','FR_CELADON_CITY_CONDOMINIUMS_3F','FR_OAKS_LAB'}end
  if version~='emerald' and os.getenv('QA_RETAIL')=='1'then maps={'FR_CELADON_CITY_POKEMON_CENTER_1F','FR_PEWTER_CITY_MUSEUM_1F','FR_CELADON_CITY_DEPARTMENT_STORE_2F','FR_CELADON_CITY_DEPARTMENT_STORE_5F','FR_FOUR_ISLAND_POKEMON_DAY_CARE'}end
  if version~='emerald' and os.getenv('QA_HOMES')=='1'then maps={'FR_PLAYERS_HOUSE_2F','FR_CELADON_CITY_CONDOMINIUMS_ROOF_ROOM','FR_SEVEN_ISLAND_HOUSE_ROOM1','FR_FOUR_ISLAND_LORELEIS_HOUSE','FR_ROCKET_HIDEOUT_B4F','FR_FIVE_ISLAND_ROCKET_WAREHOUSE'}end
+ if version~='emerald' and os.getenv('QA_SEATS')=='1'then maps={'FR_POKEMON_LEAGUE_AGATHAS_ROOM','FR_BATTLE_COLOSSEUM_2P','FR_CELADON_CITY_GAME_CORNER','FR_SSANNE_1F_ROOM1'}end
  for _,id in ipairs(maps)do
   local d=assert(game.data.maps[id]);Map.ensureMidLayout(game,id,d)
   local px,py

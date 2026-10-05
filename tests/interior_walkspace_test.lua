@@ -89,3 +89,9 @@ print('PASS FRLG lab, condo desks/sofas and polygon table walkspace')
 assert(F.draw('fr_processing_machine',{sample=function()return{}end,source=function()end,
  box=function(l,b,n,r,h,s)assert(not(r>32 and s>32),'access fittings cross the native walkable corner')end}))
 print('PASS machinery access fittings remain inside native L-shaped footprint')
+
+for _,dy in ipairs{0,16}do
+ assert(F.draw('fr_elite_column',{recipe={faceY=dy},sample=function()return{}end,source=function()end,
+ box=function(l,b,n,r,h,f)assert(l>=0 and r<=16 and n>=0 and f<=32,'column protrudes from blocked rows')end}))
+end
+print('PASS freestanding and wall-column blocked footprints')

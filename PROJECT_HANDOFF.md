@@ -1,3 +1,43 @@
+# FRLG arena/League/source-art correction — 2026-10-05 (unreleased)
+
+Native atlas + collision review found three invented objects: Agatha's
+0x2a1 is a court-border floor tile, Game Corner 0x2a8/0x2a9 are carpet,
+and Colosseum 0x30a/0x2f6/0x2fa are floor/wall art, NOT spectator stands.
+Removed their furniture recipes and unused model branches. Added reviewed
+Colosseum court surfaces and collision-scoped wall profiles. Arena walls
+have four-pixel thickness; the source's empty/teal top band is not extruded
+as black wall faces. Native screen/panel artwork remains on the upright wall.
+
+Authored all six actual purple/gold Agatha columns from complete native
+354/355 and wall 362-or-363/356/360 drawings. Closed stepped bases/caps,
+gold flutes, purple sides; solids remain inside the two blocked rows, never
+on the third walkable source apron. Existing generic League wall art still
+lies on the floor: this is not a finished-room claim.
+Game Corner's thirty blue chairs now retain side backrests facing their
+machines. They remain walkable native seating requiring actor-support work.
+Kept Gen2's shared old stool implementation unchanged under its original ID;
+new Gen3 chair has its own design ID to avoid unreviewed cross-game changes.
+
+Evidence: native, overview and first-person captures inspected using source
+engine v0.3.51, LeafGreen isolated profile with companions. Maps: Agatha,
+Battle Colosseum 2P, Celadon Game Corner, SS Anne 1F Room1 (neighbor check).
+All four settled collision grids unchanged through rendering. No gameplay,
+save, input or online-battle changes. No manual walking or gameplay battle
+claim. QA_SEATS=1 tools/qa/furniture-walkspace.lua repeats the fixtures.
+Scratch: .scratch/coverage-20261004/results/leafgreen-seats-{before,verified};
+leafgreen-arena-art and leafgreen-agatha-art retain native atlas/grid evidence.
+All game processes exited; user saves untouched.
+
+Full authored-box census: 263 interiors / 1,233 objects / 128 flags (was143).
+Six new columns have zero overlap flags. Remaining seat/bed overlaps are
+unresolved; the census checks only central 8x8 low-box intersections, not
+all geometry, every tile, exteriors or Gen1/2. Removing false models reduces
+counts but does not certify complete coverage. Beds, seated-actor support,
+other-generation coverage and broad fidelity remain open.
+162 suites pass, 0 fail, 56 external-fixture skips; 347 production Lua files
+compile in LuaJIT. Tests: .scratch/seats-final-tests.log; footprints in
+leafgreen-seats-census. No release/cart/version change this pass.
+
 # FRLG homes and industrial walkspace — 2026-10-05 (unreleased)
 
 Compared native art/collision for starting bedroom, Celadon roof room, Seven

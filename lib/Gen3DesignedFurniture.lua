@@ -48,11 +48,12 @@ function M.install(recipes)
  -- 0x2ed-0x2f2 are blue cases carrying orange canisters.
  add('lab_centrifuge_bank','oak_lab',{
   {0x2ed,0x2ee,0x2ef},{0x2f0,0x2f1,0x2f2}},'fr_lab_centrifuge',1)
- -- Elite Four chambers, building__rom_082d50c4: 317 distinct metatiles over 5
- -- maps and no recipe at all. 0x2a1 is the single cell that breaks the floor
- -- pattern -- the chamber's centrepiece -- read off the native sheet and
- -- confirmed against FR_POKEMON_LEAGUE_AGATHAS_ROOM's own midLayout.
- add('elite_pedestal','building__rom_082d50c4',{{0x2a1}},'fr_elite_pedestal',1)
+ -- Agatha's 0x2a1 is floor-border artwork, not a pedestal.
+ add('elite_column','building__rom_082d50c4',{{0x354},{0x355}},'fr_elite_column',0x2f0)
+ for _,mid in ipairs{0x362,0x363}do
+  add('elite_wall_column_'..mid,'building__rom_082d50c4',{{mid},{0x356},{0x360}},'fr_elite_column',0x2f0)
+  recipes[#recipes].faceY=16
+ end
  -- Celadon condominium rooms contain sofas, shared desks and tables, not
  -- beds/kitchens. Complete source drawings replace former wall-ID guesses.
  local condo='building__rom_082d4f8c'
@@ -136,21 +137,17 @@ function M.install(recipes)
  -- blue cells are individual stools, not additional slot machines.
  add('corner_pair','building__rom_082d4cec',{{0x2b8,0x2b9}},'fr_corner_pair',0x291)
  add('corner_pair_end','building__rom_082d4cec',{{0x2c0,0x2c1},{0x2c8,0x2c9}},'fr_corner_pair_end',0x291)
- add('corner_pair_cap','building__rom_082d4cec',{{0x2a8,0x2a9}},'fr_corner_pair_cap',0x291)
+ -- 0x2a8/0x2a9 are untouched carpet immediately behind the cabinets.
  for _,east in ipairs{false,true}do
   local suffix=east and 'east' or 'west'
   add('corner_half_'..suffix,'building__rom_082d4cec',{{east and 0x2b9 or 0x2b8}},'fr_corner_half_'..suffix,0x291)
   add('corner_half_end_'..suffix,'building__rom_082d4cec',{{east and 0x2c1 or 0x2c0},{east and 0x2c9 or 0x2c8}},'fr_corner_half_'..suffix,0x291)
  end
  for _,mid in ipairs{0x2aa,0x2ab,0x2b2,0x2b3,0x2ba,0x2bb}do
-  add('corner_stool_'..mid,'building__rom_082d4cec',{{mid}},'fr_corner_stool',0x291)
+  add('corner_stool_'..mid,'building__rom_082d4cec',{{mid}},'fr_corner_chair',0x291)
+  recipes[#recipes].backEast=mid%2==1
  end
- -- Battle Colosseum, building__rom_082d4c44, 4 maps. Seating at 0x30a
- -- (upper tier) and 0x2f6/0x2fa (lower), read off the native sheet against
- -- FR_BATTLE_COLOSSEUM_2P's layout.
- add('colosseum_stand_a','building__rom_082d4c44',{{0x30a}},'fr_stadium_stand',1)
- add('colosseum_stand_b','building__rom_082d4c44',{{0x2f6}},'fr_stadium_stand',1)
- add('colosseum_stand_c','building__rom_082d4c44',{{0x2fa}},'fr_stadium_stand',1)
+ -- Colosseum 0x30a is floor; 0x2f6/0x2fa are wall art, not stands.
  -- Native walkable Day Care cushions, not merchandise racks.
  add('daycare_cushion','building__rom_082d4f74',{{0x309}},'fr_daycare_cushion',0x309)
  add('mart_complete_island','building__rom_082d4bcc',{{0x296,0x297},{0x29e,0x29f},{0x2a6,0x2a7},{0x2ae,0x2af}},'fr_mart_island',0x281)

@@ -218,7 +218,7 @@ function M.column(cells,index)
  for row=first,last do local a=cells[c.cx..':'..row];if a.shape.kind=='roof' then roofs=roofs+1 else walls=walls+1 end end
  if not indoor and (roofs==0 or walls==0) then return end
  local top=cells[c.cx..':'..first]
- return {first=first,last=last,roofs=roofs,walls=walls,front=(last+1)*16,back=first*16,height=math.min(walls*16,indoor and 32 or 64),indoor=indoor,
+ return {first=first,last=last,roofs=roofs,walls=walls,front=(last+1)*16,back=(indoor and c.shape.wallStyle=='arena') and ((last+1)*16-4) or first*16,height=math.min(walls*16,indoor and 32 or 64),indoor=indoor,
   roofType=top.shape.roofType or 'gable',
   roofInset=top.secondary=='pallet_town' and (top.shape.roofType=='flat' and 12 or 8) or 0}
 end

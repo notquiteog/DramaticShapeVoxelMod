@@ -326,16 +326,20 @@ function M.draw(id,A)
    B(4,0,15,28,2,19,wood);B(5,2,14,27,11,16,wood)
    front({5,12,22,4},5,3,27,10,16.02)
   end
- elseif id=='fr_corner_pair_cap' then
-  local wood,gold=T(13,10),T(13,5)
-  B(5,0,9,27,11,16,wood);B(12,11,9,20,19,16,wood)
-  B(12,19,9,20,20,16,gold)
-  front({5,5,22,10},5,2,27,11,8.98)
  elseif id=='fr_corner_stool' then
   local metal,blue=T(5,13),T(8,7)
   B(5,0,5,11,1,11,metal);B(7,1,7,9,4,9,metal)
   B(4,4,4,12,5,12,metal);B(4.5,5,4.5,11.5,6,11.5,blue)
   top({5,5,6,5},4.5,4.5,11.5,11.5,6.02)
+ elseif id=='fr_corner_chair' then
+  -- Original blue swivel chair: a metal foot, upholstered seat and side
+  -- backrest facing the neighboring machine, not a round backless stool.
+  local metal,blue=T(5,13),T(8,7)
+  B(5,0,5,11,1,11,metal);B(7,1,7,9,4,9,metal)
+  B(3,4,3,13,5,13,metal);B(3.5,5,3.5,12.5,6,12.5,blue)
+  top({4,6,8,6},3.5,3.5,12.5,12.5,6.02)
+  local x=A.recipe.backEast and 12 or 2
+  B(x,5,3,x+2,11,13,metal);B(x+.2,6,3.5,x+1.8,11.5,12.5,blue)
  elseif id=='em_start_window' then
   local frame,sill=T(0,8),T(2,19)
   -- Keep the window attached to the wall face, not hovering over the aisle.
@@ -1559,28 +1563,18 @@ elseif id=='fr_rocket_console' then
   B(5,11,4.4,26,12.6,15.2,screen)
   B(3,15,4,29,15,16,shade)
   top({3,5,13,9},2,3,30,17,18.02)
-elseif id=='fr_elite_pedestal' then
-  -- The Elite Four chamber's centrepiece (0x2a1 on building__rom_082d50c4):
-  -- a stepped stone plinth carrying a carved marker. It is the one cell in the
-  -- room that breaks the floor pattern, and the native drawing is a tall
-  -- frontal slab -- so it is built as a base, two treads and an upright with a
-  -- cap rather than one extruded plane. Everything stays inside one 16px cell.
-  local stone,lit,shade,dark=T(7,4),T(9,6),T(6,12),T(4,14)
-  B(2,0,3,14,1.6,13,dark)
-  B(2.6,1.6,3.6,13.4,3.2,12.4,stone)
-  B(3.4,3.2,4,12.6,4.6,12,shade)
-  B(4,4.6,4.6,12,6,11.4,stone)
-  -- upright marker, tapered
-  B(5,6,5.2,11,12,10.8,stone)
-  B(5.6,12,5.8,10.4,13.2,10.2,lit)
-  B(5.8,13.2,6,10.2,14,10,shade)
-  B(6,14,6.2,10,15,9.8,lit)
-  B(6.4,6,5.4,7.4,12,10.6,lit)
-  B(8.6,6,5.4,9.6,12,10.6,shade)
-  B(6.6,7,5.6,7.2,11,10.4,dark)
-  B(8.8,7,5.6,9.4,11,10.4,dark)
-  top({5,6,6,6},5,5.2,11,10.8,15.02)
-  front({5,8,6,5},5,6,11,14,10.01)
+elseif id=='fr_elite_column' then
+  -- Purple shell, gold inset flutes and pale stepped foot from the native
+  -- complete drawing. Both blocked rows carry the closed column footprint.
+  local dy=A.recipe.faceY or 0
+  local purple,gold,foot=T(2,dy+9),T(7,dy+9),T(5,dy+28)
+  B(2,0,2,14,2,31,foot);B(3,2,3,13,4,30,foot)
+  B(3,4,3,13,27,29,purple)
+  B(4,27,4,12,30,28,purple);B(5,30,5,11,31,27,purple)
+  B(2,4,4,4,26,28,purple);B(12,4,4,14,26,28,purple)
+  B(4,4,29,12,26,30,gold)
+  front({4,dy+3,8,20},4,4,12,26,30.02)
+  for _,x in ipairs{5,8,11}do B(x,4,30,x+.5,26,30.5,T(6,dy+10))end
 elseif id=='fr_room_bed' then
   -- A room bed seen end-on. First authored for the Celadon Condominiums and
   -- reused by the Celadon Hotel, which draws the same furniture. Base, mattress with a raised
@@ -1642,23 +1636,6 @@ elseif id=='fr_condo_plant' then
   B(6.2,8.4,5,9.8,10.4,10,leaf)
   B(6.4,4.2,6.2,9.6,5,9.8,soil)
   top({5,6,6,5},5,5,11,11,10.42)
-elseif id=='fr_stadium_stand' then
-  -- Colosseum seating: three raked tiers with individually offset seats and a
-  -- rail along the front, so the stand steps back like a stand rather than
-  -- reading as a painted bank.
-  local frame,seat,seat2,rail,dark=T(6,10),T(7,14),T(9,15),T(8,6),T(3,12)
-  B(2,0,4,14,1.4,12,dark)
-  for i=0,2 do
-   local y=1.4+i*3.4; local z=4+i*1.2
-   B(2,y,z,14,y+1.2,z+3.4,frame)
-   -- seats, offset along the tier
-   for x=2.6,12.4,2 do
-    B(x,y+1.2,z+0.6,x+1.6,y+2.4,z+2.8,((x+i)%4<2) and seat or seat2)
-   end
-   B(2,y+1.2,z+2.8,14,y+1.6,z+3.4,rail)
-  end
-  B(2,11.6,7.6,14,12.6,11,frame)
-  B(2,12.6,7.4,14,13.4,11.2,rail)
 elseif id=='fr_slot_machine' then
   -- A slot machine: a plinth, a canted cabinet, a deep bezel around the reels
   -- and a lit crown marquee. The reels sit back inside the bezel so the screen

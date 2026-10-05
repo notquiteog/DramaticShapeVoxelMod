@@ -1,5 +1,10 @@
 ## Unreleased
 
+- Restore native League/Game Corner floor markings and Colosseum wall/court
+  tiles instead of invented pedestals, end caps and spectator stands.
+- Model Agatha’s purple-and-gold columns inside native blocked rows and
+  restore the Game Corner chairs’ directional backrests.
+
 - Restore FRLG bedroom bookcases misidentified as televisions; correct
   home/office desks, dressers, sofas and machinery walkspace footprints.
 - Keep house rear walls straight while preserving native posters/windows.
