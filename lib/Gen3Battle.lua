@@ -83,8 +83,13 @@ function M.install()
    local Player=require('src.core.game3.player')
    local Collision=require('src.core.game3.collision')
    local px,py=math.floor((Player.px or 0)/16),math.floor((Player.py or 0)/16)
-   camera.center=M.openArea(px,py,Collision.isWalkable)
-   camera.yaw=M.openYaw(math.floor(camera.center[1]/16),math.floor(camera.center[2]/16),Collision.isWalkable)
+   local Map=require('src.core.game3.map')
+   camera.elevation=Player.currentElevation
+   local ground,walkable=V.require('Gen3Elevation').battleFloor(Map.currentDef(),
+    (Player.px or 0)+8,(Player.py or 0)+16-.001,camera.elevation,Collision.isWalkable)
+   camera.floorHeight=ground
+   camera.center=M.openArea(px,py,walkable)
+   camera.yaw=M.openYaw(math.floor(camera.center[1]/16),math.floor(camera.center[2]/16),walkable)
    battleState=Battle._st
    camera.arena={mid=camera.center,cameraSafe=true}
    V.require('BattleCam').reset(camera.arena)

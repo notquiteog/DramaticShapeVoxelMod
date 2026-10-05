@@ -745,6 +745,9 @@ function M.draw(game,vw,vh,cam)
  local focus=cam.replay and cam.replay.frame or Player
  local cx,cz=(focus.px or focus.x or 0)+8,(focus.py or focus.y or 0)+8
  if cam.battle and cam.center then cx,cz=cam.center[1],cam.center[2]end
+ local layer=Player.currentElevation
+ if cam.battle then layer=cam.elevation elseif cam.replay then layer=focus.elevation end
+ local support=cam.battle and cam.floorHeight or M.groundAt(cx,cz+8-.001,layer)
  local width,height=love.graphics.getCanvas():getDimensions()
  local Renderer=require('src.render.Renderer')
  local Display=require('src.core.game3.display')
@@ -771,7 +774,7 @@ function M.draw(game,vw,vh,cam)
  if cam.level>=6 then
   local dist=cam.level==6 and 0 or 75*(cam.boomZoom or 1)
   local dx,dz=math.sin(cam.yaw),-math.cos(cam.yaw)
-  local ground=M.groundAt(cx,cz+8-.001,not cam.battle and not cam.replay and Player.currentElevation or nil)
+  local ground=support
   local ey=48+ground
   if cam.level==6 then
    ey=ground+SpriteAnchor.eyeHeight(Sprites.getDraw(Sprites.playerGraphicsId(game)))
@@ -800,9 +803,9 @@ function M.draw(game,vw,vh,cam)
  local atmosphere=V.require("NativeAtmosphere")
  local atmosphereMap=atmosphere.gen3(M.sceneDef,Map.current)
  if atmosphere.kind(atmosphereMap)=="forest" then V.require("DayNight").applyRig(false) end
- R.orbitGround=M.groundAt(cx,cz+8-.001,not cam.battle and not cam.replay and Player.currentElevation or nil)
+ R.orbitGround=support
  R.viewProjection(cx,cz,vw,vh)
- if cam.actors then cam.actors:prepare(cam,M.groundAt(cx,cz+8-.001),R.eye)end
+ if cam.actors then cam.actors:prepare(cam,support,R.eye)end
  R.orbitGround=nil
  savedCanvas=love.graphics.getCanvas();love.graphics.push('all');saved=true
  if not plate and Shadow.begin(cx,cz,vw,vh) then

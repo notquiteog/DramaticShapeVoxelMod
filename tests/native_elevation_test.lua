@@ -49,6 +49,16 @@ assert(b.cells['1:1'].underpass,'native crossing was flattened into a deck')
 assert(T.at(b,24,24,3)==0 and T.at(b,24,24,4)==32,'bridge actor layers share one height')
 assert(T.at(b,24,24)==32,'unspecified presentation layer lost the deck')
 print('PASS separate bridge deck and underpass support')
+local battleDef={id='EM_ROUTE119',mapType=3,midLayout=bridge}
+local low,under=G.battleFloor(battleDef,24,24,3,function()return true end)
+assert(low==0 and under(1,1) and under(1,0) and not under(0,1),'underpass battle chose the raised deck')
+local high,over=G.battleFloor(battleDef,24,24,4,function()return true end)
+assert(high==32 and over(1,1) and over(0,1) and not over(1,0),'deck battle chose lower ground')
+assert(not over(-1,1) and not over(3,1),'battle candidates escaped native bounds')
+local _,closed=G.battleFloor(battleDef,24,24,4,function()return false end)
+assert(not closed(1,1),'presentation changed native collision permission')
+print('PASS battles preserve bridge layer and exclude other terrain levels')
+
 
 -- Variable elevation alone is not evidence of an underpass. Mismatched
 -- banks, missing banks and non-bridge metatiles must retain one support plane.

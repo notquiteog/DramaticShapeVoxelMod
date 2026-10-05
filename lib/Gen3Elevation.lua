@@ -66,6 +66,18 @@ function M.cell(def,x,y)
  local f=M.field(def);return f and f.cells[Levels.key(x,y)]
 end
 function M.at(def,x,z,layer)return Levels.at(M.field(def),x,z,layer)end
+-- Presentation-only candidate filter. Native collision layers are identifiers,
+-- not heights: an encounter below a bridge must stay on the lower surface.
+function M.battleFloor(def,x,z,layer,walkable)
+ local f=M.field(def)
+ local height=Levels.at(f,x,z,layer)
+ return height,function(cx,cy)
+  if not f or cx<0 or cy<0 or cx>=f.width or cy>=f.height then return false end
+  local c=f.cells[Levels.key(cx,cy)]
+  return c and c.floor and not c.high and walkable(cx,cy)
+   and math.abs(Levels.at(f,cx*16+8,cy*16+8,layer)-height)<.01 or false
+ end
+end
 function M.bind(cells,regions)
  for _,region in ipairs(regions)do region.floorField=M.field(region.def)end
  Levels.align(regions)

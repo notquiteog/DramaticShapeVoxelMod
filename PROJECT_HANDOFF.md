@@ -1,3 +1,31 @@
+# Terrain depth follow-through — 2026-10-05 (after 1.31.1, unreleased)
+
+Existing terrain topology/stairs/platform/bridge geometry remains in place.
+Closed a real battle consumer gap: Gen3Stage discarded native elevation when
+choosing its area and camera/actor support. Gen3Elevation.battleFloor freezes
+the encounter's support and restricts candidate centers/yaw scoring to native
+walkable, level cells on the same physical surface. Native collision and battle
+mechanics are untouched. Camera rig and all staged actor anchors share that
+frozen support, including bridge underpasses, instead of sampling the deck.
+
+Official 0.3.51 isolated QA: Emerald Route119 (18,34), native layer 1 underpass
+height 0 and upper-deck height 32. Started real native wild battles on each;
+verified BattleCam.rig input and both staged actor heights, inspected captures.
+Driver tools/qa/bridge-battle.lua; default tests the native underpass layer,
+BRIDGE_LAYER=3 tests the deck. This is a battle fixture, not traversal/network QA.
+Evidence: .scratch/depth-20261005/bridge-{under,deck}.png and
+.scratch/coverage-20261004/results/emerald-bridge-battle.
+
+Repeated all-map census: Crystal 388 maps/17530 raised cells/69 flights;
+FireRed and LeafGreen each 426/7138/293; Emerald 519/21862/317.
+1759 maps total, zero topology conflicts. Logs/coverage.tsv in
+.scratch/coverage-20261004/results/*-terrain-census-depth. This is topology
+coverage, not visual signoff on every tile. Gen1 authored terrain unchanged.
+Full suite: 162 passed, zero failed, 56 missing external fixture skips;
+.scratch/depth-20261005/tests.log. Added low/high bridge battle bounds/collision
+regressions. No user saves touched. Companion/replay underpass-layer transport
+still needs its own integration/validation; do not claim full multiplayer parity.
+
 # Modern UI release and native Legendary preset — 2026-10-05
 
 Gen3 loads LegendaryVisualsPreset, registers its master and uses the same live
