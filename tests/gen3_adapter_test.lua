@@ -76,8 +76,9 @@ local Scene={nativeRequired=function()return needsNative end,
  draw=function()draws=draws+1;if fail then error('test GPU error')end;return canDraw end,
  restore=function()end,release=function()end,invalidate=function()SceneInvalidated=true end}
 local hooks,events={},{}
+local definedSchema
 local mod={id='BATTLE_ART_VOXEL_FORK',version='test',exports={},
- options={get=function()end,define=function(_,schema)return schema end},
+ options={get=function()end,define=function(_,schema)definedSchema=schema;return schema end},
  hooks={wrap=function(_,key,fn)hooks[key]=fn end},events={on=function(_,key,fn)events[key]=fn end}}
 local treeStyle,renderDistance
 local fallback=require("tests.modload").namespace({Gen3Scene=Scene});fallback.mod=mod
@@ -113,7 +114,9 @@ needsNative=true;Field.draw(game);assert(not A.active and native==1)
 Player.update(game,{isDown=function(_,key)return key=='up' end});assert(moves[2].up and not moves[2].right)
 needsNative=false;canDraw=false;Field.draw(game);assert(not A.active and native==2)
 canDraw=true;hooks['input.key'](function()error('3 forwarded')end,game,{key='3',phase='pressed'});assert(A.level==0)
+local schemaLength=#definedSchema
 events['mod.options_changed']({mod=mod.id,key='fireredCamera',value=7});assert(A.level==7)
+assert(#definedSchema==schemaLength,'option changes appended duplicate Crystal rows')
 assert(treeStyle.flat(),'flat trunks must be default')
 events['mod.options_changed']({mod=mod.id,key='hdTreeTrunks',value='solid'});assert(not treeStyle.flat() and SceneInvalidated,'tree option did not refresh scene')
 fail=true;Field.draw(game);assert(native==3 and not A.active)

@@ -201,8 +201,7 @@ function M.install()
   if payload and payload.mod==mod.id then
    for _,setting in ipairs(sharedSettings)do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
    if legendary.changed(payload.key)then Scene.invalidate()end
-   for _,row in ipairs(V.require('NativeCrystalArt').schemas())do schema[#schema+1]=row end
- for _,setting in ipairs(nativeArt.settings())do if payload.key==setting.key then setting:sync(payload.value)end end
+   for _,setting in ipairs(nativeArt.settings())do if payload.key==setting.key then setting:sync(payload.value)end end
    for _,setting in ipairs({Trees.setting,Trees.art})do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
   end
   if payload and payload.mod==mod.id and payload.key==mode.key then
