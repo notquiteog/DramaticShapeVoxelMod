@@ -424,7 +424,12 @@ function M.append(g,emit)
   end
   for _,o in ipairs(openings or {})do xs[#xs+1]=o[1];xs[#xs+1]=o[3];ys[#ys+1]=o[2];ys[#ys+1]=o[4]end
   table.sort(xs);table.sort(ys)
-  local function y(v)return height*(ey-v)/(ey-sy)end
+  local function y(v)
+   local value=height*(ey-v)/(ey-sy)
+   -- The entrance header meets the canopy soffit, not its roof surface.
+   if gymPorch and depth>p.front then value=math.min(value,p.wall-2)end
+   return value
+  end
   for iy=1,#ys-1 do for ix=1,#xs-1 do
    local a,b,c,d=xs[ix],xs[ix+1],ys[iy],ys[iy+1];local hole=false
    for _,o in ipairs(openings or {})do if a>=o[1] and b<=o[3] and c>=o[2] and d<=o[4]then hole=true end end
@@ -458,7 +463,7 @@ function M.append(g,emit)
   local porcelain=uv(44.1,68.1,44.2,68.2)
   local joint=uv(46.1,76.1,46.2,76.2)
   local function cheek(a,b,shade)
-   for _,band in ipairs({{0,2,joint},{2,22,porcelain},{22,24,trim},{24,26,trim}})do
+   for _,band in ipairs({{0,2,joint},{2,22,porcelain},{22,24,trim}})do
     face({{x+a,band[2],z+p.front},{x+b,band[2],z+p.front+p.projection},
       {x+b,band[1],z+p.front+p.projection},{x+a,band[1],z+p.front}},band[3],shade)
    end
@@ -490,10 +495,16 @@ function M.append(g,emit)
   -- Closed shallow canopy: sample an unprojected patch of the native gold
   -- roof, not the diagonal borders already drawn into its top-down facade.
   local gold=uv(p.w+48.05,24.05,p.w+63.95,39.95)
-  local ring={{40,p.front},{72,p.front},{64,p.front+p.projection},{48,p.front+p.projection}}
-  local inner={{41,p.front},{71,p.front},{63.5,p.front+p.projection-1},{48.5,p.front+p.projection-1}}
+  -- The angled source outline is top-down perspective, not a tapered
+  -- footprint. Keep parallel sides and square corners in world space.
+  local ring={{40,p.front},{72,p.front},{72,p.front+p.projection},{40,p.front+p.projection}}
+  local inner={{41,p.front},{71,p.front},{71,p.front+p.projection-1},{41,p.front+p.projection-1}}
   local top={};for i,q in ipairs(inner)do top[i]={x+q[1],p.wall,z+q[2]}end
   face(top,gold)
+  -- Close the overhang beneath its square corners, outside the narrower
+  -- entrance cheeks, so eye-level views cannot see through the canopy.
+  local soffit={};for i=4,1,-1 do local q=ring[i];soffit[#soffit+1]={x+q[1],p.wall-2,z+q[2]}end
+  face(soffit,trim,.7)
   for i,a in ipairs(ring)do
    local j=i%4+1;local b,c,d=ring[j],inner[j],inner[i]
    face({{x+a[1],p.wall-.8,z+a[2]},{x+b[1],p.wall-.8,z+b[2]},

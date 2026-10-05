@@ -1,3 +1,13 @@
+# Square Hoenn gym canopies — 2026-10-05 (unreleased)
+
+User corrected the canopy: native angled outlines indicate projected artwork,
+not a trapezoidal world-space roof. Six shared Hoenn gym recipes now have
+parallel canopy sides, square corners and closed undersides over the narrower
+vestibules. Native doors, footprints and walking lanes unchanged. Focused
+Civic/Hoenn tests protect rectangle, soffit, native door and footprint bounds.
+Production Petalburg turntable/eye-height fixture uses engine0.3.52 in
+.scratch/coverage-20261004/results/emerald-building-doors.
+
 # Hoenn service buildings and gym entrance polish — 2026-10-05 (unreleased)
 
 Emerald's standard Centers now use a closed chamfered shell, native recessed

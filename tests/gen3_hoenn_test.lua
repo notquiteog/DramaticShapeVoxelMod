@@ -121,9 +121,14 @@ for _,r in ipairs(H.exteriors)do
   end
  end
  if r.profile=='hoenn_gym' then
-  local g=found[1];local front,door=0,false;local solidCheeks,canopyRims=0,0
+  local g=found[1];local front,door=0,false;local solidCheeks,canopyRims=0,0;local squareTop,closedSoffit=false,false
   Civic.append(g,function(vertices,tex)
    local a,b=vertices[1],vertices[2]
+   if a[2]==26 and a[1]==41 and a[3]==64 then
+    assert(b[1]==71 and vertices[3][1]==71 and vertices[4][1]==41,'gym canopy tapers instead of retaining square corners')
+    squareTop=true
+   end
+   if a[2]==24 and a[1]==40 and a[3]==79 and b[1]==72 and vertices[3][3]==64 then closedSoffit=true end
    if a[2]==22 and b[2]==22 and a[3]==64 and b[3]==79 then
     assert(math.abs(tex[2][1]-tex[1][1])<.001,'gym cheek repeats projected diagonal artwork')
     solidCheeks=solidCheeks+1
@@ -142,6 +147,7 @@ for _,r in ipairs(H.exteriors)do
     front=math.max(front,v[3])
    end
   end)
+  assert(squareTop and closedSoffit,'rectangular gym canopy must have a closed underside')
   assert(solidCheeks==2 and canopyRims==4,'gym vestibule needs two solid cheeks and closed canopy rim')
   local surface=Civic.doorSurface(g,3,4)
   assert(surface and surface.w==14 and surface.h==16,'gym native door animation missing')
