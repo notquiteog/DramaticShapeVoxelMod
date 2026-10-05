@@ -21,6 +21,10 @@ for _,gen in ipairs({1,2,3})do
  local b=p.bounds
  for side=1,6 do for _,open in ipairs({true,false})do
   local v,i=M.geometry(p,side,open);assert(#v>0 and #i>0)
+  for n=1,#v,4 do for j=1,3 do
+   assert(v[n][4]==v[n+j][4] and v[n][5]==v[n+j][5],
+    'room face interpolates between palette colors, producing false shadow wedges')
+  end end
   for _,point in ipairs(v)do
    assert(point[1]>=b[1]-4 and point[1]<=b[3]+4 and point[3]>=b[2]-4 and point[3]<=b[4]+4)
    if side<=4 then

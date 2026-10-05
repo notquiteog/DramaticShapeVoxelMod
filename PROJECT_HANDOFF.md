@@ -1,3 +1,37 @@
+# Interior false-shadow fix and regional furniture — 2026-10-04 (unreleased)
+
+User reported implausible diagonal shadows across home walls. Root cause was
+InteriorDiorama.geometry alternating two material swatches at quad corners.
+Nearest filtering converted interpolated UVs into hard diagonal palette wedges;
+these were not actual cast shadows. Each face now samples one material texel.
+Face shading and the real renderer shadow pass are retained. The shared fix
+applies to Gen1/2/3 room walls, ceilings, trim and plinths. Regression checks
+verify constant material UVs over each face for every generation/cutaway side.
+No mesh-disk revision needed: these enclosure meshes are built at runtime.
+
+Inspected before/after Emerald Sootopolis home captures (regional-homes-before/
+final) and final Crystal Elm lab / Yellow Oak lab (gb-wall-light), official
+0.3.51. The diagonal material patches are gone; furniture/actor shadows remain.
+The Gen2 debug overlay says Pokemon Gold, but the fixture asserts the selected
+GameVersion matches crystal. Do not infer a separately tested Gold release.
+QA files remain under `.scratch/coverage-20261004`; user saves untouched.
+
+Coverage work continued: seventeen complete source patterns model 72 more
+furniture instances across Sootopolis, Rustboro and the Safari rest house.
+New sofas have separate backs/arms/cushions/feet; wide tables have full-depth
+surfaces and legs. Native palette variants reuse appropriate existing sink,
+cabinet, appliance and chair components. Original diagrams reviewed from
+regional-homes-source; rendered five-room fixture verifies unchanged native
+map/collision data. Inspected Sootopolis before/after overviews. This is not
+visual certification of all 72 occurrences or all room fittings.
+
+Focused tests: 335 designed objects, 144 Hoenn recipes, wall recess/crop bounds
+and enclosure/material regressions pass. Emerald census now has 126 maps with
+matched fixtures / 1,642 instances, out of 519 maps and 495 enabled scenes.
+Remaining gaps include native wall/window families, stair and special-object
+variants, other interiors/exteriors and settings adapters. Full-world coverage
+and parity remain unfinished. No release/version bump.
+
 # Hoenn native wall openings — 2026-10-04 (unreleased)
 
 Three complete generic-building source patterns replace 58 flat wall fixtures:

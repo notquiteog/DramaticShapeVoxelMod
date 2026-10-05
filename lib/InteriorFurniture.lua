@@ -669,6 +669,21 @@ function M.draw(id,A)
   B(4,7.6,17,13,10,18,metal);B(4,7.6,25,13,10,26,metal)
   top({17,9,13,8},17,17,30,26,10.02)
   B(8,10,14,9,14,15,metal);B(8,13,14,9,14,20,metal)
+ elseif id=='em_home_sofa' then
+  local frame,cloth=T(1,15),T(10,8)
+  -- Low seat, upholstered back and separate arms; solid underneath and
+  -- behind, so orbit and first-person views do not expose a folded card.
+  B(2,1,15,30,4,29,frame)
+  B(3,4,17,29,5.5,28,cloth)
+  top({4,7,24,12},3,17,29,28,5.52)
+  B(2,3,14,30,13,17,cloth)
+  front({4,3,24,5},3,6,29,12,17.02)
+  B(1,2,16,4,8,30,cloth);B(28,2,16,31,8,30,cloth)
+  for _,x in ipairs({3,26})do for _,z in ipairs({16,26})do B(x,0,z,x+3,2,z+3,frame)end end
+ elseif id=='em_home_wide_table' then
+  local wood=T(3,9)
+  desk(2,3,46,29,8,wood)
+  top({2,2,44,25},2,3,46,29,8.02)
  elseif id=='em_home_table' then
   local wood=T(2,8)
   desk(2,3,30,29,8,wood)
