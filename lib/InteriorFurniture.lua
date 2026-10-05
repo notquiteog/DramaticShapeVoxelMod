@@ -506,6 +506,34 @@ function M.draw(id,A)
    B(x+2,7,27,x+9,8,30,case)
    top({x+2,21,7,3},x+2,27,x+9,30,8.02)
   end
+ elseif id=='em_lilycove_stone_display' then
+  local body,cap,stone=T(8,56),T(8,44),T(36,20)
+  -- The projected upper row is floor. Chamfered plinth and a freestanding
+  -- stepped stone slab occupy only the three native blocked rows below it.
+  B(2,0,16,78,6,64,body);B(0,0,18,80,6,62,body)
+  B(2,6,16,78,7,64,cap);B(0,6,18,80,7,62,cap)
+  B(16,7,30,63,9,43,T(20,37))
+  B(17,9,31,62,11,42,T(20,35))
+  -- Each band samples the corresponding native face without its background.
+  -- Closed rear and side faces use the same carved green stone palette.
+  for _,r in ipairs{{16,28,64,34},{16,27,63,28},{17,26,60,27},{20,23,60,26},{21,22,60,23},{24,21,60,22},{27,20,59,21},{28,19,58,20},{29,18,56,19},{30,17,54,18}}do
+   local l,y,rr,b=r[1],r[2],r[3],r[4]
+   B(l,11+34-b,33,rr,11+34-y,40,stone)
+   front({l,y,rr-l,b-y},l,11+34-b,rr,11+34-y,40.02)
+  end
+ elseif id=='em_lilycove_counter' then
+  local case,lip=T(8,73),T(8,67)
+  -- Closed ring, assembled within the native counter cells. The two-row
+  -- staff lane is empty, including the apparent front cap projected onto it.
+  for _,r in ipairs{{0,16,96,32},{0,32,16,64},{80,32,96,64},{0,64,96,80}}do
+   B(r[1],0,r[2],r[3],6,r[4],case)
+   B(r[1],6,r[2],r[3],7,r[4],lip)
+  end
+  top({3,16,90,7},1,17,95,31,7.02)
+  top({2,32,12,28},1,32,15,64,7.02)
+  top({82,32,12,28},81,32,95,64,7.02)
+  top({3,63,90,7},1,65,95,79,7.02)
+  front({1,72,94,7},1,0,95,6,79.98)
  elseif id=='em_lilycove_picture_wall' then
   local w=A.width
   local spot=A.recipe and A.recipe.wallSample or {0,2}

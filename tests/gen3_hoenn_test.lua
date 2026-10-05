@@ -29,6 +29,13 @@ for _,r in ipairs(H.recipes)do
   cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair=r.pair,primary=r.primary or 'building',ts={}}
  end end
  local props=F.extract(cells);assert(#props==1 and props[1].recipe==r,r.name)
+ if r.collisionRows then
+  local exact={};for key,c in pairs(cells)do local q={};for k,v in pairs(c)do if k~='prop'then q[k]=v end end;q.collision=r.collisionRows[q.cy+1][q.cx+1];exact[key]=q end
+  assert(#F.extract(exact)==1,r.name..' native footprint rejected')
+  for _,c in pairs(exact)do c.prop=nil end
+  exact['2:1'].collision=0
+  assert(#F.extract(exact)==0,r.name..' placed over walking lane')
+ end
  if r.design=='em_lilycove_gallery' then
   local blocked={};for key,c in pairs(cells)do local q={};for k,v in pairs(c)do if k~='prop'then q[k]=v end end;q.collision=q.cy==2 and 7 or 0;blocked[key]=q end
   assert(#F.extract(blocked)==1,'complete gallery lost its blocked base')

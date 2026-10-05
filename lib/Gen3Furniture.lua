@@ -122,7 +122,8 @@ function M.extract(cells)
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
      if not n or n.prop or n.stairs or n.pair~=c.pair or not matched(n.mid,mid,r)
-      or (r.blockedRows and r.blockedRows[dy] and n.collision~=nil and n.collision~=7) then match=false else parts[#parts+1]=n end
+      or (r.blockedRows and r.blockedRows[dy] and n.collision~=nil and n.collision~=7)
+      or (r.collisionRows and r.collisionRows[dy] and r.collisionRows[dy][dx]~=nil and n.collision~=nil and n.collision~=r.collisionRows[dy][dx]) then match=false else parts[#parts+1]=n end
     end end
     if match then
      local p={recipe=r,cx=c.cx,cy=c.cy,pair=c.pair,ts=c.ts,w=#r.rows[1]*16,d=#r.rows*16}

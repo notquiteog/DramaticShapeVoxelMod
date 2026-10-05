@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Model Lilycove Museum's complete hollow counter and raised stone exhibit.
+  Preserve the staff aisle and native collision footprint; keep checker-floor
+  pixels off raised tops and retain original countertop signs and stone carving.
+
 - Model Lilycove Museum's three tall sculptures from their native opaque art,
   removing only connected background pixels and keeping pedestals in blocked
   base cells. Add eight native picture-wall patterns and both framed stair

@@ -1,3 +1,27 @@
+# Lilycove hollow counter and stone exhibit — 2026-10-05 (unreleased)
+
+Complete native 6x5 counter and 5x4 stone-display recipes now use exact collision
+rows, including solid counter value 0x90, walkable projected rows and the hollow
+staff aisle. Geometry does not alter collision. Counter top source crops exclude
+checker floor; native signs remain on top. Stone exhibit has a chamfered raised
+plinth, stepped closed stone slab and original inscription. Its stepped face
+bounds were corrected against individual native pixel rows after first-person
+review showed background slivers. Rear/side faces stay closed.
+
+Verified isolated Emerald v0.3.51 museum1F/2F via QA_GALLERY=1
+ tools/qa/furniture-walkspace.lua. Captures/logs:
+.scratch/coverage-20261004/results/emerald-gallery-statues. Inspected overview,
+inside/side counter and front/back exhibit views. Driver asserts both complete
+assemblies, views on native walking cells, and unchanged whole-room collision.
+159 Hoenn recipe checks, 358 designed objects and walkspace tests pass.
+Full shared-worktree suite: 169 pass, 1 fail, 56 skipped; gen3_adapter_test
+failure referred to parity agent working on native Crystal pack dependencies.
+Do not interpret suite failure as resolved until its fix and rerun are recorded.
+
+Remaining room work includes short bust, wall returns/corners and earned art
+variants. Exhaustive other-map visual coverage remains unfinished. Modern UI
+and generation parity agents continue separately; no release claimed here.
+
 # Lilycove museum sculptures, walls and flights — 2026-10-05 (unreleased)
 
 Three tall sculptures now have cached closed voxel hulls from their native
