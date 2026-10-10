@@ -481,6 +481,17 @@ function M.draw(id,A)
   B(3,10,1,13,11,31,edge)
   top({3,1,10,29},3,1,13,31,11.02)
   for _,x in ipairs{3,12}do B(x,0,28,x+1,10,31,edge)end
+ elseif id=='gb_department_counter_window' then
+  -- The lower half of this drawing is the reception counter overlapping a
+  -- window. Separate the horizontal countertop from the upright rear pane.
+  local frame,case=T(0,0),T(4,10)
+  B(0,10,0,16,24,14,frame)
+  B(0,10,14,1,24,15.5,frame);B(15,10,14,16,24,15.5,frame)
+  B(1,23,14,15,24,15.5,frame)
+  front({1,1,14,7},1,10,15,23,14.02)
+  B(0,0,8,16,9,16,case)
+  B(0,9,7,16,10,16,case)
+  top({0,9,16,7},0,7,16,16,10.02)
  elseif id=='gb_department_elevator' then
   -- The door cell is a native walkable warp. Put the closed door at its rear
   -- plane, with open approach space between the narrow jambs and lintel.

@@ -39,3 +39,21 @@ for _,face in ipairs(doors)do
  assert(not(x1>1 and x0<15 and z1>.6 and z0<16 and y0<23 and y1>0),'elevator closes walkable native warp approach')
 end
 print('PASS elevator approach clear below lintel; closed door at rear plane')
+local overlap
+for _,r in ipairs(assert(loadfile('data/gen2_furniture.lua'))().TILESET_MART)do
+ if r.id=='crystal_department_counter_window' then overlap=r end
+end
+assert(overlap and overlap.tiles[2][1]==42 and overlap.tiles[2][2]==43)
+local pane,worktop=0,0
+for _,face in ipairs(V.require('Gen2DesignedFurniture').build(overlap,nil,16,128,128))do
+ for _,p in ipairs(face)do assert(p[1]>=0 and p[1]<=16 and p[3]>=0 and p[3]<=16,'counter/window outside blocked source cell')end
+ if face[1][3]==14.02 then
+  pane=pane+1
+  assert(face[1][2]~=face[3][2],'glass became a counter roof')
+ elseif face[1][2]==10.02 then
+  worktop=worktop+1
+  assert(face[1][3]~=face[3][3],'countertop became a vertical wall')
+ end
+end
+assert(pane==98 and worktop==112,'overlapping drawing lost glass or counter surface')
+print('PASS overlapping counter and window separated into horizontal and vertical surfaces')

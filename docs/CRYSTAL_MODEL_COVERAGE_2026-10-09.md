@@ -46,3 +46,18 @@ assertions. Inspected Crystal and Gold first-person Celadon entrance, Silver
 Goldenrod overview. Results under `results/{game}-crystal-elevators`; native
 references under `results/{game}-crystal-elevator-source`. All three targeted
 suites pass. This confirms these store assemblies only, not all Gen2 models.
+
+## Reception window/counter overlap
+
+- [x] The previously open 14/15-above-42/43 drawing now has separate upright
+  native glass and a closed horizontal counter case/worktop. Final pane depth
+  matches adjacent ordinary windows; the first prototype's over-recessed panes
+  were corrected after first-person inspection. All vertices stay in the
+  original blocked cell. The original reflection and worktop art stay distinct.
+
+Gold/Silver/Crystal `crystal-counter-windows.lua`: Celadon1F and Goldenrod1F,
+24 final captures total. Inspected final Crystal/Gold Celadon first-person,
+Silver Goldenrod overview and side. Native layout and elevator-walkability
+checks passed. Same three test suites pass, including overlap surface direction
+and bounds. Source and final captures remain scratch-only. Other store props
+and other map families are still not signed off.
