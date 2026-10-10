@@ -1266,22 +1266,31 @@ function M.draw(id,A)
   for _,x in ipairs({8,15,23})do B(x,8,42.9,x+.55,28,43.2,dark);B(x,8,24.8,x+.55,28,25.1,dark)end
   B(2,38,22,30,40,46,wood)
  elseif id=='gb_lighthouse_beacon' then
-  local frame,lens,dark=T(6,3),T(8,20),T(2,0)
+  local frame,lens,dark=T(1,3),T(16,25),T(2,2)
+  local glint=T(14,21)
   B(2,0,14,30,3,46,dark);B(3,3,15,29,5,45,frame)
   for _,x in ipairs({3,27})do for _,z in ipairs({16,42})do B(x,5,z,x+2,29,z+2,frame)end end
   B(3,28,15,29,30,45,frame);B(6,30,18,26,32,42,frame)
   B(9,5,24,23,8,38,dark);B(12,8,27,20,12,35,frame)
-  -- Stepped Fresnel lens rings, a separate central lamp and rear conduit.
+  -- Closed octagonal Fresnel discs avoid overlapping coplanar box faces.
+  -- Sample the actual bright lamp, not the surrounding tabletop background.
+  B(13,10,28,19,25.5,34,glint)
   for _,ring in ipairs({{12,5},{15,7},{18,8},{21,7},{24,5}})do
    local y,r=ring[1],ring[2]
-   B(16-r,y,29-r,16+r,y+2,33+r,lens)
-   B(14-r,y,31-r,18+r,y+2,31+r,lens)
+   local function p(i,h)local a=(i+.5)*math.pi/4;return{16+math.cos(a)*r,h,31+math.sin(a)*r}end
+   for i=0,7 do
+    A.face({p(i+1,y),p(i,y),p(i,y+2),p(i+1,y+2)},lens,.88)
+    A.face({{16,y+2,31},p(i+1,y+2),p(i,y+2),{16,y+2,31}},glint,1)
+    A.face({{16,y,31},p(i,y),p(i+1,y),{16,y,31}},lens,.65)
+   end
   end
   B(15,10,17,17,28,19,dark);B(15,25,18,17,27,31,dark)
   B(10,5,44,22,8,46,frame);front({8,40,16,7},10,5,22,8,46.02)
  elseif id=='gb_ship_dining_table' then
   local edge,wood=T(28,36),T(1,3)
-  desk(1,13,31,46,8,wood)
+  -- One tabletop shell: the generic desk cap overlapped this apron.
+  for _,x in ipairs{2,28}do for _,z in ipairs{14,43}do B(x,0,z,x+2,6.5,z+2,wood)end end
+  B(2,5,14,30,6.5,15,wood)
   B(1,6.5,13,31,8,46,edge)
   top({1,1,30,37},1,13,31,46,8.02)
  elseif id=='fr_space_exhibit' then

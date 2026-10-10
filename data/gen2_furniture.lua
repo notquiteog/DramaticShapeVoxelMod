@@ -219,6 +219,16 @@ lighthouse[2].groundTiles=lighthouse[1].groundTiles;lighthouse[2].groundAligned=
 lighthouse[3]=item('crystal_ship_porthole',{{2,3},{18,18}},13,{},0)
 lighthouse[3].design='gb_ship_porthole'
 lighthouse[3].groundTiles={{13,29},{29,13}};lighthouse[3].groundAligned=true
+-- Gold/Silver use different lower rows for this same complete drawing.
+-- Keep the location-specific beacon/table distinction for those editions too.
+lighthouse[4]=item('crystal_lighthouse_beacon_gs',{
+ {9,10,10,12},{25,26,44,28},{25,64,65,28},{25,80,81,28},{20,44,44,53},{11,59,60,11}},13,{},0)
+lighthouse[4].design='gb_lighthouse_beacon'
+lighthouse[4].maps={OLIVINE_LIGHTHOUSE_6F=true}
+lighthouse[4].groundTiles=lighthouse[1].groundTiles;lighthouse[4].groundAligned=true
+lighthouse[5]=item('crystal_ship_dining_table_gs',lighthouse[4].tiles,13,{},0)
+lighthouse[5].design='gb_ship_dining_table'
+lighthouse[5].groundTiles=lighthouse[1].groundTiles;lighthouse[5].groundAligned=true
 -- Complete machinery sections, ahead of the old facility cabinet crops.
 -- The narrow brass conduit belongs to the machine, not a shelf of books.
 local facility={

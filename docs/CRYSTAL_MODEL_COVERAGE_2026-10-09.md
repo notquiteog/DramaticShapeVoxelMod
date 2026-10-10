@@ -647,3 +647,31 @@ return south. All three editions pass. Crystal Goldenrod overview and Silver
 Saffron first-person show complete original floor drawings and clear approach.
 Source/shared checks pass at58 recipes/32 assemblies. This intentionally
 supersedes modeled seat coverage while preserving native walking permissions.
+
+## Gold/Silver dining variants and three-edition lighthouse refinement — October 10
+
+- [x] Added the independently audited G/S six-row dining and beacon patterns;
+  Crystal retains its distinct lower two rows. Four long dining tables and one
+  lighthouse beacon now match per game (SW cabins3, SE/captain1, Lighthouse6F1).
+- [x] Replaced coincident tabletop/apron faces with one closed tabletop, four
+  legs and stretcher; rebuilt the lighthouse lens as five closed octagonal
+  bands with outward sides, top and underside caps. Native source samples
+  distinguish coral G/S lenses from amber Crystal and preserve cream framing.
+
+Gold baseline `gen2-dining-variants-before` shows the missing authored matches.
+All editions pass `gen2-dining-variants-final`: complete native grids unchanged,
+all six footprint cells blocked, exact3/1/1 placements. Inspected Gold SW first
+and side and Silver SW rear; native chairs remain flat and walking lanes clear.
+The original beacon eye camera was too close/occluded, so the separate
+`gen2-beacon-eye-final` uses cell(9,11), yaw-1.8, pitch-.15. All editions pass;
+Gold eye and Crystal overview/rear show the frame, closed lens and rear conduit.
+These are isolated source-engine0.3.52 QA profiles; no player saves or warps
+changed. Focused dining winding/coplanar/bounds regression and58 source recipes /
+32 shared assembly checks pass. Wider cabin tables/cabinets remain incomplete.
+
+Source-color qualification: cold map-only fixture bakes showed blue G/S tables,
+but entered-map native bakes and the original atlas both show pink, matching
+actual rendered furniture. Final fixtures save the entered-map native reference.
+No global palette change was made; cold fixture palette behavior is not asserted
+as resolved. The beacon's Gold title label in Crystal images is runtime UI;
+GameVersion and imported Crystal native rows are asserted by the fixture.
