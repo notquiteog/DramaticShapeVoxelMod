@@ -1,3 +1,17 @@
+# Five-game Gen3 model checkpoint — 2026-10-09 (unreleased)
+
+Ruby/Sapphire now use a separate source-reviewed catalogue instead of falling
+through to Kanto shapes. Only Oldale house/mart/Center and reviewed general
+scenery are enabled; unmatched Emerald exteriors/interiors remain native.
+Separate RU_/SA_ source and production orbit/eye captures inspected; each
+native footprint census recognizes four assemblies with zero overlap flags.
+Fresh isolated FireRed import verifies Cinnabar native source parity and
+front/eye/side models; census105/0. Lab rear orbit is obscured by the mansion.
+Full per-game evidence and remaining work are in
+`docs/GEN3_MODEL_COVERAGE_2026-10-09.md`. Six focused suites pass. All five games
+remain unfinished; next source batch is Ruby/Sapphire Petalburg. No saves,
+collisions, warps, assets, versions or releases changed.
+
 # Partner compatibility and region extension — 2026-10-09
 
 Parent added Gen3 optional scenery.registerTilesetAlias(pair,target), with owner

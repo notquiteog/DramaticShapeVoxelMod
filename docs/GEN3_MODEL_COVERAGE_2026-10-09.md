@@ -1,7 +1,8 @@
 # Gen3 native model coverage — ongoing
 
 This checklist records inspected models, not inferred coverage from tile
-classification. FireRed/LeafGreen/Emerald full-world coverage is unfinished.
+classification. FireRed, LeafGreen, Emerald, Ruby and Sapphire full-world
+coverage is unfinished.
 Collision, native metatile IDs, warps and player saves are not modified.
 
 ## Verified batch: Mossdeep Space Center
@@ -178,3 +179,40 @@ and eye/door captures in `leafgreen-cinnabar-mansion-review`. Mansion/Civic
 focused suites pass. LeafGreen native footprint census: 105 recognized
 assemblies, zero low walking-cell overlap flags. This is still only a scoped
 exterior addition; full regional building/furniture coverage remains unfinished.
+
+
+## Five-game checkpoint: independently reviewed Ruby/Sapphire dispatch
+
+Ruby/Sapphire previously missed Hoenn dispatch and fell through to Kanto tile
+interpretation. They now use a separate reviewed-family catalogue: the complete
+Oldale house, mart and Center drawings, plus checked general trees/signs/flowers.
+All source cells, including facades, must match. Identical Emerald IDs alone do
+not enable buildings, interior furniture or specialized terrain in these games.
+The RS house uses its native corrugated roof, not Emerald roof pixels. Birch's
+rectangular RS apparatus differs from Emerald's round apparatus and remains
+unmodeled pending a separate batch.
+
+Native source captures in `{ruby,sapphire,emerald}-rse-model-source` were compared
+separately. Ruby/Sapphire production captures in `{ruby,sapphire}-rse-model-review`
+include four Oldale placements, four orbit directions each, eye and door views.
+Inspected shells close at the sides/rear and preserve the native rear walking
+row. The separate native footprint audits recognize four assemblies per game,
+with zero low-face walking-cell overlap flags. These are bounded geometric
+checks, not evidence of complete world coverage or normal keyboard traversal.
+RS dispatch, Hoenn, Civic and three furniture regression suites pass.
+
+| Game | Current evidence in this workstream | Still unverified/unmodeled |
+| --- | --- | --- |
+| Emerald | Specialist batches above; 77 recognized assemblies, zero overlap flags | Remaining regional exteriors/interiors and exhaustive first-person coverage |
+| LeafGreen | Cinnabar lab/mansion and previous catalogue; 105 recognized assemblies, zero overlap flags | Remaining specialist buildings/interiors and exhaustive coverage |
+| FireRed | Fresh isolated import; Cinnabar native source is byte-identical to inspected LeafGreen source; front/eye/side production renders inspected; 105 recognized assemblies, zero overlap flags | Other models need per-game visual checks; lab rear orbit is occluded by neighboring mansion |
+| Ruby | Oldale three families/four placements and reviewed general scenery; four assemblies, zero overlap flags | Petalburg/Littleroot, all remaining regions and interiors |
+| Sapphire | Independently captured Oldale three families/four placements and reviewed general scenery; four assemblies, zero overlap flags | Petalburg/Littleroot, all remaining regions and interiors |
+
+FireRed evidence: `firered-frlg-specialist-source`, `firered-cinnabar-lab-review`,
+`firered-cinnabar-mansion-review`, `firered-building-footprints-after`. Its old QA
+cache entered the launcher; the user's supplied ROM was imported with engine
+0.3.52 into fresh `emerald-port-firered-models-qa`, without copying player saves.
+All paths above are beneath the existing scratch results directory. Test
+processes exited. No imported assets, captures, saves or ROMs are committed.
+Next batch: independently review Petalburg source families in Ruby/Sapphire.

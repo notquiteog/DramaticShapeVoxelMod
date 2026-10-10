@@ -84,6 +84,10 @@ for _,r in ipairs(Institution)do recipes[#recipes+1]=r end
 Designed.install(recipes)
 local Hoenn=V and V.require('Gen3Hoenn') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3Hoenn.lua')
 for _,r in ipairs(Hoenn.recipes)do recipes[#recipes+1]=r end
+local function recipeActive(r)
+ if Hoenn.recipeActive then return Hoenn.recipeActive(r)end
+ return Hoenn.active()==(r.family=='rse')
+end
 local function matched(mid,expected,r)
  return (r.kind=='escalator' and r.family~='rse' and Center.canonical(mid) or mid)==expected
 end
@@ -117,7 +121,7 @@ function M.extract(cells)
  table.sort(ordered,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
  for _,c in ipairs(ordered)do Budget.tick();if not c.prop and not c.stairs then
   for _,r in ipairs(choices(c.mid))do
-   if (Hoenn.active()==(r.family=='rse')) and c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
+   if recipeActive(r) and c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
     local match=true;local parts={}
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
@@ -429,7 +433,7 @@ function M.groundAt(c)
 end
 function M.cutouts(pair)
  local out={}
- for _,r in ipairs(recipes)do if Hoenn.active()==(r.family=='rse') and r.kind=='plant' and r.pair==pair then
+ for _,r in ipairs(recipes)do if recipeActive(r) and r.kind=='plant' and r.pair==pair then
   for _,row in ipairs(r.rows)do for _,mid in ipairs(row)do out[mid]=r.ground end end
  end end
  return out

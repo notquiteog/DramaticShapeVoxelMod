@@ -2,9 +2,20 @@
 -- were measured from the engine's composited Oldale maps; no ROM pixels ship.
 local V=...
 local M={recipes={},exteriors={}}
-function M.active()
+local function version()
  local ok,GV=pcall(require,'src.core.GameVersion')
- return ok and GV.get()=='emerald'
+ return ok and GV.get() or nil
+end
+local function rubySapphire()local v=version();return v=='ruby' or v=='sapphire'end
+local function RS()return V and V.require('Gen3RubySapphire') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3RubySapphire.lua')end
+function M.active()
+ local v=version();return v=='emerald' or v=='ruby' or v=='sapphire'
+end
+function M.exteriorRecipes()return rubySapphire() and RS().exteriors(M.exteriors) or M.exteriors end
+function M.recipeActive(r)
+ -- RS interiors require their own source/render batches before opt-in.
+ if rubySapphire() then return false end
+ return M.active()==(r.family=='rse')
 end
 local trees={}
 for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1e4,0x1e5,0x1e6,0x1e7}do trees[id]=true end
@@ -24,6 +35,7 @@ local fenceMauville={
 -- Ocean barrier rocks remain low, with their own water underlay. Resolve
 -- before the engine's surfable behavior because the artwork includes water.
 function M.surface(primary,mid,collision)
+ if rubySapphire() then return end
  if primary=='general' and collision==7 and (mid==0xc5 or mid==0x18c or mid==0x194)then
   return {kind='rock',ground=0x2d,height=6}
  end
@@ -31,6 +43,7 @@ end
 -- Complete Mossdeep tree drawings. Composite cliff artwork uses the native
 -- floor elevations and stone retaining faces, not an extra raised column.
 function M.prepareTrees(cells)
+ if rubySapphire() then return end
  local rows={{0x302,0x303,0x304},{0x30a,0x30b,0x30c},{0x312,0x313,0x314}}
  local variants={
   {rows=rows},
@@ -66,6 +79,7 @@ function M.prepareTrees(cells)
  return count
 end
 function M.shape(primary,secondary,mid,behavior,collision)
+ if rubySapphire() then return RS().shape(primary,secondary,mid,behavior,collision)end
  if primary=='building' and secondary=='shop' and collision==7 and (mid==0x222 or mid==0x244)then
   return {kind='roomWall',ground=0x201}
  end

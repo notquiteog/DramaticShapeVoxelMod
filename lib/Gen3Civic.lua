@@ -17,7 +17,7 @@ local function claim(cells,g,rows)
 end
 function M.prepare(cells,gyms,families)
  local H=V and V.require('Gen3Hoenn');local hoenn=H and H.active()
- if hoenn then families=H.exteriors end
+ if hoenn then families=H.exteriorRecipes and H.exteriorRecipes() or H.exteriors end
  local out={}
  for _,g in ipairs(gyms)do
   local b={cx=g.cx,cy=g.cy-1,pair=g.pair,kind='gym',variant=g.variant}
