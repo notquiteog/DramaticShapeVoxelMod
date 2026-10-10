@@ -572,3 +572,20 @@ is not evidence of a clear model-back view; Gold cabin rear supplies that view,
 though the renderer's off-map repeated wall/floor remains visible around it.
 Porthole, bed and source/shared assembly tests pass. Generic door caps, room
 boundaries and remaining cabin cabinetry are still open work.
+
+## Gold/Silver/Crystal cabin bookcases
+
+- [x] Two shelves retain four short, uneven native spine groups, above a
+  storage panel and below a complete native cap. Closed sides/back/base replace
+  the generic stretched barred appearance.
+
+Each edition has two complete drawings: NNW/NNE/NE cabin tile(14,24) and
+SE/SSE/captain cabin tile(10,48). Final `{game}-gen2-cabin-books` verifies both
+lower cells remain blocked and complete grids unchanged. Baseline Crystal
+`gen2-cabin-books-before` shows the stretched generic shelves. Inspected final
+Crystal first-person, Gold captain overview, Silver captain side and Crystal
+captain rear. Native four-group crop/height and closed-body tests pass, as do
+all source/shared assembly checks. Captures retain unrelated generic cabinets
+and lifesaver panels. Portholes overlapping those cabinets have a different
+lower tile row and remain outside the prior complete-wall-cell recipe; the61
+matches/game documented above do not imply every porthole pixel is covered.

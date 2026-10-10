@@ -101,7 +101,7 @@ return {
  },
  TILESET_LIGHTHOUSE={
   prop('ship_cabin_bed',24,{2,0,2,4},'bed',4,'gb_cabin_bed'),
-  prop('ship_cabin_books',47,{2,0,2,4},'cabinet',4),
+  prop('ship_cabin_books',47,{2,0,2,4},'cabinet',4,'gb_cabin_books'),
   prop('ship_cabin_chair',7,{2,2,2,2},'seat',4),
  },
  TILESET_GATE={
