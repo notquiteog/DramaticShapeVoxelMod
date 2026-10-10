@@ -14,6 +14,9 @@ local function ease(x) x=math.max(0,math.min(1,x));return x*x*x*(x*(x*6-15)+10) 
 function A.clear()
   Breakout.clear()
   for _,e in pairs(meshes) do if e.mesh and e.mesh.release then e.mesh:release() end end
+  for _,e in pairs(meshes)do for _,g in pairs(e.aura or{})do
+    if g.mesh and g.mesh.release then g.mesh:release()end
+  end end
   meshes={}
   if owner then owner.legendaryQ57=nil end
   owner=nil
@@ -100,6 +103,14 @@ function A.draw(battle)
       drew=true
       if p.captureOwner then p.captureOwner.q57Used=true end
       if p.entry then p.entry.q57Used=true end
+    end
+    if p.captureOwner and not p.burst and not disabled and p.captureOwner.q57Used then
+      local ball=p.captureOwner.ball
+      if ball and ball.drawCaptureAura then
+        e.aura=e.aura or{}
+        local x,y,z=Plasma.center(p,p.pull or 0)
+        ball:drawCaptureAura(x,y,z,1-.62*(p.pull or 0),0,e.aura)
+      end
     end
   end
   return drew

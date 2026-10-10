@@ -126,6 +126,7 @@ local function uvFor(slot, row)
   return (slot - 0.5) / SLOT_N, (row - 0.5) / #TIERS
 end
 
+local auraTextures={}
 local palette = nil
 local function paletteTexture()
   if palette ~= nil then return palette or nil end
@@ -413,6 +414,8 @@ end
 function Pokeball.invalidate()
   meshes = {}
   palette = nil
+  for _,image in pairs(auraTextures)do if image.release then image:release()end end
+  auraTextures={}
 end
 
 -- ------- an instance: one ball with a pose
@@ -876,6 +879,182 @@ function Pokeball:draw(pull)
 
 end
 
+-- Shared choreography for legacy beams and native Q57 intake. The caller owns
+-- draw batching; this emits presentation transforms only, never capture state.
+function Pokeball:captureAura(tx,ty,tz,strength,pull,emit)
+  local fxScale=PokeballSettings.fxScaleMult()
+  -- TEST74: independently tunable Pokemon capture aura.
+  local pokemonGlow = PokeballSettings.pokemonGlowMult()
+  if pokemonGlow > 0 then
+    local gt=self.glossT or 0
+    for i=1,6 do
+      local a=TAU*(i-1)/6 + gt*2.8
+      local rr=R*(1.00+0.16*math.sin(gt*5+i))*self.scale*fxScale
+      local gx=tx+math.cos(a)*rr
+      local gy=ty+math.sin(a)*rr*0.75
+      local gz=tz+math.sin(a)*rr*0.35
+      local gs=R*(0.38+0.18*pokemonGlow)*self.scale*fxScale
+      local G=Mat4.mul(Mat4.translate(gx,gy,gz),
+        Mat4.mul(Mat4.rotateY(eyeYaw(gx,gz)),Mat4.scale(gs,gs,1)))
+      emit(G,pull+5)
+    end
+  end
+
+  -- TEST62 EPIC SUCTION INTAKE -------------------------------------------
+  -- Directional choreography: bright ball core -> funnel -> contracting aura
+  -- -> inward spiral. Uses only localized, depth-tested cards.
+  if PokeballSettings.suctionEnabled() then
+    local particleMult = PokeballSettings.suctionParticleMult()
+    local st = math.max(0, math.min(1, strength or 1))
+    local time = self.glossT or 0
+
+    -- Vector from Pokemon target to the open ball.
+    local bx,by,bz = self.pos[1],self.pos[2],self.pos[3]
+    local vx,vy,vz = bx-tx,by-ty,bz-tz
+    local dist = math.sqrt(vx*vx+vy*vy+vz*vz)
+    if dist < 0.001 then dist=0.001 end
+    local nx,ny,nz=vx/dist,vy/dist,vz/dist
+
+    -- BALL CORE: several tiny nested cards make the open ball read as a
+    -- concentrated white energy source without lighting the whole scene.
+    local corePulse = 1 + 0.18*math.sin(time*18)
+    for j=1,4 do
+      local cs=(1.8+j*0.75)*corePulse*self.scale
+      local C=Mat4.mul(Mat4.translate(bx,by+R*0.10*self.scale,bz),
+        Mat4.mul(Mat4.rotateY(eyeYaw(bx,bz)),Mat4.scale(cs,cs,1)))
+      emit(C,pull+4+j)
+    end
+
+    if particleMult > 0 then
+    -- SUCTION FUNNEL: rings travel from Pokemon toward the ball and shrink.
+    -- This creates visible direction instead of a static halo.
+    local rings=math.max(1, math.floor(7*particleMult+0.5))
+    for r=1,rings do
+      local u=(r-1)/math.max(1,rings-1)
+      local travel=(u + time*2.1) % 1
+      local px=tx+vx*travel
+      local py=ty+vy*travel
+      local pz=tz+vz*travel
+      local radius=(7.5*(1-travel)+1.6)*self.scale
+      local cards=math.max(1, math.floor(6*particleMult+0.5))
+      for i=1,cards do
+        local a=TAU*(i-1)/cards + time*5.2 + travel*3.2
+        local hx=px+math.cos(a)*radius
+        local hy=py+math.sin(a)*radius*0.62
+        local hz=pz+math.sin(a)*radius*0.35
+        local sc=(1.15+1.35*(1-travel))*self.scale
+        local H=Mat4.mul(Mat4.translate(hx,hy,hz),
+          Mat4.mul(Mat4.rotateY(eyeYaw(hx,hz)),
+            Mat4.mul(Mat4.rotateZ(a+time*4),Mat4.scale(sc,sc,1))))
+        emit(H,pull+3)
+      end
+    end
+
+    -- POKEMON AURA: larger at first, then visibly contracts around the target.
+    local contract=0.35+0.65*st
+    local outer=math.max(1, math.floor(12*particleMult+0.5))
+    for i=1,outer do
+      local a=TAU*(i-1)/outer + time*3.4
+      local radius=(5.0+15.0*contract)*self.scale
+      local hx=tx+math.cos(a)*radius
+      local hy=ty+math.sin(a*1.45)*radius*0.72
+      local hz=tz+math.sin(a)*radius*0.40
+      local sc=(1.8+2.2*contract)*self.scale
+      local H=Mat4.mul(Mat4.translate(hx,hy,hz),
+        Mat4.mul(Mat4.rotateY(eyeYaw(hx,hz)),
+          Mat4.mul(Mat4.rotateZ(-a+time*5),Mat4.scale(sc,sc,1))))
+      emit(H,pull+2)
+    end
+
+    -- INWARD SPIRAL STRANDS: visually peel energy off the Pokemon and
+    -- corkscrew it toward the ball.
+    local strandsBase = self.ball=="MASTER_BALL" and 4 or
+                    self.ball=="ULTRA_BALL" and 3 or 2
+    local strands = math.max(1, math.floor(strandsBase*particleMult+0.5))
+    for strand=1,strands do
+      local phase=TAU*(strand-1)/strands
+      for k=1,8 do
+        local u=k/9
+        local px=tx+vx*u
+        local py=ty+vy*u
+        local pz=tz+vz*u
+        local a=phase + u*TAU*1.65 + time*6.5
+        local rr=(7.0*(1-u)+0.8)*self.scale
+        local hx=px+math.cos(a)*rr
+        local hy=py+math.sin(a)*rr*0.55
+        local hz=pz+math.sin(a)*rr*0.35
+        local sc=(1.45-0.55*u)*self.scale
+        local H=Mat4.mul(Mat4.translate(hx,hy,hz),
+          Mat4.mul(Mat4.rotateY(eyeYaw(hx,hz)),
+            Mat4.mul(Mat4.rotateZ(a),Mat4.scale(sc,sc,1))))
+        emit(H,pull+4)
+      end
+    end
+
+    end -- TEST74 particle-heavy funnel/spirals
+
+    -- TEST63: final intake snap. During the last quarter of the suction,
+    -- a tight collar collapses directly into the ball mouth.
+    if st < 0.28 then
+      local snap = 1 - st/0.28
+      for i=1,10 do
+        local a=TAU*(i-1)/10 + time*9.0
+        local rr=R*(0.75*(1-snap)+0.08)*self.scale
+        local hx=bx+math.cos(a)*rr
+        local hy=by+R*0.10*self.scale+math.sin(a)*rr*0.55
+        local hz=bz+math.sin(a)*rr*0.35
+        local sc=R*(0.13+0.10*(1-snap))*self.scale
+        local H=Mat4.mul(Mat4.translate(hx,hy,hz),
+          Mat4.mul(Mat4.rotateY(eyeYaw(hx,hz)),
+            Mat4.mul(Mat4.rotateZ(a-time*12),Mat4.scale(sc,sc,1))))
+        emit(H,pull+8)
+      end
+    end
+
+    -- MASTER BALL: extra compact vortex at the mouth of the ball.
+
+  end
+end
+
+-- Native capture uses at most seven depth groups instead of a draw per spark.
+-- The adapter owns/reclaims the transient GPU cache at the end of the battle.
+function Pokeball:drawCaptureAura(tx,ty,tz,strength,pull,cache)
+  if not self.visible then return false end
+  local pal=auraTextures[self.ball]
+  if not pal then
+    local rgb=(COLORS[self.ball]or COLORS.POKE_BALL).glow or SHARED.glow
+    local data=love.image.newImageData(32,32)
+    for y=0,31 do for x=0,31 do
+      local radius=math.sqrt(((x+.5)/16-1)^2+((y+.5)/16-1)^2)
+      data:setPixel(x,y,rgb[1],rgb[2],rgb[3],math.max(0,1-radius)^2*.65)
+    end end
+    pal=love.graphics.newImage(data);pal:setFilter("linear","linear")
+    if data.release then data:release()end
+    auraTextures[self.ball]=pal
+  end
+  local groups={}
+  self:captureAura(tx,ty,tz,strength,pull,function(m,depth)
+    local g=groups[depth];if not g then g={vertices={},indices={}};groups[depth]=g end
+    local function point(x,y)
+      return {m[1]*x+m[2]*y+m[4],m[5]*x+m[6]*y+m[8],
+        m[9]*x+m[10]*y+m[12],x+.5,1-y,1}
+    end
+    quad(g.vertices,g.indices,point(-.5,0),point(.5,0),point(.5,1),point(-.5,1))
+  end)
+  local drew=false
+  Voxel3D.withEffect("add",function()
+  for depth,g in pairs(groups)do
+    local old=cache[depth]
+    if not old or old.count~=#g.vertices then
+      if old and old.mesh and old.mesh.release then old.mesh:release()end
+      old={mesh=Voxel3D.newMesh(g.vertices,g.indices),count=#g.vertices};cache[depth]=old
+    elseif old.mesh and old.mesh.setVertices then old.mesh:setVertices(g.vertices)end
+    if old.mesh then Voxel3D.draw(old.mesh,pal,Mat4.identity(),depth);drew=true end
+  end
+  end)
+  return drew
+end
+
 -- the capture beam: a crossed pair of additive cards stretched from the
 -- ball's mouth to the mon it is drinking in. Separate from draw() because
 -- the caller owns the far end and the fade.
@@ -1001,137 +1180,9 @@ function Pokeball:drawBeam(tx, ty, tz, width, strength, pull)
     end
   end
 
-  -- TEST74: independently tunable Pokemon capture aura.
-  local pokemonGlow = PokeballSettings.pokemonGlowMult()
-  if pokemonGlow > 0 and m.glow then
-    local gt=self.glossT or 0
-    for i=1,6 do
-      local a=TAU*(i-1)/6 + gt*2.8
-      local rr=R*(1.00+0.16*math.sin(gt*5+i))*self.scale*fxScale
-      local gx=tx+math.cos(a)*rr
-      local gy=ty+math.sin(a)*rr*0.75
-      local gz=tz+math.sin(a)*rr*0.35
-      local gs=R*(0.38+0.18*pokemonGlow)*self.scale*fxScale
-      local G=Mat4.mul(Mat4.translate(gx,gy,gz),
-        Mat4.mul(Mat4.rotateY(eyeYaw(gx,gz)),Mat4.scale(gs,gs,1)))
-      Voxel3D.draw(m.glow,pal,G,pull+5)
-    end
-  end
-
-  -- TEST62 EPIC SUCTION INTAKE -------------------------------------------
-  -- Directional choreography: bright ball core -> funnel -> contracting aura
-  -- -> inward spiral. Uses only localized, depth-tested cards.
-  if PokeballSettings.suctionEnabled() and m.glow then
-    local particleMult = PokeballSettings.suctionParticleMult()
-    local st = math.max(0, math.min(1, strength or 1))
-    local time = self.glossT or 0
-
-    -- Vector from Pokemon target to the open ball.
-    local bx,by,bz = self.pos[1],self.pos[2],self.pos[3]
-    local vx,vy,vz = bx-tx,by-ty,bz-tz
-    local dist = math.sqrt(vx*vx+vy*vy+vz*vz)
-    if dist < 0.001 then dist=0.001 end
-    local nx,ny,nz=vx/dist,vy/dist,vz/dist
-
-    -- BALL CORE: several tiny nested cards make the open ball read as a
-    -- concentrated white energy source without lighting the whole scene.
-    local corePulse = 1 + 0.18*math.sin(time*18)
-    for j=1,4 do
-      local cs=(1.8+j*0.75)*corePulse*self.scale
-      local C=Mat4.mul(Mat4.translate(bx,by+R*0.10*self.scale,bz),
-        Mat4.mul(Mat4.rotateY(eyeYaw(bx,bz)),Mat4.scale(cs,cs,1)))
-      Voxel3D.draw(m.glow,pal,C,pull+4+j)
-    end
-
-    if particleMult > 0 then
-    -- SUCTION FUNNEL: rings travel from Pokemon toward the ball and shrink.
-    -- This creates visible direction instead of a static halo.
-    local rings=math.max(1, math.floor(7*particleMult+0.5))
-    for r=1,rings do
-      local u=(r-1)/(rings-1)
-      local travel=(u + time*2.1) % 1
-      local px=tx+vx*travel
-      local py=ty+vy*travel
-      local pz=tz+vz*travel
-      local radius=(7.5*(1-travel)+1.6)*self.scale
-      local cards=math.max(1, math.floor(6*particleMult+0.5))
-      for i=1,cards do
-        local a=TAU*(i-1)/cards + time*5.2 + travel*3.2
-        local hx=px+math.cos(a)*radius
-        local hy=py+math.sin(a)*radius*0.62
-        local hz=pz+math.sin(a)*radius*0.35
-        local sc=(1.15+1.35*(1-travel))*self.scale
-        local H=Mat4.mul(Mat4.translate(hx,hy,hz),
-          Mat4.mul(Mat4.rotateY(eyeYaw(hx,hz)),
-            Mat4.mul(Mat4.rotateZ(a+time*4),Mat4.scale(sc,sc,1))))
-        Voxel3D.draw(m.glow,pal,H,pull+3)
-      end
-    end
-
-    -- POKEMON AURA: larger at first, then visibly contracts around the target.
-    local contract=0.35+0.65*st
-    local outer=math.max(1, math.floor(12*particleMult+0.5))
-    for i=1,outer do
-      local a=TAU*(i-1)/outer + time*3.4
-      local radius=(5.0+15.0*contract)*self.scale
-      local hx=tx+math.cos(a)*radius
-      local hy=ty+math.sin(a*1.45)*radius*0.72
-      local hz=tz+math.sin(a)*radius*0.40
-      local sc=(1.8+2.2*contract)*self.scale
-      local H=Mat4.mul(Mat4.translate(hx,hy,hz),
-        Mat4.mul(Mat4.rotateY(eyeYaw(hx,hz)),
-          Mat4.mul(Mat4.rotateZ(-a+time*5),Mat4.scale(sc,sc,1))))
-      Voxel3D.draw(m.glow,pal,H,pull+2)
-    end
-
-    -- INWARD SPIRAL STRANDS: visually peel energy off the Pokemon and
-    -- corkscrew it toward the ball.
-    local strandsBase = self.ball=="MASTER_BALL" and 4 or
-                    self.ball=="ULTRA_BALL" and 3 or 2
-    local strands = math.max(1, math.floor(strandsBase*particleMult+0.5))
-    for strand=1,strands do
-      local phase=TAU*(strand-1)/strands
-      for k=1,8 do
-        local u=k/9
-        local px=tx+vx*u
-        local py=ty+vy*u
-        local pz=tz+vz*u
-        local a=phase + u*TAU*1.65 + time*6.5
-        local rr=(7.0*(1-u)+0.8)*self.scale
-        local hx=px+math.cos(a)*rr
-        local hy=py+math.sin(a)*rr*0.55
-        local hz=pz+math.sin(a)*rr*0.35
-        local sc=(1.45-0.55*u)*self.scale
-        local H=Mat4.mul(Mat4.translate(hx,hy,hz),
-          Mat4.mul(Mat4.rotateY(eyeYaw(hx,hz)),
-            Mat4.mul(Mat4.rotateZ(a),Mat4.scale(sc,sc,1))))
-        Voxel3D.draw(m.glow,pal,H,pull+4)
-      end
-    end
-
-    end -- TEST74 particle-heavy funnel/spirals
-
-    -- TEST63: final intake snap. During the last quarter of the suction,
-    -- a tight collar collapses directly into the ball mouth.
-    if st < 0.28 then
-      local snap = 1 - st/0.28
-      for i=1,10 do
-        local a=TAU*(i-1)/10 + time*9.0
-        local rr=R*(0.75*(1-snap)+0.08)*self.scale
-        local hx=bx+math.cos(a)*rr
-        local hy=by+R*0.10*self.scale+math.sin(a)*rr*0.55
-        local hz=bz+math.sin(a)*rr*0.35
-        local sc=R*(0.13+0.10*(1-snap))*self.scale
-        local H=Mat4.mul(Mat4.translate(hx,hy,hz),
-          Mat4.mul(Mat4.rotateY(eyeYaw(hx,hz)),
-            Mat4.mul(Mat4.rotateZ(a-time*12),Mat4.scale(sc,sc,1))))
-        Voxel3D.draw(m.glow,pal,H,pull+8)
-      end
-    end
-
-    -- MASTER BALL: extra compact vortex at the mouth of the ball.
-
-  end
+  if m.glow then self:captureAura(tx,ty,tz,strength,pull,function(matrix,depth)
+    Voxel3D.draw(m.glow,pal,matrix,depth)
+  end)end
   Voxel3D.blend(nil)
   Voxel3D.glass(true)
   Voxel3D.seams(true)

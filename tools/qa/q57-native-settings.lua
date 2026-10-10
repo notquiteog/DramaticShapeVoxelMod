@@ -14,6 +14,7 @@ return function(game)
  local settings=V.require('PokeballSettings')
  if streamer then settings.preset:setIndex(5,game);settings.streamers:setIndex(streamer,game)end
  settings.preset:setIndex(5,game);settings.beam:setIndex(os.getenv('Q57_OFF')=='1'and 1 or 5,game);settings.fxScale:setIndex(4,game)
+ settings.pokemonGlow:setIndex(os.getenv('AURA_OFF')=='1'and 1 or 4,game);settings.suctionParticles:setIndex(os.getenv('AURA_OFF')=='1'and 1 or 4,game)
  local effectSeen=false
  local trailSeen=false
  if os.getenv('CAPTURE_DARK')=='1' then V.require('UiBackplates').hudColor:setIndex(2,game) end
