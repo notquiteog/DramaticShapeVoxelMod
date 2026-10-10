@@ -17,7 +17,7 @@ return function(game)
  end
  U.wait(200)
 
- assert(gen<3)
+ assert(gen==2,'this fixture exercises Game2 staged canvas delivery')
  require('src.render.Pipelines').setLevel('voxel',0)
  game.mods.exports.BATTLE_ART_VOXEL_FORK.lib.require('OverworldBattle').setting:setIndex(os.getenv('QA_STAGE')=='off' and 2 or 1,game)
  game.save.options.battleBg='white'
