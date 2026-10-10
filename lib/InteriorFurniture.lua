@@ -481,6 +481,15 @@ function M.draw(id,A)
   B(3,10,1,13,11,31,edge)
   top({3,1,10,29},3,1,13,31,11.02)
   for _,x in ipairs{3,12}do B(x,0,28,x+1,10,31,edge)end
+ elseif id=='gb_department_window' then
+  -- The diagonal stripes are native glass reflections, not a sloping roof.
+  -- Keep the entire wall and sill within its original blocked 16px cell.
+  local frame,wall=T(0,0),T(0,15)
+  B(0,0,0,16,24,14,wall)
+  B(0,7,14,1,24,15.5,frame);B(15,7,14,16,24,15.5,frame)
+  B(1,23,14,15,24,15.5,frame)
+  B(0,7,14,16,8,16,frame)
+  front({1,1,14,14},1,8,15,23,14.02)
  elseif id=='gb_department_bench' then
   local edge,cloth=T(1,1),T(6,6)
   B(2,0,3,4,3,29,edge);B(12,0,3,14,3,29,edge)
