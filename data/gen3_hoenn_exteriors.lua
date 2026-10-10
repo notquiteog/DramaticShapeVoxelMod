@@ -1,6 +1,15 @@
 -- Complete native city buildings reviewed against the imported map drawings.
 -- Runtime supplies all pixels; these records contain layout identifiers only.
 return {
+ {name='lilycove_gold_residence',pair='general__lilycove',kind='tiered_home',header=5,
+  rows={{0x001,0x293,0x294,0x294,0x295,0x001},
+   {0x293,0x296,0x29c,0x29c,0x297,0x295},
+   {0x29b,0x29e,0x2bf,0x2bf,0x29f,0x29d},
+   {0x2a3,0x286,0x2af,0x2a5,0x2a5,0x2a6},
+   {0x2ab,0x28e,0x2b7,0x2ad,0x2ad,0x2ae}},
+  back=16,bodyBack=18,roofEnd=54,wallBottom=79,wallHeight=28,bevel=0,roofShape='tiered',
+  wallSample={43,72},trimSample={20,36},openings={{16,60,32,79,door=true},{47,60,56,70},{63,60,72,70}}},
+
  {name='lilycove_harbor',pair='general__lilycove',kind='harbor',harbor=true,roundWindows=false,header=6,
   rows={{0x348,0x349,0x349,0x349,0x349,0x349,0x34a},
    {0x350,0x351,0x351,0x351,0x351,0x351,0x352},

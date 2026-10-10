@@ -582,7 +582,9 @@ function M.append(g,emit)
  local function height(xx,zz)
   return p.wall+p.bevel*math.min(1,xx/5,(p.w-xx)/5,(zz-p.back)/5,(p.front-zz)/7)
  end
- if g.custom and g.custom.roofShape then
+ if g.custom and g.custom.roofShape=='tiered' then
+  V.require('Gen3TieredRoof').append(g,p,emit)
+ elseif g.custom and g.custom.roofShape then
   local style=g.kind=='center' and g.custom.family=='rse' and g.custom.roofShape=='barrel' and 'hipped_barrel' or g.custom.roofShape
   Architecture.roof(p,style,g.custom.roofRise,uv,function(v,t,shade)
    local out={};for i,q in ipairs(v)do out[i]={x+q[1],q[2],z+q[3]}end;face(out,t,shade)

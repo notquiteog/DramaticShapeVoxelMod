@@ -126,3 +126,16 @@ previous focused model suites pass. Native footprint census: 76 recognized
 assemblies, zero low-face overlap flags. This is scoped evidence for recognized
 assemblies, not proof of complete regional scenery coverage. Next source targets
 include Lilycove museum/department store and Slateport specialist buildings.
+
+## Verified batch: Lilycove gold residence
+
+The exact 6×5 drawing at (36,20) now has two raised gold roof tiers, native
+repeating seam/highlight strips, pale ridge caps and the silver dormer fascia.
+Closed risers support the upper tier; both tiers have closed undersides/end
+caps. Native recessed door/windows and gold corner posts continue around the
+shell. Low geometry remains south of the native rear walking row.
+
+`results/emerald-tiered-home-review`: production orbit and eye captures
+inspected. First prototype had an unsupported upper tier; its riser was closed
+before final capture. Tiered-home/Civic/Hoenn tests pass. Emerald footprint
+census now recognizes 77 assemblies with zero low walking-cell overlap flags.
