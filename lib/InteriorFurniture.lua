@@ -481,6 +481,25 @@ function M.draw(id,A)
   B(3,10,1,13,11,31,edge)
   top({3,1,10,29},3,1,13,31,11.02)
   for _,x in ipairs{3,12}do B(x,0,28,x+1,10,31,edge)end
+ elseif id=='gb_underground_stall_counter' then
+  -- A complete long stall has one green top and a rounded, fluted end.
+  -- Close the underside and the perimeter without enlarging its three cells.
+  local material=T(7,8)
+  local rim={{1,0},{15,0},{15,43},{13,47},{3,47},{1,43}}
+  for i,a in ipairs(rim)do
+   local b=rim[i%#rim+1]
+   A.face({{b[1],0,b[2]},{a[1],0,a[2]},{a[1],8,a[2]},{b[1],8,b[2]}},material,.8)
+  end
+  B(1,0,0,15,.5,43,material)
+  A.face({{1,0,43},{15,0,43},{13,0,47},{3,0,47}},material,.65)
+  top({1,0,14,40},1,0,15,43,8)
+  S(2,39,12,2,{1,8,43},{15,8,43},{13,8,47},{3,8,47})
+  front({2,41,12,6},3,0,13,7.8,47.01)
+  local flute=T(3,45)
+  for z=1,41,2 do
+   B(.75,0,z,1.15,7.8,z+.5,flute)
+   B(14.85,0,z,15.25,7.8,z+.5,flute)
+  end
  elseif id=='gb_department_directory' then
   -- Native background event identifies this as the floor directory, not a
   -- cupboard. The original lettering belongs only on its recessed front.

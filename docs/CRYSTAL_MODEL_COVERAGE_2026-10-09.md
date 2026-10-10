@@ -150,3 +150,27 @@ approach is walkable and its adjacent control-wall cell is blocked. All pass.
 These are pattern/footprint counts, not visual sign-off of every placement.
 The difference in window totals reinforces that versions are checked
 independently. Runtime outputs: `results/{game}-gen2-new-fixture-census`.
+
+## Goldenrod Underground stalls and plants
+
+- [x] Three complete long green stalls: closed shaped ends, native green tops,
+  fluted sides and underside. Front skirt pixels are kept off the countertop
+  after first-person review found their initial crop leaking onto the top.
+- [x] Nine tall and three short plants use the existing closed native-palette
+  planter/leaf model rather than cuboid tree drawings.
+- [ ] Underground stools intentionally remain flat: native collision0 permits
+  walking through those drawings. Raising stools would obstruct the aisle.
+- [ ] Underground static overview is obscured by an existing gray enclosure
+  ceiling. First-person/orbit inspections work; ceiling gate fix is separate.
+
+Recipes are explicitly scoped to GOLDENROD_UNDERGROUND, which uses TILESET_GATE
+(the similarly named warehouse uses TILESET_UNDERGROUND). An initial wrong
+family assignment produced unchanged art and was corrected before acceptance.
+
+Gold/Silver/Crystal native source images inspected independently. Final
+`gen2-underground-verified.lua` asserts 3 built stalls and plant presence, with
+full native tile/collision invariants at walkable `(4,12)`. All report 3 stalls,
+9 tall plants and 3 short plants. Inspected Crystal/Silver first-person and
+Gold side views. Counts are assembly matches, not all-world visual coverage.
+Native stool/counter collision examined in `gen2-underground-footprints`.
+Underground, complete-furniture and existing depth-furniture tests pass.

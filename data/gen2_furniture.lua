@@ -252,6 +252,14 @@ for i,r in ipairs(station)do
  r.design=({'gb_station_seat','gb_station_fence','gb_station_entry'})[i]
  r.groundTiles={{i==1 and 61 or 62}};r.groundAligned=true
 end
-return {TILESET_TRAIN_STATION=station,TILESET_GAME_CORNER=corner,TILESET_RADIO_TOWER=radio,TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
+local underground={
+ {id='crystal_underground_stall_counter',tiles={{8,9},{24,25},{24,25},{24,25},{24,25},{36,37}},groundTiles={{1}},design='gb_underground_stall_counter',parts={},support=8},
+ {id='crystal_underground_tall_plant',tiles={{56,57},{5,6},{5,6},{21,22}},groundTiles={{1}},model='planter',parts={},support=0},
+ {id='crystal_underground_small_plant',tiles={{56,57},{21,22}},groundTiles={{1}},model='planter',parts={},support=0},
+}
+-- The neighboring stool drawings are native WALKABLE floor, so they are not
+-- raised into models that would visually block the narrow shopping aisle.
+for _,r in ipairs(underground)do r.maps={GOLDENROD_UNDERGROUND=true} end
+return {TILESET_GATE=underground,TILESET_TRAIN_STATION=station,TILESET_GAME_CORNER=corner,TILESET_RADIO_TOWER=radio,TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
   TILESET_HOUSE=commonHouse,TILESET_TRADITIONAL_HOUSE=traditional,TILESET_MART=mart,TILESET_POKECENTER=center,
   TILESET_PLAYERS_ROOM=bedroom}
