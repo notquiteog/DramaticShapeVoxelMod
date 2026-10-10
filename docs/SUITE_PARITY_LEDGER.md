@@ -29,17 +29,17 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 | Battle Art | emerald | Partial; Gen3 adapter | Gen3 inventory remains partial/provider-dependent | Raised masonry four colors/OFF only |
 | Battle Art | firered | Partial; Gen3 adapter | Gen3 inventory remains partial/provider-dependent | Unverified |
 | Battle Art | leafgreen | Partial; Gen3 adapter | Gen3 inventory remains partial/provider-dependent | Standing-trainer public test provider ON/OFF; actual companion models provider-dependent |
-| Wild Skies | red | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wild Skies | blue | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wild Skies | yellow | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wild Skies | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wild Skies | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wild Skies | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wild Skies | ruby | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete | Native regional bird pool; guest empty-before-snapshot and host flying replica verified |
-| Wild Skies | sapphire | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete | Native regional bird pool; guest empty-before-snapshot and host flying replica verified |
-| Wild Skies | emerald | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete | Unverified |
-| Wild Skies | firered | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete | Unverified |
-| Wild Skies | leafgreen | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete | Unverified |
+| Wild Skies | red | Partial; Gen1 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wild Skies | blue | Partial; Gen1 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wild Skies | yellow | Partial; Gen1 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wild Skies | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wild Skies | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wild Skies | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wild Skies | ruby | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete |Native regional bird pool; guest empty-before-snapshot and host flying replica verified; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wild Skies | sapphire | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete |Native regional bird pool; guest empty-before-snapshot and host flying replica verified; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wild Skies | emerald | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wild Skies | firered | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wild Skies | leafgreen | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
 | Sky Ride | red | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
 | Sky Ride | blue | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
 | Sky Ride | yellow | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
@@ -73,17 +73,17 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 | Online | emerald | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote ride actors, single/double complete turn, normal end and original HP/PP restore; native trade exchange/save; disconnect cleanup |
 | Online | firered | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote ride actors, single/double complete turn, normal end and original HP/PP restore; native trade exchange/save; disconnect cleanup |
 | Online | leafgreen | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote ride actors, single/double complete turn, normal end and original HP/PP restore; native trade exchange/save; disconnect cleanup |
-| Wilds | red | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wilds | blue | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wilds | yellow | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wilds | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wilds | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wilds | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Wilds | ruby | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete | Native regional town residents; guest empty-before-snapshot and host ground replica verified |
-| Wilds | sapphire | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete | Native regional town residents; guest empty-before-snapshot and host ground replica verified |
-| Wilds | emerald | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete | Unverified |
-| Wilds | firered | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete | Unverified |
-| Wilds | leafgreen | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete | Unverified |
+| Wilds | red | Partial; Gen1 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wilds | blue | Partial; Gen1 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wilds | yellow | Partial; Gen1 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wilds | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wilds | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wilds | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wilds | ruby | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete |Native regional town residents; guest empty-before-snapshot and host ground replica verified; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wilds | sapphire | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete |Native regional town residents; guest empty-before-snapshot and host ground replica verified; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wilds | emerald | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wilds | firered | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
+| Wilds | leafgreen | Partial; Gen3 adapter | Shared native schema unit-tested; full options/runtime not complete |; actual paired host/guest non-empty ground AND sky ID/species/level rosters converge|
 | Modern UI | red | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
 | Modern UI | blue | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
 | Modern UI | yellow | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
@@ -130,3 +130,5 @@ The GBA paired matrix now also runs on Emerald, FireRed and LeafGreen: one nativ
 Gen2 paired battle follow-up: Crystal and Gold native singles exercised fainted-slot replacement and returned without mutating saved HP/PP. Gold, Silver and Crystal doubles independently completed with mirrored win/lose outcomes and matching turn hashes. Fixture explicitly checks native battle.over and rejects doubleRoom.failed; replacement selection uses the native party menu. Other encounter/switch/edge cases remain unverified.
 
 Red, Blue and Yellow were subsequently run independently through paired online doubles: each pair completed with mirrored win/lose result, verified turn hash and preserved saved HP/PP. The fixture uses native party-menu replacement and native actions; no direct battle result injection. Full singles/trades and wider disconnect/switch matrices are still distinct open work.
+
+All eleven editions independently passed real paired host/guest field-roster convergence: both non-empty ground and SKY ID/species/level fingerprints match across separate processes. This validates common visible actors; it does not yet verify every contact claim, simultaneous throw, rejoin, remote-map lifecycle or motion frame. Fixture: `tools/qa/native-online-roster.lua`.
