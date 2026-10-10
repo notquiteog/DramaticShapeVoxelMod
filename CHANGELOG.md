@@ -1,3 +1,9 @@
+## 1.32.1 — 2026-10-10
+
+The right stick is camera-only while a camera claims it. Engine 0.3.73 taught Input twin-stick walking (rightstick directions bind onto up/down/left/right), so on a free-camera rung one throw both steered the camera and walked the player. Both input paths (the Gen 1 gamepadaxis patch and the Gen 2 input.gamepad hook) now consult FirstPerson.stickClaimed: while the 1ST/3RD rungs are selected, or a staged battle's lens is steerable, the throw is consumed by the camera and never reaches the engine's translation; off those rungs the engine's new walk is preserved untouched. Raw non-gamepad sticks and Gen 3 were never translated and are unchanged.
+
+Verified on Gen1Recomp 0.3.73 Crystal: 238 tests passed, 0 failed, 58 skipped, and a live NEW_BARK_TOWN run confirmed the right stick pans under 1ST while the player holds position, while OFF the rungs the engine's walk still drives the player; the dialogue-camera driver passes with the claim active.
+
 ## 1.32.0 — 2026-10-10
 
 Ship the native interior and landmark modeling push across all three generations: Gen2 ships, the Radio Tower's bookcases and broadcast rooms, department stores, Rocket hideouts, facilities, Birch and Oak labs, Hoenn Marts and Centers, Pewter Museum, Silph Co, Celadon and Saffron streets, Cinnabar, Littleroot, Oldale, Petalburg, Rustboro, Lilycove, Slateport, Devon, Mossdeep, the Battle Tower and Contest Hall. Gen2 staged battles now deliver independently of the overworld pipeline level, and native walking lanes, seats, roofs and aisles stay clear in every edition. Online play is verified across all eleven editions: settings reachability, shared ground and sky rosters, doubles, trades, singles, captures with full-PC rejections, and LAN field roster reconvergence.
