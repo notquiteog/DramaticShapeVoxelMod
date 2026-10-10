@@ -12,7 +12,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  assert(S.of('general','petalburg',1,0x10,0).kind=='water')
  assert(S.of('general','petalburg',0x2a,0x2a,0).kind=='flat','seaweed became Kanto stairs')
  assert(S.of('building','facility',0x2f8,0,7).kind=='flat','unreviewed Emerald interior leaked')
- local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop')end end;assert(approved==29)
+ local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop' or r.pair=='building__lab')end end;assert(approved==37)
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)

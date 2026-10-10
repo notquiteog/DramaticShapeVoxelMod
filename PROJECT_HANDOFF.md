@@ -1,3 +1,10 @@
+# Ruby/Sapphire Birch lab core furniture — 2026-10-09
+
+Eight source-checked families enabled; RS front/rear/side/eye renders inspected,
+scoped audits8/0 and focused suites pass. Emerald comparison9/2 flags existing
+circular machine apron intrusion, next priority. RS machine stays disabled;
+workstations/side equipment remain native.
+
 # Hoenn Mart register — 2026-10-09
 
 Native-source sloped till and closed pedestal now modeled for RS/Emerald.

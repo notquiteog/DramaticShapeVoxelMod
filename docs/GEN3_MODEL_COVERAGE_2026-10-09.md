@@ -438,3 +438,19 @@ directories. Scoped audits8/0 in each game; Hoenn/RS/additional-furniture suites
 pass, including three-edition complete matching and service-cell bounds.
 Small wall decorations and broader regional variants remain unreviewed. No
 collision, interaction or save changes; normal service interactions untested.
+
+
+## Verified batch: Ruby/Sapphire Birch lab core furniture
+
+Eight separate native-source-compatible families enable bookcases, computer,
+research desk, starter cupboards, server and plant. RS/E native sources captured
+independently in `-rse-birch-source`; RS front/rear/side/eye production renders
+inspected in `-rse-birch-review`. Scoped RS audits8/0 each, RS/designed suites
+pass. Source-only aliasing remains gated for other room equipment.
+
+The matching Emerald comparison exposes9/2: the existing circular machine
+extends into walking apron cells(10,8)/(11,8). Its RS recipe remains disabled
+until a dedicated geometry correction. South workstations and side equipment
+are also still native. Initial review drivers retained an unrelated escalator
+strip assertion; removed that QA-only block and reran successfully before
+recording final audits. Player saves/gameplay unchanged.
