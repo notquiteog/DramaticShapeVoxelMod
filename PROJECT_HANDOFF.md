@@ -1,3 +1,11 @@
+# FRLG Saffron short green-roof houses — 2026-10-09
+
+Added complete four-row native family (three instances each edition), closed
+barrel roofs with original green strips, yellow wall sample and native paving
+underlay. Front/rear/eye production captures reviewed, native audits 3/0;
+four focused suites pass. Dense neighbors obscure side elevations in orbit
+captures; fully unobstructed side review remains open. Wider coverage incomplete.
+
 # FRLG Saffron yellow offices — 2026-10-09
 
 Corrected misaligned old recipe (paving included, facade truncated) with full

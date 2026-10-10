@@ -217,6 +217,12 @@ return {
 {664,665,667,668},
 {672,673,675,676},
 }},
+{name='saffron_low_house',pair='general__rom_082d4b9c',roofShape='barrel',roofRise=5,roofPaintGreen=true,header=4,back=8,roofEnd=40,wallBottom=63,wallHeight=26,bevel=2,ground=0x2e5,wallSample={24,54},rows={
+{0x2dc,0x2dd,0x2dd,0x2de},
+{0x29d,0x29e,0x29e,0x29f},
+{0x2a5,0x2a6,0x28f,0x2a7},
+{0x2a0,0x2a1,0x2a3,0x2a4},
+}},
 {name='saffron_tall_house',pair='general__rom_082d4b9c',geometry='saffron_office',kind='office_block',header=6,back=0,roofEnd=32,wallBottom=96,ground=0x2e5,rows={
 {0x281,0x282,0x282,0x285,0x286},
 {0x288,0x289,0x289,0x28d,0x28e},

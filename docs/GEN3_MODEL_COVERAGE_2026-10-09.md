@@ -603,3 +603,23 @@ flags each. Four focused tests pass: `gen3_saffron_office_test`, `gen3_civic_tes
 `gen3_rear_roof_test`, `gen3_silph_test`. Same isolated profiles/runtime as Silph;
 no player-save or engine gameplay changes. Ordinary movement not verified.
 Short green Saffron house variants and other regions remain incomplete.
+
+## Partial visual review: FRLG Saffron short green-roof houses
+
+Added the complete four-row drawing at (22,18), (42,18), (27,35); independent
+FR/LG source exports match. Closed shallow barrel roof, source green stripe
+continuation excluding projected paving corners, correct yellow wall sample
+and paved underlay. Native rear walking row remains clear. Source facade
+and openings remain unchanged; this family contains no native door.
+
+`results/{firered,leafgreen}-saffron-low-review`: front/rear and first-person
+captures inspected, plus orbit captures showing surrounding houses. Adjacent
+buildings obscure side elevations; unobstructed side review remains pending.
+Initial generic wall sample selected grey trim and grass underlay; reviewed
+render prompted yellow siding and native paving correction. Same isolated
+profiles/runtime as the preceding two Saffron batches.
+
+Native scoped audit 3 recognized / 0 low-face flags each, before the final
+material-only correction. Tests: `gen3_saffron_low_test`, `gen3_civic_test`,
+`gen3_rear_roof_test`, `gen3_scene_cache_test` pass. No normal input traversal
+claim. More green-roof families remain flat; city/game coverage unfinished.

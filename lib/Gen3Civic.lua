@@ -290,7 +290,7 @@ function M.material(g)
  -- The solid roof prism must use roof paint there, never grass or paving.
  -- Extend the actual red/blue roof stripe on each row into those corners;
  -- facade pixels in the first half of the material remain untouched.
- if g.kind=='center' or g.kind=='mart' then
+ if g.kind=='center' or g.kind=='mart' or (g.custom and g.custom.roofPaintGreen) then
   local painted,empty={},{}
   for yy=p.back,p.roofEnd-1 do
    local left,right
@@ -298,6 +298,7 @@ function M.material(g)
     local rr,gg,bb,aa=data:getPixel(p.w+xx,yy)
     local paint=g.kind=='center' and rr>gg+.06 and rr>bb+.04
      or g.kind=='mart' and rr<.55 and bb>rr+.18 and bb>gg+.025
+     or g.custom and g.custom.roofPaintGreen and gg>rr+.05 and gg>bb+.04
     if aa>.9 and paint then left=left or xx;right=xx end
    end
    if left and right then
