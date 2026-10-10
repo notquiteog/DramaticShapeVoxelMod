@@ -370,6 +370,12 @@ function M.material(g)
    for yy=31,40 do data:setPixel(p.w+xx,yy,sourcePixel(g,12,yy))end
   end
  end
+ if g.custom and g.custom.harbor then
+  for xx=0,p.w-1 do
+   local rr,gg,bb,aa=sourcePixel(g,math.max(2,math.min(p.w-3,xx)),24)
+   for yy=0,55 do data:setPixel(p.w+xx,yy,rr,gg,bb,aa)end
+  end
+ end
  if g.launchDisplay then
   -- Native red launch-gantry swatch, without bundling its art.
   local rr,gg,bb,aa=sourcePixel(g,4,4,0x379)
@@ -381,6 +387,7 @@ end
 -- Reuse one real facade window for unseen elevations, excluding tall door
 -- glass and panes that reach the ground. Native source pixels stay private.
 function M.window(g)
+ if g.custom and g.custom.roundWindows then return end
  if g.custom and g.custom.profile=='hoenn_gym' then return {9,49,23,54}end
  for _,o in ipairs(g.custom and g.custom.openings or {})do
   if not o.door then return {o[1],o[2],o[3],o[4]}end
@@ -695,5 +702,6 @@ function M.append(g,emit)
    face({{x+sx,y+1,z+bodyBack},{x+sx,y+1,z+sideFront},{x+sx,y,z+sideFront},{x+sx,y,z+bodyBack}},trim,.88)
   end
  end
+ if g.custom and g.custom.roundWindows then V.require('Gen3HarborDetails').append(g,p,emit)end
 end
 return M

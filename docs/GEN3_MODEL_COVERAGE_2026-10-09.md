@@ -110,3 +110,19 @@ Production front/right/rear/left and eye views inspected in
 ContestHall/Civic/Hoenn focused tests pass. Emerald footprint census: 74
 recognized assemblies, zero low-face overlap flags. Other regional Contest
 Halls use different drawings and remain outside this model's coverage.
+
+## Verified batch: Lilycove and Slateport harbor terminals
+
+Two exact 7×6 source patterns now have closed corrugated gable roofs, native
+nautical facades and recessed entrances. Lilycove retains rectangular windows;
+Slateport has solid circular frames and recessed native glass on all elevations.
+Roof stripes repeat the native interior sample without projecting top-down
+corner/background pixels over the raised slopes. Lilycove's native rear walking
+row remains clear; Slateport retains its distinct blocked rear footprint.
+
+Production orbit and eye/door captures inspected in
+`results/emerald-harbors-review`, isolated Emerald0.3.52 profile. Harbor and all
+previous focused model suites pass. Native footprint census: 76 recognized
+assemblies, zero low-face overlap flags. This is scoped evidence for recognized
+assemblies, not proof of complete regional scenery coverage. Next source targets
+include Lilycove museum/department store and Slateport specialist buildings.
