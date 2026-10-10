@@ -245,7 +245,9 @@ do
  local roots=0
  for _,v in pairs(c)do assert(v.shape.kind=='tree');if v.shape.root then roots=roots+1;assert(v.cx==2 and v.cy==3 and v.collision==7);assert(v.shape.anchorX==8 and v.shape.anchorZ==8)end end
  assert(roots==1 and c['2:3'].shape.treeFamily=='mossdeep')
- c=fixture();c['1:1'].mid=0x2fa;assert(H.prepareTrees(c)==0,'cliff-composite tree consumed terrain')
+ c=fixture();c['1:1'].mid=0x2fa;assert(H.prepareTrees(c)==0,'partial cliff-composite tree consumed terrain')
+ c['2:1'].mid=0x2fb;assert(H.prepareTrees(c)==1)
+ assert(c['1:1'].collision==0 and c['1:1'].shape.kind=='tree' and not c['1:1'].shape.root and c['1:1'].shape.retaining==0x71,'walkable corner raised or terrain material lost')
  c=fixture();c['2:3'].collision=0;assert(H.prepareTrees(c)==0,'trunk placed on walking lane')
  c=fixture();c['1:1']=nil;assert(H.prepareTrees(c)==0,'partial drawing consumed')
 end
@@ -257,3 +259,17 @@ for y=0,16 do for x=-24,24 do for z=-24,24 do
   assert(math.abs(x)<8 and math.abs(z)<8,'Mossdeep low trunk extends outside blocked center cell')
  end
 end end end
+
+do
+ local rows={{0x2f2,0x2f3,0x2f4},{0x301,0x30b,0x305},{0x312,0x313,0x314}}
+ local cells={}
+ for y,row in ipairs(rows)do for x,mid in ipairs(row)do
+  cells[x..':'..y]={cx=x,cy=y,mid=mid,primary='general',secondary='mossdeep',pair='general__mossdeep',collision=y==2 and 0 or 7,shape={kind='flat'}}
+ end end
+ assert(H.prepareTrees(cells)==1)
+ for x=1,3 do assert(cells[x..':1'].shape.retaining==0x71 and cells[x..':1'].shape.ground==0x6c and not cells[x..':1'].shape.root,'north cliff erased by tree');assert(cells[x..':2'].shape.kind=='tree' and not cells[x..':2'].shape.root)end
+ assert(cells['2:3'].shape.root)
+ cells['2:1'].collision=0
+ assert(H.prepareTrees(cells)==0,'walkable cliff composite raised')
+end
+print('PASS north-cliff Mossdeep trees preserve blocked terrain band')

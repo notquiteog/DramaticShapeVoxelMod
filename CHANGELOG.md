@@ -1,5 +1,8 @@
 ## Unreleased
 
+- Model Mossdeep cliff-composite trees while preserving native terrain levels
+  and clear walking corners; stop repeating tree art down retaining faces.
+
 - Model complete standalone Mossdeep trees from native artwork, anchor trunks
   inside blocked cells, and exclude lawn colors from foliage materials.
 

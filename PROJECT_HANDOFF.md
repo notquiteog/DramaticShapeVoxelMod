@@ -1,3 +1,23 @@
+# Mossdeep cliff-composite trees — 2026-10-09 (unreleased)
+
+Complete north-edge and corner composite trees now join the two standalone
+Mossdeep trees in the original-art tree pipeline. Full 3x3 patterns and blocked
+root required. North band retains native floor elevation, stone cap and stone
+retaining material; it does not add an artificial 24px column. Walkable corner
+cells remain flat under the canopy. No collision/warp changes. All four large
+Mossdeep trees now have matching recipes; this does not cover other tree types.
+Gen3 tree retaining faces now use their underlay instead of stretching tree
+art vertically. Parent owns these Gen3Hoenn/Scene/test edits.
+
+Engine0.3.52 source-map inspection plus production turntables and eye views:
+.scratch/coverage-20261004/results/emerald-mossdeep-cliff-tree and
+emerald-mossdeep-corner-tree. Inspected front/rear north band and corner front;
+first prototype introduced artificial rock columns and was corrected before
+commit. Source scenery still has unrelated flat buildings/foliage requiring
+further coverage. Tests: .scratch/mossdeep-cliff-20261009-tests.log.
+
+Generation-parity and Modern UI agents restarted at user's explicit request.
+
 # Mossdeep standalone trees — 2026-10-09 (unreleased)
 
 Two complete native 3x3 Mossdeep trees now use the shared original-art tree

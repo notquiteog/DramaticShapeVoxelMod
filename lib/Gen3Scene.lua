@@ -442,7 +442,9 @@ local function build(req,cache,previous)
       local bx,bz=ax+(d[1]==0 and 16 or 0),az+(d[2]==0 and 16 or 0)
       -- Claimed source cells contain roof/window art. Their raised
       -- foundation continues local ground, never another upright facade.
-      local retaining=c.civic and uvFor(ts,Civic.ground(c))or uv
+      local retaining=c.civic and uvFor(ts,Civic.ground(c))
+       or shape.retaining and uvFor(ts,shape.retaining)
+       or shape.kind=='tree' and uvFor(ts,shape.ground or 1) or uv
       quad(b.v,b.i,{{ax,low,az},{bx,low,bz},{bx,base,bz},{ax,base,az}},retaining or uv,.78)
      end
     end
