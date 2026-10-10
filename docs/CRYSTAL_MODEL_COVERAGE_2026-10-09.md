@@ -589,3 +589,25 @@ all source/shared assembly checks. Captures retain unrelated generic cabinets
 and lifesaver panels. Portholes overlapping those cabinets have a different
 lower tile row and remain outside the prior complete-wall-cell recipe; the61
 matches/game documented above do not imply every porthole pixel is covered.
+
+## Gold/Silver/Crystal walkable cabin-chair correction
+
+- [x] Removed the specific generic chair recipe that raised geometry over
+  native walkable cells. Original chair drawings remain at floor level.
+
+Independent and live audits find27 chairs/game: Lighthouse6F1, NNW/NNE/NE6,
+SW/SSW/NW8, SE/SSE/captain6 and shipB1F6. All have native collision0 and remain
+walkable. Crystal baseline `gen2-cabin-chairs-before` confirms raised seats in
+three maps before its SE camera hit a table; final camera moved to(4,7).
+Final `{game}-gen2-cabin-chairs-flat` completes all five maps, asserts zero
+removed-template placements and unchanged full grids. The committed isolated
+`tests/gen2_cabin_chairs_driver.lua` also moves normally onto SW-cabin chair(4,5)
+and back to(4,6) in all three editions. A direction reversal includes the
+native turn before the return step.
+
+Inspected Crystal SW overview and Silver SW first-person: chair art is intact
+without a raised walking obstruction. Gold SE overview is table-occluded and
+not counted as a clear chair view. Cabin-book/bed regressions and60 source
+recipes/34 assemblies pass. Radio/station seats need separate walkability
+review; this change does not assert they are safe. G/S cabin tables also show
+unmodeled generic volumes and remain a separate edition-specific coverage gap.

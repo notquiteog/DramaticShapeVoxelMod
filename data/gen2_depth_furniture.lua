@@ -102,7 +102,8 @@ return {
  TILESET_LIGHTHOUSE={
   prop('ship_cabin_bed',24,{2,0,2,4},'bed',4,'gb_cabin_bed'),
   prop('ship_cabin_books',47,{2,0,2,4},'cabinet',4,'gb_cabin_books'),
-  prop('ship_cabin_chair',7,{2,2,2,2},'seat',4),
+  -- The native chair cells are walkable in G/S/C. Preserve the floor art;
+  -- a raised seat here would occupy the original walking route.
  },
  TILESET_GATE={
   prop('gate_chair',33,{0,0,2,2},'seat',1),
