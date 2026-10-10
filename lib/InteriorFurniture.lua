@@ -1440,6 +1440,39 @@ function M.draw(id,A)
   -- Wide shelves retain every item in the source facade while central
   -- uprights divide physically separate storage bays.
   if w>=32 then for x=16,w-8,16 do B(x-.4,base+1.5,z-.8,x+.4,height-1,z,mat)end end
+ elseif id=='gb_mansion_books' then
+  -- Blank wall and projected lid occupy the upper half of this drawing.
+  -- Its lower half is one low book rack over two storage panels.
+  local wood,dark=T(4,12),T(2,17)
+  B(1,0,20,15,16,21,wood)
+  B(1,0,21,2,16,30,wood);B(14,0,21,15,16,30,wood)
+  B(2,0,21,14,7,30,wood)
+  front({1,24,14,8},1,0,15,8,30.02)
+  B(2,7,21,14,8,30,wood);B(2,8,21,14,15,22,dark)
+  for _,book in ipairs({{3,2},{6,1},{8,2},{11,2}})do
+   local x,w=book[1],book[2]
+   B(x,8,22,x+w,14,29.6,T(x,19))
+   front({x,17,w,6},x,8,x+w,14,29.62)
+  end
+  B(.5,15,19.5,15.5,16.5,30.5,wood)
+  top({1,9,14,6},.5,19.5,15.5,30.5,16.52)
+ elseif id=='gb_mansion_clock' then
+  -- The upper eight native rows are the projected crown; the remaining
+  -- twenty-four rows form one clock face/case, never two book shelves.
+  local wood,dark=T(4,4),T(2,10)
+  B(1,0,20,15,24,29.45,wood)
+  B(1,0,29.45,4,24,30,wood);B(12,0,29.45,15,24,30,wood)
+  B(4,0,29.45,12,10,30,wood);B(4,22,29.45,12,24,30,wood)
+  front({1,8,14,2},1,22,15,24,30.02)
+  front({1,10,3,12},1,10,4,22,30.02)
+  front({12,10,3,12},12,10,15,22,30.02)
+  front({1,22,14,10},1,0,15,10,30.02)
+  -- Preserve the original dial/pendulum pixels in a shallow glazed recess.
+  front({4,10,8,12},4,10,12,22,29.47)
+  B(3.8,10,29.45,4,22,30,dark);B(12,10,29.45,12.2,22,30,dark)
+  B(4,9.8,29.45,12,10,30,dark);B(4,22,29.45,12,22.2,30,dark)
+  B(.5,24,19.5,15.5,25.5,30.5,wood)
+  top({1,1,14,6},.5,19.5,15.5,30.5,25.52)
  elseif id:match('^gb_native_') then
   local w,h=A.width,A.height
   local mat,dark=T(1,1),T(math.min(3,w-1),math.min(8,h-1))

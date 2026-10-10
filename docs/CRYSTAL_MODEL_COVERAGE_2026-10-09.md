@@ -372,3 +372,27 @@ shape suite pass, including unclaimed native wall/door classifications. Tower
 interior and general exterior regressions pass. Gold/Silver imported map tables
 have no Battle Tower; this batch is Crystal-only. Daylight, animated entrance
 states and native challenge progression are not claimed verified.
+
+## Gold/Silver/Crystal Mansion clock and low book racks
+
+- [x] Celadon Mansion1F clock now has its original continuous dial/case face
+  recessed into a closed wooden body, with separate projected crown. The old
+  generic shelf adapter split and repeated its pixels as book spines.
+- [x] Adjacent book racks now use the native lower16px facade, four separate
+  original book spines and lower storage panels. Blank upper wall/projected
+  lid rows no longer inflate the rack to clock height. Native lid art sits on
+  the closed top; sides, rear and underside are complete.
+
+Independent `gen2-historical-source` map renders and native metatile15 grids
+were compared in all three games. `gen2-mansion-clock-before` records the
+Crystal generic-model defect. Final `{gold,silver,crystal}-gen2-mansion-assemblies`
+assert1 clock/2 racks, native lower cells blocked and complete tile/collision
+invariants. Four model-centered/first-person views captured per game from
+native player cell(1,5), north-facing, pitch.12; all Crystal views, Gold eye/rear
+and Silver overview/side inspected. Original walking floor stays clear.
+
+Focused clock/recess/rack-height/source/bounds tests,60 source-crop recipes,
+34 shared assemblies, Tower/Rocket and house/department regressions pass.
+The recipe can also match the same rack drawing elsewhere in the Mansion
+family; those rooms need their own rendered review and are not counted here.
+Other Mansion furniture and stairs remain open.
