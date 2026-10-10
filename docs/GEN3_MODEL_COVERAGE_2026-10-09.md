@@ -466,3 +466,14 @@ scoped lab audits now9/0 each, superseding EM9/2. RS/Hoenn/additional suites pas
 including apron bounds and drum underside regression. FRLG machine position is
 unchanged; shared underside closure applies there but was not freshly rendered.
 South workstations and additional lab equipment remain unreviewed.
+
+
+## Verified batch: Birch narrow south workstation
+
+The complete three-cell narrow workstation now has a supported native yellow
+desk, closed terminal facing the adjacent seat, and raised desktop device.
+Native art sampled separately; the adjacent green seat stays native walking
+floor. RS/E orbit and dedicated workstation-eye views inspected; scoped lab
+audits10/0 each. RS/Hoenn/additional suites pass with chair/apron bounds.
+Neighboring book stacks and other side/south workstation variants remain native.
+No gameplay or save changes.

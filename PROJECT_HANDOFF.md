@@ -1,3 +1,10 @@
+# Birch south workstation — 2026-10-09
+
+Narrow native workstation modeled for RS/E, with closed terminal, supported
+desk and desktop device. Native walking chair left clear. All-angle and
+workstation eye renders inspected; scoped audits10/0 each, focused tests pass.
+Neighboring stacks/other workstation variants remain unfinished.
+
 # Birch circular machine apron clearance — 2026-10-09
 
 Machine moved back16px onto blocked footprint; drum/foot undersides closed.

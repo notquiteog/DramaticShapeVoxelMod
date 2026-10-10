@@ -196,6 +196,7 @@ function M.append(p,emit,uvFor)
  end
  if r.kind=='rsLinkBooth' or r.kind=='rsLinkPartition' then V.require('Gen3LinkBooth').append(p,source,box,sample,emit);return end
  if r.kind=='martCheckout' or r.kind=='martRegister' then V.require('Gen3MartCheckout').append(p,source,box,sample,emit);return end
+ if r.kind=='labWorkstation' then V.require('Gen3LabWorkstation').append(p,source,box,sample,emit);return end
  if Designed.append(p,source,box,sample,emit)then return end
  if Center.append(p,source,box,sample,emit,uvFor)then return end
  if r.kind=='relief' or r.kind=='bin' or r.kind=='plaque' then
