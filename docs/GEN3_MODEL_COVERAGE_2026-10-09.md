@@ -387,3 +387,19 @@ RS, Center and starting-furniture suites pass, including PC projected-apron
 bounds and incomplete-pattern rejection. No gameplay or saved progress changed.
 This completes these selected room fixtures, not all Center variants or Gen3
 interiors; remaining regional coverage and normal warp traversal are open.
+
+
+## Verified batch: Ruby/Sapphire Mart display cases
+
+Separate RS/E Oldale Mart native captures confirm matching shelf/cooler artwork
+and footprints. Five reviewed families enable five RS assemblies: two stock
+cabinets, three-door glass case, central double shelf and side shelf. Production
+RS front/rear/side/eye captures inspected in `-rse-mart-review`; both scoped
+face audits report5/0. RS/Hoenn/designed-interior suites pass. The general
+designed-object test now selects Ruby for RS-only fixtures, retaining full
+385-object checks. Source fixtures are in `-rse-mart-source`.
+
+Checkout and register have differing RS metatile patterns and remain native
+pending a separate model. Mart plant likewise awaits a projected-apron fix
+(the existing Emerald recipe needs review); this batch does not enable it.
+No collision, interaction, warp or player-save changes.

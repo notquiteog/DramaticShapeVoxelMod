@@ -1,3 +1,10 @@
+# Ruby/Sapphire Mart display cases — 2026-10-09
+
+Five independently checked shelf/cooler families enabled; both native sources
+and front/rear/side/eye production renders inspected. Scoped audit5/0 per RS
+edition; RS/Hoenn/designed suites pass (385 designed objects). Checkout/register
+source patterns differ and stay native; plant/apron review remains pending.
+
 # Ruby/Sapphire upper Center PC and plants — 2026-10-09
 
 Separate upper-PC pattern and source-checked link plants enabled. Both editions'
