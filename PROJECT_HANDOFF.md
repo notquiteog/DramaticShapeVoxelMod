@@ -1,3 +1,12 @@
+# FRLG Silph Co. exterior — 2026-10-09
+
+Complete native 9×15 source pattern now forms a closed glazed office tower,
+lavender roof and curved rooflight with solid caps/ribs. Separate FR/LG source
+exports match. Front/back/both sides and entrance eye/door-state production
+captures inspected in isolated profiles; scoped low-face native floor audits
+1/0 each. Five focused suites pass. Rear walking row remains clear; ordinary
+input/warp traversal not tested. Wider Gen3 coverage remains unfinished.
+
 # FRLG Pewter Museum exterior — 2026-10-09
 
 Closed main hall, lower wing, pitched roofs and projecting entrance modeled

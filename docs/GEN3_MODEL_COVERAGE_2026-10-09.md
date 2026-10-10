@@ -556,3 +556,29 @@ Six focused suites pass, including complete-match rejection,89-cell claim mask,
 scenery preservation, bounds and both door planes. Controlled fixture review
 does not prove normal input/warp traversal. Player saves unchanged; all QA
 processes exited. This adds one specialist exterior, not complete FRLG coverage.
+
+## Verified batch: FireRed/LeafGreen Silph Co.
+
+Complete 9×15 native drawing at `FR_SAFFRON_CITY (29,16)` becomes a closed
+blue-glazed office tower, lavender ribbed roof deck and curved central
+rooflight with capped ends and closed transverse ribs. Glazing/storey bands
+continue around both sides and rear. Recessed animated doorway and native
+entrance sign remain aligned; the native first walking row stays clear.
+
+Independent FireRed/LeafGreen source PNGs in `{firered,leafgreen}-frlg-specialist-source`
+match byte-for-byte. Engine 0.3.52 production captures in
+`/home/admin/Projects/.scratch/coverage-20261004/results/{firered,leafgreen}-silph-review`
+were inspected from front, rear, both sides and entrance eye height, including
+native door states. Isolated `emerald-port-firered-models-qa` and
+`emerald-port-leafgreen-qa` fixtures; controlled camera/daytime/view distance.
+Native Rocket guard remains present at the entrance in this new-game fixture.
+
+Scoped `silph-footprint` audits: one recognized building, zero low-face
+intersections with central 8×8 collision-0 cells in each edition. The initial
+LeafGreen audit lacked the normal tileset alias bind and found no model;
+corrected fixture binds public map aliases before preparing models. This is
+not a normal movement/warp test or an exhaustive collision guarantee.
+Tests: `gen3_silph_test`, `gen3_civic_test`, `gen3_rear_roof_test`,
+`gen3_pewter_museum_test`, `gen3_scene_cache_test` pass. No saves/gameplay data
+changed. Remaining Saffron facade families visibly remain flat and require
+separate source review; no full-city or full-game completion claim.
