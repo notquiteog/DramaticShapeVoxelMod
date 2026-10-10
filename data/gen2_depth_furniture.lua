@@ -48,7 +48,7 @@ return {
  TILESET_TRADITIONAL_HOUSE={
   prop('traditional_shelves',2,full,'cabinet',4),
   prop('traditional_drawers',26,left,'cabinet',4,'gb_traditional_tall_books'),
-  prop('traditional_low_table',20,top,'table',4),
+  prop('traditional_low_table',20,top,'cabinet',4,'gb_traditional_picture'),
  },
  TILESET_FACILITY={
   prop('facility_server',2,left,'cabinet',3),

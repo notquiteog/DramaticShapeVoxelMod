@@ -441,3 +441,22 @@ NPC/hutch; `crystal-gen2-traditional-tall-books-final` shifts the player to
 walkable(2,3) and camera nearer the cases. Inspected clear eye/side views.
 Five targeted furniture/source suites pass. Other traditional furniture,
 wallpaper and the apparent wall-picture/table mismatch remain open.
+
+## Gold/Silver/Crystal Kurt wall picture
+
+- [x] Legacy `traditional_low_table` crop is a framed wall picture, found only
+  at Kurt's north wall in the Crystal traditional-room census. It now has a
+  shallow closed back and raised frame, mounted at the north edge of its two
+  blocked cells. Complete original artwork stands upright at wall height;
+  the walking apron underneath is clear. Stable recipe ID retained.
+
+Independent native source/metatile20 agreed across Gold/Silver/Crystal.
+`gen2-traditional-picture-audit` records Crystal position(16,0) in tile units,
+blocked collision7 in both cells. Final
+`{gold,silver,crystal}-gen2-traditional-picture-final` verifies one model/game,
+blocked source cells, the two walkable cells immediately below, and unchanged
+full grids. Crystal overview/eye, Gold side and Silver rear inspected from
+native player(9,3). An initial invented full-height backing panel was rejected;
+final geometry is only the shallow wall-mounted frame. Focused frame bounds,
+source orientation and five neighboring furniture suites pass. Remaining
+traditional wall panels and room-wide coverage are still open.

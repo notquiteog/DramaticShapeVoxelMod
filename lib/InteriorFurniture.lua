@@ -1718,6 +1718,15 @@ function M.draw(id,A)
   B(1,5,14,15,16,22,case);B(2,16,15,14,17,21,case)
   front({1,3,14,13},1,5,15,16,22.02)
   B(11,7,22,13,9,22.6,dark);B(3,6,22,8,6.6,22.4,dark)
+ elseif id=='gb_traditional_picture' then
+  -- Kurt's framed picture belongs to the upper wall. The former low-table
+  -- crop laid this art on the floor. Keep its backing and frame entirely
+  -- inside the two native blocked northern cells, above the clear apron.
+  local wood,gilt=T(1,5),T(4,2)
+  B(0,16,0,32,32,1,wood)
+  front({0,0,32,16},0,16,32,32,1.02)
+  B(2,17,1.02,3,31,1.5,gilt);B(29,17,1.02,30,31,1.5,gilt)
+  B(3,17,1.02,29,18,1.5,gilt);B(3,30,1.02,29,31,1.5,gilt)
  elseif id=='gb_traditional_table' then
   desk(1,7,31,38,5,T(1,20));top({1,1,30,30},1,7,31,38,5.02)
  elseif id=='gb_traditional_hutch' or id=='gb_traditional_drawers' then
