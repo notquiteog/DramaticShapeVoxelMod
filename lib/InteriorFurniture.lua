@@ -1455,6 +1455,26 @@ function M.draw(id,A)
   -- Native display is a parallelogram across contiguous atlas quadrants.
   A.face({{20,16,8.99},{29,16,8.99},{29,9,8.99},{20,9,8.99}},
    {T(21,5)[1],T(25,7)[1],T(25,10)[1],T(21,8)[1]},1)
+ elseif id=='gb_facility_books' or id=='gb_facility_books_open' then
+  local wood,dark=T(4,4),T(2,10)
+  local open=id=='gb_facility_books_open'
+  B(1,0,20,15,24,21,wood)
+  B(1,0,21,2,24,30,wood);B(14,0,21,15,24,30,wood)
+  B(2,0,21,14,open and 1 or 8,30,wood)
+  if not open then front({1,24,14,8},1,0,15,8,30.02)end
+  local tiers=open and {{1,25},{8,17},{16,9}} or {{8,17},{16,9}}
+  for _,tier in ipairs(tiers)do
+   local base,sy=tier[1],tier[2]
+   B(2,math.max(0,base-1),21,14,base,30,wood)
+   B(2,base,21,14,base+7,22,dark)
+   for _,book in ipairs({{3,2},{6,1},{8,2},{11,2}})do
+    local x,w=book[1],book[2]
+    B(x,base,22,x+w,base+6,29.5,T(x,sy+1))
+    front({x,sy,w,6},x,base,x+w,base+6,29.52)
+   end
+  end
+  B(.5,23,19.5,15.5,24.5,30.5,wood)
+  top({1,1,14,6},.5,19.5,15.5,30.5,24.52)
  elseif id=='gb_mansion_books' then
   -- Blank wall and projected lid occupy the upper half of this drawing.
   -- Its lower half is one low book rack over two storage panels.

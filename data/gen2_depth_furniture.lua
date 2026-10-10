@@ -54,10 +54,11 @@ return {
   prop('facility_server',2,left,'cabinet',3),
   prop('facility_machine_bank_left',18,full,'cabinet',3),
   prop('facility_machine_bank_right',19,full,'cabinet',3),
-  prop('facility_books',6,left,'cabinet',3),
+  prop('facility_books',6,left,'cabinet',3,'gb_facility_books'),
   prop('facility_console',8,top,'console',3,'gb_facility_workstation'),
   prop('facility_planter',9,left,'planter',3),
   prop('facility_bench',25,{0,2,4,2},'seat',3),
+  prop('facility_books_open',6,{2,0,2,4},'cabinet',3,'gb_facility_books_open'),
  },
  TILESET_RADIO_TOWER={
   prop('radio_shelves',10,left,'cabinet',1),

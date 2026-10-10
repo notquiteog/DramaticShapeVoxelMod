@@ -485,3 +485,23 @@ and supplies clear Crystal overview, Gold side and Silver rear evidence.
 Counts validate placement coverage; these representative views do not certify
 all unrelated objects in those maps. Six focused furniture/source suites pass.
 Facility bookcases and other remaining generic furniture remain open.
+
+## Gold/Silver/Crystal facility bookcase variants
+
+- [x] Native block6 left case: two shelves above storage panels.
+- [x] Native block6 right case: three open shelves, newly recognized separately.
+
+Both forms retain native spine strips with individual closed book volumes,
+recessed shelf backs, enclosed sides, base and native cap. Geometry stays within
+the lower blocked cell of each projected drawing. Independent game fixtures
+verify seven of each variant per game: Mr Pokémon1 pair, Ruins research center1,
+Power Plant1 and RocketB3F4. Complete tile/collision grids remain unchanged.
+
+Baseline: `crystal-gen2-facility-books-before`. Accepted captures:
+`{gold,silver,crystal}-gen2-facility-books` in the isolated coverage QA results.
+Inspected Crystal Mr Pokémon first-person, Gold Ruins overview, Silver Power
+Plant side and Crystal RocketB3F rear. The latter shows the shared closed back
+and cap; nearby server geometry remains independent. These representative views
+and placement counts do not certify every unrelated object in these rooms.
+Focused bookcase tests and all61 source recipes/35 shared assemblies pass.
+Facility sofas and other generic furniture remain open.
