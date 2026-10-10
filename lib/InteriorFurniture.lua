@@ -1308,6 +1308,36 @@ function M.draw(id,A)
   top({11,10,1,1},10.7,15.7,13.3,18.3,10.52)
   B(14,9.5,16,16,10.1,18,ceramic);B(14,8.4,16,16,9,18,ceramic)
   B(15.4,9,16,16,9.5,18,ceramic)
+ elseif id=='gb_ship_banquet_table' then
+  local edge,wood,ceramic=T(28,68),T(10,76),T(9,10)
+  local function depth(y)return 13+(y-1)*65/69 end
+  for _,x in ipairs{2,28}do for _,z in ipairs{14,44,75}do B(x,0,z,x+2,6.5,z+2,wood)end end
+  B(2,5,14,30,6.5,15,wood);B(2,5,45,30,6.5,46,wood)
+  B(1,6.5,13,31,8,78,edge)
+  -- Keep native cloth/meal drawings; partition only the two cup marks.
+  for y=1,69 do
+   local l,r
+   if y>=7 and y<17 then l,r=7,17 elseif y>=31 and y<41 then l,r=15,25 end
+   if l then
+    top({1,y,l-1,1},1,depth(y),l,depth(y+1),8.02)
+    top({27,10,1,1},l,depth(y),r,depth(y+1),8.02)
+    top({r,y,31-r,1},r,depth(y),31,depth(y+1),8.02)
+   else top({1,y,30,1},1,depth(y),31,depth(y+1),8.02)end
+  end
+  for _,cup in ipairs{{12,11},{20,35}}do
+   local x,z=cup[1],depth(cup[2])
+   B(x-2,8.02,z-2,x+2,10.5,z+2,ceramic)
+   top({11,10,1,1},x-1.3,z-1.3,x+1.3,z+1.3,10.52)
+   B(x+2,9.5,z-1,x+4,10.1,z+1,ceramic);B(x+2,8.4,z-1,x+4,9,z+1,ceramic)
+   B(x+3.4,9,z-1,x+4,9.5,z+1,ceramic)
+  end
+  -- Thin closed stepped platters lift the original circular meal art.
+  for _,cy in ipairs{24,56}do for row=-6,5 do
+   local half=math.floor(math.sqrt(36-(row+.5)^2))+.5
+   local l,r=16-half,16+half;local sy=cy+row
+   B(l,8.02,depth(sy),r,8.55,depth(sy+1),T(12,cy-5))
+   top({l,sy,r-l,1},l,depth(sy),r,depth(sy+1),8.57)
+  end end
  elseif id=='fr_space_exhibit' then
   local white,edge,dark,stand=T(19,8),T(13,7),T(13,12),T(6,23)
   B(2,0,3,46,2,30,stand);B(4,2,5,44,3,28,edge)

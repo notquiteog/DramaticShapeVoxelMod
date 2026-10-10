@@ -693,3 +693,22 @@ native cream ceramic and wood. G/S live pink and Crystal blue surfaces follow
 those editions' actual atlas. Cup/closed-support/bounds regression and the
 previous dining suite pass. The ten-row banquet table and captain's desk remain
 separate gaps; this batch does not claim all cabin furniture complete.
+
+## Gold/Silver/Crystal banquet tables — October 10
+
+- [x] Independently matched complete ten-row drawings in each edition: SE cabin
+  tile(12,6), shipB1F tiles(20,18),(24,18), three per game.
+- [x] Closed low tabletop with six wooden supports, two raised handled cups and
+  shallow closed stepped platters retaining native meal artwork.
+
+Crystal `gen2-banquet-before` verifies the eye-height generic obstruction.
+Final `{game}-gen2-banquet-final` passes both maps in all editions, exact1/2
+counts, all ten source cells blocked and full tile/collision grids unchanged.
+Inspected final Crystal cabin eye, Gold B1F side and Silver B1F rear. The first
+review caught the second cup shifted one tile south, leaving duplicate flat art;
+corrected its native row, reran all editions and added its position regression.
+No duplicate cup remains. The native decorative meal surround stays on the
+cloth; only the dish is raised. Source/shared checks, banquet bounds/detail test,
+and prior table tests pass. B1F's NPC partly covers one support in side view;
+rear and cabin eye provide additional geometry review. Captain desk and small
+wall-adjacent tables are separate outstanding families.
