@@ -140,6 +140,7 @@ function M.prepare(cells,gyms,families)
  return out
 end
 function M.ground(c)
+ if c.civic.custom and c.civic.custom.ground then return c.civic.custom.ground end
  if c.civic.custom and c.civic.custom.preserveWalkableFloor and c.collision==0 then return c.mid end
  return c.civic.grounds and c.civic.grounds[c.cx..':'..c.cy]
   or (c.civic.variant=='saffron' and 0x2E5 or 1)
@@ -148,6 +149,10 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.geometry=='urban' then
+   local h=g.depth*16
+   return {w=w,h=h,back=0,front=h-1,wall=h-48,roofEnd=48,wallTop=48,wallBottom=h,bevel=0,doorLeft=0,doorRight=w,doorTop=48,doorBottom=h,doorHeight=h-48,projection=0}
+  end
   if r.geometry=='devon' then
    return {w=w,h=144,back=0,front=143,wall=112,roofEnd=32,wallTop=32,wallBottom=144,bevel=0,doorLeft=64,doorRight=96,doorTop=48,doorBottom=144,doorHeight=112,projection=0}
   end
@@ -233,7 +238,7 @@ function M.material(g)
   end
   local chimney=g.custom and g.custom.chimney
   if chimney and x>=chimney[1] and x<chimney[3] and y>=chimney[2] and y<chimney[4]then
-   rr,gg,bb,aa=sourcePixel(g,28,y)
+   rr,gg,bb,aa=sourcePixel(g,g.custom.geometry=='urban' and 16+x%16 or 28,y)
   end
   local vent=g.custom and g.custom.roofVent
   if vent and x>=vent[1]and x<vent[3]and y>=vent[2]and y<vent[4]then rr,gg,bb,aa=sourcePixel(g,64,y)end
@@ -403,6 +408,7 @@ function M.window(g)
 end
 function M.append(g,emit)
  if g.custom and (g.custom.centerRoof or g.custom.martRoof) then return V.require('HoennCivicBuilding').append(g,M.profile(g),emit)end
+ if g.custom and g.custom.geometry=='urban' then return V.require('Gen3UrbanBuilding').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='devon' then return V.require('Gen3DevonBuilding').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='space_center' then return V.require('Gen3SpaceCenter').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='tower' then return V.require('Gen3TowerExterior').append(g,M.profile(g),emit)end

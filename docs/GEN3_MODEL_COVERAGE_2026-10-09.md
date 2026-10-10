@@ -55,3 +55,24 @@ an unintended view through the entire building when the entrance is open.
 
 Rustboro's other houses, Lilycove specialists and Slateport specialists remain
 pending. These two individual buildings do not establish family-wide coverage.
+
+## Verified batch: Rustboro urban houses
+
+Seven complete source patterns cover eight actual Rustboro residences, including
+tall white apartment blocks and tan houses with rooftop ventilation cabinets.
+Closed roof overhangs preserve the native rear walking row; full side/rear walls
+use native window panels and solid sills. Roof materials repeat the actual
+interior roof pattern without stretching source fascia or duplicating cabinets.
+Door recesses follow the measured 20px native frame. Stone-backed homes use the
+reviewed city pavement; the east lawn-backed home retains its grass underlay.
+
+Source and production artifacts: `results/emerald-rustboro-homes-review`, same
+isolated Emerald0.3.52 profile. Eight placements/32 directional captures plus
+entry views generated; representative front, side, rear and eye captures across
+all seven patterns inspected. Neighboring buildings remain in the production
+scene; a few long-distance initial views were occluded and the camera was
+corrected. Focused Urban/Civic/Hoenn/SpaceCenter/Devon tests pass. Real-map
+Emerald footprint census: 67 recognized assemblies, zero flagged low faces.
+
+This completes the reviewed Rustboro house patterns, not every exterior or
+scenery element in Rustboro and not Emerald coverage as a whole.
