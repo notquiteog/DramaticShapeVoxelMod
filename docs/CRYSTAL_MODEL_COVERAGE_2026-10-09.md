@@ -261,3 +261,20 @@ initial wall gap and oversized backing were corrected before acceptance.
 Focused footprint/screen/underside/wall tests and complete-furniture regressions
 pass. The native walkable chair remains unchanged. This is one workstation,
 not general terminal coverage across all tilesets.
+
+## Native stair traversal audit
+
+- [x] Celadon and Goldenrod department1F↔2F and both directions of each
+  Olivine/Vermilion internal passage stair pair:24 successful native steps and
+  warp landings across Gold/Silver/Crystal. Full tile/collision grids remain
+  unchanged after rendering the approach. Driver is committed for repetition.
+- [ ] Descending department stairs remain visually difficult to read at eye
+  level; successful traversal does not close their visual coverage.
+
+`gen2-stair-traversal.lua` (committed as `gen2_stair_traversal_driver.lua`) takes
+first-person approach captures and invokes native `movePlayer`, then verifies
+native destination/landing. Inspected Crystal four representative approach
+views. Source port stairs are already correctly recipe-pinned; the earlier
+plant fixture put its camera directly on one ascending stair. That view was
+not evidence of a missing stair recipe. Other floors/warp families remain
+outside this bounded traversal audit.
