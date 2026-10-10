@@ -1443,6 +1443,24 @@ function M.draw(id,A)
    B(l,b,22,l+w,h,z,T(l+1,r[2]+1))
    front(r,l,b,l+w,h,z+.02)
   end end
+ elseif id=='gb_radio_books' then
+  local frame,shelf,dark,cap=T(1,10),T(4,8),T(2,9),T(4,2)
+  B(.5,0,19.5,15.5,24.6,20.5,dark)
+  B(.5,0,20.5,1.5,24.6,30.5,frame);B(14.5,0,20.5,15.5,24.6,30.5,frame)
+  for _,y in ipairs{0,8,16}do B(1.5,y,20.5,14.5,y+.6,30.5,shelf)end
+  B(1.5,23.4,20.5,14.5,24.6,30.5,cap)
+  front({1,1,14,6},1.5,23.4,14.5,24.6,30.52)
+  local function volume(x,w,sy,sh,b,h,z)
+   B(x,b,23.5,x+w,h-.3,z,T(x,sy+1))
+   B(x,h-.3,23.5,x+w,h,z,T(x,sy))
+   front({x,sy,w,sh},x,b,x+w,h,z+.02)
+  end
+  for _,tier in ipairs{{16.6,10},{8.6,18}}do
+   for i,book in ipairs{{3,1},{5,1},{7,1},{9,2},{12,1}}do
+    volume(book[1],book[2],tier[2],3,tier[1],tier[1]+4.2,29.6-(i%2)*.25)
+   end
+  end
+  for i,book in ipairs{{3,2},{6,2},{9,4}}do volume(book[1],book[2],26,4,.6,6.2,29.6-(i%2)*.25)end
  elseif id=='fr_space_exhibit' then
   local white,edge,dark,stand=T(19,8),T(13,7),T(13,12),T(6,23)
   B(2,0,3,46,2,30,stand);B(4,2,5,44,3,28,edge)

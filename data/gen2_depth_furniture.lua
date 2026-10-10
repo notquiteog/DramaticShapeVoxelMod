@@ -61,7 +61,7 @@ return {
   prop('facility_books_open',6,{2,0,2,4},'cabinet',3,'gb_facility_books_open'),
  },
  TILESET_RADIO_TOWER={
-  prop('radio_shelves',10,left,'cabinet',1),
+  prop('radio_shelves',10,left,'cabinet',1,'gb_radio_books'),
   prop('radio_planter',11,left,'planter',1),
   prop('radio_terminal',18,left,'machine',1,'gb_broadcast_receiver'),
   -- Match the whole reception desk before the taller equipment recipe. Its
