@@ -1,3 +1,10 @@
+# Ruby/Sapphire upper Center PC and plants — 2026-10-09
+
+Separate upper-PC pattern and source-checked link plants enabled. Both editions'
+front/rear/side and PC eye renders inspected, focused tests pass; scoped upper
+room authored-face audit now19/0. Full PC pattern and apron regressions added.
+Regional/model coverage and normal warp traversal remain unfinished.
+
 # Ruby/Sapphire downward Center escalators — 2026-10-09
 
 Three independently source-checked downward animation patterns enabled. Both

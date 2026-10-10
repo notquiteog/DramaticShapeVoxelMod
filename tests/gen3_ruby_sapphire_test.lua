@@ -12,7 +12,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  assert(S.of('general','petalburg',1,0x10,0).kind=='water')
  assert(S.of('general','petalburg',0x2a,0x2a,0).kind=='flat','seaweed became Kanto stairs')
  assert(S.of('building','facility',0x2f8,0,7).kind=='flat','unreviewed Emerald interior leaked')
- local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center')end end;assert(approved==21)
+ local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center')end end;assert(approved==22)
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)
@@ -51,7 +51,7 @@ for _,r in ipairs(H.recipes)do if r.kind=='escalator' then
  end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
 end end
 -- Native RS booths must leave their two open rear lanes and front apron clear.
-for _,r in ipairs(V.require('Gen3RubySapphire').recipes)do
+for _,r in ipairs(V.require('Gen3RubySapphire').recipes)do if r.kind~='designed' then
  for _,game in ipairs({'ruby','sapphire'})do
   version=game;local cells={}
   for yy,row in ipairs(r.rows)do for xx,mid in ipairs(row)do cells[(xx-1)..':'..(yy-1)]={cx=xx-1,cy=yy-1,mid=mid,pair=r.pair,primary='building',ts={}}end end
@@ -68,6 +68,16 @@ for _,r in ipairs(V.require('Gen3RubySapphire').recipes)do
   assert(underside,'open partition/lintel underside')
   version='emerald';assert(not H.recipeActive(r),'RS-only booth leaked into Emerald')
  end
+end
+end
+for _,game in ipairs({'ruby','sapphire'})do
+ version=game
+ for _,r in ipairs(V.require('Gen3RubySapphire').recipes)do if r.name=='rs_upper_pc' then
+  local cells={};for yy,row in ipairs(r.rows)do cells['0:'..(yy-1)]={cx=0,cy=yy-1,mid=row[1],pair=r.pair,primary='building',ts={}}end
+  local list=F.extract(cells);assert(#list==1 and list[1].recipe==r)
+  F.append(list[1],function(v)for _,q in ipairs(v)do assert(q[3]<32,'upper PC intrudes native floor apron')end end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
+  cells['0:2'].mid=0;assert(#F.extract(cells)==0,'partial upper PC claimed')
+ end end
 end
 version='emerald';assert(#H.exteriorRecipes()>3 and H.recipeActive(H.recipes[1]))
 version='firered';assert(not H.active() and H.recipeActive({}) and not H.recipeActive({family='rse'}))

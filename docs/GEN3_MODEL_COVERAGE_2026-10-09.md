@@ -373,3 +373,17 @@ remain within the bounded middle row. Upper-room scoped face audit now16/0
 per edition. RS/Hoenn/Center focused suites pass. This enables the existing
 geometry only; input and warp traversal remain untested. Remaining upper PC
 and link plants are still native, with all wider coverage gaps unchanged.
+
+
+## Verified follow-up: Ruby/Sapphire upper PC and link plants
+
+The upper PC has its own complete RS three-cell pattern; its bottom source cell
+is different from the downstairs PC. It reuses the source-sampled closed CRT,
+keyboard and pedestal model after checking both native room images. Two link
+plants use the matching two-cell source family with their pots on blocked cells.
+Production front/rear/side and dedicated PC eye captures inspected for both
+games in the same upper-room review directories. Scoped face audit now19/0;
+RS, Center and starting-furniture suites pass, including PC projected-apron
+bounds and incomplete-pattern rejection. No gameplay or saved progress changed.
+This completes these selected room fixtures, not all Center variants or Gen3
+interiors; remaining regional coverage and normal warp traversal are open.
