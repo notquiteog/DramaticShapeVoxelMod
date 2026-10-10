@@ -260,6 +260,11 @@ local underground={
 -- The neighboring stool drawings are native WALKABLE floor, so they are not
 -- raised into models that would visually block the narrow shopping aisle.
 for _,r in ipairs(underground)do r.maps={GOLDENROD_UNDERGROUND=true} end
-return {TILESET_UNDERGROUND={{id='crystal_warehouse_crate',tiles={{67,68},{83,84}},groundTiles={{16}},design='gb_warehouse_crate',parts={},support=12,maps={GOLDENROD_UNDERGROUND_WAREHOUSE=true,GOLDENROD_DEPT_STORE_B1F=true,TEAM_ROCKET_BASE_B1F=true}}},TILESET_GATE=underground,TILESET_TRAIN_STATION=station,TILESET_GAME_CORNER=corner,TILESET_RADIO_TOWER=radio,TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
+local storage={
+ {id='crystal_warehouse_crate',tiles={{67,68},{83,84}},groundTiles={{16}},design='gb_warehouse_crate',parts={},support=12,maps={GOLDENROD_UNDERGROUND_WAREHOUSE=true,GOLDENROD_DEPT_STORE_B1F=true,TEAM_ROCKET_BASE_B1F=true}},
+ {id='crystal_storage_plant',tiles={{30,31},{46,47},{62,63},{16,16}},drawingRows=3,groundTiles={{16}},model='planter',parts={},support=0,
+  maps={OLIVINE_PORT_PASSAGE=true,VERMILION_PORT_PASSAGE=true,TEAM_ROCKET_BASE_B1F=true}},
+}
+return {TILESET_UNDERGROUND=storage,TILESET_GATE=underground,TILESET_TRAIN_STATION=station,TILESET_GAME_CORNER=corner,TILESET_RADIO_TOWER=radio,TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
   TILESET_HOUSE=commonHouse,TILESET_TRADITIONAL_HOUSE=traditional,TILESET_MART=mart,TILESET_POKECENTER=center,
   TILESET_PLAYERS_ROOM=bedroom}

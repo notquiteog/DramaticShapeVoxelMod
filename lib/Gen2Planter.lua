@@ -49,7 +49,9 @@ function M.card(width,height,pixel)
  return faces
 end
 function M.build(t,data,perRow,aw,ah)
- local width,height=#t.tiles[1]*8,#t.tiles*8
+ -- Some native plants occupy a full blocked cell pair but draw only three
+ -- rows. Claim the floor row without treating it as part of the plant.
+ local width,height=#t.tiles[1]*8,math.min(t.drawingRows or #t.tiles,#t.tiles)*8
  local pixel=M.cutout(width,height,function(x,y)
   local tile=t.tiles[math.floor(y/8)+1][math.floor(x/8)+1]
   local ax,ay=tile%perRow*8+x%8,math.floor(tile/perRow)*8+y%8

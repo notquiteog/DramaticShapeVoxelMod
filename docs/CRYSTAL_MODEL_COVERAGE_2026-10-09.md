@@ -217,3 +217,18 @@ cell blocked, full native tile/collision grids unchanged. Four views per map
 were captured from walkable cells. Inspected Crystal basement eye view and
 Silver Rocket side view; neighboring machinery remains a separate coverage
 task. Crate footprint/geometry test passes with the explicit three-map scope.
+
+## Port and Rocket storage plants
+
+- [x] Complete native 30/31–46/47–62/63 plants in Olivine/Vermilion port
+  passages and Rocket B1: closed pot/rim/soil and solid curved leaves, sampled
+  from each game's original plant palette. Claim the fourth floor row to avoid
+  a partial-cell floor wall, while drawingRows keeps the original24px crop.
+
+Gold/Silver/Crystal `gen2-storage-plants.lua` passes from walkable cameras:
+2 models per map, both source cells blocked, full native grids unchanged and
+four views captured. Independently inspected native source maps; inspected
+Crystal port first/overview, Gold port rear and Silver Rocket first-person.
+The initial3-row claim exposed a floor-wall artifact, fixed before acceptance.
+Focused crop/scope and existing pot-mask/geometry tests pass. Port stairs and
+Rocket workstation/shelves remain separate coverage items.
