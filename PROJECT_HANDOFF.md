@@ -1,3 +1,11 @@
+# Ruby/Sapphire Petalburg model batch — 2026-10-09 (unreleased)
+
+Five source-reviewed families add six Petalburg buildings per edition. Native
+Ruby/Sapphire source maps match; Emerald roof art differs and is not copied.
+Production orbit/eye captures inspected, targeted suites pass. Native census
+now10/0 per edition. All five games remain partial; coverage ledger records
+scope and limitations. Next: Littleroot's distinct RS laboratory apparatus.
+
 # Five-game Gen3 model checkpoint — 2026-10-09 (unreleased)
 
 Ruby/Sapphire now use a separate source-reviewed catalogue instead of falling

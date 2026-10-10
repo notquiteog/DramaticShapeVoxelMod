@@ -216,3 +216,22 @@ cache entered the launcher; the user's supplied ROM was imported with engine
 All paths above are beneath the existing scratch results directory. Test
 processes exited. No imported assets, captures, saves or ROMs are committed.
 Next batch: independently review Petalburg source families in Ruby/Sapphire.
+
+
+## Verified batch: Ruby/Sapphire Petalburg
+
+Five additional complete source patterns enable six buildings in each game:
+wide home, two small homes, gym, Center and mart. Independently captured native
+Petalburg maps are pixel-identical between Ruby and Sapphire; Emerald roofs
+are visibly different. The reused closed shells sample each running game's
+own art, including RS red corrugated house roofs. Gym entrance projection,
+side glass, home rear windows and native front approach remain intact.
+
+Production `{ruby,sapphire}-rse-petalburg-review` captures contain 24 orbit views
+per game plus eye/door views. Front, side, rear and eye views across the families
+were inspected; trees partly occlude the gym rear. Full-pattern and walking-row
+regressions pass, as do Hoenn/Civic suites. Updated independent native census:
+Ruby10/0 and Sapphire10/0 recognized assemblies/low walking overlap flags.
+The table above records the preceding checkpoint; current RS scope is Oldale
+plus Petalburg (eight source families). Hedges, remaining terrain, Littleroot
+and interior furniture remain pending. No collision/warp/save edits.
