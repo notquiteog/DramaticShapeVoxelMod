@@ -1,3 +1,9 @@
+# Emerald Littleroot roof adoption — 2026-10-09 (unreleased)
+
+Separately verified Emerald source/render adopts the closed tiered home roof,
+retaining native orange shingles and bounded rear eaves. Hoenn/RS tests pass;
+native census77/0 unchanged. Regional/interior coverage remains unfinished.
+
 # Ruby/Sapphire Littleroot homes — 2026-10-09 (unreleased)
 
 Separate follow-up after roof correction: both native RS homes now use closed

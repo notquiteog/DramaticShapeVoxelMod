@@ -294,3 +294,12 @@ inspected independently. RS/Hoenn/Civic suites pass; native census13/0 per
 edition, eleven enabled source families. Emerald's Littleroot roofs still use
 the previous geometry and require their own adoption/render batch. RS interiors,
 most remaining exteriors and special scenery remain unfinished.
+
+
+## Verified follow-up: Emerald Littleroot tiers
+
+Emerald's player/rival roofs now use the same source-layout-compatible closed
+tier geometry, sampling Emerald's own orange shingles and gold caps. Its source
+was separately inspected before adoption. `emerald-rse-littleroot-homes-review`
+front/side/eye renders inspected; focused Hoenn/RS tests pass. Native census
+remains77/0. This supersedes the preceding note about Emerald's old gable.
