@@ -44,6 +44,7 @@ function M.append(g,p,emit)
  local front=127
  box(2,0,64,front,80,2,olive);box(80,0,142,front,80,2,olive)
  box(64,24,80,front,80,2,gray)
+ box(64,0,80,3,24,2,gray)
  for _,r in ipairs({{2,64},{80,142}})do
   face({{r[1],80,front+.02},{r[2],80,front+.02},{r[2],0,front+.02},{r[1],0,front+.02}},uv(r[1]+.05,48.05,r[2]-.05,127.95))
  end

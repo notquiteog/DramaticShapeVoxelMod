@@ -140,6 +140,7 @@ function M.prepare(cells,gyms,families)
  return out
 end
 function M.ground(c)
+ if c.civic.custom and c.civic.custom.preserveWalkableFloor and c.collision==0 then return c.mid end
  return c.civic.grounds and c.civic.grounds[c.cx..':'..c.cy]
   or (c.civic.variant=='saffron' and 0x2E5 or 1)
 end
@@ -147,6 +148,9 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.geometry=='devon' then
+   return {w=w,h=144,back=0,front=143,wall=112,roofEnd=32,wallTop=32,wallBottom=144,bevel=0,doorLeft=64,doorRight=96,doorTop=48,doorBottom=144,doorHeight=112,projection=0}
+  end
   if r.geometry=='space_center' then
    return {w=w,h=128,back=0,front=127,wall=80,roofEnd=48,wallTop=48,wallBottom=128,bevel=0,doorLeft=64,doorRight=80,doorTop=112,doorBottom=128,doorHeight=24,projection=0}
   end
@@ -399,6 +403,7 @@ function M.window(g)
 end
 function M.append(g,emit)
  if g.custom and (g.custom.centerRoof or g.custom.martRoof) then return V.require('HoennCivicBuilding').append(g,M.profile(g),emit)end
+ if g.custom and g.custom.geometry=='devon' then return V.require('Gen3DevonBuilding').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='space_center' then return V.require('Gen3SpaceCenter').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='tower' then return V.require('Gen3TowerExterior').append(g,M.profile(g),emit)end
  local p=M.profile(g);local x,z=g.cx*16,g.cy*16

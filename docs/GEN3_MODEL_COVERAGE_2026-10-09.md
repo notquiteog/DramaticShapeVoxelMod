@@ -36,3 +36,22 @@ This bounded audit does not establish universal collision safety or coverage.
 - [ ] Remaining FRLG specialized exteriors and interior/furniture families.
 - [ ] FireRed dedicated runtime verification (shared FRLG code alone is not it).
 - [ ] Exhaustive original-art census, with first-person/orbit evidence per family.
+
+## Verified batch: Rustboro Devon Corporation
+
+The complete 10×9 original drawing now has a raised central tower and lower
+wings, original mosaic roofs, pointed windows, three facade storeys, parapets,
+solid pilasters and a shallow winged medallion. Side/rear elevations continue
+the native window vocabulary. Both native entrance cells retain separate door
+surfaces and 28px headroom. The wings end before the front walking strip;
+those exact native pavement cells retain their original source pixels.
+
+Production evidence: same isolated Emerald engine/profile as above,
+`results/emerald-devon-review`; source composite plus four directional, eye and
+native door captures inspected. Focused Devon/SpaceCenter/Civic/Hoenn tests pass.
+Emerald footprint census now recognizes 59 assemblies, zero flagged low faces.
+The Space Center's entrance tunnel also gained a closed rear panel, avoiding
+an unintended view through the entire building when the entrance is open.
+
+Rustboro's other houses, Lilycove specialists and Slateport specialists remain
+pending. These two individual buildings do not establish family-wide coverage.
