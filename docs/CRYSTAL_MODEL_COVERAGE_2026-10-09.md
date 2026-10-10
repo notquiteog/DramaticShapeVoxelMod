@@ -754,3 +754,18 @@ Terminology correction for the next gap: earlier entries called the adjacent
 red circular artwork a lifesaver panel. The native [captain cabin script](https://raw.githubusercontent.com/pret/pokecrystal/master/maps/FastShipCabins_SE_SSE_CaptainsCabin.asm)
 binds cell(4,25) to TrashCanScript. Tiles72/73/88/89 are a trash can, independently
 found six times per edition, each in a blocked cell; it remains unmodeled here.
+
+## Gold/Silver/Crystal ship trash cans — October 10
+
+- [x] Six native72/73/88/89 bins per edition: captain1, NNW/NNE/NE3, SW/SSW/NW1,
+  B1F1. Native script identifies the captain example as a trash can (link above).
+- [x] Tapered decagonal body, source red rim/stripes and cream body, recessed
+  dark interior, thick lip, inside floor and closed underside; no square slab.
+
+The captain desk/chair baselines retain the previous tall red-art cube.
+All editions' `gen2-ship-bins-final` pass all four maps, exact1/3/1/1 matches,
+blocked cell7 and unchanged full native grids. Inspected Gold captain overview,
+Silver NNW first-person, Gold SW side and Crystal B1F rear. These show rounded
+sides and the recessed mouth while preserving adjacent floor. Bin closure/bounds
+and captain-chair regressions pass. Native TrashCanScript interaction was not
+triggered by these geometry fixtures; production scripts were not changed.

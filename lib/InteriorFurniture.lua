@@ -1374,6 +1374,20 @@ function M.draw(id,A)
   for _,x in ipairs{1,13}do
    B(x,4.5,21,x+2,7.5,28,frame);B(x,7.5,20,x+2,8.1,29,blue)
   end
+ elseif id=='gb_ship_bin' then
+  local red,cream,dark=T(7,7),T(8,10),T(8,5)
+  local function p(r,y,i)local a=i*math.pi/5;return{8+r*math.cos(a),y,8+r*math.sin(a)}end
+  for i=0,9 do
+   local j=i+1;local body=(i==0 or i==3 or i==5 or i==8)and red or cream
+   A.face({p(4.8,0,j),p(4.8,0,i),p(5,1,i),p(5,1,j)},dark,.7)
+   A.face({p(5,1,j),p(5,1,i),p(6,6,i),p(6,6,j)},body,.85)
+   A.face({p(6,6,j),p(6,6,i),p(6.5,9,i),p(6.5,9,j)},red,.9)
+   -- Thick lip, recessed inner walls, inside floor and closed underside.
+   A.face({p(5.2,9,i),p(5.2,9,j),p(6.5,9,j),p(6.5,9,i)},red,1)
+   A.face({p(5.2,9,j),p(5.2,9,i),p(3.6,2,i),p(3.6,2,j)},dark,.7)
+   A.face({{8,2,8},p(3.6,2,j),p(3.6,2,i),{8,2,8}},dark,.6)
+   A.face({{8,0,8},p(4.8,0,i),p(4.8,0,j),{8,0,8}},dark,.6)
+  end
  elseif id=='fr_space_exhibit' then
   local white,edge,dark,stand=T(19,8),T(13,7),T(13,12),T(6,23)
   B(2,0,3,46,2,30,stand);B(4,2,5,44,3,28,edge)

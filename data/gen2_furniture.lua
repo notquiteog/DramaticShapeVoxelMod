@@ -255,6 +255,9 @@ local captainChair=item('crystal_ship_captain_chair',{{16,16},{84,85},{66,67},{2
 captainChair.supportBounds={0,16,16,32}
 captainChair.design='gb_ship_captain_chair';captainChair.groundTiles=lighthouse[1].groundTiles;captainChair.groundAligned=true
 lighthouse[#lighthouse+1]=captainChair
+local shipBin=item('crystal_ship_bin',{{72,73},{88,89}},13,{},0)
+shipBin.design='gb_ship_bin';shipBin.groundTiles=lighthouse[1].groundTiles;shipBin.groundAligned=true
+lighthouse[#lighthouse+1]=shipBin
 -- Complete machinery sections, ahead of the old facility cabinet crops.
 -- The narrow brass conduit belongs to the machine, not a shelf of books.
 local facility={
