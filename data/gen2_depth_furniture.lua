@@ -95,7 +95,7 @@ return {
   prop('mansion_books',15,left,'cabinet',3,'gb_mansion_books'),
   prop('mansion_clock',15,{2,0,2,4},'cabinet',3,'gb_mansion_clock'),
   prop('mansion_planter',17,{2,2,2,2},'planter',3),
-  prop('mansion_desk',18,{0,2,4,2},'console',3),
+  prop('mansion_desk',18,{0,2,4,2},'console',3,'gb_mansion_workstation'),
   prop('mansion_bed',20,left,'bed',3),
  },
  TILESET_LIGHTHOUSE={

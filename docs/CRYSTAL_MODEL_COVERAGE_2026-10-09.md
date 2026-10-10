@@ -396,3 +396,29 @@ Focused clock/recess/rack-height/source/bounds tests,60 source-crop recipes,
 The recipe can also match the same rack drawing elsewhere in the Mansion
 family; those rooms need their own rendered review and are not counted here.
 Other Mansion furniture and stairs remain open.
+
+## Gold/Silver/Crystal Mansion workstations
+
+- [x] Celadon Mansion2F(1) and3F(3) native desktop/CRT assemblies per game:
+  original screen unprojected onto an upright display, closed vented case and
+  pedestal, separate keyboard with sealed sloping edges, complete desk legs
+  and underside. Native papers remain on the desktop; monitor art is no
+  longer flattened onto it. CRT display proportions corrected after review.
+- [x] The matching low book rack from the previous batch is also visible and
+  reviewed in both upstairs rooms.
+- [ ] Native chair drawings remain flat: Crystal audit confirms all four
+  chair cells collision0/walkable. Raising occupied furniture there would
+  intrude into original walking space; no collision change was made.
+
+All three independently imported games agree on source metatile18. Baseline:
+`crystal-gen2-mansion-desks-before`. Final:
+`{gold,silver,crystal}-gen2-mansion-workstations-final`, four views on both floors
+from native player(1,5). Fixtures assert1/3 assemblies, both source footprint
+cells blocked and full grids unchanged. Final Crystal3F eye/side, Gold2F rear,
+Silver2F overview inspected. The initial screen crop included brown casing;
+corrected native parallelogram corners before final acceptance. Rear cameras
+were moved nearer to see the model behind room-wall occlusion. First-person
+3F retains native NPCs, which obscure part of the left desktop.
+
+Focused workstation/clock/source/whole-furniture suites pass. Original chairs,
+room-wall/stair appearance and non-Mansion workstations remain separate work.

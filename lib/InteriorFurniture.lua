@@ -1440,6 +1440,21 @@ function M.draw(id,A)
   -- Wide shelves retain every item in the source facade while central
   -- uprights divide physically separate storage bays.
   if w>=32 then for x=16,w-8,16 do B(x-.4,base+1.5,z-.8,x+.4,height-1,z,mat)end end
+ elseif id=='gb_mansion_workstation' then
+  local wood,case,dark=T(2,2),T(23,3),T(21,7)
+  desk(1,1,31,15,7,wood)
+  -- Original papers and desk objects stay on the left working surface.
+  -- The projected monitor at right becomes a separate complete CRT.
+  top({1,1,18,14},1,1,19,15,7.02)
+  keyboard({4,8,12,6},4,8,12,6,7.1,case)
+  local rim={{4,7.7,8},{16,7.7,8},{16,7.15,14},{4,7.15,14}}
+  for i,a in ipairs(rim)do local b=rim[i%4+1]
+   A.face({a,b,{b[1],7.1,b[3]},{a[1],7.1,a[3]}},case,.82)
+  end
+  crt(19,2,11,8,17,{22,7,1,1},case,dark)
+  -- Native display is a parallelogram across contiguous atlas quadrants.
+  A.face({{20,16,8.99},{29,16,8.99},{29,9,8.99},{20,9,8.99}},
+   {T(21,5)[1],T(25,7)[1],T(25,10)[1],T(21,8)[1]},1)
  elseif id=='gb_mansion_books' then
   -- Blank wall and projected lid occupy the upper half of this drawing.
   -- Its lower half is one low book rack over two storage panels.
