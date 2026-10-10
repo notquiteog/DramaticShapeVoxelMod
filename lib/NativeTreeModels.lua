@@ -30,12 +30,12 @@ function M.part(family,x,y,z)
    or oval(x,y,z,0,.43,0,.31,.15,.31)
    or oval(x,y,z,0,.245,0,.49,.145,.49)then return 'foliage' end
   if y>=0 and y<.64 and radial<(.06+.055*math.max(0,1-y/.13))^2 then return 'wood' end
- elseif family=='broad' then
+ elseif family=='broad' or family=='mossdeep' then
   -- Ilex/Park: one wide low crown over a visibly flared, branching trunk.
   if oval(x,y,z,-.18,.76,.02,.32,.23,.45)
    or oval(x,y,z,.18,.76,-.02,.32,.23,.45)
    or oval(x,y,z,0,.82,0,.40,.17,.49)then return 'foliage' end
-  local r=.095+.11*math.max(0,1-y/.3)
+  local r=.095+(family=='mossdeep' and .05 or .11)*math.max(0,1-y/.3)
   if y>=0 and y<.8 and radial<r*r then return 'wood' end
   if y>.28 and y<.74 then
    local branch=(y-.28)*.42

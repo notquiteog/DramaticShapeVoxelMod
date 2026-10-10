@@ -1,3 +1,8 @@
+## Unreleased
+
+- Model complete standalone Mossdeep trees from native artwork, anchor trunks
+  inside blocked cells, and exclude lawn colors from foliage materials.
+
 ## 1.31.5 — 2026-10-05
 
 Keep Gen3 building walls clear of native walking lanes, correct square Emerald gym canopies, improve short-house clearance and raised foundation materials. Includes optional native Cut saplings, Rocket wall presentation and shared capture-beam controls. Engine 0.3.52: 182 tests passed, 0 failed, 56 skipped; recognized-building audits and rendered views inspected. Full coverage and parity remain unfinished; in-progress Legendary road changes are excluded.

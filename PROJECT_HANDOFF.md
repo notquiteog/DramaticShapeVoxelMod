@@ -1,3 +1,25 @@
+# Mossdeep standalone trees — 2026-10-09 (unreleased)
+
+Two complete native 3x3 Mossdeep trees now use the shared original-art tree
+pipeline instead of flat ground drawings. Exact full pattern and blocked root
+required; trunk centered on that blocked cell, low trunk bounded within it.
+Native lawn palette excluded from tree samples after rendered QA revealed blue
+lawn patches on the crown. Model/billboard preference remains supported.
+Cliff-composite variants deliberately remain pending: consuming those as plain
+trees would remove terrain. No gameplay collision or warps changed.
+
+Engine0.3.52 private Emerald QA: native source map inspected; four directional
+and eye-height production renders at (48,19) in
+.scratch/coverage-20261004/results/emerald-mossdeep-tree-review. Camera fixture
+corrected to account for raised terrain before final inspection. Regression
+covers full/partial matching, cliff exclusion, blocked anchor and low trunk
+bounds. Suite log: .scratch/mossdeep-trees-20261009-tests.log.
+Full tile coverage is NOT complete. Other flat tree families and cliff-composite
+Mossdeep drawings remain visible in captures and require further work.
+
+Release follow-up: Yellow1.12.4 CI succeeded; published Lua bundle recursively
+matches locally packed content, SHA256 verified, auxiliary checksum refreshed.
+
 # Gen3 building footprints — 2026-10-05 (unreleased)
 
 Recognized Civic models now use native collision rows to keep rear walls out

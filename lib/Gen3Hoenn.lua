@@ -28,6 +28,30 @@ function M.surface(primary,mid,collision)
   return {kind='rock',ground=0x2d,height=6}
  end
 end
+-- Complete standalone Mossdeep trees. Cliff-composite variants deliberately
+-- retain their terrain until a separate edge recipe accounts for both layers.
+function M.prepareTrees(cells)
+ local rows={{0x302,0x303,0x304},{0x30a,0x30b,0x30c},{0x312,0x313,0x314}}
+ local count=0
+ for _,root in pairs(cells)do
+  if root.primary=='general' and root.secondary=='mossdeep' and root.mid==0x313 and root.collision==7 then
+   local x,y=root.cx-1,root.cy-2;local complete=true
+   for iy,row in ipairs(rows)do for ix,mid in ipairs(row)do
+    local c=cells[(x+ix-1)..':'..(y+iy-1)]
+    if not c or c.pair~=root.pair or c.mid~=mid then complete=false end
+   end end
+   if complete then
+    for iy,row in ipairs(rows)do for ix in ipairs(row)do
+     local c=cells[(x+ix-1)..':'..(y+iy-1)]
+     c.shape={kind='tree',ground=1,root=c==root,anchorX=8,anchorZ=8,
+      treeRows=rows,treeFamily='mossdeep',treeTrim=0}
+    end end
+    count=count+1
+   end
+  end
+ end
+ return count
+end
 function M.shape(primary,secondary,mid,behavior,collision)
  if primary=='building' and secondary=='shop' and collision==7 and (mid==0x222 or mid==0x244)then
   return {kind='roomWall',ground=0x201}

@@ -183,6 +183,11 @@ function M.gen3(c)
   return r,g,b,a
  end
  local ground=background(16,16,function(x,y)return pixel(c.shape.ground or 1,x,y)end)
+ if family=='mossdeep' then
+  -- This drawing includes the speckled lawn around its crown. Exclude all
+  -- native lawn colors, not only its dominant color, from the solid model.
+  for y=0,15 do for x=0,15 do local r,g,b=pixel(c.shape.ground or 1,x,y);ground[key(r,g,b)]=true end end
+ end
  local result=card(id,#rows[1]*16,#rows*16,function(x,y)
   return pixel(rows[math.floor(y/16)+1][math.floor(x/16)+1],x%16,y%16)
  end,ground,c.shape.treeTrim or (forest and 16 or 8))

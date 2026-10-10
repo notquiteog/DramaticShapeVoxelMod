@@ -195,6 +195,7 @@ local function build(req,cache,previous)
  if previous and previous.signature==sig then return previous end
  cache.signature=sig;cache.parts={};cache.cells=cells
  local treeGroups={}
+ if V.require("Gen3Hoenn").active() then V.require("Gen3Hoenn").prepareTrees(cells) end
  M.forestTrees=Forest.prepare(cells)
  local gyms=Buildings.prepare(cells);M.gymCount=#gyms
  local civics=Civic.prepare(cells,gyms,V.data("gen3_exteriors"));M.civicCount=#civics

@@ -231,3 +231,29 @@ for _,mid in ipairs{0x222,0x244}do
  assert(H.shape('building','shop',mid,0,0).kind=='flat','walkable clock alias became solid')
 end
 for _,r in ipairs(H.recipes)do assert(r.name~='hoenn_mart_return','wallpaper/floor claimed as checkout')end
+
+do
+ local rows={{0x302,0x303,0x304},{0x30a,0x30b,0x30c},{0x312,0x313,0x314}}
+ local function fixture()
+  local cells={}
+  for y,row in ipairs(rows)do for x,mid in ipairs(row)do
+   cells[x..':'..y]={cx=x,cy=y,mid=mid,primary='general',secondary='mossdeep',pair='general__mossdeep',collision=y==3 and 7 or 0,shape={kind='flat'}}
+  end end
+  return cells
+ end
+ local c=fixture();assert(H.prepareTrees(c)==1)
+ local roots=0
+ for _,v in pairs(c)do assert(v.shape.kind=='tree');if v.shape.root then roots=roots+1;assert(v.cx==2 and v.cy==3 and v.collision==7);assert(v.shape.anchorX==8 and v.shape.anchorZ==8)end end
+ assert(roots==1 and c['2:3'].shape.treeFamily=='mossdeep')
+ c=fixture();c['1:1'].mid=0x2fa;assert(H.prepareTrees(c)==0,'cliff-composite tree consumed terrain')
+ c=fixture();c['2:3'].collision=0;assert(H.prepareTrees(c)==0,'trunk placed on walking lane')
+ c=fixture();c['1:1']=nil;assert(H.prepareTrees(c)==0,'partial drawing consumed')
+end
+print('PASS complete Mossdeep tree group and blocked trunk anchor')
+
+local models=V.require('NativeTreeModels')
+for y=0,16 do for x=-24,24 do for z=-24,24 do
+ if models.part('mossdeep',x/48,y/48,z/48) then
+  assert(math.abs(x)<8 and math.abs(z)<8,'Mossdeep low trunk extends outside blocked center cell')
+ end
+end end end
