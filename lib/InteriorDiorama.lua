@@ -38,13 +38,15 @@ function M.profile(def,gen)
  elseif gen==2 then
   if def.environment~='INDOOR' and def.environment~='GATE' and not cave then return end
  else
+  -- Mansion's roof reuses interior furniture tiles but is an open-air terrace.
+  if id=='CELADON_MANSION_ROOF' then return end
   -- Buildings and caves are enclosed; outdoor maps keep their scenery.
   --
   -- SHIP, CEMETERY and MANSION were missing here and every map that uses them
   -- was getting no room at all, so no ceiling: the S.S. Anne (12 maps), the
   -- Pokemon Tower (8) and the Celadon Mansion (5) all rendered as a black void
-  -- in BOTH cameras. Confirmed against the data -- all 25 are interior maps
-  -- with connections = {}.
+  -- in BOTH cameras. Their true indoor maps need enclosure; the rooftop
+  -- exception above keeps its native parapet and open sky.
   --
   -- Deliberately NOT a "no connections means a room" rule: 186 of 222 Gen 1
   -- maps have no connections, and that set includes genuinely outdoor

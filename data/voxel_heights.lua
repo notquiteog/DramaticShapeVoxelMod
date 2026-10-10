@@ -1830,12 +1830,8 @@ return {
       -- the body).  The desks' aprons (2/3/85/86 over 18/19) are drawn
       -- into the WALKABLE cell in front and stay flat floor, which is
       -- how the artist placed them.
-      -- Known compromise: the rooftop shed on CELADON_MANSION_ROOF is
-      -- drawn with the table's own top and body tiles (38/39/41 over
-      -- five rows of 54/55/57) with a door punched in its base, so it
-      -- comes out a 12px block rather than a shed.  Nothing towers there
-      -- any more -- the detector had its east columns at 48px -- and no
-      -- per-tile pin can give one drawing two heights.
+      -- The rooftop shed reuses these tiles; its full, map-scoped building
+      -- template below consumes them before this furniture fallback.
       table = { 36, 37, 38, 39, 41, 52, 53, 54, 55, 57, 58, 59, 60,
                 64, 65, 66, 67 },
       -- the stool at the 2F/3F desk: a whole cell of drawing (2/3 over
@@ -6541,6 +6537,26 @@ return {
     },
 
     MANSION = {
+      -- The rooftop shed shares furniture roof tiles, but its complete drawing
+      -- is an exterior building: six roof rows over a two-row upright facade.
+      -- Keep the native doorway at the south edge and plain siding at the back.
+      {
+        id = "mansion_rooftop_shed", maps = { CELADON_MANSION_ROOF = true },
+        tiles = {
+          {38,39,39,39,39,41},
+          {54,55,55,55,55,57},
+          {54,55,55,55,55,57},
+          {54,55,55,55,55,57},
+          {54,55,55,55,55,57},
+          {54,55,55,55,55,57},
+          {48,30,81,82,30,93},
+          {48,30,83,84,6,7},
+        },
+        roofRows=48, roofBack=46, roofFront=2, roofCycle={2,45},
+        slab=1, frontEave=0, ledge=nil,
+        backTiles={ [81]=30, [82]=30, [83]=30, [84]=30, [6]=30, [7]=30 },
+        groundTiles={{1}},
+      },
       -- Complete mixed desk/stool drawings: keep the original 12px worktop
       -- and 8px seat support, with a separate inset chair and source equipment.
       {
