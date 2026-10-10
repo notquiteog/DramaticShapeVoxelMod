@@ -131,3 +131,22 @@ Crystal/Gold Celadon first-person and Silver Goldenrod overview. Stair approach
 remains clear; entire model bounded to its blocked source cell. Directory,
 register, window, complete-furniture and depth-furniture suites pass. Native
 artwork and imported event/text data remain local QA references, not bundled.
+
+## Native collision audit of the new store patterns
+
+`tests/gen2_store_footprint_driver.lua` checked every MART map in each imported
+version on engine0.3.52. All five new recipe patterns align to native cells.
+Window, overlap, directory and register cells are blocked; every elevator's
+approach is walkable and its adjacent control-wall cell is blocked. All pass.
+
+| Native drawing matches | Gold | Silver | Crystal |
+| --- | ---: | ---: | ---: |
+| Plain store window | 114 | 114 | 112 |
+| Counter/window overlap | 8 | 8 | 8 |
+| Elevator and control panel | 12 | 12 | 12 |
+| Cash register | 17 | 17 | 17 |
+| Department directory | 12 | 12 | 12 |
+
+These are pattern/footprint counts, not visual sign-off of every placement.
+The difference in window totals reinforces that versions are checked
+independently. Runtime outputs: `results/{game}-gen2-new-fixture-census`.
