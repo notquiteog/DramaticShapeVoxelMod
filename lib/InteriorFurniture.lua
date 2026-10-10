@@ -1699,6 +1699,24 @@ function M.draw(id,A)
   B(1,0,6,15,10,14,mat);B(2,10,7,14,11,13,mat)
   front({1,1,14,14},1,0,15,10,14.02)
   B(10,3,14,12,5,14.6,dark)
+ elseif id=='gb_battle_tower_pc' then
+  local case,dark=T(1,3),T(5,12)
+  -- This is the complete integrated blue kiosk: projected lid, upright
+  -- display, lower controls and pedestal are distinct native surfaces.
+  B(2,0,19,14,7,30,case);front({1,26,14,6},2,0,14,7,30.02)
+  B(2,7,17,14,21,28,case)
+  B(1,9,28,3,21,29,case);B(13,9,28,15,21,29,case)
+  B(3,9,28,13,10,29,case);B(3,20,28,13,21,29,case)
+  front({3,11,10,8},3,10,13,20,28.98)
+  B(1,21,17,15,22,29,case);B(2,22,18,14,23,28,case)
+  top({2,1,12,6},2,18,14,28,23.02)
+  B(1,7,26,15,8,31,case)
+  S(2,21,12,5,{2,9,26},{14,9,26},{14,8.05,31},{2,8.05,31})
+  A.face({{2,8,26},{2,8,31},{2,8.05,31},{2,9,26}},case,.78)
+  A.face({{14,8,31},{14,8,26},{14,9,26},{14,8.05,31}},case,.78)
+  A.face({{2,8,31},{14,8,31},{14,8.05,31},{2,8.05,31}},case,.85)
+  A.face({{14,8,26},{2,8,26},{2,9,26},{14,9,26}},case,.7)
+  for y=11,17,2 do B(13.98,y,19,14.02,y+.5,25,dark)end
  elseif id=='gb_rocket_terminal' then
   local case,dark=T(4,11),T(1,24)
   -- A working surface with knee space, a drawer pedestal and one desktop

@@ -85,8 +85,8 @@ return {
   prop('station_statue',29,left,'statue',28),
  },
  TILESET_BATTLE_TOWER_INSIDE={
-  prop('battle_tower_terminal',5,left,'machine',1),
-  prop('battle_tower_table',7,{0,0,2,2},'table',1),
+  -- The complete lobby PC is matched by gen2_furniture before these crops.
+  prop('battle_tower_seat',7,{0,0,2,2},'seat',1,'gb_seat'),
   -- Block28 is a circular floor ornament over four WALKABLE cells, not
   -- a reception desk. Its native pattern must remain flat and complete.
   prop('battle_tower_statue',11,{0,0,2,2},'statue',10),

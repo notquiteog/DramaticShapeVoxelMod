@@ -296,3 +296,18 @@ explicit Crystal-only correction. Other lobby furnishings need review.
 The MART shallow-descent experiment was reverted because the forward eye view
 was not enough evidence of an improvement. Native stair geometry is unchanged;
 traversal evidence above remains valid, and descending visual review stays open.
+
+## Crystal Battle Tower kiosk and seats
+
+- [x] Replace the legacy lower-half PC crop with the complete four-row blue
+  kiosk. Separate closed pedestal, display shell, original upright screen,
+  sloped controls and projected lid; sides/back/underside stay enclosed.
+- [x] Six native low cushions replace the old table interpretation of block7.
+
+Crystal `gen2-tower-furniture-footprints` confirms both PC cells and all six
+seat cells blocked. `gen2-tower-furniture` asserts1 PC/6 seats, four native floor
+ornaments still walkable, full grids unchanged and four views at walkable
+`(6,8)`. First/overview inspected against original source. The initial generic
+PC adapter was rejected in favor of this integrated kiosk model. Focused whole
+crop/bounds/cushion-height, complete-furniture and source-crop tests pass.
+Gold/Silver do not contain these maps. Other Battle Tower details remain open.
