@@ -318,8 +318,8 @@ Gold/Silver do not contain these maps. Other Battle Tower details remain open.
   battle room1, hallway10) now have closed rear panels, narrow jambs and lintels.
   Their16px height matches neighboring native wall ornaments. Walking approach
   interiors remain clear; door art is not repeated on a box top.
-- [ ] Hallway's offset elevator drawing is a distinct assembly and is excluded
-  by tileRow0 until its two-cell approach is separately reviewed.
+- [x] Hallway's offset elevator drawing: separately resolved below; the
+  north-row recipe remains restricted to avoid duplicate matches.
 
 Crystal `gen2-tower-doors` captures all three maps in four views, asserting
 native walkability, matching production counts and unchanged complete grids.
@@ -328,3 +328,17 @@ closed-frame and existing Tower/furniture tests pass. The seven existing
 rounded stone ornaments were inspected in `gen2-tower-panels-before` and
 retained; their source footprints are blocked. Animated door states and native
 Tower challenge progression are not covered by these static fixtures.
+
+## Crystal hallway elevator assembly
+
+- [x] The offset4×4 source assembly now folds its solid left wall into the
+  single blocked upper-left cell. The door stands at the north edge; both
+  lower cells and the upper-right approach remain clear. Original roof band,
+  wall face, controls and glass are preserved on their respective surfaces.
+
+`gen2-tower-elevator-footprint` confirms three walkable cells and one blocked
+cell. Crystal `gen2-tower-elevator-entry` asserts one model, clear lower warp
+row, unchanged native grid and four views. Native `movePlayer` then enters the
+original BATTLE_TOWER_ELEVATOR destination. First/overview inspected. Focused
+vertex bounds/open-approach and complete-furniture tests pass. Challenge
+progression and animated door sequences remain outside this static-model scope.

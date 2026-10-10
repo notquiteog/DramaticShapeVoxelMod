@@ -1699,6 +1699,18 @@ function M.draw(id,A)
   B(1,0,6,15,10,14,mat);B(2,10,7,14,11,13,mat)
   front({1,1,14,14},1,0,15,10,14.02)
   B(10,3,14,12,5,14.6,dark)
+ elseif id=='gb_battle_elevator_entry' then
+  local wall,frame=T(2,9),T(17,9)
+  -- Only the upper-left native cell is blocked. Its projected front/shadow
+  -- folds back onto that cell; the lower row and door approach stay clear.
+  B(0,0,0,16,16,15.9,wall)
+  front({0,8,16,16},0,0,16,16,15.92)
+  top({0,0,16,8},0,0,16,16,16.02)
+  B(16,0,0,32,16,.5,frame)
+  front({17,9,14,14},17,0,31,15,.52)
+  B(16,0,.5,17,16,16,frame);B(31,0,.5,32,16,16,frame)
+  B(16,15,.5,32,16,16,frame)
+  top({16,0,16,8},16,0,32,16,16.02)
  elseif id=='gb_battle_tower_door' then
   local frame=T(1,1)
   -- Native warp or inactive door cells remain open up to the rear plane.
