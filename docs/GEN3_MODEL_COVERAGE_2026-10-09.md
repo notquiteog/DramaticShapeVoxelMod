@@ -279,3 +279,18 @@ pass, including new rear eave/UV/closed-underside regression. Native footprint
 census remains Emerald77/0, Ruby11/0, FireRed105/0. This verifies representative
 families and shared geometry, not every map/camera. Native walls, collisions,
 warps and player saves remain unchanged.
+
+
+## Verified batch: Ruby/Sapphire Littleroot homes
+
+Player/rival houses now have two closed shingled roof tiers, a structural riser,
+raised native pale fascia and solid ridge caps. Native door/window arrangement
+is preserved for each opposite layout. The rejected first prototype extended
+its upper tier behind the moved rear wall; the final version ends at the same
+bounded rear eave as the lower tier. A regression checks the tier's rear extent.
+
+Final `{ruby,sapphire}-rse-littleroot-homes-review` orbit and eye captures were
+inspected independently. RS/Hoenn/Civic suites pass; native census13/0 per
+edition, eleven enabled source families. Emerald's Littleroot roofs still use
+the previous geometry and require their own adoption/render batch. RS interiors,
+most remaining exteriors and special scenery remain unfinished.

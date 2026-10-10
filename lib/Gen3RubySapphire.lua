@@ -3,7 +3,8 @@
 local M={}
 local exteriorNames={oldale_house=true,oldale_mart=true,oldale_center=true,
  petalburg_city_mart=true,petalburg_city_center=true,petalburg_city_gym=true,
- petalburg_city_wide_home=true,petalburg_city_home=true,birch_lab=true}
+ petalburg_city_wide_home=true,petalburg_city_home=true,birch_lab=true,
+ littleroot_player_house=true,littleroot_rival_house=true}
 local trees={}
 for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1e4,0x1e5,0x1e6,0x1e7}do trees[id]=true end
 local roots={[0x1dc]=true,[0x1e4]=true,[0x1e6]=true}
@@ -13,6 +14,7 @@ function M.exteriors(source)
   local copy={};for k,v in pairs(r)do copy[k]=v end
   copy.header=#r.rows -- require every native source cell, including facade
   if r.name=='birch_lab' then copy.ventShape='rectangular' end
+  if r.name:match('^littleroot_') then copy.roofShape='littleroot_tiered' end
   out[#out+1]=copy
  end end
  return out

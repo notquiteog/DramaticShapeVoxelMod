@@ -1,3 +1,10 @@
+# Ruby/Sapphire Littleroot homes — 2026-10-09 (unreleased)
+
+Separate follow-up after roof correction: both native RS homes now use closed
+supported two-tier roofs, bounded rear eaves and source fascia. Independent
+Ruby/Sapphire orbit/eye captures inspected; focused suites pass, census13/0 per
+edition. All regional coverage remains partial; ledger records evidence.
+
 # Excessive Gen3 rear roof projection fixed — 2026-10-09 (unreleased)
 
 User report reproduced: Civic preserved rear walking rows by moving walls but
