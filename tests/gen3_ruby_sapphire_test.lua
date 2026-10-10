@@ -50,6 +50,25 @@ for _,r in ipairs(H.recipes)do if r.kind=='escalator' then
   if high>1.5 then for _,q in ipairs(v)do assert(q[3]>=16 and q[3]<33,'Hoenn flight occupies walking apron')end end
  end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
 end end
+-- Native RS booths must leave their two open rear lanes and front apron clear.
+for _,r in ipairs(V.require('Gen3RubySapphire').recipes)do
+ for _,game in ipairs({'ruby','sapphire'})do
+  version=game;local cells={}
+  for yy,row in ipairs(r.rows)do for xx,mid in ipairs(row)do cells[(xx-1)..':'..(yy-1)]={cx=xx-1,cy=yy-1,mid=mid,pair=r.pair,primary='building',ts={}}end end
+  local list=F.extract(cells);assert(#list==1 and list[1].recipe==r)
+  local underside=false
+  F.append(list[1],function(v)
+   local lo,hi=math.huge,-math.huge;for _,q in ipairs(v)do
+    assert(q[3]>=15 and q[3]<80,'booth intrudes front apron')
+    lo=math.min(lo,q[2]);hi=math.max(hi,q[2])
+    if q[1]>=20 and q[1]<=44 and q[2]<24 then assert(q[3]<20 or q[3]>=48,'booth intrudes open clerk/warp lane')end
+   end
+   if lo==28 and hi==28 then underside=true end
+  end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
+  assert(underside,'open partition/lintel underside')
+  version='emerald';assert(not H.recipeActive(r),'RS-only booth leaked into Emerald')
+ end
+end
 version='emerald';assert(#H.exteriorRecipes()>3 and H.recipeActive(H.recipes[1]))
 version='firered';assert(not H.active() and H.recipeActive({}) and not H.recipeActive({family='rse'}))
 print('Ruby/Sapphire checked-family dispatch, full source matches, native rear lanes and edition isolation PASS')

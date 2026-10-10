@@ -84,6 +84,8 @@ for _,r in ipairs(Institution)do recipes[#recipes+1]=r end
 Designed.install(recipes)
 local Hoenn=V and V.require('Gen3Hoenn') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3Hoenn.lua')
 for _,r in ipairs(Hoenn.recipes)do recipes[#recipes+1]=r end
+local RS=V and V.require('Gen3RubySapphire') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3RubySapphire.lua')
+for _,r in ipairs(RS.recipes)do recipes[#recipes+1]=r end
 local function recipeActive(r)
  if Hoenn.recipeActive then return Hoenn.recipeActive(r)end
  return Hoenn.active()==(r.family=='rse')
@@ -192,6 +194,7 @@ function M.append(p,emit,uvFor)
  if r.kind=='statue' and V then
   V.require('Gen3Statue').append(p,emit,uvFor,box,source,sample);return
  end
+ if r.kind=='rsLinkBooth' or r.kind=='rsLinkPartition' then V.require('Gen3LinkBooth').append(p,source,box,sample,emit);return end
  if Designed.append(p,source,box,sample,emit)then return end
  if Center.append(p,source,box,sample,emit,uvFor)then return end
  if r.kind=='relief' or r.kind=='bin' or r.kind=='plaque' then

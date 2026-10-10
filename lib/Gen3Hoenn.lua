@@ -15,6 +15,7 @@ function M.exteriorRecipes()return rubySapphire() and RS().exteriors(M.exteriors
 function M.recipeActive(r)
  -- RS interiors opt in only after their own source/render batches.
  if rubySapphire() then return RS().recipeActive(r) end
+ if r.edition=='rs' then return false end
  return M.active()==(r.family=='rse')
 end
 local trees={}

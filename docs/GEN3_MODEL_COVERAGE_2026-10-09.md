@@ -342,3 +342,22 @@ and center suites pass, including an explicit flight-depth boundary regression.
 This supersedes the prior Emerald20/2 result. Normal input/warp traversal was
 not exercised by these controlled visual fixtures; gameplay implementations are
 unchanged. All three engines exited and player saves remain untouched.
+
+
+## Verified batch: Ruby/Sapphire upper Center link booths
+
+Separate native upper-floor captures show three private service booths rather
+than Emerald's continuous counter. Four RS-only complete patterns now provide
+closed orange partitions with white caps, individual desks/gates, full native
+service symbols and recessed portal art. Low geometry leaves the clerk and
+portal approach lanes open; partition/lintel undersides are closed. Emerald
+receives none of these edition-specific recipes.
+
+Production Ruby and Sapphire Dewford Center 2F front, rear, side and eye renders
+inspected in `{ruby,sapphire}-rse-upper-center-review`, with independent native
+references in `-rse-upper-center-source`. Both scoped authored-face audits report
+15 fixtures / 0 explicit-floor flags. Six focused Lua suites pass, including
+RS edition isolation, lane bounds and closed undersides. Normal input/warp
+traversal was not exercised. Upper-floor PC, additional plants and downward
+escalator patterns remain native pending separate source/model review. Engines
+exited; isolated QA fixtures only, player saves and gameplay unchanged.

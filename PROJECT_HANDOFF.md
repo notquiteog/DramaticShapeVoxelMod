@@ -1,3 +1,12 @@
+# Ruby/Sapphire upper Center link booths — 2026-10-09
+
+Four RS-specific complete source patterns now form three closed privacy booths
+and the final partition. Native signs/portal art retained; clerk and portal
+approaches stay clear. Separate Ruby/Sapphire front/rear/side/eye production
+renders inspected; six focused suites pass and scoped face audit is15/0 each.
+Emerald remains isolated. Upper PC/plants/downward stairs still unreviewed;
+normal warp traversal not exercised. Details in Gen3 coverage ledger.
+
 # Hoenn escalator projected approach clearance — 2026-10-09
 
 Flight/rails now remain within the native middle blocked/warp row instead of
