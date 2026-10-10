@@ -1699,6 +1699,22 @@ function M.draw(id,A)
   B(1,0,6,15,10,14,mat);B(2,10,7,14,11,13,mat)
   front({1,1,14,14},1,0,15,10,14.02)
   B(10,3,14,12,5,14.6,dark)
+ elseif id=='gb_rocket_books' then
+  local wood,dark=T(1,9),T(3,10)
+  shelves(1,20,14,10,26,{},wood,dark)
+  -- The native artwork has three spines per tier. Integer crops preserve
+  -- each spine instead of splitting pixel columns between arbitrary books.
+  for _,row in ipairs({{9,16},{17,8}})do
+   B(1.5,row[1]-.7,21,14.5,row[1],30.2,wood)
+   for _,book in ipairs({{3,2,5},{6,2,5},{10,3,6}})do
+    local x,w,h=book[1],book[2],book[3]
+    B(x,row[1],22,x+w,row[1]+h,29,T(x,row[2]+1))
+    front({x,row[2]+1,w,h},x,row[1],x+w,row[1]+h,29.02)
+   end
+  end
+  B(2,1.5,21,14,8,29,wood)
+  front({1,24,14,7},2,1.5,14,8,29.02)
+  top({1,1,14,6},1,20,15,30,26.02)
  elseif id=='gb_house_tall_books' then
   shelves(1,21,14,10,24,{{3,11,{1,17,14,6}},{13,22,{1,9,14,6}}},T(1,1),T(3,12))
  elseif id=='gb_house_books' then

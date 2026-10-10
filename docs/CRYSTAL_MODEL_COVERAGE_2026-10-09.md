@@ -232,3 +232,16 @@ Crystal port first/overview, Gold port rear and Silver Rocket first-person.
 The initial3-row claim exposed a floor-wall artifact, fixed before acceptance.
 Focused crop/scope and existing pot-mask/geometry tests pass. Port stairs and
 Rocket workstation/shelves remain separate coverage items.
+
+## Rocket base bookcases
+
+- [x] Rocket B1 native paired bookcases: closed rear/sides/base/cap, two open
+  shelves, three separate source-matched books per shelf and lower drawers.
+  Integer artwork crops prevent seams from fractional spine slices.
+
+Gold/Silver/Crystal `gen2-rocket-books.lua` passes: two native patterns/models,
+all source cells blocked, full native grids unchanged, four walkable-camera
+views. Inspected Crystal first and Silver overview; closed geometry remains
+inside the southern blocked cell of the original drawing. Focused bounds,
+full native furniture, plant and crate regressions pass. The adjacent terminal
+is still the next separate coverage task.
