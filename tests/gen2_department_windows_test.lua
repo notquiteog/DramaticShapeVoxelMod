@@ -24,3 +24,18 @@ for _,face in ipairs(q)do
 end
 assert(recessed==14*14,'native glass crop incomplete')
 print('PASS Crystal department panes: whole pattern, native glass plane and blocked-cell bounds')
+local elevator
+for _,r in ipairs(assert(loadfile('data/gen2_furniture.lua'))().TILESET_MART)do
+ if r.id=='crystal_department_elevator' then elevator=r end
+end
+assert(elevator and #elevator.tiles[1]==4 and #elevator.tiles==2)
+local doors=V.require('Gen2DesignedFurniture').build(elevator,nil,16,128,128)
+for _,face in ipairs(doors)do
+ local x0,x1,y0,y1,z0,z1=math.huge,-math.huge,math.huge,-math.huge,math.huge,-math.huge
+ for _,p in ipairs(face)do
+  x0=math.min(x0,p[1]);x1=math.max(x1,p[1]);y0=math.min(y0,p[2]);y1=math.max(y1,p[2]);z0=math.min(z0,p[3]);z1=math.max(z1,p[3])
+  assert(p[1]>=0 and p[1]<=32 and p[3]>=0 and p[3]<=16.03,'elevator outside native two-cell footprint')
+ end
+ assert(not(x1>1 and x0<15 and z1>.6 and z0<16 and y0<23 and y1>0),'elevator closes walkable native warp approach')
+end
+print('PASS elevator approach clear below lintel; closed door at rear plane')

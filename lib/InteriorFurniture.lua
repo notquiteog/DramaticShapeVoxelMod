@@ -481,6 +481,16 @@ function M.draw(id,A)
   B(3,10,1,13,11,31,edge)
   top({3,1,10,29},3,1,13,31,11.02)
   for _,x in ipairs{3,12}do B(x,0,28,x+1,10,31,edge)end
+ elseif id=='gb_department_elevator' then
+  -- The door cell is a native walkable warp. Put the closed door at its rear
+  -- plane, with open approach space between the narrow jambs and lintel.
+  local frame,wall=T(1,1),T(31,9)
+  B(0,0,0,16,24,.5,frame)
+  front({1,1,14,14},1,0,15,23,.52)
+  B(0,0,.5,1,24,16,frame);B(15,0,.5,16,24,16,frame)
+  B(0,23,.5,16,24,16,frame)
+  B(16,0,0,32,24,16,wall)
+  front({16,0,16,16},16,0,32,24,16.02)
  elseif id=='gb_department_window' then
   -- The diagonal stripes are native glass reflections, not a sloping roof.
   -- Keep the entire wall and sill within its original blocked 16px cell.
