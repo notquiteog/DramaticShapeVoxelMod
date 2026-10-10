@@ -233,6 +233,23 @@ function FirstPerson.stickY()
   return stick.y or 0
 end
 
+-- Whether the right stick belongs to a camera right now: a free-camera
+-- rung is selected (both the 1ST look and the 3RD boom read it, in menus
+-- too), or a staged battle's lens is steerable. While claimed, the
+-- engine's own stick translation must not also run: 0.3.73 taught Input
+-- twin-stick walking (STICK_DEFAULT_BINDINGS maps rightstick_* onto
+-- up/down/left/right), so an unclaimed throw both steered the camera and
+-- walked the player -- the stick is camera-only, the same contract this
+-- module had before the engine learned the translation, restated on top
+-- of it. With the rungs off and no staged lens, every byte flows where
+-- the engine sends it, so a vanilla player keeps the new twin-stick walk.
+function FirstPerson.stickClaimed()
+  local okFree, free = pcall(Voxel.isFreeCam)
+  if okFree and free then return true end
+  local okCam, Cam = pcall(V.require, "CamControl")
+  return (okCam and Cam and Cam.battleLive and Cam.battleLive()) and true or false
+end
+
 -- ------- lending the look finger out
 --
 -- A pinch needs both fingers on the screen, and one of them is very likely
@@ -803,6 +820,12 @@ function FirstPerson.install()
       if ev.phase == "axis" then
         if ev.axis == "rightx" then stick.x = ev.value
         elseif ev.axis == "righty" then stick.y = ev.value end
+        -- camera-only while a camera claims the stick (0.3.73 twin-stick
+        -- walk suppressed); see FirstPerson.stickClaimed.
+        if (ev.axis == "rightx" or ev.axis == "righty")
+           and FirstPerson.stickClaimed() then
+          return true
+        end
       end
       return next(game, ev)
     end)
@@ -814,6 +837,12 @@ function FirstPerson.install()
     function Game:gamepadaxis(joystick, axis, value)
       if axis == "rightx" then stick.x = value
       elseif axis == "righty" then stick.y = value end
+      -- camera-only while a camera claims the stick (0.3.73 twin-stick
+      -- walk suppressed); see FirstPerson.stickClaimed.
+      if (axis == "rightx" or axis == "righty")
+         and FirstPerson.stickClaimed() then
+        return
+      end
       return inner(self, joystick, axis, value)
     end
   end
