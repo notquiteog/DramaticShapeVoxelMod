@@ -108,7 +108,7 @@ return {
  },
  TILESET_GATE={
   prop('gate_chair',33,{0,0,2,2},'seat',1),
-  prop('gate_terminal',44,{2,0,2,4},'machine',1),
+  prop('gate_terminal',44,{2,0,2,4},'machine',1,'gb_gate_terminal'),
  },
  TILESET_POKECOM_CENTER={
   prop('pokecom_healer',5,full,'bed',1),

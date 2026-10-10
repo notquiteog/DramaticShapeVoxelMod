@@ -788,3 +788,22 @@ the existing wall; neighboring geometry naturally occludes some direct rear
 views. Sideboard, prior porthole and58 source/32 shared assembly checks pass.
 Doors/warps and walking chair drawings remain unchanged. This closes this
 specific overlap family, not all ship/Gen2 scenery coverage.
+
+## Gold/Silver/Crystal National Park gate PCs — October 10
+
+- [x] Replaced the generic terminal at Route35 and Route36 park gates in each
+  edition. Native full pattern92/93,72/73,74/75,78/79 agrees independently;
+  upper cell7 and lower PC collision147 remain blocked and unchanged.
+- [x] Separate original wall header, closed cream CRT with native dark/glint
+  screen and side vents, sloped native keyboard and low blue console base.
+
+Crystal `gen2-gate-terminals-before` records the earlier generic screen/box.
+All editions' final `gen2-gate-terminals-eye` pass both placements and full grids.
+Eye cells(7,3)/(9,3) move back from the initially cropped adjacent position.
+Inspected Crystal Route35 eye, Gold Route36 overview/side, Silver Route35 rear.
+An exact-boundary backing initially lost its visible orbit side against the
+outer room plane. A0.05px inward shell inset closes the side/back in final Gold
+and Silver captures; focused test protects it. The wall naturally hides the
+lower rear PC base; the CRT rear/cap remain visible. Existing58 source/32 shared
+assembly checks and focused gate-PC geometry test pass. Native PCScript/menu
+interaction was not exercised; no event, collision or warp code changed.

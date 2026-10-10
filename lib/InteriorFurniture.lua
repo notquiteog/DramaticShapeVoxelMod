@@ -1414,6 +1414,17 @@ function M.draw(id,A)
   top({11,18,1,1},10.7,z-1.3,13.3,z+1.3,10.52)
   B(14,9.5,z-1,16,10.1,z+1,ceramic);B(14,8.4,z-1,16,9,z+1,ceramic)
   B(15.4,9,z-1,16,9.5,z+1,ceramic)
+ elseif id=='gb_gate_terminal' then
+  local blue,cream,dark=T(4,26),T(4,9),T(4,13)
+  -- Original gate header remains on its own wall behind the lower-cell PC.
+  -- Inset the shell from the outer room plane so orbit views retain its side.
+  B(.05,0,.05,15.95,16,15.8,blue);front({0,0,16,8},0,8,16,16,15.82)
+  B(1,0,17,15,6,30,blue)
+  front({2,28,12,4},2,1,14,5.5,30.02)
+  B(2,5.5,17,14,6.5,30,cream)
+  crt(2,17,12,8,19,{3,12,10,7},cream,dark)
+  front({3,19,10,4},3,7,13,8,24.02)
+  keyboard({2,24,12,4},2,25,12,4,6.6,cream)
  elseif id=='fr_space_exhibit' then
   local white,edge,dark,stand=T(19,8),T(13,7),T(13,12),T(6,23)
   B(2,0,3,46,2,30,stand);B(4,2,5,44,3,28,edge)
