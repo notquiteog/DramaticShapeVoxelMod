@@ -57,8 +57,8 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 | Double Battles | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Double Battles | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Double Battles | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Double Battles | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Actual online native double entry: four actors/cards; full turn/faint/switch/end pending |
-| Double Battles | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Actual online native double entry: four actors/cards; full turn/faint/switch/end pending |
+| Double Battles | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Actual online native double: four actors/cards, complete turn and normal end; faint/switch matrix pending |
+| Double Battles | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Actual online native double: four actors/cards, complete turn and normal end; faint/switch matrix pending |
 | Double Battles | emerald | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Double Battles | firered | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Double Battles | leafgreen | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
@@ -68,8 +68,8 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 | Online | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Online | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Online | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Online | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote actors, single/double entry, trade menu, disconnect HP/PP restore and ghost cleanup; completed turn/exchange pending |
-| Online | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote actors, single/double entry, trade menu, disconnect HP/PP restore and ghost cleanup; completed turn/exchange pending |
+| Online | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote actors, single/double complete turn, normal end and original HP/PP restore; actual trade exchange/save; disconnect and ghost cleanup |
+| Online | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote actors, single/double complete turn, normal end and original HP/PP restore; actual trade exchange/save; disconnect and ghost cleanup |
 | Online | emerald | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Online | firered | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Online | leafgreen | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
@@ -116,3 +116,7 @@ Actual Ruby/Sapphire fixture: `tools/qa/rse-suite-parity.lua`; captures in `.scr
 ## Paired Ruby/Sapphire check — engine 0.3.52
 
 Two independent native clients passed ride pose/height/dismount, chat, battle invitation and native single/double setup, trade-menu opening, reconnect and exact original-party restoration on disconnect. Ruby/Sapphire require the native `ScrSpecial_HealPlayerParty` symbol; Online now selects that name without guessing numeric special IDs. Ten named/legacy party tests cover all five GBA editions. These checks do not establish completed turn, trade exchange, capture, or all-edition parity. Repeatable driver: `tools/qa/rse-online-entry.lua` (QA_ROLE host/guest, SHOT_DIR; private imported profiles and LAN port 18864).
+
+## Completed native RSE activities
+
+Online commits `713b82d` and `ac31d52` fix native Ruby/Sapphire healing and the Gen3 virtual-channel trade barrier. Separate actual two-client Ruby and Sapphire runs completed one native single and double turn, mutual run/end, restoration of original HP/PP, and a real trade exchange through native animation and save. Pokémon nicknames were exchanged and checked on both ends. The room continues using its own transport; neither `LT.loopbackCommit` nor native validation is bypassed. Matching native transaction digests are required; mismatch, malformed/replayed confirmations, forged guest commits, and pre-commit disconnects are tested. Post-commit crash recovery and exhaustive faint/switch/trade-evolution cases remain unverified. `tools/qa/rse-online-complete.lua` drives the native command seam only in QA; it does not replace battle rules.
