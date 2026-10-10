@@ -235,3 +235,20 @@ Ruby10/0 and Sapphire10/0 recognized assemblies/low walking overlap flags.
 The table above records the preceding checkpoint; current RS scope is Oldale
 plus Petalburg (eight source families). Hedges, remaining terrain, Littleroot
 and interior furniture remain pending. No collision/warp/save edits.
+
+
+## Verified batch: Ruby/Sapphire Birch laboratory
+
+The exact 7×5 lab at Littleroot (3,12) now uses the native RS rectangular roof
+extractor: closed stepped plinth/casing/cap and recessed solid grille. Emerald
+retains its independently authored circular drum. Repeated RS roof seams are
+restored beneath the removed projected apparatus; the initial render revealed
+a plain donor patch, corrected before final captures. The shell keeps the
+native rear walking row clear and uses native recessed door/window art.
+
+Ruby/Sapphire Littleroot native source captures match independently. Final
+`{ruby,sapphire}-rse-birch-review` orbit and eye views inspected; roof patch and
+side/rear closure verified. RS/Hoenn/Civic tests pass. Independent native census
+now11/0 per edition (nine enabled source families). Moving trucks remain native
+sprites; Littleroot's two homes still await source-faithful tiered roof geometry.
+No full-world or complete furniture claim. Processes exited; saves unchanged.

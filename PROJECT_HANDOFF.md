@@ -1,3 +1,11 @@
+# Ruby/Sapphire Birch laboratory — 2026-10-09 (unreleased)
+
+Closed rectangular roof apparatus now distinguishes the RS lab from Emerald's
+round drum. Native corrugation continues beneath the removed source projection.
+Independent RS orbit/eye renders inspected and focused suites pass; census11/0
+per edition. Littleroot homes/tiered roofs remain pending. Detailed evidence in
+Gen3 model coverage ledger; no gameplay data or saves changed.
+
 # Ruby/Sapphire Petalburg model batch — 2026-10-09 (unreleased)
 
 Five source-reviewed families add six Petalburg buildings per edition. Native

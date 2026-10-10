@@ -5,7 +5,7 @@ local V,cache={},{}
 function V.require(n)if not cache[n]then cache[n]=assert(loadfile('lib/'..n..'.lua'))(V)end;return cache[n]end
 local H,S,C=V.require('Gen3Hoenn'),V.require('Gen3TileShape'),V.require('Gen3Civic')
 for _,game in ipairs({'ruby','sapphire'})do
- version=game;assert(H.active());local recipes=H.exteriorRecipes();assert(#recipes==8)
+ version=game;assert(H.active());local recipes=H.exteriorRecipes();assert(#recipes==9)
  assert(S.of('general','petalburg',0x1dc,0,7).kind=='tree')
  assert(S.of('general','petalburg',0x14,0,7).kind=='flat','Kanto trees leaked')
  assert(S.of('general','petalburg',0x66,0,7).kind=='flat','unreviewed Emerald terrain leaked')
@@ -16,6 +16,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)
+  if r.name=='birch_lab' then assert(r.ventShape=='rectangular')end
   local cells={}
   for iy,row in ipairs(r.rows)do for ix,mid in ipairs(row)do
    local x,y=ix-1,iy-1;cells[x..':'..y]={cx=x,cy=y,mid=mid,pair=r.pair,primary='general',collision=(iy==1 and r.name~='petalburg_city_gym') and 0 or 7,shape={kind='flat'},ts={}}

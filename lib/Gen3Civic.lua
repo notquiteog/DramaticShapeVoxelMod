@@ -252,7 +252,7 @@ function M.material(g)
    rr,gg,bb,aa=sourcePixel(g,g.custom.geometry=='urban' and 16+x%16 or 28,y)
   end
   local vent=g.custom and g.custom.roofVent
-  if vent and x>=vent[1]and x<vent[3]and y>=vent[2]and y<vent[4]then rr,gg,bb,aa=sourcePixel(g,64,y)end
+  if vent and x>=vent[1]and x<vent[3]and y>=vent[2]and y<vent[4]then rr,gg,bb,aa=sourcePixel(g,g.custom.ventShape=='rectangular' and 64+x%16 or 64,y)end
   data:setPixel(x+p.w,y,rr,gg,bb,aa)
   -- Lavaridge's sign overlaps the right wall in the top-down drawing.
   -- Restore the native unoccluded wall; keep the original sign in the
@@ -638,7 +638,9 @@ function M.append(g,emit)
  end
  local chimney=g.custom and g.custom.chimney
  local vent=g.custom and g.custom.roofVent
- if vent then
+ if vent and g.custom.ventShape=='rectangular' then
+  V.require('Gen3RectangularVent').append(g,p,face,uv)
+ elseif vent then
   -- Birch's circular extractor is a raised drum, not a flat roof decal.
   local cx,cz=x+(vent[1]+vent[3])/2,z+p.back+18
   local bottom=p.wall+p.bevel;local top=bottom+13
