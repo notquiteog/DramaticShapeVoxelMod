@@ -1088,7 +1088,7 @@ function Structures.forMap(map)
               -- every Johto door -- the fold never ran, the door cell kept
               -- the `ground` its warp-carpet collision earns it, and each
               -- house was drawn with a notch cut out of its front.
-              if Structures.doorFoldClaims(ds) then
+              if not S.skip[dk] and Structures.doorFoldClaims(ds) then
                 -- the Gen 2 wall, where there is one: the canonical Gen 1
                 -- `wall` is unauthored, so handing a Johto doorway that
                 -- shape would leave one column of the facade folding by a
@@ -1122,7 +1122,7 @@ function Structures.forMap(map)
   -- decide, because a Johto house is as tall as its facade is deep.
   -- `s.volume` is that second half said separately (lib/Gen2TileShape.lua).
   local function structural(k)
-    return Structures.volumeClaims(shapeAt[k])
+    return not S.skip[k] and Structures.volumeClaims(shapeAt[k])
   end
 
   -- ---- cylinders: profile-pinned round graphics, one per 16x16 cell ----
@@ -1287,7 +1287,7 @@ function Structures.forMap(map)
     for ty = y0, y1 do
       for tx = x0, x1 do
         local s = shapeAt[keyOf(tx, ty)]
-        if s and s.art == "post" then
+        if s and s.art == "post" and not S.skip[keyOf(tx, ty)] then
           local cx, cy = math.floor(tx / 2), math.floor(ty / 2)
           local ck = keyOf(cx, cy)
           postCells[ck] = postCells[ck]

@@ -92,7 +92,9 @@ function M.kanto(map)
 end
 function M.build(S,map)
  if not S.gen2 or not S.outdoor then return end
- local list=M.placements(map);S.exteriors={}
+ S.exteriors={}
+ if map.id=='BATTLE_TOWER_OUTSIDE' and V.require('Gen2BattleTowerExterior').build(S,map)then return end
+ local list=M.placements(map)
  local ts=map.tileset;local aw,ah=ts.imageWidth or 128,ts.imageHeight or 128
  local per=ts.tilesPerRow or 16
  local function uv(tile)

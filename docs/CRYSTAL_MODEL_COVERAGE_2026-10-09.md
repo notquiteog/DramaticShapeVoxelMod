@@ -342,3 +342,33 @@ row, unchanged native grid and four views. Native `movePlayer` then enters the
 original BATTLE_TOWER_ELEVATOR destination. First/overview inspected. Focused
 vertex bounds/open-approach and complete-furniture tests pass. Challenge
 progression and animated door sequences remain outside this static-model scope.
+
+
+## Crystal Battle Tower exterior
+
+- [x] Replace the generic low U-shaped extrusion with the complete native
+  glass landmark: six side-wing storeys, eight taller chamfered shaft bands,
+  pale flat roof, closed sides/back/base, supported entrance canopy and
+  yellow entry panes behind the original warp boundary.
+- [x] Both native entry lanes remain empty below the18px canopy; the only
+  low portico supports occupy the two original blocked cells. All400 source
+  tiles must match before this specialized assembly claims the drawing.
+- [x] Later generic door/volume/post detection respects existing model claims.
+  The first rendered pass exposed yellow door art being extracted again as a
+  fence/step; tracing identified the post pass and the final view is clear.
+
+`gen2-tower-exterior-before` preserves the generic baseline. Final Crystal
+`gen2-tower-exterior-verified` renders true model-centered front/side/rear and
+native first-person at walkable(9,12), north-facing, pitch-.25. All four views
+were inspected at NIGHT; complete native tile/collision grids and400 ground
+claims remain unchanged. Both original entrances were traversed via native
+`movePlayer`, reaching BATTLE_TOWER_1F. The committed driver reproduces these
+checks in an isolated QA profile. The off-map rear diagnostic camera also shows
+existing repeated border terrain behind the map; that terrain is outside this
+model's claim and remains a separate renderer issue.
+
+Focused exterior/footprint/whole-source tests and the existing114-check Gen2
+shape suite pass, including unclaimed native wall/door classifications. Tower
+interior and general exterior regressions pass. Gold/Silver imported map tables
+have no Battle Tower; this batch is Crystal-only. Daylight, animated entrance
+states and native challenge progression are not claimed verified.
