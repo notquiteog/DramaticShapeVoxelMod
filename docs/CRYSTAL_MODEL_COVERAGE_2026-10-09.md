@@ -311,3 +311,20 @@ ornaments still walkable, full grids unchanged and four views at walkable
 PC adapter was rejected in favor of this integrated kiosk model. Focused whole
 crop/bounds/cushion-height, complete-furniture and source-crop tests pass.
 Gold/Silver do not contain these maps. Other Battle Tower details remain open.
+
+## Crystal Battle Tower north-wall doors
+
+- [x] Twelve complete north-row door/control/glass drawings (lobby1,
+  battle room1, hallway10) now have closed rear panels, narrow jambs and lintels.
+  Their16px height matches neighboring native wall ornaments. Walking approach
+  interiors remain clear; door art is not repeated on a box top.
+- [ ] Hallway's offset elevator drawing is a distinct assembly and is excluded
+  by tileRow0 until its two-cell approach is separately reviewed.
+
+Crystal `gen2-tower-doors` captures all three maps in four views, asserting
+native walkability, matching production counts and unchanged complete grids.
+Inspected final battle-room eye and hallway overview. Focused open-approach,
+closed-frame and existing Tower/furniture tests pass. The seven existing
+rounded stone ornaments were inspected in `gen2-tower-panels-before` and
+retained; their source footprints are blocked. Animated door states and native
+Tower challenge progression are not covered by these static fixtures.

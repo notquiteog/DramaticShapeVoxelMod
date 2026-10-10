@@ -1699,6 +1699,14 @@ function M.draw(id,A)
   B(1,0,6,15,10,14,mat);B(2,10,7,14,11,13,mat)
   front({1,1,14,14},1,0,15,10,14.02)
   B(10,3,14,12,5,14.6,dark)
+ elseif id=='gb_battle_tower_door' then
+  local frame=T(1,1)
+  -- Native warp or inactive door cells remain open up to the rear plane.
+  -- The control panel is part of that rear face, not a box in the approach.
+  B(0,0,0,16,16,.5,frame)
+  front({1,1,14,14},1,0,15,15,.52)
+  B(0,0,.5,1,16,16,frame);B(15,0,.5,16,16,16,frame)
+  B(0,15,.5,16,16,16,frame)
  elseif id=='gb_battle_tower_pc' then
   local case,dark=T(1,3),T(5,12)
   -- This is the complete integrated blue kiosk: projected lid, upright
