@@ -1,3 +1,9 @@
+## 1.32.0 — 2026-10-10
+
+Ship the native interior and landmark modeling push across all three generations: Gen2 ships, the Radio Tower's bookcases and broadcast rooms, department stores, Rocket hideouts, facilities, Birch and Oak labs, Hoenn Marts and Centers, Pewter Museum, Silph Co, Celadon and Saffron streets, Cinnabar, Littleroot, Oldale, Petalburg, Rustboro, Lilycove, Slateport, Devon, Mossdeep, the Battle Tower and Contest Hall. Gen2 staged battles now deliver independently of the overworld pipeline level, and native walking lanes, seats, roofs and aisles stay clear in every edition. Online play is verified across all eleven editions: settings reachability, shared ground and sky rosters, doubles, trades, singles, captures with full-PC rejections, and LAN field roster reconvergence.
+
+Verified on Gen1Recomp 0.3.73: 237 tests passed, 0 failed, 58 skipped. The Crystal ceiling census lids every one of the 39 DUNGEON maps, with live Tin Tower and Goldenrod Underground captures inspected. Full coverage and parity remain unfinished.
+
 ## Unreleased
 
 - Model Mossdeep cliff-composite trees while preserving native terrain levels
