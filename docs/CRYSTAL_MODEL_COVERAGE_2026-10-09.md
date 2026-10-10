@@ -732,3 +732,25 @@ chair cell(3,25) is blocked7 in all editions, unlike the walking cabin chairs.
 Focused desk knee-space/book/bounds test and preceding table regressions pass.
 No collision/warp or player save changes. Neighboring chair, lifesaver panel and
 five wall-adjacent sideboards/game still need authored geometry.
+
+## Gold/Silver/Crystal captain's chair — October 10
+
+- [x] One complete wall/back/seat drawing per edition at tile(6,48); both cells
+  are blocked7. Closed blue back and cushion, cream legs/arms, native red base.
+- [x] Explicit support bounds lift only the occupied lower cell to seat5.5;
+  the upper wall cell has zero sprite support. Height alone was insufficient
+  because this authored recipe has no legacy `parts` bounds.
+
+All editions' `gen2-captain-chair-eye` pass exact1 placement, unchanged complete
+native grid and live seat5.5/wall0 assertions. Native-actor Gold overview and
+Crystal close side from the earlier `final` run show the replacement's scale;
+final eye at(1,25) is granddaughter-occluded and not clear asset evidence.
+The separate Crystal `gen2-captain-chair-asset` removes actors only in the QA
+render loop: inspected clear first-person side and overview show legs, arms,
+seat and back. Its rear remains wall-backed/occluded; closed geometry is tested.
+Production actors and scripts remain intact. Chair/desk regressions pass.
+
+Terminology correction for the next gap: earlier entries called the adjacent
+red circular artwork a lifesaver panel. The native [captain cabin script](https://raw.githubusercontent.com/pret/pokecrystal/master/maps/FastShipCabins_SE_SSE_CaptainsCabin.asm)
+binds cell(4,25) to TrashCanScript. Tiles72/73/88/89 are a trash can, independently
+found six times per edition, each in a blocked cell; it remains unmodeled here.

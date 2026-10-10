@@ -251,6 +251,10 @@ for _,variant in ipairs({{'',130},{'_gs',44}})do
  t.design='gb_ship_captain_desk';t.groundTiles=lighthouse[1].groundTiles;t.groundAligned=true
  lighthouse[#lighthouse+1]=t
 end
+local captainChair=item('crystal_ship_captain_chair',{{16,16},{84,85},{66,67},{23,24}},13,{},5.5)
+captainChair.supportBounds={0,16,16,32}
+captainChair.design='gb_ship_captain_chair';captainChair.groundTiles=lighthouse[1].groundTiles;captainChair.groundAligned=true
+lighthouse[#lighthouse+1]=captainChair
 -- Complete machinery sections, ahead of the old facility cabinet crops.
 -- The narrow brass conduit belongs to the machine, not a shelf of books.
 local facility={

@@ -1362,6 +1362,18 @@ function M.draw(id,A)
    A.face({{r,rh,14.5},{r,rh,22.5},{r,8.8,22.5},{r,8.8,14.5}},paper,.8)
   end
   B(23.7,8.5,14.5,24.3,8.9,22.5,dark)
+ elseif id=='gb_ship_captain_chair' then
+  local wall,frame,blue,red,dark=T(0,0),T(2,28),T(5,13),T(8,25),T(3,10)
+  -- The projected backrest shares a source cell with the cabin wall.
+  B(0,0,0,16,16,15.8,wall)
+  for _,x in ipairs{2,12}do for _,z in ipairs{18,28}do B(x,0,z,x+2,4.5,z+2,frame)end end
+  B(2,3.8,18,14,4.5,30,red);B(3,4.5,18,13,5.5,29,blue)
+  top({3,19,10,5},3,19,13,29,5.52)
+  B(2,4.5,16,14,14,19,dark)
+  front({4,9,8,9},3,6,13,13.5,19.02)
+  for _,x in ipairs{1,13}do
+   B(x,4.5,21,x+2,7.5,28,frame);B(x,7.5,20,x+2,8.1,29,blue)
+  end
  elseif id=='fr_space_exhibit' then
   local white,edge,dark,stand=T(19,8),T(13,7),T(13,12),T(6,23)
   B(2,0,3,46,2,30,stand);B(4,2,5,44,3,28,edge)
