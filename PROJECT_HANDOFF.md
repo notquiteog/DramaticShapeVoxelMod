@@ -1,3 +1,13 @@
+# FRLG Pewter Museum exterior — 2026-10-09
+
+Closed main hall, lower wing, pitched roofs and projecting entrance modeled
+from separate matching FireRed/LeafGreen sources. Opt-in89-cell claim mask
+leaves shrubs/trees/fences/steps intact; native wing roof walking row clear.
+Both editions' front/rear/sides/main+wing eye and door-state captures inspected;
+scoped native audits1/0 each, six focused suites pass. Main native open arch
+and animated wing entrance aligned. Normal input/warp traversal not tested.
+Coverage ledger records full evidence; wider Gen3 coverage remains unfinished.
+
 # Emerald northeast individual book stacks — 2026-10-09
 
 Separate Emerald29a/232 family matches its native three-stack arrangement.

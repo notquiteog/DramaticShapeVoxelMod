@@ -12,7 +12,10 @@ local function claim(cells,g,rows)
   parts[#parts+1]=c
  end end
  g.rows=rows;g.width=#rows[1];g.depth=#rows;g.ts=parts[1].ts
- for _,c in ipairs(parts)do c.civic=g end
+ for _,c in ipairs(parts)do
+  local ranges=g.custom and g.custom.claimRanges;local row=ranges and ranges[c.cy-g.cy+1]
+  if not ranges or row and c.cx-g.cx>=row[1] and c.cx-g.cx<=row[2] then c.civic=g end
+ end
  return g
 end
 function M.prepare(cells,gyms,families)
@@ -152,6 +155,7 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.geometry=='pewter_museum' then return {w=w,h=112,back=8,front=111,wall=56,roofEnd=64,wallTop=64,wallBottom=112,bevel=0,doorLeft=80,doorRight=96,doorTop=96,doorBottom=112,doorHeight=24,projection=0}end
   if r.geometry=='cinnabar_mansion' then
    return {w=w,h=64,back=0,front=52,wall=72,roofEnd=32,wallTop=32,wallBottom=64,bevel=0,doorLeft=48,doorRight=64,doorTop=54,doorBottom=64,doorHeight=22.5,projection=0}
   end
@@ -200,6 +204,7 @@ end
 -- returned here are shared with the fixed mesh, so animation never grows into
 -- a freestanding 32x48 card or floats in front of the entrance.
 function M.doorSurface(g,tx,ty)
+ if g.custom and g.custom.geometry=='pewter_museum' then return V.require('Gen3PewterMuseum').doorSurface(g,tx,ty)end
  local p=M.profile(g);local openings=g.custom and g.custom.openings
  if not openings then
   if not g.custom and (g.kind=='center' or g.kind=='mart')then
@@ -437,6 +442,7 @@ function M.window(g)
  return best
 end
 function M.append(g,emit)
+ if g.custom and g.custom.geometry=='pewter_museum' then return V.require('Gen3PewterMuseum').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='cinnabar_mansion' then return V.require('Gen3CinnabarMansion').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='cinnabar_lab' then return V.require('Gen3CinnabarLab').append(g,M.profile(g),emit)end
  if g.custom and (g.custom.centerRoof or g.custom.martRoof) then return V.require('HoennCivicBuilding').append(g,M.profile(g),emit)end

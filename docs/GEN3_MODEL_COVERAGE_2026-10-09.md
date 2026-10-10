@@ -35,7 +35,7 @@ This bounded audit does not establish universal collision safety or coverage.
 - [ ] Slateport specialist buildings and remaining Rustboro scenery.
 - [ ] Remaining Emerald city/facility structures and unusual foliage.
 - [ ] Remaining FRLG specialized exteriors and interior/furniture families.
-- [ ] FireRed dedicated runtime verification (shared FRLG code alone is not it).
+- [x] FireRed dedicated isolated runtime verified for recorded Cinnabar and Pewter batches; other families remain unverified.
 - [ ] Exhaustive original-art census, with first-person/orbit evidence per family.
 
 ## Verified batch: Rustboro Devon Corporation
@@ -531,3 +531,28 @@ source crop and Emerald front/rear/side/close-eye render inspected; scoped lab
 audit18/0. RS/Hoenn suites pass including single-cell stack bounds; RS remains
 17/0 at its previous rendered checkpoint. Walkable green seats remain native,
 and this room check does not certify full Gen3 interiors or gameplay traversal.
+
+
+## Verified batch: FireRed/LeafGreen Pewter Museum exterior
+
+Complete16x7 native pattern now produces the closed main hall, pitched striped
+roof, lower east wing and projecting fossil entrance. Native cream piers,
+windows, door panels and roof details are preserved; side/rear elevations
+continue the authored window/pier vocabulary. Closed roof trim and undersides
+remain bounded. Distinct main/wing entrance planes align their native surfaces.
+
+An opt-in claim mask consumes only89 building cells after validating the whole
+source pattern. It leaves surrounding trees, shrubs, fences and entrance steps
+available to native scenery rendering. The east wing's walkable projected roof
+row stays clear of low walls; eaves stay near the actual rear wall.
+
+FireRed and LeafGreen source exports were separately obtained and their Pewter
+native PNGs compare byte-identical. Production front/right/rear/left, main/wing
+eye views and door-state captures inspected in `{firered,leafgreen}`
+`-pewter-museum-review`. Wing animated open/closed panels visibly align; main
+entrance uses its native open arch. Native-map geometry audits in
+`-pewter-museum-footprint` report1 assembly/0 explicit-floor flags per game.
+Six focused suites pass, including complete-match rejection,89-cell claim mask,
+scenery preservation, bounds and both door planes. Controlled fixture review
+does not prove normal input/warp traversal. Player saves unchanged; all QA
+processes exited. This adds one specialist exterior, not complete FRLG coverage.
