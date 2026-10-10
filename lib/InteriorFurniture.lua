@@ -481,6 +481,35 @@ function M.draw(id,A)
   B(3,10,1,13,11,31,edge)
   top({3,1,10,29},3,1,13,31,11.02)
   for _,x in ipairs{3,12}do B(x,0,28,x+1,10,31,edge)end
+ elseif id=='gb_warehouse_crate' then
+  local wood,edge,brace=T(5,3),T(1,1),T(3,10)
+  B(2,0,2,14,12,14,wood)
+  -- Four closed corner posts and rails carry the source's framed box shape.
+  for _,x in ipairs{1,13}do for _,z in ipairs{1,13}do B(x,0,z,x+2,12,z+2,edge)end end
+  for _,y in ipairs{0,10}do
+   B(1,y,1,15,y+2,2,wood);B(1,y,14,15,y+2,15,wood)
+   B(1,y,2,2,y+2,14,wood);B(14,y,2,15,y+2,14,wood)
+  end
+  top({1,0,14,8},1,1,15,15,12.02)
+  -- Reuse the native X-board front on each unseen side, never on the lid.
+  for turn=0,3 do
+   local function rotate(p)
+    local x,y,z=p[1],p[2],p[3]
+    for _=1,turn do x,z=16-z,x end
+    return {x,y,z}
+   end
+   S(2,8,12,8,rotate({2,11,14.02}),rotate({14,11,14.02}),rotate({14,1,14.02}),rotate({2,1,14.02}))
+   local function beam(x0,y0,x1,y1)
+    local dx,dy=x1-x0,y1-y0;local n=math.sqrt(dx*dx+dy*dy)
+    local px,py=-dy/n*.6,dx/n*.6
+    local ring={{x0+px,y0+py},{x1+px,y1+py},{x1-px,y1-py},{x0-px,y0-py}}
+    local f,b={},{}
+    for i,p in ipairs(ring)do f[i]=rotate({p[1],p[2],14.6});b[i]=rotate({p[1],p[2],14.1})end
+    A.face({f[4],f[3],f[2],f[1]},brace,.95);A.face(b,brace,.7)
+    for i=1,4 do local j=i%4+1;A.face({b[j],b[i],f[i],f[j]},brace,.82)end
+   end
+   beam(4,8.5,12,2);beam(4,2,12,8.5)
+  end
  elseif id=='gb_underground_stall_counter' then
   -- A complete long stall has one green top and a rounded, fluted end.
   -- Close the underside and the perimeter without enlarging its three cells.

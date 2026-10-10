@@ -189,3 +189,19 @@ tile/collision invariants, and blocked-cell checks for every matched new
 Underground counter/plant. Inspected Crystal/Silver overview (gray obstruction
 removed), Crystal/Gold first-person (ceiling retained). This is direct evidence
 for Underground; other dungeon maps still need individual visual review.
+
+## Underground warehouse crates
+
+- [x] Native 67/68-above-83/84 crate: separate source lid, closed body, corner
+  posts, rails and solid X braces on four sides. Height is12px rather than a
+  wall-sized extrusion of the entire projected drawing. Geometry remains
+  within x/z1..15 of each source cell. Original palette/art supplies all faces.
+
+Gold/Silver/Crystal `gen2-warehouse-verified.lua`: native source images reviewed,
+walkable `(5,3)` camera, four views, unchanged full tile/collision grids. All44
+native crate patterns match44 production models per version; every source
+crate cell asserted blocked. Inspected Crystal eye view and Silver overview;
+additional Crystal `gen2-warehouse-back` inspects rear bracing. Unit test guards
+footprint, height, lid and side/rear braces. Full-furniture and Underground
+regressions pass. This recipe is currently gated to this warehouse; department
+basement/Rocket storage crates remain a separate pending coverage extension.
