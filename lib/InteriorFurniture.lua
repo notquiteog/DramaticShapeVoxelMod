@@ -1440,7 +1440,7 @@ function M.draw(id,A)
   -- Wide shelves retain every item in the source facade while central
   -- uprights divide physically separate storage bays.
   if w>=32 then for x=16,w-8,16 do B(x-.4,base+1.5,z-.8,x+.4,height-1,z,mat)end end
- elseif id=='gb_mansion_workstation' then
+ elseif id=='gb_mansion_workstation' or id=='gb_facility_workstation' then
   local wood,case,dark=T(2,2),T(23,3),T(21,7)
   desk(1,1,31,15,7,wood)
   -- Original papers and desk objects stay on the left working surface.

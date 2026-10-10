@@ -55,7 +55,7 @@ return {
   prop('facility_machine_bank_left',18,full,'cabinet',3),
   prop('facility_machine_bank_right',19,full,'cabinet',3),
   prop('facility_books',6,left,'cabinet',3),
-  prop('facility_console',8,top,'console',3),
+  prop('facility_console',8,top,'console',3,'gb_facility_workstation'),
   prop('facility_planter',9,left,'planter',3),
   prop('facility_bench',25,{0,2,4,2},'seat',3),
  },

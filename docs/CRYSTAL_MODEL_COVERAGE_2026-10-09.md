@@ -460,3 +460,28 @@ native player(9,3). An initial invented full-height backing panel was rejected;
 final geometry is only the shallow wall-mounted frame. Focused frame bounds,
 source orientation and five neighboring furniture suites pass. Remaining
 traditional wall panels and room-wide coverage are still open.
+
+## Gold/Silver/Crystal facility workstations
+
+- [x] Complete source workstation adopts the closed CRT/keyboard/desk model
+  with its own live facility artwork. Comparison against Mansion found11
+  native border/casing pixels differ; the display geometry is compatible,
+  while sampling remains per tileset/game. No ROM image was copied.
+
+Independent facility source/collision census in each game finds11 complete
+workstations: Mr Pokémon1, Ruins research center1, Power Plant3, RocketB2F1,
+RocketB3F5. Both cells of every source assembly are blocked. Baseline Crystal
+`gen2-facility-workstations-before` shows the monitor flattened on the desktop.
+Final `{game}-gen2-facility-workstations` verifies the three public maps;
+`{game}-gen2-facility-rocket-workstations` verifies both Rocket floors. Each
+captures four views and asserts expected counts and unchanged complete grids.
+The initial B2F camera was on its southern wall, so corrected to native(25,9).
+
+Inspected Crystal Mr Pokémon eye/Power Plant rear, Gold Ruins overview,
+Silver Power Plant side, Crystal RocketB2F overview and Gold RocketB3F eye.
+B3's first rear view was blocked by server banks; the follow-up
+`{game}-gen2-facility-rocket-b3-open` at native(21,12) verifies the lower room
+and supplies clear Crystal overview, Gold side and Silver rear evidence.
+Counts validate placement coverage; these representative views do not certify
+all unrelated objects in those maps. Six focused furniture/source suites pass.
+Facility bookcases and other remaining generic furniture remain open.
