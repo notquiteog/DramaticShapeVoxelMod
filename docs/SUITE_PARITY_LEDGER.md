@@ -54,9 +54,9 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 | Double Battles | red | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
 | Double Battles | blue | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
 | Double Battles | yellow | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
-| Double Battles | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Double Battles | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Double Battles | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
+| Double Battles | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Actual paired clients: complete double battle, matching turn hash, mirrored win/lose outcome, native world return and saved HP/PP preserved. Wider target/switch/edge-case matrix remains |
+| Double Battles | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Actual paired clients: complete double battle, matching turn hash, mirrored win/lose outcome, native world return and saved HP/PP preserved. Wider target/switch/edge-case matrix remains |
+| Double Battles | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Actual paired clients: complete double battle, matching turn hash, mirrored win/lose outcome, native world return and saved HP/PP preserved. Wider target/switch/edge-case matrix remains |
 | Double Battles | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Actual online native double: four actors/cards, complete turn and normal end; faint/switch matrix pending |
 | Double Battles | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Actual online native double: four actors/cards, complete turn and normal end; faint/switch matrix pending |
 | Double Battles | emerald | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
@@ -126,3 +126,5 @@ Online commits `713b82d` and `ac31d52` fix native Ruby/Sapphire healing and the 
 Online e5e8eb4 replaces the incompatible offline-save Trade.remote API with the native Gen2 wire/consent state machine and host digest barrier. The live game retains trade animation, evolution, held-item consumption and save ownership. Gold/Silver were previously excluded by the Online manifest; they are now enabled and tested independently. Game2 returns to its world with an empty StateStack by design. No offline save writer is invoked.
 
 The GBA paired matrix now also runs on Emerald, FireRed and LeafGreen: one native single and double turn, normal battle end, original HP/PP restoration, actual native trade, chat, remote mounts and disconnect cleanup. These checks do not prove all faint/replacement, special battle, crash recovery, regional quest, or settings paths. FireRed required a fresh isolated native importer cache; old QA cache landing in the launcher was not a mod failure.
+
+Gen2 paired battle follow-up: Crystal and Gold native singles exercised fainted-slot replacement and returned without mutating saved HP/PP. Gold, Silver and Crystal doubles independently completed with mirrored win/lose outcomes and matching turn hashes. Fixture explicitly checks native battle.over and rejects doubleRoom.failed; replacement selection uses the native party menu. Other encounter/switch/edge cases remain unverified.
