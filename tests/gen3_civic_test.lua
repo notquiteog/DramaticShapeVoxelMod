@@ -170,7 +170,7 @@ do
   return M.prepare(cells,{}, {recipe})[1]
  end
  local g=build(0);assert(g.bodyBack==18,'rear roof-art lane must remain walkable')
- M.append(g,function(vertices)for _,v in ipairs(vertices)do if v[2]<16 then assert(v[3]>=16,'rear wall blocks native roof-art lane')end end end)
+ M.append(g,function(vertices)for _,v in ipairs(vertices)do if v[2]<16 then assert(v[3]>=16,'rear wall blocks native roof-art lane')else assert(v[3]>=14.5,'roof cantilevers beyond modest rear eave')end end end)
  assert(not build(7).bodyBack,'blocked source roof row should retain authored rear wall')
  local gym={kind='gym',cx=0,cy=0,width=7,depth=5}
  M.append(gym,function(vertices)for _,v in ipairs(vertices)do

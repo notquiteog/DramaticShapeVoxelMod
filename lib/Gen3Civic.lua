@@ -454,6 +454,10 @@ function M.append(g,emit)
  local civicCorners=(g.kind=='center' or g.kind=='mart') and p.w>=64
  local bodyBack=math.max(g.bodyBack or p.back,g.custom and g.custom.bodyBack or p.back)
  if gymPorch and bodyBack>p.back then bodyBack=bodyBack+2 end -- keep rear trim inside blocked cells
+ -- Source roof rows describe projection, not the roof's world footprint.
+ -- The rear wall may have moved forward to preserve a native walking row.
+ local roofBack=math.max(p.back,bodyBack-2)
+ p.roofBack=roofBack
  local wingFront=kantoGym and 64 or p.front
  local sideFront=wingFront-(civicCorners and 6 or 0)
  local function facadeFace(v,tex,shade)
@@ -600,7 +604,7 @@ function M.append(g,emit)
  end
  -- Flat plateau with a narrow, chamfered perimeter, not a central ridge.
  local function height(xx,zz)
-  return p.wall+p.bevel*math.min(1,xx/5,(p.w-xx)/5,(zz-p.back)/5,(p.front-zz)/7)
+  return p.wall+p.bevel*math.min(1,xx/5,(p.w-xx)/5,(zz-roofBack)/5,(p.front-zz)/7)
  end
  if g.custom and g.custom.roofShape=='tiered' then
   V.require('Gen3TieredRoof').append(g,p,emit)
@@ -612,12 +616,12 @@ function M.append(g,emit)
  else
  -- Seal the soffit of the chamfered roof above the recessed wall shell.
  -- Without this face, low side views see sky through the overhang cavity.
- face({{x,p.wall,z+p.front},{x+p.w,p.wall,z+p.front},{x+p.w,p.wall,z+p.back},{x,p.wall,z+p.back}},trim,.68)
- local xs={0,5,p.w-5,p.w};local zs={p.back,p.back+5,p.front-7,p.front}
+ face({{x,p.wall,z+p.front},{x+p.w,p.wall,z+p.front},{x+p.w,p.wall,z+roofBack},{x,p.wall,z+roofBack}},trim,.68)
+ local xs={0,5,p.w-5,p.w};local zs={roofBack,roofBack+5,p.front-7,p.front}
  for iz=1,3 do for ix=1,3 do
   local l,r,t,b=xs[ix],xs[ix+1],zs[iz],zs[iz+1]
-  local sy=p.back+(t-p.back)/(p.front-p.back)*(p.roofEnd-p.back)
-  local ey=p.back+(b-p.back)/(p.front-p.back)*(p.roofEnd-p.back)
+  local sy=p.back+(t-roofBack)/(p.front-roofBack)*(p.roofEnd-p.back)
+  local ey=p.back+(b-roofBack)/(p.front-roofBack)*(p.roofEnd-p.back)
   face({{x+l,height(l,t),z+t},{x+r,height(r,t),z+t},{x+r,height(r,b),z+b},{x+l,height(l,b),z+b}},uv(p.w+l+.05,sy+.05,p.w+r-.05,ey-.05),iz==3 and .92 or 1)
  end end
  end
@@ -627,11 +631,11 @@ function M.append(g,emit)
   local Eaves=V and V.require('RoofEaves') or assert(loadfile('lib/RoofEaves.lua'))()
   local eave=g.kind=='center' and uv(p.w+12.1,p.roofEnd-8.1,p.w+12.2,p.roofEnd-8.2) or trim
   local function edge(a,b,dx,dz) Eaves.edge(a,b,dx,dz,eave,face)end
-  edge({x,height(0,p.back),z+p.back},{x+p.w,height(p.w,p.back),z+p.back},0,-1.5)
+  edge({x,height(0,roofBack),z+roofBack},{x+p.w,height(p.w,roofBack),z+roofBack},0,-1.5)
   edge({x+p.w,height(p.w,p.front),z+p.front},{x,height(0,p.front),z+p.front},0,1.5)
-  edge({x,height(0,p.front),z+p.front},{x,height(0,p.back),z+p.back},-1,0)
-  edge({x+p.w,height(p.w,p.back),z+p.back},{x+p.w,height(p.w,p.front),z+p.front},1,0)
-  for _,s in ipairs({{0,p.back,-1,-1.5},{p.w,p.back,1,-1.5},
+  edge({x,height(0,p.front),z+p.front},{x,height(0,roofBack),z+roofBack},-1,0)
+  edge({x+p.w,height(p.w,roofBack),z+roofBack},{x+p.w,height(p.w,p.front),z+p.front},1,0)
+  for _,s in ipairs({{0,roofBack,-1,-1.5},{p.w,roofBack,1,-1.5},
     {0,p.front,-1,1.5},{p.w,p.front,1,1.5}})do
    Eaves.corner({x+s[1],height(s[1],s[2]),z+s[2]},s[3],s[4],eave,face)
   end
@@ -642,7 +646,7 @@ function M.append(g,emit)
   V.require('Gen3RectangularVent').append(g,p,face,uv)
  elseif vent then
   -- Birch's circular extractor is a raised drum, not a flat roof decal.
-  local cx,cz=x+(vent[1]+vent[3])/2,z+p.back+18
+  local cx,cz=x+(vent[1]+vent[3])/2,z+roofBack+18
   local bottom=p.wall+p.bevel;local top=bottom+13
   local metal=uv(vent[1]+5.1,vent[2]+15.1,vent[1]+5.2,vent[2]+15.2)
   local dark=uv(vent[1]+16.1,vent[2]+9.1,vent[1]+16.2,vent[2]+9.2)
@@ -657,7 +661,7 @@ function M.append(g,emit)
   for offset=-6,6,3 do Architecture.box(face,cx-7,top-1,cz+offset,cx+7,top-.3,cz+offset+.7,metal)end
  end
  if chimney then
-  local l,r=chimney[1]+2,chimney[3]-2;local back=p.back+8;local front=back+12
+  local l,r=chimney[1]+2,chimney[3]-2;local back=roofBack+8;local front=back+12
   local bottom=p.wall+p.bevel;local top=bottom+20
   local brick=uv(chimney[1]+2.05,chimney[2]+26.05,chimney[3]-2.05,chimney[4]-2.05)
   face({{x+l,top,z+front},{x+r,top,z+front},{x+r,bottom,z+front},{x+l,bottom,z+front}},brick)

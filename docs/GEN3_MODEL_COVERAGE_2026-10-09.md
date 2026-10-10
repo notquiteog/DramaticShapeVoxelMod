@@ -252,3 +252,30 @@ side/rear closure verified. RS/Hoenn/Civic tests pass. Independent native census
 now11/0 per edition (nine enabled source families). Moving trucks remain native
 sprites; Littleroot's two homes still await source-faithful tiered roof geometry.
 No full-world or complete furniture claim. Processes exited; saves unchanged.
+
+
+## Priority correction: excessive rear roof projection
+
+User-reported roofs extending too far behind buildings were reproduced in rear
+and side renders. Civic moved the rear wall forward over native projected roof
+rows to preserve walking cells, but left the roof at the original source edge.
+Roof geometry now starts within two pixels of the actual rear wall, with the
+existing 1.5px eave lip. Native source coordinates remain separate: the complete
+roof artwork still maps across the shortened roof, including closed underside,
+bevels, gable/barrel ends and shifted rooftop equipment bases.
+
+Custom Rustboro urban slabs/parapets, Lilycove gold upper tier and Contest Hall,
+and Cinnabar's rounded laboratory/ribs receive the same bounded rear treatment.
+Space Center/Devon already aligned roofs and walls and were not changed.
+Pending Littleroot home activation is excluded from this correction.
+
+Inspected production side/rear renders: Ruby Oldale house; Emerald Oldale Center,
+Rustboro tan residence, Lilycove gold home/Contest Hall; LeafGreen Viridian house
+and Center; FireRed/LeafGreen Cinnabar lab. Evidence in `ruby-rear-roof-review`,
+`emerald-rear-roof-review`, `leafgreen-frlg-rear-roof-review`, and the refreshed
+Cinnabar lab review directories. Final FireRed capsule render incorporates the
+one-pixel front-bound correction found by its geometry test. Nine focused suites
+pass, including new rear eave/UV/closed-underside regression. Native footprint
+census remains Emerald77/0, Ruby11/0, FireRed105/0. This verifies representative
+families and shared geometry, not every map/camera. Native walls, collisions,
+warps and player saves remain unchanged.

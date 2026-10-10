@@ -22,7 +22,7 @@ C.append(g,function(v,uv)
  end
  if low<16 and high>1.5 then assert(back>=16,'hall blocks native rear walking row')end
  if low==38.7 and high==38.7 then studs=studs+1 end
- if low==32 and high==32 and back==8 then soffit=true end
+ if low==32 and high==32 and back==16 then soffit=true end
 end)
 assert(faces>1500 and studs>500 and soffit,'roof fasteners/closed soffit missing')
 local door=assert(C.doorSurface(g,3,6));assert(door.w==16 and door.h==20 and math.abs(door.vertices[1][2]-80/3)<.001)

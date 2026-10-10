@@ -32,7 +32,7 @@ end
 -- An authored pitched or barrel profile. Every roof bay is a prism: the
 -- gables, underside and eave thickness are closed, not stretched wall cards.
 function M.roof(p,style,rise,uv,emit,trim)
- local w,n,f=p.w,p.back,p.front
+ local w,n,f=p.w,p.roofBack or p.back,p.front
  local h=p.wall;local t=1.2
  local roofPaint=uv(p.w+w*.25,p.back+12,p.w+w*.25,p.back+12)
  local axis=(style=='barrel' or style=='hipped_barrel') and 'x' or 'z'

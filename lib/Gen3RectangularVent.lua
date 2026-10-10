@@ -6,7 +6,7 @@ local M={}
 function M.append(g,p,face,uv)
  local x,z=g.cx*16,g.cy*16
  local v=g.custom.roofVent;local cx=x+(v[1]+v[3])/2
- local back=z+p.back+7;local y=p.wall+p.bevel
+ local back=z+(p.roofBack or p.back)+7;local y=p.wall+p.bevel
  local function sw(a,b)return uv(a+.5,b+.5,a+.5,b+.5)end
  local metal,dark,light=sw(23,17),sw(20,25),sw(26,5)
  -- Closed plinth, raised equipment casing and projecting cap.

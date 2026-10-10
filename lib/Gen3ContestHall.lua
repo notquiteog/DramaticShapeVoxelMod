@@ -47,8 +47,8 @@ function M.append(g,p,emit)
   ribbon(cx-2,31,cx,26);ribbon(cx,26,cx+2,31)
  end
  -- Eight-sided roof shell: bevel ring, closed underside, and opaque top.
- local outer={{6,8},{106,8},{112,14},{112,106},{106,112},{6,112},{0,106},{0,14}}
- local inner={{8,10},{104,10},{110,16},{110,104},{104,110},{8,110},{2,104},{2,16}}
+ local outer={{6,16},{106,16},{112,22},{112,106},{106,112},{6,112},{0,106},{0,22}}
+ local inner={{8,18},{104,18},{110,24},{110,104},{104,110},{8,110},{2,104},{2,24}}
  local center={56,38,60}
  for i,a in ipairs(outer)do
   local j=i%8+1;local b,c,d=outer[j],inner[j],inner[i]

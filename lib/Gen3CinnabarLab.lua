@@ -40,22 +40,22 @@ function M.append(g,p,emit)
  for _,xx in ipairs({48,64})do box(xx-.2,0,xx+.2,64,24,63,cream)end
  -- Closed capsule roof. A raised rim follows the curved end caps.
  local ring={}
- for i=0,12 do local a=-math.pi/2+i*math.pi/12;ring[#ring+1]={96+16*math.cos(a),33+31*math.sin(a)}end
- for i=0,12 do local a=math.pi/2+i*math.pi/12;ring[#ring+1]={16+16*math.cos(a),33+31*math.sin(a)}end
+ for i=0,12 do local a=-math.pi/2+i*math.pi/12;ring[#ring+1]={96+16*math.cos(a),40+24*math.sin(a)}end
+ for i=0,12 do local a=math.pi/2+i*math.pi/12;ring[#ring+1]={16+16*math.cos(a),40+24*math.sin(a)}end
  for i,a in ipairs(ring)do
   local b=ring[i%#ring+1]
-  face({{56,50,33},{a[1],50,a[2]},{b[1],50,b[2]},{56,50,33}},dark)
-  face({{56,48,33},{b[1],48,b[2]},{a[1],48,a[2]},{56,48,33}},cream,.7)
+  face({{56,50,40},{a[1],50,a[2]},{b[1],50,b[2]},{56,50,40}},dark)
+  face({{56,48,40},{b[1],48,b[2]},{a[1],48,a[2]},{56,48,40}},cream,.7)
   face({{a[1],50,a[2]},{b[1],50,b[2]},{b[1],48,b[2]},{a[1],48,a[2]}},cream)
  end
  -- The original pale longitudinal ribs and crossbars are actual solids.
- for _,xx in ipairs({16,40,64,88})do box(xx,48,xx+6,64,54,2,cream)end
- for _,zz in ipairs({5,26,47})do
-  local edge=16-16*math.sqrt(1-(math.max(math.abs(zz-33),math.abs(zz+3-33))/31)^2)
+ for _,xx in ipairs({16,40,64,88})do box(xx,48,xx+6,64,54,17,cream)end
+ for _,zz in ipairs({20,36,52})do
+  local edge=16-16*math.sqrt(1-(math.max(math.abs(zz-40),math.abs(zz+3-40))/24)^2)
   box(edge,50,48,zz+3,52,zz,cream);box(70,50,112-edge,zz+3,52,zz,cream)
  end
- box(48,50,64,48,52,2,cream)
- face({{48,52.03,2},{64,52.03,2},{64,52.03,48},{48,52.03,48}},uv(48.05,1.05,63.95,43.95))
+ box(48,50,64,48,52,17,cream)
+ face({{48,52.03,17},{64,52.03,17},{64,52.03,48},{48,52.03,48}},uv(48.05,1.05,63.95,43.95))
  -- Side/rear window glass continues the native two facade window motif.
  for _,right in ipairs({false,true})do
   local cx,sign=right and 96 or 16,right and 1 or -1

@@ -24,7 +24,7 @@ for _,r in ipairs(recipes)do
    low=math.min(low,q[2]);high=math.max(high,q[2]);back=math.min(back,q[3])
   end
   if high>1.5 and low<16 then assert(back>=16,r.name..' rear lane blocked')end
-  if low==p.wall and high==p.wall and back==0 then underside=true end
+  if low==p.wall and high==p.wall and back==16 then underside=true end
  end)
  assert(n>40 and underside,r.name..' incomplete closed roof')
  for _,o in ipairs(r.openings or {})do

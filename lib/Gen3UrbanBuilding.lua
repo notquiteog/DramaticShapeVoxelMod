@@ -1,5 +1,5 @@
 -- Rustboro's flat-roof stone residences. Rear roof artwork projects over a
--- native walking row: only the elevated roof occupies that row.
+-- native walking row: walls and roof stop at its blocked boundary.
 local M={}
 function M.append(g,p,emit)
  local W,D,H=g.width*16,g.depth*16,p.wall;local r=g.custom
@@ -16,7 +16,7 @@ function M.append(g,p,emit)
   face({{a,e,f},{c,e,f},{c,e,d},{a,e,d}},t)
   face({{a,b,d},{c,b,d},{c,b,f},{a,b,f}},t,.7)
  end
- local back=math.max(18,g.bodyBack or 18);local front=D-1
+ local back=math.max(18,g.bodyBack or 18);local front=D-1;local roofBack=back-2
  -- Closed rear/sides and subdivided facade keep door reveals empty.
  box(2,0,W-2,back+1,H,back,wall)
  box(2,0,3,front,H,back,wall);box(W-3,0,W-2,front,H,back,wall)
@@ -35,12 +35,12 @@ function M.append(g,p,emit)
  panel(cursor,W-2,48,D,front+.02)
  -- Modest sill/plinth bands and an opaque closed roof overhang.
  box(1.5,0,W-1.5,front+.4,1.5,back,trim)
- box(0,H,W,front+1,H+2,0,trim)
- for zz=2,front-3,16 do
+ box(0,H,W,front+1,H+2,roofBack,trim)
+ for zz=roofBack+2,front-3,16 do
   local edge=math.min(zz+16,front-2)
   face({{2,H+2.03,zz},{W-2,H+2.03,zz},{W-2,H+2.03,edge},{2,H+2.03,edge}},uv(W+6.05,16.05,W*2-6.05,16+edge-zz-.05))
  end
- for _,q in ipairs({{1,1,W-1,2},{1,front-2,W-1,front-1},{1,2,2,front-2},{W-2,2,W-1,front-2}})do
+ for _,q in ipairs({{1,roofBack+1,W-1,roofBack+2},{1,front-2,W-1,front-1},{1,roofBack+2,2,front-2},{W-2,roofBack+2,W-1,front-2}})do
   box(q[1],H+2,q[3],q[4],H+3,q[2],wall)
  end
  -- Repeat the actual native window panel on unseen elevations. Each

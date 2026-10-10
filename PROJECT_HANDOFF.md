@@ -1,3 +1,15 @@
+# Excessive Gen3 rear roof projection fixed — 2026-10-09 (unreleased)
+
+User report reproduced: Civic preserved rear walking rows by moving walls but
+kept roof geometry at the projected source edge. Roof world rear is now bounded
+to the actual wall; source UV coordinates remain independent. Closed eaves and
+undersides retained. Corrected matching custom urban/tiered/Contest Hall and
+Cinnabar capsule roofs too. Production representative rear/side views inspected
+in Emerald, Ruby, LeafGreen and FireRed; nine focused suites pass. Native
+footprint census EM77/0,RU11/0,FR105/0. Detailed evidence/limits in Gen3 coverage
+ledger. Littleroot home prototype remains separate and not enabled. No gameplay
+or save changes.
+
 # Ruby/Sapphire Birch laboratory — 2026-10-09 (unreleased)
 
 Closed rectangular roof apparatus now distinguishes the RS lab from Emerald's

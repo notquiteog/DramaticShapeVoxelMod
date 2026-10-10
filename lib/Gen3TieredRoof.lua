@@ -27,10 +27,10 @@ function M.append(g,p,emit)
  -- The upper tier is carried by a closed riser, not a floating slab.
  prism(16,80,18,63,28,35,35,gold)
  -- Raised central dormer leaves both lower roof wings visible.
- roof(16,80,3,63,35,48,39)
+ roof(16,80,16,63,35,48,39)
  -- Native pale ridge caps are closed shallow bars, not billboard edges.
  prism(0,96,16,20,34,36,36,light)
- prism(16,80,3,7,47,49,49,light)
+ prism(16,80,16,20,47,49,49,light)
  -- Recessed silver front fascia below the upper roof.
  face({{18,39,63.05},{78,39,63.05},{78,35,63.05},{18,35,63.05}},uv(18.05,36.05,77.95,42.95))
  -- Gold corner posts continue the native facade palette onto unseen walls.
