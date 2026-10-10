@@ -46,8 +46,8 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 | Sky Ride | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Sky Ride | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Sky Ride | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Sky Ride | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Native 0.3.52 boot/export present only; feature runtime remains unverified |
-| Sky Ride | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Native 0.3.52 boot/export present only; feature runtime remains unverified |
+| Sky Ride | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: remote ground mount, flight/height and dismount; local mount unchanged; other ride cases pending |
+| Sky Ride | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: remote ground mount, flight/height and dismount; local mount unchanged; other ride cases pending |
 | Sky Ride | emerald | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Sky Ride | firered | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Sky Ride | leafgreen | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
@@ -57,8 +57,8 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 | Double Battles | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Double Battles | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Double Battles | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Double Battles | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Native 0.3.52 boot/export present only; feature runtime remains unverified |
-| Double Battles | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Native 0.3.52 boot/export present only; feature runtime remains unverified |
+| Double Battles | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Actual online native double entry: four actors/cards; full turn/faint/switch/end pending |
+| Double Battles | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Actual online native double entry: four actors/cards; full turn/faint/switch/end pending |
 | Double Battles | emerald | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Double Battles | firered | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Double Battles | leafgreen | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
@@ -68,8 +68,8 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 | Online | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Online | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Online | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Online | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Native 0.3.52 boot/export present only; feature runtime remains unverified |
-| Online | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Native 0.3.52 boot/export present only; feature runtime remains unverified |
+| Online | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote actors, single/double entry, trade menu, disconnect HP/PP restore and ghost cleanup; completed turn/exchange pending |
+| Online | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote actors, single/double entry, trade menu, disconnect HP/PP restore and ghost cleanup; completed turn/exchange pending |
 | Online | emerald | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Online | firered | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Online | leafgreen | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
@@ -90,8 +90,8 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 | Modern UI | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Modern UI | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
 | Modern UI | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Modern UI | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Native 0.3.52 boot/export present only; feature runtime remains unverified |
-| Modern UI | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Native 0.3.52 boot/export present only; feature runtime remains unverified |
+| Modern UI | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Actual online single/double/trade entry captures inspected; no complete screen audit |
+| Modern UI | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Actual online single/double/trade entry captures inspected; no complete screen audit |
 | Modern UI | emerald | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Modern UI | firered | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
 | Modern UI | leafgreen | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
@@ -112,3 +112,7 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 5. Custom region maps and optional quest states must use public adapters and preserve native collision, scripts and story state.
 
 Actual Ruby/Sapphire fixture: `tools/qa/rse-suite-parity.lua`; captures in `.scratch/coverage-20261004/results/{ruby,sapphire}-rse-parity/replica.png`. Both inspected. All seven modules load; this does not verify every module feature. Real native map prefixes are RU_ and SA_, and remaining scenery gaps were reported to the Gen3 model owner.
+
+## Paired Ruby/Sapphire check — engine 0.3.52
+
+Two independent native clients passed ride pose/height/dismount, chat, battle invitation and native single/double setup, trade-menu opening, reconnect and exact original-party restoration on disconnect. Ruby/Sapphire require the native `ScrSpecial_HealPlayerParty` symbol; Online now selects that name without guessing numeric special IDs. Ten named/legacy party tests cover all five GBA editions. These checks do not establish completed turn, trade exchange, capture, or all-edition parity. Repeatable driver: `tools/qa/rse-online-entry.lua` (QA_ROLE host/guest, SHOT_DIR; private imported profiles and LAN port 18864).
