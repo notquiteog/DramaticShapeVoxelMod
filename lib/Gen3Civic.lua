@@ -155,6 +155,7 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.geometry=='saffron_office' then return {w=w,h=96,back=0,front=95,wall=64,roofEnd=32,wallTop=32,wallBottom=96,bevel=0,doorLeft=0,doorRight=0,doorTop=96,doorBottom=96,doorHeight=0,projection=0}end
   if r.geometry=='silph_co' then return {w=w,h=240,back=8,front=239,wall=160,roofEnd=80,wallTop=80,wallBottom=240,bevel=0,doorLeft=64,doorRight=80,doorTop=224,doorBottom=240,doorHeight=20,projection=0}end
   if r.geometry=='pewter_museum' then return {w=w,h=112,back=8,front=111,wall=56,roofEnd=64,wallTop=64,wallBottom=112,bevel=0,doorLeft=80,doorRight=96,doorTop=96,doorBottom=112,doorHeight=24,projection=0}end
   if r.geometry=='cinnabar_mansion' then
@@ -443,6 +444,7 @@ function M.window(g)
  return best
 end
 function M.append(g,emit)
+ if g.custom and g.custom.geometry=='saffron_office' then return V.require('Gen3SaffronOffice').append(g,p,emit)end
  if g.custom and g.custom.geometry=='silph_co' then return V.require('Gen3SilphCo').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='pewter_museum' then return V.require('Gen3PewterMuseum').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='cinnabar_mansion' then return V.require('Gen3CinnabarMansion').append(g,M.profile(g),emit)end

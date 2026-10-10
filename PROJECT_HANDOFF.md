@@ -1,3 +1,13 @@
+# FRLG Saffron yellow offices — 2026-10-09
+
+Corrected misaligned old recipe (paving included, facade truncated) with full
+5×6 native pattern. All four yellow offices now have closed bodies, source
+facades, side/rear windows, ribbed green roofs and raised roof equipment.
+FR/LG representative front/rear/both sides/eye renders inspected; scoped
+native floor audits 4/0 each, four focused suites pass. Some inward turntable
+angles are occluded by Silph; exposed opposite instances supply side review.
+Rear walking rows remain clear. Normal input traversal not tested.
+
 # FRLG Silph Co. exterior — 2026-10-09
 
 Complete native 9×15 source pattern now forms a closed glazed office tower,

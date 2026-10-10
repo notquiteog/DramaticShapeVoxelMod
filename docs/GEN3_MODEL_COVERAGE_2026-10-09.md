@@ -582,3 +582,24 @@ Tests: `gen3_silph_test`, `gen3_civic_test`, `gen3_rear_roof_test`,
 `gen3_pewter_museum_test`, `gen3_scene_cache_test` pass. No saves/gameplay data
 changed. Remaining Saffron facade families visibly remain flat and require
 separate source review; no full-city or full-game completion claim.
+
+## Verified batch: FireRed/LeafGreen Saffron yellow offices
+
+The old `saffron_tall_house` recipe included two paving columns and omitted
+part of the facade. Exact source 5×6 replacement matches four buildings at
+(19,25), (24,25), (38,25), (43,25). Source-faithful yellow front, green striped
+roof, rectangular vent housing and circular cap now form closed geometry.
+Native windows and storey bands continue onto side/rear faces. Rear walking
+row remains clear. Separate FR/LG source exports match (Silph source record).
+
+Production captures in `results/{firered,leafgreen}-saffron-office-review`
+under the existing scratch root: representative front, rear, exposed left/right
+and eye-height views inspected. Inward side views beside Silph are occluded
+by that adjacent tower; opposite exposed office instances show both sides.
+Initial review caught roof pixels duplicated on the front; facade crop fixed.
+Final hidden vent underside was flattened within its closed housing afterward.
+`-saffron-office-footprint` native audits: 4 recognized / 0 scoped walking-cell
+flags each. Four focused tests pass: `gen3_saffron_office_test`, `gen3_civic_test`,
+`gen3_rear_roof_test`, `gen3_silph_test`. Same isolated profiles/runtime as Silph;
+no player-save or engine gameplay changes. Ordinary movement not verified.
+Short green Saffron house variants and other regions remain incomplete.
