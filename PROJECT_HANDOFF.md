@@ -1,3 +1,11 @@
+# Ruby/Sapphire downward Center escalators — 2026-10-09
+
+Three independently source-checked downward animation patterns enabled. Both
+games' orbit/side and dedicated stair eye renders inspected; focused suites
+pass and upper-room scoped face audit now16/0. Native geometry/material model
+reused only after source review. No input/warp traversal claim; upper PC and
+link plants remain pending.
+
 # Ruby/Sapphire upper Center link booths — 2026-10-09
 
 Four RS-specific complete source patterns now form three closed privacy booths

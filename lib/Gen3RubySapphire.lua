@@ -10,7 +10,7 @@ local furnitureNames={center_healer=true,center_screen=true,hoenn_center_front_d
  hoenn_center_map=true,hoenn_center_medicine=true,hoenn_center_terminal=true,
  hoenn_center_table=true,hoenn_cushion_550=true,hoenn_cushion_564=true,
  hoenn_center_plant=true,hoenn_center_wall_528=true,hoenn_center_wall_535=true}
-function M.recipeActive(r)if r.edition=='rs' then return true end;return r.family=='rse' and r.pair=='building__pokemon_center' and (furnitureNames[r.name]==true or (r.name or ''):match('^hoenn_escalator_up_[012]$')~=nil) end
+function M.recipeActive(r)if r.edition=='rs' then return true end;return r.family=='rse' and r.pair=='building__pokemon_center' and (furnitureNames[r.name]==true or (r.name or ''):match('^hoenn_escalator_up_[012]$')~=nil or (r.name or ''):match('^hoenn_escalator_down_[012]$')~=nil) end
 -- Ruby/Sapphire link rooms have individual booths, unlike Emerald's long desk.
 for i,q in ipairs({{0x24c,0x254,0x265},{0x24d,0x255,0x25f},{0x24e,0x256,0x25f}})do
  M.recipes[#M.recipes+1]={name='rs_link_booth_'..i,edition='rs',family='rse',primary='building',pair='building__pokemon_center',kind='rsLinkBooth',ground=0x202,recessBack=15,

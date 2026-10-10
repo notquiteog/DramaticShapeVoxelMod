@@ -361,3 +361,15 @@ RS edition isolation, lane bounds and closed undersides. Normal input/warp
 traversal was not exercised. Upper-floor PC, additional plants and downward
 escalator patterns remain native pending separate source/model review. Engines
 exited; isolated QA fixtures only, player saves and gameplay unchanged.
+
+
+## Verified follow-up: Ruby/Sapphire downward escalators
+
+Separately exported all three downward native animation patterns in both games
+(`rse-upper-center-review/escalator-frames.png`) before enabling these families.
+Production orbit/side and dedicated `stairs-eye.png` captures inspected in both
+editions: native dark rails, orange trim, pale enclosure and recessed flight
+remain within the bounded middle row. Upper-room scoped face audit now16/0
+per edition. RS/Hoenn/Center focused suites pass. This enables the existing
+geometry only; input and warp traversal remain untested. Remaining upper PC
+and link plants are still native, with all wider coverage gaps unchanged.
