@@ -65,14 +65,14 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 | Online | red | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
 | Online | blue | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
 | Online | yellow | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
-| Online | gold | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Online | silver | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
-| Online | crystal | Partial; Gen2 adapter | Source inventory; not complete runtime proof | Unverified |
+| Online | gold | Partial; Gen2 adapter | Native options; online manifest enables all Gen2 editions | Two actual clients: native consent, live trade exchange/save; Onix + Metal Coat evolves to Steelix, consumes item, returns to world. Native singles/doubles still need end-to-end edition verification |
+| Online | silver | Partial; Gen2 adapter | Native options; online manifest enables all Gen2 editions | Two actual clients: native consent, live trade exchange/save; Onix + Metal Coat evolves to Steelix, consumes item, returns to world. Native singles/doubles still need end-to-end edition verification |
+| Online | crystal | Partial; Gen2 adapter | Native options; online manifest enables all Gen2 editions | Two actual clients: native consent, live trade exchange/save; normal Pikachu exchange returns to world. Native singles/doubles still need end-to-end edition verification |
 | Online | ruby | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote actors, single/double complete turn, normal end and original HP/PP restore; actual trade exchange/save; disconnect and ghost cleanup |
 | Online | sapphire | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote actors, single/double complete turn, normal end and original HP/PP restore; actual trade exchange/save; disconnect and ghost cleanup |
-| Online | emerald | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
-| Online | firered | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
-| Online | leafgreen | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Unverified |
+| Online | emerald | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote ride actors, single/double complete turn, normal end and original HP/PP restore; native trade exchange/save; disconnect cleanup |
+| Online | firered | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote ride actors, single/double complete turn, normal end and original HP/PP restore; native trade exchange/save; disconnect cleanup |
+| Online | leafgreen | Partial; Gen3 adapter | Source inventory; not complete runtime proof | Two actual clients: chat/remote ride actors, single/double complete turn, normal end and original HP/PP restore; native trade exchange/save; disconnect cleanup |
 | Wilds | red | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
 | Wilds | blue | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
 | Wilds | yellow | Partial; Gen1 adapter | Source inventory; not complete runtime proof | Unverified |
@@ -120,3 +120,9 @@ Two independent native clients passed ride pose/height/dismount, chat, battle in
 ## Completed native RSE activities
 
 Online commits `713b82d` and `ac31d52` fix native Ruby/Sapphire healing and the Gen3 virtual-channel trade barrier. Separate actual two-client Ruby and Sapphire runs completed one native single and double turn, mutual run/end, restoration of original HP/PP, and a real trade exchange through native animation and save. Pokémon nicknames were exchanged and checked on both ends. The room continues using its own transport; neither `LT.loopbackCommit` nor native validation is bypassed. Matching native transaction digests are required; mismatch, malformed/replayed confirmations, forged guest commits, and pre-commit disconnects are tested. Post-commit crash recovery and exhaustive faint/switch/trade-evolution cases remain unverified. `tools/qa/rse-online-complete.lua` drives the native command seam only in QA; it does not replace battle rules.
+
+### Live Gen2 trades and five-edition GBA network pass
+
+Online e5e8eb4 replaces the incompatible offline-save Trade.remote API with the native Gen2 wire/consent state machine and host digest barrier. The live game retains trade animation, evolution, held-item consumption and save ownership. Gold/Silver were previously excluded by the Online manifest; they are now enabled and tested independently. Game2 returns to its world with an empty StateStack by design. No offline save writer is invoked.
+
+The GBA paired matrix now also runs on Emerald, FireRed and LeafGreen: one native single and double turn, normal battle end, original HP/PP restoration, actual native trade, chat, remote mounts and disconnect cleanup. These checks do not prove all faint/replacement, special battle, crash recovery, regional quest, or settings paths. FireRed required a fresh isolated native importer cache; old QA cache landing in the launcher was not a mod failure.
