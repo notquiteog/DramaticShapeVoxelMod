@@ -1,6 +1,17 @@
 -- Complete native city buildings reviewed against the imported map drawings.
 -- Runtime supplies all pixels; these records contain layout identifiers only.
 return {
+ {name='mossdeep_space_center',pair='general__mossdeep',kind='space_center',geometry='space_center',header=8,
+  rows={{0x3a0,0x3a1,0x3a2,0x3a3,0x3a4,0x3a5,0x3a6,0x3a7,0x32e},
+   {0x3a8,0x3a9,0x3aa,0x3ab,0x3ac,0x3ad,0x3ae,0x3af,0x336},
+   {0x3b0,0x3b1,0x3b2,0x3b3,0x3b4,0x3b5,0x3b6,0x3b7,0x35b},
+   {0x3b8,0x3b9,0x3b9,0x3ba,0x2dd,0x3bb,0x3bc,0x3bc,0x3bd},
+   {0x3c0,0x3c1,0x3c1,0x3c2,0x2dd,0x3c3,0x3c4,0x3c4,0x3c5},
+   {0x2da,0x2db,0x2db,0x2dc,0x2dd,0x2de,0x2df,0x2df,0x2c7},
+   {0x2e2,0x2e3,0x2e3,0x2e4,0x2e5,0x2e6,0x2e7,0x2e7,0x2cf},
+   {0x2ea,0x2eb,0x2eb,0x2ec,0x2ed,0x2ee,0x2ef,0x2ef,0x2d7}},
+  back=0,bodyBack=0,roofEnd=48,wallBottom=128,wallHeight=80,bevel=0,
+  wallSample={4,66},trimSample={10,87},openings={{64,112,80,128,door=true}}},
  {name='petalburg_city_mart',pair='general__petalburg',rows={{0x250,0x251,0x258,0x259},{48,49,50,51},{56,57,58,59},{96,65,66,67}},kind='mart',martRoof=true,bodyBack=16,wallSample={8,55},trimSample={7,41},header=4,back=2,roofEnd=42,wallBottom=63,bevel=3,roofShape='gable',roofRise=7},
  {name='petalburg_city_center',pair='general__petalburg',rows={{72,73,74,75},{80,81,82,83},{88,89,90,91},{96,97,98,99}},kind='center',centerRoof=true,bodyBack=16,wallSample={8,55},trimSample={7,41},header=4,back=2,roofEnd=40,wallBottom=63,bevel=3,roofShape='barrel',roofRise=11},
  {name='battle_frontier_center',pair='general__battle_frontier_outside_east',rows={{72,73,74,75},{80,81,82,83},{88,89,90,91},{96,97,98,99}},kind='center',centerRoof=true,bodyBack=16,wallSample={8,55},trimSample={7,41},header=4,back=2,roofEnd=40,wallBottom=63,bevel=3,roofShape='barrel',roofRise=11},

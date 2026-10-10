@@ -93,6 +93,9 @@ function M.prepare(cells,gyms,families)
   end end
  end
  -- Source roofs often occupy walkable cells behind the wall.
+ for _,g in ipairs(out)do
+  if g.custom and g.custom.geometry=='space_center' then V.require('Gen3SpaceCenter').prepare(cells,g)end
+ end
  -- Keep the roof overhang, but begin its solid shell inside the first row
  -- that actually blocks movement. Unknown collision data never changes a model.
  for _,g in ipairs(out)do
@@ -144,6 +147,9 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.geometry=='space_center' then
+   return {w=w,h=128,back=0,front=127,wall=80,roofEnd=48,wallTop=48,wallBottom=128,bevel=0,doorLeft=64,doorRight=80,doorTop=112,doorBottom=128,doorHeight=24,projection=0}
+  end
   if r.centerRoof or r.martRoof then
    return {w=64,h=64,back=14,front=60,wall=23,roofEnd=40,wallTop=40,wallBottom=63,bevel=0,doorLeft=0,doorRight=64,doorTop=40,doorBottom=63,doorHeight=23,projection=0}
   end
@@ -350,6 +356,11 @@ function M.material(g)
    for yy=31,40 do data:setPixel(p.w+xx,yy,sourcePixel(g,12,yy))end
   end
  end
+ if g.launchDisplay then
+  -- Native red launch-gantry swatch, without bundling its art.
+  local rr,gg,bb,aa=sourcePixel(g,4,4,0x379)
+  data:setPixel(p.w*2,2,rr,gg,bb,aa)
+ end
  local image=love.graphics.newImage(data);image:setFilter('nearest','nearest');data:release()
  return image
 end
@@ -388,6 +399,7 @@ function M.window(g)
 end
 function M.append(g,emit)
  if g.custom and (g.custom.centerRoof or g.custom.martRoof) then return V.require('HoennCivicBuilding').append(g,M.profile(g),emit)end
+ if g.custom and g.custom.geometry=='space_center' then return V.require('Gen3SpaceCenter').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='tower' then return V.require('Gen3TowerExterior').append(g,M.profile(g),emit)end
  local p=M.profile(g);local x,z=g.cx*16,g.cy*16
  local function uv(l,t,r,b)return {{l/(p.w*2+4),t/p.h},{r/(p.w*2+4),t/p.h},{r/(p.w*2+4),b/p.h},{l/(p.w*2+4),b/p.h}}end

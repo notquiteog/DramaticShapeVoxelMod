@@ -273,7 +273,7 @@ local function build(req,cache,previous)
   elseif c.civic then
    plane(b.v,b.i,x,z,uvFor(ts,Civic.ground(c)) or uv)
   elseif shape.kind=='water' then
-   plane(b.wv,b.wi,x,z,uv,.05)
+   plane(b.wv,b.wi,x,z,uvFor(ts,shape.ground) or uv,.05)
   elseif shape.kind=='interiorFloor' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
   elseif shape.kind=='caveWall' then
