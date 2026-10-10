@@ -522,3 +522,32 @@ all three maps in each edition. Inspected Crystal Mr Pokémon first-person,
 Crystal Power Plant side, Gold Silph overview and Silver Silph rear. Native
 room palettes remain live. Sofa and bookcase tests plus all source/shared
 assembly checks pass. Other facility machinery and room finishes remain open.
+
+## Gold/Silver/Crystal Mansion and cabin beds
+
+- [x] Upright head/foot boards, closed supports, mattress, blanket and pillow
+  replace projected bed drawings pasted across generic platforms.
+- [x] Edition-specific cabin art: Gold/Silver use different lower tiles and a
+  gray headboard; Crystal uses a wooden headboard. Pillow crops differ too.
+  Native samples retain those distinctions and each room's live palette.
+
+Independent native census and final fixtures verify21 beds/game: Mansion2F1,
+Lighthouse6F1, NNW/NNE/NE cabins3, SW/SSW/NW cabins4, SE/SSE/captain cabins4,
+ship B1F8. Both cells of every matched drawing are blocked. Full native grids
+are unchanged. `Gen2DesignedFurniture` supplies the source recipe to the shared
+model adapter so Crystal's cabin pillow is distinguished from Gold/Silver.
+
+Source evidence: `{game}-gen2-beds-source`; baseline Crystal `gen2-beds-before`.
+Final `{game}-gen2-beds` passes all six maps in each edition. Initial Mansion
+camera was on the southern wall; moved to native(1,7) and aimed toward the bed.
+Ship B1F camera corrected to(22,14). The first Mansion pillow crop included a
+dark projection border; final crop removes it. Final inspected evidence includes
+Crystal Mansion eye, Silver Mansion rear, Gold and Crystal cabin overviews,
+Silver ship B1F side, Crystal B1F rear and Gold lighthouse first-person. Camera
+positions were tightened to avoid the Mansion wall obscuring the model.
+
+Focused tests cover all three source layouts, closed support/footprint bounds
+and actual bedding crops; facility regressions and61 recipes/35 assemblies pass.
+Cabin portholes still appear as bulky generic extrusions in the reviewed scene;
+these and room finishes remain separate open work. Placement counts are not a
+claim that every bed was individually visually inspected from every angle.

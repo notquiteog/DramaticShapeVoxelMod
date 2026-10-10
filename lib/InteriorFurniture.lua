@@ -1455,6 +1455,27 @@ function M.draw(id,A)
   -- Native display is a parallelogram across contiguous atlas quadrants.
   A.face({{20,16,8.99},{29,16,8.99},{29,9,8.99},{20,9,8.99}},
    {T(21,5)[1],T(25,7)[1],T(25,10)[1],T(21,8)[1]},1)
+ elseif id=='gb_mansion_bed' or id=='gb_cabin_bed' then
+  -- Original head/foot boards stand upright; bedding occupies the mattress.
+  -- Both native cells are blocked, including the projected head of the bed.
+  local cabin=id=='gb_cabin_bed'
+  local crystal=cabin and A.recipe and A.recipe.tiles[3][1]==131
+  local frame,cloth,edge=T(cabin and 6 or 2,cabin and 4 or 3),T(7,15),T(1,15)
+  local foot=cabin and T(6,27) or frame
+  for _,x in ipairs{1,13}do for _,z in ipairs{1,28}do
+   B(x,0,z,x+2,z==1 and 10 or 7,z+2,z==1 and frame or foot)
+   B(x,z==1 and 10 or 7,z,x+2,z==1 and 10.5 or 7.5,z+2,T(1,1))
+  end end
+  B(2,2,2,14,4,30,frame)
+  B(2,4,4,14,5.5,28,edge)
+  B(3,5.5,9,13,6,27,cloth)
+  top({3,cabin and 10 or 8,10,cabin and 12 or 16},3,9,13,27,6.02)
+  B(3,5.5,4,13,6.5,8,cloth)
+  top(crystal and {4,7,8,2} or {5,cabin and 5 or 6,6,1},3,4,13,8,6.52)
+  B(3,4,1,13,9,3,frame)
+  B(3,2,28,13,6.5,30,foot)
+  front(cabin and {3,3,10,3} or {1,1,14,2},3,4,13,9,3.02)
+  front(cabin and {3,25,10,5} or {1,25,14,2},3,2,13,6.5,30.02)
  elseif id=='gb_facility_sofa' then
   -- Separate the projected blue seat and tufted back from their floor corners.
   -- Closed upholstery and stepped shoulders preserve the native rounded form.

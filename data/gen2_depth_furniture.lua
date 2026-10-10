@@ -97,10 +97,10 @@ return {
   prop('mansion_clock',15,{2,0,2,4},'cabinet',3,'gb_mansion_clock'),
   prop('mansion_planter',17,{2,2,2,2},'planter',3),
   prop('mansion_desk',18,{0,2,4,2},'console',3,'gb_mansion_workstation'),
-  prop('mansion_bed',20,left,'bed',3),
+  prop('mansion_bed',20,left,'bed',3,'gb_mansion_bed'),
  },
  TILESET_LIGHTHOUSE={
-  prop('ship_cabin_bed',24,{2,0,2,4},'bed',4),
+  prop('ship_cabin_bed',24,{2,0,2,4},'bed',4,'gb_cabin_bed'),
   prop('ship_cabin_books',47,{2,0,2,4},'cabinet',4),
   prop('ship_cabin_chair',7,{2,2,2,2},'seat',4),
  },
