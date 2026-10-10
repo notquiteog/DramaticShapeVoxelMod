@@ -38,8 +38,8 @@ model('gb_broadcast_desk',32,16,0)
 model('gb_broadcast_mixer',32,16,0)
 model('gb_broadcast_stool',16,16,0)
 local specs=dofile('data/gen2_depth_furniture.lua').TILESET_RADIO_TOWER
-local n=0;for _,s in ipairs(specs)do if s.design then n=n+1;assert(s.design:match('^gb_broadcast_'))end end
-assert(n==5)
+local n=0;for _,s in ipairs(specs)do if s.design then n=n+1;assert(s.design:match('^gb_broadcast_')or s.design=='gb_radio_books')end end
+assert(n==5,'four broadcast machines plus the bookcase are authored')
 local Shapes=dofile('lib/Gen3TileShape.lua')
 package.loaded['src.core.game3.collision']={isSurfable=function()return false end}
 for _,mid in ipairs({0x289,0x28a,0x28b,0x291,0x292,0x293,0x299,0x29a,0x2b3,0x2b4,0x2de,0x2df,0x2e6,0x2e7,0x2ff})do

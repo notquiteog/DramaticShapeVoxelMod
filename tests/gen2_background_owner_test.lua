@@ -2,7 +2,7 @@ local active=true
 local S={drawPanel=function()end,bgMode=function(self)return self.game.options.battleBg end}
 package.loaded['src.battle.BattleState']=S
 package.loaded['src.ui.gen2.BattleAnimView']={}
-local V={require=function(k)return ({Generation={isGen2=function()return true end},OverworldBattle={setting={get=function()return active end}}})[k]end}
+local V={require=function(k)return ({Generation={isGen2=function()return true end},OverworldBattle={setting={get=function()return active end}},Gen2BattlePipeline={install=function()end}})[k]end}
 local M=assert(loadfile('lib/Gen2Battle.lua'))(V);M.install()
 local s=setmetatable({game={options={battleBg='white',battleFit='fill',battleHud='extended'}},BG_WORLD_DIM=.31},{__index=S})
 assert(s:bgMode()=='world' and s.BG_WORLD_DIM==0)
