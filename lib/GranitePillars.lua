@@ -197,7 +197,7 @@ local function pierRhythm(cells)
   return piers
 end
 
-local function build(cells,id,boundary)
+local function build(cells,id,boundary,nativeFootprint)
   local layout = CommunityVisuals.layout()
   if layout == "default" then return false end
   local vertices, indices = {}, {}
@@ -211,6 +211,9 @@ local function build(cells,id,boundary)
   end
 
   local function box(mx, mz, base, hx, hz, y0, y1, v0, v1, shade, bevel)
+    -- Native-cell adapters cannot borrow the neighboring walkable lane for
+    -- a cornice. Links span two blocked owners; piers stay within their cell.
+    if nativeFootprint then hx,hz=math.min(8,hx),math.min(8,hz)end
     bevel = math.min(bevel or 0, math.min(hx, hz) * .18)
     local c = {
       { mx-hx+bevel,mz-hz }, { mx+hx-bevel,mz-hz },
@@ -389,6 +392,25 @@ function P.draw(map, ox, oz)
     (ox ~= 0 or oz ~= 0) and Mat4.translate(ox, 0, oz) or nil)
   Voxel3D.glass(false)
   Voxel3D.glassMaskNow(oldMask)
+end
+
+-- Native renderers publish explicit collision-safe owners without using the
+-- Gen1 mesher globals. The caller owns/reclaims this one mesh with its scene.
+function P.native(cells,id)
+  if not CommunityVisuals.customPillars() or not next(cells)then return end
+  local mesh=build(cells,id,nil,true);if not mesh then return end
+  local image=texture();if not image then if mesh.release then mesh:release()end;return end
+  return {mesh=mesh,image=image,mask=mask()}
+end
+function P.drawNative(record,draw,ox,oz)
+  if not(record and record.mesh and record.image)then return false end
+  local oldMask=Voxel3D.glassMask
+  Voxel3D.glassMaskNow(record.mask);Voxel3D.glass(true)
+  local renderer=draw or Voxel3D.draw
+  local ok,err=pcall(renderer,record.mesh,record.image,Mat4.translate(ox or 0,0,oz or 0))
+  Voxel3D.glass(false);Voxel3D.glassMaskNow(oldMask)
+  if not ok then error(err,0)end
+  return true
 end
 
 -- Match the terrain cache's live neighborhood instead of retaining GPU
