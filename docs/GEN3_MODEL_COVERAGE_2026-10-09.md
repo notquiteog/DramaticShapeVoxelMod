@@ -96,3 +96,17 @@ captures are not verification evidence.
 Focused Lilycove/Civic/Hoenn suites pass. The native Emerald footprint census
 now recognizes 73 assemblies, zero flagged low faces. Lilycove department store,
 museum, contest hall, specialist shop and harbor remain visibly flat/pending.
+
+## Verified batch: Lilycove Contest Hall
+
+The exact 7×7 native hall now has a closed red pavilion shell, original emblem
+entrance, chamfered silver-blue roof, rounded faceted fasteners, raised V-shaped
+pennant ribbons and side/rear structural bands. The original flat pennants are
+removed only from their known source rectangles to avoid duplicate decoration.
+The raised roof retains its blocked-body/walkable-rear-row separation.
+
+Production front/right/rear/left and eye views inspected in
+`results/emerald-lilycove-contest-review`, isolated Emerald0.3.52 profile.
+ContestHall/Civic/Hoenn focused tests pass. Emerald footprint census: 74
+recognized assemblies, zero low-face overlap flags. Other regional Contest
+Halls use different drawings and remain outside this model's coverage.

@@ -149,6 +149,9 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.geometry=='contest_hall' then
+   return {w=w,h=112,back=8,front=111,wall=32,roofEnd=88,wallTop=88,wallBottom=112,bevel=0,doorLeft=48,doorRight=64,doorTop=88,doorBottom=112,doorHeight=32,projection=0}
+  end
   if r.geometry=='urban' then
    local h=g.depth*16
    return {w=w,h=h,back=0,front=h-1,wall=h-48,roofEnd=48,wallTop=48,wallBottom=h,bevel=0,doorLeft=0,doorRight=w,doorTop=48,doorBottom=h,doorHeight=h-48,projection=0}
@@ -231,6 +234,8 @@ function M.material(g)
   -- Ground-colour removal is restricted to the outside of this complete
   -- known drawing. Window glass/roof colours inside it remain intact.
   if not(g.custom and g.custom.geometry=='tower') and (x<4 or x>=p.w-4 or y<p.back or y>=p.wallBottom) and gr>r+.035 and gr>b+.02 then a=0 end
+  if g.custom and g.custom.geometry=='contest_hall' and y>=88 and y<96 and
+    ((x>=16 and x<40) or (x>=72 and x<96))then r,gr,b,a=sourcePixel(g,22,98)end
   data:setPixel(x,y,r,gr,b,a)
   local rr,gg,bb,aa=r,gr,b,a
   if (g.kind=='mart' or g.kind=='center') and x>=p.doorLeft and x<p.doorRight and y>=p.doorTop and y<p.roofEnd then
@@ -408,6 +413,7 @@ function M.window(g)
 end
 function M.append(g,emit)
  if g.custom and (g.custom.centerRoof or g.custom.martRoof) then return V.require('HoennCivicBuilding').append(g,M.profile(g),emit)end
+ if g.custom and g.custom.geometry=='contest_hall' then return V.require('Gen3ContestHall').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='urban' then return V.require('Gen3UrbanBuilding').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='devon' then return V.require('Gen3DevonBuilding').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='space_center' then return V.require('Gen3SpaceCenter').append(g,M.profile(g),emit)end
