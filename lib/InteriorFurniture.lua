@@ -1338,6 +1338,30 @@ function M.draw(id,A)
    B(l,8.02,depth(sy),r,8.55,depth(sy+1),T(12,cy-5))
    top({l,sy,r-l,1},l,depth(sy),r,depth(sy+1),8.57)
   end end
+ elseif id=='gb_ship_captain_desk' then
+  local edge,wood,dark,paper=T(44,22),T(10,28),T(18,8),T(19,10)
+  for _,x in ipairs{1,33}do
+   B(x,0,8,x+14,6.5,29,wood)
+   front({x,24,14,8},x,0,x+14,6.5,29.02)
+  end
+  B(1,6.5,7,47,8,30,edge)
+  -- Preserve the border, replacing only the old book mark with table cloth.
+  for _,r in ipairs{{1,1,15,22},{32,1,15,22},{16,1,16,6},{16,17,16,6}}do
+   top(r,r[1],7+(r[2]-1)*23/22,r[1]+r[3],7+(r[2]+r[4]-1)*23/22,8.02)
+  end
+  top({38,10,1,1},16,7+6*23/22,32,7+16*23/22,8.02)
+  -- Closed cover and two shallow page wedges retain the native printed lines.
+  B(16,8.04,14,32,8.5,23,dark)
+  for _,leaf in ipairs{{17,23.7,9.5,8.9,17},{24.3,31,8.9,9.5,24}}do
+   local l,r,lh,rh,sx=unpack(leaf)
+   B(l,8.5,14.5,r,8.8,22.5,paper)
+   S(sx,9,7,6,{l,lh,14.5},{r,rh,14.5},{r,rh,22.5},{l,lh,22.5})
+   A.face({{l,lh,14.5},{r,rh,14.5},{r,8.8,14.5},{l,8.8,14.5}},paper,.75)
+   A.face({{r,rh,22.5},{l,lh,22.5},{l,8.8,22.5},{r,8.8,22.5}},paper,.85)
+   A.face({{l,lh,22.5},{l,lh,14.5},{l,8.8,14.5},{l,8.8,22.5}},paper,.8)
+   A.face({{r,rh,14.5},{r,rh,22.5},{r,8.8,22.5},{r,8.8,14.5}},paper,.8)
+  end
+  B(23.7,8.5,14.5,24.3,8.9,22.5,dark)
  elseif id=='fr_space_exhibit' then
   local white,edge,dark,stand=T(19,8),T(13,7),T(13,12),T(6,23)
   B(2,0,3,46,2,30,stand);B(4,2,5,44,3,28,edge)

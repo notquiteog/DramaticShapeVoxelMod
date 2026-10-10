@@ -712,3 +712,23 @@ cloth; only the dish is raised. Source/shared checks, banquet bounds/detail test
 and prior table tests pass. B1F's NPC partly covers one support in side view;
 rear and cabin eye provide additional geometry review. Captain desk and small
 wall-adjacent tables are separate outstanding families.
+
+## Gold/Silver/Crystal captain's desk — October 10
+
+- [x] One native six-cell desk per edition, SE/SSE/captain tile(4,52), with
+  independently checked Crystal/G/S lower rows and blocked collision7.
+- [x] Two closed drawer pedestals, open knee space and closed tabletop; separate
+  covered book with two shallow page wedges retaining the original printed art.
+
+Crystal `gen2-captain-desk-before` confirms the old tall generic volume. All
+three `gen2-captain-desk-final` fixtures pass placement/native/full-grid checks.
+The initial eye position cropped the book: `gen2-captain-desk-eye`, cell(3,29),
+yaw pi/pitch.2, passes all editions and gives a clear full Crystal front/eye.
+Gold side inspected. The central rear camera hit the captain sprite, so Gold
+and Crystal `gen2-captain-desk-rear` use a left-offset rear angle; both inspected
+with the book and exposed rear pedestal visible. The adjacent chair still
+occludes the far rear support and remains an explicit scene gap. Captain's
+chair cell(3,25) is blocked7 in all editions, unlike the walking cabin chairs.
+Focused desk knee-space/book/bounds test and preceding table regressions pass.
+No collision/warp or player save changes. Neighboring chair, lifesaver panel and
+five wall-adjacent sideboards/game still need authored geometry.
