@@ -1,3 +1,22 @@
+## 2026-10-09 refresh
+
+Fetched all seven partner origin remotes: no missing origin commits at audit.
+Fetched absol89/master, Wilds upstream/main and Skies upstream/main: all commits
+already contained. All72 literal upstream setting keys retained; all7 manifests
+have no required dependency. These are inventory assertions, not runtime parity.
+Kanto reference Git fetch failed with repository-not-found/authentication errors;
+its cached checkout remains available, but current revision is NOT confirmed.
+
+Focused checks passed: Ride native Gen3 HUD; Online native room rendering across
+three generations and activity-safe walk-up menu; Wilds standalone follower boot
+and catching-HUD ownership. Broader live networking, every menu, special moves
+and all mod combinations remain unverified. Modern UI agent committed verified
+Gen1/2 party UI ff9945c; remaining specialized screens are still open.
+
+Added optional Gen3 scenery alias API for region authors deliberately reusing
+known tile layouts, with owner guards, disposal and cache invalidation. See
+CUSTOM_REGION_SCENERY.md. No new hard dependency; no gameplay UI restyling.
+
 # Upstream and independent-mod audit — 2026-10-04
 
 All 72 literal ModSetting keys declared in absol89's current upstream/master

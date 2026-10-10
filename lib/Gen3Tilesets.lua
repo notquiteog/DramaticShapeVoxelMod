@@ -9,6 +9,7 @@ local profiles=V and V.require('Gen3InteriorProfiles') or dofile((os.getenv('DS_
 -- No ROM addresses or imported files are read at runtime. Full drawing recipes
 -- still validate each object before claiming it.
 local aliases={}
+local registered={}
 local representatives={
  ['building__rom_082d4bcc']={'FR_CERULEAN_CITY_MART','FR_CINNABAR_ISLAND_MART','FR_FOUR_ISLAND_MART','FR_FUCHSIA_CITY_MART','FR_LAVENDER_TOWN_MART','FR_PEWTER_CITY_MART','FR_SAFFRON_CITY_MART','FR_SEVEN_ISLAND_MART','FR_SIX_ISLAND_MART','FR_THREE_ISLAND_MART','FR_VERMILION_CITY_MART','FR_VIRIDIAN_CITY_MART'},
  ['building__rom_082d4c2c']={'FR_FIVE_ISLAND_RESORT_GORGEOUS_HOUSE','FR_FUCHSIA_CITY_HOUSE2','FR_FUCHSIA_CITY_WARDENS_HOUSE','FR_PEWTER_CITY_MUSEUM_1F','FR_PEWTER_CITY_MUSEUM_2F'},
@@ -81,7 +82,25 @@ function M.bind(maps)
   end
  end
 end
-function M.canonical(pair)return aliases[pair] or pair end
+function M.canonical(pair)return aliases[pair] or (registered[pair] and registered[pair].target) or pair end
+-- Explicit opt-in for regions reusing an existing metatile layout. Never
+-- infer art compatibility from a custom map name or replace native aliases.
+function M.registerAlias(pair,target)
+ if type(pair)~='string' or pair=='' or type(target)~='string' or target=='' then return nil,'pair and target must be nonempty strings' end
+ if aliases[pair] or representatives[pair] or registered[pair] then return nil,'pair already owned' end
+ target=M.canonical(target)
+ if pair==target then return nil,'self alias' end
+ if not representatives[target] and not target:match('^[%w_]+__[%w_]+$') then return nil,'target must name an existing tileset layout' end
+ -- Targets cannot depend on a later registration, preventing alias chains.
+ for _,entry in pairs(registered)do if entry.target==pair then return nil,'pair is already an alias target' end end
+ local entry={target=target};registered[pair]=entry
+ local live=true
+ return function()
+  if not live then return false end;live=false
+  if registered[pair]==entry then registered[pair]=nil;return true end
+  return false
+ end
+end
 function M.resolve(pair,known)
  pair=M.canonical(pair)
  local spec=known and known[pair]

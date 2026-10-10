@@ -1,3 +1,20 @@
+# Partner compatibility and region extension — 2026-10-09
+
+Parent added Gen3 optional scenery.registerTilesetAlias(pair,target), with owner
+protection, explicit disposal and scene cache invalidation. New custom-region
+scenery guide documents native fallback, lifecycle and identical-art-only scope.
+Alias/session/disposal regression passed; full suite183/0/56. This API batch
+has no live custom-region render fixture yet. Source audit and partner unit
+checks in docs/UPSTREAM_COMPATIBILITY_2026-10-04.md; no exhaustive parity claim.
+Upstream abs/Wilds/Skies contain no missing commits. Kanto Git fetch failed;
+do not label cached reference current. Seven manifests remain independent.
+
+Three agents active: generation_parity (capture effects), crystal_models
+(department-store windows/interior coverage), gen3_models (Mossdeep Space Center).
+Modern UI completed Gen1/2 roster commitff9945c, later screens still pending.
+Agents should continue model coverage batches autonomously and coordinate shared
+files. Parent owns Tilesets/Integration API changes only in this batch.
+
 # Mossdeep cliff-composite trees — 2026-10-09 (unreleased)
 
 Complete north-edge and corner composite trees now join the two standalone

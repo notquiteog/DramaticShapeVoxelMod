@@ -230,6 +230,16 @@ function M.install()
  for _,cart in ipairs{'emerald'}do mod.exports[cart]=gen3Namespace end
  -- ...and once under the durable, cart-neutral name.
  mod.exports.gen3=gen3Namespace
+ gen3Namespace.scenery={apiVersion=1,registerTilesetAlias=function(pair,target)
+  local dispose,err=V.require('Gen3Tilesets').registerAlias(pair,target)
+  if not dispose then return nil,err end
+  V.require('Gen3Scene').invalidate()
+  return function()
+   local removed=dispose()
+   if removed then V.require('Gen3Scene').invalidate() end
+   return removed
+  end
+ end}
  print('[Battle Art FireRed] native field and battle background adapters installed')
 end
 return M
