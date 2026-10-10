@@ -1,4 +1,4 @@
-# Crystal model coverage checklist — 2026-10-09
+# Gen2 model coverage checklist — 2026-10-09
 
 This records bounded model work, not approval of every classified tile.
 
@@ -6,8 +6,10 @@ This records bounded model work, not approval of every classified tile.
   original reflection artwork, closed backing, dimensional frames and sill.
   The pane no longer appears on a cube's roof. All geometry stays inside its
   blocked 16px source cell; native map/collision/warp data is unchanged.
-- [ ] Department-store stair/elevator wall fixtures: still generic source
-  extrusions in the reviewed views; need independent native-art review.
+- [x] Department-store elevator, reception-window overlap, cash register and
+  directory: authored and verified in the bounded fixtures below.
+- [ ] Department-store stairs: existing native stair recipes remain; a separate
+  traversal and visual review is still needed to close stair coverage.
 - [ ] Other Crystal building/interior families: inventory and per-model review
   remain outstanding; classifier counts cannot close this item.
 
@@ -31,8 +33,8 @@ cell and protect the complete vertical glass crop. No version/release change.
   collision122 and walkable in these fixtures. The new doorway leaves its
   interior approach open; the door is only at the cell's rear plane. Geometry
   tests protect that open space and bound the whole two-cell assembly.
-- [ ] Counter-overlapped window drawings (14/15 above 42/43) still retain
-  generic geometry beside the reception desk; distinct recipe needed.
+- [x] Counter-overlapped window drawings (14/15 above 42/43): closed by the
+  reception follow-up below.
 
 Gold/Silver QA caches were v12 and rejected by engine0.3.52. Reimported the
 user's installed ROMs into disposable `emerald-port-gold-qa` and
@@ -68,6 +70,7 @@ and other map families are still not signed off.
   with closed jamb/reveal, lintel and threshold surfaces. Original door art
   stays in order and at its original facade coordinates. Partial drawings and
   other tileset families do not carve openings. No outward geometry is added.
+- [x] Paired tile38 window bands: closed by the following window pass.
 - [ ] Other door/window families, major city landmarks and remaining generic
   scenery require further review; this entrance pass is not full exterior
   coverage.
@@ -113,3 +116,18 @@ inspected independently (`gen2-register-source`). The side fixture initially
 retained an irrelevant elevator-cell assertion; it was removed before the
 successful captures. Register, department-window, full furniture and depth
 furniture tests pass. Other shop furniture remains separately scoped.
+
+## Department directory
+
+- [x] Complete 44/45-above-60/61 drawing now has a closed backing and recessed
+  framed sign face. Native lettering is no longer repeated on the top/sides.
+  Its imported Crystal background event at Celadon1F `(14,0)` resolves to
+  `1c:49e9` / text `1c:4aea`, the six-floor service directory, confirming the
+  intended object rather than guessing a cabinet from its outline.
+
+Gold/Silver/Crystal `gen2-directory.lua`: Celadon1F and Goldenrod1F overview,
+side/rear orbit and first person, native tile/collision invariants. Inspected
+Crystal/Gold Celadon first-person and Silver Goldenrod overview. Stair approach
+remains clear; entire model bounded to its blocked source cell. Directory,
+register, window, complete-furniture and depth-furniture suites pass. Native
+artwork and imported event/text data remain local QA references, not bundled.

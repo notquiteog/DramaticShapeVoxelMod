@@ -481,6 +481,15 @@ function M.draw(id,A)
   B(3,10,1,13,11,31,edge)
   top({3,1,10,29},3,1,13,31,11.02)
   for _,x in ipairs{3,12}do B(x,0,28,x+1,10,31,edge)end
+ elseif id=='gb_department_directory' then
+  -- Native background event identifies this as the floor directory, not a
+  -- cupboard. The original lettering belongs only on its recessed front.
+  local wall,frame=T(15,15),T(1,1)
+  B(0,0,0,16,24,14,wall)
+  B(0,6,14,16,22,14.5,frame)
+  B(0,6,14.5,1,22,15.5,frame);B(15,6,14.5,16,22,15.5,frame)
+  B(1,6,14.5,15,7,15.5,frame);B(1,21,14.5,15,22,15.5,frame)
+  front({1,1,14,14},1,7,15,21,14.52)
  elseif id=='gb_department_register' then
   local counter,case,dark=T(2,1),T(7,2),T(3,4)
   -- The 16px native drawing combines countertop, display, keys and printer.
