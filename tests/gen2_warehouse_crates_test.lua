@@ -4,6 +4,7 @@ function V.require(n)
  return cache[n]
 end
 local r=assert(loadfile('data/gen2_furniture.lua'))().TILESET_UNDERGROUND[1]
+assert(r.maps.GOLDENROD_DEPT_STORE_B1F and r.maps.TEAM_ROCKET_BASE_B1F and not r.maps.SAFFRON_GYM,'crate maps lost reviewed scope')
 assert(r.maps.GOLDENROD_UNDERGROUND_WAREHOUSE and r.tiles[1][1]==67 and r.tiles[2][2]==84)
 local q=V.require('Gen2DesignedFurniture').build(r,nil,16,128,128)
 local lid,side,back=false,false,false

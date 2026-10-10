@@ -203,5 +203,17 @@ native crate patterns match44 production models per version; every source
 crate cell asserted blocked. Inspected Crystal eye view and Silver overview;
 additional Crystal `gen2-warehouse-back` inspects rear bracing. Unit test guards
 footprint, height, lid and side/rear braces. Full-furniture and Underground
-regressions pass. This recipe is currently gated to this warehouse; department
-basement/Rocket storage crates remain a separate pending coverage extension.
+regressions pass. The initial recipe was gated to this warehouse; the reviewed storage extension
+below adds the two other native crate maps.
+
+## Department basement and Rocket storage crates
+
+- [x] Reuse the complete native crate volume in GOLDENROD_DEPT_STORE_B1F and
+  TEAM_ROCKET_BASE_B1F after separately inspecting their source maps.
+
+Gold/Silver/Crystal `gen2-storage-crates.lua` passes: 32 department basement and
+16 Rocket base native patterns match production models per game, every source
+cell blocked, full native tile/collision grids unchanged. Four views per map
+were captured from walkable cells. Inspected Crystal basement eye view and
+Silver Rocket side view; neighboring machinery remains a separate coverage
+task. Crate footprint/geometry test passes with the explicit three-map scope.
