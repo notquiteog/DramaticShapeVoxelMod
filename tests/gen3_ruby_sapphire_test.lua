@@ -12,7 +12,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  assert(S.of('general','petalburg',1,0x10,0).kind=='water')
  assert(S.of('general','petalburg',0x2a,0x2a,0).kind=='flat','seaweed became Kanto stairs')
  assert(S.of('building','facility',0x2f8,0,7).kind=='flat','unreviewed Emerald interior leaked')
- local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop' or r.pair=='building__lab')end end;assert(approved==44)
+ local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop' or r.pair=='building__lab')end end;assert(approved==43)
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)
@@ -99,7 +99,7 @@ for _,r in ipairs(H.recipes)do if r.name=='birch_machine' then
  end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
  assert(underside,'machine drum underside open')
 end end
-for _,r in ipairs(H.recipes)do if r.kind=='labWorkstation' or r.kind=='labStacks' then
+for _,r in ipairs(F.recipes)do if r.kind=='labWorkstation' or r.kind=='labStacks' then
  local depth=r.kind=='labStacks' and (#r.rows*16) or 48
  F.append({cx=0,cy=0,w=16,d=depth,recipe=r,ts={}},function(v)
   for _,q in ipairs(v)do assert(q[1]>=0 and q[1]<16 and q[3]>=0 and q[3]<depth,'workstation/stacks cross chair/apron')end
@@ -110,6 +110,13 @@ for _,r in ipairs(H.recipes)do if r.kind=='labSideCabinet' then
   for _,q in ipairs(v)do assert(q[3]>=16 and q[3]<32,'side cupboard occupies projected walking row')end
  end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
 end end
+for _,r in ipairs(F.recipes)do if r.kind=='labSideDesk' then
+ F.append({cx=0,cy=0,w=16,d=32,recipe=r,ts={}},function(v)
+  for _,q in ipairs(v)do assert(q[3]>=0 and q[3]<16,'east small table occupies projected walking row')end
+ end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
+end end
+version='emerald'
+for _,r in ipairs(V.require('Gen3RubySapphire').recipes)do assert(not H.recipeActive(r),'edition-only recipe leaked into Emerald')end
 version='emerald';assert(#H.exteriorRecipes()>3 and H.recipeActive(H.recipes[1]))
 version='firered';assert(not H.active() and H.recipeActive({}) and not H.recipeActive({family='rse'}))
 print('Ruby/Sapphire checked-family dispatch, full source matches, native rear lanes and edition isolation PASS')

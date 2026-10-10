@@ -506,5 +506,18 @@ Native one-cell plants occupy their blocked cells; the east book-stack family
 uses its separate three-cell drawing with an8px source/geometry offset. Closed
 cover/page models reuse only the separately checked matching book art. RS/E
 orbit and dedicated east-stack eye views inspected; scoped audits RS16/0 each,
-Emerald15/0 (different native plant placement). Hoenn/RS suites pass. Native
-wallside small table and walkable green seat drawings remain pending.
+Emerald15/0 (different northeast book arrangement; plant placements match). Hoenn/RS suites pass. Native
+RS wallside small table, Emerald northeast books and walkable green seat drawings remain pending.
+
+
+## Verified batch/correction: RS east small lab table
+
+Ruby/Sapphire's complete table pattern now forms a closed supported desk and
+raised device entirely on the upper blocked cell. Its lower source projection
+stays floor. RS close-eye/orbit views inspected; scoped audits17/0 each.
+Emerald15/0 remains unchanged: its northeast source arrangement uses29a/232
+book cells, with no matching table. This corrects the prior explanation of
+the count difference as plant placement; plant locations match. Both east
+stack/table recipes are now explicitly RS-only and tested against Emerald
+dispatch. Emerald northeast book stacks remain native for separate modeling.
+Focused RS/Hoenn/additional suites pass; no gameplay/save changes.

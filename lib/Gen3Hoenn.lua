@@ -365,7 +365,6 @@ local center='building__pokemon_center'
 local lab='building__lab'
 add('birch_south_book_stacks',lab,{{0x248},{0x248}},'labStacks')
 add('birch_floor_plant',lab,{{0x22e}},'plant',{h=16,cutout=true})
-add('birch_east_book_stacks',lab,{{0x20f},{0x217},{0x21f}},'labStacks',{sourceOffset=8,stackOffset=8})
 add('birch_side_cupboard',lab,{{0x23a},{0x242}},'labSideCabinet')
 add('birch_southeast_workstation',lab,{{0x23b},{0x243},{0x24b}},'labWorkstation',{faceLeft=true})
 add('birch_south_workstation',lab,{{0x230},{0x238},{0x240}},'labWorkstation')

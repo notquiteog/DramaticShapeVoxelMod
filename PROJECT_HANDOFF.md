@@ -1,8 +1,15 @@
+# RS east small lab table and edition audit correction — 2026-10-09
+
+Table/device modeled on blocked cell; RS orbit/eye renders inspected, audits
+17/0 each. Emerald remains15/0 because its northeast book arrangement differs,
+not plant placements (earlier explanation corrected). East stack/table recipes
+now explicitly RS-only; edition/footprint suites pass. Emerald books pending.
+
 # Birch floor plants and east book stacks — 2026-10-09
 
 Separately checked offset source family and one-cell plants modeled. RS/E
 orbit/eye renders inspected; scoped audits RS16/0, Emerald15/0; focused tests
-pass. Small east table and native walkable seat drawings still pending.
+pass. RS small east table, Emerald northeast books and walkable seat drawings still pending.
 
 # Birch southeast workstation and cupboard — 2026-10-09
 

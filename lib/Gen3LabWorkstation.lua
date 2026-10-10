@@ -7,6 +7,15 @@ function M.append(p,source,box,sample,emit)
   emit({{a,b,f},{c,b,f},{c,b,n},{a,b,n}},t,.65)
  end
  local x,z=p.cx*16,p.cy*16
+ if p.recipe.kind=='labSideDesk' then
+  local wood=sample(3,23)
+  box(x+1,7,z+1,x+15,9,z+15,sample(2,4))
+  source(1,0,14,6,{x+1,9.02,z+1},{x+15,9.02,z+1},{x+15,9.02,z+15},{x+1,9.02,z+15})
+  for _,xx in ipairs({2,12})do for _,zz in ipairs({2,11})do box(x+xx,0,z+zz,x+xx+2,7,z+zz+3,wood)end end
+  box(x+5,9,z+5,x+12,10.5,z+12,sample(8,10))
+  source(5,7,7,7,{x+5,10.52,z+5},{x+12,10.52,z+5},{x+12,10.52,z+12},{x+5,10.52,z+12})
+  return
+ end
  if p.recipe.kind=='labSideCabinet' then
   local wood=sample(4,18)
   box(x+1,0,z+17,x+15,8,z+31,wood)
