@@ -1,3 +1,10 @@
+# Hoenn checkout aisle clearance and RS model — 2026-10-09
+
+Replaced Emerald's rectangular slab with closed source-faithful L counter,
+clearing two native clerk-aisle cells. Separate RS full pattern enabled.
+RS/E front/rear/side/checkout eye renders inspected; scoped Mart audits7/0
+each and four focused suites pass. Register/wall detail remains unfinished.
+
 # Hoenn Mart plant apron — 2026-10-09
 
 Plant moved into native blocked wall niche and separately enabled in RS. RS/E

@@ -51,7 +51,7 @@ for _,r in ipairs(H.recipes)do if r.kind=='escalator' then
  end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
 end end
 -- Native RS booths must leave their two open rear lanes and front apron clear.
-for _,r in ipairs(V.require('Gen3RubySapphire').recipes)do if r.kind~='designed' then
+for _,r in ipairs(V.require('Gen3RubySapphire').recipes)do if r.kind=='rsLinkBooth' or r.kind=='rsLinkPartition' then
  for _,game in ipairs({'ruby','sapphire'})do
   version=game;local cells={}
   for yy,row in ipairs(r.rows)do for xx,mid in ipairs(row)do cells[(xx-1)..':'..(yy-1)]={cx=xx-1,cy=yy-1,mid=mid,pair=r.pair,primary='building',ts={}}end end
@@ -79,6 +79,11 @@ for _,game in ipairs({'ruby','sapphire'})do
   cells['0:2'].mid=0;assert(#F.extract(cells)==0,'partial upper PC claimed')
  end end
 end
+for _,r in ipairs(F.recipes)do if r.kind=='martCheckout' then
+ F.append({cx=0,cy=0,w=48,d=32,recipe=r,ts={}},function(v)
+  for _,q in ipairs(v)do assert(q[3]>=17 or q[1]>=33,'checkout occupies native clerk aisle')end
+ end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
+end end
 version='emerald';assert(#H.exteriorRecipes()>3 and H.recipeActive(H.recipes[1]))
 version='firered';assert(not H.active() and H.recipeActive({}) and not H.recipeActive({family='rse'}))
 print('Ruby/Sapphire checked-family dispatch, full source matches, native rear lanes and edition isolation PASS')

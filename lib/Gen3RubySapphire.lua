@@ -20,6 +20,7 @@ end
 M.recipes[#M.recipes+1]={name='rs_link_partition_end',edition='rs',family='rse',primary='building',pair='building__pokemon_center',kind='rsLinkPartition',ground=0x202,recessBack=15,
  rows={{0x23f},{0x247},{0x24f},{0x257},{0x25f}}}
 M.recipes[#M.recipes+1]={name='rs_upper_pc',edition='rs',family='rse',primary='building',pair='building__pokemon_center',kind='designed',design='fr_upper_pc',ground=0x202,rows={{0x20c},{4},{0x21c}}}
+M.recipes[#M.recipes+1]={name='rs_mart_checkout',edition='rs',family='rse',primary='building',pair='building__shop',kind='martCheckout',ground=0x201,rows={{0x238,0x239,0x23a},{0x240,0x241,0x242}}}
 local trees={}
 for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1e4,0x1e5,0x1e6,0x1e7}do trees[id]=true end
 local roots={[0x1dc]=true,[0x1e4]=true,[0x1e6]=true}

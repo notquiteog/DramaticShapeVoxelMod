@@ -409,7 +409,7 @@ for _,a in ipairs{{0x230,0x231},{0x221,0x231}}do
  add('hoenn_mart_stock_'..a[1],mart,{{0x223,0x224},{0x228,0x229},a},'designed',{design='em_mart_stock'})
 end
 add('hoenn_mart_glass',mart,{{0x213,0x213,0x213},{0x21b,0x21b,0x21b}},'designed',{design='em_mart_glass'})
-add('hoenn_mart_counter',mart,{{0x318,0x239,0x23a},{0x320,0x241,0x242}},'counter',{h=7,top=16,join=true})
+add('hoenn_mart_counter',mart,{{0x318,0x239,0x23a},{0x320,0x241,0x242}},'martCheckout',{h=7})
 -- 244 is the clock's lower wallpaper row; 208 is walkable floor.
 -- Leave both to the native wall/floor renderer, never invent a counter.
 add('hoenn_mart_plant',mart,{{0x215},{0x21d},{0x225}},'plant',{h=26,cutout=true,depthOffset=-16})

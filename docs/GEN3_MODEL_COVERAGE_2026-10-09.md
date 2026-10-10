@@ -413,3 +413,16 @@ inspection. RS/Emerald production views inspected; focused tests include all
 three games' plant-apron bounds. RS Mart audits6/0 each. Emerald7/2 exposes an
 existing checkout slab across clerk-aisle cells(0,3)/(1,3); this is the next
 priority fix, not a plant regression. Native gameplay/saves unchanged.
+
+
+## Verified fix/batch: native Hoenn L-shaped checkout
+
+Emerald's old generic slab occupied two native clerk-aisle cells. The new closed
+L-shaped counter follows the front blocked row and right-hand service column,
+retains native glass/panel art and leaves the rear-left aisle empty. Ruby and
+Sapphire receive their distinct complete two-row pattern, preserving their
+different front-panel art. Production front/rear/side and checkout eye captures
+inspected in all three games. Each Mart scoped audit now7/0, superseding EM7/2.
+Four focused suites pass; a geometry regression checks both aisle cells.
+Register and additional wall details remain native; interaction/warp traversal
+was not exercised. Presentation only; no gameplay/saved progress modified.
