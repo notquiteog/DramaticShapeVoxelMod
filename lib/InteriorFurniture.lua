@@ -481,6 +481,22 @@ function M.draw(id,A)
   B(3,10,1,13,11,31,edge)
   top({3,1,10,29},3,1,13,31,11.02)
   for _,x in ipairs{3,12}do B(x,0,28,x+1,10,31,edge)end
+ elseif id=='gb_department_register' then
+  local counter,case,dark=T(2,1),T(7,2),T(3,4)
+  -- The 16px native drawing combines countertop, display, keys and printer.
+  -- Stand the equipment on its counter instead of printing it on the lid.
+  B(0,0,0,16,6,16,counter);B(0,6,0,16,7,16,counter)
+  B(3,7,3,13,9,13,dark)
+  B(3,9,2,9,15,6,case)
+  front({3,1,6,4},3.5,10,8.5,14,6.02)
+  B(10,9,3,13,13,7,case)
+  front({10,1,3,4},10,9,13,13,7.02)
+  -- Closed sloped keypad: its source pixels remain on the inclined face.
+  S(3,7,6,5,{3,11,7},{9,11,7},{9,9.5,12},{3,9.5,12})
+  A.face({{3,9,7},{3,11,7},{3,9.5,12},{3,9,12}},case,.78)
+  A.face({{9,9,12},{9,9.5,12},{9,11,7},{9,9,7}},case,.84)
+  A.face({{9,9,7},{9,11,7},{3,11,7},{3,9,7}},case,.72)
+  A.face({{3,9,12},{3,9.5,12},{9,9.5,12},{9,9,12}},case,.86)
  elseif id=='gb_department_counter_window' then
   -- The lower half of this drawing is the reception counter overlapping a
   -- window. Separate the horizontal countertop from the upright rear pane.

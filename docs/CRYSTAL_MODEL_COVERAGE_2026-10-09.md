@@ -96,3 +96,20 @@ Inspected Gold and Crystal Goldenrod eye views, Silver Olivine eye view; all
 six scenes passed. Earlier eye views were too low to show whole windows and
 were replaced with upward camera pitch. Existing exterior/roof suites pass,
 including paired and partial band regressions. No collision or warp changes.
+
+## MART cash register
+
+- [x] Complete 32/33-above-48/49 native till drawing now becomes a closed
+  counter pedestal, raised display, printer and sealed inclined keypad. Source
+  screen/key/printer pixels are kept on their respective faces; equipment is
+  no longer a flat counter-top texture. All parts remain within one source cell.
+
+Gold/Silver/Crystal `gen2-register.lua`: Celadon1F and Goldenrod1F, all four
+views and full native tile/collision invariants. Inspected Crystal/Gold Celadon
+first-person and Silver Goldenrod overview. Additional Crystal
+`gen2-register-side.lua` inspected Cherrygrove Mart and Celadon side views from
+asserted walkable camera cells; no open model sides seen. Ordinary Mart art was
+inspected independently (`gen2-register-source`). The side fixture initially
+retained an irrelevant elevator-cell assertion; it was removed before the
+successful captures. Register, department-window, full furniture and depth
+furniture tests pass. Other shop furniture remains separately scoped.
