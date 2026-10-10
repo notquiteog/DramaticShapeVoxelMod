@@ -258,6 +258,12 @@ lighthouse[#lighthouse+1]=captainChair
 local shipBin=item('crystal_ship_bin',{{72,73},{88,89}},13,{},0)
 shipBin.design='gb_ship_bin';shipBin.groundTiles=lighthouse[1].groundTiles;shipBin.groundAligned=true
 lighthouse[#lighthouse+1]=shipBin
+for _,variant in ipairs({{'',130},{'_gs',44}})do
+ local t=item('crystal_ship_sideboard'..variant[1],{
+ {2,3,16,16},{9,10,10,12},{20,26,variant[2],53},{59,60,59,60}},13,{},0)
+ t.design='gb_ship_sideboard';t.groundTiles=lighthouse[1].groundTiles;t.groundAligned=true
+ lighthouse[#lighthouse+1]=t
+end
 -- Complete machinery sections, ahead of the old facility cabinet crops.
 -- The narrow brass conduit belongs to the machine, not a shelf of books.
 local facility={

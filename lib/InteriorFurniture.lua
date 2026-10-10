@@ -1388,6 +1388,32 @@ function M.draw(id,A)
    A.face({{8,2,8},p(3.6,2,j),p(3.6,2,i),{8,2,8}},dark,.6)
    A.face({{8,0,8},p(4.8,0,i),p(4.8,0,j),{8,0,8}},dark,.6)
   end
+ elseif id=='gb_ship_sideboard' then
+  local wall,rim,wood,edge,ceramic=T(0,0),T(6,0),T(4,28),T(1,9),T(9,18)
+  -- Restore the porthole wall independently above the low cabinet.
+  B(0,0,0,32,16,15.2,wall)
+  front({0,0,1,1},0,0,32,16,15.22)
+  for y=0,7 do
+   local inset=(y==0 or y==7)and 2 or((y==1 or y==6)and 1 or 0)
+   local x,w=4+inset,8-inset*2
+   B(x,15-y,15.2,x+w,16-y,15.98,rim)
+   front({x,y,w,1},x,15-y,x+w,16-y,15.99)
+  end
+  B(1,0,16,31,6.5,31,wood);front({1,24,30,8},1,0,31,6.5,31.02)
+  B(1,6.5,16,31,8,31,edge)
+  local function depth(y)return 16+(y-8)*15/16 end
+  for y=8,23 do
+   if y>=15 then
+    top({1,y,6,1},1,depth(y),7,depth(y+1),8.02)
+    top({24,y,1,1},7,depth(y),17,depth(y+1),8.02)
+    top({17,y,14,1},17,depth(y),31,depth(y+1),8.02)
+   else top({1,y,30,1},1,depth(y),31,depth(y+1),8.02)end
+  end
+  local z=depth(19)
+  B(10,8.02,z-2,14,10.5,z+2,ceramic)
+  top({11,18,1,1},10.7,z-1.3,13.3,z+1.3,10.52)
+  B(14,9.5,z-1,16,10.1,z+1,ceramic);B(14,8.4,z-1,16,9,z+1,ceramic)
+  B(15.4,9,z-1,16,9.5,z+1,ceramic)
  elseif id=='fr_space_exhibit' then
   local white,edge,dark,stand=T(19,8),T(13,7),T(13,12),T(6,23)
   B(2,0,3,46,2,30,stand);B(4,2,5,44,3,28,edge)

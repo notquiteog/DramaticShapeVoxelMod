@@ -769,3 +769,22 @@ Silver NNW first-person, Gold SW side and Crystal B1F rear. These show rounded
 sides and the recessed mouth while preserving adjacent floor. Bin closure/bounds
 and captain-chair regressions pass. Native TrashCanScript interaction was not
 triggered by these geometry fixtures; production scripts were not changed.
+
+## Gold/Silver/Crystal wall sideboards and overlapping portholes — October 10
+
+- [x] Five complete wall/cabinet drawings per edition: NNW/NNE/NE2, SW/SSW/NW2,
+  captain1. Separate G/S versus Crystal rows preserve the source table variant.
+- [x] Closed low drawer cabinet and raised cup below a separate16px wall with
+  stepped native porthole rim. These five portholes supplement the earlier61
+  complete wall-cell matches; they previously overlapped the cabinet's row.
+
+All editions' `gen2-ship-sideboards-final` pass the three maps, exact2/2/1
+placements, all four cells blocked and unchanged complete native grids.
+Inspected corrected Crystal NNW eye, Gold SW overview, Silver NNW side and
+Silver captain offset rear/side. First review found a border gap beneath the
+removed flat cup; row-specific native samples restore that border, protected by
+an atlas-UV regression and rerun captures. Rear wall faces are closed and join
+the existing wall; neighboring geometry naturally occludes some direct rear
+views. Sideboard, prior porthole and58 source/32 shared assembly checks pass.
+Doors/warps and walking chair drawings remain unchanged. This closes this
+specific overlap family, not all ship/Gen2 scenery coverage.
