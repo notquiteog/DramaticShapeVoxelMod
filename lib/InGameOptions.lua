@@ -66,6 +66,9 @@ function M.install(mod,schema,title,categories,liveSettings)
  if require('src.core.GameVersion').generation()==3 then
   -- Game3 uses ctx-based native pages and does not dispatch ui.options.rows.
   local Rows=require('src.ui.game3.option_rows')
+  if mod.read then
+   assert((loadstring or load)(assert(mod:read('lib/NativeOptionsOverflow.lua')),'@native_options_overflow'))()(mod,function()return active end)
+  end
   -- Hot reload replaces this mod's owner without disturbing another mod's
   -- native page. Old composed wrappers become inert and simply delegate.
   Rows.modSettingsPages=Rows.modSettingsPages or {}
