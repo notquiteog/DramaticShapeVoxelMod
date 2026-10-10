@@ -1,3 +1,10 @@
+# Birch southeast workstation and cupboard — 2026-10-09
+
+Mirrored native workstation and blocked-cell cupboard modeled for RS/E.
+All-angle/southeast eye renders inspected; scoped lab audits13/0 each and
+focused suites pass. Cupboard projected walking row stays clear. Remaining
+wall shelves/plants and other furnishings still native.
+
 # Birch south book stacks — 2026-10-09
 
 Closed layered books preserve native red/dark/blue covers and pale page edges.

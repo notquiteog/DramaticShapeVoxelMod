@@ -487,3 +487,14 @@ the projected floor and lower books from each top cover. RS/E dedicated low-eye
 and orbit views inspected; scoped lab audits11/0 each. Hoenn/RS suites pass,
 including exact stack/adjacent-chair bounds. Other workstation variants and
 side equipment remain unfinished; no gameplay or save changes.
+
+
+## Verified batch: Birch southeast workstation and side cupboard
+
+Separate native mirrored workstation pattern faces its adjacent chair; source
+terminal and desktop art remain distinct from the southwest model. The adjoining
+gold cupboard uses only its blocked lower cell, leaving its projected upper
+walking cell open. RS/E orbit and southeast-eye views inspected; scoped lab
+audits13/0 each. Hoenn/RS/designed suites pass, including cupboard projection
+regression and full source precedence. Remaining wall shelves, plants and
+other furnishings are still native; no interaction or full-coverage claim.
