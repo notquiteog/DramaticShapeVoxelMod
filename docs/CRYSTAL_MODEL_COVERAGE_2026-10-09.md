@@ -422,3 +422,22 @@ were moved nearer to see the model behind room-wall occlusion. First-person
 
 Focused workstation/clock/source/whole-furniture suites pass. Original chairs,
 room-wall/stair appearance and non-Mansion workstations remain separate work.
+
+## Gold/Silver/Crystal Kurt's tall bookcases
+
+- [x] The legacy `traditional_drawers` depth recipe is actually two-tier
+  book shelving. Retained its stable ID but replaced generic split crops with
+  two rows of five original spines, lower storage front and the native wooden
+  projected lid. Cases, shelves, contents, backs and undersides are enclosed.
+- [x] Existing authored Violet drawers/hutch were inspected and retained;
+  this batch does not replace those separate source drawings.
+
+Compared independent Kurt source renders and metatile26 in all three games.
+Baseline `crystal-gen2-traditional-before`. Final
+`{gold,silver,crystal}-gen2-traditional-tall-books` asserts2 racks per game,
+blocked lower source cells and unchanged native grids. Crystal overview and
+Silver rear inspected. Initial eye/side cameras were obstructed by the native
+NPC/hutch; `crystal-gen2-traditional-tall-books-final` shifts the player to
+walkable(2,3) and camera nearer the cases. Inspected clear eye/side views.
+Five targeted furniture/source suites pass. Other traditional furniture,
+wallpaper and the apparent wall-picture/table mismatch remain open.

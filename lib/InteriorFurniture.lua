@@ -1735,6 +1735,25 @@ function M.draw(id,A)
     B(7,bottom+3,f,9,bottom+4,f+.65,dark)
    end
   end
+ elseif id=='gb_traditional_tall_books' then
+  -- Kurt's tall rack: two tiers of five original spines over storage doors.
+  -- The top source row is the polished projected lid, not another shelf.
+  local wood,dark=T(4,4),T(2,10)
+  B(1,0,20,15,24,21,wood)
+  B(1,0,21,2,24,30,wood);B(14,0,21,15,24,30,wood)
+  B(2,0,21,14,8,30,wood);front({1,24,14,8},1,0,15,8,30.02)
+  for _,tier in ipairs({{8,18},{16,10}})do
+   local base,sy=tier[1],tier[2]
+   B(2,base-1,21,14,base,30,wood)
+   B(2,base,21,14,base+7,22,dark)
+   for _,book in ipairs({{3,1},{5,1},{7,1},{9,2},{12,1}})do
+    local x,w=book[1],book[2]
+    B(x,base,22,x+w,base+6,29.5,T(x,sy))
+    front({x,sy,w,5},x,base,x+w,base+6,29.52)
+   end
+  end
+  B(.5,23,19.5,15.5,24.5,30.5,wood)
+  top({1,1,14,6},.5,19.5,15.5,30.5,24.52)
  elseif id=='gb_traditional_books' then
   shelves(1,13,14,10,21,{{9,18,{1,9,14,6}}},T(1,1),T(3,12),true)
   B(2,2,14,14,8,23,T(1,1));front({1,17,14,6},2,2,14,8,23.02)
