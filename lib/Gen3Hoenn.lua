@@ -364,6 +364,7 @@ end
 local center='building__pokemon_center'
 local lab='building__lab'
 add('birch_south_book_stacks',lab,{{0x248},{0x248}},'labStacks')
+for _,mid in ipairs{0x29a,0x232}do add('birch_emerald_book_stack_'..mid,lab,{{mid}},'labStacks',{stackCount=1})end
 add('birch_floor_plant',lab,{{0x22e}},'plant',{h=16,cutout=true})
 add('birch_side_cupboard',lab,{{0x23a},{0x242}},'labSideCabinet')
 add('birch_southeast_workstation',lab,{{0x23b},{0x243},{0x24b}},'labWorkstation',{faceLeft=true})

@@ -1,3 +1,10 @@
+# Emerald northeast individual book stacks — 2026-10-09
+
+Separate Emerald29a/232 family matches its native three-stack arrangement.
+Source/all-angle/close-eye review passes; scoped audit18/0. RS remains gated
+out and retains its own17/0 layout. Focused suites pass; green walking seats
+remain native and wider Gen3 coverage remains unfinished.
+
 # RS east small lab table and edition audit correction — 2026-10-09
 
 Table/device modeled on blocked cell; RS orbit/eye renders inspected, audits

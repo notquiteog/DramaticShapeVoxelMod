@@ -521,3 +521,13 @@ the count difference as plant placement; plant locations match. Both east
 stack/table recipes are now explicitly RS-only and tested against Emerald
 dispatch. Emerald northeast book stacks remain native for separate modeling.
 Focused RS/Hoenn/additional suites pass; no gameplay/save changes.
+
+
+## Verified batch: Emerald northeast individual book stacks
+
+Emerald's29a/232 source cells now form three separate closed stacks in their
+actual native arrangement. These family names remain gated out of RS. Native
+source crop and Emerald front/rear/side/close-eye render inspected; scoped lab
+audit18/0. RS/Hoenn suites pass including single-cell stack bounds; RS remains
+17/0 at its previous rendered checkpoint. Walkable green seats remain native,
+and this room check does not certify full Gen3 interiors or gameplay traversal.

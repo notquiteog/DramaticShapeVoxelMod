@@ -26,7 +26,7 @@ function M.append(p,source,box,sample,emit)
  end
  if p.recipe.kind=='labStacks' then
   local function color(px,py)return sample(px,py+(p.recipe.sourceOffset or 0))end
-  for row=0,1 do
+  for row=0,(p.recipe.stackCount or 2)-1 do
    local n=z+row*16+(p.recipe.stackOffset or 0)
    local covers={color(4,12),color(8,10),color(7,4)}
    for layer=0,2 do
