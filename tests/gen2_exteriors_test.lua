@@ -30,6 +30,24 @@ for _,q in ipairs(partial.objectQuads)do
  assert(not(q[1][3]==62 and q[2][3]==62 and q[3][3]==62 and q[4][3]==62),'partial door carved a recess')
 end
 drawing[8][4]=58
+drawing[5][3],drawing[5][4]=38,38
+local windows={gen2=true,outdoor=true,skip={},ground={},objectQuads={}}
+M.build(windows,map)
+local panes=0
+for _,q in ipairs(windows.objectQuads)do
+ if q[1][3]==63 and q[2][3]==63 and q[3][3]==63 and q[4][3]==63 then
+  panes=panes+1
+  for _,v in ipairs(q)do assert(v[1]>=16 and v[1]<=32 and v[2]>=24 and v[2]<=32,'window band moved')end
+ end
+end
+assert(panes==2,'paired native window band not recessed as complete source art')
+drawing[5][4]=7
+local single={gen2=true,outdoor=true,skip={},ground={},objectQuads={}}
+M.build(single,map)
+for _,q in ipairs(single.objectQuads)do
+ assert(not(q[1][3]==63 and q[2][3]==63 and q[3][3]==63 and q[4][3]==63),'single window tile carved a paired opening')
+end
+drawing[5][3]=7
 drawing[8][8]=5;assert(#M.placements(map)==0,'incomplete facade swallowed grass')
 drawing[8][8]=22;map.tileset.id='TILESET_LAB';assert(#M.placements(map)==0,'interior tile IDs became an exterior')
 drawing={{5,6,7,7,7,7,8,9},{21,22,23,23,23,23,24,25},

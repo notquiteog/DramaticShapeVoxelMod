@@ -114,15 +114,26 @@ function M.build(S,map)
     S.skip[key(x,y)]=true;S.ground[key(x,y)]=g.groundTile or 5
    end end
    -- Complete Johto door drawings are inset as one opening. Tile IDs alone
-   -- are insufficient: all four pixels groups must agree before carving.
-   local doors,doorTiles={},{}
+   -- are insufficient: all four tile quadrants must agree before carving.
+   local openings,openingTiles={},{}
    if ts.id=='TILESET_JOHTO' or ts.id=='TILESET_JOHTO_MODERN' then
     for by=0,H/8-2 do for bx=0,g.width-2 do
      local xx,yy=g.x+bx,g.y+g.roofRows+by
      if map:tileAt(xx,yy)==55 and map:tileAt(xx+1,yy)==56
       and map:tileAt(xx,yy+1)==57 and map:tileAt(xx+1,yy+1)==58 then
-      doors[#doors+1]={bx=bx,by=by}
-      for dy=0,1 do for dx=0,1 do doorTiles[(by+dy)*g.width+bx+dx]=true end end
+      openings[#openings+1]={bx=bx,by=by,rows=2,inset=2}
+      for dy=0,1 do for dx=0,1 do openingTiles[(by+dy)*g.width+bx+dx]=true end end
+     end
+    end end
+   end
+   -- Paired native 8px window panels form one framed band. Recognize only
+   -- complete pairs; a lone matching tile is not enough to cut the facade.
+   if ts.id=='TILESET_JOHTO' or ts.id=='TILESET_JOHTO_MODERN' then
+    for by=0,H/8-1 do for bx=0,g.width-2 do
+     if not openingTiles[by*g.width+bx] and map:tileAt(g.x+bx,g.y+g.roofRows+by)==38
+      and map:tileAt(g.x+bx+1,g.y+g.roofRows+by)==38 then
+      openings[#openings+1]={bx=bx,by=by,rows=1,inset=1}
+      openingTiles[by*g.width+bx]=true;openingTiles[by*g.width+bx+1]=true
      end
     end end
    end
@@ -132,22 +143,22 @@ function M.build(S,map)
     local top=H-by*8;local z=z0+D
     -- The native POKE/MART plates sit just in front of the brickwork.
     if t==8 or t==9 or t==24 or t==25 then z=z+.18 end
-    if not doorTiles[by*g.width+bx] then
+    if not openingTiles[by*g.width+bx] then
      face({{x,top,z},{x+8,top,z},{x+8,top-8,z},{x,top-8,z}},t)
     end
    end end
-   for _,door in ipairs(doors)do
-    local l,hi,z=x0+door.bx*8,H-door.by*8,z0+D
-    local r,lo=l+16,hi-16
-    for dy=0,1 do for dx=0,1 do
+   for _,opening in ipairs(openings)do
+    local l,hi,z=x0+opening.bx*8,H-opening.by*8,z0+D
+    local r,lo,back=l+16,hi-opening.rows*8,z-opening.inset
+    for dy=0,opening.rows-1 do for dx=0,1 do
      local x,top=l+dx*8,hi-dy*8
-     face({{x,top,z-2},{x+8,top,z-2},{x+8,top-8,z-2},{x,top-8,z-2}},
-      map:tileAt(g.x+door.bx+dx,g.y+g.roofRows+door.by+dy))
+     face({{x,top,back},{x+8,top,back},{x+8,top-8,back},{x,top-8,back}},
+      map:tileAt(g.x+opening.bx+dx,g.y+g.roofRows+opening.by+dy))
     end end
-    face({{l,hi,z},{l,hi,z-2},{l,lo,z-2},{l,lo,z}},g.wallTile,.8)
-    face({{r,hi,z-2},{r,hi,z},{r,lo,z},{r,lo,z-2}},g.wallTile,.86)
-    face({{l,hi,z},{r,hi,z},{r,hi,z-2},{l,hi,z-2}},g.wallTile,.7)
-    face({{l,lo,z-2},{r,lo,z-2},{r,lo,z},{l,lo,z}},g.baseTile or 2,.9)
+    face({{l,hi,z},{l,hi,back},{l,lo,back},{l,lo,z}},g.wallTile,.8)
+    face({{r,hi,back},{r,hi,z},{r,lo,z},{r,lo,back}},g.wallTile,.86)
+    face({{l,hi,z},{r,hi,z},{r,hi,back},{l,hi,back}},g.wallTile,.7)
+    face({{l,lo,back},{r,lo,back},{r,lo,z},{l,lo,z}},opening.rows==2 and (g.baseTile or 2) or g.wallTile,.9)
    end
    -- Repeat the actual wall material around both sides and the back. No
    -- mirrored doors, huge stretched trim or roof artwork on vertical walls.

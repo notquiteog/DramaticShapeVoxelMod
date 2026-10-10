@@ -82,3 +82,17 @@ art differs between games, so whole-map parity is not assumed. Earlier
 only, not a walking fixture. `gen2_exteriors_test` passes with complete/partial
 opening assertions and existing Kanto/roof/wall preservation checks. Scratch:
 `results/{game}-gen2-door-recess`, `results/{game}-gen2-city-model-source`.
+
+## Paired Johto window bands
+
+- [x] Complete paired tile38 bands now sit 1px inward from the brick facade,
+  with closed reveals and sill. Their full native 16x8 drawing remains in its
+  original vertical plane and position. Lone unmatched tiles stay unchanged.
+
+`gen2-window-bands-eye.lua`: Gold/Silver/Crystal Goldenrod `(12,23)` and
+Olivine `(8,23)`, native walkable positions, overview/orbit/first-person.
+Final fixture includes both full native tile and collision-grid invariants.
+Inspected Gold and Crystal Goldenrod eye views, Silver Olivine eye view; all
+six scenes passed. Earlier eye views were too low to show whole windows and
+were replaced with upward camera pitch. Existing exterior/roof suites pass,
+including paired and partial band regressions. No collision or warp changes.
