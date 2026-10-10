@@ -160,8 +160,8 @@ independently. Runtime outputs: `results/{game}-gen2-new-fixture-census`.
   planter/leaf model rather than cuboid tree drawings.
 - [ ] Underground stools intentionally remain flat: native collision0 permits
   walking through those drawings. Raising stools would obstruct the aisle.
-- [ ] Underground static overview is obscured by an existing gray enclosure
-  ceiling. First-person/orbit inspections work; ceiling gate fix is separate.
+- [x] Underground static overview ceiling obstruction: fixed by the camera
+  gate follow-up below.
 
 Recipes are explicitly scoped to GOLDENROD_UNDERGROUND, which uses TILESET_GATE
 (the similarly named warehouse uses TILESET_UNDERGROUND). An initial wrong
@@ -174,3 +174,18 @@ full native tile/collision invariants at walkable `(4,12)`. All report 3 stalls,
 Gold side views. Counts are assembly matches, not all-world visual coverage.
 Native stool/counter collision examined in `gen2-underground-footprints`.
 Underground, complete-furniture and existing depth-furniture tests pass.
+
+## Enclosure camera gate
+
+Gen2InteriorShell now requires ThirdPerson.selected() before interpreting a
+hidden player as a collapsed boom. Previously, showsPlayer()==false outside
+3RD enabled the ceiling in ordinary static views. The change keeps static
+cutaways open, preserves first-person ceilings and preserves collapsed-boom
+ceilings. No camera or collision parameters change.
+
+Focused camera-gate and existing depth-style tests pass. Gold/Silver/Crystal
+`gen2-underground-audit.lua` succeeds with 3/9/3 assembly counts, full native
+tile/collision invariants, and blocked-cell checks for every matched new
+Underground counter/plant. Inspected Crystal/Silver overview (gray obstruction
+removed), Crystal/Gold first-person (ceiling retained). This is direct evidence
+for Underground; other dungeon maps still need individual visual review.

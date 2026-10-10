@@ -69,7 +69,11 @@ end
 -- same signal, as CommunityFlora.boomedOut().
 local function thirdPersonCollapsed()
   local ok, ThirdPerson = pcall(V.require, 'ThirdPerson')
-  if not (ok and ThirdPerson and ThirdPerson.showsPlayer) then return false end
+  if not (ok and ThirdPerson and ThirdPerson.showsPlayer and ThirdPerson.selected) then return false end
+  -- showsPlayer() is also false outside 3RD. That does not mean the boom
+  -- collapsed: static overview cameras must remain above an open cutaway.
+  local selectedOK, selected = pcall(ThirdPerson.selected)
+  if not (selectedOK and selected) then return false end
   local ran, shows = pcall(ThirdPerson.showsPlayer)
   return (ran and not shows) and true or false
 end
