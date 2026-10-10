@@ -13,8 +13,8 @@ function M.active()
 end
 function M.exteriorRecipes()return rubySapphire() and RS().exteriors(M.exteriors) or M.exteriors end
 function M.recipeActive(r)
- -- RS interiors require their own source/render batches before opt-in.
- if rubySapphire() then return false end
+ -- RS interiors opt in only after their own source/render batches.
+ if rubySapphire() then return RS().recipeActive(r) end
  return M.active()==(r.family=='rse')
 end
 local trees={}
@@ -381,8 +381,8 @@ add('hoenn_center_map',center,{{0x20d,0x20e},{0x215,0x216}},'cabinet',{h=27,base
 add('hoenn_center_medicine',center,{{0x269,0x26a},{0x271,0x272},{0x279,0x27a}},'designed',{design='em_center_medicine'})
 add('hoenn_center_terminal',center,{{0x25b}},'designed',{design='em_center_terminal'})
 add('hoenn_center_table',center,{{0x23d,0x23e},{0x245,0x246}},'table',{h=7,top=26})
-for _,mid in ipairs{0x226,0x234}do add('hoenn_cushion_'..mid,center,{{mid}},'centerSeat',{h=2.5})end
-add('hoenn_center_plant',center,{{0x209},{0x211},{0x219}},'plant',{h=26,cutout=true})
+for _,mid in ipairs{0x226,0x234}do add('hoenn_cushion_'..mid,center,{{mid}},'centerSeat',{h=1.25,walkablePad=true})end
+add('hoenn_center_plant',center,{{0x209},{0x211},{0x219}},'plant',{h=26,cutout=true,depthOffset=-16})
 add('hoenn_link_plant',center,{{0x25e},{0x266}},'plant',{h=24,cutout=true})
 for _,a in ipairs{{0x208,0x210},{0x20b,0x213},{0x20f,0x217},{0x23f,0x247},{0x25c,0x264}}do
  add('hoenn_center_wall_'..a[2],center,{{a[1]},{a[2]}},'centerWall')

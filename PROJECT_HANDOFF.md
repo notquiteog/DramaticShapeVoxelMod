@@ -1,3 +1,12 @@
+# Ruby/Sapphire Center fixtures and native apron clearance — 2026-10-09
+
+Fifteen checked Center families enable19fixtures per RS edition; separate native
+source comparison plus orbit/eye renders inspected. Plant moved from walkable
+projected apron into a blocked-cell wall recess; Hoenn cushions use shallow floor
+relief. Same source corrections verified in Emerald. Six focused suites pass;
+RS local face audit19/0 each. Emerald20/2 flags are unchanged escalator lower
+cells, pending separate stair audit. Detailed scope/evidence in Gen3 ledger.
+
 # Emerald Littleroot roof adoption — 2026-10-09 (unreleased)
 
 Separately verified Emerald source/render adopts the closed tiered home roof,

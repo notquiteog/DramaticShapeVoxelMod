@@ -107,6 +107,13 @@ function M.append(p,source,box,sample,emit,uvFor)
   for _,xx in ipairs({6,10,14,18,22})do box(x+xx,7,z+30,x+xx+2,8,z+30.4,shadow)end
   return true
  elseif r.kind=='centerSeat' then
+  local scale=r.walkablePad and .48 or 1
+  local originalBox,originalSource=box,source
+  box=function(a,b,c,d,e,f,t)return originalBox(a,b*scale,c,d,e*scale,f,t)end
+  source=function(sx,sy,sw,sh,a,b,c,d)
+   for _,q in ipairs({a,b,c,d})do q[2]=q[2]*scale end
+   return originalSource(sx,sy,sw,sh,a,b,c,d)
+  end
   local frame,cushion=sample(4,13),sample(8,5)
   box(x+3,0,z+3,x+13,.7,z+13,frame)
   box(x+2,.7,z+2,x+14,1.8,z+13,cushion)

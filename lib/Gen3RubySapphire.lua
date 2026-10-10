@@ -5,6 +5,12 @@ local exteriorNames={oldale_house=true,oldale_mart=true,oldale_center=true,
  petalburg_city_mart=true,petalburg_city_center=true,petalburg_city_gym=true,
  petalburg_city_wide_home=true,petalburg_city_home=true,birch_lab=true,
  littleroot_player_house=true,littleroot_rival_house=true}
+local furnitureNames={center_healer=true,center_screen=true,hoenn_center_front_desk=true,
+ hoenn_center_left=true,hoenn_center_right=true,hoenn_center_pc=true,
+ hoenn_center_map=true,hoenn_center_medicine=true,hoenn_center_terminal=true,
+ hoenn_center_table=true,hoenn_cushion_550=true,hoenn_cushion_564=true,
+ hoenn_center_plant=true,hoenn_center_wall_528=true,hoenn_center_wall_535=true}
+function M.recipeActive(r)return r.family=='rse' and r.pair=='building__pokemon_center' and furnitureNames[r.name]==true end
 local trees={}
 for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1e4,0x1e5,0x1e6,0x1e7}do trees[id]=true end
 local roots={[0x1dc]=true,[0x1e4]=true,[0x1e6]=true}

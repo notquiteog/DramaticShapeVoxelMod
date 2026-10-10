@@ -12,7 +12,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  assert(S.of('general','petalburg',1,0x10,0).kind=='water')
  assert(S.of('general','petalburg',0x2a,0x2a,0).kind=='flat','seaweed became Kanto stairs')
  assert(S.of('building','facility',0x2f8,0,7).kind=='flat','unreviewed Emerald interior leaked')
- for _,r in ipairs(H.recipes)do assert(not H.recipeActive(r))end
+ local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center')end end;assert(approved==15)
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)
@@ -31,6 +31,18 @@ for _,game in ipairs({'ruby','sapphire'})do
   for _,c in pairs(cells)do c.civic=nil end
   cells['1:2'].mid=1;assert(#C.prepare(cells,{}, {})==0,'partial RS facade claimed')
  end
+end
+-- Projected plant aprons and floor cushions must remain traversable.
+local F=V.require('Gen3Furniture')
+for _,game in ipairs({'ruby','sapphire','emerald'})do
+ version=game
+ for _,r in ipairs(H.recipes)do if r.name=='hoenn_center_plant' or r.kind=='centerSeat' then
+  local cells={};for yy,row in ipairs(r.rows)do for xx,mid in ipairs(row)do cells[(xx-1)..':'..(yy-1)]={cx=xx-1,cy=yy-1,mid=mid,pair=r.pair,primary='building',ts={}}end end
+  local list=F.extract(cells);assert(#list==1)
+  F.append(list[1],function(v)for _,q in ipairs(v)do
+   if r.kind=='centerSeat' then assert(q[2]<=1.5,'floor cushion blocks walking cell')else assert(q[3]<32,'plant blocks projected apron')end
+  end end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
+ end end
 end
 version='emerald';assert(#H.exteriorRecipes()>3 and H.recipeActive(H.recipes[1]))
 version='firered';assert(not H.active() and H.recipeActive({}) and not H.recipeActive({family='rse'}))

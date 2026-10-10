@@ -303,3 +303,24 @@ tier geometry, sampling Emerald's own orange shingles and gold caps. Its source
 was separately inspected before adoption. `emerald-rse-littleroot-homes-review`
 front/side/eye renders inspected; focused Hoenn/RS tests pass. Native census
 remains77/0. This supersedes the preceding note about Emerald's old gable.
+
+
+## Verified batch: Ruby/Sapphire Center ground-floor fixtures
+
+Fifteen complete source families now enable nineteen Oldale Center fixtures
+per edition: healer, monitor, counter/returns, PCs, wall map, medicine cabinet,
+glass table, shallow cushion pads, plant and two wall segments. Independently
+captured RS/Emerald Oldale Center native images are pixel-identical. This does
+not enable unreviewed upper-floor furniture or escalator animation families.
+
+The footprint audit found the existing plant volume occupied its native
+walkable projected apron; it now sits sixteen pixels farther back on the
+blocked cell with a bounded north-wall recess so it remains visible. Hoenn
+cushions now use at most1.21px floor relief instead of2.52px. Both corrections
+also apply to Emerald's identical source. Production `{ruby,sapphire,emerald}`
+`-rse-center-interior-review` orbit and eye renders inspected; six focused suites
+pass, including plant-apron/pad-height regressions. Dummy-UV face footprint check
+reports RS19fixtures/0flags. Emerald20fixtures/2flags are both its unchanged
+escalator lower cells (0,7)/(1,7), requiring a separate stair traversal/geometry
+audit. This test is scoped to authored fixtures and does not certify every room.
+All runs used isolated fresh fixtures and exited; collisions/warps/saves unchanged.

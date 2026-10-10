@@ -212,6 +212,9 @@ local function build(req,cache,previous)
  local placements=V.require('InteriorFurniture').placement
  for _,p in ipairs(props)do
   local placement=placements[p.recipe.design]
+  if p.recipe.kind=='plant' and p.recipe.depthOffset then
+   placement={back=p.d-16+p.recipe.depthOffset}
+  end
   if p.recipe.name=='center_vending' or p.recipe.name=='museum_bookcase' then
    placement={back=p.recipe.frontOffset-p.recipe.depth}
   end

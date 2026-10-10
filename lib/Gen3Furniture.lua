@@ -214,6 +214,7 @@ function M.append(p,emit,uvFor)
    box(x+sx,y0,z+8-depth/2,x+sx+1,y1,z+8+depth/2,tex(sx,sy))
   end end end
  elseif r.kind=='plant' then
+  z=z+(r.depthOffset or 0) -- projected bottom rows can be native walking floor
   if V and p.ts.imageData then
    local Plant=V.require('Gen2Planter')
    local pixel=Plant.cutout(p.w,p.d,function(px,py)
