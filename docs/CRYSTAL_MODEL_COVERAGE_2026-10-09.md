@@ -61,3 +61,24 @@ Silver Goldenrod overview and side. Native layout and elevator-walkability
 checks passed. Same three test suites pass, including overlap surface direction
 and bounds. Source and final captures remain scratch-only. Other store props
 and other map families are still not signed off.
+
+## Johto brick-building entrances
+
+- [x] Complete 55/56-above-57/58 Johto doors now sit in 2px inward recesses,
+  with closed jamb/reveal, lintel and threshold surfaces. Original door art
+  stays in order and at its original facade coordinates. Partial drawings and
+  other tileset families do not carve openings. No outward geometry is added.
+- [ ] Other door/window families, major city landmarks and remaining generic
+  scenery require further review; this entrance pass is not full exterior
+  coverage.
+
+`gen2-door-recess.lua` verified walkable camera cells in Goldenrod `(14,23)`
+(facing the small brick house) and Olivine `(19,19)` (Mart), Gold/Silver/Crystal.
+Four views each; native tile-grid invariants passed. Inspected Crystal both
+first-person entrances, Silver Olivine first-person and Gold Goldenrod overview.
+Native source city images were inspected for all three versions; larger map
+art differs between games, so whole-map parity is not assumed. Earlier
+`gen2-city-model-review` used unvalidated camera positions and is survey evidence
+only, not a walking fixture. `gen2_exteriors_test` passes with complete/partial
+opening assertions and existing Kanto/roof/wall preservation checks. Scratch:
+`results/{game}-gen2-door-recess`, `results/{game}-gen2-city-model-source`.

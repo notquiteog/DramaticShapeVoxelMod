@@ -113,14 +113,42 @@ function M.build(S,map)
    for y=g.y,g.y+g.depth-1 do for x=g.x,g.x+g.width-1 do
     S.skip[key(x,y)]=true;S.ground[key(x,y)]=g.groundTile or 5
    end end
+   -- Complete Johto door drawings are inset as one opening. Tile IDs alone
+   -- are insufficient: all four pixels groups must agree before carving.
+   local doors,doorTiles={},{}
+   if ts.id=='TILESET_JOHTO' or ts.id=='TILESET_JOHTO_MODERN' then
+    for by=0,H/8-2 do for bx=0,g.width-2 do
+     local xx,yy=g.x+bx,g.y+g.roofRows+by
+     if map:tileAt(xx,yy)==55 and map:tileAt(xx+1,yy)==56
+      and map:tileAt(xx,yy+1)==57 and map:tileAt(xx+1,yy+1)==58 then
+      doors[#doors+1]={bx=bx,by=by}
+      for dy=0,1 do for dx=0,1 do doorTiles[(by+dy)*g.width+bx+dx]=true end end
+     end
+    end end
+   end
    -- Front artwork is kept in source order, including brick, doors, signage.
    for by=0,H/8-1 do for bx=0,g.width-1 do
     local x,t=x0+bx*8,map:tileAt(g.x+bx,g.y+g.roofRows+by)
     local top=H-by*8;local z=z0+D
     -- The native POKE/MART plates sit just in front of the brickwork.
     if t==8 or t==9 or t==24 or t==25 then z=z+.18 end
-    face({{x,top,z},{x+8,top,z},{x+8,top-8,z},{x,top-8,z}},t)
+    if not doorTiles[by*g.width+bx] then
+     face({{x,top,z},{x+8,top,z},{x+8,top-8,z},{x,top-8,z}},t)
+    end
    end end
+   for _,door in ipairs(doors)do
+    local l,hi,z=x0+door.bx*8,H-door.by*8,z0+D
+    local r,lo=l+16,hi-16
+    for dy=0,1 do for dx=0,1 do
+     local x,top=l+dx*8,hi-dy*8
+     face({{x,top,z-2},{x+8,top,z-2},{x+8,top-8,z-2},{x,top-8,z-2}},
+      map:tileAt(g.x+door.bx+dx,g.y+g.roofRows+door.by+dy))
+    end end
+    face({{l,hi,z},{l,hi,z-2},{l,lo,z-2},{l,lo,z}},g.wallTile,.8)
+    face({{r,hi,z-2},{r,hi,z},{r,lo,z},{r,lo,z-2}},g.wallTile,.86)
+    face({{l,hi,z},{r,hi,z},{r,hi,z-2},{l,hi,z-2}},g.wallTile,.7)
+    face({{l,lo,z-2},{r,lo,z-2},{r,lo,z},{l,lo,z}},g.baseTile or 2,.9)
+   end
    -- Repeat the actual wall material around both sides and the back. No
    -- mirrored doors, huge stretched trim or roof artwork on vertical walls.
    for by=0,H/8-1 do
