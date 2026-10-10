@@ -324,3 +324,21 @@ reports RS19fixtures/0flags. Emerald20fixtures/2flags are both its unchanged
 escalator lower cells (0,7)/(1,7), requiring a separate stair traversal/geometry
 audit. This test is scoped to authored fixtures and does not certify every room.
 All runs used isolated fresh fixtures and exited; collisions/warps/saves unchanged.
+
+
+## Verified follow-up: Hoenn escalator approach clearance
+
+The two Emerald audit flags came from the flight/rail depth extending into the
+native walkable lower drawing row. Hoenn flight depth is now confined to its
+middle blocked/warp row; the lower projected apron becomes floor. All native
+source samples and collision/warp metadata remain unchanged. The three upward
+animation patterns are now enabled in RS after separately inspecting both
+editions' composited frame strips (`escalator-frames.png`). Downward RS patterns
+remain disabled pending upper-floor source/runtime review.
+
+Final RS/Emerald orbit renders inspected in the same Center review directories;
+the authored face audit now reports20fixtures/0flags in each game. Frame-family
+and center suites pass, including an explicit flight-depth boundary regression.
+This supersedes the prior Emerald20/2 result. Normal input/warp traversal was
+not exercised by these controlled visual fixtures; gameplay implementations are
+unchanged. All three engines exited and player saves remain untouched.

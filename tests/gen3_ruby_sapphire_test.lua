@@ -12,7 +12,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  assert(S.of('general','petalburg',1,0x10,0).kind=='water')
  assert(S.of('general','petalburg',0x2a,0x2a,0).kind=='flat','seaweed became Kanto stairs')
  assert(S.of('building','facility',0x2f8,0,7).kind=='flat','unreviewed Emerald interior leaked')
- local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center')end end;assert(approved==15)
+ local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center')end end;assert(approved==18)
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)
@@ -44,6 +44,12 @@ for _,game in ipairs({'ruby','sapphire','emerald'})do
   end end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
  end end
 end
+for _,r in ipairs(H.recipes)do if r.kind=='escalator' then
+ F.append({cx=0,cy=0,w=32,d=48,recipe=r,ts={}},function(v)
+  local high=-math.huge;for _,q in ipairs(v)do high=math.max(high,q[2])end
+  if high>1.5 then for _,q in ipairs(v)do assert(q[3]>=16 and q[3]<33,'Hoenn flight occupies walking apron')end end
+ end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
+end end
 version='emerald';assert(#H.exteriorRecipes()>3 and H.recipeActive(H.recipes[1]))
 version='firered';assert(not H.active() and H.recipeActive({}) and not H.recipeActive({family='rse'}))
 print('Ruby/Sapphire checked-family dispatch, full source matches, native rear lanes and edition isolation PASS')

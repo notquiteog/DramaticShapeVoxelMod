@@ -77,6 +77,14 @@ function M.append(p,source,box,sample,emit,uvFor)
    emit({{x+a,0,z+b},{x+c,0,z+b},{x+c,0,z+d},{x+a,0,z+d}},floor,1)
   end
   ground(0,0,32,16);ground(0,40,32,48);ground(24,16,32,40)
+  if r.family=='rse' then
+   -- Hoenn's lower drawing row is walking floor, not flight depth.
+   -- Keep the full native treads/rails inside the blocked/warp middle row.
+   local originalBox=box
+   local function depth(v)return z+16+(v-z-16)*2/3 end
+   box=function(a,b,n,c,e,f,t)return originalBox(a,b,depth(n),c,e,depth(f),t)end
+   ground(0,32,32,40)
+  end
   local function height(u)return (r.down and -1 or 1)*math.max(0,(24-u)*.5)end
   for u=0,22,2 do
    local h=height(u+1)

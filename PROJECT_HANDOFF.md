@@ -1,3 +1,12 @@
+# Hoenn escalator projected approach clearance — 2026-10-09
+
+Flight/rails now remain within the native middle blocked/warp row instead of
+occupying the lower walkable source projection. Full native material samples
+retained. RS three upward frame patterns separately source-inspected and enabled;
+RS downward patterns remain gated. Production RS/E orbit renders inspected;
+local authored face audit now20/0 each, superseding prior Emerald20/2. Focused
+frame/depth tests pass; normal input/warp traversal not exercised in this fixture.
+
 # Ruby/Sapphire Center fixtures and native apron clearance — 2026-10-09
 
 Fifteen checked Center families enable19fixtures per RS edition; separate native
