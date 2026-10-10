@@ -229,6 +229,13 @@ lighthouse[4].groundTiles=lighthouse[1].groundTiles;lighthouse[4].groundAligned=
 lighthouse[5]=item('crystal_ship_dining_table_gs',lighthouse[4].tiles,13,{},0)
 lighthouse[5].design='gb_ship_dining_table'
 lighthouse[5].groundTiles=lighthouse[1].groundTiles;lighthouse[5].groundAligned=true
+-- Small cabin tables omit the two central banquet rows in all editions.
+for _,variant in ipairs({{'',{{9,10,10,12},{25,26,44,28},{20,130,130,53},{11,128,129,11}}},
+ {'_gs',{{9,10,10,12},{25,26,44,28},{20,44,44,53},{11,59,60,11}}}})do
+ local t=item('crystal_ship_square_table'..variant[1],variant[2],13,{},0)
+ t.design='gb_ship_square_table';t.groundTiles=lighthouse[1].groundTiles;t.groundAligned=true
+ lighthouse[#lighthouse+1]=t
+end
 -- Complete machinery sections, ahead of the old facility cabinet crops.
 -- The narrow brass conduit belongs to the machine, not a shelf of books.
 local facility={

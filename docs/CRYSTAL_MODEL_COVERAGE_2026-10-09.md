@@ -675,3 +675,21 @@ actual rendered furniture. Final fixtures save the entered-map native reference.
 No global palette change was made; cold fixture palette behavior is not asserted
 as resolved. The beacon's Gold title label in Crystal images is runtime UI;
 GameVersion and imported Crystal native rows are asserted by the fixture.
+
+## Gold/Silver/Crystal small cabin tables — October 10
+
+- [x] Added the separate four-row Crystal and G/S drawings: three tables per
+  edition, NNW/NNE/NE tile(4,10) and SE/SSE/captain tiles(4,30),(8,30).
+- [x] Closed low tabletop, native wooden legs/stretcher, cream cup with dark
+  interior and open handle. Partitioned the tabletop artwork around the cup
+  removes its duplicate flat drawing without overlapping coplanar faces.
+
+Crystal `gen2-square-tables-before` confirms tall generic volumes at eye level.
+All editions' `gen2-square-tables-final` complete both maps, assert all four
+native cells blocked, exact1/2 placements and unchanged complete tile/collision
+arrays. Inspected final Crystal NNW eye, Gold SE side and Silver NNW rear.
+Source pixel samples corrected the initial dark cup/cream leg materials to
+native cream ceramic and wood. G/S live pink and Crystal blue surfaces follow
+those editions' actual atlas. Cup/closed-support/bounds regression and the
+previous dining suite pass. The ten-row banquet table and captain's desk remain
+separate gaps; this batch does not claim all cabin furniture complete.

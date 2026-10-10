@@ -1293,6 +1293,21 @@ function M.draw(id,A)
   B(2,5,14,30,6.5,15,wood)
   B(1,6.5,13,31,8,46,edge)
   top({1,1,30,37},1,13,31,46,8.02)
+ elseif id=='gb_ship_square_table' then
+  local edge,wood,ceramic=T(28,22),T(10,28),T(9,10)
+  for _,x in ipairs{2,28}do for _,z in ipairs{8,27}do B(x,0,z,x+2,6.5,z+2,wood)end end
+  B(2,5,8,30,6.5,9,wood)
+  B(1,6.5,7,31,8,30,edge)
+  -- Partition the cloth around the original cup mark: no duplicate flat cup
+  -- or coplanar overlay remains beneath the closed cup and open handle.
+  for _,r in ipairs{{1,1,6,22},{17,1,14,22},{7,1,10,6},{7,17,10,6}}do
+   top(r,r[1],7+(r[2]-1)*23/22,r[1]+r[3],7+(r[2]+r[4]-1)*23/22,8.02)
+  end
+  top({20,10,1,1},7,7+6*23/22,17,7+16*23/22,8.02)
+  B(10,8.04,15,14,10.5,19,ceramic)
+  top({11,10,1,1},10.7,15.7,13.3,18.3,10.52)
+  B(14,9.5,16,16,10.1,18,ceramic);B(14,8.4,16,16,9,18,ceramic)
+  B(15.4,9,16,16,9.5,18,ceramic)
  elseif id=='fr_space_exhibit' then
   local white,edge,dark,stand=T(19,8),T(13,7),T(13,12),T(6,23)
   B(2,0,3,46,2,30,stand);B(4,2,5,44,3,28,edge)
