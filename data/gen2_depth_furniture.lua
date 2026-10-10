@@ -80,7 +80,8 @@ return {
   prop('game_corner_statue',29,{2,0,2,4},'statue',1),
  },
  TILESET_TRAIN_STATION={
-  prop('station_seat',1,{0,0,2,2},'seat',3),
+  -- Seat collision178 permits entry while blocking the north edge.
+  -- Preserve native floor art and directional walking permission.
   prop('station_flower_box',12,left,'planter',3),
   prop('station_tree_planter',26,left,'planter',25),
   prop('station_statue',29,left,'statue',28),

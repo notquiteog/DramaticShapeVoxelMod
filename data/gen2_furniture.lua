@@ -247,14 +247,14 @@ for i,r in ipairs(corner)do
  r.design=({'gb_corner_pair','gb_corner_cap','gb_corner_end','fr_corner_stool'})[i]
  r.groundTiles={{1,16},{17,18}};r.groundAligned=true
 end
+-- Native seat cells permit walking; only the solid rails/fence are modeled.
 local station={
- item('crystal_station_seat',{{64,65},{66,67}},61,{},0),
  item('crystal_station_platform_fence',{{8},{24}},62,{},0),
  item('crystal_station_entry_rail',{{53,54},{55,56},{57,58},{59,60}},62,{},0),
 }
 for i,r in ipairs(station)do
- r.design=({'gb_station_seat','gb_station_fence','gb_station_entry'})[i]
- r.groundTiles={{i==1 and 61 or 62}};r.groundAligned=true
+ r.design=({'gb_station_fence','gb_station_entry'})[i]
+ r.groundTiles={{62}};r.groundAligned=true
 end
 local underground={
  {id='crystal_underground_stall_counter',tiles={{8,9},{24,25},{24,25},{24,25},{24,25},{36,37}},groundTiles={{1}},design='gb_underground_stall_counter',parts={},support=8},

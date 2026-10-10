@@ -631,3 +631,19 @@ Inspected Crystal1F eye, Gold2F overview and Silver4F overview. Lavender eye
 is NPC-occluded and is not counted as a clear stool-art review. Source/shared
 checks pass at59 recipes/33 assemblies. This corrects the earlier modeled-stool
 coverage: these cells intentionally remain flat to preserve native walkspace.
+
+## Gold/Silver/Crystal station-seat directional walkspace
+
+- [x] Removed both the authored station-seat placement and its generic depth
+  fallback. Native yellow seat artwork stays flat; solid fence/entry rails remain.
+
+There are18 matches/game: Goldenrod8 and Saffron10. Native collision178 is LAND
+with an UP_WALL edge, not a fully blocked chair cell. Baseline Crystal
+`gen2-station-seats-before` verifies the authored volumes. The final
+`{game}-gen2-station-seats-flat` and committed isolated station-seat driver verify
+zero seat-template placements, unchanged full grids and native directional
+behavior in both stations: enter the seat, reject northward exit, turn and
+return south. All three editions pass. Crystal Goldenrod overview and Silver
+Saffron first-person show complete original floor drawings and clear approach.
+Source/shared checks pass at58 recipes/32 assemblies. This intentionally
+supersedes modeled seat coverage while preserving native walking permissions.
