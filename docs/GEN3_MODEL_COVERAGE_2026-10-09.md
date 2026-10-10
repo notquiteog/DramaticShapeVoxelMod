@@ -30,8 +30,8 @@ This bounded audit does not establish universal collision safety or coverage.
 
 ## Next batches (source review required)
 
-- [ ] Lilycove specialized exteriors: department store, museum/contest buildings.
-- [ ] Rustboro Devon building and Slateport specialist buildings.
+- [ ] Lilycove department store and museum; other regional Contest Halls.
+- [ ] Slateport specialist buildings and remaining Rustboro scenery.
 - [ ] Remaining Emerald city/facility structures and unusual foliage.
 - [ ] Remaining FRLG specialized exteriors and interior/furniture families.
 - [ ] FireRed dedicated runtime verification (shared FRLG code alone is not it).
@@ -139,3 +139,27 @@ shell. Low geometry remains south of the native rear walking row.
 inspected. First prototype had an unsupported upper tier; its riser was closed
 before final capture. Tiered-home/Civic/Hoenn tests pass. Emerald footprint
 census now recognizes 77 assemblies with zero low walking-cell overlap flags.
+
+
+## Verified batch: Cinnabar laboratory (LeafGreen)
+
+Complete 7×5 native laboratory/sign drawing now becomes a closed rounded shell,
+solid pale longitudinal ribs/crossbars, original red roof panel and doorway,
+curved side glass and a raised beveled sign. Native shoreline cells are preserved
+individually; only the sign's projected foreground pixels become turf. Solid
+body/supports remain on blocked rows, clear of both native walking rows.
+
+`results/leafgreen-frlg-specialist-source` contains the native map/grid;
+`results/leafgreen-cinnabar-lab-review` contains inspected production orbit and
+eye/door views. The QA enumerator needed the production edition alias binding
+after map loading: native LeafGreen pair `082d4b4c` resolves to recipe `082d4b6c`.
+Early flat/no-placement captures were fixture/recipe alias mismatches and are
+not validation evidence. Rounded glass was split along shell segments to avoid
+being buried in the wall; sign silhouette/underside and base-band depth were
+corrected from renders. Focused laboratory/Civic/Hoenn/recent-model tests pass.
+LeafGreen native footprint census: 104 recognized assemblies, zero low walking
+cell overlap flags. FireRed runtime verification remains pending.
+
+Ruby/Sapphire are separate coverage work: parity's new Ruby fixture uses RU_
+map IDs (Sapphire SA_), and source differences still need inspection. Emerald
+pattern coverage is not evidence for those games.

@@ -140,6 +140,9 @@ function M.prepare(cells,gyms,families)
  return out
 end
 function M.ground(c)
+ for _,q in ipairs(c.civic.custom and c.civic.custom.groundPreserve or {})do
+  if c.cx==c.civic.cx+q[1] and c.cy==c.civic.cy+q[2] then return c.mid end
+ end
  if c.civic.custom and c.civic.custom.ground then return c.civic.custom.ground end
  if c.civic.custom and c.civic.custom.preserveWalkableFloor and c.collision==0 then return c.mid end
  return c.civic.grounds and c.civic.grounds[c.cx..':'..c.cy]
@@ -370,6 +373,15 @@ function M.material(g)
    for yy=31,40 do data:setPixel(p.w+xx,yy,sourcePixel(g,12,yy))end
   end
  end
+ if g.custom and g.custom.geometry=='cinnabar_lab' then
+  -- Keep the original projected sign in the second material half for its
+  -- raised panel; repair only its overlap with the laboratory front wall.
+  for xx=66,94 do for yy=56,63 do
+   local sx,sy=xx,52
+   if xx>=70 and xx<88 then sx,sy=30,58 end
+   data:setPixel(xx,yy,sourcePixel(g,sx,sy))
+  end end
+ end
  if g.custom and g.custom.harbor then
   for xx=0,p.w-1 do
    local rr,gg,bb,aa=sourcePixel(g,math.max(2,math.min(p.w-3,xx)),24)
@@ -419,6 +431,7 @@ function M.window(g)
  return best
 end
 function M.append(g,emit)
+ if g.custom and g.custom.geometry=='cinnabar_lab' then return V.require('Gen3CinnabarLab').append(g,M.profile(g),emit)end
  if g.custom and (g.custom.centerRoof or g.custom.martRoof) then return V.require('HoennCivicBuilding').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='contest_hall' then return V.require('Gen3ContestHall').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='urban' then return V.require('Gen3UrbanBuilding').append(g,M.profile(g),emit)end
