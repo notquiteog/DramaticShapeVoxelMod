@@ -1,3 +1,9 @@
+# Birch south book stacks — 2026-10-09
+
+Closed layered books preserve native red/dark/blue covers and pale page edges.
+RS/E low-eye and orbit renders inspected; scoped lab audits11/0 each, focused
+suites pass. Remaining workstation variants/side equipment still native.
+
 # Birch south workstation — 2026-10-09
 
 Narrow native workstation modeled for RS/E, with closed terminal, supported

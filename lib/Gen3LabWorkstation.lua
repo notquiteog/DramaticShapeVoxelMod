@@ -7,6 +7,21 @@ function M.append(p,source,box,sample,emit)
   emit({{a,b,f},{c,b,f},{c,b,n},{a,b,n}},t,.65)
  end
  local x,z=p.cx*16,p.cy*16
+ if p.recipe.kind=='labStacks' then
+  for row=0,1 do
+   local n=z+row*16
+   local covers={sample(4,12),sample(8,10),sample(7,4)}
+   for layer=0,2 do
+    local a=layer%2;local cover=covers[layer+1]
+    box(x+1+a,layer*2,n+3,x+14-a,layer*2+.35,n+14,cover)
+    box(x+1.5+a,layer*2+.35,n+3.5,x+13.5-a,layer*2+1.65,n+13.5,sample(10,9))
+    box(x+1+a,layer*2+1.65,n+3,x+14-a,layer*2+2,n+14,cover)
+    box(x+1+a,layer*2,n+3,x+2+a,layer*2+2,n+14,cover)
+   end
+   source(5,row*16+1,7,7,{x+2,6.03,n+3},{x+13,6.03,n+3},{x+13,6.03,n+13},{x+2,6.03,n+13})
+  end
+  return
+ end
  local wood,edge,case,dark=sample(7,26),sample(3,42),sample(8,7),sample(3,9)
  box(x+1,7,z+2,x+15,9,z+43,wood)
  source(1,20,14,20,{x+1,9.02,z+18},{x+15,9.02,z+18},{x+15,9.02,z+43},{x+1,9.02,z+43})

@@ -477,3 +477,13 @@ floor. RS/E orbit and dedicated workstation-eye views inspected; scoped lab
 audits10/0 each. RS/Hoenn/additional suites pass with chair/apron bounds.
 Neighboring book stacks and other side/south workstation variants remain native.
 No gameplay or save changes.
+
+
+## Verified batch: Birch south book stacks
+
+Two complete native book-stack cells now form closed layered red, dark and blue
+books with inset page blocks and source cover details. The source crop excludes
+the projected floor and lower books from each top cover. RS/E dedicated low-eye
+and orbit views inspected; scoped lab audits11/0 each. Hoenn/RS suites pass,
+including exact stack/adjacent-chair bounds. Other workstation variants and
+side equipment remain unfinished; no gameplay or save changes.

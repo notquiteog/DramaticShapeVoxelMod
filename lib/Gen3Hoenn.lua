@@ -363,6 +363,7 @@ for _,a in ipairs{{0x219,'left'},{0x221,'left'},{0x21c,'right'},{0x224,'right'}}
 end
 local center='building__pokemon_center'
 local lab='building__lab'
+add('birch_south_book_stacks',lab,{{0x248},{0x248}},'labStacks')
 add('birch_south_workstation',lab,{{0x230},{0x238},{0x240}},'labWorkstation')
 add('birch_books',lab,{{0x210,0x211},{0x218,0x219},{0x220,0x221}},'designed',{design='em_lab_books'})
 add('birch_free_books',lab,{{0x224,0x225},{0x22c,0x22d},{0x234,0x235}},'designed',{design='em_lab_books'})
