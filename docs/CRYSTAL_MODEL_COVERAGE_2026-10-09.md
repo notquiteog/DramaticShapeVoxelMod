@@ -807,3 +807,23 @@ and Silver captures; focused test protects it. The wall naturally hides the
 lower rear PC base; the CRT rear/cap remain visible. Existing58 source/32 shared
 assembly checks and focused gate-PC geometry test pass. Native PCScript/menu
 interaction was not exercised; no event, collision or warp code changed.
+
+## Gold/Silver/Crystal traditional shop stock shelves — October 10
+
+- [x] Six complete shelves per edition: Mahogany Mart3 and Mt.Moon Gift Shop3.
+  Native four-cell patterns match independently; collision7/150 stays blocked.
+- [x] Closed gray body with four cream shelf tiers and seventeen native stock
+  groups, retaining original packets/labels and their unequal sizes. Geometry
+  occupies only the lower two blocked cells of the projected source drawing.
+
+Gold `gen2-traditional-shop-shelves-before` shows the old repeated tall strips.
+All editions' final fixtures pass both maps, exact3/3 counts and unchanged full
+native grids. Inspected final Crystal Mt.Moon eye, Silver Mahogany rear; Gold
+Mahogany eye is NPC-occluded. The initial shelf boards overlapped the rear/side
+shell, producing visible lines. Partitioned those solids, added a single-back
+regression and reran all editions. The initial side camera looked over an
+adjacent rack; Crystal `gen2-traditional-shop-shelves-side` views its exposed end
+from the central aisle and clearly shows the closed side/stock depth. No shelf
+intrudes into that aisle. Targeted shelf/source checks pass; the engine-integrated
+Gen2 tile-shape suite also passes114/114. Story/secret-stair transitions at
+Mahogany were not triggered; source blocks, collision and events are untouched.

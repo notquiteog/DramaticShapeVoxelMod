@@ -1425,6 +1425,24 @@ function M.draw(id,A)
   crt(2,17,12,8,19,{3,12,10,7},cream,dark)
   front({3,19,10,4},3,7,13,8,24.02)
   keyboard({2,24,12,4},2,25,12,4,6.6,cream)
+ elseif id=='gb_traditional_shop_shelf' then
+  local frame,shelf,dark=T(1,31),T(1,8),T(4,9)
+  B(.5,0,19.5,31.5,24.6,20.5,dark)
+  B(.5,0,20.5,1.5,24.6,30.5,frame);B(30.5,0,20.5,31.5,24.6,30.5,frame)
+  for _,y in ipairs{0,6,12,18,24}do B(1.5,y,20.5,30.5,y+.6,30.5,shelf)end
+  -- Four source tiers contain distinct packets, tins and narrow packages.
+  -- Preserve those groups instead of inventing evenly spaced book spines.
+  local tiers={
+   {18,{{2,1,6,5},{10,1,6,5},{18,1,6,5},{27,1,3,5}}},
+   {12,{{3,11,4,3},{9,10,4,4},{17,10,4,4},{24,11,5,3}}},
+   {6,{{3,19,4,3},{8,18,3,4},{11,17,4,5},{19,17,4,5},{27,18,3,4}}},
+   {0,{{3,25,3,5},{9,26,4,4},{17,26,4,4},{25,26,4,4}}},
+  }
+  for _,tier in ipairs(tiers)do for i,r in ipairs(tier[2])do
+   local l,w,b=r[1],r[3],tier[1]+.6;local h=b+r[4]*.88;local z=29.6-(i%2)*.35
+   B(l,b,22,l+w,h,z,T(l+1,r[2]+1))
+   front(r,l,b,l+w,h,z+.02)
+  end end
  elseif id=='fr_space_exhibit' then
   local white,edge,dark,stand=T(19,8),T(13,7),T(13,12),T(6,23)
   B(2,0,3,46,2,30,stand);B(4,2,5,44,3,28,edge)
