@@ -74,8 +74,8 @@ function M.install(mod,schema,title,categories,liveSettings)
   Rows.modSettingsPages[mod.id]=function()active=false end
   local build,group=Rows.build,Rows.group
   local function owned(id)return type(id)=='string' and id:sub(1,#mod.id+1)==mod.id..':'end
-  Rows.build=function(ctx)
-   local out=build(ctx)
+  Rows.build=function(ctx,...)
+   local out=build(ctx,...)
    if active then for _,r in ipairs(rows(ctx.game))do
     local step=r.step;r.step=function(c,dir)return step(c.game,dir)end
     out[#out+1]=r
