@@ -215,6 +215,10 @@ lighthouse[1].groundTiles={{13,29},{29,13}};lighthouse[1].groundAligned=true
 lighthouse[2]=item('crystal_ship_dining_table',lighthouse[1].tiles,13,{},0)
 lighthouse[2].design='gb_ship_dining_table'
 lighthouse[2].groundTiles=lighthouse[1].groundTiles;lighthouse[2].groundAligned=true
+-- The porthole is wall-mounted, not artwork repeated on a solid cube's cap.
+lighthouse[3]=item('crystal_ship_porthole',{{2,3},{18,18}},13,{},0)
+lighthouse[3].design='gb_ship_porthole'
+lighthouse[3].groundTiles={{13,29},{29,13}};lighthouse[3].groundAligned=true
 -- Complete machinery sections, ahead of the old facility cabinet crops.
 -- The narrow brass conduit belongs to the machine, not a shelf of books.
 local facility={

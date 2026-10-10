@@ -1455,6 +1455,20 @@ function M.draw(id,A)
   -- Native display is a parallelogram across contiguous atlas quadrants.
   A.face({{20,16,8.99},{29,16,8.99},{29,9,8.99},{20,9,8.99}},
    {T(21,5)[1],T(25,7)[1],T(25,10)[1],T(21,8)[1]},1)
+ elseif id=='gb_ship_porthole' then
+  -- Closed wall with the native eight-pixel circular rim standing proud of it.
+  -- Stepped ring rows omit the source's square cream corners; no glass on top.
+  local wall,rim=T(0,0),T(6,0)
+  B(0,0,0,16,16,15.2,wall)
+  front({0,0,1,1},0,8,16,16,15.22)
+  B(0,0,15.2,16,8,15.98,wall)
+  front({0,8,16,8},0,0,16,8,15.99)
+  for y=0,7 do
+   local inset=(y==0 or y==7) and 2 or ((y==1 or y==6) and 1 or 0)
+   local x,w=4+inset,8-inset*2
+   B(x,15-y,15.2,x+w,16-y,15.98,rim)
+   front({x,y,w,1},x,15-y,x+w,16-y,15.99)
+  end
  elseif id=='gb_mansion_bed' or id=='gb_cabin_bed' then
   -- Original head/foot boards stand upright; bedding occupies the mattress.
   -- Both native cells are blocked, including the projected head of the bed.

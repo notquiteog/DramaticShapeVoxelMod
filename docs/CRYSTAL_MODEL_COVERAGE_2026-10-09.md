@@ -551,3 +551,24 @@ and actual bedding crops; facility regressions and61 recipes/35 assemblies pass.
 Cabin portholes still appear as bulky generic extrusions in the reviewed scene;
 these and room finishes remain separate open work. Placement counts are not a
 claim that every bed was individually visually inspected from every angle.
+
+## Gold/Silver/Crystal ship portholes
+
+- [x] Complete native wall-cell match adds a shallow stepped circular rim and
+  original blue glass, with closed wall sides/back/base and a plain cap.
+  Window pixels no longer repeat across the horizontal wall top.
+
+Native audits and final fixtures verify61 wall cells/game: ship1F18, NNW/NNE/NE
+cabins7, SW/SSW/NW cabins8, SE/SSE/captain cabins12, B1F16. All source cells are
+blocked; geometry stays inside their16x16 footprint and full grids are unchanged.
+Baseline `crystal-gen2-portholes-before`; accepted `{game}-gen2-portholes-final`.
+The first candidate used24px height and visibly disagreed with the native16px
+neighboring walls; corrected to16 and aligned the lower trim. A darker backing
+patch was also corrected by using the native wall face sample.
+
+Inspected final Crystal ship1F eye/side, Gold cabin side/rear and Crystal
+SE-cabin overview. Silver B1F rear is occluded by adjacent background mass and
+is not evidence of a clear model-back view; Gold cabin rear supplies that view,
+though the renderer's off-map repeated wall/floor remains visible around it.
+Porthole, bed and source/shared assembly tests pass. Generic door caps, room
+boundaries and remaining cabin cabinetry are still open work.
