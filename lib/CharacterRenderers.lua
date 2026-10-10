@@ -136,11 +136,21 @@ local function discoverExports()
   discovering = false
 end
 
-function CharacterRenderers.has(method)
+-- Existing providers predate native Gen2/3 battle state. They remain Gen1-only
+-- for battle callbacks unless they explicitly advertise supported generations.
+local function supports(entry,method,generation)
+  if not generation or generation==1 or not method:match('^drawBattleTrainer') then return true end
+  local supported=entry.spec.battleGenerations
+  if type(supported)~='table' then return false end
+  for _,gen in ipairs(supported)do if gen==generation then return true end end
+  return false
+end
+
+function CharacterRenderers.has(method,generation)
   discoverExports()
   if not CALLBACKS[method] then return false end
   for _, entry in ipairs(CharacterRenderers.entries) do
-    if not entry.removed and type(entry.spec[method]) == "function" then
+    if not entry.removed and supports(entry,method,generation) and type(entry.spec[method]) == "function" then
       return true
     end
   end
@@ -160,7 +170,7 @@ function CharacterRenderers.first(method, context)
   discoverExports()
   if not CALLBACKS[method] then return false end
   for _, entry in ipairs(CharacterRenderers.entries) do
-    local fn = not entry.removed and entry.spec[method] or nil
+    local fn = not entry.removed and supports(entry,method,context and context.generation or (method:match('^drawBattleTrainer') and CharacterRenderers.battle.generation)) and entry.spec[method] or nil
     if type(fn) == "function" then
       local ok, claimed = pcall(fn, context)
       if not ok then logError(entry, method, claimed)
@@ -187,7 +197,8 @@ function CharacterRenderers.revision()
   return CharacterRenderers.generation
 end
 
-function CharacterRenderers.setBattle(active, state)
+function CharacterRenderers.setBattle(active, state, generation)
+  CharacterRenderers.battle.generation = active and (generation or 1) or nil
   CharacterRenderers.battle.active = active and true or false
   CharacterRenderers.battle.state = active and state or nil
   if not active then CharacterRenderers.battle.handWorld = nil end

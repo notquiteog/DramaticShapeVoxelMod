@@ -129,6 +129,7 @@ function M:effectPoint(x,y,ball)
   x-(na.x+dx*t),y-(na.y+dy*t)
 end
 function M:prepare(camera,ground,eye)
+ self.camera=camera;self.ground=ground
  self.points={}
  for id=0,5 do self.points[id]=M.placement(camera,id,self.st.double,ground)end
  V.require("Gen3Capture").prepare(self,ground)
@@ -146,6 +147,11 @@ function M:draw(shadow)
  local draw=shadow or R.draw
  if not shadow then self.vp=R.vp end
  if not shadow then R.seams(false);R.lighting(not V.require('UiBackplates').spritesUnlit())end
+ local Trainer=V.require('StandingTrainer')
+ Trainer.prepare(self.st,3,self.byId[4]~=nil,self.st.safari or self.st.demo or self.st.oldManTutorial or self.st.pokedude or self.st.wally)
+ Trainer.draw(self.st,3,{state=self.st,arena=self.camera and self.camera.arena,
+  groundY=self.ground,position=self.points and self.points[4],camera=self.camera,
+  host={Voxel3D=R,Mat4=Mat,ShadowMap=V.require('ShadowMap')}},shadow~=nil)
  local mesh=Billboard.mesh()
  for _,c in ipairs(self.cards)do
   if not shadow or c.id or c.ball then draw(mesh,c.tex,c.model,0)end
@@ -160,6 +166,7 @@ function M:head(id,x,y)
  return M.project(self.vp or R.vp,m[1]*u+m[2]*v+m[4],m[5]*u+m[6]*v+m[8],m[9]*u+m[10]*v+m[12])
 end
 function M.release()
+ V.require("StandingTrainer").clear()
  for _,c in ipairs(pool)do c:release()end;pool={}
 end
 return M

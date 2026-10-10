@@ -924,6 +924,7 @@ local function castShadows(state, arena, terrain, nbMesh, cx, cy, vw, vh,
   if battle and CharacterRenderers.battleActive() then
     CharacterRenderers.first("drawBattleTrainerShadow", {
       state = state, battle = battle, arena = arena, groundY = groundY,
+      generation = CharacterRenderers.battle and CharacterRenderers.battle.generation or 1,
       host = { Voxel3D = Voxel3D, Mat4 = Mat4, ShadowMap = ShadowMap },
     })
   end
@@ -1084,6 +1085,7 @@ function BattleScene.drawTrainerAndBall(state, battle, arena, groundY, safariTra
   elseif CharacterRenderers.battleActive() then
     providerTrainer = CharacterRenderers.first("drawBattleTrainer", {
       state = state, battle = battle, arena = arena, groundY = groundY,
+      generation = CharacterRenderers.battle and CharacterRenderers.battle.generation or 1,
       host = { Voxel3D = Voxel3D, Mat4 = Mat4,
                ShadowMap = ShadowMap },
       setHandWorld = function(value)

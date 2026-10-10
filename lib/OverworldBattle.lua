@@ -93,8 +93,7 @@ OverworldBattle.setting = ModSetting.new(OverworldBattle.KEY,
 -- presentation pieces whose live callbacks/models are actually available;
 -- every unavailable side retains Battle Art's native art.
 OverworldBattle.trainerBattleSetting =
-  ModSetting.new("standingTrainer", "STANDING TRAINER",
-                 { "stock", "legendary" }, { "STOCK", "LEGENDARY" }, 1)
+  V.require("StandingTrainer").setting
 
 function OverworldBattle.legendaryTrainerEnabled()
   return OverworldBattle.trainerBattleSetting:get() == "legendary"
@@ -806,6 +805,7 @@ function OverworldBattle.onBattleEnded()
 end
 
 function OverworldBattle.finish()
+  V.require("StandingTrainer").clear()
   V.require("SafariBattleFX").clear()
   -- The 3D player mod reads this small, presentation-only handoff. Clear it
   -- even if a battle was torn down before a staged session fully opened, so
@@ -1358,6 +1358,12 @@ end
 -- ground under a mon that is not on it.
 function OverworldBattle.prepareTrainer(battle)
   if not battle then return nil end
+  if Generation.isGen2() then
+    local screen=V.require('Gen2Staged').screenFor(game())
+    return V.require('StandingTrainer').prepare(battle,2,
+      screen and screen.showPlayerTrainer and screen.playerBackImage,
+      not screen or battle.safari or battle.demo)
+  end
 
   -- Persistent 3D trainer handoff. The engine exposes the selected player
   -- trainer during a short showPlayerBack/playerBackPic intro window. Latch
@@ -1393,6 +1399,7 @@ function OverworldBattle.textures(battle)
   -- sideTexture below cannot run there at all. Gen2Staged answers with the
   -- same { canvas, ax, ay, trainer } shape.
   if Generation.isGen2() then
+    OverworldBattle.prepareTrainer(battle)
     return V.require("Gen2Staged").textures(game())
   end
   if not battle then return nil end

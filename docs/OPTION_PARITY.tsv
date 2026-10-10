@@ -178,7 +178,7 @@ generation	key	label	status	consumer	limitation
 2	spriteLight	SPRITE LIGHT	implemented	lib/OverworldBattle.lua; lib/Gen2Staged.lua; lib/BattleScene.lua	Native Gen2 battle side adapter feeds the shared stage and UI path.
 2	spritePack	SPRITE PACK (RESTART)	implemented	lib/CrystalSprites.lua; lib/Crystal/main.lua	Integrated native Crystal provider, selected at restart.
 2	stadiumCircle	STADIUM CIRCLE	provider	lib/StadiumBackground.lua	Requires the optional compatible Stadium scene provider; no provider means no consumer.
-2	standingTrainer	STANDING TRAINER	provider	lib/OverworldBattle.lua	Requires a compatible character renderer; native Gen2 trainer staging still needs a dedicated adapter.
+2	standingTrainer	STANDING TRAINER	provider	lib/StandingTrainer.lua; lib/OverworldBattle.lua; lib/BattleScene.lua	Native intro handoff and persistent provider draw; requires a public trainer provider declaring battleGenerations={2}. No trainer model bundled.
 2	surfaceArtwork	SCENERY TEXTURES	implemented	lib/TreePresentation.lua; lib/ChunkMesher.lua	Native scenery rebuilds on option changes.
 2	textboxFill	TEXTBOX FILL	provider	lib/ModernBattleUI.lua; lib/Gen2BattleUI.lua	Like Gen1, optional Modern Pokemon UI owns styling. Without a provider the native UI remains unchanged.
 2	towerDetails	TOWER DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
@@ -273,7 +273,7 @@ generation	key	label	status	consumer	limitation
 3	spriteLight	SPRITE LIGHT	implemented	lib/Gen3BattleActors.lua; lib/Gen3Scene.lua	Native actor cards share world lighting, depth and cast shadows; native flashes/fades are baked into their live artwork.
 3	spritePack	SPRITE PACK (RESTART)	partial	lib/NativeCrystalArt.lua; lib/NativeBattleArt.lua; lib/NativeInterfaceArt.lua	SELECTED ART remains Gen3 default; CRYSTAL supplies bundled normal/shiny battlers and opted-in Summary/Dex art, retaining native missing-species/forms. Trainer battle portraits are supported; native player walk/bike and FRLG named-trainer sheets are supported. Evolution and Hall-of-Fame public picture paths are supported; trainer-card/intro and shiny-reveal effects still need native adapters.
 3	stadiumCircle	STADIUM CIRCLE	provider	lib/StadiumBackground.lua	Requires the optional compatible Stadium scene provider; no provider means no consumer.
-3	standingTrainer	STANDING TRAINER	missing	false	No complete native generation adapter audited for this option.
+3	standingTrainer	STANDING TRAINER	provider	lib/StandingTrainer.lua; lib/Gen3BattleActors.lua	Native intro handoff and persistent world-space provider draw; requires a public trainer provider declaring battleGenerations={3}. No trainer model bundled.
 3	surfaceArtwork	SCENERY TEXTURES	implemented	lib/Gen3Scene.lua; lib/Voxel3D.lua	Native-palette surface grain on scenery only; camera-stable world coordinates, distance filtering and unchanged actor/UI art.
 3	textboxFill	TEXTBOX FILL	provider	lib/ModernBattleUI.lua; lib/UiBackplates.lua	Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.
 3	towerDetails	TOWER DETAILS	partial	lib/NativeAtmosphere.lua	Native atmosphere controls are live; complete Gen1 specialty geometry and decorative props remain incomplete.
