@@ -426,3 +426,15 @@ inspected in all three games. Each Mart scoped audit now7/0, superseding EM7/2.
 Four focused suites pass; a geometry regression checks both aisle cells.
 Register and additional wall details remain native; interaction/warp traversal
 was not exercised. Presentation only; no gameplay/saved progress modified.
+
+
+## Verified batch: Hoenn Mart register
+
+Complete two-cell register source checked separately in RS/Emerald; the projected
+wallpaper rows are excluded from machine surfaces. Closed pedestal and sloped
+till retain native keypad, display and drawer pixels, readable at eye level.
+RS/E front/rear/side/checkout eye renders inspected in the existing Mart review
+directories. Scoped audits8/0 in each game; Hoenn/RS/additional-furniture suites
+pass, including three-edition complete matching and service-cell bounds.
+Small wall decorations and broader regional variants remain unreviewed. No
+collision, interaction or save changes; normal service interactions untested.

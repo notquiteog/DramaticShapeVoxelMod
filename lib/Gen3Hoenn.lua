@@ -412,6 +412,7 @@ add('hoenn_mart_glass',mart,{{0x213,0x213,0x213},{0x21b,0x21b,0x21b}},'designed'
 add('hoenn_mart_counter',mart,{{0x318,0x239,0x23a},{0x320,0x241,0x242}},'martCheckout',{h=7})
 -- 244 is the clock's lower wallpaper row; 208 is walkable floor.
 -- Leave both to the native wall/floor renderer, never invent a counter.
+add('hoenn_mart_register',mart,{{0x22a},{0x232}},'martRegister')
 add('hoenn_mart_plant',mart,{{0x215},{0x21d},{0x225}},'plant',{h=26,cutout=true,depthOffset=-16})
 -- Whole native roof headers, walls and doors; the floor apron is excluded.
 M.exteriors={

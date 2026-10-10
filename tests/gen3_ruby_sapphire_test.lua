@@ -12,7 +12,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  assert(S.of('general','petalburg',1,0x10,0).kind=='water')
  assert(S.of('general','petalburg',0x2a,0x2a,0).kind=='flat','seaweed became Kanto stairs')
  assert(S.of('building','facility',0x2f8,0,7).kind=='flat','unreviewed Emerald interior leaked')
- local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop')end end;assert(approved==28)
+ local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop')end end;assert(approved==29)
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)
@@ -84,6 +84,12 @@ for _,r in ipairs(F.recipes)do if r.kind=='martCheckout' then
   for _,q in ipairs(v)do assert(q[3]>=17 or q[1]>=33,'checkout occupies native clerk aisle')end
  end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
 end end
+for _,game in ipairs({'ruby','sapphire','emerald'})do
+ version=game
+ local cells={['0:0']={cx=0,cy=0,mid=0x22a,pair='building__shop',primary='building',ts={}},['0:1']={cx=0,cy=1,mid=0x232,pair='building__shop',primary='building',ts={}}}
+ local list=F.extract(cells);assert(#list==1 and list[1].recipe.kind=='martRegister')
+ F.append(list[1],function(v)for _,q in ipairs(v)do assert(q[3]>=17 and q[3]<32,'register crosses its service cell')end end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
+end
 version='emerald';assert(#H.exteriorRecipes()>3 and H.recipeActive(H.recipes[1]))
 version='firered';assert(not H.active() and H.recipeActive({}) and not H.recipeActive({family='rse'}))
 print('Ruby/Sapphire checked-family dispatch, full source matches, native rear lanes and edition isolation PASS')

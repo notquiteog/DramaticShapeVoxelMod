@@ -1,3 +1,9 @@
+# Hoenn Mart register — 2026-10-09
+
+Native-source sloped till and closed pedestal now modeled for RS/Emerald.
+All-angle/checkout-eye renders inspected; scoped audits8/0 each and targeted
+suites pass. Service-cell bounds verified; normal interactions remain untested.
+
 # Hoenn checkout aisle clearance and RS model — 2026-10-09
 
 Replaced Emerald's rectangular slab with closed source-faithful L counter,
