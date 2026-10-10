@@ -23,7 +23,9 @@ return function(game)
   local page=pages()[#pages()];local found
   for i,r in ipairs(page.rows)do if r.id==key then page.index=i;found=r end end;assert(found)
   adjust(1);assert(V.require('CameraSettings').invertY:get()~=before,'live native look ignored option')
-  U.wait(8);U.shot(game,os.getenv('SHOT_DIR')..'/world-options.png');adjust(-1);Menu.close()
+  U.wait(8);U.shot(game,os.getenv('SHOT_DIR')..'/world-options.png')
+  if ver=='ruby'or ver=='sapphire'then U.wait(120);U.shot(game,os.getenv('SHOT_DIR')..'/world-options-scroll.png')end
+  adjust(-1);Menu.close()
  else
   local Menu=require(gen==2 and 'src.ui.gen2.OptionsMenu'or'src.ui.OptionsMenu');local menu=Menu.new(game,{options=game.save and game.save.options or game.options});game.stack:push(menu)
   local group
