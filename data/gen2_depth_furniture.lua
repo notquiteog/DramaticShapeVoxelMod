@@ -57,7 +57,7 @@ return {
   prop('facility_books',6,left,'cabinet',3,'gb_facility_books'),
   prop('facility_console',8,top,'console',3,'gb_facility_workstation'),
   prop('facility_planter',9,left,'planter',3),
-  prop('facility_bench',25,{0,2,4,2},'seat',3),
+  prop('facility_bench',25,{0,2,4,2},'seat',3,'gb_facility_sofa'),
   prop('facility_books_open',6,{2,0,2,4},'cabinet',3,'gb_facility_books_open'),
  },
  TILESET_RADIO_TOWER={

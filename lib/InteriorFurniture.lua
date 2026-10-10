@@ -1455,6 +1455,23 @@ function M.draw(id,A)
   -- Native display is a parallelogram across contiguous atlas quadrants.
   A.face({{20,16,8.99},{29,16,8.99},{29,9,8.99},{20,9,8.99}},
    {T(21,5)[1],T(25,7)[1],T(25,10)[1],T(21,8)[1]},1)
+ elseif id=='gb_facility_sofa' then
+  -- Separate the projected blue seat and tufted back from their floor corners.
+  -- Closed upholstery and stepped shoulders preserve the native rounded form.
+  local blue,cloth,dark=T(15,7),T(15,10),T(4,8)
+  for _,x in ipairs{3,27}do for _,z in ipairs{3,12}do B(x,0,z,x+2,2,z+2,dark)end end
+  B(2,1.5,2,30,4.5,15,blue)
+  B(4,4.5,5,28,5.5,14.5,cloth)
+  top({5,8,22,6},4,5,28,14.5,5.52)
+  B(3,4,1,29,11,4.5,blue)
+  B(4,11,1.5,28,12,4,blue)
+  front({4,1,24,5},4,6,28,11,4.52)
+  for _,x in ipairs{1,28}do
+   B(x,3,4,x+3,7,14,blue)
+   B(x+.5,7,5,x+2.5,8,13,cloth)
+  end
+  top({1,8,3,5},1.5,5,3.5,13,8.02)
+  top({28,8,3,5},28.5,5,30.5,13,8.02)
  elseif id=='gb_facility_books' or id=='gb_facility_books_open' then
   local wood,dark=T(4,4),T(2,10)
   local open=id=='gb_facility_books_open'

@@ -505,3 +505,20 @@ and cap; nearby server geometry remains independent. These representative views
 and placement counts do not certify every unrelated object in these rooms.
 Focused bookcase tests and all61 source recipes/35 shared assemblies pass.
 Facility sofas and other generic furniture remain open.
+
+## Gold/Silver/Crystal facility sofas
+
+- [x] Separate upholstered seat, raised arms and tufted back replace the pale
+  platform recipe. Native blue/white strips map to their intended surfaces;
+  stepped shoulders, solid rear, base and feet close the object from all angles.
+
+Independent imported-map scans and live fixtures find six sofas/game: Mr
+Pokémon1, Power Plant2 and Silph1F3. Each complete32x16 drawing occupies two
+blocked native cells; model bounds stay inside them and full grids are unchanged.
+Baseline `crystal-gen2-facility-sofas-before` reproduces the flat platform in
+Mr Pokémon/Power Plant. Its Silph camera initially landed on a sofa, so the
+accepted fixture uses native(9,5). Final `{game}-gen2-facility-sofas` completes
+all three maps in each edition. Inspected Crystal Mr Pokémon first-person,
+Crystal Power Plant side, Gold Silph overview and Silver Silph rear. Native
+room palettes remain live. Sofa and bookcase tests plus all source/shared
+assembly checks pass. Other facility machinery and room finishes remain open.
