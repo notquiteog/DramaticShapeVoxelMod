@@ -611,3 +611,23 @@ not counted as a clear chair view. Cabin-book/bed regressions and60 source
 recipes/34 assemblies pass. Radio/station seats need separate walkability
 review; this change does not assert they are safe. G/S cabin tables also show
 unmodeled generic volumes and remain a separate edition-specific coverage gap.
+
+## Gold/Silver/Crystal walkable radio-stool correction
+
+- [x] Removed the specific raised stool recipe from native collision0 cells;
+  the original stool art remains at floor level.
+
+All three editions contain17 matched drawings across Radio Tower1F–5F and
+Lavender1F (4/2/5/3/2/1). Gold/Silver2F places its pair at x12/14, while Crystal
+uses x4/6; the isolated driver selects the edition's actual coordinates.
+Baseline Crystal `gen2-radio-chairs-before` verifies raised stools on1F/2F;
+its initial3F camera was on the southern boundary and was corrected to(3,5).
+Final `{game}-gen2-radio-chairs-flat` completes all six maps per game with zero
+stool-template placements, walkability and complete-grid preservation. Native
+movement onto unoccupied1F stool(10,6) and back to(10,7) passes each edition.
+The reusable isolated driver is `tests/gen2_radio_chairs_driver.lua`.
+
+Inspected Crystal1F eye, Gold2F overview and Silver4F overview. Lavender eye
+is NPC-occluded and is not counted as a clear stool-art review. Source/shared
+checks pass at59 recipes/33 assemblies. This corrects the earlier modeled-stool
+coverage: these cells intentionally remain flat to preserve native walkspace.

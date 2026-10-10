@@ -69,7 +69,7 @@ return {
   prop('radio_desk_terminal',43,{0,2,4,2},'console',1,'gb_broadcast_desk'),
   prop('radio_equipment',28,{2,0,2,4},'machine',1,'gb_broadcast_receiver'),
   prop('radio_mixing_desk',56,{0,2,4,2},'console',1,'gb_broadcast_mixer'),
-  prop('radio_chair',20,{0,0,2,2},'seat',1,'gb_broadcast_stool'),
+  -- Radio stools are native walkable floor drawings, not blocked props.
  },
  TILESET_GAME_CORNER={
   prop('game_corner_planter',18,left,'planter',1),
