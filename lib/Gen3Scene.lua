@@ -113,6 +113,7 @@ local function releaseGeometry(cache)
  end
  if cache.legendaryPillars then cache.legendaryPillars.mesh:release()end
  if cache.legendaryRoads then cache.legendaryRoads.mesh:release();cache.legendaryRoads.image:release()end
+ if cache.masonry then cache.masonry.mesh:release();cache.masonry.image:release()end
  if cache.rocketWalls then cache.rocketWalls.mesh:release();cache.rocketWalls.image:release()end
  for _,part in ipairs(cache.civics or {})do
   if part.mesh then part.mesh:release()end;if part.image then part.image:release()end
@@ -259,6 +260,7 @@ local function build(req,cache,previous)
  cache.legendaryPillars=V.require('NativeLegendaryPillars').build(cells,def.id or Map.current)
  cache.legendaryRoads=V.require('NativeLegendaryRoads').build(cells,def.id or Map.current)
  cache.rocketWalls=V.require('NativeRocketWalls').build(cells,def.id or Map.current)
+ local masonry=V.require("NativeMasonry").new(def)
  M.cliffCount=0
  local batches={};local wood,wi,leaf,li={},{},{},{}
  for _,c in pairs(cells)do
@@ -449,12 +451,15 @@ local function build(req,cache,previous)
       local retaining=c.civic and uvFor(ts,Civic.ground(c))
        or shape.retaining and uvFor(ts,shape.retaining)
        or shape.kind=='tree' and uvFor(ts,shape.ground or 1) or uv
-      quad(b.v,b.i,{{ax,low,az},{bx,low,bz},{bx,base,bz},{ax,base,az}},retaining or uv,.78)
+      if not V.require("NativeMasonry").append(masonry,c,d,low,base)then
+       quad(b.v,b.i,{{ax,low,az},{bx,low,bz},{bx,base,bz},{ax,base,az}},retaining or uv,.78)
+      end
      end
     end
    end
   end
  end
+ cache.masonry=V.require("NativeMasonry").finish(masonry)
  local function wallFront(cx,front)
   if cache.northWallFront then return cache.northWallFront end
   local x=cx*16+8
@@ -589,6 +594,7 @@ local function terrain(draw)
  end
  if cache.legendaryPillars then V.require('NativeLegendaryPillars').draw(cache.legendaryPillars,draw)end
  if cache.legendaryRoads then draw(cache.legendaryRoads.mesh,cache.legendaryRoads.image)end
+ if cache.masonry then draw(cache.masonry.mesh,cache.masonry.image)end
  if cache.rocketWalls then draw(cache.rocketWalls.mesh,cache.rocketWalls.image)end
  for _,part in ipairs(cache.civics or {})do
   if not V.require('NativeLegendaryTower').draw(part.placement,draw)then draw(part.mesh,part.image)end
