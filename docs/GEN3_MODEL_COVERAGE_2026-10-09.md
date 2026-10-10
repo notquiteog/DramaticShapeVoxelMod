@@ -76,3 +76,23 @@ Emerald footprint census: 67 recognized assemblies, zero flagged low faces.
 
 This completes the reviewed Rustboro house patterns, not every exterior or
 scenery element in Rustboro and not Emerald coverage as a whole.
+
+## Verified batch: Lilycove blue-roof homes
+
+Five complete patterns cover six Lilycove homes. Native blue-tiled gables,
+recessed doors/windows, pale panels and solid blue vertical stiles continue onto
+closed side/rear elevations. Native rear walking rows remain clear beneath the
+roof overhangs; cliff-edge placements retain the engine's elevation/retaining
+geometry. Neither map collision nor terrain elevation is changed.
+
+Artifacts: `results/emerald-lilycove-homes-review` and the isolated
+`results/emerald-lilycove-southwest-home-review`. Six placements/24 directional
+captures plus eye/door views; representative views across all five patterns
+inspected. Long-distance multi-placement camera state initially produced empty
+views for east/southwest houses; resetting the inspection camera and capturing
+the southwest placement separately resolved the fixture issue. Empty initial
+captures are not verification evidence.
+
+Focused Lilycove/Civic/Hoenn suites pass. The native Emerald footprint census
+now recognizes 73 assemblies, zero flagged low faces. Lilycove department store,
+museum, contest hall, specialist shop and harbor remain visibly flat/pending.

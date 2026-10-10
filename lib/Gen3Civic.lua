@@ -644,8 +644,19 @@ function M.append(g,emit)
   boards.side(x+p.w-2,z+bodyBack,z+p.front,p.wall,p.wall,1,wall,face)
   boards.back(x+2,x+p.w-2,z+bodyBack,p.wall,wall,face)
  end
+ if g.custom and g.custom.verticalSiding then
+  -- Lilycove's blue upright stiles continue around the unseen elevations.
+  local blue=uv(9.1,49.1,9.2,49.2)
+  for zz=bodyBack+4,sideFront-4,16 do
+   Architecture.box(face,x+1.6,0,z+zz,x+2.1,p.wall,z+zz+3,blue)
+   Architecture.box(face,x+p.w-2.1,0,z+zz,x+p.w-1.6,p.wall,z+zz+3,blue)
+  end
+  for xx=6,p.w-8,16 do
+   Architecture.box(face,x+xx,0,z+bodyBack-.4,x+xx+3,p.wall,z+bodyBack+.1,blue)
+  end
+ end
  local window=M.window(g)
- for yy=5,(boarded and 0 or p.wall-3),6 do
+ for yy=5,((boarded or g.custom and g.custom.verticalSiding) and 0 or p.wall-3),6 do
   for _,sx in ipairs({1.94,p.w-1.94})do
    face({{x+sx,yy+.22,z+bodyBack},{x+sx,yy+.22,z+sideFront},{x+sx,yy,z+sideFront},{x+sx,yy,z+bodyBack}},wall,.78)
   end
