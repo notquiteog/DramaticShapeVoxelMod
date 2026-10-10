@@ -12,7 +12,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  assert(S.of('general','petalburg',1,0x10,0).kind=='water')
  assert(S.of('general','petalburg',0x2a,0x2a,0).kind=='flat','seaweed became Kanto stairs')
  assert(S.of('building','facility',0x2f8,0,7).kind=='flat','unreviewed Emerald interior leaked')
- local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop')end end;assert(approved==27)
+ local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop')end end;assert(approved==28)
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)
@@ -36,7 +36,7 @@ end
 local F=V.require('Gen3Furniture')
 for _,game in ipairs({'ruby','sapphire','emerald'})do
  version=game
- for _,r in ipairs(H.recipes)do if r.name=='hoenn_center_plant' or r.kind=='centerSeat' then
+ for _,r in ipairs(H.recipes)do if r.name=='hoenn_center_plant' or r.name=='hoenn_mart_plant' or r.kind=='centerSeat' then
   local cells={};for yy,row in ipairs(r.rows)do for xx,mid in ipairs(row)do cells[(xx-1)..':'..(yy-1)]={cx=xx-1,cy=yy-1,mid=mid,pair=r.pair,primary='building',ts={}}end end
   local list=F.extract(cells);assert(#list==1)
   F.append(list[1],function(v)for _,q in ipairs(v)do

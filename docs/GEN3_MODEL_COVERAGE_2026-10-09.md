@@ -403,3 +403,13 @@ Checkout and register have differing RS metatile patterns and remain native
 pending a separate model. Mart plant likewise awaits a projected-apron fix
 (the existing Emerald recipe needs review); this batch does not enable it.
 No collision, interaction, warp or player-save changes.
+
+
+## Verified follow-up: Hoenn Mart plant apron
+
+Moved the source-projected plant volume back16px into its blocked wall niche,
+using the existing bounded recess hook. RS family enabled after separate source
+inspection. RS/Emerald production views inspected; focused tests include all
+three games' plant-apron bounds. RS Mart audits6/0 each. Emerald7/2 exposes an
+existing checkout slab across clerk-aisle cells(0,3)/(1,3); this is the next
+priority fix, not a plant regression. Native gameplay/saves unchanged.

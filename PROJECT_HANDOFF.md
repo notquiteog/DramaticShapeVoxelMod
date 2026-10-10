@@ -1,3 +1,9 @@
+# Hoenn Mart plant apron — 2026-10-09
+
+Plant moved into native blocked wall niche and separately enabled in RS. RS/E
+production renders inspected; focused suites pass. RS6/0 scoped floor audit;
+Emerald7/2 identifies existing checkout slab across clerk aisle, next priority.
+
 # Ruby/Sapphire Mart display cases — 2026-10-09
 
 Five independently checked shelf/cooler families enabled; both native sources

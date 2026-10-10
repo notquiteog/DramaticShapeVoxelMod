@@ -412,7 +412,7 @@ add('hoenn_mart_glass',mart,{{0x213,0x213,0x213},{0x21b,0x21b,0x21b}},'designed'
 add('hoenn_mart_counter',mart,{{0x318,0x239,0x23a},{0x320,0x241,0x242}},'counter',{h=7,top=16,join=true})
 -- 244 is the clock's lower wallpaper row; 208 is walkable floor.
 -- Leave both to the native wall/floor renderer, never invent a counter.
-add('hoenn_mart_plant',mart,{{0x215},{0x21d},{0x225}},'plant',{h=26,cutout=true})
+add('hoenn_mart_plant',mart,{{0x215},{0x21d},{0x225}},'plant',{h=26,cutout=true,depthOffset=-16})
 -- Whole native roof headers, walls and doors; the floor apron is excluded.
 M.exteriors={
  {family='rse',name='littleroot_player_house',pair='general__petalburg',header=0,back=2,roofEnd=54,wallBottom=79,bevel=3,roofShape='littleroot_tiered',roofRise=16,openings={{48,57,65,78,door=true},{15,58,32,68}},rows={{0x208,0x209,0x209,0x209,0x20a},{0x210,0x211,0x211,0x211,0x212},{0x218,0x219,0x219,0x219,0x21a},{0x222,0x232,0x230,0x240,0x221},{0x22a,0x23a,0x238,0x248,0x229}}},
