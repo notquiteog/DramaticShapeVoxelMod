@@ -1,6 +1,13 @@
 -- Native metatile identifiers only; no imported pixels or ROM data.
 -- A family matches its complete roof header and both facade boundaries.
 return {
+{name='cinnabar_mansion',pair='general__rom_082d4b6c',kind='mansion',geometry='cinnabar_mansion',header=4,
+ back=0,roofEnd=32,wallBottom=64,bevel=0,ground=0x008,openings={{48,54,64,64,door=true}},rows={
+ {0x290,0x28f,0x291,0x28f,0x291,0x28f,0x292},
+ {0x298,0x297,0x299,0x297,0x299,0x297,0x29a},
+ {0x29b,0x29c,0x29d,0x28b,0x28c,0x28d,0x28e},
+ {0x2a3,0x2a4,0x2a5,0x293,0x294,0x295,0x296},
+}},
 {name='cinnabar_lab',pair='general__rom_082d4b6c',kind='laboratory',geometry='cinnabar_lab',header=5,
  back=2,bodyBack=18,roofEnd=32,wallBottom=64,wallHeight=48,bevel=0,ground=0x008,
  groundPreserve={{0,4},{1,4},{2,4},{3,4},{6,4}},openings={{48,48,64,64,door=true}},rows={

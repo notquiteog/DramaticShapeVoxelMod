@@ -163,3 +163,18 @@ cell overlap flags. FireRed runtime verification remains pending.
 Ruby/Sapphire are separate coverage work: parity's new Ruby fixture uses RU_
 map IDs (Sapphire SA_), and source differences still need inspection. Emerald
 pattern coverage is not evidence for those games.
+
+## Verified batch: Cinnabar mansion (LeafGreen)
+
+The complete 7×4 mansion now has a closed steep roof with three solid gabled
+dormers, two source-windowed storeys, rear/side windows and cornices. The central
+entrance recess and checkerboard canopy stay within the blocked source cells;
+the native walkable stair drawing below the building remains untouched. The
+canopy's source checkerboard is drawn horizontally and its former facade patch
+is repaired with original wall color. Door animation uses the authored recess.
+
+Native source in `leafgreen-frlg-specialist-source`, inspected production orbit
+and eye/door captures in `leafgreen-cinnabar-mansion-review`. Mansion/Civic
+focused suites pass. LeafGreen native footprint census: 105 recognized
+assemblies, zero low walking-cell overlap flags. This is still only a scoped
+exterior addition; full regional building/furniture coverage remains unfinished.
