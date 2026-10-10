@@ -1,3 +1,9 @@
+# Birch floor plants and east book stacks — 2026-10-09
+
+Separately checked offset source family and one-cell plants modeled. RS/E
+orbit/eye renders inspected; scoped audits RS16/0, Emerald15/0; focused tests
+pass. Small east table and native walkable seat drawings still pending.
+
 # Birch southeast workstation and cupboard — 2026-10-09
 
 Mirrored native workstation and blocked-cell cupboard modeled for RS/E.

@@ -498,3 +498,13 @@ walking cell open. RS/E orbit and southeast-eye views inspected; scoped lab
 audits13/0 each. Hoenn/RS/designed suites pass, including cupboard projection
 regression and full source precedence. Remaining wall shelves, plants and
 other furnishings are still native; no interaction or full-coverage claim.
+
+
+## Verified batch: Birch floor plants and east book stacks
+
+Native one-cell plants occupy their blocked cells; the east book-stack family
+uses its separate three-cell drawing with an8px source/geometry offset. Closed
+cover/page models reuse only the separately checked matching book art. RS/E
+orbit and dedicated east-stack eye views inspected; scoped audits RS16/0 each,
+Emerald15/0 (different native plant placement). Hoenn/RS suites pass. Native
+wallside small table and walkable green seat drawings remain pending.

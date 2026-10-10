@@ -16,17 +16,18 @@ function M.append(p,source,box,sample,emit)
   return
  end
  if p.recipe.kind=='labStacks' then
+  local function color(px,py)return sample(px,py+(p.recipe.sourceOffset or 0))end
   for row=0,1 do
-   local n=z+row*16
-   local covers={sample(4,12),sample(8,10),sample(7,4)}
+   local n=z+row*16+(p.recipe.stackOffset or 0)
+   local covers={color(4,12),color(8,10),color(7,4)}
    for layer=0,2 do
     local a=layer%2;local cover=covers[layer+1]
     box(x+1+a,layer*2,n+3,x+14-a,layer*2+.35,n+14,cover)
-    box(x+1.5+a,layer*2+.35,n+3.5,x+13.5-a,layer*2+1.65,n+13.5,sample(10,9))
+    box(x+1.5+a,layer*2+.35,n+3.5,x+13.5-a,layer*2+1.65,n+13.5,color(10,9))
     box(x+1+a,layer*2+1.65,n+3,x+14-a,layer*2+2,n+14,cover)
     box(x+1+a,layer*2,n+3,x+2+a,layer*2+2,n+14,cover)
    end
-   source(5,row*16+1,7,7,{x+2,6.03,n+3},{x+13,6.03,n+3},{x+13,6.03,n+13},{x+2,6.03,n+13})
+   source(5,row*16+1+(p.recipe.sourceOffset or 0),7,7,{x+2,6.03,n+3},{x+13,6.03,n+3},{x+13,6.03,n+13},{x+2,6.03,n+13})
   end
   return
  end
