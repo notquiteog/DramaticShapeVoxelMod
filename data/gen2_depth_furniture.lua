@@ -87,7 +87,8 @@ return {
  TILESET_BATTLE_TOWER_INSIDE={
   prop('battle_tower_terminal',5,left,'machine',1),
   prop('battle_tower_table',7,{0,0,2,2},'table',1),
-  prop('battle_tower_reception',28,top,'console',1),
+  -- Block28 is a circular floor ornament over four WALKABLE cells, not
+  -- a reception desk. Its native pattern must remain flat and complete.
   prop('battle_tower_statue',11,{0,0,2,2},'statue',10),
  },
  TILESET_MANSION={

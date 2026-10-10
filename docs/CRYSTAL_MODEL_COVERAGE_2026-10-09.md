@@ -278,3 +278,21 @@ views. Source port stairs are already correctly recipe-pinned; the earlier
 plant fixture put its camera directly on one ascending stair. That view was
 not evidence of a missing stair recipe. Other floors/warp families remain
 outside this bounded traversal audit.
+
+## Crystal Battle Tower floor ornaments
+
+- [x] Remove the incorrect block28 “reception” recipe. It claimed only the
+  upper half of a circular floor ornament and raised it into a pink console.
+  All four native cells under each of the four complete ornaments are walkable.
+  Their original artwork now remains complete at floor level.
+
+Crystal `gen2-tower-footprints` verifies the16 walking cells;
+`gen2-tower-lobby-floor` verifies four complete drawings, no false reception
+models, unchanged full native tile/collision grids and four walkable-camera
+views. Before/after overviews inspected. Source-crop regressions pass.
+Gold/Silver imported maps contain no Battle Tower1F or Outside; this is an
+explicit Crystal-only correction. Other lobby furnishings need review.
+
+The MART shallow-descent experiment was reverted because the forward eye view
+was not enough evidence of an improvement. Native stair geometry is unchanged;
+traversal evidence above remains valid, and descending visual review stays open.

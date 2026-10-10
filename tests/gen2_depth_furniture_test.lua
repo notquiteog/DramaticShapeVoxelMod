@@ -62,3 +62,5 @@ for _,list in pairs(specs)do for _,s in ipairs(list)do
  end
 end end
 print('PASS '..n..' shared furniture assemblies: geometry and native crop bounds')
+
+for _,s in ipairs(specs.TILESET_BATTLE_TOWER_INSIDE)do assert(s.block~=28,'walkable Battle Tower floor ornament raised into furniture')end
