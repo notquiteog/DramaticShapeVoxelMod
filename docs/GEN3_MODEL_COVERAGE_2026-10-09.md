@@ -454,3 +454,15 @@ until a dedicated geometry correction. South workstations and side equipment
 are also still native. Initial review drivers retained an unrelated escalator
 strip assertion; removed that QA-only block and reran successfully before
 recording final audits. Player saves/gameplay unchanged.
+
+
+## Verified fix/batch: Birch circular machine apron
+
+Birch's machine moves back16px onto its native blocked footprint, retaining the
+original circular platen, drum, panel and feet. Drum and foot/panel undersides
+are now closed. RS family enabled only after separate source review. All three
+games' front/rear/side and dedicated `machine-eye.png` production views inspected;
+scoped lab audits now9/0 each, superseding EM9/2. RS/Hoenn/additional suites pass,
+including apron bounds and drum underside regression. FRLG machine position is
+unchanged; shared underside closure applies there but was not freshly rendered.
+South workstations and additional lab equipment remain unreviewed.

@@ -369,7 +369,7 @@ add('birch_free_books_end',lab,{{0x236,0x237},{0x22c,0x22d},{0x234,0x235}},'desi
 add('birch_computer',lab,{{0x212,0x213},{0x21a,0x21b},{0x222,0x223}},'designed',{design='em_lab_computer'})
 add('birch_research_desk',lab,{{0x20b,0x20c,0x20d,0x20e},{0x222,0x233,0x222,0x233}},'designed',{design='em_lab_desk'})
 add('birch_starter_desk',lab,{{0x229,0x23a},{0x231,0x242}},'designed',{design='em_lab_starter'})
-add('birch_machine',lab,{{0x214,0x215},{0x21c,0x21d},{0x247,0x23f}},'labMachine',{h=25,topY=0,bodyY=24,panelY=26})
+add('birch_machine',lab,{{0x214,0x215},{0x21c,0x21d},{0x247,0x23f}},'labMachine',{h=25,topY=0,bodyY=24,panelY=26,depthOffset=-16})
 add('birch_server',lab,{{0x216},{0x21e},{0x292}},'designed',{design='em_lab_server'})
 add('birch_plant',lab,{{0x23c},{0x244}},'plant',{h=20,cutout=true})
 add('center_healer',center,{{0x222,0x223},{0x22a,0x22b}},'centerHealer',{h=13})

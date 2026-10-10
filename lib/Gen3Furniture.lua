@@ -319,6 +319,11 @@ function M.append(p,emit,uvFor)
   local f=r.facade or {1,0,p.w-2,p.d}
   source(f[1],f[2],f[3],f[4],{x+1,r.h,front+.02},{x+p.w-1,r.h,front+.02},{x+p.w-1,r.base or 0,front+.02},{x+1,r.base or 0,front+.02})
  elseif r.kind=='labMachine' then
+  local originalBox=box
+  local function box(a,b,n,c,h,f,t)
+   originalBox(a,b,n,c,h,f,t)
+   emit({{a,b,f},{c,b,f},{c,b,n},{a,b,n}},t,.65)
+  end
   -- The native machine is a circular red platen, silver rim and blue drum
   -- on four feet. Its top-down shadow/floor is never part of the model.
   local function sample(sx,sy)
@@ -328,7 +333,7 @@ function M.append(p,emit,uvFor)
    return {{u,v},{u,v},{u,v},{u,v}}
   end
   local silver,blue,dark=sample(7,12),sample(12,r.bodyY or 32),sample(9,r.panelY or 38)
-  local cx,cz=x+16,z+31
+  local cx,cz=x+16,z+31+(r.depthOffset or 0)
   local rings={{2,10},{5,12},{7,11},{18,11},{20,14},{22,14},{24,12}}
   for j=1,#rings-1 do
    local a,b=rings[j],rings[j+1]
@@ -337,6 +342,11 @@ function M.append(p,emit,uvFor)
     local function pt(r,t)return {cx+math.cos(t)*r[2],r[1],cz+math.sin(t)*r[2]}end
     emit({pt(b,t0),pt(b,t1),pt(a,t1),pt(a,t0)},j==3 and blue or silver,.78+.12*math.sin(t0))
    end
+  end
+  for i=0,15 do
+   local a,b=i*math.pi/8,(i+1)*math.pi/8
+   emit({{cx,2,cz},{cx+10*math.cos(b),2,cz+10*math.sin(b)},
+    {cx+10*math.cos(a),2,cz+10*math.sin(a)},{cx,2,cz}},dark,.65)
   end
   -- Map the original circular red top onto a horizontal disk, preserving
   -- the small white highlight instead of stretching it over a cylinder.

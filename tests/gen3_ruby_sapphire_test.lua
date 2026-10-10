@@ -12,7 +12,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  assert(S.of('general','petalburg',1,0x10,0).kind=='water')
  assert(S.of('general','petalburg',0x2a,0x2a,0).kind=='flat','seaweed became Kanto stairs')
  assert(S.of('building','facility',0x2f8,0,7).kind=='flat','unreviewed Emerald interior leaked')
- local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop' or r.pair=='building__lab')end end;assert(approved==37)
+ local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop' or r.pair=='building__lab')end end;assert(approved==38)
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)
@@ -90,6 +90,15 @@ for _,game in ipairs({'ruby','sapphire','emerald'})do
  local list=F.extract(cells);assert(#list==1 and list[1].recipe.kind=='martRegister')
  F.append(list[1],function(v)for _,q in ipairs(v)do assert(q[3]>=17 and q[3]<32,'register crosses its service cell')end end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
 end
+for _,r in ipairs(H.recipes)do if r.name=='birch_machine' then
+ local underside=false
+ F.append({cx=0,cy=0,w=32,d=48,recipe=r,ts={}},function(v)
+  local low,high=math.huge,-math.huge
+  for _,q in ipairs(v)do assert(q[3]>=0 and q[3]<32,'Birch machine crosses native apron');low=math.min(low,q[2]);high=math.max(high,q[2])end
+  if low==2 and high==2 then underside=true end
+ end,function()return {{0,0},{1,0},{1,1},{0,1}}end)
+ assert(underside,'machine drum underside open')
+end end
 version='emerald';assert(#H.exteriorRecipes()>3 and H.recipeActive(H.recipes[1]))
 version='firered';assert(not H.active() and H.recipeActive({}) and not H.recipeActive({family='rse'}))
 print('Ruby/Sapphire checked-family dispatch, full source matches, native rear lanes and edition isolation PASS')

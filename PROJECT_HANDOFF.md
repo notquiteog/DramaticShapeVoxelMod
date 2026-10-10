@@ -1,3 +1,10 @@
+# Birch circular machine apron clearance — 2026-10-09
+
+Machine moved back16px onto blocked footprint; drum/foot undersides closed.
+RS enabled after source review. RS/E all-angle and machine eye renders
+inspected, scoped audits9/0 each and focused suites pass. FRLG position
+unchanged, its shared underside closure not freshly rendered.
+
 # Ruby/Sapphire Birch lab core furniture — 2026-10-09
 
 Eight source-checked families enabled; RS front/rear/side/eye renders inspected,
