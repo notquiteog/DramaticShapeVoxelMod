@@ -2,8 +2,9 @@ local V=...
 local M={}
 function M.build(t,data,perRow,aw,ah)
  local out={}
+ local drawing=t.tiles
  local function tex(x,y)
-  local id=t.tiles[math.floor(y/8)+1][math.floor(x/8)+1]
+  local id=drawing[math.floor(y/8)+1][math.floor(x/8)+1]
   return {(id%perRow*8+x%8+.5)/aw,(math.floor(id/perRow)*8+y%8+.5)/ah}
  end
  local function emit(p,uv,shade)p.uv=uv;p.shade=shade or 1;out[#out+1]=p end
@@ -29,6 +30,15 @@ function M.build(t,data,perRow,aw,ah)
   -- Preserve the original wallpaper as one continuous thin face.
   source(0,0,8,8,{0,t.wallHigh,f+.01},{8,t.wallHigh,f+.01},{8,t.wallLow,f+.01},{0,t.wallLow,f+.01})
  else assert(V.require('InteriorFurniture').draw(t.design,{source=source,sample=sample,box=box,face=emit,width=#t.tiles[1]*8,height=#t.tiles*8}),'unknown interior model '..t.design)end
+ if t.backing then
+  -- A desk drawn over an interior wall owns those source rows. Restore the
+  -- reviewed continuous wall behind it rather than leaving a room opening.
+  local b=t.backing;drawing=b.tiles
+  local w,h=#drawing[1]*8,#drawing*8
+  box(0,0,0,w,b.height,b.depth,sample(4,4))
+  source(0,0,w,h,{0,b.height,b.depth+.01},{w,b.height,b.depth+.01},
+   {w,0,b.depth+.01},{0,0,b.depth+.01})
+ end
  return out
 end
 -- Fill only the north-wall backing in reviewed rooms. Claiming a whole

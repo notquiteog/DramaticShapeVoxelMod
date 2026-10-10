@@ -1699,6 +1699,24 @@ function M.draw(id,A)
   B(1,0,6,15,10,14,mat);B(2,10,7,14,11,13,mat)
   front({1,1,14,14},1,0,15,10,14.02)
   B(10,3,14,12,5,14.6,dark)
+ elseif id=='gb_rocket_terminal' then
+  local case,dark=T(4,11),T(1,24)
+  -- A working surface with knee space, a drawer pedestal and one desktop
+  -- monitor/mouse. The projected monitor is no longer repeated on the lid.
+  desk(1,16,31,31,7,case)
+  B(17,0,18,30,5.8,30,dark)
+  front({17,24,14,7},17,0,30,5.8,30.02)
+  crt(17,17,13,9,19,{21,15,1,1},case,dark)
+  -- Unproject the original parallelogram display; its atlas region spans
+  -- contiguous78/79 and94/95 tiles, so these four source corners stay native.
+  A.face({{18,18,23.99},{29,18,23.99},{29,10,23.99},{18,10,23.99}},
+   {T(20,13)[1],T(24,15)[1],T(24,18)[1],T(20,16)[1]},1)
+  B(7,7,25,12,7.7,29,dark)
+  B(8,7.7,25.5,11,8.6,28.5,case)
+  top({8,18,5,5},7.5,25,11.5,29,8.62)
+  -- The mouse lead follows the original unobtrusive dark desktop palette.
+  B(9,7.04,23,9.25,7.25,25,dark)
+  B(9,7.04,23,18,7.25,23.25,dark)
  elseif id=='gb_rocket_books' then
   local wood,dark=T(1,9),T(3,10)
   shelves(1,20,14,10,26,{},wood,dark)

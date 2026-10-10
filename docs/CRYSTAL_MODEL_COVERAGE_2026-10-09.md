@@ -245,3 +245,19 @@ views. Inspected Crystal first and Silver overview; closed geometry remains
 inside the southern blocked cell of the original drawing. Focused bounds,
 full native furniture, plant and crate regressions pass. The adjacent terminal
 is still the next separate coverage task.
+
+## Rocket base terminal
+
+- [x] Rocket B1 terminal now has a desk with knee space, drawer pedestal,
+  closed CRT shell/stand/vents and mouse. The original slanted screen is
+  unprojected using its native atlas corners; it no longer repeats across a
+  generic box lid. The wall covered by the original desk drawing is restored
+  from native4/20 tiles at the neighboring16px wall height.
+
+Gold/Silver/Crystal `gen2-rocket-terminal.lua` passes: one complete native
+assembly, all four source cells blocked, full native tile/collision grids
+unchanged, four views from walkable `(19,13)`. Crystal first/overview inspected;
+initial wall gap and oversized backing were corrected before acceptance.
+Focused footprint/screen/underside/wall tests and complete-furniture regressions
+pass. The native walkable chair remains unchanged. This is one workstation,
+not general terminal coverage across all tilesets.

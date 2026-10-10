@@ -265,6 +265,7 @@ local storage={
  {id='crystal_storage_plant',tiles={{30,31},{46,47},{62,63},{16,16}},drawingRows=3,groundTiles={{16}},model='planter',parts={},support=0,
   maps={OLIVINE_PORT_PASSAGE=true,VERMILION_PORT_PASSAGE=true,TEAM_ROCKET_BASE_B1F=true}},
  {id='crystal_rocket_books',tiles={{64,66},{26,27},{26,27},{28,29}},groundTiles={{16}},design='gb_rocket_books',parts={},support=0,maps={TEAM_ROCKET_BASE_B1F=true}},
+ {id='crystal_rocket_terminal',tiles={{4,4,4,4},{64,65,78,79},{80,93,94,95},{38,39,54,55}},backing={tiles={{4,4,4,4},{20,20,20,20}},height=16,depth=16},groundTiles={{16}},design='gb_rocket_terminal',parts={},support=7,maps={TEAM_ROCKET_BASE_B1F=true}},
 }
 return {TILESET_UNDERGROUND=storage,TILESET_GATE=underground,TILESET_TRAIN_STATION=station,TILESET_GAME_CORNER=corner,TILESET_RADIO_TOWER=radio,TILESET_FACILITY=facility,TILESET_TOWER=tower,TILESET_LIGHTHOUSE=lighthouse,TILESET_PLAYERS_HOUSE=house,TILESET_LAB=lab,
   TILESET_HOUSE=commonHouse,TILESET_TRADITIONAL_HOUSE=traditional,TILESET_MART=mart,TILESET_POKECENTER=center,
