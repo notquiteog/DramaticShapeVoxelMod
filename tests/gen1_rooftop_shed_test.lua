@@ -34,4 +34,8 @@ assert(#scene('CELADON_MANSION_ROOF',true).objectQuads==0,'incomplete drawings m
 local I=assert(loadfile('lib/InteriorDiorama.lua'))({})
 assert(I.profile({id='CELADON_MANSION_ROOF',tileset='MANSION',width=4,height=6},1)==nil,'roof is outdoors')
 assert(I.profile({id='CELADON_MANSION_1F',tileset='MANSION',width=4,height=6},1),'actual interior stays enclosed')
+for _,case in ipairs{{'CELADON_MART_ROOF','MART'},{'SS_ANNE_BOW','SHIP'}}do
+ assert(I.profile({id=case[1],tileset=case[2],width=4,height=6},1)==nil,'outdoor shared tileset enclosed')
+end
+assert(I.profile({id='SS_ANNE_3F',tileset='SHIP',width=4,height=6},1),'actual ship corridor stays enclosed')
 print('PASS source-scoped rooftop shed geometry, neighboring walkway, partial/indoor rejection and open-air room classification')

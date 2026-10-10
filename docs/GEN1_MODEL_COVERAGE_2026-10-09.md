@@ -25,3 +25,9 @@ imported atlas via`ROOF_ATLAS` (rawRGBA fixture, never committed).
 Remaining: audit other rooftop/ship-deck shared-tileset exceptions, then
 unreviewed Gen1 exterior/interior families and their first-person backs/sides.
 No claim is made that all existing Gen1 models are complete or polished.
+
+Follow-up: Yellow S.S.Anne bow and Celadon Mart rooftop native/model captures
+confirmed the same artificial-room error. Both now retain open sky and their
+native hull/parapets; the actual S.S.Anne3F corridor stays enclosed. Compared
+before/after in`yellow-gen1-openair-audit`; no collision/layout changes. Other
+vending/deck model detail remains under review rather than counted complete.

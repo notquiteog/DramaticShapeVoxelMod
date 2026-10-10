@@ -38,8 +38,9 @@ function M.profile(def,gen)
  elseif gen==2 then
   if def.environment~='INDOOR' and def.environment~='GATE' and not cave then return end
  else
-  -- Mansion's roof reuses interior furniture tiles but is an open-air terrace.
-  if id=='CELADON_MANSION_ROOF' then return end
+  -- These source maps reuse indoor tilesets for outdoor terraces/decks.
+  -- Their native parapets/hull supply the enclosure; never add a room/ceiling.
+  if id=='CELADON_MANSION_ROOF' or id=='CELADON_MART_ROOF' or id=='SS_ANNE_BOW' then return end
   -- Buildings and caves are enclosed; outdoor maps keep their scenery.
   --
   -- SHIP, CEMETERY and MANSION were missing here and every map that uses them

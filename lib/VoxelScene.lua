@@ -159,7 +159,7 @@ end
 -- void to wants -- the overworld battle's arena shot is one of those. The
 -- gradient is added on top of this by skyFor, for the free-roam camera alone.
 function VoxelScene.skyColor(map, t)
-  if not (map and map.def and (Map.isOutdoor(map.def) or DayNight.isOpenForest(map) or map.id == 'SAFARI_ZONE_CENTER' or map.id == 'CELADON_MANSION_ROOF' or V.require('Gen2Boundary').enabled(map))) then return nil end
+  if not (map and map.def and (Map.isOutdoor(map.def) or DayNight.isOpenForest(map) or map.id == 'SAFARI_ZONE_CENTER' or map.id == 'CELADON_MANSION_ROOF' or map.id == 'CELADON_MART_ROOF' or map.id == 'SS_ANNE_BOW' or V.require('Gen2Boundary').enabled(map))) then return nil end
   if not t or t <= 0 then return nil end
   local sky = VoxelScene.skyShade(SKY_SHADE, t)
   -- outdoors the flat fill follows the CLOCK: it becomes the hour's haze --
@@ -1454,7 +1454,7 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   -- every surface by. A CANOPY map (Viridian Forest) is the case between:
   -- the rig stays at noon and no sky is painted, but the hour's tint still
   -- falls through the leaves -- night reaches a forest floor.
-  local outdoor = state.map.def and (Map.isOutdoor(state.map.def) or DayNight.isOpenForest(state.map) or state.map.id == 'SAFARI_ZONE_CENTER' or state.map.id == 'CELADON_MANSION_ROOF') or false
+  local outdoor = state.map.def and (Map.isOutdoor(state.map.def) or DayNight.isOpenForest(state.map) or state.map.id == 'SAFARI_ZONE_CENTER' or state.map.id == 'CELADON_MANSION_ROOF' or state.map.id == 'CELADON_MART_ROOF' or state.map.id == 'SS_ANNE_BOW') or false
   DayNight.applyRig(outdoor)
   Voxel3D.tint = DayNight.tint(outdoor or DayNight.isCanopy(state.map))
   -- and the window glass: the tileset's own panes (found in its art --
