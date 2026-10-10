@@ -1,67 +1,9 @@
--- 3D-BTL on Gold, Silver and Crystal: the battle drawn over the live diorama.
---
--- This is a different implementation of the same row, not a port of the Gen 1
--- one, because the two engines put the world behind a battle in opposite ways.
---
--- On Gen 1, Battle Art stages the fight itself: it finds clear ground, points
--- an over-the-shoulder camera at it, renders the mons as billboards in that
--- 3D space, and composites the HUD over the result. Every seam that needs --
--- picImage, resolveBattleScale, frontPlacement, backPlacement, newWild,
--- newTrainer, pushBattle -- is absent on Gen 2, which is why
--- OverworldBattle.available() is false there and stays false.
---
--- On Gen 2 the engine already does the hard part. `Game2:drawScene` has a
--- branch for it (src/core/Game2.lua:1848):
---
---     if battleSurround(self.stack) == "world" then
---       self.frameWorldActive = true
---       self:letterbox(w, h, true)
---       self.world:draw()          -- <- the LIVE world, every frame
---       Chrome.worldSurround = true
---     end
---     wide:drawWidescreen(w, h)
---
--- `World:draw` is the very function that asks `Pipelines.worldPipeline()` and
--- calls `World:drawPipeline` (src/world/gen2/World.lua:11643), so under
--- BATTLE BG = world the thing drawn behind a Gen 2 battle IS this mod's
--- diorama, live, at whatever rung is selected. `Chrome.worldSurround` then
--- suppresses the letterbox fill that would have covered it.
---
--- One thing is left over, and it is the whole of this file: the 160x144 panel
--- still clears itself opaque. `BattleState:drawPanel` opens with
--- `Chrome.clear()`, which is a full-panel `paletteFill` -- and unlike
--- `Chrome.letterbox` it does not consult `worldSurround`, because on the cart
--- the battle background genuinely is a white field. So the native WORLD mode
--- shows the world in the MARGINS and a white slab where the fight is.
---
--- Suppress that one fill and the diorama is behind the fight as well. So this
--- replaces `drawPanel` with its own body minus the clear, and every other path
--- through the scene -- the slide-in, the animation view, the lifted rows, the
--- exp burst, `battle.overlay` -- is still the engine's own.
---
--- `drawPanel` and NOT the `drawSceneBody(panelFn)` seam, which is the tidier
--- looking route and was the first attempt. The engine builds the panel as
--- `panelFn or function() self:drawPanel() end`, so passing a panel works --
--- right up until another mod wraps `drawSceneBody` with a signature that
--- drops the argument:
---
---     function BattleState2:drawSceneBody()      -- no panelFn
---       ...
---       innerDrawSceneBody(self)                 -- and none forwarded
---     end
---
--- crystal_animated_sprites_with_shiny_visuals 2.0.3 does exactly that, and
--- the result is silent: our panel is swallowed, the engine falls back to its
--- own `drawPanel`, and the fight draws on a white slab with no error anywhere.
--- Replacing `drawPanel` itself needs no argument to survive a chain, so it
--- cannot be broken by a link that forgets to forward one.
---
--- What this deliberately does NOT do, and what separates it from the Gen 1
--- rung: there is no arena search and no over-the-shoulder camera. The world
--- behind the fight is the player's own view of the map they are standing on,
--- because that is what `World:draw` draws. The mons, their placement, their
--- scale, the HUD and the text box all stay Gold's. So this is "the fight
--- happens on the diorama", not "the fight is staged and shot".
+-- Gen 2 staged battle composition. Game2 draws World behind its native battle
+-- screen rather than using Gen 1's renderer override. The finished arena goes
+-- through the existing world pipeline (even with the overworld rung OFF), while
+-- the native panel/animation fills are suppressed. Only actors actually drawn
+-- by Gen2Staged suppress their flat sprite; unavailable actors retain native art.
+-- All battle mechanics and non-staged UI remain owned by the engine.
 
 local V = ...
 local Generation = V.require("Generation")
@@ -69,8 +11,7 @@ local OverworldBattle = V.require("OverworldBattle")
 
 local Gen2Battle = {}
 
--- Gen 2 only. The Gen 1 rung is OverworldBattle's and the two never both run:
--- OverworldBattle.available() is the Gen 1 test and is false here.
+-- Gen 2 only; Gen 1 uses OverworldBattle's renderer override.
 function Gen2Battle.available()
   return Generation.isGen2()
 end
@@ -136,6 +77,19 @@ function Gen2Battle.install()
     return
   end
 
+  -- The stage must also reach Game2 when the ordinary overworld rung is OFF.
+  -- Keep the choice scoped to World.draw so Options and other games retain
+  -- the user's pipeline value, including on renderer failures.
+  local okWorld, World = pcall(require, "src.world.gen2.World")
+  local okPipelines, Pipelines = pcall(require, "src.render.Pipelines")
+  if okWorld and okPipelines then
+    V.require("Gen2BattlePipeline").install(World, Pipelines, function()
+      if not Gen2Battle.enabled() then return false end
+      local shot = OverworldBattle.shot()
+      return shot and shot.canvas ~= nil
+    end)
+  end
+
   local BattleState = require("src.battle.BattleState")
   -- The four UI facades are write-through, so this lands on the class Gold
   -- actually pushes (src/ui/gen2/BattleState.lua), and reads back as ours --
@@ -195,9 +149,18 @@ function Gen2Battle.install()
       local okFont, BoxFont = pcall(require, "src.render.Font")
       local ownsHud=type(self.usesModernDoublesHud)=="function" and self:usesModernDoublesHud()
       if not ownsHud and okFont and BoxFont and type(BoxFont.drawBox) == "function" then
+        local laidOut=false
+        if type(self.drawNativeDoublesBackplates)=='function' then
+          local Chrome=require('src.ui.gen2.Chrome')
+          laidOut=self:drawNativeDoublesBackplates(function(x,y,w,h)
+            Chrome.paletteFill(x*8,y*8,w*8,h*8)
+          end)
+        end
+        if not laidOut then
         local UI=V.require('Gen2BattleUI')
         if not UI.backplate(self,0,0,12,4)then BoxFont.drawBox(0, 0, 12, 4)end
         if not UI.backplate(self,9,6,11,7)then BoxFont.drawBox(9, 6, 11, 7)end
+        end
       end
     end
     -- drawPanel's own body, minus the Chrome.clear() that would paint over
