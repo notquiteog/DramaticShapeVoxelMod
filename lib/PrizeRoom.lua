@@ -6,6 +6,7 @@ local palette={{.075,.08,.10},{.14,.15,.18},{.48,.34,.16},{.77,.60,.30},
  {.27,.045,.075},{.44,.075,.105},{.87,.79,.59},{.055,.065,.08},
  {.72,.12,.10},{.18,.45,.32},{.93,.62,.24},{.42,.44,.48},
  {.105,.025,.043},{.15,.035,.053},{.20,.055,.075},{.28,.13,.10}}
+function M.palette()return palette end
 local function key(x,y)return (y+64)*4096+x+64 end
 function M.layout(map)
  if V.require("CommunityVisuals").prizeRoom:get()~="n64memory" then return end

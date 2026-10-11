@@ -290,3 +290,21 @@ Driver: `tools/qa/gen2-native-buildings.lua`; evidence in
 `.scratch/parity-073-20261011/results/{gold,silver,crystal}-gen2-native-buildings-host`.
 This remains **partial**: unreviewed service buildings retain their existing
 models; no claim of complete city or global model coverage.
+
+### Native PRIZE ROOM wall panels (0.3.76)
+
+FireRed/LeafGreen Celadon prize room now consumes the optional shared authored
+PrizeRoom wall kit and palette on seven reviewed back-wall strips. Exact native
+top/bottom metatile patterns, blocked cells and neighboring floor guard the
+replacement. Brass ribs and fabric panels remain within the solid wall strip;
+clerks, counters, floor, exits and native interaction logic are unchanged.
+Native default/OFF restores its original artwork. The setting is registered
+with the native options adapter and invalidates the scene on change.
+
+Both editions passed official 0.3.76 ON/OFF and first-person renderer checks;
+FireRed panels/first-person and LeafGreen original fallback captures inspected.
+Shared geometry, source-pattern rejection, walkable-cell exclusion, custom-map
+fallback and adapter tests pass, along with 541 option-consumer checks.
+This remains **partial**: ceiling, full enclosure and authored furnishings are
+not ported. Driver: `tools/qa/native-prize-walls.lua`; captures/logs under
+`.scratch/parity-073-20261011/results/{firered,leafgreen}-native-prize-walls-host`.

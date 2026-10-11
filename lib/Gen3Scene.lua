@@ -116,6 +116,7 @@ local function releaseGeometry(cache)
  if cache.cityGround then cache.cityGround.mesh:release();cache.cityGround.image:release()end
  if cache.legendaryTunnels then V.require('NativeLegendaryTunnels').release(cache.legendaryTunnels)end
  if cache.masonry then cache.masonry.mesh:release();cache.masonry.image:release()end
+ if cache.prizeWalls then cache.prizeWalls.mesh:release();cache.prizeWalls.image:release()end
  if cache.rocketWalls then cache.rocketWalls.mesh:release();cache.rocketWalls.image:release()end
  for _,part in ipairs(cache.civics or {})do
   if part.mesh then part.mesh:release()end;if part.image then part.image:release()end
@@ -270,6 +271,8 @@ local function build(req,cache,previous)
  M.cityGroundCount=cache.cityGround and cache.cityGround.count or nil
  cache.legendaryTunnels=V.require('NativeLegendaryTunnels').build(cells,def.id or Map.current)
  M.tunnelCounts=cache.legendaryTunnels and cache.legendaryTunnels.counts or nil
+ cache.prizeWalls=V.require('NativePrizeWalls').build(cells,def.id or Map.current)
+ M.prizeWallCount=cache.prizeWalls and cache.prizeWalls.count or nil
  cache.rocketWalls=V.require('NativeRocketWalls').build(cells,def.id or Map.current)
  local masonry=V.require("NativeMasonry").new(def)
  M.cliffCount=0
@@ -340,6 +343,8 @@ local function build(req,cache,previous)
   elseif cache.legendaryPillars and cache.legendaryPillars.claims[c.cx..':'..c.cy] then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
   elseif cache.legendaryTunnels and cache.legendaryTunnels.claims[c.cx..':'..c.cy] then
+   plane(b.v,b.i,x,z,uvFor(ts,column and column.ground or shape.ground) or uv)
+  elseif cache.prizeWalls and cache.prizeWalls.claims[c.cx..':'..c.cy] then
    plane(b.v,b.i,x,z,uvFor(ts,column and column.ground or shape.ground) or uv)
   elseif cache.rocketWalls and cache.rocketWalls.claims[c.cx..':'..c.cy] then
    plane(b.v,b.i,x,z,uvFor(ts,column and column.ground or shape.ground) or uv)
@@ -587,7 +592,7 @@ local function prepare(game,vw,vh,cam)
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
  M.prepares=stream.stats.started;M.builds=stream.stats.completed;M.cacheHits=stream.stats.hits
- for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','tunnelCounts','cityGroundCount','legendaryBuildingCount'})do M[name]=cache[name]end
+ for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount'})do M[name]=cache[name]end
  return true
 end
 local function terrain(draw)
@@ -620,6 +625,7 @@ local function terrain(draw)
  if cache.cityGround then draw(cache.cityGround.mesh,cache.cityGround.image)end
  if cache.legendaryTunnels then V.require('NativeLegendaryTunnels').draw(cache.legendaryTunnels,draw)end
  if cache.masonry then draw(cache.masonry.mesh,cache.masonry.image)end
+ if cache.prizeWalls then draw(cache.prizeWalls.mesh,cache.prizeWalls.image)end
  if cache.rocketWalls then draw(cache.rocketWalls.mesh,cache.rocketWalls.image)end
  for _,part in ipairs(cache.civics or {})do
   if not V.require('NativeLegendaryTower').draw(part.placement,draw)then draw(part.mesh,part.image)end
