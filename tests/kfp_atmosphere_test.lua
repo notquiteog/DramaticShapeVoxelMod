@@ -23,5 +23,7 @@ options.kfpDoorSounds.value=true;f={map='room',kind='room',shop=true,x=0,z=0};a:
 assert(a.sources['sfx-shopdoor.mp3'].plays==1)
 f={map='cave',kind='cave',x=0,z=0};a:update(f,.1,1,true)
 assert(not a.sources['amb-cave.mp3'],'existing cave owner not duplicated')
+options.kfpRainSound.value='low';f.kind='route';f.rain=true;a:update(f,.1,1,true)
+assert(a.sources['amb-rain.mp3'].playing,'weather bed follows existing weather')
 a:clear();for _,s in ipairs(sources)do assert(s.released)end
 print('PASS KFP bounded optional audio and asset ownership')

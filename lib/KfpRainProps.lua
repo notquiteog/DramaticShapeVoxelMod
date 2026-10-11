@@ -58,6 +58,28 @@ local function makeUmbrella()
 end
 
 
+local humanNames={}
+for name in ("YOUNGSTER LASS BEAUTY HIKER BUG_CATCHER FISHER FISHERMAN SAILOR SCIENTIST GENTLEMAN GENTLEMAN_1 SUPER_NERD COOLTRAINER COOLTRAINER_M COOLTRAINER_F ACE_TRAINER_M ACE_TRAINER_F SCHOOLBOY SCHOOLGIRL TEACHER NURSE CLERK RECEPTIONIST CABLE_CLUB_RECEPTIONIST OFFICER POLICEMAN GRAMPS GRANNY OLD_MAN OLD_WOMAN FAT_MAN MAN WOMAN BOY GIRL LITTLE_BOY LITTLE_GIRL CAMPER PICNICKER POKEFAN_M POKEFAN_F BLACK_BELT BATTLE_GIRL ROCKER BIKER BURGLAR CUE_BALL SWIMMER_M SWIMMER_F PSYCHIC_M PSYCHIC_F SAGE MEDIUM POKEFAN_M POKEFAN_F POKEMANIAC ROCKET ROCKET_M ROCKET_F MOM OAK BILL DAISY ELM MR_POKEMON FALKNER BUGSY WHITNEY MORTY CHUCK JASMINE PRYCE CLAIR KURT RIVAL BLUE LANCE RED GREEN BRENDAN MAY BIRCH WALLY STEVEN WALLACE FLANNERY ROXANNE BRAWLY NORMAN WINONA TATE LIZA JUAN SCOTT") :gmatch('%S+')do humanNames[name]=true end
+function M.human(name)
+ if type(name)~='string'then return false end
+ name=name:upper():gsub('^OBJ_EVENT_GFX_',''):gsub('^SPRITE_','')
+ -- Restrict suffix normalization to known palette/pose variants. Unknown
+ -- sprites and new-region custom IDs must explicitly opt in through actors.
+ name=name:gsub('_%d+$',''):gsub('_NORMAL$','')
+ return humanNames[name]==true
+end
+function M.posed(posed,player)
+ local actors={}
+ for _,p in ipairs(posed or {})do
+  local d=p.sprite and p.sprite.def or {}
+  if not p.isPlayer and M.human(d.name or d.id) and
+    (not player or V.require('RenderDistance').point(p.px+8,p.py+8,player))then
+   actors[#actors+1]={human=true,x=p.px+8,z=p.py+8,ground=(p.gh or 0)+(p.lift or 0),
+    height=d.frameHeight or 16}
+  end
+ end
+ return actors
+end
 function M.draw(actors,map,time,yaw)
  if not M.setting:get()then return 0 end
  local mode=V.require('Weather').mode(map)
@@ -78,7 +100,7 @@ function M.draw(actors,map,time,yaw)
    -- unknown objects, Pokémon, followers or the first-person player a prop.
    if actor.human==true and not actor.player and actor.x and actor.z then
     local height=actor.height or 24
-    local model=T.mul(T.mul(T.translate(actor.x,(actor.ground or 0)+height-1,actor.z),T.rotateY(-(yaw or 0))),T.scale(15,15,1))
+    local model=T.mul(T.mul(T.translate(actor.x,(actor.ground or 0)+height-2,actor.z),T.rotateY(-(yaw or 0))),T.scale(15,15,1))
     R.draw(mesh,image,model);count=count+1
     if count==32 then break end
    end
@@ -86,6 +108,7 @@ function M.draw(actors,map,time,yaw)
  end)
  love.graphics.pop()
  M.error=not ok and tostring(err)or nil
+ M.lastCount=count
  return count
 end
 function M.invalidate()

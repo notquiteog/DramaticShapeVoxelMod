@@ -7,6 +7,8 @@ local V={require=function(n)
 end}
 love={image={newImageData=function()return{setPixel=function()end,release=function()end}end},graphics={newImage=function()return{setFilter=function()end,release=function()end}end,push=function()end,pop=function()end,setDepthMode=function()end}}
 local M=assert(loadfile('lib/KfpRainProps.lua'))(V)
+assert(M.human('OBJ_EVENT_GFX_LITTLE_BOY') and M.human('SPRITE_YOUNGSTER'))
+assert(not M.human('OBJ_EVENT_GFX_PIKACHU')and not M.human('UNKNOWN_NPC'))
 local actors={{human=true,x=1,z=1},{human=true,player=true,x=2,z=2},{human=false,x=3,z=3},{x=4,z=4}}
 assert(M.draw(actors,{})==0);enabled=true;assert(M.draw(actors,{})==0)
 mode='rain';assert(M.draw(actors,{})==1 and draws==1,'only known human NPCs carry umbrellas')

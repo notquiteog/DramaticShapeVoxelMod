@@ -3,9 +3,10 @@ local V=...
 local S=V.require('ModSetting')
 local M={}
 M.ambient=S.new('kfpAmbience','TOWN / ROUTE SOUND',{'off','low','mid'},{'OFF','LOW','MID'})
+M.rain=S.new('kfpRainSound','RAIN SOUND',{'off','low','mid'},{'OFF','LOW','MID'})
 M.steps=S.new('kfpFootsteps','SURFACE FOOTSTEPS',{false,true},{'OFF','ON'})
 M.doors=S.new('kfpDoorSounds','DOOR SOUNDS',{false,true},{'OFF','ON'})
-M.settings={M.ambient,M.steps,M.doors}
+M.settings={M.ambient,M.rain,M.steps,M.doors}
 local permitted={['amb-cave.mp3']=true,['amb-forest.mp3']=true,['amb-night.mp3']=true,
  ['amb-rain.mp3']=true,['amb-route.mp3']=true,['amb-town.mp3']=true,['amb-water.mp3']=true,
  ['sfx-cavestep.mp3']=true,['sfx-door.mp3']=true,['sfx-grass1.mp3']=true,
@@ -42,9 +43,10 @@ function M.new()
   facts=facts or {};dt=math.max(0,math.min(.1,tonumber(dt)or 0))
   local gain=enabled and math.max(0,math.min(1,tonumber(master)or 1))or 0
   local level=({low=.35,mid=.62})[M.ambient:get()]or 0
-  for _,kind in ipairs({'town','route'})do
+  for _,kind in ipairs({'town','route','rain'})do
    local name='amb-'..kind..'.mp3'
    local target=facts.kind==kind and gain*level or 0
+   if kind=='rain'then target=facts.rain and gain*(( {low=.35,mid=.62})[M.rain:get()]or 0)or 0 end
    local vol=self.volumes[name]or 0
    vol=gain==0 and 0 or vol+math.max(-dt*.55,math.min(dt*.30,target-vol))
    self.volumes[name]=vol
@@ -102,7 +104,10 @@ function M.facts(map,player,generation)
  elseif generation==3 and map then
   local ok,g=pcall(function()return require('src.core.game3.collision').isGrass(p.cellX,p.cellY)end);grass=ok and g or false
  end
+ local weatherMap=generation==3 and map and {id=map.id,def={outdoor=kind=='town'or kind=='route'or kind=='forest'}}or map
+ local weather=weatherMap and V.require('Weather').mode(weatherMap)
  return {map=map,kind=kind,x=p.px,z=p.py,grass=grass,
+  rain=(kind=='town'or kind=='route'or kind=='forest')and (weather=='rain'or weather=='storm'),
   shop=id:find('MART')~=nil or id:find('POKECENTER')~=nil or tid=='MART'or tid=='POKECENTER'}
 end
 function M.install(cameraEnabled)
