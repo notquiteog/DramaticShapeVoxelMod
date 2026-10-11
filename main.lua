@@ -85,6 +85,7 @@ if V.require("Generation").isGen3() then
 end
 
 local Voxel = V.require("VoxelState")
+V.require("KfpAtmosphere").install(function()return (Voxel.level or 0)>0 end)
 local Voxel3D = V.require("Voxel3D")
 local VoxelScene = V.require("VoxelScene")
 local TiltShift = V.require("TiltShift")
@@ -728,6 +729,23 @@ end
 
 local TreePresentation=V.require("TreePresentation")
 local SETTINGS = {
+  { V.require('KfpWetGround').setting, 'Optional native-surface rain puddles and splashes.', full=true },
+  { V.require('KfpRainProps').setting, 'Optional Kanto First Person umbrellas on human NPCs during rain.', full=true },
+  { V.require('KfpAtmosphere').rain, "Rain ambience follows the shared WEATHER setting; no separate weather clock.", full=true },
+  { V.require('KantoFirstPerson').rainbows, "Kanto First Person rainbow after rain clears, anchored opposite the sun.", full=true },
+  { V.require('KfpInterior').dressing, "Optional Kanto First Person wall pictures and ceiling pendants. NATIVE retains the game's original decoration.", full=true },
+  { V.require('KfpAtmosphere').ambient, "Optional town and route ambience. Existing cave and forest audio keep their own settings.", full=true },
+  { V.require('KfpAtmosphere').steps, "Optional footsteps matched to the native surface.", full=true },
+  { V.require('KfpAtmosphere').doors, "Optional sound on native map doorway transitions.", full=true },
+  { V.require('KfpMotion').jump, "Cosmetic ledge-hop arc and landing settle; collision and movement stay native.", full=true },
+  { V.require('KfpMotion').bob, "Optional first-person walking head bob.", full=true },
+  { V.require('KfpMotion').door, "Optional camera dip through doorway transitions; native warps stay unchanged.", full=true },
+  { V.require('KfpInterior').ceiling, "Room ceilings in ground-level views; native walls and door openings remain unchanged.", full=true },
+  { V.require('KfpInterior').headroom, "Optional extra room headroom. NATIVE preserves each room's original modeled height.", full=true },
+  { V.require('KfpInterior').cutaway, "Open camera-facing room walls in exterior views, or keep the complete enclosure.", full=true },
+  { V.require('KantoFirstPerson').horizon, "Optional Kanto First Person panorama. BATTLE ART retains the existing horizon.", full=true },
+  { V.require('KantoFirstPerson').sky, "Optional layered clouds and night stars from Kanto First Person; shared across generations.", full=true },
+  { V.require('KantoFirstPerson').aircraft, "Rare decorative aircraft and contrails. Does not create encounters or require Wild Skies.", full=true },
   { V.require("Weather").setting, "Optional outdoor rain, snow, drifting fog and storms. AUTO uses a deterministic map schedule. Visual only; native battle weather and gameplay stay unchanged.", full=true },
   { V.require('ModernBattleUI').setting, "With optional Modern Pokemon UI enabled: compact overhead status cards and window-resolution commands. Without that provider, native menus remain unchanged.", full=true },
   { V.require("CrystalSprites").setting, "Crystal animation, shiny effects and portraits in Gen 1/2. SELECTED ART uses the existing Battle Art collections. Restart the game after changing this pack.", full=true },

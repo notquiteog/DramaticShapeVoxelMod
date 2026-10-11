@@ -1,6 +1,23 @@
 -- Declaration inventory. Per-generation consumers/status live in OptionSupport;
 -- declaring a setting or listing a row is never evidence that it works.
 return {
+ {key="kfpHorizon",label="KFP HORIZON",module="KantoFirstPerson"},
+ {key="kfpSky",label="KFP SKY",module="KantoFirstPerson"},
+ {key="kfpAircraft",label="KFP AIRCRAFT",module="KantoFirstPerson"},
+ {key="kfpRainbows",label="RAINBOWS",module="KantoFirstPerson"},
+ {key="fpceiling",label="FP CEILING",module="KfpInterior"},
+ {key="fpheadroom",label="HEADROOM",module="KfpInterior"},
+ {key="fpcutaway",label="CUTAWAY",module="KfpInterior"},
+ {key="kfpInteriorDressing",label="KFP INTERIOR",module="KfpInterior"},
+ {key="kfpJump",label="JUMP FEEL",module="KfpMotion"},
+ {key="kfpHeadBob",label="HEAD BOB",module="KfpMotion"},
+ {key="kfpDoorstep",label="DOORSTEP",module="KfpMotion"},
+ {key="kfpAmbience",label="TOWN / ROUTE SOUND",module="KfpAtmosphere"},
+ {key="kfpRainSound",label="RAIN SOUND",module="KfpAtmosphere"},
+ {key="kfpFootsteps",label="SURFACE FOOTSTEPS",module="KfpAtmosphere"},
+ {key="kfpDoorSounds",label="DOOR SOUNDS",module="KfpAtmosphere"},
+ {key="kfpWetGround",label="RAIN GROUND",module="KfpWetGround"},
+ {key="kfpUmbrellas",label="RAIN UMBRELLAS",module="KfpRainProps"},
  {key="sceneryProps",label="ROCKS & PLANTS",module="TreePresentation"},
  {key="weather",label="WEATHER",module="Weather"},
  {key="spatialUpscale",label="FSR 1",module="SpatialUpscale"},

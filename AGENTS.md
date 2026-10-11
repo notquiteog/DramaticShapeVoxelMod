@@ -2,6 +2,12 @@
 
 ## Start here
 
+Before each new runtime verification batch, check the latest official
+`bryanthaboi/gen1recomp` release and use its matching runtime. Record the exact
+engine release and native shell used. Older captures/tests remain evidence for
+that older version only; never relabel them as current. Preserve isolated saves.
+
+
 This is the Battle Art voxel/presentation mod. A visual bug is visually verified
 only after inspecting the running game or its rendered screenshots at the
 reported location. Passing Lua tests alone is insufficient.

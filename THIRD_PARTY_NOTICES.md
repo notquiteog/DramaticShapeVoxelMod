@@ -37,3 +37,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Kanto First Person
+
+Embedded source and original art/audio from mrmushrooms11's Kanto First Person
+1.60.0 are attributed in `vendor/kanto-first-person/ATTRIBUTION.md`. The project
+owner reports the author's redistribution permission. No general upstream
+license grant is inferred. Host adapters replace its installer and expose
+optional features directly through Battle Art; see
+`docs/KANTO_FIRST_PERSON_INTEGRATION.md` for implementation and verification scope.

@@ -30,7 +30,7 @@ if (-not $Output) {
 $Output = [System.IO.Path]::GetFullPath($Output)
 
 $source = @()
-foreach ($dir in @('data', 'lib')) {
+foreach ($dir in @('data', 'lib', 'vendor')) {
   $source += Get-ChildItem -LiteralPath (Join-Path $repo $dir) -Recurse -File |
     ForEach-Object {
       $relative = Relative-Path $_.FullName

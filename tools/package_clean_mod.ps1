@@ -34,7 +34,7 @@ $Output = [System.IO.Path]::GetFullPath($Output)
 # Match the installable runtime allowlist used by package_mod.ps1, then add
 # the public authoring toolkit so a ZIP recipient does not need a Git clone.
 $source = @()
-foreach ($dir in @('data', 'lib', 'tools')) {
+foreach ($dir in @('data', 'lib', 'tools', 'vendor')) {
   $source += Get-ChildItem -LiteralPath (Join-Path $repo $dir) -Recurse -File |
     Where-Object {
       $_.Extension -ine '.pyc' -and

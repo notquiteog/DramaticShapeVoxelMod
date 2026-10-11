@@ -32,6 +32,7 @@ function M.setLevel(level,game)
  mode:setIndex(level+1,game);M.level=mode:get()
 end
 function M.install()
+ V.require("KfpAtmosphere").install(function()return (M.level or 0)>0 end)
  local mod=V.mod
  local FieldView=require('src.core.game3.field_view')
  local Display=require('src.core.game3.display')

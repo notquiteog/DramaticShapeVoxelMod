@@ -696,6 +696,7 @@ local function heldFrame(w, h, mapId)
 end
 
 function VoxelScene.invalidate()
+  V.require('KfpWetGround').invalidate()
   V.require("Gen2Boundary").clear()
   ItemPokeballs.invalidate()
   Gen2Rocks.invalidate()
@@ -1583,9 +1584,10 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   -- additive background seam rather than a renderer replacement.
   Voxel3D.glass(false)
   -- TEST133: mountains cover stars; nearby sky life stays in front.
-  pcall(SkyLayer.drawStars, state)
-  pcall(Backdrop.draw, state)
-  pcall(SkyLayer.drawForeground, state)
+  if not V.require("KantoFirstPerson").sky:get() then pcall(SkyLayer.drawStars, state)end
+  if V.require("KantoFirstPerson").horizon:get()=="off" then pcall(Backdrop.draw, state)end
+  V.require("KantoFirstPerson").draw(state)
+  if not V.require("KantoFirstPerson").sky:get() then pcall(SkyLayer.drawForeground, state)end
   Voxel3D.glass(true)
 
   -- Extension backgrounds run after the host has opened its isolated 3D
@@ -1793,6 +1795,20 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   -- character genuinely behind a building is far deeper and loses the
   -- test, so buildings and trees really occlude.
   Timings.call("actor_draw", drawCast, state, posed, atlasFor)
+  local rainProps=V.require('KfpRainProps')
+  if rainProps.setting:get()then
+    rainProps.draw(rainProps.posed(posed,state.player),state.map,love.timer.getTime(),FirstPerson.driving()and FirstPerson.yaw or 0)
+  end
+  local wet=V.require('KfpWetGround')
+  if wet.setting:get()~='off' and state.player then
+    wet.draw(state.map,state.player.px+8,state.player.py+8,function(wx,wz)
+      local map=state.map;local x,z=math.floor(wx/16),math.floor(wz/16)
+      if map.inBounds and not map:inBounds(x,z)then return end
+      if not map:isWalkableCell(x,z)or (map.isWaterCell and map:isWaterCell(x,z))then return end
+      return groundAt(map,x,z,wx-8,wz-8)
+    end,love.timer.getTime())
+  end
+  V.require('KfpInteriorDecor').drawLights(room)
   -- Tower fog is translucent world volume. Drawing it after the opaque cast
   -- lets depth decide whether a bank is in front of or behind each figure,
   -- so knee-high mist can naturally veil legs instead of being overwritten.
