@@ -16,7 +16,7 @@ local texture
 -- sweep shows they already render. ROUTE/TOWN stay open to the sky.
 local ENCLOSED = { INDOOR = true, DUNGEON = true }
 
-function M.geometry(map)
+function M.geometry(map,policy)
   if not (map and map.def and ENCLOSED[map.def.environment]) then return nil end
   local w,h=map.def.width*32,map.def.height*32
   if w<=0 or h<=0 then return nil end
@@ -29,6 +29,7 @@ function M.geometry(map)
       ceiling=math.max(ceiling,(f.height or 0)+16)
     end
   end
+  if policy then ceiling=policy.height(ceiling)end
   local verts,indices={},{}
   -- us may be a single value for the whole face, or four values so a face can
   -- sample across the texture. The lid needs that: with one u it took a single
@@ -57,7 +58,9 @@ function M.geometry(map)
   face({{x0,0,z1},{x0,0,z0},{x0,ceiling,z0},{x0,ceiling,z1}},0,.86)
   face({{x1,0,z0},{x1,0,z1},{x1,ceiling,z1},{x1,ceiling,z0}},0,.86)
   local lid = {1/8,7/8,7/8,1/8}
-  face({{x0,ceiling,z0},{x1,ceiling,z0},{x1,ceiling,z1},{x0,ceiling,z1}},lid,lidShade)
+  if not policy or policy.ceiling:get()then
+    face({{x0,ceiling,z0},{x1,ceiling,z0},{x1,ceiling,z1},{x0,ceiling,z1}},lid,lidShade)
+  end
   return verts,indices,ceiling
 end
 -- ThirdPerson has a third rung: the boom can be out behind the shoulder, or
@@ -85,13 +88,17 @@ function M.draw(map)
     local ran, on = pcall(FirstPerson.engaged)
     engaged = (ran and on) and true or false
   end
-  if not (engaged or thirdPersonCollapsed()) then return end
-  local entry=cache[map]
+  local policy=V.require('KfpInterior')
+  if policy.cutaway:get()and not (engaged or thirdPersonCollapsed()) then return end
+  local key=tostring(policy.headroom:get())..':'..tostring(policy.ceiling:get())
+  local saved=cache[map]
+  if saved and saved.key~=key then saved.mesh:release();saved=nil end
+  local entry=saved and saved.mesh
   if not entry then
-    local verts,indices=M.geometry(map)
+    local verts,indices=M.geometry(map,policy)
     if not verts then return end
     entry=V.require('Voxel3D').newMesh(verts,indices)
-    cache[map]=entry
+    cache[map]={mesh=entry,key=key}
   end
   if not texture then
     -- Texel 0 is the wall. Texels 1..7 are a shallow ceiling pattern: a slow

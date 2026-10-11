@@ -1,3 +1,22 @@
+# Kanto First Person shared room controls — 2026-10-11
+
+Adapted ceiling/headroom/cutaway concepts into the existing single room shell,
+not the legacy patcher or duplicate wall assembly. FP CEILING, HEADROOM and
+CUTAWAY share one policy across native Gen1/2/3 rooms and Gen2 DUNGEON fallback.
+Defaults preserve existing geometry; AIRY/TALL only raise ceilings, never lower
+native cave/furniture clearance. Height changes release old cached meshes.
+Native door gaps, stair recesses, window placements and collision stay intact.
+
+Five focused LuaJIT suites pass (KFP policy, interior, cave enclosure, house
+stairs, walkspace). On engine0.3.73 inspected Red bedroom native/tall/off/orbit
+captures and Crystal house/tower ceiling captures from isolated QA profiles.
+Driver: `.scratch/ascendant-20260926/kfp-interior.lua`; launch `run-073.sh red
+kfp-interior 120` (Crystal140); results under that scratch directory. These are
+rendered fixtures, not controller traversal or complete11-game validation.
+Emerald073 QA profile lacks imported data; its visual verification pending.
+Legacy random posters/windows are deliberately not sprayed over original art;
+native matching fixtures remain authoritative. No new model coverage claimed.
+
 # FRLG Saffron short green-roof houses — 2026-10-09
 
 Added complete four-row native family (three instances each edition), closed

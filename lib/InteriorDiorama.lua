@@ -362,10 +362,12 @@ function M.camera(p,angle,aspect)
  return {eye={x,h*.35+distance*math.cos(a),z+distance*math.sin(a)},focus={x,h*.35,z},fov=fov,curve=0}
 end
 function M.configure(p)
+ if p then V.require('KfpInterior').prepare(p)end
  V.require('Voxel3D').interior=p
 end
 function M.draw(p)
  if not p then return end
+ local policy=V.require('KfpInterior');policy.prepare(p)
  local R=V.require('Voxel3D');local eye=R.eye or {0,100,1000};local b=p.bounds
  local inside=eye[1]>b[1] and eye[1]<b[3] and eye[3]>b[2] and eye[3]<b[4] and eye[2]<p.height-.05
  local opened={not inside and eye[3]<b[2],not inside and eye[1]>b[3],not inside and eye[3]>b[4],not inside and eye[1]<b[1]}
@@ -375,8 +377,10 @@ function M.draw(p)
   local dx,dz=(eye[1]-(b[1]+b[3])*.5)/(b[3]-b[1]),(eye[3]-(b[2]+b[4])*.5)/(b[4]-b[2])
   opened[math.abs(dx)>math.abs(dz) and (dx>0 and 2 or 4) or (dz<0 and 1 or 3)]=true
  end
+ if not policy.cutaway:get()then opened={}end
+ local ceiling=policy.ceiling:get()and (inside or not policy.cutaway:get())
  R.interiorClip(false)
- for side=1,inside and 6 or 5 do
+ for side=1,ceiling and 6 or 5 do
   local key=side..':'..tostring(opened[side] or false)
   if not p.meshes[key]then local v,i=M.geometry(p,side,opened[side]);p.meshes[key]=R.newMesh(v,i)end
   R.draw(p.meshes[key],texture(p.theme))
