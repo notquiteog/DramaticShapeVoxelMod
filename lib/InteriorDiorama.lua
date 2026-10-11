@@ -385,6 +385,7 @@ function M.draw(p)
   if not p.meshes[key]then local v,i=M.geometry(p,side,opened[side]);p.meshes[key]=R.newMesh(v,i)end
   R.draw(p.meshes[key],texture(p.theme))
  end
+ if policy.dressing:get()then V.require('KfpInteriorDecor').draw(p,opened,ceiling,texture(p.theme))end
  R.interiorClip(true)
 end
 return M

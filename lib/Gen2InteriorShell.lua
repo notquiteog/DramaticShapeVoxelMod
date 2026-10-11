@@ -95,10 +95,11 @@ function M.draw(map)
   if saved and saved.key~=key then saved.mesh:release();saved=nil end
   local entry=saved and saved.mesh
   if not entry then
-    local verts,indices=M.geometry(map,policy)
+    local verts,indices,height=M.geometry(map,policy)
     if not verts then return end
     entry=V.require('Voxel3D').newMesh(verts,indices)
-    cache[map]={mesh=entry,key=key}
+    saved={mesh=entry,key=key,profile={bounds={-.5,-.5,map.def.width*32+.5,map.def.height*32+.5},height=height,theme='home'}}
+    cache[map]=saved
   end
   if not texture then
     -- Texel 0 is the wall. Texels 1..7 are a shallow ceiling pattern: a slow
@@ -117,5 +118,6 @@ function M.draw(map)
     data:release()
   end
   V.require('Voxel3D').draw(entry,texture)
+  if policy.dressing:get()then V.require('KfpInteriorDecor').draw(saved.profile,{},policy.ceiling:get(),texture)end
 end
 return M

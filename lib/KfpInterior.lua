@@ -7,7 +7,8 @@ local Setting=V.require('ModSetting')
 M.ceiling=Setting.new('fpceiling','FP CEILING',{true,false},{'ON','OFF'})
 M.headroom=Setting.new('fpheadroom','HEADROOM',{0,48,64},{'NATIVE','AIRY','TALL'})
 M.cutaway=Setting.new('fpcutaway','CUTAWAY',{true,false},{'ON','OFF'})
-M.settings={M.ceiling,M.headroom,M.cutaway}
+M.dressing=Setting.new('kfpInteriorDressing','KFP INTERIOR',{false,true},{'NATIVE','DRESSED'})
+M.settings={M.ceiling,M.headroom,M.cutaway,M.dressing}
 function M.height(native)
  -- KFP's 16/24px low ceilings would intersect our native furniture and cave
  -- elevation. Never shrink a reviewed room below its existing headroom.

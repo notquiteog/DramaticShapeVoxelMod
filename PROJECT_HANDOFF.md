@@ -1,3 +1,25 @@
+# Optional authored KFP room dressing — 2026-10-11
+
+KFP INTERIOR / DRESSED now imports original poster sheets, source-sized atlas
+decals, pendant rose/flex/crossed-shade vertices and deterministic four-sided
+ceiling stalactites. Native mode stays default. Existing shell owns walls,
+rails, doors and cutaway; posters avoid door neighbors and north stair bays.
+Cave spikes stay overhead; native walkable cells never gain ground spikes.
+Original doorway wedge and pendant pool dimensions use a late additive pass
+with no depth writes and soft alpha, preserving native floor textures. Stair
+floor openings exclude these light planes. Mesh caches invalidate on headroom,
+recess or floor-opening changes. Gen2 DUNGEON fallback also dispatches dressing.
+
+Five focused suites pass, including imported dimensions and safety bounds.
+Engine0.3.73 rendered captures inspected: Crystal starting house native/dressed
+first-person and orbit, Dark Cave roof spikes, Emerald Brendan house first-person
+and orbit (fresh root QA import). Files in `.scratch/ascendant-20260926/results/`
+`{crystal-kfp-dressing,crystal-kfp-cave,emerald-kfp-dressing}`. Selected-ball HUD
+comes from existing companion setup, unchanged. Engine0.3.74 now announced;
+next visual check targets that version. This is not full KFP import completion:
+source textured irregular cave ceilings, window dressing and other features
+still require adapters/review. No complete world/model coverage claim.
+
 # Kanto First Person shared room controls — 2026-10-11
 
 Adapted ceiling/headroom/cutaway concepts into the existing single room shell,
