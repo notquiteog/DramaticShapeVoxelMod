@@ -143,9 +143,23 @@ function M.install()
  end)
  local stick={x=0,y=0}
  local battleMouse
+ -- Whether a camera reads the right stick right now: a free-camera rung
+ -- (1ST look / 3RD boom) or a steerable staged battle lens. While claimed,
+ -- the axis never reaches the engine's own translation -- 0.3.73 maps
+ -- rightstick_* onto up/down/left/right (Input.STICK_DEFAULT_BINDINGS), so
+ -- unclaimed a throw would turn the camera AND walk the player. The stick
+ -- is camera-only; with the rungs off and no staged lens the engine's new
+ -- twin-stick walk is preserved untouched.
+ local function stickClaimed(game)
+  if free() then return true end
+  return BattleStage.active and Battle.isActive()
+ end
  mod.hooks:wrap('input.gamepad',function(next,game,ev)
   if ev.phase=='axis' then
    if ev.axis=='rightx'then stick.x=tonumber(ev.value)or 0 elseif ev.axis=='righty'then stick.y=tonumber(ev.value)or 0 end
+   if (ev.axis=='rightx' or ev.axis=='righty') and stickClaimed(game) then
+    return true
+   end
   elseif ev.phase=='pressed' and looking(game) and M.active and M.level==7 and (ev.button=='leftstick' or ev.button=='rightstick')then
    controls:step(ev.button=='leftstick' and 1 or -1);return true
   elseif ev.phase=='removed'then stick.x,stick.y=0,0 end

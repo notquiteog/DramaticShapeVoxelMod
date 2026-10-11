@@ -662,21 +662,30 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
   mesh=R.newMesh(v,i);spriteMeshes[key]=mesh
  end
  local yaw=cam.level>=6 and -cam.yaw or 0
- local floor=M.groundAt(x+8,z+16-.001,opts.elevation)
+ -- The character stands at the CENTRE of the cell they occupy, (x+8, z+8),
+ -- matching the GB billboards (Mat4.billboard places a card on px+8/py+8 and
+ -- Gen 1/2 ground contact runs through the same point). The old z+16 sat the
+ -- feet on the tile's south EDGE -- the GBA 2D screen projection, which the
+ -- flat renderer needs for its top-down sorting but reads in 3D as everyone
+ -- standing on the boundary line, half a tile ahead of their own ground.
+ -- Ground sampling, ActorContact and the shadow caster all read the same
+ -- centre point so the feet, the floor lookup and the occlusion silhouette
+ -- can never disagree by the half-tile again.
+ local floor=M.groundAt(x+8,z+8,opts.elevation)
  local contact=cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]
  if contact and contact.prop then floor=contact.prop.groundHeight or floor end
  local height=floor+(opts.lift or 0)
  if V.require('NativeLegendarySapling').draw(gid,x,z,height,spr.image,draw,reflectPlane)then return end
  if draw~=Shadow.draw and not reflectPlane and (opts.depthOffset or 0)==0 then
-  V.require("ActorContact").draw(x+8,z+16,floor,height-floor,spr.width)
+  V.require("ActorContact").draw(x+8,z+8,floor,height-floor,spr.width)
  end
  local pose=Mat.rotateY(yaw)
- local base=Mat.mul(Mat.translate(x+8,height,z+16+(opts.depthOffset or 0)),pose)
+ local base=Mat.mul(Mat.translate(x+8,height,z+8+(opts.depthOffset or 0)),pose)
  -- Use the shared GB actor contact correction. Terrain retains its full
  -- acne margin; the visible lookup must use the identical snugged caster.
  local caster=Shadow.snug(base)
  if reflectPlane then height=2*reflectPlane-height+V.require('Water').CAST_RAISE end
- local model=reflectPlane and Mat.mul(Mat.translate(x+8,height,z+16+(opts.depthOffset or 0)),pose) or base
+ local model=reflectPlane and Mat.mul(Mat.translate(x+8,height,z+8+(opts.depthOffset or 0)),pose) or base
  if reflectPlane then model=Mat.mul(model,Mat.scale(1,-1,1))end
  if draw==Shadow.draw then draw(mesh,spr.image,caster)
  else draw(mesh,spr.image,model,nil,caster) end
@@ -766,7 +775,7 @@ local function fieldEffects(draw,cam)
   local yaw=cam and cam.level>=6 and cam.yaw or 0
   local dx,dz=8*math.cos(yaw),8*math.sin(yaw)
   effect('landing-dust-'..i,16,8,function()fx.drawFront(x,z+8,nil)end,
-   {{x+8-dx,8,z+16-dz},{x+8+dx,8,z+16+dz},{x+8+dx,0,z+16+dz},{x+8-dx,0,z+16-dz}},M.groundAt(x+8,z+16-.001))
+   {{x+8-dx,8,z+8-dz},{x+8+dx,8,z+8+dz},{x+8+dx,0,z+8+dz},{x+8-dx,0,z+8-dz}},M.groundAt(x+8,z+8))
  end end
  V.require('Gen3EmoteCards').draw(fx,cam,M.groundAt,effect)
  local doors=require('src.core.game3.doors');local a=doors._activeAnim
