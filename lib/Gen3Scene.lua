@@ -113,7 +113,7 @@ local function releaseGeometry(cache)
  end
  if cache.legendaryPillars then cache.legendaryPillars.mesh:release()end
  if cache.legendaryRoads then cache.legendaryRoads.mesh:release();cache.legendaryRoads.image:release()end
- if cache.legendaryTunnels then cache.legendaryTunnels.mesh:release();cache.legendaryTunnels.image:release()end
+ if cache.legendaryTunnels then V.require('NativeLegendaryTunnels').release(cache.legendaryTunnels)end
  if cache.masonry then cache.masonry.mesh:release();cache.masonry.image:release()end
  if cache.rocketWalls then cache.rocketWalls.mesh:release();cache.rocketWalls.image:release()end
  for _,part in ipairs(cache.civics or {})do
@@ -611,7 +611,7 @@ local function terrain(draw)
  end
  if cache.legendaryPillars then V.require('NativeLegendaryPillars').draw(cache.legendaryPillars,draw)end
  if cache.legendaryRoads then draw(cache.legendaryRoads.mesh,cache.legendaryRoads.image)end
- if cache.legendaryTunnels then draw(cache.legendaryTunnels.mesh,cache.legendaryTunnels.image)end
+ if cache.legendaryTunnels then V.require('NativeLegendaryTunnels').draw(cache.legendaryTunnels,draw)end
  if cache.masonry then draw(cache.masonry.mesh,cache.masonry.image)end
  if cache.rocketWalls then draw(cache.rocketWalls.mesh,cache.rocketWalls.image)end
  for _,part in ipairs(cache.civics or {})do

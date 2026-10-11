@@ -235,3 +235,6 @@ LeafGreen north/south (250 floor cells, 89 wall segments) and FireRed east/west
 Tracked driver: `tools/qa/native-legendary-tunnels.lua`. Focused bounds, native
 stairs, OFF/custom-map fallback, adapter and 541 option-consumer checks pass.
 Evidence: `.scratch/parity-073-20261011/results/{leafgreen,firered}-native-legendary-tunnels-host`.
+Follow-up: both corridors also verified in first person. Foreground walls respect
+CUTAWAY in third person; inside-eye views retain all sides. Per-side meshes share
+no unused vertex copies. The east/west fixture now starts on a real floor cell.

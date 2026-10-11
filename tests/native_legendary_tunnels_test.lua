@@ -1,7 +1,9 @@
-local enabled=true;local V={}
+local enabled=true;local V={};local eye={40,20,40};local cutaway=true
 V.require=function(name)
  if name=='CommunityVisuals'then return{tunnels={get=function()return enabled and'n64memory'or'original'end}}end
  if name=='UndergroundRoom'then return assert(loadfile('lib/UndergroundRoom.lua'))(V)end
+ if name=='Voxel3D'then return{eye=eye}end
+ if name=='KfpInterior'then return{cutaway={get=function()return cutaway end}}end
  error(name)
 end
 local M=assert(loadfile('lib/NativeLegendaryTunnels.lua'))(V)
@@ -27,4 +29,8 @@ for _,p in ipairs(v)do if p[2]>.06 then assert(p[1]>=12 and p[1]<=16 and p[3]>=0
 strip['0:0'].stairs={};local _,_,owned,num=M.geometry(strip,'FR_UNDERGROUND_PATH_NORTH_SOUTH_TUNNEL');assert(not next(owned)and num.walls==0)
 enabled=false;assert(not M.geometry(cells,'FR_UNDERGROUND_PATH_NORTH_SOUTH_TUNNEL'))
 enabled=true;assert(not M.geometry(cells,'CUSTOM_TUNNEL'));assert(not M.geometry(cells,'EM_RUSTURF_TUNNEL'))
+local model={bounds={0,0,80,80},parts={floor='floor',north='north',south='south',east='east',west='west'}}
+local drawn={};M.draw(model,function(part)drawn[part]=true end);assert(drawn.north and drawn.south and drawn.east and drawn.west,'first-person wall missing')
+eye={40,70,120};drawn={};M.draw(model,function(part)drawn[part]=true end);assert(not drawn.south and drawn.floor and drawn.north,'near wall not cut away')
+cutaway=false;drawn={};M.draw(model,function(part)drawn[part]=true end);assert(drawn.south,'cutaway OFF ignored')
 print('PASS native Legendary tunnels: boundaries, stairs, walkable cells, hidden walls, OFF/custom fallback')
