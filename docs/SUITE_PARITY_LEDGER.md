@@ -272,3 +272,21 @@ all Vermilion buildings or complete city coverage. Focused authored-geometry,
 blocked-body, native-warp, fallback, generation-adapter and option checks pass.
 Driver: `tools/qa/native-legendary-buildings.lua`; evidence in
 `.scratch/parity-073-20261011/results/{leafgreen,firered}-native-legendary-buildings-host`.
+
+### Gen2 BUILDING STYLE: shared native Vermilion models (0.3.76)
+
+Gold, Silver and Crystal now consume the shared authored building kit on six
+reviewed Vermilion house/club assemblies. Native warp doors and blocked body
+cells bound the replacement; unknown shapes and walkable bodies keep installed
+geometry. INSTALLED remains the native default; saved upstream values win.
+The native mesh fingerprint includes the setting so toggling cannot replay the
+opposite style from disk. Gen1 defaults and gameplay collision are unchanged.
+
+All three isolated editions passed actual renderer ON/OFF, first-person and
+fingerprint-difference checks on official 0.3.76. Gold/Crystal first-person and
+Silver overview captures inspected. Shared constructor, native warp, clear-floor
+rejection and source-palette tests pass; 541 option-consumer checks pass.
+Driver: `tools/qa/gen2-native-buildings.lua`; evidence in
+`.scratch/parity-073-20261011/results/{gold,silver,crystal}-gen2-native-buildings-host`.
+This remains **partial**: unreviewed service buildings retain their existing
+models; no claim of complete city or global model coverage.

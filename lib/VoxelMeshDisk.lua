@@ -608,6 +608,9 @@ function Disk.fingerprint(map, slot, masks, kind)
   if kind=='terrain' and tileset.id=='OVERWORLD' and mapId=='ROUTE_11' and V.require('CommunityVisuals').customRoads() then
     parts[#parts+1]='route11-taller-sprouts-53'
   end
+  if mapId=='VERMILION_CITY' and tileset.id=='TILESET_KANTO' then
+    parts[#parts+1]='native-vermilion-kit-1:'..V.require('CommunityVisuals').buildings:get()
+  end
   if tileset.id=='OVERWORLD' or tileset.id=='FOREST' or tileset.id=='PLATEAU' then
     parts[#parts+1]='kanto-architecture-62:'..V.require('CommunityVisuals').buildings:get()
   end

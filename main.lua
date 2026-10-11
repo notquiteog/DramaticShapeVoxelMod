@@ -131,6 +131,7 @@ local VoxelCompanion = V.require("VoxelCompanion")
 local CompanionLifecycle = V.require("CompanionLifecycle")
 local CharacterRenderers = V.require("CharacterRenderers")
 local CommunityVisuals = V.require("CommunityVisuals")
+if Generation.isGen2() then CommunityVisuals.buildings.defaultIndex=1 end
 local ForestAtmos = V.require("ForestAtmos")
 local TowerFogSettings = V.require("TowerFogSettings")
 local LegendaryVisualsPreset = V.require("LegendaryVisualsPreset")

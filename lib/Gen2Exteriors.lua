@@ -109,7 +109,7 @@ function M.build(S,map)
   local free=true
   for y=g.y,g.y+g.depth-1 do for x=g.x,g.x+g.width-1 do if S.skip[key(x,y)]then free=false end end end
   if free then
-   S.exteriors[#S.exteriors+1]=g
+   S.exteriors[#S.exteriors+1]=g;g.quadFirst=#S.objectQuads+1
    local x0,z0=g.x*8,g.y*8;local W,D=g.width*8,g.depth*8
    local H=(g.depth-g.roofRows)*8
    for y=g.y,g.y+g.depth-1 do for x=g.x,g.x+g.width-1 do
@@ -246,7 +246,9 @@ function M.build(S,map)
     if bx==0 then face({{x0,a,z0+z},{x0,d,z0+z+8},{x0,H,z0+z+8},{x0,H,z0+z}},g.roofTile,.75)end
     if bx==g.width-1 then face({{x0+W,c,z0+z+8},{x0+W,b,z0+z},{x0+W,H,z0+z},{x0+W,H,z0+z+8}},g.roofTile,.8)end
    end end
+   g.quadLast=#S.objectQuads
   end
  end
+ if V and map.id=="VERMILION_CITY" then V.require("NativeGen2Buildings").build(S,map)end
 end
 return M
