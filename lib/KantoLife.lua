@@ -59,6 +59,7 @@ function M.vertices(anchors,t,night,profile,px,pz,level,raining)
  return out,butterflies,flies
 end
 function M.draw(state)
+ V.require('KfpSurfaceLife').draw(state)
  local map=state and state.map;local profile=H.profile(map);local level=settings()
  if level=='off'or not profile then if lastMap then M.invalidate()end;return end
  if lastMap~=map then M.invalidate();lastMap=map end

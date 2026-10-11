@@ -13,6 +13,7 @@ M.invert=V.require('CameraSettings').invertY
 M.settings={V.require("SpatialUpscale").setting,AA.setting,Day.setting,Underlay.setting,Community.sky,M.invert,M.tilt,
  V.require('Water').setting,V.require('Weather').setting}
 
+for _,setting in ipairs(V.require('KfpSurfaceLife').settings)do M.settings[#M.settings+1]=setting end
 for _,setting in ipairs(V.require('KfpWetGround').settings)do M.settings[#M.settings+1]=setting end
 for _,setting in ipairs(V.require('KfpRainProps').settings)do M.settings[#M.settings+1]=setting end
 for _,setting in ipairs(V.require('KfpAtmosphere').settings)do M.settings[#M.settings+1]=setting end

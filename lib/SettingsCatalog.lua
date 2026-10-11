@@ -16,6 +16,7 @@ return {
  {key="kfpRainSound",label="RAIN SOUND",module="KfpAtmosphere"},
  {key="kfpFootsteps",label="SURFACE FOOTSTEPS",module="KfpAtmosphere"},
  {key="kfpDoorSounds",label="DOOR SOUNDS",module="KfpAtmosphere"},
+ {key="kfpGrassSeeds",label="GRASS SEEDS",module="KfpSurfaceLife"},
  {key="kfpWetGround",label="RAIN GROUND",module="KfpWetGround"},
  {key="kfpUmbrellas",label="RAIN UMBRELLAS",module="KfpRainProps"},
  {key="sceneryProps",label="ROCKS & PLANTS",module="TreePresentation"},

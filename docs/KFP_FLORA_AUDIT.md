@@ -14,7 +14,8 @@ scene: it generates additional geometry, rain and tree caches over existing ones
 | Rain, storm and lightning | Shared `Weather` owns selection and timing | Existing 41-check parity suite passed; donor random weather not enabled |
 | NPC umbrellas | `KfpRainProps` reuses donor-generated pixel art; explicit human inputs, weather owner, bounded draws | Native Gen1/2 posed and Gen3 public event-graphics adapters wired; Yellow0.3.52 and Emerald0.3.74 rain frames checked |
 | Tufts and native grass art | `CommunityVisuals.grass`, native grass meshes and CommunityFlora | Donor hardcoded tile search is not safe for Gen2/3 |
-| Seeds/drips/fireflies/leaves/dust/foam/smoke/rustle | Donor implementations already present in CommunityFlora; selective `CommunityFlora`, `ForestAtmos`, `KantoLife`, `CaveAtmosphere3D` owners | Broad donor particle dispatch is not enabled; not every particle type yet has an all-edition public toggle |
+| Grass step seeds | `KfpSurfaceLife` uses donor disc art with a native-scale knee-height launch envelope and shared KantoLife dispatch with independent GRASS SEEDS option; native grass/walkability/elevation, bounded pool, deterministic isolated emitter | Emerald0.3.74 actual grass walking/running verified with insects OFF; other editions retain unit-tested shared adapters, rendered verification pending |
+| Drips/fireflies/leaves/dust/foam/smoke/rustle | Donor implementations already present in CommunityFlora; selective `CommunityFlora`, `ForestAtmos`, `KantoLife`, `CaveAtmosphere3D` owners | Broad donor particle dispatch is not enabled; not every particle type yet has an all-edition public toggle |
 | Darkness/pools/sconces/bats/lights | Existing CommunityFlora code plus `CaveAtmosphere3D`, `CaveSconces`, native Flash handling | Do not assume Gen1 dark-map table applies to other games |
 | Forest canopy, vines, shafts | Existing CommunityFlora/ForestAtmos paths, including cutaway/first-person canopy selection | All-edition canopy/vine coverage still needs native layout review |
 | Puddles, additional rain splash/bolts | Donor implementations retained in CommunityFlora but broad pass not active | `KfpWetGround` adds optional bounded hashed puddles/splash rings on callback-approved flat walkable native surfaces; Emerald0.3.74 rendered2 eligible anchors, remaining editions/terrain traversal pending |
@@ -35,3 +36,16 @@ anchors; no effect errors. Native/overview/first-person captures retained in
 scratch. First-person camera was too close to the fish for a polished composed
 shot; do not call that general visual parity. Yellow0.3.52 town/room views and
 real packaged town audio passed earlier; not latest-engine evidence.
+
+Grass seeds checkpoint: `KfpSurfaceLife` defaults OFF and shares existing native
+scenery dispatch without depending on KANTO LIFE/insects. Static/mocked checks
+cover native elevation, solid/water exclusions, warp/airborne resets, isolated
+randomness and the48-particle ceiling. Emerald Route101 on official0.3.74,
+actual native walking/running with KANTO LIFE OFF, observed live seeds while
+camera stayed active. Close first-person review reduced the donor's airborne
+launch scale to small knee-height motes; native artwork and collisions unchanged.
+Drivers/captures: `.scratch/kfp-20261011/grass-seeds-close074.lua` and
+`grass-seeds-final074/`. Scope remains one particle family, not a full donor or
+all-eleven-game visual parity claim. Remaining broad donor particles (shore foam,
+chimney smoke, indoor dust, rustling/leaf emission) need source-aware adapters
+where existing owners do not already supply them.

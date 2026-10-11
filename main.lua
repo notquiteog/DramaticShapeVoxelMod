@@ -729,6 +729,7 @@ end
 
 local TreePresentation=V.require("TreePresentation")
 local SETTINGS = {
+  { V.require('KfpSurfaceLife').setting, 'Optional grass seed motes when walking through native grass.', full=true },
   { V.require('KfpWetGround').setting, 'Optional native-surface rain puddles and splashes.', full=true },
   { V.require('KfpRainProps').setting, 'Optional Kanto First Person umbrellas on human NPCs during rain.', full=true },
   { V.require('KfpAtmosphere').rain, "Rain ambience follows the shared WEATHER setting; no separate weather clock.", full=true },
