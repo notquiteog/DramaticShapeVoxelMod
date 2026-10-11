@@ -18,4 +18,25 @@ assert(not B.blocks({0,0,0},{0,0,0,20}))
 -- The draw shader's height gate preserves the supporting terrain plane.
 assert(0-eye[2]<=cut.floor)
 assert(B.build(eye,nil,0)==nil,'leaving battle retains a cut volume')
-print('Battle occlusion: both groups, depth limits, floor and unrelated scenery PASS')
+-- The corridor: the whole frame is clear of scenery between the camera and
+-- the fight, not just the sightline thread. A trunk beside the sightline,
+-- a quarter of the way out, is inside the cut -- under the old capsule it
+-- rendered and the fight read through the hole it left (the binocular shot).
+for _,target in ipairs(cut) do
+  local w=target[4]
+  local ray={target[1]*.25,target[2]*.25,target[3]*.25}
+  ray[1]=ray[1]+(3+w*.25)          -- just past the old capsule's radius there
+  assert(B.blocks(ray,target),
+    'scenery beside the sightline, near the camera, must clear')
+  -- and the stage keeps its surroundings: at the subjects' own depth the
+  -- corridor is eased away and only the subject's opening remains.
+  local far={target[1]*.95,target[2]*.95,target[3]*.95}
+  far[1]=far[1]+(3+w*.95)
+  assert(not B.blocks(far,target),
+    'scenery beside the subjects stays in the shot')
+end
+-- the radius itself: mon opening at the subject, full frame mid-line
+assert(B.radius(1,15)==3+15,'the subject end keeps its own opening')
+assert(B.radius(.5,15)>=(15+20)*.5,'the mid-line corridor clears the frame')
+assert(B.radius(0,15)==3,'at the lens only the thread was ever needed')
+print('Battle occlusion: both groups, depth limits, floor and corridor PASS')
