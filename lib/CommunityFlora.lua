@@ -6496,7 +6496,7 @@ function MOUND.AMB.src(k)
     return made
   end
   local okBytes, bytes = pcall(function()
-    return V.mod:read("assets/legendary/" .. MOUND.AMB.FILES[k])
+    return V.require("KfpAtmosphere").read(MOUND.AMB.FILES[k]) or V.mod:read("assets/legendary/" .. MOUND.AMB.FILES[k])
   end)
   if okBytes and type(bytes) == "string" and #bytes > 0 then
     for _, kind in ipairs(kinds) do

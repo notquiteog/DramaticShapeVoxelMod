@@ -8,7 +8,9 @@ function M.new()
  function self:source(name,loop)
   if self.sources[name]~=nil then return self.sources[name]or nil end
   local ok,result=pcall(function()
-   local bytes=assert(V.mod:read('assets/legendary/'..name),'optional cave sound absent')
+   local found,bytes=pcall(V.mod.read,V.mod,'assets/legendary/'..name)
+   if not found or not bytes then bytes=V.require('KfpAtmosphere').read(name)end
+   assert(bytes,'optional cave sound absent')
    local data=love.filesystem.newFileData(bytes,name)
    local source=love.audio.newSource(data,loop and 'stream' or 'static')
    source:setLooping(loop);source:setVolume(0);return source

@@ -666,6 +666,7 @@ function FirstPerson.frame(me, cx, cy, vw, vh, posed, state)
   if b <= 0 then
     if rig and Voxel3D.camera == rig then Voxel3D.camera = nil end
     rig = nil
+    V.require('KfpMotion').reset()
     ThirdPerson.surfActive = false
     ThirdPerson.surfLiftGoal = 0
     return nil
@@ -679,6 +680,10 @@ function FirstPerson.frame(me, cx, cy, vw, vh, posed, state)
     head = { me.px + 8,
              (me.gh or 0) + (me.lift or 0) + eyeHeight,
              me.py + 8 }
+    if Voxel.isFirstPerson() then
+      local dx,dy,dz=V.require('KfpMotion').sample(me,state and state.map,FirstPerson.yaw,love.timer.getTime())
+      head={head[1]+dx,head[2]+dy,head[3]+dz}
+    else V.require('KfpMotion').reset() end
     lastEye = head
   else
     head = lastEye or { cx, FirstPerson.EYE_HEIGHT, cy }
