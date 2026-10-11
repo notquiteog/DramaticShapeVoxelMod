@@ -3,7 +3,8 @@
 local V=...
 local M={MAX_PARTICLES=48,MAX_VERTICES=48*24}
 M.setting=V.require('ModSetting').new('kfpGrassSeeds','GRASS SEEDS',{'off','subtle','lively'},{'OFF','SUBTLE','LIVELY'})
-M.settings={M.setting}
+M.rustle=V.require('ModSetting').new('kfpGrassRustle','GRASS RUSTLE',{'off','subtle'},{'OFF','SUBTLE'})
+M.settings={M.setting,M.rustle}
 local function hash(n,k)return((n*7919+k*104729)%65521)/65521 end
 function M.new()
  local self={particles={},serial=0,distance=0}
@@ -97,8 +98,43 @@ function M.draw(state)
  end
  R.draw(mesh,texture)
 end
+local rustleMesh,rustleMap,rustleEpoch,rustleParticles
+function M.drawRustles(state)
+ if M.rustle:get()=='off'or not state or not state.map or not state.player then return end
+ local H=V.require('KantoHabitat');local map=state.map
+ if not H.profile(map)then return end
+ local t=love.timer.getTime();local epoch=math.floor(t/3)
+ if rustleMap~=map then rustleMap=map;rustleEpoch=nil;rustleParticles={}end
+ if rustleEpoch~=epoch then
+  rustleEpoch=epoch;rustleParticles={}
+  local px,pz=(state.player.px or 0)+8,(state.player.py or 0)+8
+  local habitat=H.scan(map,not V.require('NativeHabitat').native(map)and V.require('Structures').forMap(map)or nil,px,pz)
+  local eligible={}
+  for _,a in ipairs(habitat.green or{})do
+   local d=(a.x-px)^2+(a.z-pz)^2
+   if d>40*40 and d<112*112 then
+    local f=M.facts({map=map,player={px=a.x-8,py=a.z-8}})
+    if f.grass and f.height then eligible[#eligible+1]=f end
+   end
+  end
+  if #eligible>0 then
+   local a=eligible[epoch%#eligible+1]
+   for i=1,5 do
+    local angle=hash(epoch,i)*math.pi*2
+    rustleParticles[#rustleParticles+1]={x=a.x+math.cos(angle)*2,z=a.z+math.sin(angle)*2,y=a.height+.7,
+     vx=math.cos(angle)*2,vz=math.sin(angle)*2,vy=4+hash(epoch,i+7)*2,born=t,life=.65,size=.55}
+   end
+  end
+ end
+ local verts=M.vertices(rustleParticles or{},t);M.lastRustleCount=#verts/24
+ if #verts==0 then return end
+ local R=V.require('Voxel3D');rustleMesh=rustleMesh or love.graphics.newMesh(R.FORMAT,5*24,'triangles','dynamic')
+ rustleMesh:setVertices(verts,1,#verts);rustleMesh:setDrawRange(1,#verts);texture=texture or makeTexture();R.draw(rustleMesh,texture)
+end
 function M.invalidate()
  if mesh then mesh:release()end;if texture then texture:release()end
+ if rustleMesh then rustleMesh:release()end
+ rustleMesh,rustleMap,rustleEpoch,rustleParticles=nil,nil,nil,nil
  mesh,texture,lastTick=nil,nil,nil;model=M.new();M.lastCount=0
 end
 return M

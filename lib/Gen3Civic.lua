@@ -457,6 +457,7 @@ function M.append(g,emit)
  if g.custom and g.custom.geometry=='space_center' then return V.require('Gen3SpaceCenter').append(g,M.profile(g),emit)end
  if g.custom and g.custom.geometry=='tower' then return V.require('Gen3TowerExterior').append(g,M.profile(g),emit)end
  local p=M.profile(g);local x,z=g.cx*16,g.cy*16
+ g.chimneyOutlet=nil
  local function uv(l,t,r,b)return {{l/(p.w*2+4),t/p.h},{r/(p.w*2+4),t/p.h},{r/(p.w*2+4),b/p.h},{l/(p.w*2+4),b/p.h}}end
  local wall,trim=uv(p.w*2+.5,.5,p.w*2+.5,.5),uv(p.w*2+2.5,.5,p.w*2+2.5,.5)
  local function face(v,tex,shade)emit(v,tex,shade or 1)end
@@ -676,6 +677,7 @@ function M.append(g,emit)
  if chimney then
   local l,r=chimney[1]+2,chimney[3]-2;local back=roofBack+8;local front=back+12
   local bottom=p.wall+p.bevel;local top=bottom+20
+  g.chimneyOutlet={x=x+(l+r)/2,y=top+(g.groundHeight or 0),z=z+(back+front)/2}
   local brick=uv(chimney[1]+2.05,chimney[2]+26.05,chimney[3]-2.05,chimney[4]-2.05)
   face({{x+l,top,z+front},{x+r,top,z+front},{x+r,bottom,z+front},{x+l,bottom,z+front}},brick)
   face({{x+r,top,z+back},{x+l,top,z+back},{x+l,bottom,z+back},{x+r,bottom,z+back}},brick,.8)

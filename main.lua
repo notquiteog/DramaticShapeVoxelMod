@@ -730,9 +730,16 @@ end
 local TreePresentation=V.require("TreePresentation")
 local SETTINGS = {
   { V.require('KfpSurfaceLife').setting, 'Optional grass seed motes when walking through native grass.', full=true },
+  { V.require('KfpSurfaceLife').rustle, 'Occasional small seed bursts in distant native grass.', full=true },
+  { V.require('KfpAmbientDetails').foam, 'Small foam sprays at native level shorelines.', full=true },
+  { V.require('KfpAmbientDetails').dust, 'Subtle dust motes inside native rooms.', full=true },
+  { V.require('KfpAmbientDetails').smoke, 'Smoke from actual modeled chimney outlets.', full=true },
+  { V.require('KfpTreeDetails').leaves, 'Falling leaves below native tree crowns.', full=true },
+  { V.require('KfpTreeDetails').vines, 'Small hanging vines confined to blocked tree cells.', full=true },
   { V.require('KfpWetGround').setting, 'Optional native-surface rain puddles and splashes.', full=true },
   { V.require('KfpRainProps').setting, 'Optional Kanto First Person umbrellas on human NPCs during rain.', full=true },
   { V.require('KfpAtmosphere').rain, "Rain ambience follows the shared WEATHER setting; no separate weather clock.", full=true },
+  { V.require('KantoFirstPerson').birds, 'Decorative flying flocks using native imported Pokemon art.', full=true },
   { V.require('KantoFirstPerson').rainbows, "Kanto First Person rainbow after rain clears, anchored opposite the sun.", full=true },
   { V.require('KfpInterior').dressing, "Optional Kanto First Person wall pictures and ceiling pendants. NATIVE retains the game's original decoration.", full=true },
   { V.require('KfpAtmosphere').ambient, "Optional town and route ambience. Existing cave and forest audio keep their own settings.", full=true },

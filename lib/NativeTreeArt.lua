@@ -55,6 +55,20 @@ local function card(id,w,h,pixel,ground,shadowRows)
  local c={w=w,h=h,bottom=math.max(0,h-lastOpaque-1),u0=x0/size,u1=(x0+w)/size,v0=y0/size,v1=(y0+h)/size}
  entries[id]=c;content[fingerprint]=c;dirty=true;return c
 end
+-- Lowest living foliage in the exact native card, above its grounded bottom.
+-- Optional hanging detail uses this underside, never the crown's top.
+function M.foliageFloor(c)
+ if not c or not data then return end
+ if c.foliageBottom~=nil then return c.foliageBottom or nil end
+ local x0,y0=math.floor(c.u0*size),math.floor(c.v0*size)
+ for y=c.h-1,0,-1 do
+  for x=0,c.w-1 do
+   local r,g,b,a=data:getPixel(x0+x,y0+y)
+   if a>.5 and g>r*1.08 and g>b*1.08 then c.foliageBottom=c.h-y-(c.bottom or 0);return c.foliageBottom end
+  end
+ end
+ c.foliageBottom=false
+end
 function M.append(c,v,i,q,x,y,z,flat)
  if not c then return q end
  -- Ground the lowest opaque pixel. Modeled stems replace the first four

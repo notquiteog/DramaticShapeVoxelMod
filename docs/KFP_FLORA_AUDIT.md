@@ -15,9 +15,9 @@ scene: it generates additional geometry, rain and tree caches over existing ones
 | NPC umbrellas | `KfpRainProps` reuses donor-generated pixel art; explicit human inputs, weather owner, bounded draws | Native Gen1/2 posed and Gen3 public event-graphics adapters wired; Yellow0.3.52 and Emerald0.3.74 rain frames checked |
 | Tufts and native grass art | `CommunityVisuals.grass`, native grass meshes and CommunityFlora | Donor hardcoded tile search is not safe for Gen2/3 |
 | Grass step seeds | `KfpSurfaceLife` uses donor disc art with a native-scale knee-height launch envelope and shared KantoLife dispatch with independent GRASS SEEDS option; native grass/walkability/elevation, bounded pool, deterministic isolated emitter | Emerald0.3.74 actual grass walking/running verified with insects OFF; other editions retain unit-tested shared adapters, rendered verification pending |
-| Drips/fireflies/leaves/dust/foam/smoke/rustle | Donor implementations already present in CommunityFlora; selective `CommunityFlora`, `ForestAtmos`, `KantoLife`, `CaveAtmosphere3D` owners | Broad donor particle dispatch is not enabled; not every particle type yet has an all-edition public toggle |
+| Drips/fireflies/leaves/dust/foam/smoke/rustle | Existing cave/forest owners plus `KfpAmbientDetails`, `KfpTreeDetails`, and `KfpSurfaceLife.drawRustles`; separate default-OFF shared options | Native source-aware adapters replace the unsafe broad particle dispatcher; see 0.3.75 checkpoint below |
 | Darkness/pools/sconces/bats/lights | Existing CommunityFlora code plus `CaveAtmosphere3D`, `CaveSconces`, native Flash handling | Do not assume Gen1 dark-map table applies to other games |
-| Forest canopy, vines, shafts | Existing CommunityFlora/ForestAtmos paths, including cutaway/first-person canopy selection | All-edition canopy/vine coverage still needs native layout review |
+| Forest canopy, vines, shafts | Gen1 `drawCommunityForest` owns the stitched donor canopy; native Gen2/3 authored tree crowns and ForestAtmos own canopy/shafts. `KfpTreeDetails` adds optional tree-local vines. | Native foliage underside sampling skips vines when there is insufficient trunk clearance. No blanket Gen1 roof over native trees or walk lanes. |
 | Puddles, additional rain splash/bolts | Donor implementations retained in CommunityFlora but broad pass not active | `KfpWetGround` adds optional bounded hashed puddles/splash rings on callback-approved flat walkable native surfaces; Emerald0.3.74 rendered2 eligible anchors, remaining editions/terrain traversal pending |
 | Trunks, boulder trees, shadows | Native tree/model pipeline and settings supersede donor tile-hardcoded generator | Preserve source-faithful models and approved shadow budgets |
 | Mountain peaks, backs and apron | Existing CommunityFlora implementations; native horizon/terrain/boundary systems own scene | Legacy peaks intentionally disabled (TEST412: false giant buildings). Do not re-enable without source-aware map adapter |
@@ -46,6 +46,18 @@ camera stayed active. Close first-person review reduced the donor's airborne
 launch scale to small knee-height motes; native artwork and collisions unchanged.
 Drivers/captures: `.scratch/kfp-20261011/grass-seeds-close074.lua` and
 `grass-seeds-final074/`. Scope remains one particle family, not a full donor or
-all-eleven-game visual parity claim. Remaining broad donor particles (shore foam,
-chimney smoke, indoor dust, rustling/leaf emission) need source-aware adapters
-where existing owners do not already supply them.
+all-eleven-game visual parity claim. These remaining families now have bounded source-aware adapters described below; this historical seed checkpoint is retained as evidence for its own revision.
+
+## Native particle adapters, 2026-10-11 / official0.3.75
+
+- **SHORE FOAM** samples real water/level walkable-land boundaries, not map-name guesses; cliff shores and solid walls are excluded. Spray stays inside the water cell.
+- **ROOM DUST** uses dry native walking cells and actual elevation; caves/forests retain their existing effects.
+- **CHIMNEY SMOKE** consumes exact outlets from actual Gen3 chimney geometry (including Oak's lab), never a generic roof/solid-cell guess. `drawChimneys` is also an explicit public seam for added region model providers. Games/buildings with no authored chimney receive no invented plume.
+- **LEAF FALL / HANGING VINES** consume modeled tree observations. Original native atlas foliage supplies the underside; vines stay in a blocked cell and skip trees lacking physical clearance. Existing Gen1 custom-forest particle ownership is respected.
+- **GRASS RUSTLE** ports the donor's distant five-seed burst, using confirmed native grass, actual elevation, a bounded pool and deterministic isolated timing. It is independent of insects and footsteps.
+
+All six options default OFF. There are no collision, encounter, save, or native UI writes. Scans, vertex counts and updates are bounded; art/mesh objects are reused. Source-shaped particles remain optional embellishments rather than replacements for original tree or terrain artwork.
+
+Focused tests cover water/solid/cliff exclusions, finite geometry, elevations, blocked tree-cell containment, expired bursts, cut-tree clearance, no gameplay RNG and native option consumers. Official0.3.75 Emerald Route104/Brendan-room fixtures exercise foam/dust; FireRed Pallet exercises a real chimney outlet. First smoke render looked like solid pellets, so final material uses faint transparent expanding puffs. Captures/logs: `.scratch/kfp-20261011/{ambient-final075,chimney-final075}`. Native Gen1/Gen2 paths share adapters but are not labelled all-edition visual proof.
+
+The intentionally unused donor mountain-peak heuristic remains superseded by native elevation/horizon geometry: enabling false mountains on roofs would violate source fidelity. Native canopy geometry likewise supersedes the Gen1-only stitched canopy on other generations. Bird image ownership lives in `KantoFirstPerson`/`KfpBirdArt`; airborne and ground-flock behavior must be tracked separately.

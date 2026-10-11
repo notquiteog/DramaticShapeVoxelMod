@@ -40,7 +40,7 @@ local modules={SpatialUpscale={setting=s},ModSetting=Setting,CameraSettings={inv
  draw=function(_,x,z,color)hit('underlay',color);return true end},
  TiltShift={setLevel=function(n)hit('tilt',n)end,apply=function(c)hit('blur',c);return 'blurred'end,invalidate=function()end},
  CommunityVisuals={sky=s},Water={setting=s}}
-for _,name in ipairs({'KfpSurfaceLife','KfpWetGround','KfpRainProps','KfpAtmosphere','KfpMotion','KfpInterior','KantoFirstPerson'})do
+for _,name in ipairs({'KfpAmbientDetails','KfpTreeDetails','KfpSurfaceLife','KfpWetGround','KfpRainProps','KfpAtmosphere','KfpMotion','KfpInterior','KantoFirstPerson'})do
  modules[name]={settings={s}}
 end
 local Options=load('Gen3SceneOptions',{require=function(name)return assert(modules[name],name)end})

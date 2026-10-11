@@ -1915,6 +1915,7 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
           (not boulder) and (base + (sapling and 15 or (lift + 3))) or nil }
       local mx, mz = cx * 16 + 8, cy * 16 + 8
       if type(map.cellCollision) == "function" and lift == 20 then mx,mz=mx+8,mz-8 end
+      if not boulder and not sapling and lift>4 and(type(map.cellCollision)~="function"or not V.require("TreePresentation").original())then V.require("KfpTreeDetails").record(map,mx,base,mz,base+lift+3)end
       -- A connected wall is already planted across its full authored footprint;
       -- repeated square boulder shadows underneath would show as dark stepping
       -- stones. Standalone pillars and every tree retain their locked shadows.
@@ -2114,6 +2115,8 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         if style.original() then
           local native=V.require("NativeTreeArt")
           local card=native.gen2(map,cx,cy,lift)
+          local underside=card and native.foliageFloor(card)
+          if card and lift>4 then V.require("KfpTreeDetails").record(map,mx,base,mz,base+card.h-(card.bottom or 0)-4,base+(underside or 0))end
           card=V.require('NativeLegendaryForest').card(card,{cx=cx,cy=cy},map.id)
           if (lift==3 and style.props:get()=="modeled") or (lift~=3 and style.voxel()) then
             spatialPart.nativeGroups=spatialPart.nativeGroups or {}

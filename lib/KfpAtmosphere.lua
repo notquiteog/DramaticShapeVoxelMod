@@ -114,6 +114,7 @@ function M.install(cameraEnabled)
  if M.current then return M.current end
  local audio=M.new();M.current=audio
  V.mod.hooks:wrap('core.update',function(next,game,dt,...)
+  local horizon=V.require('KantoFirstPerson');if horizon.bindGame then horizon.bindGame(game)end
   local result=next(game,dt,...)
   local generation=V.require('Generation').number()
   local map,p,enabled

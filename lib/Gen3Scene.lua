@@ -251,6 +251,7 @@ local function build(req,cache,previous)
  Elevation.bind(cells,regions)
  cache.floorRegions=regions
  local chimneys=Roof.prepare(cells)
+ cache.chimneyOutlets={}
  M.chimneyCount=#chimneys
  M.propCount=#props
  for _,g in ipairs(civics)do g.stageHidden=BattleClear.hits(cam,g.cx*16,g.cy*16,(g.cx+g.width)*16,(g.cy+g.depth)*16)end
@@ -301,6 +302,9 @@ local function build(req,cache,previous)
   elseif shape.kind=='tree' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    if shape.root and not c.stageHidden then
+    local crown=V.require('NativeTreeArt').gen3(c)
+    local underside=crown and V.require('NativeTreeArt').foliageFloor(crown)
+    if crown then V.require('KfpTreeDetails').record({nativeDef=def},x+(shape.anchorX or 16),c.base or 0,z+(shape.anchorZ or 12),(c.base or 0)+crown.h-(crown.bottom or 0)-4,(c.base or 0)+(underside or 0))end
     if TreeStyle.original() then
      local native=V.require('NativeTreeArt')
      local tx,tz=x+(shape.anchorX or 16),z+(shape.anchorZ or 12)
@@ -518,6 +522,7 @@ local function build(req,cache,previous)
  for _,g in ipairs(civics)do if not g.stageHidden then
   local vertices,indices={},{}
   Civic.append(g,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
+  if g.chimneyOutlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=g.chimneyOutlet end
   Elevation.lift(vertices,0,g.groundHeight or 0)
   local part={placement=g};cache.civics[#cache.civics+1]=part
   part.mesh=assert(R.newMesh(vertices,indices));part.image=Civic.material(g)
@@ -527,6 +532,7 @@ local function build(req,cache,previous)
   local b=batches[p.pair];local start=#b.rv
   Roof.appendChimney(p,function(vertices,uv,shade)quad(b.rv,b.ri,vertices,uv,shade)end,uvFor)
   local c=cells[p.cx..':'..p.cy];Elevation.lift(b.rv,start,c and c.base or 0)
+  cache.chimneyOutlets[#cache.chimneyOutlets+1]={x=p.cx*16+10.5,z=p.cy*16+30,y=p.height+20+(c and c.base or 0)}
  end end
  for _,b in pairs(batches)do
   local part={pair=b.pair,secondary=b.secondary,roofMids=b.roofMids}
@@ -988,7 +994,10 @@ function M.draw(game,vw,vh,cam)
   end
   V.require('KfpInteriorDecor').drawLights(room)
   atmosphere.draw(atmosphereMap)
-  if not cam.battle and not cam.replay then V.require('KantoLife').draw({map=atmosphereMap,player=Player})end
+  if not cam.battle and not cam.replay then
+   V.require('KantoLife').draw({map=atmosphereMap,player=Player})
+   V.require('KfpAmbientDetails').drawChimneys(cache.chimneyOutlets,Player.px+8,Player.py+8,love.timer.getTime())
+  end
  end
  local canvas=Options.finish(R.endScene(),width,height)
  if not plate then
