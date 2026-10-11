@@ -12,6 +12,14 @@ This replaces generation-level assumptions with an explicit seven-mod × eleven-
 
 Evidence: `.scratch/parity-073-20261011/results/{red-gen1-online-ally,crystal-gen2-online-ally,leafgreen-gen3-target-rows,emerald-gen3-target-rows}-host/`; the directory name is historical, those runs use official 0.3.74 via `run-074.sh`. Runtime fixtures are tracked in Doubles tests and Battle Art `tools/qa`; focused tests cover mechanics and native presentation opt-out. Exhaustive move/effect, option and custom-region parity remains incomplete.
 
+## 2026-10-11 native movement and spread-mechanics follow-up — engine 0.3.74
+
+Ride ground/Surf removal now preserves native moving/progress/vertical offsets instead of cancelling hops or warps. Ruby, Sapphire and Emerald independently pass native Dive descent, underwater traversal, emergence and Surf overlay restoration; mounting underwater is refused while the native avatar owns movement. Emerald underwater render inspected. The fixture is `dramatic-sky-ride/tests/gen3_dive_ride_driver.lua`; native Waterfall traversal remains a separate unverified case.
+
+Gen2 now implements the existing Gen1 spread policy and public spread registration: native primary damage plus three-quarter additional hits, one PP debit, correct opposing/allied recipients, native Protect/Substitute/screens and Fly/Dig legality. Interrupted moves do not ripple. 85 native core checks pass; Gold/Silver/Crystal independently finish mirrored native Surf battles with matching signatures. Fixture: `double-battles-gen2/tests/gen2_online_spread_driver.lua`.
+
+Gen1 auditing exposed two real online spread desynchronizations: unseeded secondary damage and differing Explosion recipient order on mirrored peers. Both are fixed, alongside native interruption gates and Substitute/Bide/Counter/Rage damage handling. Red/Blue/Yellow independently finish 10-turn actual loopback ENet sleep/Surf battles with identical final hashes, retained transport and unchanged source parties. Red additionally verifies Explosion secondary hits and faint replacement with matching hashes. Fixture: `double-battles-gen2/tests/gen1_online_spread_driver.lua`; `QA_EXPLOSION=1` selects the latter case. Complete move/effect and offline simultaneous-wipe matrices remain unverified.
+
 ## Feature and option scope
 
 | Mod | Features required | Option source | Remaining work |
