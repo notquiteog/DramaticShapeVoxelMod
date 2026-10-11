@@ -55,7 +55,7 @@ end
 -- declined mid-battle (a faint, a send-out, a Transform mid-animation) and
 -- the flat slot has to come back for it the moment it is.
 function Gen2Battle.stagedMon(mon)
-  if mon == nil then return false end
+  if mon == nil or not sceneOverrideOn() then return false end
   local OverworldBattle = V.require("OverworldBattle")
   if not OverworldBattle.available() then return false end
   local shot = OverworldBattle.shot()

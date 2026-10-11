@@ -2,6 +2,16 @@
 
 This replaces generation-level assumptions with an explicit seven-mod × eleven-game audit. **No row means complete parity.** Source adapters can exist without a tested game, screen or network transition. Runtime evidence below covers only the named scenario, not the entire mod. All manifests currently declare zero required companion dependencies.
 
+## 2026-10-11 target-row and native fallback batch — engine 0.3.74
+
+- Gen3 LeafGreen/Emerald native trainer doubles: Left/Right enemy slots, Down allied row, Up remembered enemy; cancellation and partner command pass. Hover blink uses the same opaque sprite head anchor instead of falling back to native screen coordinates. Both blink phases visually inspected.
+- Gen1 Red: native row controls and cancellation pass; complete 10-turn local ENet battle with ally-directed moves, switch/faint replacement, matching mirrored hashes, unchanged source parties and retained chat transport passes. Native ally menu inspected. This is Red evidence, not a new eleven-game battle certification.
+- Gen2 Crystal: native target prompt remains present with Modern UI disabled; row navigation and three mirrored core turns including ally targeting pass. 65 native mechanics assertions include friendly damage, own Reflect, genuine bench phazing and paired-trainer bench ownership. Gen1/2 wire tests reject self, fractional/out-of-range and fainted ally targets; both peers need the updated target-slot vocabulary.
+- Gen2 cached stage ownership now yields native pictures when 3D-BTL is disabled. The guard and diagnostic override have regression coverage; native back sprites visibly return. The short UI fixture skips send-out setup, so its capture does not certify front send-out animation.
+- Sky Ride's GB follower lookup now uses the optional public sprite provider and owned fallback, removing private companion directory/source scanning. Red/Blue/Crystal paired native Surf, shoreline dismount and remote pose removal pass on 0.3.74. Other GB editions retain earlier standalone Surf evidence; new paired Surf verification is pending.
+
+Evidence: `.scratch/parity-073-20261011/results/{red-gen1-online-ally,crystal-gen2-online-ally,leafgreen-gen3-target-rows,emerald-gen3-target-rows}-host/`; the directory name is historical, those runs use official 0.3.74 via `run-074.sh`. Runtime fixtures are tracked in Doubles tests and Battle Art `tools/qa`; focused tests cover mechanics and native presentation opt-out. Exhaustive move/effect, option and custom-region parity remains incomplete.
+
 ## Feature and option scope
 
 | Mod | Features required | Option source | Remaining work |
