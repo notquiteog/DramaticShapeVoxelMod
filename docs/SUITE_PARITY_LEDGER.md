@@ -238,3 +238,19 @@ Evidence: `.scratch/parity-073-20261011/results/{leafgreen,firered}-native-legen
 Follow-up: both corridors also verified in first person. Foreground walls respect
 CUTAWAY in third person; inside-eye views retain all sides. Per-side meshes share
 no unused vertex copies. The east/west fixture now starts on a real floor cell.
+
+### 2026-10-11: native CITY GROUND consumer (engine 0.3.76)
+
+The original CITY GROUND ladder now consumes the existing shared `LawnMaterial`
+for Lavender and Fuchsia. Replacement polygons follow exact native turf-colored
+floor pixels; sand paths, solid cells, native objects, elevations and original
+OFF artwork remain authoritative. This is partial: authored garden fixtures,
+courtyard details and non-flat ground families are not claimed complete.
+Scene invalidation now includes CITY GROUND and TUNNELS, so live menu changes
+rebuild their geometry rather than requiring a map transition.
+
+Native isolated LeafGreen Lavender (618 source floor cells) and FireRed Fuchsia
+(859) ON/OFF checks passed on official 0.3.76; paired renders inspected. Focused
+source-mask/footprint/elevation/UV/option-invalidation checks, original roads
+regression and 541 native option checks pass. Driver: `tools/qa/native-city-ground.lua`.
+Evidence: `.scratch/parity-073-20261011/results/{leafgreen,firered}-native-city-ground-host`.

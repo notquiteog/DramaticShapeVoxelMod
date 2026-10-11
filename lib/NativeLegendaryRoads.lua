@@ -7,9 +7,10 @@ local function pixel(ts,mid,x,y)
  local slot=ts.midToSlot[mid];if not slot or not ts.imageData then return end
  return ts.imageData:getPixel(slot%ts.cols*16+x,math.floor(slot/ts.cols)*16+y)
 end
-function M.mask(ts,mid)
- local palette={};if not ts.midToSlot[0x163]or not ts.imageData then return end
- for y=0,15 do for x=0,15 do palette[color(pixel(ts,0x163,x,y))]=true end end
+function M.mask(ts,mid,donor)
+ donor=donor or 0x163
+ local palette={};if not ts.midToSlot[donor]or not ts.imageData then return end
+ for y=0,15 do for x=0,15 do palette[color(pixel(ts,donor,x,y))]=true end end
  local rows,previous={},{}
  for y=0,15 do
   local runs={};local start
