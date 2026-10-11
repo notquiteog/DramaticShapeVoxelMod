@@ -1,3 +1,9 @@
+## 1.32.2 — 2026-10-10
+
+The staged-battle camera always has a clear view. The battle cut used to open only a narrow thread along each sightline — a few world pixels wide at the lens — so scenery standing beside the line near the camera still rendered around the hole and a fight in a treeline read as being watched through binoculars. The cut is now a corridor: it opens to the whole frame's width over the first part of each sightline and eases back to the subject's own opening before the stage, so the ground the fight stands on keeps its grass and neighbours while everything in view between the camera and the fight clears. Gen 3 characters also stand centred on the cell they occupy (the cards sat on the tile's south edge, half a tile ahead of their own ground), and the right stick stays camera-only there under 0.3.73's twin-stick walk.
+
+Verified on Gen1Recomp 0.3.73: 238 tests passed, 0 failed, 58 skipped; the seeded eight-map battle run shows near-camera scenery cleared around an untouched fight in before/after captures, and a FireRed staged battle renders with the new cut. One pre-existing 0.3.73 gap is noted, not fixed here: the Gen 3 stage driver's Modern UI OFF menu-remap expectation fails identically with this change stashed.
+
 ## 1.32.1 — 2026-10-10
 
 The right stick is camera-only while a camera claims it. Engine 0.3.73 taught Input twin-stick walking (rightstick directions bind onto up/down/left/right), so on a free-camera rung one throw both steered the camera and walked the player. Both input paths (the Gen 1 gamepadaxis patch and the Gen 2 input.gamepad hook) now consult FirstPerson.stickClaimed: while the 1ST/3RD rungs are selected, or a staged battle's lens is steerable, the throw is consumed by the camera and never reaches the engine's translation; off those rungs the engine's new walk is preserved untouched. Raw non-gamepad sticks and Gen 3 were never translated and are unchanged.
