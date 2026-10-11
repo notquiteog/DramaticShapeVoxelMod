@@ -41,5 +41,7 @@ Focused tests cover provider selection, centered alpha frames, bounded cache,
 owned image release and donor isolation. These are representative checks,
 not an all-maps visual claim.
 Red0.3.75 also passed after waiting for the native scene's loading veil; the
-skyward render visibly shows native monochrome bird silhouettes. The fixture
+upward render visibly shows transparent silhouettes from the live sprite
+provider (including its selected color art). This fixture is an art/dispatch
+check, not a composed world-scene quality review. The fixture
 waits for actual draw dispatch rather than assuming a fixed frame count.
