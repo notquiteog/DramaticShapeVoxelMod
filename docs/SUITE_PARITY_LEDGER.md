@@ -219,3 +219,19 @@ Engine0.3.73 paired native Surf follow-up: FireRed, LeafGreen, Ruby, Sapphire an
 
 
 Gen3 doubles target-row and hover-card regression (engine0.3.74): native LeafGreen and Emerald trainer doubles independently pass Left/Right foe-only navigation, Down teammate/Up remembered foe, horizontal no-op on ally, native cancel, and partner-turn selection. Visible/hidden native target-blink captures inspected in both editions; the selected status card keeps its world head projection instead of falling back to native2D coordinates. Focused world-projection and target-legality units pass, including self-allowed moves and absent partners;57 native adapter contracts pass. QA: tools/qa/gen3-target-rows.lua. Native unstaged target input uses the same optional Doubles wrapper; the modern appearance remains owned by Modern UI. Physical controller hardware was not separately tested (the native logical directions are shared). Gen1/2 ally resolver/wire support was subsequently implemented and verified in the 2026-10-11 batch above.
+
+### 2026-10-11: native Legendary tunnel consumer (engine 0.3.76)
+
+`NativeLegendaryTunnels` reuses the shared `UndergroundRoom` floor, closed panel
+and lamp kit in the two FRLG underground corridors. Wall details are fitted wholly
+inside native blocked cells; stairs, exits, warp behavior and collision remain
+native. The original option label/values are registered in Game3 settings. OFF
+restores source artwork. Entrance halls and other tunnel families remain
+unadapted; this is a **partial** scenery consumer, not complete map coverage.
+
+Official 0.3.76 `.love` and Linux AppImage checksums verified. Isolated native
+LeafGreen north/south (250 floor cells, 89 wall segments) and FireRed east/west
+(144 floor cells, 77 wall segments) ON/OFF render checks passed; images inspected.
+Tracked driver: `tools/qa/native-legendary-tunnels.lua`. Focused bounds, native
+stairs, OFF/custom-map fallback, adapter and 541 option-consumer checks pass.
+Evidence: `.scratch/parity-073-20261011/results/{leafgreen,firered}-native-legendary-tunnels-host`.

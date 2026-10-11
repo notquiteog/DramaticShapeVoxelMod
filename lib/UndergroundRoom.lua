@@ -6,6 +6,7 @@ local palette={{.10,.12,.14},{.23,.26,.28},{.48,.34,.16},{.77,.60,.30},
  {.29,.32,.33},{.34,.37,.38},{.87,.79,.59},{.055,.065,.08},
  {.72,.12,.10},{.18,.45,.32},{.93,.62,.24},{.42,.44,.48},
  {.25,.27,.28},{.29,.31,.32},{.35,.37,.38},{.28,.13,.10}}
+function M.palette()return palette end
 local function key(x,y)return (y+64)*4096+x+64 end
 local entries={UNDERGROUND_PATH_ROUTE_5=true,UNDERGROUND_PATH_ROUTE_6=true,
  UNDERGROUND_PATH_ROUTE_6_COPY=true,UNDERGROUND_PATH_ROUTE_7=true,

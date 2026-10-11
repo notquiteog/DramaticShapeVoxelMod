@@ -113,6 +113,7 @@ local function releaseGeometry(cache)
  end
  if cache.legendaryPillars then cache.legendaryPillars.mesh:release()end
  if cache.legendaryRoads then cache.legendaryRoads.mesh:release();cache.legendaryRoads.image:release()end
+ if cache.legendaryTunnels then cache.legendaryTunnels.mesh:release();cache.legendaryTunnels.image:release()end
  if cache.masonry then cache.masonry.mesh:release();cache.masonry.image:release()end
  if cache.rocketWalls then cache.rocketWalls.mesh:release();cache.rocketWalls.image:release()end
  for _,part in ipairs(cache.civics or {})do
@@ -264,6 +265,8 @@ local function build(req,cache,previous)
  end
  cache.legendaryPillars=V.require('NativeLegendaryPillars').build(cells,def.id or Map.current)
  cache.legendaryRoads=V.require('NativeLegendaryRoads').build(cells,def.id or Map.current)
+ cache.legendaryTunnels=V.require('NativeLegendaryTunnels').build(cells,def.id or Map.current)
+ M.tunnelCounts=cache.legendaryTunnels and cache.legendaryTunnels.counts or nil
  cache.rocketWalls=V.require('NativeRocketWalls').build(cells,def.id or Map.current)
  local masonry=V.require("NativeMasonry").new(def)
  M.cliffCount=0
@@ -333,6 +336,8 @@ local function build(req,cache,previous)
    end
   elseif cache.legendaryPillars and cache.legendaryPillars.claims[c.cx..':'..c.cy] then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+  elseif cache.legendaryTunnels and cache.legendaryTunnels.claims[c.cx..':'..c.cy] then
+   plane(b.v,b.i,x,z,uvFor(ts,column and column.ground or shape.ground) or uv)
   elseif cache.rocketWalls and cache.rocketWalls.claims[c.cx..':'..c.cy] then
    plane(b.v,b.i,x,z,uvFor(ts,column and column.ground or shape.ground) or uv)
   elseif column and column.indoor and shape.wallStyle=='tower' then
@@ -576,7 +581,7 @@ local function prepare(game,vw,vh,cam)
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
  M.prepares=stream.stats.started;M.builds=stream.stats.completed;M.cacheHits=stream.stats.hits
- for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount'})do M[name]=cache[name]end
+ for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','tunnelCounts'})do M[name]=cache[name]end
  return true
 end
 local function terrain(draw)
@@ -606,6 +611,7 @@ local function terrain(draw)
  end
  if cache.legendaryPillars then V.require('NativeLegendaryPillars').draw(cache.legendaryPillars,draw)end
  if cache.legendaryRoads then draw(cache.legendaryRoads.mesh,cache.legendaryRoads.image)end
+ if cache.legendaryTunnels then draw(cache.legendaryTunnels.mesh,cache.legendaryTunnels.image)end
  if cache.masonry then draw(cache.masonry.mesh,cache.masonry.image)end
  if cache.rocketWalls then draw(cache.rocketWalls.mesh,cache.rocketWalls.image)end
  for _,part in ipairs(cache.civics or {})do

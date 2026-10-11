@@ -311,7 +311,7 @@ generation	key	label	status	consumer	limitation
 3	communityTowerWall	TOWER WALL	implemented	lib/NativeLegendaryTower.lua; lib/LegendaryTowerExterior.lua; lib/Gen3Scene.lua	SMOKE BLACK/STORM WHITE/PEARL WHITE use the shared authored palette on the optional native Lavender Gothic tower, including shadows and native podium elevation. BATTLE ART keeps its original tower artwork.
 3	communityTreeDetail	TREE DETAIL	implemented	lib/NativeTreeArt.lua; lib/VoxelHull.lua	FULL/BALANCED/HANDHELD change native voxel tree resolution, with live geometry rebuild.
 3	communityTrees	TREES	missing	false	No complete native generation adapter audited for this option.
-3	communityTunnels	TUNNELS	missing	false	No complete native generation adapter audited for this option.
+3	communityTunnels	TUNNELS	partial	lib/NativeLegendaryTunnels.lua; lib/UndergroundRoom.lua; lib/Gen3Scene.lua	Optional shared Legendary corridor floor, closed wall panels and lamps fit only native FRLG tunnel floor/blocked boundaries. Native stairs, exits and collision are retained, OFF restores native art. Entrance halls and other tunnel families remain native/unadapted.
 3	communityWalls	WALLS & LEDGES	partial	lib/NativeMasonry.lua; lib/RetainingMasonry.lua; lib/MasonryPalette.lua	Native outdoor elevation retaining faces use the exact shared Gen1 courses and four palettes, inset into the high cell. Other cliff/ledge and native wall families retain their artwork pending adapters.
 3	curve	V-CURVE	implemented	lib/Voxel3D.lua; lib/ShadowMap.lua	Native scene uses the shared geometry and shadow passes.
 3	daytime	DAYTIME	implemented	lib/Gen3SceneOptions.lua; lib/Gen3Scene.lua	Native scene supersampling, day clock/light/sky, underlay and postprocess.
