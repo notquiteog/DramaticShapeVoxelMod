@@ -20,14 +20,26 @@ Gen2 now implements the existing Gen1 spread policy and public spread registrati
 
 Gen1 auditing exposed two real online spread desynchronizations: unseeded secondary damage and differing Explosion recipient order on mirrored peers. Both are fixed, alongside native interruption gates and Substitute/Bide/Counter/Rage damage handling. Red/Blue/Yellow independently finish 10-turn actual loopback ENet sleep/Surf battles with identical final hashes, retained transport and unchanged source parties. Red additionally verifies Explosion secondary hits and faint replacement with matching hashes. Fixture: `double-battles-gen2/tests/gen1_online_spread_driver.lua`; `QA_EXPLOSION=1` selects the latter case. Complete move/effect and offline simultaneous-wipe matrices remain unverified.
 
+## 2026-10-11 Waterfall and real Gen2 transport closure — engine 0.3.75
+
+Official `.love` and Linux AppImage SHA256 verified against the release checksum file; existing isolated caches boot without reimport. No older evidence is relabeled.
+
+- Ride `790128a`: native Waterfall ascent/descent passes independently in Ruby, Sapphire and Emerald (Ever Grande) and FireRed/LeafGreen (Icefall Cave entrance). The latter uncovered and fixed an actual gate: native Surf overlays were incorrectly refused indoors. Ground/free-flight remain outdoors; inland dismount preserves native locomotion. Emerald/LeafGreen summit renders inspected. Fixture: Ride `tests/gen3_waterfall_ride_driver.lua`.
+- Doubles `7eda2e8`: Gold, Silver and Crystal each complete a real local ENet native Surf double battle, including secondary damage, native queues, bench replacement, uneven peer update clocks, final mirrored hash verification, unchanged source parties and retained room/chat transport. Gold completes five turns; Silver/Crystal four. Fixture: Doubles `tests/gen2_online_transport_driver.lua`. This replaces the narrower simulated-transport qualification for this spread lifecycle.
+
+- Gen3 native trainer doubles: all five editions pass target rows/cancel/partner selection, stable projected card anchors in both blink phases, actual attacks, enemy bench replacement and completion. Ruby capture inspected. Fixture: Battle Art `tools/qa/gen3-target-lifecycle.lua`.
+- Wilds land followers and Pokemon-control no longer replace/follow the native underwater diver; underwater trails are discarded. Focused test and actual Emerald Dive roundtrip pass on 0.3.75; underwater capture visibly retains only the native avatar.
+
+Evidence: `.scratch/parity-073-20261011/results/*-gen3-waterfall-ride-host` and `*-gen2-online-transport-host`, executed by `run-075.sh`. The directory name is historical. Authored scenery-setting adapters and provider-dependent features below remain separate work.
+
 ## Feature and option scope
 
 | Mod | Features required | Option source | Remaining work |
 |---|---|---|---|
 | Battle Art | Rendering, camera, Legendary, sprites, capture, native options | [docs/OPTION_PARITY.tsv](../../DramaticShapeVoxelMod/docs/OPTION_PARITY.tsv) | Remaining missing/partial/provider rows; per-map and per-game verification incomplete. |
 | Wild Skies | Ecology, sky art/options, encounter claims, host-owned flock | [options.lua](../../wild-skies-gen2/options.lua) | All-edition host roster convergence verified; simultaneous claims, rejoin and wider ecology transitions remain. |
-| Sky Ride | Ground/Surf/flight, mount selection, rider art/options, remote mount sync | [lib/gen3/settings.lua](../../dramatic-sky-ride/lib/gen3/settings.lua) | Basic standalone ground/flight/Surf and paired ground/flight verified all editions; paired Surf and wider transition matrix remain. |
-| Double Battles | Wild/trainer doubles, targeting, native Gen3 doubles, online doubles | [main.lua](../../double-battles-gen2/main.lua) | Per-edition complete turn/faint/switch/end matrix and standalone/native double coexistence pending. |
+| Sky Ride | Ground/Surf/flight, mount selection, rider art/options, remote mount sync | [lib/gen3/settings.lua](../../dramatic-sky-ride/lib/gen3/settings.lua) | Basic standalone ground/flight/Surf and paired ground/flight verified all editions; paired Surf verified all six GB editions on 0.3.74 and all five GBA editions on 0.3.73; native GBA Waterfall verified all five on 0.3.75, Hoenn Dive all three on 0.3.74. Remaining special movement paths tracked separately. |
+| Double Battles | Wild/trainer doubles, targeting, native Gen3 doubles, online doubles | [main.lua](../../double-battles-gen2/main.lua) | Gen1 complete ENet spread lifecycle verified all three editions on 0.3.74; Gen2 equivalent native transport lifecycle verified all three on 0.3.75. Gen3 native trainer targeting, status blink anchoring, partner choice, foe bench replacement and completion verified all five on 0.3.75; special effects retain native legality. |
 | Online | Remote actors, walk-up trade/battle, singles/doubles, chat/bubbles, host encounter authority | [main.lua](../../gen1online-plus/main.lua) | Basic paired singles/doubles/trades and shared rosters verified all editions; lifecycle, disconnect edges and custom-region cases remain. |
 | Wilds | Visible encounters, followers, throwing, art/options, host-authoritative ground roster | [options.lua](../../overworld-spawn-mod/options.lua) | Basic standalone and host-reserved guest capture verified all editions; simultaneous throws, full-PC network storage and follower lifecycle remain. |
 | Modern UI | Optional command/status/party screens, native fallback, special screens | [main.lua](../../modern-ui/main.lua) | GB roster implemented; specialized screens and all-edition complete UI review pending. |
