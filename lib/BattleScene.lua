@@ -62,7 +62,6 @@ local ForestAtmos = V.require("ForestAtmos")
 local ForestDressing = V.require("ForestDressing")
 local CharacterRenderers = V.require("CharacterRenderers")
 local PaletteFX = require("src.render.PaletteFX")
-local Map = require("src.world.Map")
 
 local BattleScene = {}
 BattleScene.capture = nil
@@ -1227,7 +1226,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
   -- shared rig follows the clock on an outdoor floor and stays at noon on an
   -- indoor one, and the same tint multiplies the staged shot -- with the
   -- same window glass on whatever buildings stand in the background
-  local outdoor = (host.def and Map.isOutdoor(host.def)) or V.require("SafariReserve").enabled(host) or false
+  local outdoor = (host.def and require("src.world.Map").isOutdoor(host.def)) or V.require("SafariReserve").enabled(host) or false
   DayNight.applyRig(outdoor)
   -- a canopy floor (Viridian Forest) fights under the hour's tint too,
   -- with the rig and the void exactly as they were
