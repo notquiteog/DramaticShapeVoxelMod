@@ -1,3 +1,7 @@
+## 1.33.0 — 2026-10-11
+
+Native battle-card gender, caught markers and EXP; grounded capture presentation; continuous battle obstruction clearing; source-aware KFP atmosphere/interior adapters; native building, tunnel and Prize Room options; compressed native model caching. Representative rendering and focused checks used official Gen1Recomp 0.3.74–0.3.76. Full-world coverage and complete option parity remain unfinished; see the included coverage ledgers.
+
 ## 1.32.2 — 2026-10-10
 
 The staged-battle camera always has a clear view. The battle cut used to open only a narrow thread along each sightline — a few world pixels wide at the lens — so scenery standing beside the line near the camera still rendered around the hole and a fight in a treeline read as being watched through binoculars. The cut is now a corridor: it opens to the whole frame's width over the first part of each sightline and eases back to the subject's own opening before the stage, so the ground the fight stands on keeps its grass and neighbours while everything in view between the camera and the fight clears. Gen 3 characters also stand centred on the cell they occupy (the cards sat on the tile's south edge, half a tile ahead of their own ground), and the right stick stays camera-only there under 0.3.73's twin-stick walk.
