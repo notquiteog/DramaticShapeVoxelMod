@@ -113,10 +113,29 @@ local function windowImage()
  end end
  paneImage=love.graphics.newImage(d);paneImage:setFilter('nearest','nearest');d:release();return paneImage
 end
+-- Upstream's five-cell fixture grid; skip actual stair voids and exits.
+function M.fittings(p)
+ local out={};if p.cave or p.height<40 then return out end
+ local b=p.bounds
+ local function place(x,z)
+  for _,hole in ipairs(p.openings or{})do
+   if x+6>hole[1]and x-6<hole[3]and z+6>hole[2]and z-6<hole[4]then return end
+  end
+  for side,doors in ipairs(p.doorways or{})do for _,d in ipairs(doors)do
+   local at=(side==1 or side==3)and x or z
+   local distance=side==1 and z-b[2]or side==3 and b[4]-z or side==2 and b[3]-x or x-b[1]
+   if distance<16 and at>d[1]-6 and at<d[2]+6 then return end
+  end end
+  out[#out+1]={x,z}
+ end
+ for z=b[2]+40,b[4]-40,80 do for x=b[1]+40,b[3]-40,80 do place(x,z)end end
+ if #out==0 and b[3]-b[1]>=16 and b[4]-b[2]>=16 then place((b[1]+b[3])/2,(b[2]+b[4])/2)end
+ return out
+end
 function M.draw(p,opened,ceiling,nativeMaterial)
  if not V.require('KfpInterior').dressing:get()then return end
  local R=V.require('Voxel3D');local entry=cache[p]
- local key=tostring(p.height)..':'..tostring(p.recessSignature)
+ local key=tostring(p.height)..':'..tostring(p.recessSignature)..':'..tostring(p.openingSignature)
  if entry and entry.key~=key then for _,mesh in pairs(entry.meshes)do mesh:release()end;entry=nil end
  if p.cave then
   if not entry then
@@ -136,7 +155,12 @@ function M.draw(p,opened,ceiling,nativeMaterial)
   local bv,bi=M.beams(p);if #bv>0 then entry.meshes[10]=R.newMesh(bv,bi)end
   -- Original pendant mesh only hangs from an actual ceiling, with enough
   -- clearance above characters. Never synthesize a floor obstacle or pool.
-  if p.height>=40 then local b=p.bounds;local v,i=M.pendant((b[1]+b[3])/2,(b[2]+b[4])/2,p.height);entry.meshes[5]=R.newMesh(v,i)end
+  local v,i={},{}
+  for _,pos in ipairs(M.fittings(p))do
+   local pv,pi=M.pendant(pos[1],pos[2],p.height);local n=#v
+   for _,a in ipairs(pv)do v[#v+1]=a end;for _,k in ipairs(pi)do i[#i+1]=n+k end
+  end
+  if #v>0 then entry.meshes[5]=R.newMesh(v,i)end
  end
  for side=1,4 do if not opened[side]then
   if entry.meshes[side]then R.draw(entry.meshes[side],sheet)end
@@ -166,7 +190,7 @@ function M.lightGeometry(p)
   elseif side==2 then q({b[3],y,lo},{b[3],y,hi},{b[3]-30,y,hi-inset},{b[3]-30,y,lo+inset})
   else q({b[1],y,lo},{b[1],y,hi},{b[1]+30,y,hi-inset},{b[1]+30,y,lo+inset})end
  end end
- if p.height>=40 then local x,z=(b[1]+b[3])/2,(b[2]+b[4])/2
+ for _,pos in ipairs(M.fittings(p))do local x,z=pos[1],pos[2]
   q({x-22,.8,z+22},{x+22,.8,z+22},{x+22,.8,z-22},{x-22,.8,z-22})end
  return v,i
 end
