@@ -130,7 +130,7 @@ function M.install(stage)
    r.uoy+(cy+(p and p.oy or 0)+Ui.bounceOffset('mon',id)+head)*r.Uy}
   M.cards[id]={anchor=anchor,nativeHead={cx+(p and p.ox or 0),cy+(p and p.oy or 0)+Ui.bounceOffset('mon',id)+head},name=State.displayName(battler),level=p and p.displayLevel or mon.level or 1,
    hp=math.max(0,math.floor(hp or mon.hp or 0)),maximum=math.max(1,math.floor(maxHp or mon.maxHp or 1)),
-   status=({'SLP','PSN','BRN','FRZ','PAR','PSN'})[status],gender=mon.gender,
+   status=({'SLP','PSN','BRN','FRZ','PAR','PSN'})[status],gender=mon.gender or Pokemon.gender(sp,mon.personality),
    caught=id%2==1 and Health.shouldShowCaughtMarker(st,battler),
    exp=id%2==0 and Anim.displayExpRatio(side,battler) or nil,
    ox=((hb and hb.ox)or 0)+((opts and opts.ox)or 0),oy=((hb and hb.oy)or 0)+((opts and opts.oy)or 0)}
@@ -148,22 +148,24 @@ function M.install(stage)
   local function label(value,x,y,width)return Theme.text(value,x,y,width,Options.ink())end
   local items={}
   for id=0,3 do local c=M.cards[id];if c then
-   items[#items+1]={id=id,x=c.anchor[1]/k,y=c.anchor[2]/k,w=76,h=id%2==0 and 27 or 22}
+   items[#items+1]={id=id,x=c.anchor[1]/k,y=c.anchor[2]/k,w=76,h=id%2==0 and 29 or 26}
   end end
   local layout=Theme.layoutStatusCards(items,w,h)
   for id=0,3 do local c=M.cards[id];if c then
    local ally=id%2==0
-   local cardH=ally and 27 or 22
+   local cardH=ally and 29 or 26
    local x,y=layout[id].x,layout[id].y
    Options.card(x,y,76,cardH,c.anchor[1]/k,Ui._mode=='target' and Ui.targetCursor()==id)
    label(c.name,x+3,y+2,49);label('Lv.'..c.level,x+53,y+2,21)
+   Theme.gender(c.gender,x+4,y+17);if c.caught then Theme.caught(x+15,y+18)end
    label(c.status or 'HP',x+3,y+11,19)
    local fraction=math.min(1,c.hp/c.maximum)
    G.setColor(.20,.27,.29,1);G.rectangle('fill',x+24,y+12,48,3,1,1)
    G.setColor(Theme.hpColor(fraction));G.rectangle('fill',x+24,y+12,48*fraction,3,1,1)
    if ally then
     label(c.hp..' / '..c.maximum,x+24,y+16,48)
-    G.setColor(.24,.57,.81,1);G.rectangle('fill',x+3,y+25,70*math.max(0,math.min(1,c.exp or 0)),1)
+    G.setColor(.20,.27,.29,1);G.rectangle('fill',x+3,y+27,70,1)
+    G.setColor(.24,.57,.81,1);G.rectangle('fill',x+3,y+27,70*math.max(0,math.min(1,c.exp or 0)),1)
    end
   end end
   if M.menu and not UI.uiHidden('text') then

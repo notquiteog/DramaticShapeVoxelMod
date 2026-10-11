@@ -98,7 +98,7 @@ function M.install()
     local head=shot.heads and shot.heads[side]
     local visible=side=='player' and state.showPlayerHud or side=='enemy' and state.showEnemyHud
     if mon and head and visible and not state:hudCleared(side)then
-     items[#items+1]={id=i,x=(rect.vux+head[1]*rect.vuw)/k,y=(rect.vuy+head[2]*rect.vuh)/k,w=76,h=side=='player' and 27 or 22}
+     items[#items+1]={id=i,x=(rect.vux+head[1]*rect.vuw)/k,y=(rect.vuy+head[2]*rect.vuh)/k,w=76,h=side=='player' and 29 or 26}
      mons[i]={mon=mon,side=side}
     end
    end
@@ -113,12 +113,19 @@ function M.install()
    if UI.hudUsesColor()then g.setColor(.9,.95,.94,.96);g.rectangle('fill',x+1,y+1,74,item.h-2,2,2)end
    Theme.text(state:name(mon),x+3,y+2,49,ink)
    Theme.text('Lv.'..tostring(mon.level or 1),x+53,y+2,21,ink)
+   Theme.gender(mon.gender,x+4,y+17)
+   if side=='enemy' and state.battle.wild and state:dexCaught(mon)then Theme.caught(x+15,y+18)end
    Theme.text(state:statusTag(mon,side) or 'HP',x+3,y+11,19,ink)
    local maximum=math.max(1,mon.maxHp or (mon.stats and mon.stats.hp)or 1)
    local hp=math.max(0,math.min(maximum,state:hudHp(mon,side)))
    g.setColor(.2,.27,.29,1);g.rectangle('fill',x+24,y+12,48,3,1,1)
    g.setColor(Theme.hpColor(hp/maximum));g.rectangle('fill',x+24,y+12,48*hp/maximum,3,1,1)
-   if side=='player'then Theme.text(hp..' / '..maximum,x+24,y+16,48,ink)end
+   if side=='player'then
+    Theme.text(hp..' / '..maximum,x+24,y+16,48,ink)
+    local length=require('src.ui.gen2.BattleHud').EXP_LENGTH_PX
+    g.setColor(.20,.27,.29,1);g.rectangle('fill',x+3,y+27,70,1)
+    g.setColor(.24,.57,.81,1);g.rectangle('fill',x+3,y+27,70*math.max(0,math.min(1,(state.shownExp or 0)/length)),1)
+   end
   end
   if UI.uiHidden('text') or not state:bottomUIVisible()then return end
   local entries,index={}

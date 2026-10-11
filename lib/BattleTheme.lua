@@ -29,6 +29,20 @@ function M.button(x,y,w,h,kind,selected,flip)
  G.setColor(selected and 1 or .32,selected and .94 or .35,selected and .78 or .29,1);G.polygon('line',p)
  G.setColor(1,1,1,.18);G.line(x+cut,y+2,x+w-3,y+2)
 end
+-- Pixel symbols avoid missing gender glyphs in the bundled text face.
+function M.gender(value,x,y)
+ local male=value=='M'or value=='male'or value=='♂'
+ local female=value=='F'or value=='female'or value=='♀'
+ if not male and not female then return end
+ local g=love.graphics;g.setColor(unpack(M.ink));g.setLineWidth(.8)
+ g.circle('line',x+2,y+3,1.7)
+ if male then g.line(x+3,y+2,x+6,y-1,x+3,y-1);g.line(x+6,y-1,x+6,y+2)
+ else g.line(x+2,y+5,x+2,y+8);g.line(x,y+6,x+4,y+6)end
+end
+function M.caught(x,y)
+ local g=love.graphics;g.setColor(unpack(M.ink));g.setLineWidth(.8)
+ g.circle('line',x+3,y+3,2.6);g.line(x,y+3,x+6,y+3);g.circle('fill',x+3,y+3,.8)
+end
 function M.hpColor(fraction)
  if fraction>.5 then return .09,.73,.21,1 end
  if fraction>.2 then return .93,.65,.23,1 end
