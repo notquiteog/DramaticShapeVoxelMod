@@ -4965,3 +4965,15 @@ Wilds87e39950 fixes generic hidden-water behavior overriding swimming sprites;
 074 Emerald water reproduction inspected. Doubles target row navigation,
 blink-stable HUD and capture-ball grounding are assigned to active workers;
 record their final evidence separately. User saves untouched; QA-only profiles.
+
+Additional074 verification:1280x720 default/orbit battle captures inspected in
+.scratch/bugfix-20261011/occlusion-wide; continuous foreground remains clear.
+The driver emitted PASS; like the beach runner the shell returned1 at shutdown,
+so no claim of a clean process exit. Doubles1e768d3 + BAV71364b8 add row navigation
+and stable target HUD contracts, verified by the parity worker on Emerald and
+LeafGreen074. Shared actor-anchor/capture helper remains with that worker pair
+until their final capture verification/commit.
+
+Final cutaway basis also includes camera height, so an overhead camera cannot
+collapse back into separate holes. Overhead CPU regression passes; updated074
+1280x720 scene captured/inspected at .scratch/bugfix-20261011/occlusion-final.

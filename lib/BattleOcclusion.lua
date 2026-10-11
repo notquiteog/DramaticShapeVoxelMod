@@ -37,18 +37,18 @@ function M.build(eye,arena,ground,textures)
  end
  -- One depth slab spans the visible frame. Separate target capsules leave
  -- opaque bridges and circular rims around the combatants.
- local x,z=(out[1][1]+out[2][1])*.5,(out[1][3]+out[2][3])*.5
- local length=math.sqrt(x*x+z*z)
+ local x,y,z=(out[1][1]+out[2][1])*.5,(out[1][2]+out[2][2])*.5,(out[1][3]+out[2][3])*.5
+ local length=math.sqrt(x*x+y*y+z*z)
  if length>0 then
-  x,z=x/length,z/length
-  out.view={x,0,z,math.max(out[1][1]*x+out[1][3]*z,out[2][1]*x+out[2][3]*z)}
+  x,y,z=x/length,y/length,z/length
+  out.view={x,y,z,math.max(out[1][1]*x+out[1][2]*y+out[1][3]*z,out[2][1]*x+out[2][2]*y+out[2][3]*z)}
  else out.view={0,0,0,0} end
  return out
 end
 function M.foreground(ray,cut)
  if not cut or ray[2]<=cut.floor then return false end
  local v=cut.view
- local depth=ray[1]*v[1]+ray[3]*v[3]
+ local depth=ray[1]*v[1]+ray[2]*v[2]+ray[3]*v[3]
  return depth>0 and depth<v[4]
 end
 function M.blocks(ray,target)

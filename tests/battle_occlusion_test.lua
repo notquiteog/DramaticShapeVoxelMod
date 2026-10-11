@@ -50,3 +50,8 @@ end
 assert(not B.foreground({cut.view[1]*(cut.view[4]+10),0,cut.view[3]*(cut.view[4]+10)},cut))
 assert(not B.foreground({-cut.view[1],0,-cut.view[3]},cut))
 print('Battle continuous foreground slab PASS')
+
+local overhead=B.build({16,80,64},arena,0)
+assert(B.foreground({0,-30,0},overhead),'overhead camera leaves foreground canopy opaque')
+assert(not B.foreground({0,-80,0},overhead),'overhead floor clipped')
+print('Battle overhead cutaway PASS')
