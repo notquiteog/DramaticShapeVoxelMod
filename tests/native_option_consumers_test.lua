@@ -40,6 +40,9 @@ local modules={SpatialUpscale={setting=s},ModSetting=Setting,CameraSettings={inv
  draw=function(_,x,z,color)hit('underlay',color);return true end},
  TiltShift={setLevel=function(n)hit('tilt',n)end,apply=function(c)hit('blur',c);return 'blurred'end,invalidate=function()end},
  CommunityVisuals={sky=s},Water={setting=s}}
+for _,name in ipairs({'KfpWetGround','KfpRainProps','KfpAtmosphere','KfpMotion','KfpInterior','KantoFirstPerson'})do
+ modules[name]={settings={s}}
+end
 local Options=load('Gen3SceneOptions',{require=function(name)return assert(modules[name],name)end})
 Options.tilt:setIndex(3);Options.update(.25)
 check(calls[1][1]=='clock' and calls[1][2]==.25,'clock advances on native update')

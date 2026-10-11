@@ -79,7 +79,7 @@ end
 -- Unsupported full-screen effects still retain their native presentation.
 function M.nativeEffects(anims)
  for _,a in ipairs(anims or {})do
-  if type(a)~='table' or (a.kind~='dust' and not V.require('Gen3EmoteCards').supports(a.kind))then return true end
+  if type(a)~='table' or (a.kind~='dust' and not V.require('Gen3EmoteCards').supports(a.kind) and not V.require('Gen3GroundEffects').supports(a.kind))then return true end
  end
  return false
 end
@@ -778,6 +778,7 @@ local function fieldEffects(draw,cam)
    {{x+8-dx,8,z+8-dz},{x+8+dx,8,z+8+dz},{x+8+dx,0,z+8+dz},{x+8-dx,0,z+8-dz}},M.groundAt(x+8,z+8))
  end end
  V.require('Gen3EmoteCards').draw(fx,cam,M.groundAt,effect)
+ V.require('Gen3GroundEffects').draw(fx,M.groundAt,effect)
  local doors=require('src.core.game3.doors');local a=doors._activeAnim
  if a then
   local surface
@@ -870,6 +871,11 @@ function M.draw(game,vw,vh,cam)
   end
   local focusDistance=cam.level==6 and 24 or 70
   R.camera={eye={cx-dx*dist,ey,cz-dz*dist},focus={cx+dx*focusDistance,ey-focusDistance*math.tan(cam.pitch),cz+dz*focusDistance},fov=math.rad(62),curve=cam.level==6 and 0 or nil}
+  if cam.level==6 and not cam.battle and not cam.replay then
+   local ox,oy,oz=V.require('KfpMotion').sample({px=cx,py=cz,
+    lift=math.max(0,-(Player.spriteYOffset or 0)-(Player.jumpSpriteY and Player.jumpSpriteY()or 0))},Map.current,math.pi-cam.yaw,love.timer.getTime())
+   for _,p in ipairs({R.camera.eye,R.camera.focus})do p[1]=p[1]+ox;p[2]=p[2]+oy;p[3]=p[3]+oz end
+  else V.require('KfpMotion').reset()end
   if cam.battle then
    R.camera=V.require('BattleCam').rig(cam.arena,ground)
    local c,s=math.cos(cam.yaw),math.sin(cam.yaw)
@@ -879,6 +885,7 @@ function M.draw(game,vw,vh,cam)
    if cam.actors and cam.actors.st.double then R.camera.fov=2*math.atan(math.tan(R.camera.fov/2)*2.3)end
   end
  else
+  V.require('KfpMotion').reset()
   R.camera=Interior.camera(Interior.forMap(M.sceneDef,3),S.angle,vw/vh)
   if R.camera then cx,cz=R.camera.focus[1],R.camera.focus[3]end
  end
@@ -925,6 +932,7 @@ function M.draw(game,vw,vh,cam)
   if plate.image then R.backdrop(plate.image,plate.offset)end
  else
   Options.underlay(indoor,cx,cz,background)
+  V.require('KantoFirstPerson').draw({map=atmosphereMap,player={px=cx-8,py=cz-8}})
   Interior.draw(room)
   terrain(R.draw)
  end
@@ -944,10 +952,41 @@ function M.draw(game,vw,vh,cam)
    end)
   end
   actors(game,cam,R.draw)
+  local rainProps=V.require('KfpRainProps')
+  if not cam.battle and not cam.replay and rainProps.setting:get()then
+   local humans={};local constants=require('src.core.game3.constants').active(game)
+   local space=package.loaded['src.core.game3.scripting.space']
+   for _,eo in ipairs(Objects.forDraw())do
+    local gid=eo.graphicsId or (eo.def and (eo.def.graphicsId or eo.def.graphics))
+    if space and space.resolveObjectGraphicsId and eo.def then gid=space.resolveObjectGraphicsId(eo.def)or gid end
+    if rainProps.human(constants:name('event_objects',gid,'OBJ_EVENT_GFX_'))then
+     local x,z=eo.px or eo.cellX*16,eo.py or eo.cellY*16
+     if cache.cells and cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]then
+      local support=Furniture.support(cache.cells,gid,x,z,not eo.moving)
+      local spr=Sprites.getDraw(gid)
+      humans[#humans+1]={human=true,x=x+8+(eo.raiseX or 0),z=z+8,
+       ground=M.groundAt(x+8,z+8,eo.currentElevation)+(support or 0)-(eo.raiseY or 0),
+       height=spr and SpriteAnchor.eyeHeight(spr)+5 or 24}
+     end
+    end
+   end
+   rainProps.draw(humans,{id=Map.current,def={outdoor=not indoor}},love.timer.getTime(),cam.level>=6 and cam.yaw or 0)
+  end
   if not cam.replay then rideDust(game,cam);fieldEffects(R.draw,cam)end
  end
  R.battleOcclusion(nil)
  if not plate then
+  local wet=V.require('KfpWetGround')
+  if not cam.battle and not cam.replay and wet.setting:get()~='off'then
+   wet.draw({id=Map.current,def={outdoor=not indoor}},cx,cz,function(wx,wz)
+    local c=cache.cells and cache.cells[math.floor(wx/16)..':'..math.floor(wz/16)]
+    if not c or c.collision~=0 or c.civic or c.prop or c.gym or c.stairs or c.column or c.boundary then return end
+    local kind=c.shape and c.shape.kind
+    if kind=='water'or kind=='cliff'or kind=='steps'or kind=='ladder'or kind=='wall'or kind=='tree'then return end
+    return M.groundAt(wx,wz)
+   end,love.timer.getTime())
+  end
+  V.require('KfpInteriorDecor').drawLights(room)
   atmosphere.draw(atmosphereMap)
   if not cam.battle and not cam.replay then V.require('KantoLife').draw({map=atmosphereMap,player=Player})end
  end
@@ -970,7 +1009,7 @@ function M.draw(game,vw,vh,cam)
  love.graphics.pop()
  return true
 end
-function M.invalidate()Boundary.clear();stream:clear();cache={}end
+function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();stream:clear();cache={}end
 function M.release()
  V.require("NativeLegendaryTower").clear()
  V.require("NativeLegendarySapling").clear()

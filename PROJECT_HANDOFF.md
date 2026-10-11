@@ -4937,3 +4937,31 @@ accident -- see the known limitation in the doc.
 5. Gen 2 equivalents for the `game.data.field` features that answer nil there:
    CAVE DARKNESS (`darkMaps`), the heal-machine sheet (`overworldFx`) and the
    cut-tree swaps.
+
+## 2026-10-11: KFP direct integration and reported camera defects
+
+Latest official release checked: Gen1Recomp0.3.74; matching official Linux shell
+and .love downloaded/hash-verified in .scratch/runtime-0.3.74. Optional embedded
+KFP integration is documented in docs/KANTO_FIRST_PERSON_INTEGRATION.md; source
+presence does not imply every donor feature is ported. Red074 panorama/sky and
+Crystal/Emerald interiors inspected; original game art remains default.
+
+Beach camera cause: native tracks/ripples were classified as unsupported field
+presentations. Gen3GroundEffects now draws their actual native frames/flips as
+flat terrain decals without advancing their timers. Unsupported effects still
+use native presentation. Route104074 real walk/run fixture:60input frames,
+136visible-track observations, no nativeRequired fallback; clean captures
+inspected at .scratch/coverage-20261004/results/emerald-beach-tracks-clean-074.
+Driver emitted PASS; shell returned1 on shutdown (not presented as exit0).
+
+Battle cutaway uses a continuous foreground depth slab rather than separated
+capsule peepholes. Keeps supporting floor and background, bounded by farthest
+battler depth; actor pass resets the scope. Default+orbit Emerald074 captures
+inspected at .scratch/bugfix-20261011/occlusion; shader compiled/rendered.
+Focused occlusion and native ground-effects tests pass;505native option consumer
+checks, menu persistence/overflow and LuaJIT source compilation pass.
+
+Wilds87e39950 fixes generic hidden-water behavior overriding swimming sprites;
+074 Emerald water reproduction inspected. Doubles target row navigation,
+blink-stable HUD and capture-ball grounding are assigned to active workers;
+record their final evidence separately. User saves untouched; QA-only profiles.

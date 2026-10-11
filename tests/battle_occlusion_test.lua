@@ -40,3 +40,13 @@ assert(B.radius(1,15)==3+15,'the subject end keeps its own opening')
 assert(B.radius(.5,15)>=(15+20)*.5,'the mid-line corridor clears the frame')
 assert(B.radius(0,15)==3,'at the lens only the thread was ever needed')
 print('Battle occlusion: both groups, depth limits, floor and corridor PASS')
+-- Foreground clearing spans the viewport, including the bridge between two
+-- targets and arbitrarily wide aspect ratios. Ground/background remain intact.
+for _,x in ipairs({-150,-25,0,15,60,150})do
+ local z=(cut.view[4]*.4-x*cut.view[1])/cut.view[3]
+ assert(B.foreground({x,0,z},cut),'foreground rim survives across the frame')
+ assert(not B.foreground({x,cut.floor,z},cut),'battle floor erased')
+end
+assert(not B.foreground({cut.view[1]*(cut.view[4]+10),0,cut.view[3]*(cut.view[4]+10)},cut))
+assert(not B.foreground({-cut.view[1],0,-cut.view[3]},cut))
+print('Battle continuous foreground slab PASS')

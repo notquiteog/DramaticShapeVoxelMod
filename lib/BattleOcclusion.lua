@@ -1,13 +1,6 @@
--- A camera-relative opening to each complete battler group. Scenery behind
--- the subjects and the battle's supporting floor remain intact.
---
--- The opening is a corridor, not a peephole: the lens is long and the eye
--- stands well back, so anything tall within the FRAME between the camera
--- and the fight would otherwise leave the fight visible through a hole --
--- the "looking through binoculars" shot. The radius therefore opens to the
--- whole frame's width over the first part of the sightline and narrows back
--- to the subject's own opening before the stage, so the ground the fight
--- stands on keeps its grass and its neighbours.
+-- Shared battle-scene cutaway. A continuous camera-relative depth slab
+-- clears foreground scenery across the viewport, preserving the supporting
+-- floor and background. Target capsules additionally protect raised silhouettes.
 local M={}
 -- How much wider than the subject the frame is, in world pixels at the
 -- subjects' depth: the GB frame holds about 34 world px vertically at the
@@ -42,7 +35,21 @@ function M.build(eye,arena,ground,textures)
   out[i]={p[1]-eye[1],(ground or 0)+height*.5-eye[2],p[2]-eye[3],
    math.max(10,width*.5,height*.5)+5}
  end
+ -- One depth slab spans the visible frame. Separate target capsules leave
+ -- opaque bridges and circular rims around the combatants.
+ local x,z=(out[1][1]+out[2][1])*.5,(out[1][3]+out[2][3])*.5
+ local length=math.sqrt(x*x+z*z)
+ if length>0 then
+  x,z=x/length,z/length
+  out.view={x,0,z,math.max(out[1][1]*x+out[1][3]*z,out[2][1]*x+out[2][3]*z)}
+ else out.view={0,0,0,0} end
  return out
+end
+function M.foreground(ray,cut)
+ if not cut or ray[2]<=cut.floor then return false end
+ local v=cut.view
+ local depth=ray[1]*v[1]+ray[3]*v[3]
+ return depth>0 and depth<v[4]
 end
 function M.blocks(ray,target)
  local len=target[1]^2+target[2]^2+target[3]^2
@@ -55,6 +62,7 @@ end
 M.shader=[[
   uniform float battleCutOn;
   uniform float battleCutFloor;
+  uniform vec4 battleCutView;
   uniform vec4 battleCutA;
   uniform vec4 battleCutB;
   float battleWidth(float t, float w) {

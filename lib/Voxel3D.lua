@@ -554,7 +554,9 @@ float gardenRipple(vec2 q, float t) {
     if (interiorCut > 0.5 && (vFoliageRay.x < interiorBounds.x+0.03 || vFoliageRay.z < interiorBounds.y+0.03
       || vFoliageRay.x > interiorBounds.z-0.03 || vFoliageRay.z > interiorBounds.w-0.03)) discard;
     if (battleCutOn > 0.5 && vFoliageRay.y > battleCutFloor
-        && (battleBlocked(vFoliageRay,battleCutA) || battleBlocked(vFoliageRay,battleCutB))) discard;
+        && ((dot(vFoliageRay,battleCutView.xyz)>0.0
+          && dot(vFoliageRay,battleCutView.xyz)<battleCutView.w)
+          || battleBlocked(vFoliageRay,battleCutA) || battleBlocked(vFoliageRay,battleCutB))) discard;
     if (reflectionClip.x > 0.5 && vFoliageRay.y > reflectionClip.y) discard;
     if (foliageCutOn > 0.5 && (foliageNativeOnly < 0.5
         || (vReferenceMaterial > 19.5 && vReferenceMaterial < 22.5))) {
@@ -2025,6 +2027,7 @@ function Voxel3D.draw(mesh, texture, model, pull, sunModel)
   drawUniforms.send(sh,"battleCutOn",battleCutScope and 1 or 0)
   if battleCutScope then
     pcall(sh.send,sh,"battleCutFloor",battleCutScope.floor)
+    pcall(sh.send,sh,"battleCutView",battleCutScope.view)
     pcall(sh.send,sh,"battleCutA",battleCutScope[1])
     pcall(sh.send,sh,"battleCutB",battleCutScope[2])
   end
