@@ -24,6 +24,12 @@ local V = ...
 
 local ModSetting = {}
 ModSetting.__index = ModSetting
+local registry = {}
+function ModSetting.snapshot()
+  local values = {}
+  for key, setting in pairs(registry) do values[key] = setting:get() end
+  return values
+end
 
 local function modId()
   local mod = V.mod
@@ -34,11 +40,13 @@ end
 -- shows for each. The optional defaultIndex is also the fallback for an
 -- unreadable or unrecognised stored value; otherwise values[1] is used.
 function ModSetting.new(key, label, values, labels, defaultIndex)
-  return setmetatable({
+  local setting = setmetatable({
     key = key, label = label, values = values, labels = labels,
     defaultIndex = defaultIndex or 1,
     index = nil,          -- nil = not yet read back from the persisted options
   }, ModSetting)
+  registry[key] = setting
+  return setting
 end
 
 local function indexOf(self, value)

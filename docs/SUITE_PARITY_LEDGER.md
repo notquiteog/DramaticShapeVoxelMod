@@ -32,6 +32,12 @@ Official `.love` and Linux AppImage SHA256 verified against the release checksum
 
 Evidence: `.scratch/parity-073-20261011/results/*-gen3-waterfall-ride-host` and `*-gen2-online-transport-host`, executed by `run-075.sh`. The directory name is historical. Authored scenery-setting adapters and provider-dependent features below remain separate work.
 
+## Native authored-model CPU cache — engine 0.3.75
+
+Gen3 now consumes RAM PRECACHE MB for compressed authored building and furniture records. OFF performs no retention or disk reads; LIVE CACHE retains only session-generated records; numeric budgets bound compressed CPU data; FULL removes that budget. Persistent reads preload actual current/connected-map records. Native source pixels, atlas slots, effective options and sorted mod Lua/data contents fingerprint each record. Invalid, corrupt, unavailable or unsupported records rebuild normally; decoding completes before emitting any replayed faces. Wind anchors and authored chimney metadata survive replay. This does not change GPU budgets or certify every terrain/tree mesh family.
+
+Actual Emerald Oldale rebuild replays all four authored buildings (22,891 compressed bytes); LeafGreen Oak's lab replays 21 furniture records (44,358 bytes). Captures inspected. Real LÖVE codec/storage tests cover source-list order, source/art/options invalidation, OFF/LIVE/FULL, bounded retention, corruption and failed writes. Fixtures: `tools/qa/native-geometry-cache.lua`, `tools/qa/native-geometry-replay.lua`; latest result directories use the isolated `run-075.sh` runtime. General terrain and native tree CPU stream caching remain work, so the option inventory is explicitly partial.
+
 ## Feature and option scope
 
 | Mod | Features required | Option source | Remaining work |

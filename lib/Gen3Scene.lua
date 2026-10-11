@@ -505,23 +505,25 @@ local function build(req,cache,previous)
    end
   end
  end end
+ local modelCache=V.require('NativeGeometryCache')
+ modelCache.prepare(req.game,regions)
  for _,p in ipairs(props)do if not p.stageHidden then
   local b=batches[p.pair]
   local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout
-  Furniture.append(p,function(vertices,uv,shade,anchor)
+  modelCache.append(def.id or Map.current,p,function(item,emit)return Furniture.append(item,emit,uvFor)end,function(vertices,uv,shade,anchor)
    if cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
     local shift=cache.northWallFront-31.92
     for _,v in ipairs(vertices)do v[3]=v[3]+shift end
    end
    quad(cutout and b.pv or b.v,cutout and b.pi or b.i,vertices,uv,shade,anchor)
-  end,uvFor)
+  end)
   Elevation.lift(b.v,start,p.groundHeight or 0);Elevation.lift(b.pv,plantStart,p.groundHeight or 0)
  end end
  cache.civics={}
  for _,g in ipairs(civics)do if not g.stageHidden then
   local vertices,indices={},{}
-  Civic.append(g,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
+  modelCache.append(def.id or Map.current,g,Civic.append,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
   if g.chimneyOutlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=g.chimneyOutlet end
   Elevation.lift(vertices,0,g.groundHeight or 0)
   local part={placement=g};cache.civics[#cache.civics+1]=part
