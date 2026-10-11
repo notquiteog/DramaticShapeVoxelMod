@@ -254,3 +254,21 @@ Native isolated LeafGreen Lavender (618 source floor cells) and FireRed Fuchsia
 source-mask/footprint/elevation/UV/option-invalidation checks, original roads
 regression and 541 native option checks pass. Driver: `tools/qa/native-city-ground.lua`.
 Evidence: `.scratch/parity-073-20261011/results/{leafgreen,firered}-native-city-ground-host`.
+
+### 2026-10-11: native BUILDING STYLE consumer (engine 0.3.76)
+
+The existing `ReferenceBuildings.model` kit now has a guarded FRLG Vermilion
+adapter, using actual native warp coordinates for doors. Below-head detailing
+stays inside the reviewed solid body; shapes with walkable body cells, missing
+warps, unknown families or custom map IDs retain installed geometry. Native door
+opening/closing art is projected into the authored doorway. The Gen3 default is
+INSTALLED; saved upstream choice values remain authoritative. Gen1 is unchanged.
+
+Both isolated editions rendered the native fan club replacement and INSTALLED
+fallback on 0.3.76; first-person door captures inspected. LeafGreen additionally
+awaited complete native open/close callbacks. Other house families are guarded
+but were not replaced in this fixture: BUILDING STYLE remains **partial**, not
+all Vermilion buildings or complete city coverage. Focused authored-geometry,
+blocked-body, native-warp, fallback, generation-adapter and option checks pass.
+Driver: `tools/qa/native-legendary-buildings.lua`; evidence in
+`.scratch/parity-073-20261011/results/{leafgreen,firered}-native-legendary-buildings-host`.

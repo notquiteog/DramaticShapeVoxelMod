@@ -32,6 +32,9 @@ function M.setLevel(level,game)
  mode:setIndex(level+1,game);M.level=mode:get()
 end
 function M.install()
+ -- Native artwork remains the default in newly supported editions; saved
+ -- upstream BUILDING STYLE values still win through the shared setting.
+ V.require('CommunityVisuals').buildings.defaultIndex=1
  V.require("KfpAtmosphere").install(function()return (M.level or 0)>0 end)
  local mod=V.mod
  local FieldView=require('src.core.game3.field_view')
@@ -58,7 +61,7 @@ function M.install()
  local uninstallCrystalField=V.require('NativeCrystalField').install()
  mod.hooks:wrap('core.quit_to_launcher',function(next,...)uninstallCrystalField();return next(...)end)
  local uninstallInterface=interfaceArt.install()
- local sharedSettings={V.require('RamPrecache').setting,V.require('CommunityVisuals').tunnels,V.require('CommunityVisuals').cityGround,V.require('CommunityVisuals').walls,V.require('CommunityVisuals').masonry,V.require('StandingTrainer').setting,V.require('CommunityVisuals').pillars,V.require('CommunityVisuals').roads,V.require('CommunityVisuals').rocket,V.require('CommunityVisuals').elevator,V.require('CommunityVisuals').cutTrees,V.require('CommunityVisuals').towerWall,V.require('CommunityVisuals').signs,V.require('CommunityVisuals').safari,V.require('CommunityVisuals').grass,legendary.setting,Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,V.require('CommunityVisuals').caveSound,V.require('CommunityVisuals').kantoLife,
+ local sharedSettings={V.require('RamPrecache').setting,V.require('CommunityVisuals').buildings,V.require('CommunityVisuals').tunnels,V.require('CommunityVisuals').cityGround,V.require('CommunityVisuals').walls,V.require('CommunityVisuals').masonry,V.require('StandingTrainer').setting,V.require('CommunityVisuals').pillars,V.require('CommunityVisuals').roads,V.require('CommunityVisuals').rocket,V.require('CommunityVisuals').elevator,V.require('CommunityVisuals').cutTrees,V.require('CommunityVisuals').towerWall,V.require('CommunityVisuals').signs,V.require('CommunityVisuals').safari,V.require('CommunityVisuals').grass,legendary.setting,Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,V.require('CommunityVisuals').caveSound,V.require('CommunityVisuals').kantoLife,
   V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting}
  for _,setting in ipairs(V.require("Gen3Capture").settings())do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(V.require("NativeAtmosphere").settings)do sharedSettings[#sharedSettings+1]=setting end

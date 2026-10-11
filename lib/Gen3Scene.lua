@@ -528,14 +528,17 @@ local function build(req,cache,previous)
   end)
   Elevation.lift(b.v,start,p.groundHeight or 0);Elevation.lift(b.pv,plantStart,p.groundHeight or 0)
  end end
- cache.civics={}
+ cache.civics={};M.legendaryBuildingCount=0
  for _,g in ipairs(civics)do if not g.stageHidden then
+  local nativeKit=V.require('NativeLegendaryBuildings').build(g,def,cells)
+  if nativeKit then cache.civics[#cache.civics+1]=nativeKit;M.legendaryBuildingCount=M.legendaryBuildingCount+1 else
   local vertices,indices={},{}
   modelCache.append(def.id or Map.current,g,Civic.append,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
   if g.chimneyOutlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=g.chimneyOutlet end
   Elevation.lift(vertices,0,g.groundHeight or 0)
   local part={placement=g};cache.civics[#cache.civics+1]=part
   part.mesh=assert(R.newMesh(vertices,indices));part.image=Civic.material(g)
+  end
   Budget.check()
  end end
  for _,p in ipairs(chimneys)do if not BattleClear.hits(cam,p.cx*16,p.cy*16,p.cx*16+16,p.cy*16+16)then
@@ -584,7 +587,7 @@ local function prepare(game,vw,vh,cam)
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
  M.prepares=stream.stats.started;M.builds=stream.stats.completed;M.cacheHits=stream.stats.hits
- for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','tunnelCounts','cityGroundCount'})do M[name]=cache[name]end
+ for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','tunnelCounts','cityGroundCount','legendaryBuildingCount'})do M[name]=cache[name]end
  return true
 end
 local function terrain(draw)
@@ -801,7 +804,7 @@ local function fieldEffects(draw,cam)
  if a then
   local surface
   for _,part in ipairs(cache.civics or {})do
-   if part.placement then surface=Civic.doorSurface(part.placement,a.x,a.y)end
+   if part.placement then surface=V.require('NativeLegendaryBuildings').doorSurface(part,a.x,a.y)or Civic.doorSurface(part.placement,a.x,a.y)end
    if surface then break end
   end
   if surface then
