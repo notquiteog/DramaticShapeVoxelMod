@@ -65,6 +65,7 @@ function M:record(draw,image,args,primitive)
  local card=id and self.byId[id]
  if not card then
   card={id=id,tex=self:canvas(),ball=not primitive and image==self.ballImage}
+  if card.ball then card.radius=V.require('NativeBattleBallBounds').radius(image,args[1])*M.PIXEL end
   if id then card.ax,card.ay=self:anchor(id,image);self.byId[id]=card
   else card.ax,card.ay=drawOrigin(args)end
   self.cards[#self.cards+1]=card
@@ -107,7 +108,7 @@ end
 -- Interpolate attack travel along the selected native attacker/target pair.
 -- The residual is a billboard-space offset, so a rising bolt remains vertical
 -- rather than being flattened into terrain. No particle state is changed.
-function M:effectPoint(x,y,ball)
+function M:effectPoint(x,y,ball,radius)
  local Anim=require('src.core.game3.battle.anim');local vm=Anim.vm and Anim.vm()
  local a=vm and vm.attackerId and vm:attackerId()or 0
  local b=vm and vm.targetId and vm:targetId()or 1
@@ -122,7 +123,7 @@ function M:effectPoint(x,y,ball)
   -- Native balls settle 24px below their battler row, independently of the
   -- selected sprite's crop/foot padding. Preserve the arc above that floor.
   local baseline=(ca.y or na.y)+24+((cb.y or nb.y)-(ca.y or na.y))*t
-  return {wa[1]+(wb[1]-wa[1])*t,wa[2]+2+math.max(0,baseline-y)*M.PIXEL,wa[3]+(wb[3]-wa[3])*t},x-(na.x+dx*t),0
+  return {wa[1]+(wb[1]-wa[1])*t,wa[2]+(radius or 6*M.PIXEL)+math.max(0,baseline-y)*M.PIXEL,wa[3]+(wb[3]-wa[3])*t},x-(na.x+dx*t),0
  end
  local t=d>0 and math.max(0,math.min(1,((x-na.x)*dx+(y-na.y)*dy)/d))or 0
  return {wa[1]+(wb[1]-wa[1])*t,wa[2]+(wb[2]-wa[2])*t+8,wa[3]+(wb[3]-wa[3])*t},
@@ -135,12 +136,26 @@ function M:prepare(camera,ground,eye)
  V.require("Gen3Capture").prepare(self,ground)
  -- Hidden actors still anchor native send-out/capture particle paths.
  for id=0,3 do if not self.native[id]then self:anchor(id)end end
- for _,c in ipairs(self.cards)do
+ local function positionCard(c)
   local point,ox,oy=self.points[c.id],0,0
-  if not c.id then point,ox,oy=self:effectPoint(c.ax,c.ay,c.ball)end
+  if not c.id then point,ox,oy=self:effectPoint(c.ax,c.ay,c.ball,c.radius)end
   local yaw=Billboard.yawToward(point[1],point[3],eye)
   local offset=Mat.translate((M.W/2-c.ax+ox)*M.PIXEL,(c.ay-M.H-oy)*M.PIXEL,0)
   c.model=Mat.mul(Mat.mul(Mat.mul(Mat.translate(unpack(point)),Mat.rotateY(yaw)),offset),Mat.scale(M.W*M.PIXEL,M.H*M.PIXEL,1))
+ end
+ for _,c in ipairs(self.cards)do positionCard(c)end
+ -- Native target selection blinks the sprite, not its status card. Project
+ -- the hidden actor's same native anchor without drawing a replacement sprite.
+ self.hiddenHeads={}
+ local Ui=require('src.core.game3.battle.ui')
+ for id=0,3 do
+  if not self.byId[id] and Ui.targetHidden and Ui.targetHidden(id)
+   and not(id%2==0 and V.require('BattleArt').backPlacementSetting:get()=='ui')then
+   local anchor=self.native[id]
+   if anchor then
+    local c={id=id,ax=anchor.x,ay=anchor.foot};positionCard(c);self.hiddenHeads[id]=c
+   end
+  end
  end
 end
 function M:draw(shadow)
@@ -161,7 +176,7 @@ function M:draw(shadow)
  if not shadow then R.lighting(true);R.seams(true)end
 end
 function M:head(id,x,y)
- local c=self.byId[id];if not(c and c.model)then return end
+ local c=self.byId[id]or(self.hiddenHeads and self.hiddenHeads[id]);if not(c and c.model)then return end
  local m=c.model;local u,v=x/M.W-.5,1-y/M.H
  return M.project(self.vp or R.vp,m[1]*u+m[2]*v+m[4],m[5]*u+m[6]*v+m[8],m[9]*u+m[10]*v+m[12])
 end

@@ -48,7 +48,8 @@ assert(not ok and not f.inWorld and not light.world and not art.world)
 for k,v in pairs(original)do assert(g[k]==v,'error leaked '..k)end
 f:prepare({center={100,100},yaw=0},3,{100,30,200});f:draw()
 local ball=f:effectPoint(176,64,true)
-assert(ball[2]==5,'capture ball must settle exactly one radius above the world floor')
+assert(ball[2]==4.5,'capture ball must settle exactly one radius above the world floor')
+assert(f:effectPoint(176,64,true,2)[2]==5,'custom ball radius must retain ground contact')
 for id=0,1 do
  local c=f.byId[id];local m=c.model
  local u,v=c.ax/240-.5,1-c.ay/160
@@ -58,6 +59,18 @@ for id=0,1 do
 end
 local x=f:head(0,72,48)[1];R.vp=Mat.scale(3,3,3)
 assert(f:head(0,72,48)[1]==x,'HUD must retain the actor pass projection')
+-- Blink-only suppression must not move a target's card into native screen UI.
+local ui=package.loaded['src.core.game3.battle.ui']
+ui.targetHidden=function(id)return id==1 end
+local hidden=M.new({double=true});hidden:anchor(1,b)
+hidden:prepare({center={100,100},yaw=0},3,{100,30,200});hidden:draw()
+local retained=hidden:head(1,176,8)
+assert(retained and #hidden.cards==0,'hidden target needs projection without duplicate actor')
+local prior=f.byId[1];local model=hidden.hiddenHeads[1].model
+for i=1,16 do assert(math.abs(model[i]-prior.model[i])<1e-6,'blink projection drift '..i)end
+ui.targetHidden=function()return false end
+hidden:prepare({center={100,100},yaw=0},3,{100,30,200})
+assert(hidden:head(1,176,8)==nil,'do not fabricate cards for unrelated absent actors')
 local p=M.placement({center={0,0},yaw=math.pi/2},0,false,0)
 assert(math.abs(p[1]+24)<1e-6 and math.abs(p[3])<1e-6,'arena orientation is shared by every actor')
 -- Changing the live option must affect both allied slots, without moving
