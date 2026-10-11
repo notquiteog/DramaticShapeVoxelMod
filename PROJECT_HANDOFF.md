@@ -4977,3 +4977,8 @@ until their final capture verification/commit.
 Final cutaway basis also includes camera height, so an overhead camera cannot
 collapse back into separate holes. Overhead CPU regression passes; updated074
 1280x720 scene captured/inspected at .scratch/bugfix-20261011/occlusion-final.
+
+### 2026-10-11 native GBA capture footing and hidden target heads
+- Corrected native capture-ball opaque radius: imported 16px closed frames have a 2px transparent margin (12px opaque diameter). Previously the world card used radius8px and visibly floated2px; it now measures the closed frame alpha and uses6px for stock art, retaining custom replacement bounds. GPU readback restores depth/cull/canvas and retries transient failures.
+- Gen3 target-selection blink now retains the hidden actor's exact world head projection without drawing a second actor (parity worker's verified change).
+- Unit checks PASS: native_battle_ball_bounds_test, gen3_world_battle_test, gen3_capture_test. Rendered Emerald074 fresh Route101 fixture with native ball enabled/model OFF consumed MasterBall and advanced native throw/rebound to settled y64 for frames240–480, then reached native pokedex_reg (not stuck catching). Inspected `.scratch/kfp-capture-20261011/native/capture-300.png`; parent independently inspected. Runner `.scratch/runtime-0.3.74/run.sh`; driver `.scratch/kfp-capture-20261011/capture.lua`; isolated profile `.scratch/kfp-capture-20261011/profiles` identity `kfp-capture-qa`. No player save touched. This proves native geometry/flow through Pokédex registration, not final naming/return, multiplayer, or every ball asset override. Modeled ball follows separately; no speculative physics change.
