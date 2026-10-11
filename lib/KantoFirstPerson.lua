@@ -8,8 +8,15 @@ M.horizon=Setting.new('kfpHorizon','KFP HORIZON',{'off','kanto','fuji','valley',
 M.sky=Setting.new('kfpSky','KFP SKY',{false,true},{'BATTLE ART','LAYERED'})
 M.aircraft=Setting.new('kfpAircraft','KFP AIRCRAFT',{false,true},{'OFF','ON'})
 M.rainbows=Setting.new('kfpRainbows','RAINBOWS',{false,true},{'OFF','ON'})
-M.settings={M.horizon,M.sky,M.aircraft,M.rainbows}
+M.birds=Setting.new('kfpBirds','DISTANT BIRDS',{false,true},{'OFF','ON'})
+M.settings={M.horizon,M.sky,M.aircraft,M.rainbows,M.birds}
 local modules,env={},nil
+local game
+function M.bindGame(value)
+ if game==value then return end
+ if modules.sky then modules.sky.invalidate();modules.sky=nil end
+ V.require('KfpBirdArt').clear();game=value
+end
 local root=(V.path or '')..'/vendor/kanto-first-person/'
 local pictures={kanto='backdrop.png',fuji='backdrop2.png',valley='backdrop3.png',city='backdrop4.png'}
 local function copy(t)local r={};for k,v in pairs(t or {})do r[k]=v end;return setmetatable(r,{__index=t}) end
@@ -30,6 +37,8 @@ local function environment()
  end
  env.love.graphics.newImage=function(value,...)
   if type(value)=='string'then
+   local name,frame=value:match('^save/mod%-derived/ds_fp_ceiling/birds/([a-z]+)_([ab])%.png$')
+   if name then return V.require('KfpBirdArt').image(game,name,frame)end
    local rel=relative(value);local data=love.filesystem.newFileData(assert(V.mod:read(rel)),rel)
    local image=love.graphics.newImage(data);data:release();return image
   end
@@ -47,7 +56,7 @@ local function environment()
  end
  env._G.__ds_ceiling_config=function()
   return {backdrop=M.horizon:get()~='off',clouds=M.sky:get(),stars=M.sky:get(),
-   aircraft=M.aircraft:get(),birds=false,groundflock=false,rainbows=M.rainbows:get()}
+   aircraft=M.aircraft:get(),birds=M.birds:get() and game~=nil,groundflock=false,rainbows=M.rainbows:get()}
  end
  return env
 end
@@ -57,7 +66,22 @@ local function payload(name)
  local source=assert(V.mod:read(rel),'missing KFP payload '..name)
  local prefix='local __host=select(2,...); local _G,math,love=__host._G,__host.math,__host.love;\n'
  local chunk=assert(loadstring(prefix..source,'@'..rel))
- modules[name]=chunk(V,environment())
+ local adapter=setmetatable({},{__index=V})
+ adapter.require=function(key)
+  if key=='FirstPerson'then
+   return setmetatable({},{__index=function(_,field)
+    if field=='yaw'then
+     local camera=V.require('Voxel3D').camera
+     if camera and camera.eye and camera.focus then
+      return math.atan2(camera.focus[1]-camera.eye[1],camera.focus[3]-camera.eye[3])
+     end
+     return 0
+    end
+   end})
+  end
+  return V.require(key)
+ end
+ modules[name]=chunk(adapter,environment())
  return modules[name]
 end
 -- Explicit native map classification; a disconnected outdoor town is not a
@@ -73,7 +97,7 @@ function M.outdoor(map)
  local ts=d.tileset
  return ts=='OVERWORLD' or ts=='PLATEAU' or ts=='SHIP_PORT'
 end
-function M.enabled()return M.horizon:get()~='off' or M.sky:get() or M.aircraft:get() or M.rainbows:get()end
+function M.enabled()return M.horizon:get()~='off' or M.sky:get() or M.aircraft:get() or M.rainbows:get() or M.birds:get()end
 function M.draw(state)
  if not M.enabled() or not state or not M.outdoor(state.map) then return false end
  -- The background needs positions and outdoor eligibility, never Gen1 tile
@@ -102,7 +126,7 @@ function M.draw(state)
   end
   M.lastHorizon=choice;draw('backdrop')
  end
- if M.sky:get()or M.aircraft:get()or M.rainbows:get()then draw('sky')end
+ if M.sky:get()or M.aircraft:get()or M.rainbows:get()or M.birds:get()then draw('sky')end
  return true
 end
 function M.status()
