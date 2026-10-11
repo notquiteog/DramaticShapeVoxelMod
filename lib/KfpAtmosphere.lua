@@ -99,7 +99,7 @@ function M.facts(map,player,generation)
  end
  local p=player or {};local grass=false
  if map and type(map.isGrassCell)=='function'then
-  local size=generation==1 and 8 or 16
+  local size=16 -- native collision/grass cells are 16px in every generation
   local ok,g=pcall(map.isGrassCell,map,math.floor((p.px or 0)/size),math.floor((p.py or 0)/size));grass=ok and g or false
  elseif generation==3 and map then
   local ok,g=pcall(function()return require('src.core.game3.collision').isGrass(p.cellX,p.cellY)end);grass=ok and g or false

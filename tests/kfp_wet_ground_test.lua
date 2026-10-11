@@ -1,0 +1,10 @@
+local M=assert(loadfile('lib/KfpWetGround.lua'))({require=function(n)assert(n=='ModSetting');return{new=function()return{}end}end})
+local a=M.anchors(128,128,function()return 24 end)
+assert(#a>0 and #a<=81)
+for _,p in ipairs(a)do assert(p.h==24,'raised surface lost')end
+local b=M.anchors(129,129,function()return 24 end)
+assert(#a==#b and a[1].x==b[1].x,'camera movement shifts scenery')
+assert(#M.anchors(128,128,function()return nil end)==0,'blocked terrain accepted')
+local rejected=M.anchors(128,128,function(x,z)return x*.1 end)
+assert(#rejected==0,'height seam accepted')
+print('PASS KFP wet ground deterministic/bounded/raised surface and collision exclusion')
