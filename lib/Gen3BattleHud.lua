@@ -115,6 +115,9 @@ function M.install(stage)
   local status=Status.statusAilment({status=battler.status or mon.status or mon.status1,hp=mon.hp})
   local sp=battler.species or Pokemon.speciesOf(mon)
   local pic=Ui.battlerPic(id,battler,sp)
+  -- Supply opaque bounds even on native target-blink frames, when no actor
+  -- sprite draw reaches the world capture. This keeps its card at its head.
+  if stage.frame and pic and pic.image then stage.frame:anchor(id,pic.image)end
   local bounds=Bounds.get(pic and pic.image)
   local cx,cy=Ui.battlerSpriteCenter(id,sp,Coords.coords(st,id))
   local scale=p and p.scale or 1
