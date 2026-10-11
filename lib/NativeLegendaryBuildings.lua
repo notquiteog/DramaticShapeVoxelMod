@@ -29,11 +29,11 @@ function M.geometry(g,def,cells)
  local slots={};for i,name in ipairs(names)do slots[name]=(i-.5)/#names end
  local vs,ix={},{}
  for _,q in ipairs(V.require('ReferenceBuildings').model(spec))do
-  local n=#vs
+  local n=#vs;local shade=V.require('ReferenceMaterials').encode(q.referenceMaterial,q.shade or 1)
   for i,point in ipairs(q)do
    local x,y,z=point[1],point[2],point[3]
    if y<24 then x=math.max(0,math.min(p.w,x));z=math.max(spec.z0-3,math.min(p.front,z))end
-   vs[#vs+1]={g.cx*16+x,(g.groundHeight or 0)+y,g.cy*16+z,assert(slots[q.referenceMaterial]),.5,type(q.shade)=='table'and q.shade[i]or q.shade or 1}
+   vs[#vs+1]={g.cx*16+x,(g.groundHeight or 0)+y,g.cy*16+z,assert(slots[q.referenceMaterial]),.5,type(shade)=='table'and shade[i]or shade}
   end
   for _,i in ipairs{1,2,3,1,3,4}do ix[#ix+1]=n+i end
  end
