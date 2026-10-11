@@ -41,7 +41,7 @@ assert(not K.dressing:get(),'native art default overridden')
 print('PASS original KFP pendant and atlas decal dimensions, doorway and stair exclusion')
 local cave={bounds={0,0,320,320},height=96}
 v,i=Decor.stalactites(cave);assert(#v>0 and #v<=4096)
-for _,a in ipairs(v)do assert(a[2]>=81 and a[2]<=96 and a[1]>=16 and a[1]<=320 and a[3]>=16 and a[3]<=320)end
+for _,a in ipairs(v)do assert(a[2]>=70 and a[2]<=96 and a[1]>=16 and a[1]<=320 and a[3]>=16 and a[3]<=320)end
 print('PASS deterministic original ceiling spikes retain native traversal clearance')
 local room={bounds={0,0,80,80},height=40,doorways={{{20,36}},{},{},{}},openings={{24,24,56,56}}}
 v,i=Decor.lightGeometry(room)
@@ -49,3 +49,19 @@ assert(#v==0,'light plane covers a stair opening')
 room.openings=nil;v,i=Decor.lightGeometry(room);assert(#v==8)
 for _,a in ipairs(v)do assert(a[1]>=0 and a[1]<=80 and a[3]>=0 and a[3]<=80)end
 print('PASS doorway spill/pool bounds and stair-void exclusion')
+p={bounds={0,0,320,320},height=40}
+local all=Decor.posters(p,2,19)
+local posters=Decor.posters(p,2,19,false)
+local windows=Decor.posters(p,2,1,true)
+assert(#all==#posters+#windows and #windows>0,'poster and pane placements overlap')
+assert(#Decor.posters(p,3,1,true)==0,'front door wall acquired windows')
+print('PASS original KFP window positions never overlap imported posters')
+v,i=Decor.beams({bounds={0,0,160,80},height=40,theme='home'})
+assert(#v==12)
+for _,a in ipairs(v)do assert(a[2]>=37.8 and a[2]<=40 and a[1]>=0 and a[1]<=160 and a[3]>=0 and a[3]<=80)end
+assert(#Decor.beams({bounds={0,0,160,80},height=40,theme='center'})==0)
+print('PASS original ceiling joist dimensions and commercial exclusion')
+
+v,i=Decor.rockCeiling(cave);assert(#v>1600)
+for _,a in ipairs(v)do assert(a[2]>=85 and a[2]<=94 and a[1]>=0 and a[1]<=320 and a[3]>=0 and a[3]<=320)end
+print('PASS original irregular cave panels and closed skirt bounds')

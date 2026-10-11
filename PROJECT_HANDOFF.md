@@ -1,3 +1,21 @@
+# KFP interior dressing on official engine0.3.74 — 2026-10-11
+
+Added remaining authored interior primitives in the optional dressing pass:
+original12x14 generated glass/frame art, nonoverlapping poster/window placement,
+source-dimension ceiling joists, deterministic uneven cave ceiling panels and
+closed side skirts. Native palette materials adapt these shapes across editions;
+no foreign tile-ID guesses. Tiny source skirt gaps (<.4px) are closed too.
+Original cave floor spikes are not placed on native walkable cells.
+
+Focused KFP/interior/cave suites pass. Official0.3.74 rendered fixtures inspected:
+Emerald Brendan house FP/orbit (pendant, joists, poster/window art and soft floor
+light), Crystal house FP/orbit, Sprout Tower fallback, Dark Cave ceiling relief.
+Results `.scratch/kfp-20261011/{emerald-interiors074,crystal-interiors074}`;
+drivers `kfp-dressing.lua` / `kfp-final-interior.lua` in ascendant scratch folder.
+No game collision, saves, UI, or scripts changed. Small final skirt closure is
+geometry-tested after these captures. This remains representative visual QA,
+not every-room/all-eleven-edition proof; the broader KFP feature audit continues.
+
 # Optional authored KFP room dressing — 2026-10-11
 
 KFP INTERIOR / DRESSED now imports original poster sheets, source-sized atlas
