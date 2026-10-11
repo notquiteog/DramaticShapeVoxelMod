@@ -1,4 +1,4 @@
-local settings={};local reads=0
+local settings={};local reads=0;local clears=0;local version="red"
 local S={new=function(key,label,values)
  local s={value=values[1]};function s:get()return self.value end
  function s:sync(v)self.value=v end;settings[key]=s;return s
@@ -11,7 +11,7 @@ local V={path='test',mod={read=function(_,path)reads=reads+1;return [[local V=..
  assert(s.map.def.tileset=='OVERWORLD');assert(_G.__ds_ceiling_config());assert(not love.filesystem.write('x','x'))
  math.randomseed(1);math.random();_G.__ds_backdrop_status='drawn';V.require('Voxel3D').tint={0,0,0}
  end,invalidate=function()end}]]end},require=function(n)
- if n=='Weather'then return {mode=function()return 'clear'end} elseif n=='ModSetting'then return S elseif n=='Voxel3D'then return R elseif n=='NativeAtmosphere'then return {kind=function(m)return m.kind end}end
+ if n=='Generation'then return{version=function()return version end}elseif n=='KfpBirdArt'then return{clear=function()clears=clears+1 end}elseif n=='Weather'then return {mode=function()return 'clear'end} elseif n=='ModSetting'then return S elseif n=='Voxel3D'then return R elseif n=='NativeAtmosphere'then return {kind=function(m)return m.kind end}end
  error(n)
 end}
 local K=assert(loadfile('lib/KantoFirstPerson.lua'))(V)
@@ -25,3 +25,10 @@ assert(pushes==0 and R.tint==tint and rngCalls==1 and reads==1)
 assert(_G.__ds_ceiling_config==globals and K.status().__ds_backdrop_status=='drawn')
 K.horizon:sync('city');K.draw({map={def={tileset='OVERWORLD'}}});assert(reads==2)
 assert(not next(K.errors));print('PASS KFP isolation, lazy loading, native classification, live art switching and render-state restoration')
+
+local game={data={}};K.bindGame(game);assert(clears==1 and K.currentGame()==game)
+K.bindGame(game);assert(clears==1,'unchanged game clears art every frame')
+game.data={};K.bindGame(game);assert(clears==2,'reused game loses new data')
+version='crystal';K.bindGame(game);assert(clears==3,'reused game loses new edition')
+K.refreshBirds();assert(clears==4,'option refresh fails')
+print('PASS native bird cache lifecycle: game identity, data identity, edition and explicit options refresh')

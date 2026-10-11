@@ -45,3 +45,5 @@ upward render visibly shows transparent silhouettes from the live sprite
 provider (including its selected color art). This fixture is an art/dispatch
 check, not a composed world-scene quality review. The fixture
 waits for actual draw dispatch rather than assuming a fixed frame count.
+
+Remaining donor particle families now use source-aware native adapters: optional shoreline foam, room dust, actual-chimney smoke, native-tree leaf fall/vines and distant grass rustles. Decorative ground flocks use native art, opaque-pixel foot grounding, collision/elevation/actor-safe placement, and approach-triggered takeoff with no encounter entities. Shared native options default OFF. Bird images refresh for live option/provider changes and reused game/data/edition contexts; no stale payload picture list owns released images. See KFP_FLORA_AUDIT.md for precise075 captures and intentional replacements for incompatible blanket canopy/mountain heuristics.

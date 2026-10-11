@@ -8,12 +8,12 @@ M.settings={M.leaves,M.vines}
 local maps=setmetatable({},{__mode='k'})
 function M.record(map,x,y,z,crown,underside)
  if not map or crown<=y+5 then return end
- local key=map.nativeDef or map;local set=maps[key]
+ local key=map.nativeDef or map.def or map;local set=maps[key]
  if not set then set={};maps[key]=set end
  set[x..':'..z]={x=x,y=y,z=z,crown=crown,underside=underside or crown,seed=((x*73+z*139)%997)/997}
 end
 function M.select(map,px,pz)
- local out={};local set=maps[map.nativeDef or map]or{}
+ local out={};local set=maps[map.nativeDef or map.def or map]or{}
  local C=map.nativeGeneration==3 and require('src.core.game3.collision')
  for _,a in pairs(set)do
   local x,z=math.floor(a.x/16),math.floor(a.z/16)

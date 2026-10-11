@@ -3,7 +3,8 @@
 return {
  {key="kfpHorizon",label="KFP HORIZON",module="KantoFirstPerson"},
  {key="kfpSky",label="KFP SKY",module="KantoFirstPerson"},
- {key="kfpBirds",label="KFP BIRDS",module="KantoFirstPerson"},
+ {key="kfpBirds",label="DISTANT BIRDS",module="KantoFirstPerson"},
+ {key="kfpGroundBirds",label="GROUND BIRDS",module="KfpGroundFlock"},
  {key="kfpAircraft",label="KFP AIRCRAFT",module="KantoFirstPerson"},
  {key="kfpRainbows",label="RAINBOWS",module="KantoFirstPerson"},
  {key="fpceiling",label="FP CEILING",module="KfpInterior"},

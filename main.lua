@@ -739,6 +739,7 @@ local SETTINGS = {
   { V.require('KfpWetGround').setting, 'Optional native-surface rain puddles and splashes.', full=true },
   { V.require('KfpRainProps').setting, 'Optional Kanto First Person umbrellas on human NPCs during rain.', full=true },
   { V.require('KfpAtmosphere').rain, "Rain ambience follows the shared WEATHER setting; no separate weather clock.", full=true },
+  { V.require('KfpGroundFlock').setting, 'Decorative native birds peck on clear dry ground and fly away when approached.', full=true },
   { V.require('KantoFirstPerson').birds, 'Decorative flying flocks using native imported Pokemon art.', full=true },
   { V.require('KantoFirstPerson').rainbows, "Kanto First Person rainbow after rain clears, anchored opposite the sun.", full=true },
   { V.require('KfpInterior').dressing, "Optional Kanto First Person wall pictures and ceiling pendants. NATIVE retains the game's original decoration.", full=true },

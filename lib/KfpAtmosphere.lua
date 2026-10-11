@@ -113,6 +113,7 @@ end
 function M.install(cameraEnabled)
  if M.current then return M.current end
  local audio=M.new();M.current=audio
+ if V.mod.events and V.mod.events.on then V.mod.events:on('mod.options_changed',function()V.require('KantoFirstPerson').refreshBirds()end)end
  V.mod.hooks:wrap('core.update',function(next,game,dt,...)
   local horizon=V.require('KantoFirstPerson');if horizon.bindGame then horizon.bindGame(game)end
   local result=next(game,dt,...)

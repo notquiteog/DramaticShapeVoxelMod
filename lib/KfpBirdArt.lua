@@ -2,10 +2,10 @@
 -- Own only our copies: native sprite caches must never be released here.
 local V=...
 local M={}
-local cache={}
+local cache,feet={},{}
 function M.clear()
  for _,image in pairs(cache)do image:release()end
- cache={}
+ cache={};feet={}
 end
 function M.squeeze(src)
  local w,h=src:getDimensions();local out=love.image.newImageData(w,h)
@@ -40,8 +40,12 @@ function M.image(game,name,frame)
  assert(game,'native game not ready')
  local key=name..frame;if cache[key]then return cache[key]end
  local src=source(game,name);local data=frame=='b' and M.squeeze(src) or src
+ local w,h=data:getDimensions();local last=-1
+ for y=0,h-1 do for x=0,w-1 do local _,_,_,a=data:getPixel(x,y);if a>.01 then last=math.max(last,y)end end end
+ feet[key]=last>=0 and(h-last-1)/h or 0
  local image=love.graphics.newImage(data);image:setFilter('nearest','nearest')
  if data~=src then data:release()end;src:release();cache[key]=image
  return image
 end
+function M.footing(name,frame)return feet[name..frame]or 0 end
 return M

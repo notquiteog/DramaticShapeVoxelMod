@@ -13,3 +13,10 @@ for n=1,100 do M.record(map,n,0,n,30)end
 map.isWalkableCell=function()return false end;assert(#M.select(map,24,24)<=M.MAX_TREES)
 assert(#M.vertices(M.select(map,24,24),1,true,true)<=M.MAX_VERTICES)
 print('PASS KFP tree details: explicit model registration, walkable exclusion, bounded foliage/cell footprint, elevations, isolated RNG')
+
+local def={};local first={def=def,isWalkableCell=function()return false end}
+M.record(first,24,0,24,30,3)
+local rebuilt={def=def,isWalkableCell=first.isWalkableCell}
+local native=M.select(rebuilt,24,24);assert(#native==1,'rebuilt map facade loses registered tree')
+assert(#M.vertices(native,1,false,true)==0,'vines forced through low native foliage')
+assert(#M.vertices(native,1,true,false)>0,'low foliage lost leaf fall')

@@ -25,8 +25,9 @@ scene: it generates additional geometry, rain and tree caches over existing ones
 
 The audio and motion modules neither modify gameplay data nor use the encounter
 RNG. No companion is required. Settings use the normal mod option registry.
-Original vendored files remain unmodified; new adapters do not invoke their
-filesystem patcher or shared-global installation protocol.
+Original vendored art is retained; narrow host lifetime fixes are documented by
+the integration owner. New adapters never invoke the filesystem patcher or
+shared-global installation protocol.
 
 ## Runtime checkpoint
 
@@ -61,3 +62,13 @@ All six options default OFF. There are no collision, encounter, save, or native 
 Focused tests cover water/solid/cliff exclusions, finite geometry, elevations, blocked tree-cell containment, expired bursts, cut-tree clearance, no gameplay RNG and native option consumers. Official0.3.75 Emerald Route104/Brendan-room fixtures exercise foam/dust; FireRed Pallet exercises a real chimney outlet. First smoke render looked like solid pellets, so final material uses faint transparent expanding puffs. Captures/logs: `.scratch/kfp-20261011/{ambient-final075,chimney-final075}`. Native Gen1/Gen2 paths share adapters but are not labelled all-edition visual proof.
 
 The intentionally unused donor mountain-peak heuristic remains superseded by native elevation/horizon geometry: enabling false mountains on roofs would violate source fidelity. Native canopy geometry likewise supersedes the Gen1-only stitched canopy on other generations. Bird image ownership lives in `KantoFirstPerson`/`KfpBirdArt`; airborne and ground-flock behavior must be tracked separately.
+
+Additional official0.3.75 checks: Crystal New Bark native tree pass and player-house dust, Emerald native crown/leaf pass and Route101 five-seed rustle. Tree records use native map-definition identity so rebuilt facade instances share their model observations. Native card alpha/palette sampling supplies foliage clearance; a low skirt is not forcibly lifted just to make space for a vine. Captures `.scratch/kfp-20261011/{crystal-final075,tree-rustle-final075}`.
+
+### Ground flocks
+
+`KfpGroundFlock` ports pecking and approach-triggered takeoff as optional **GROUND BIRDS**. Three decorative native-art cards use dry, flat3x3 native ground and exact elevations. Candidate placement also checks the corridor and native NPC/event occupancy. Transparent image foot margins are measured, preventing sprite padding from becoming a levitation gap. Approaching flushes the flock away/up with elapsed-time movement; it expires, resets on maps/OFF, and never creates encounter entities or modifies collision. A public native asset resolver supplies art; no sprite pack or partner is required.
+
+Focused checks cover blocked/water/stair rejection, map/reset/expiry, native elevation, native-art cache ownership, data/edition rebinding and option refresh. Sky payload is recreated before releasing images so its private picture list cannot retain freed textures. Ground birds query the refreshed cache per draw. Bird providers and native assets remain authoritative.
+
+Ground-flock visual checkpoint: official0.3.75 Emerald Oldale, isolated `kfp-emerald-qa` profile. Three native cards visibly stand on the clearing, take off on approach, and disappear when disabled. Driver must exercise `core.update`: the engine's scripted branch bypasses `PlatformHooks.update`, so an unwrapped test can report flock positions without ever binding the native art owner. Corrected fixture `.scratch/kfp-20261011/ground-flock075.lua`; reviewed captures/log in `ground-bound075/`. Assertions passed with no Lua errors; launcher process returned1 during shutdown, recorded separately from visual assertions. Native NPC/prop occupancy and the corridor are excluded, avoiding the early Birch-bag occlusion.

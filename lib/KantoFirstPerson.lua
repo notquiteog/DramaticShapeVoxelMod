@@ -11,11 +11,17 @@ M.rainbows=Setting.new('kfpRainbows','RAINBOWS',{false,true},{'OFF','ON'})
 M.birds=Setting.new('kfpBirds','DISTANT BIRDS',{false,true},{'OFF','ON'})
 M.settings={M.horizon,M.sky,M.aircraft,M.rainbows,M.birds}
 local modules,env={},nil
-local game
-function M.bindGame(value)
- if game==value then return end
+local game,gameData,gameVersion
+function M.currentGame()return game end
+function M.refreshBirds()
+ -- Payload retains its pics list; discard it before releasing owned images.
  if modules.sky then modules.sky.invalidate();modules.sky=nil end
- V.require('KfpBirdArt').clear();game=value
+ V.require('KfpBirdArt').clear()
+end
+function M.bindGame(value)
+ local version=V.require('Generation').version()
+ if game==value and gameData==(value and value.data)and gameVersion==version then return end
+ M.refreshBirds();game=value;gameData=value and value.data;gameVersion=version
 end
 local root=(V.path or '')..'/vendor/kanto-first-person/'
 local pictures={kanto='backdrop.png',fuji='backdrop2.png',valley='backdrop3.png',city='backdrop4.png'}
