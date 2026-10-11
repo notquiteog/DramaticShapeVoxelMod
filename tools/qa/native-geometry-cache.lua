@@ -31,8 +31,16 @@ return function(game)
  -- and never append an incomplete replay before rebuilding.
  for k in pairs(disk)do if k:sub(-5)~='index'then disk[k]='BAG2'..love.data.pack('string','<I4',1)..'bad zlib'end end
  c=fresh();local before=emitted;draw(c);assert(calls==6 and emitted==before+1,'corrupt replay duplicated geometry')
- value='session';local r,w=reads,writes;c=fresh();draw(c);draw(c);assert(calls==7 and reads==r and writes==w and c.stats.hits==1,'LIVE read persistent data')
- value=0;r,w=reads,writes;draw(c);draw(c);assert(calls==9 and reads==r and writes==w and c.stats.bytes==0,'OFF retained/read data')
+ -- Valid compression with non-finite coordinates is still corrupt geometry.
+ local corruptCalls=calls
+ for k,bytes in pairs(disk)do if k:sub(-5)~='index' and bytes:sub(1,4)=='BAG2'then
+  local valid,raw=pcall(love.data.decompress,'string','zlib',bytes:sub(9))
+  if valid then raw=raw:sub(1,16)..love.data.pack('string','<f',0/0)..raw:sub(21)
+  disk[k]=bytes:sub(1,8)..love.data.compress('string','zlib',raw,1)end
+ end end
+ c=fresh();before=emitted;draw(c);assert(calls==corruptCalls+1 and emitted==before+1,'non-finite geometry replayed')
+ value='session';local r,w=reads,writes;c=fresh();draw(c);draw(c);assert(calls==8 and reads==r and writes==w and c.stats.hits==1,'LIVE read persistent data')
+ value=0;r,w=reads,writes;draw(c);draw(c);assert(calls==10 and reads==r and writes==w and c.stats.bytes==0,'OFF retained/read data')
  value=false;c=fresh();draw(c);assert(c.stats.bytes>0,'FULL failed')
  value=.000001;draw(c);assert(c.stats.bytes<=value*1024*1024,'budget exceeded')
  value=256;style='failed-write';failWrite=true;c=fresh();draw(c);assert(c.stats.misses==1,'failed writes should retain live native result')

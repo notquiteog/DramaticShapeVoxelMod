@@ -106,11 +106,15 @@ local function unpackRecord(bytes,emit,g)
  if count>524288 then return false end
  local raw=love.data.decompress('string','zlib',bytes:sub(9))
  if #raw~=16+count*100 then return false end
+ local function finite(n)return n==n and math.abs(n)<math.huge end
  local flag,x,y,z=love.data.unpack('<ffff',raw)
+ if (flag~=0 and flag~=1)or not finite(x)or not finite(y)or not finite(z)then return false end
  g.chimneyOutlet=flag==1 and{x=x,y=y,z=z}or nil
  local pos=17
  for _=1,count do
   local row={love.data.unpack('<'..string.rep('f',25),raw,pos)};pos=row[26]
+  for i=1,25 do if not finite(row[i])then return false end end
+  if row[22]~=0 and row[22]~=1 then return false end
   local p,t={},{}
   for i=1,4 do local k=(i-1)*5;p[i]={row[k+1],row[k+2],row[k+3]};t[i]={row[k+4],row[k+5]}end
   emit(p,t,row[21],row[22]==1 and {row[23],row[24],row[25]}or nil);Budget.check()
