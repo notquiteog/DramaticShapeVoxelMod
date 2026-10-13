@@ -20,7 +20,7 @@ function M.draw(fx,groundAt,emit,cam)
   end
  end
  for i,a in ipairs(fx._anims or {})do
-  if M.supports(a.kind) and a.cx and a.cy and (a.kind~='tracks' or a.visible)then
+  if (a.kind=='tracks' or a.kind=='ripple') and a.cx and a.cy and (a.kind~='tracks' or a.visible)then
    local ripple=a.kind=='ripple'
    local sheet
    if ripple then sheet=fx.loadSheet('ripple',16,16,5)
