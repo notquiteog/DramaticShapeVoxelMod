@@ -63,15 +63,18 @@ end
 -- compatibility hooks must predict the same place the real step will enter.
 function Precache.candidates(data, overworld)
   local map = overworld and overworld.map
-  local maps = data and data.maps
+  local maps = (overworld and overworld.maps) or (data and data.maps)
   if not (map and map.def and maps) then return {} end
 
   local out, seen = {}, { [map.id] = true }
   local okWarp, Warp = pcall(require, "src.world.Warp")
-  if okWarp and Warp then
+  if (okWarp and Warp) or type(overworld.resolveWarp) == "function" then
     for _, warp in ipairs(map.def.warps or {}) do
       local ok, id = pcall(function()
-        local dest = Warp.destination(data, warp, overworld.lastOutdoor)
+        local dest
+        if type(overworld.resolveWarp) == "function" then
+          dest = overworld:resolveWarp(warp)
+        else dest = Warp.destination(data, warp, overworld.lastOutdoor) end
         return dest
       end)
       if ok and maps[id] then
@@ -84,8 +87,9 @@ function Precache.candidates(data, overworld)
   -- FULL variants (including the destination's own border ring) are not.
   -- Queue direct connections here so crossing a seam promotes a complete map.
   for dir, connection in pairs(map.def.connections or {}) do
-    if connection and maps[connection.map] then
-      addCandidate(out, seen, connection.map,
+    local id = connection and (type(connection.mapId) == "string" and connection.mapId or connection.map)
+    if id and maps[id] then
+      addCandidate(out, seen, id,
                    edgeDistance(overworld.player, map.def, dir), "connection")
     end
   end
@@ -101,12 +105,15 @@ end
 -- Full-mesh masks must match the placement logic used by the live renderer;
 -- otherwise a cached destination could grow border trees through a connected
 -- route.  The engine owns this graph math, so do not duplicate it here.
-function Precache.masksFor(data, mapId)
-  local ok, Controller = pcall(require, "src.world.OverworldController")
+function Precache.masksFor(data, mapId, overworld)
+  local gen2 = overworld and type(overworld.resolveWarp) == "function"
+  local maps = (overworld and overworld.maps) or data.maps
+  local ok, Controller = pcall(require, gen2 and "src.world.gen2.World"
+    or "src.world.OverworldController")
   if not (ok and Controller and Controller.computeNeighbors) then return {} end
   local out = {}
-  for _, nb in ipairs(Controller.computeNeighbors(data.maps, mapId, 2) or {}) do
-    local def = data.maps[nb.id]
+  for _, nb in ipairs(Controller.computeNeighbors(maps, mapId, 2) or {}) do
+    local def = maps[nb.id]
     if def then
       out[#out + 1] = {
         nb.ox, nb.oy,
@@ -130,7 +137,7 @@ function Precache.allJobs(data)
     if type(id) == "string" and type(def) == "table" then
       ids[#ids + 1] = id
       for _, connection in pairs(def.connections or {}) do
-        local other = type(connection) == "table" and connection.map or nil
+        local other = type(connection) == "table" and (type(connection.mapId) == "string" and connection.mapId or connection.map) or nil
         if other and maps[other] then
           connected[id], connected[other] = true, true
         end
@@ -149,8 +156,19 @@ function Precache.allJobs(data)
 end
 
 local function restart(data, overworld)
+  local previous = active
   rootId = overworld.map.id
   candidates = Precache.candidates(data, overworld)
+  if previous and previous.id ~= rootId then
+    local stillUseful = false
+    for _, candidate in ipairs(candidates) do
+      if candidate.id == previous.id then stillUseful = true; break end
+    end
+    -- Leaving an area must not let its unrelated speculative build occupy
+    -- the queue ahead of this area's predictions. Visible/promoted work is
+    -- protected inside cancelSpeculative.
+    if not stillUseful then ChunkMesher.cancelSpeculative(previous.id, false) end
+  end
   nextCandidate = 1
   active = nil
 end
@@ -167,9 +185,10 @@ function Precache.update(game)
     Precache.reset()
     return
   end
-  local overworld = game and game.overworld
+  local overworld = game and ((game.world and game.world.map and game.world) or game.overworld)
   local data = game and game.data
-  if not (overworld and overworld.map and data and data.maps) then return end
+  if not (overworld and overworld.map and data
+      and (overworld.maps or data.maps)) then return end
 
   if rootId ~= overworld.map.id then restart(data, overworld) end
 
@@ -208,9 +227,14 @@ function Precache.update(game)
     return
   end
 
-  local okLoader, MapLoader = pcall(require, "src.world.MapLoader")
-  if not (okLoader and MapLoader and MapLoader.load) then return end
-  local okMap, map = pcall(MapLoader.load, data, candidate.id)
+  local okMap, map
+  if type(overworld.connectionMap) == "function" then
+    okMap, map = pcall(overworld.connectionMap, overworld, candidate.id)
+  else
+    local okLoader, MapLoader = pcall(require, "src.world.MapLoader")
+    if not (okLoader and MapLoader and MapLoader.load) then return end
+    okMap, map = pcall(MapLoader.load, data, candidate.id)
+  end
   if not (okMap and map) then
     nextCandidate = nextCandidate + 1
     return
@@ -225,7 +249,7 @@ function Precache.update(game)
     return
   end
 
-  ChunkMesher.request(map, false, Precache.masksFor(data, map.id), false)
+  ChunkMesher.request(map, false, Precache.masksFor(data, map.id, overworld), false)
   active = { id = map.id, map = map }
 end
 
