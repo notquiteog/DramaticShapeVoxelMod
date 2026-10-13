@@ -63,7 +63,7 @@ function M.hudScale(w,h)
  if M.scale:get()=='og'then return math.max(1,math.min(w/240,h/160))end
  return V.require('BattleTheme').scale(w,h)
 end
-function M.ink()return UI.hudUsesColor()and {.19,.21,.20,1}or{.96,.98,1,1}end
+function M.ink()return UI.hudUsesColor()and V.require('BattleTheme').ink or{.96,.98,1,1}end
 function M.card(x,y,w,h,tip,selected)
  local style=not UI.hudUsesColor()and {paper={.07,.10,.13,.96}}or nil
  return V.require('BattleTheme').statusCard(x,y,w,h,tip,selected,style)

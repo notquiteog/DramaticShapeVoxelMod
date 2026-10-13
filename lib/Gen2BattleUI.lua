@@ -104,13 +104,11 @@ function M.install()
    end
   end
   local layout=Theme.layoutStatusCards(items,w,h)
-  local ink=Theme.ink -- The optional provider's silver cards always need dark ink.
+  local ink=Theme.ink -- Match the optional provider's card palette.
   for _,item in ipairs(items)do
    local entry=mons[item.id];local mon,side=entry.mon,entry.side
    local p=layout[item.id];local x,y=p.x,p.y
    Theme.statusCard(x,y,76,item.h,item.x,false)
-   -- COLOR has its own light card so black ink remains readable.
-   if UI.hudUsesColor()then g.setColor(.9,.95,.94,.96);g.rectangle('fill',x+1,y+1,74,item.h-2,2,2)end
    Theme.text(state:name(mon),x+3,y+2,49,ink)
    Theme.text('Lv.'..tostring(mon.level or 1),x+53,y+2,21,ink)
    Theme.gender(mon.gender,x+4,y+17)
