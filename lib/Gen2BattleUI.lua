@@ -144,12 +144,12 @@ function M.install()
   else return end
   local moveMenu=state.phase=='moves'
   local x,y=w-168,h-(moveMenu and 110 or 62)
-  if not moveMenu then Theme.commandHub(x+82,y+29)end
+  local m=Theme.commandMetrics();if not moveMenu then y=h-m.height;Theme.commandHub(x+82,y+m.hub,m.height)end
   for i,entry in ipairs(entries)do
    local bx=moveMenu and x+3 or x+3+(i-1)%2*82
-   local by=moveMenu and y+3+(i-1)*26 or y+3+math.floor((i-1)/2)*30
+   local by=moveMenu and y+3+(i-1)*26 or y+3+math.floor((i-1)/2)*m.row
    local width=moveMenu and 158 or 76
-   Theme.button(bx,by,width,22,entry.kind,index==i,i%2==0)
+   Theme.button(bx,by,width,moveMenu and 22 or m.cell,entry.kind,index==i,i%2==0)
    Theme.text(entry.name,bx+5,by+(entry.detail and 2 or 5),width-10,{1,1,.96,1},not entry.detail)
    if entry.detail then Theme.text(entry.detail,bx+3,by+12,width-6,{1,1,.96,1})end
   end

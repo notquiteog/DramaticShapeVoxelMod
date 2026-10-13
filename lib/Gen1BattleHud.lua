@@ -58,10 +58,11 @@ local function paint(b)
   if not commands(b)then return end
   local x,y=width-168,height-62
   if b.phase=='menu' then
-    Theme.commandHub(x+82,y+29)
+    local m=Theme.commandMetrics();y=height-m.height
+    Theme.commandHub(x+82,y+m.hub,m.height)
     for i,label in ipairs({'FIGHT','PKMN','ITEMS','RUN'})do
-      local bx,by=x+3+(i-1)%2*82,y+3+math.floor((i-1)/2)*30
-      Theme.button(bx,by,76,22,({'fight','pokemon','bag','run'})[i],b.menuIndex==i,i%2==0)
+      local bx,by=x+3+(i-1)%2*82,y+3+math.floor((i-1)/2)*m.row
+      Theme.button(bx,by,76,m.cell,({'fight','pokemon','bag','run'})[i],b.menuIndex==i,i%2==0)
       Theme.text(label,bx+5,by+5,66,{1,1,.96,1},true)
     end
   else

@@ -109,6 +109,7 @@ function M.commandHub(x,y)
  G.polygon('line',{x,y-8,x+8,y,x,y+8,x-8,y})
 end
 -- Optional semantic card providers may own both layout and geometry.
+function M.commandMetrics()return {height=62,row=30,cell=22,hub=29}end
 function M.combatCardSize()return nil end
 function M.combatCard()return false end
 -- Resolve at draw time: companions may load after Battle Art or be toggled

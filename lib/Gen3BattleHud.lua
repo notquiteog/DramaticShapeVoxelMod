@@ -173,15 +173,16 @@ function M.install(stage)
    end
   end end
   if M.menu and not UI.uiHidden('text') then
-   local x,y=w-168,h-62
+   local m=Theme.commandMetrics(M.menu.entries[1]and M.menu.entries[1].detail~=nil)
+   local x,y=w-168,h-m.height
    local title=M.menu.target and ('TARGET: '..M.menu.target)or nil
    if title then Theme.panel(x+2,y-13,160,12);Theme.text(title,x+4,y-10,152,Theme.ink)end
-   Theme.commandHub(x+82,y+29)
+   Theme.commandHub(x+82,y+m.hub,m.height)
    for i,entry in ipairs(M.menu.entries)do
     local pos=M.menu.mode=='menu' and ({1,3,2,4})[i]or i
-    local bx,by=x+3+(pos-1)%2*82,y+3+math.floor((pos-1)/2)*30
+    local bx,by=x+3+(pos-1)%2*82,y+3+math.floor((pos-1)/2)*m.row
     local chosen=M.menu.index==i
-    Theme.button(bx,by,76,22,entry.kind,chosen,pos%2==0)
+    Theme.button(bx,by,76,m.cell,entry.kind,chosen,pos%2==0)
     Theme.text(entry.name,bx+5,by+(entry.detail and 2 or 5),66,{1,1,.96,1},not entry.detail)
     if entry.detail then Theme.text(entry.detail,bx+3,by+12,70,{1,1,.96,1})end
    end
