@@ -4,7 +4,10 @@ Current work targets official Gen1Recomp 0.3.85. Shared `3D MOVE` defaults GRID
 and offers continuous FREE in first/rotating third person. Static views retain
 native movement. Gen1 consumes native speed hooks. Yellow real-input GRID,
 fractional FREE and GRID handback pass in Viridian; see
-`docs/MOVEMENT_MODE_2026-10-13.md` and native adapter verification record.
+`docs/MOVEMENT_MODE_2026-10-13.md` and
+`docs/NATIVE_FREE_MOVE_2026-10-13.md`. All eight Gen2/3 editions pass basic
+continuous movement/menu/GRID handback checks; Crystal, Emerald and FireRed
+also pass native warp, ledge, connection and Surf transition fixtures.
 
 Gen3 streaming retains useful pending work as the player runs instead of
 repeatedly canceling it; provider readiness does not force cold world rebuilds.
@@ -19,7 +22,9 @@ Wilds companion preserves followers and trail coordinates across native seams,
 removes ordinary teleport catch-up, and uses native running cadence. Same actor
 verified across one Yellow/Crystal/Emerald connection each. Sustained Emerald
 native-run test crossed Oldale→Route103, bounded followers to 120 px/s, then
-observed 16 px catch-up after stopping. See companion
+observed 16 px catch-up after stopping. Follow-up regressions reset cached pace
+on locomotion changes and reject stale bicycle duration while dismounted/idle.
+See companion
 `docs/FOLLOWER_CONNECTION_QA.md`; not every edition/route/companion combination
 has runtime evidence. No release/push performed for this batch.
 

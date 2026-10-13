@@ -19,6 +19,7 @@ release, and GRID handback. Captures inspected at
 
 Unit checks cover default selection, scoped input restoration (including
 errors), analog/diagonal movement, wall sliding, arrival counts, relocation,
-mode handback and special-move ownership. Native Gen2/3 runtime evidence is
-recorded alongside the adapter implementation. These are bounded fixtures,
+mode handback and special-move ownership. All eight Gen2/3 editions passed
+native movement fixtures; details and special-transition coverage are recorded
+in `NATIVE_FREE_MOVE_2026-10-13.md`. These are bounded fixtures,
 not exhaustive route, script or companion-combination certification.
