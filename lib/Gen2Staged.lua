@@ -103,7 +103,7 @@ local function picFor(game,screen,mon,back)
     local ok,pic=pcall(provider.stagedPokemonSprite,mon,back)
     if ok and pic and pic.image and type(pic.width)=="number"
        and type(pic.height)=="number" and pic.width>0 and pic.height>0 then
-      return pic.image,pic.width,pic.height,pic.quad
+      return pic.image,pic.width,pic.height,pic.quad,nil,pic.groundY
     end
   end
   local ok,image=pcall(screen.pic,screen,mon,back)
@@ -126,7 +126,7 @@ function Gen2Staged.sideTexture(game, side)
   if back and V.require('BattleArt').backPlacementSetting:get()=='ui' then return nil end
   local okMon, mon = pcall(screen.activeMon, screen, side)
   if not (okMon and mon) then return nil end
-  local image,iw,ih,quad,selectedArt=picFor(game,screen,mon,back)
+  local image,iw,ih,quad,selectedArt,groundY=picFor(game,screen,mon,back)
   if not image then return nil end
 
   -- A 2v2 round fields a partner beside the lead (the doubles layer keeps
@@ -141,13 +141,22 @@ function Gen2Staged.sideTexture(game, side)
       or (side == "enemy" and battle.enemy2) or nil
     if p2 and p2 ~= mon and (p2.hp or 0) > 0 then partner = p2 end
   end
-  local pimage, pquad = nil,nil
+  local pimage, pquad,pground = nil,nil,nil
   local iw2,ih2=0,0
   if partner then
-    pimage,iw2,ih2,pquad=picFor(game,screen,partner,back)
+    local selected
+    pimage,iw2,ih2,pquad,selected,pground=picFor(game,screen,partner,back)
     if not pimage then iw2,ih2=0,0 end
   end
 
+  local Foot=V.require('BattleSpriteFooting')
+  local box=Foot.bounds(image,quad)
+  local pbox=pimage and Foot.bounds(pimage,pquad)
+  local Art=V.require('BattleArt')
+  local metric=Art.metrics and Art.metrics(image)
+  local pm=pimage and Art.metrics and Art.metrics(pimage)
+  groundY=groundY or (metric and metric.y1+1) or box[4]
+  pground=pground or (pm and pm.y1+1) or (pbox and pbox[4])
   local BattleScene = V.require("BattleScene")
   local cw = math.max(BattleScene.GB_W or 160, iw + iw2 + 2)
   local ch = math.max(BattleScene.GB_H or 144, math.max(ih, ih2) + 2)
@@ -168,10 +177,10 @@ function Gen2Staged.sideTexture(game, side)
     -- the lead sits left of centre and the partner right of it, feet on
     -- the same ground line.
     if pimage then
-      drawPic(g,image,quad,ax-iw,ay-ih)
-      drawPic(g,pimage,pquad,ax,ay-ih2)
+      drawPic(g,image,quad,ax-iw,ay-groundY)
+      drawPic(g,pimage,pquad,ax,ay-pground)
     else
-      drawPic(g,image,quad,ax-iw/2,ay-ih)
+      drawPic(g,image,quad,ax-iw/2,ay-groundY)
     end
   end)
   g.setCanvas(prev)
@@ -184,8 +193,8 @@ function Gen2Staged.sideTexture(game, side)
   -- mirror would turn this back sprite away from its opponents a second time.
   return { canvas = canvas, ax = ax, ay = ay, trainer = false,
     hudAnchors={
-      [side]={pimage and ax-iw/2 or ax,ay-ih},
-      [side..'2']=pimage and {ax+iw2/2,ay-ih2}or nil,
+      [side]={pimage and ax-iw/2 or ax,ay-groundY+box[2]},
+      [side..'2']=pimage and {ax+iw2/2,ay-pground+pbox[2]}or nil,
     },
     noMirror=back and not (selectedArt and V.require('BattleArt').playerSide()=='front'
       and V.require('BattleArt').flipsPlayerFront()),

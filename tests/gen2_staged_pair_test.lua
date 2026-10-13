@@ -16,6 +16,7 @@ love={graphics={
  draw=function(img,x,y)local w,h=img:getDimensions();draws[#draws+1]={x=x,y=y,w=w,h=h} end,
 }}
 local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
+ if name=='BattleSpriteFooting'then return {bounds=function(image)local w,h=image:getDimensions();return {0,0,w,h-7}end}end
  if name=='Generation' then return {isGen2=function()return true end} end
  if name=='BattleScene' then return {GB_W=160,GB_H=144} end
  if name=='NativeBattleArt'then return {image=function()return selected and pic(56,56) or nil end}end
@@ -29,6 +30,7 @@ assert(#draws==2,'both complete partner images must draw')
 assert(draws[1].x+draws[1].w<=draws[2].x,'partner sprites overlap')
 assert(draws[1].y+draws[1].h==draws[2].y+draws[2].h,'feet not aligned')
 assert(M.drawn.enemy==first and M.drawn.enemy2==second,'flat replay must skip both rendered bodies')
+assert(draws[1].y+draws[1].h-7==texture.ay,'transparent image padding raised visible feet')
 assert(target==nil,'previous render target not restored')
 local back=assert(M.sideTexture(game,'player'))
 assert(back.noMirror==true,'native back sprites must not receive the Gen 1 front-pic mirror')
@@ -39,3 +41,13 @@ assert(M.sideTexture(game,'player').noMirror==false,'selected player fronts hono
 flip=false;assert(M.sideTexture(game,'player').noMirror==true,'DEFAULT retains player-front orientation')
 screen.showPlayerTrainer=true;assert(M.sideTexture(game,'player')==nil,'intro trainer owns the native slot before sending out')
 print('staged pair dimensions, separation, ground line and ownership passed')
+-- A public animation-wide foot row preserves a raised frame instead of
+-- snapping each frame independently onto the floor.
+screen.showPlayerTrainer=false;selected=false;front=false
+local animated=pic(56,56)
+game.mods={exports={crystal_animated_sprites_with_shiny_visuals={
+ stagedPokemonSprite=function()return {image=animated,width=56,height=56,groundY=52}end}}}
+local moving=assert(M.sideTexture(game,'player'))
+local last=draws[#draws]
+assert(last.y+49==moving.ay-3,'authored three-pixel hop was flattened')
+print('PASS provider animation foot row retains raised poses')

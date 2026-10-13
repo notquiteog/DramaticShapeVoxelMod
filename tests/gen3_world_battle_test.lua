@@ -19,7 +19,7 @@ love={graphics=g}
 local light,art={},{}
 local placement="auto"
 local R={vp=Mat.identity(),draw=function()end,seams=function()end,lighting=function()end}
-local modules={StandingTrainer={prepare=function()end,draw=function()end,clear=function()end},ShadowMap={},Gen3Capture={active=function()return false end,prepare=function()end,draw=function()end},BattleArt={backPlacementSetting={get=function()return placement end}},Mat4=Mat,Voxel3D=R,Gen3SpriteLight=light,NativeBattleArt=art,
+local modules={StandingTrainer={prepare=function()end,draw=function()end,clear=function()end},ShadowMap={snug=function(m)return Mat.mul(Mat.translate(0,.45,0),m)end},Gen3Capture={active=function()return false end,prepare=function()end,draw=function()end},BattleArt={backPlacementSetting={get=function()return placement end}},Mat4=Mat,Voxel3D=R,Gen3SpriteLight=light,NativeBattleArt=art,
  SpriteHeadBounds={get=function()return {0,0,64,64}end},
  BattleBillboard={mesh=function()return {}end,yawToward=function()return 0 end},
  UiBackplates={spritesUnlit=function()return false end}}
@@ -47,6 +47,16 @@ local ok=pcall(function()f:capture(function()f.inWorld=true;error('native failur
 assert(not ok and not f.inWorld and not light.world and not art.world)
 for k,v in pairs(original)do assert(g[k]==v,'error leaked '..k)end
 f:prepare({center={100,100},yaw=0},3,{100,30,200});f:draw()
+local lit,casters={},{}
+R.draw=function(_,_,model,_,sun)lit[#lit+1]={model,sun}end
+f:draw();f:draw(function(_,_,model)casters[#casters+1]=model end)
+assert(#lit==3 and #casters==2)
+for i=1,#casters do
+ local pair=lit[i]
+ assert(pair[2] and pair[1]~=pair[2],'actor must retain its original visible placement')
+ for k=1,16 do assert(math.abs(pair[2][k]-casters[i][k])<1e-9,'lit shadow lookup and caster must agree')end
+ assert(math.abs(pair[2][8]-pair[1][8]-.45)<1e-9,'thin actor contact compensation missing')
+end
 local ball=f:effectPoint(176,64,true)
 assert(ball[2]==4.5,'capture ball must settle exactly one radius above the world floor')
 assert(f:effectPoint(176,64,true,2)[2]==5,'custom ball radius must retain ground contact')

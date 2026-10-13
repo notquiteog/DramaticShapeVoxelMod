@@ -169,7 +169,14 @@ function M:draw(shadow)
   host={Voxel3D=R,Mat4=Mat,ShadowMap=V.require('ShadowMap')}},shadow~=nil)
  local mesh=Billboard.mesh()
  for _,c in ipairs(self.cards)do
-  if not shadow or c.id or c.ball then draw(mesh,c.tex,c.model,0)end
+  if not shadow or c.id or c.ball then
+   -- Match the established Gen1/2 card caster: terrain acne slack must not
+   -- erase contact shadows under thin sprites. Sample the same transform
+   -- in the lit pass so this does not add self-shadow striping.
+   local sun=V.require('ShadowMap').snug(c.model)
+   if shadow then draw(mesh,c.tex,sun)
+   else draw(mesh,c.tex,c.model,0,sun)end
+  end
  end
  if not shadow then R.lighting(true)end
  V.require("Gen3Capture").draw(self.st,shadow and V.require("ShadowMap")or nil)

@@ -35,13 +35,14 @@ return function(mod, dexFor, isShiny)
     entry.quads[i]=love.graphics.newQuad(((i-1)%row.columns)*row.w,
      math.floor((i-1)/row.columns)*row.h,row.w,row.h,img:getDimensions())
    end
+   entry.groundY=V.require('BattleSpriteFooting').animationGround(img,entry.quads)
    loaded[key]=entry
   end
   if not entry then return nil end
   local t=clock%entry.total;local frame=#row.durations
   for i,d in ipairs(row.durations) do if t<d then frame=i;break end;t=t-d end
   return {image=entry.image,quad=entry.quads[frame],width=row.w,height=row.h,
-   fullBody=true,frame=frame,source='gen5',variant=isShiny(mon) and 'shiny' or 'normal'}
+   fullBody=true,frame=frame,groundY=entry.groundY,source='gen5',variant=isShiny(mon) and 'shiny' or 'normal'}
  end
  return resolve
 end

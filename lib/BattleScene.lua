@@ -722,13 +722,10 @@ local function monMatrix(tex, x, groundY, z, mirror)
   local k = BattleBillboard.FULL_W / BattleBillboard.FULL_PIC
   local tw, th = tex.canvas:getWidth(), tex.canvas:getHeight()
   local w, h = tw * k, th * k
-  -- `k` is fractional (FULL_W/FULL_PIC = 16/56), so a non-zero (tw/2 - ax)
-  -- or (th - ay) leaves the card hanging off the world grid by a decimal.
-  -- The nearest-filtered billboard upscale then doubles or drops the edge
-  -- texel in each axis -- the "one row/column smudged" on ROM/gen1 fronts and
-  -- gen2 backs. Snap the anchor off its decimal so the card sits on the grid.
+  -- Keep horizontal sampling stable, but preserve the exact vertical foot
+  -- correction. Rounding it lifts a 143/144 anchored Gen2 card by 2/7px.
   local ox = math.floor((tw / 2 - tex.ax) * k + 0.5)
-  local oy = math.floor(-(th - tex.ay) * k + 0.5)
+  local oy = -(th - tex.ay) * k
   local yaw = BattleBillboard.yawToward(x, z, Voxel3D.eye)
   local card = Mat4.mul(Mat4.translate(ox, oy, 0), Mat4.scale(w, h, 1))
   if mirror then card = Mat4.mul(Mat4.scale(-1, 1, 1), card) end

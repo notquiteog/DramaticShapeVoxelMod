@@ -1244,6 +1244,17 @@ function OverworldBattle.sideTexture(battle, side)
                           or battle.playerBackPic)
                      or (battler and battler.sprite)
   local metric = BattleArt.metrics(shownImage)
+  if not metric and shownImage then
+    -- Native ROM images have no external-art metrics. Their transparent
+    -- bottom rows are padding too, not a deliberate world-space hover.
+    local image=battle:picImage(shownImage)
+    if image then
+      local bounds=V.require('SpriteHeadBounds').get(image)
+      local w,h=image:getDimensions()
+      metric={w=w,h=h,x0=bounds[1],x1=bounds[3]-1,y0=bounds[2],y1=bounds[4]-1,
+        center=(bounds[1]+bounds[3])/2,padBottom=h-bounds[4]}
+    end
+  end
   local cw, ch = BattleScene.GB_W, BattleScene.GB_H
   local ax, ay = TEX_AX, TEX_AY
   if metric then
