@@ -1,3 +1,16 @@
+# Slateport shipyard across R/S/E — 2026-10-13
+
+Exact native8×7 drawing now forms a closed sloping shed with two low framed
+roof vents and a recessed24px entrance. Original Emerald corrugated roof/metal
+courses and RS riveted roof/timber facade remain distinct. Source first rear
+row and inner entrance collision-0 cell have no low geometry intrusion.
+
+Official085 three-edition front/back/sides/eye renders inspected; native scoped
+audits1/0 each. Focused shipyard/RS/Civic suites pass. Additional Emerald/Ruby
+entrance views move fixture player aside using native walkability checks.
+No normal warp traversal claim. Evidence `.scratch/gen3-20261013`; all player
+saves/collision/warps untouched, broader Hoenn coverage remains unfinished.
+
 # Oceanic Museum native exterior across R/S/E — 2026-10-13
 
 Closed museum shell, teal columns, side/rear native windows, wide recessed

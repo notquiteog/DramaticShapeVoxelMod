@@ -686,3 +686,34 @@ pass. RS test updates its approved exterior count to12 and models the museum's
 actual blocked rear row. No user save, native collision/warp or other agent edits
 changed. Remaining Slateport shipyard/facilities and Lilycove museum/store
 exteriors are pending; no all-city/all-game completion claim.
+
+## Slateport shipyard: Emerald / Ruby / Sapphire — 2026-10-13
+
+At `{EM,RU,SA}_SLATEPORT_CITY (24,32)`, exact8×7 source drawing now produces
+a closed shallow mono-pitch shed, two low framed roof vents and recessed24px
+entrance. Native Emerald corrugated metal and horizontal wall courses differ
+from RS riveted roof/timber battens; native textures continue around sides/back.
+Independent085 source exports/crops (`{edition}-shipyard-source.png`) were
+inspected. IDs/collision match across three games while artwork differs.
+
+Both native walking regions are preserved: entire rear projected roof row and
+inner approach at local(2,5). Low geometry stays out of those cells; warp at
+local(2,6) and all game collision data unchanged. RS allowlist gains this one
+checked family (13exterior recipes); no broad Emerald equivalence assumed.
+
+Same isolated085 Linux runtime/profiles as museum. `shipyard-review.lua` and
+`{edition}-shipyard-review` capture front, rear, sides, eye and requested door
+states; inspected for all three editions. Emerald/Ruby close-entry follow-up
+`shipyard-eye-review.lua`, `-shipyard-eye` moves fixture player aside. Ruby's
+first proposed player location was not walkable; revised fixture chooses an
+actual walkable/dry/nonwarp cell through public collision API. This is rendered
+inspection, not normal input/warp traversal. Existing HUD hides portions of
+lower orbit views. Source entrance appears as an open dark recess, not a new
+interactive door. No interaction behavior is added.
+
+`{edition}-shipyard-footprint`:1recognized /0scoped low-face collision-0 central
+8×8 flags in each edition. `gen3_shipyard_test`, `gen3_ruby_sapphire_test`,
+`gen3_civic_test` pass. Native rear/inner lane bounds and complete-source
+rejection are explicit regressions. Runtime drivers log PASS; wrapper exits1
+on shutdown as preceding085 batches. No user-save or other-agent changes.
+Lilycove store/museum and additional Slateport buildings/objects remain pending.

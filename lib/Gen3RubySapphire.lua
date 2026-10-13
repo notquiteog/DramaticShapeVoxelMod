@@ -1,7 +1,7 @@
 -- Independently reviewed Ruby/Sapphire source families. Do not dispatch the
 -- entire Emerald catalogue: several identical IDs draw different objects.
 local M={recipes={}}
-local exteriorNames={slateport_oceanic_museum=true,oldale_house=true,oldale_mart=true,oldale_center=true,
+local exteriorNames={slateport_shipyard=true,slateport_oceanic_museum=true,oldale_house=true,oldale_mart=true,oldale_center=true,
  petalburg_city_mart=true,petalburg_city_center=true,petalburg_city_gym=true,
  petalburg_city_wide_home=true,petalburg_city_home=true,birch_lab=true,
  littleroot_player_house=true,littleroot_rival_house=true}

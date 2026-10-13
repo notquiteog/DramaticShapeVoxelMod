@@ -155,6 +155,7 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.geometry=='shipyard' then return {w=w,h=112,back=8,front=111,wall=40,roofEnd=72,wallTop=72,wallBottom=112,bevel=0,doorLeft=32,doorRight=48,doorTop=72,doorBottom=112,doorHeight=40,projection=0}end
   if r.geometry=='oceanic_museum' then return {w=w,h=80,back=8,front=79,wall=40,roofEnd=48,wallTop=48,wallBottom=80,bevel=0,doorLeft=32,doorRight=64,doorTop=48,doorBottom=80,doorHeight=40,projection=0}end
   if r.geometry=='saffron_office' then return {w=w,h=96,back=0,front=95,wall=64,roofEnd=32,wallTop=32,wallBottom=96,bevel=0,doorLeft=0,doorRight=0,doorTop=96,doorBottom=96,doorHeight=0,projection=0}end
   if r.geometry=='silph_co' then return {w=w,h=240,back=8,front=239,wall=160,roofEnd=80,wallTop=80,wallBottom=240,bevel=0,doorLeft=64,doorRight=80,doorTop=224,doorBottom=240,doorHeight=20,projection=0}end
@@ -446,6 +447,7 @@ function M.window(g)
  return best
 end
 function M.append(g,emit)
+ if g.custom and g.custom.geometry=='shipyard' then return V.require('Gen3Shipyard').append(g,p,emit)end
  if g.custom and g.custom.geometry=='oceanic_museum' then return V.require('Gen3OceanicMuseum').append(g,p,emit)end
  if g.custom and g.custom.geometry=='saffron_office' then return V.require('Gen3SaffronOffice').append(g,p,emit)end
  if g.custom and g.custom.geometry=='silph_co' then return V.require('Gen3SilphCo').append(g,M.profile(g),emit)end

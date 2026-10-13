@@ -5,7 +5,7 @@ local V,cache={},{}
 function V.require(n)if not cache[n]then cache[n]=assert(loadfile('lib/'..n..'.lua'))(V)end;return cache[n]end
 local H,S,C=V.require('Gen3Hoenn'),V.require('Gen3TileShape'),V.require('Gen3Civic')
 for _,game in ipairs({'ruby','sapphire'})do
- version=game;assert(H.active());local recipes=H.exteriorRecipes();assert(#recipes==12)
+ version=game;assert(H.active());local recipes=H.exteriorRecipes();assert(#recipes==13)
  assert(S.of('general','petalburg',0x1dc,0,7).kind=='tree')
  assert(S.of('general','petalburg',0x14,0,7).kind=='flat','Kanto trees leaked')
  assert(S.of('general','petalburg',0x66,0,7).kind=='flat','unreviewed Emerald terrain leaked')
