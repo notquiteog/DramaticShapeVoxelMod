@@ -141,6 +141,7 @@ function M.append(c,emit,uvFor)
    local function sample(p)return sub(post,p[1],p[2],p[1]+.1,p[2]+.1)end
    face=sample(s.postSamples.face);cap=sample(s.postSamples.cap);rail=sample(s.postSamples.rail)
   end
+  if V.require('NativeLegendaryFence').append(c,emit,face,cap)then return end
   local h=s.height or 10
   local half=(s.postWidth or 2.8)/2
   local function stake(px,pz)

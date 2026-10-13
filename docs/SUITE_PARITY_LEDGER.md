@@ -308,3 +308,22 @@ fallback and adapter tests pass, along with 541 option-consumer checks.
 This remains **partial**: ceiling, full enclosure and authored furnishings are
 not ported. Driver: `tools/qa/native-prize-walls.lua`; captures/logs under
 `.scratch/parity-073-20261011/results/{firered,leafgreen}-native-prize-walls-host`.
+
+### Native FENCES & COURTS: authored fence bays (0.3.85)
+
+Extracted the existing Gen1 post/collar/rail construction into the shared
+LegendaryFenceKit without changing its geometry. Gen3's optional consumer uses
+that kit with each reviewed native fence cell's original material, axis, bend
+and endpoint. Rail halves are clipped to their own blocked cell, including
+closed undersides; walkable cells never acquire geometry. Native OFF remains
+unchanged. The native option is registered and invalidates its scene on change.
+
+Official 0.3.85 .love and matching Linux AppImage were verified against release
+SHA256 sums. Fresh isolated native imports and ON/OFF/first-person rendering
+passed independently in FireRed and LeafGreen (Fuchsia, cell21,7). LeafGreen
+first-person and FireRed original fallback captures inspected. Bounds, endpoint,
+source-shape immutability, OFF/walkable rejection, existing native outdoor and
+adapter tests pass; 541 option-consumer checks pass. This option stays **partial**:
+authored courtyard paving and special landscaping are not yet adapted.
+Driver `tools/qa/native-legendary-fences.lua`; evidence:
+`.scratch/parity-073-20261011/results/{firered,leafgreen}-native-legendary-fences-host`.
