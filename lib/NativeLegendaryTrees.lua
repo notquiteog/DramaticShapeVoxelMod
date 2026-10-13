@@ -34,15 +34,20 @@ local function template(card,variant)
  end
  templates[key]=result;return result
 end
+local function blocked(c)
+ -- Boundary.resolve labels only scenery outside every real connected map.
+ -- Never treat a real walkable cell as solid, even if an extension labels it.
+ return c and(c.collision==7 or(c.collision==nil and c.boundary=='forest'))
+end
 function M.add(card,c,cells,groups,x,y,z)
- if not(card and M.enabled()and c.collision==7)then return false end
+ if not(card and M.enabled()and blocked(c))then return false end
  -- Dedicated forest/Safari overrides keep their own shared Gen1 families.
  if card.legendaryForest or card.legendarySafari then return false end
  local t=template(card,(c.cx*17+c.cy*29)%4);if not t then return false end
  local b=t.low
  for cy=math.floor((z+b[2]) /16),math.floor((z+b[4]-.001)/16)do
   for cx=math.floor((x+b[1])/16),math.floor((x+b[3]-.001)/16)do
-   local cell=cells[cx..':'..cy];if not cell or cell.collision~=7 then return false end
+   local cell=cells[cx..':'..cy];if not blocked(cell)then return false end
   end
  end
  local row=groups[t];if not row then row={template=t,positions={}};groups[t]=row end

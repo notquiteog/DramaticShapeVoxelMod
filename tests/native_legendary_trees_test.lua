@@ -20,6 +20,13 @@ local first=next(groups);for _,group in ipairs(first.groups)do for _,v in ipairs
 for _,cell in pairs(cells)do cell.collision=0 end
 assert(not M.add({w=32,h=40},c,cells,{},40,0,40),'walkable footprint claimed')
 assert(not M.add({w=32,h=40,legendaryForest=true},c,cells,{},40,0,40),'forest override stolen')
+for _,cell in pairs(cells)do cell.collision=nil;cell.boundary='forest'end
+c.collision=nil;c.boundary='forest'
+assert(M.add({w=32,h=40},c,cells,{},40,0,40),'native forest void did not match its source trees')
+c.collision=0
+assert(not M.add({w=32,h=40},c,cells,{},40,0,40),'forest label overrode real walkable collision')
+c.collision=nil;c.boundary='water'
+assert(not M.add({w=32,h=40},c,cells,{},40,0,40),'water boundary received a tree')
 F.mods.CommunityVisuals.customTrees=function()return false end
 assert(not M.add({w=32,h=40},c,cells,{},40,0,40),'OFF consumed')
 print('PASS actual Gen1 CPU templates, no live cache/GPU mutation, native bounds, collision/forest/OFF guards')

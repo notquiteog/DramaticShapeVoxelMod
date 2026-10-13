@@ -369,3 +369,20 @@ not runtime-verified for this batch; full wind and unknown/synthetic footprint
 coverage remain partial. Driver: `tools/qa/native-legendary-trees.lua`; evidence
 under `.scratch/parity-073-20261011/results/`, including
 `emerald-trees-debug-host` and `{firered,leafgreen}-native-legendary-trees-host`.
+
+
+Native mature-tree follow-up: explicit `boundary=forest` scenery outside real
+connected maps now shares the same prototypes; real collision 0 always rejects
+replacement, even with a forest label. Water/unknown boundaries stay native.
+Emerald 0.3.85 rendered 613 trees including forest fill; independent fresh Ruby
+and Sapphire identities each rendered 593, completed first-person/OFF checks,
+and overview captures were inspected. Initial RS runs timed out before captures;
+explicit NVIDIA GLX selection completed both unchanged fixtures. Their evidence
+is `results/{ruby,sapphire}-native-legendary-trees085` under the same scratch root.
+Full wind and unreviewed footprint coverage remain partial.
+
+The stale Gen2/3 DISTANT BIRDS inventory rows now identify existing real
+KantoFirstPerson/KfpBirdArt/KfpAtmosphere consumers: native public sprite
+providers, owned-cache invalidation, outdoor gate and independent OFF default.
+This is a source audit plus focused bird-cache/541-consumer regression checks;
+it does not relabel prior sky captures as current or claim all-edition runtime QA.
