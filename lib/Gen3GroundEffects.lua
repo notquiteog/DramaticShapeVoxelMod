@@ -1,7 +1,9 @@
 -- Native field-effect frames, laid onto their terrain rather than triggering
 -- the native 2D camera. The engine retains animation lifetime and timing.
 local M={}
-function M.supports(kind) return kind=='tracks' or kind=='ripple' or kind=='splash' or kind=='feet_water' or kind=='hot_springs' or kind=='camera_shake' or kind=='cut_grass_scatter' end
+function M.supports(kind) return kind=='tracks' or kind=='ripple' or kind=='splash' or kind=='feet_water' or kind=='hot_springs' or kind=='camera_shake' or kind=='cut_grass_scatter' or kind=='deoxys_rock_move' end
+-- Deoxys sliding uses the native Objects px/py interpolation already drawn by
+-- Gen3Scene; it needs no duplicate effect sprite or alternate camera.
 function M.draw(fx,groundAt,emit,cam)
  -- Actor-attached splashes use the engine's own frame and attachment point.
  local water=false

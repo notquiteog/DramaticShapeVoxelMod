@@ -474,3 +474,13 @@ Drivers `tools/qa/native-world-{scent,cut}.lua`; evidence under
 `.scratch/parity-073-20261011/results/emerald-native-world-{scent,cut}-host`.
 Other special presentations remain listed separately; this is not blanket
 verification of all field moves or editions.
+
+Native Birth Island rock-slide follow-up: `deoxys_rock_move` no longer triggers
+a flat-camera fallback. The native engine already interpolates the object
+coordinates consumed by Gen3Scene, so no duplicate sprite or animation owner is
+added. Actual Emerald 0.3.85 Birth Island showed the native rock at intermediate
+and exact destination coordinates while the voxel view stayed active; both
+renders inspected. Classifier and ground-effect regressions pass. Destruction,
+background-only whitening, Fly and Teleport remain separate native effects.
+Driver `tools/qa/native-event-rock.lua`; evidence
+`.scratch/parity-073-20261011/results/emerald-native-event-rock-host`.
