@@ -1,3 +1,18 @@
+# Shared instance binding reuse — 2026-10-13
+
+ModelInstances retains immutable placement bindings across shadow/scene passes;
+ordinary draw, batch switch/release and failures clear or replace them safely.
+2,000 unchanged draws reduce attach/detach calls from 2,000 each to one/zero.
+Mocked lifecycle tests and exact GPU merged/instanced pixels+shadows at four
+headings pass on engine0.3.85/NVIDIA5060Ti (also llvmpipe); output inspected.
+No art, shadow quality or connected-map coverage reduction.
+
+Matched Emerald1440 native→voxel→native control keeps present at
+35.01→35.73→35.33ms: that delay also exists with voxel OFF. Draw submission is
+0.95→3.41→1.32ms. Do not claim 35ms is voxel GPU cost or an FPS gain from the
+binding optimization. See `docs/INSTANCE_BINDINGS_2026-10-13.md` for evidence,
+profiles, renderer-access caveat and remaining presentation diagnosis.
+
 # Gen2 Center/Mart source-faithful fixture batch — 2026-10-13
 
 Gold/Silver/Crystal: separate Center PC/status console; recessed healer tray,
