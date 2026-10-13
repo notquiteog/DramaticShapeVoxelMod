@@ -38,7 +38,9 @@ local function add(setting, off, auto, full)
   profiles[setting] = { off = off, auto = auto, full = full }
 end
 
--- World/interior families. AUTO is the complete Legendary presentation with
+-- Tree families are artistic opt-ins, including under AUTO/FULL. Those
+-- presets must not silently replace source-accurate models with another pack.
+-- World/interior families. AUTO is the Legendary presentation with
 -- lighter detail recipes; FULL changes only actual quality tiers. Style/audio
 -- choices stay independent so presets never overwrite artistic preferences.
 add(CommunityVisuals.casino,      "default", "n64memory",      "n64memory")
@@ -50,9 +52,9 @@ add(CommunityVisuals.pillars,     "default", "separate",       "separate")
 add(CommunityVisuals.tower,       "default", "n64memory",      "n64memory")
 add(CommunityVisuals.caves,       "default", "n64memory",      "n64memory")
 add(CommunityVisuals.caveDetails, "off",     "subtle",         "full")
-add(CommunityVisuals.trees,       "default", "n64memory",      "n64memory")
+add(CommunityVisuals.trees,       "default", "default", "default")
 add(CommunityVisuals.treeDetail,  "balanced","balanced",       "full")
-add(CommunityVisuals.cutTrees,    "default", "n64memory",      "n64memory")
+add(CommunityVisuals.cutTrees,    "default", "default", "default")
 add(CommunityVisuals.signs,       "default", "n64memory",      "n64memory")
 add(CommunityVisuals.cityGround,  "default", "n64memory",      "n64memory")
 add(CommunityVisuals.grass,       "default", "n64memory",      "n64memory")
@@ -60,8 +62,8 @@ add(CommunityVisuals.roads,       "default", "n64memory",      "n64memory")
 add(CommunityVisuals.walls,       "default", "n64memory",      "n64memory")
 add(CommunityVisuals.courtyards,  "default", "n64memory",      "n64memory")
 add(CommunityVisuals.sky,         "default", "n64memory",      "n64memory")
-add(CommunityVisuals.forest,      "default", "n64memory",      "n64memory")
-add(CommunityVisuals.safari,      "default", "n64memory",      "n64memory")
+add(CommunityVisuals.forest,      "default", "default", "default")
+add(CommunityVisuals.safari,      "default", "default", "default")
 add(CommunityVisuals.kantoLife,   "off", "natural", "natural")
 
 -- Tower atmosphere. Both Legendary presets show the intended fog; AUTO keeps

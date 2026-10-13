@@ -23,6 +23,25 @@ reported location. Passing Lua tests alone is insufficient.
 4. Make a focused fix, repeat the same scene, and inspect neighboring geometry.
    Keep commands, logs, and before/after images in a dedicated scratch directory.
 
+## Source-faithful model acceptance
+
+- Inspect the native tile drawing and room/map before changing its model.
+  Top-down perspective is evidence of a 3D object, not a texture net: author
+  closed sides, backs, undersides, recesses and actual angled corners. Do not
+  flatten a silhouette to hide a UV defect or double-project diagonal pixels.
+- Preserve source proportions, roofs, lettering, fixtures and regional art.
+  Do not invent attachments or substitute unrelated furniture. Continuous
+  lettering must remain on a continuous sign surface.
+- Keep geometry inside the original blocked footprint and mostly fill that
+  footprint. Preserve aisles, door openings, counter staff clearance and native
+  collision. Use source/local floor or ground; nearby paving is not proof that
+  a source lawn should be paved (Viridian Center/Mart are lawns).
+- Inspect first-person, front, sides, rear and rotating views, plus source
+  comparison and a native walkable-footprint check. A test pass alone is not
+  visual approval. Batch coherent code changes before bounded runtime checks.
+- Track distinct room/art families across editions; inherited family coverage
+  is not evidence that every room or game was visually reviewed.
+
 ## Ownership and compatibility
 
 - Battle Art owns scene order, terrain, camera, lighting, depth, battle

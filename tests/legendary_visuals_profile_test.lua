@@ -55,9 +55,10 @@ check(C.masonry:get()=='red' and C.towerWall:get()=='pearl_white'
   'style and audio choices remain independent under OFF')
 
 P.setting:setIndex(3)
+check(C.forest:get()=='default' and C.safari:get()=='default' and C.cutTrees:get()=='default','AUTO retains source art for every tree family')
 check(C.tower:get()=='n64memory' and C.cityGround:get()=='n64memory'
-    and C.grass:get()=='n64memory' and C.trees:get()=='n64memory',
-  'AUTO enables complete Legendary world and Tower gates')
+    and C.grass:get()=='n64memory' and C.trees:get()=='default',
+  'AUTO enables world effects while retaining source-accurate trees')
 check(C.treeDetail:get()=='balanced' and C.caveDetails:get()=='subtle'
     and T.details:get()=='subtle' and T.enabled:get()=='on'
     and F.setting:get()=='low',
@@ -67,7 +68,7 @@ check(C.masonry:get()=='red' and C.towerWall:get()=='pearl_white'
   'AUTO leaves style, sound, fog thickness and fog speed untouched')
 
 P.setting:setIndex(4)
-check(C.trees:get()=='n64memory' and C.treeDetail:get()=='full','FULL uses maximum tree detail')
+check(C.trees:get()=='default' and C.treeDetail:get()=='full','FULL raises quality without replacing native tree art')
 check(C.caveDetails:get()=='full' and T.details:get()=='full' and T.enabled:get()=='on',
   'FULL raises cave and Tower detail to maximum')
 check(F.setting:get()=='low' and C.pillars:get()=='separate',

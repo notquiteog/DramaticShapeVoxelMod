@@ -72,7 +72,7 @@ function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
  local x0,y0,x1,y1=bx-cells,bz-cells,bx+cells+6,bz+cells+6
  if not radius then x0,y0,x1,y1=Select.bounds(rs,16)end
  local flat=V.require('TreePresentation').flat()
- local parts={x0,y0,x1,y1,tostring(flat),V.require('TreePresentation').art:get(),V.require('CommunityVisuals').treeDetail:get()}
+ local parts={x0,y0,x1,y1,tostring(flat),V.require('TreePresentation').art:get(),V.require('CommunityVisuals').treeDetail:get(),V.require('CommunityVisuals').forest:get(),V.require('CommunityVisuals').safari:get()}
  for _,r in ipairs(rs)do parts[#parts+1]=tostring(r.map)..':'..r.x..':'..r.y end
  local key=table.concat(parts,';')
  if cache.key~=key then
@@ -118,6 +118,7 @@ function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
        if V.require('TreePresentation').original() then
         local native=V.require('NativeTreeArt')
         local card=native.gen2(map,donor.x,donor.y,lift,true)
+        card=V.require('NativeLegendaryForest').card(card,{cx=donor.x,cy=donor.y},map.id)
         -- Donor artwork and palette are shared with the neighboring map.
         if V.require('TreePresentation').voxel() then native.appendModel(card,leaves,li,0,tx,0,tz)
         else native.append(card,leaves,li,0,tx,0,tz,flat) end

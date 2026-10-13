@@ -17,6 +17,16 @@ local cells={};for y=0,5 do for x=0,5 do cells[x..':'..y]={collision=7}end end
 local groups={};local c={cx=2,cy=2,collision=7};assert(M.add({w=32,h=40},c,cells,groups,40,0,40))
 assert(next(groups),'no real shared template')
 local first=next(groups);for _,group in ipairs(first.groups)do for _,v in ipairs(group.vertices)do assert(math.abs(v[1])<=16.001 and math.abs(v[3])<=16.001 and v[2]>=0 and v[2]<=40.001)end end
+-- A one-cell path-edge footprint must retain the selected replacement pack.
+local narrow={['2:2']={collision=7}}
+local fittedGroups={}
+assert(M.add({w=32,h=40},c,narrow,fittedGroups,40,0,40),'path edge silently fell back to another tree style')
+assert(M.add({w=32,h=40},c,narrow,{},48,0,44),'projected boundary anchor fell back instead of using blocked root')
+for _,group in pairs(fittedGroups)do
+ for _,part in ipairs(group.template.groups)do for _,v in ipairs(part.vertices)do
+  if v[2]<24 then assert(v[1]+40>=32 and v[1]+40<=48 and v[3]+40>=32 and v[3]+40<=48,'fitted tree obstructs path')end
+ end end
+end
 for _,cell in pairs(cells)do cell.collision=0 end
 assert(not M.add({w=32,h=40},c,cells,{},40,0,40),'walkable footprint claimed')
 assert(not M.add({w=32,h=40,legendaryForest=true},c,cells,{},40,0,40),'forest override stolen')
