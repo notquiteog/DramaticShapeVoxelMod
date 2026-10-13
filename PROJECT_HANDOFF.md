@@ -1,13 +1,15 @@
-# Hoenn decorative service lanterns — 2026-10-13
+# Native Rustboro lamps replace rejected additions — 2026-10-13
 
-Two closed caged wall lanterns on reviewed Hoenn Center/Mart façades now use
-explicit pale-glass emission tags and shared outward light collection. Decorative
-addition, not a recovered native streetlamp claim; no Kanto/unrelated placement.
-Ruby day/night and Sapphire night official085 front/side/eye renders inspected.
-Strict native full-cell audit:2buildings/4lamps,0walkable overlaps in each edition;
-actual fixture cells are collision7. Focused LuaJIT suites pass. Evidence and
-remaining scope in GEN3_MODEL_COVERAGE_2026-10-09.md and .scratch/gen3-20261013.
-Root owns Civic palette, Scene hookup, BuildingLights/shader and Emerald review.
+User rejected decorative service wall lanterns; helper/test removed and root
+removed Scene hookup/palette. Earlier failure to identify native lamps was
+wrong: Rustboro contains exact212/21A two-cell lamp drawings. New native module
+anchors all geometry on blocked base; upper projected cell stays walkable.
+Emerald tapered lantern and RS rounded globe have independently reviewed source
+art and separate heads. Official085 production day/night/all-angle/eye review complete;17native posts
+peredition and zero walkable-cell audit overlaps. Separate source heads, pale
+blue day glass and warm night glow verified. Continuous-shell/manifold test and
+shared lighting suite pass. Evidence in .scratch/gen3-20261013 and coverage
+ledger. Root owns Scene hookup and unlimited spatial light field integration.
 
 # Slateport shipyard across R/S/E — 2026-10-13
 

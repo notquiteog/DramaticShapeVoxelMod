@@ -719,35 +719,43 @@ on shutdown as preceding085 batches. No user-save or other-agent changes.
 Lilycove store/museum and additional Slateport buildings/objects remain pending.
 
 
-## Decorative Hoenn service lanterns — 2026-10-13
+## Native Rustboro lamps — correction and replacement, 2026-10-13
 
-`Gen3ServiceLanterns` adds two closed wall lanterns to the reviewed 64px Hoenn
-Center/Mart façades, including Ruby/Sapphire checked equivalents. These are
-explicit decorative additions, not recovered native streetlamp tiles. Catalogue
-and city-art review found no confirmed standalone Gen2/3 streetlamp in this
-batch; no exhaustive absence claim. Kanto and unrelated buildings are excluded.
+The decorative service-wall lantern batch ac0b029 was rejected by the user and
+removed. Its broad source-search conclusion was mistaken: original Rustboro
+art clearly contains native standalone lamp posts. No invented service fixtures
+remain active. The earlier renders verify only the rejected addition.
 
-Each fixture has a backplate, bracket, enclosed pale glass, cage posts/crossbar,
-weather cap and finial. Local centers x12/x36 on z60 blank wall strips preserve
-the native doorframe x16..32 and service sign x40..56. Full geometry lies inside
-the blocked building footprint. Reserved Civic swatches (2W+2,1) dark metal and
-(2W+3,1) pale glass feed explicitly tagged panes; shared BuildingLights and the
-root-owned shader provide always-powered glass and ambient-relative warm spill.
+Actual native `general__rustboro` top0x212 or0x213/collision0 and bottom0x21A or0x21B/collision7
+form each original post. Geometry anchors wholly inside the lower blocked cell;
+the upper drawing is projection over walkable paving. Emerald source shows a
+slender metal post/flared base, blue tapered lantern and hipped cap. Independent
+085 Ruby/Sapphire exports show a rounded faceted glass globe instead; matching
+IDs do not imply matching geometry. `Gen3NativeLamps` models these separately
+from their own atlas palette, with closed base/post/head and tagged glass.
 
-Official 0.3.85 was parent-verified for this batch (this worker's independent
-release fetch was unavailable). Isolated Ruby day/night and Sapphire night
-Oldale front, side and close eye production renders inspected, two placements
-each. Evidence `.scratch/gen3-20261013/{ruby-lamps-day,ruby-lamps-night,
-sapphire-lamps-night}` and `service-lamps-review.lua`. Glass is subtly powered
-in daylight and clearly luminous at night; metal remains dark and closed, door
-and sign remain readable. Existing HUD obscures some ground. No ordinary-input
-traversal claim. Root handles Emerald integration/render review separately.
+Shaded-paving source variants near Devon preserve their own replacement ground
+(0x2C3 versus ordinary0x2BB), and the geometry samples each actual top metatile.
+Exact complete matches plus native collision checks guard the placement.
+Initial official085 source audits find17lamps/0walkable-cell vertex intersections
+in Emerald and Ruby; rendered Emerald night/Ruby day four-angle/eye inspections
+confirmed closed heads and edition differences. A tapered-rib intersection was
+found and corrected before the final review. Final integrated lighting uses
+root-owned unlimited cached spatial light field, with one omnidirectional source
+per actual post. Final Emerald day/night and Sapphire night 085 production
+renders inspected from front/back/both sides/eye and street overview. Ruby day
+was inspected earlier with the same independently reviewed RS head. All three
+native audits recognize17posts and report0walkable-cell vertex intersections.
+No input-driven traversal, collision or warp behavior claim. Existing HUD hides
+some ground in close views; wider building coverage in RS remains unfinished.
 
-`service-lamps-footprint.lua` strict full-cell geometry audits report two
-buildings/four lamps and zero collision-0 intersections in both Ruby/Sapphire.
-Actual lamp cells (local x0/x2,row3) are collision7 in both buildings/editions;
-this check does not assume every claimed cell is blocked. Runtime logs PASS
-with existing wrapper exit1 on shutdown. Focused service-lantern, BuildingLights
-and Ruby/Sapphire LuaJIT suites pass. The collector retains one outward emitter
-per caged lantern to preserve the eight-light budget. No saves, collisions or
-warps change. Wider native lamp coverage remains unverified.
+Final evidence `.scratch/gen3-20261013/{emerald-native-lamps-final-day,
+emerald-native-lamps-final-night,sapphire-native-lamps-final-night}`; subsequent
+continuous-shell cleanup rerendered in `emerald-native-lamps-closed-day` and
+`sapphire-native-lamps-closed-night`. Glass glow and subtle warm post/ground
+spill render without GLSL fallback. Ribs follow the widening lantern. Final
+profile removes overlapping internal caps; edge-pair regression confirms a
+closed manifold model. Native-lamp and shared BuildingLights LuaJIT tests pass.
+Runtime logs PASS with the established wrapper exit1 at shutdown. No native
+art assets bundled; source images remain isolated QA artifacts. No real saves
+modified. This closes Rustboro native posts only, not every game lamp family.
