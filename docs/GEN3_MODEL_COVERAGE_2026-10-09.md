@@ -717,3 +717,37 @@ interactive door. No interaction behavior is added.
 rejection are explicit regressions. Runtime drivers log PASS; wrapper exits1
 on shutdown as preceding085 batches. No user-save or other-agent changes.
 Lilycove store/museum and additional Slateport buildings/objects remain pending.
+
+
+## Decorative Hoenn service lanterns — 2026-10-13
+
+`Gen3ServiceLanterns` adds two closed wall lanterns to the reviewed 64px Hoenn
+Center/Mart façades, including Ruby/Sapphire checked equivalents. These are
+explicit decorative additions, not recovered native streetlamp tiles. Catalogue
+and city-art review found no confirmed standalone Gen2/3 streetlamp in this
+batch; no exhaustive absence claim. Kanto and unrelated buildings are excluded.
+
+Each fixture has a backplate, bracket, enclosed pale glass, cage posts/crossbar,
+weather cap and finial. Local centers x12/x36 on z60 blank wall strips preserve
+the native doorframe x16..32 and service sign x40..56. Full geometry lies inside
+the blocked building footprint. Reserved Civic swatches (2W+2,1) dark metal and
+(2W+3,1) pale glass feed explicitly tagged panes; shared BuildingLights and the
+root-owned shader provide always-powered glass and ambient-relative warm spill.
+
+Official 0.3.85 was parent-verified for this batch (this worker's independent
+release fetch was unavailable). Isolated Ruby day/night and Sapphire night
+Oldale front, side and close eye production renders inspected, two placements
+each. Evidence `.scratch/gen3-20261013/{ruby-lamps-day,ruby-lamps-night,
+sapphire-lamps-night}` and `service-lamps-review.lua`. Glass is subtly powered
+in daylight and clearly luminous at night; metal remains dark and closed, door
+and sign remain readable. Existing HUD obscures some ground. No ordinary-input
+traversal claim. Root handles Emerald integration/render review separately.
+
+`service-lamps-footprint.lua` strict full-cell geometry audits report two
+buildings/four lamps and zero collision-0 intersections in both Ruby/Sapphire.
+Actual lamp cells (local x0/x2,row3) are collision7 in both buildings/editions;
+this check does not assume every claimed cell is blocked. Runtime logs PASS
+with existing wrapper exit1 on shutdown. Focused service-lantern, BuildingLights
+and Ruby/Sapphire LuaJIT suites pass. The collector retains one outward emitter
+per caged lantern to preserve the eight-light budget. No saves, collisions or
+warps change. Wider native lamp coverage remains unverified.

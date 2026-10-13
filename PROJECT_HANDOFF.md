@@ -1,3 +1,14 @@
+# Hoenn decorative service lanterns — 2026-10-13
+
+Two closed caged wall lanterns on reviewed Hoenn Center/Mart façades now use
+explicit pale-glass emission tags and shared outward light collection. Decorative
+addition, not a recovered native streetlamp claim; no Kanto/unrelated placement.
+Ruby day/night and Sapphire night official085 front/side/eye renders inspected.
+Strict native full-cell audit:2buildings/4lamps,0walkable overlaps in each edition;
+actual fixture cells are collision7. Focused LuaJIT suites pass. Evidence and
+remaining scope in GEN3_MODEL_COVERAGE_2026-10-09.md and .scratch/gen3-20261013.
+Root owns Civic palette, Scene hookup, BuildingLights/shader and Emerald review.
+
 # Slateport shipyard across R/S/E — 2026-10-13
 
 Exact native8×7 drawing now forms a closed sloping shed with two low framed
