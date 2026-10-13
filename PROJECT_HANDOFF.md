@@ -1,3 +1,14 @@
+# FR/LG service corner and foundation correction — 2026-10-13
+
+Restored native angled outer walls with straight source-colour courses; removed
+Mart entrance-cheek overlap. Original lawn corner tiles now retain grass under
+the entire foundation, rather than borrowing a nearby road. User accepted the
+improved shapes and requested this lawn correction. Official0.3.85 LeafGreen
+rendered final source-ground views inspected; two-building native footprint
+check has zero walking-cell intersections. Civic/service/Hoenn suites pass.
+Details and scope in docs/GEN3_SERVICE_FACADE_2026-10-13.md. Existing eave shadow
+artifacts remain; earlier straight-side/paving geometry statement is superseded.
+
 # Source-faithful urban shells and cached building lighting — 2026-10-13
 
 Seven reviewed Rustboro urban source families (eight placements) now have closed

@@ -17,5 +17,26 @@ for y,row in ipairs(rows)do for x,mid in ipairs(row)do cells[(x-1)..':'..(y-1)]=
 cells['0:4']={cx=0,cy=4,mid=1,pair='city',collision=0,shape={kind='flat',reviewedSurface=true}}
 cells['2:5']={cx=2,cy=5,mid=0x16E,pair='city',collision=0,shape={kind='flat'}}
 assert(#C.prepare(cells,{})==1)
-assert(C.ground(cells['0:0'])==0x16E,'nearby native city paving must replace grass under service building')
-print('PASS complete MART sign plane, aligned door and native city paving')
+assert(C.ground(cells['2:3'])==1,'native lawn corners must preserve grass below the whole assembly')
+assert(C.ground(cells['0:0'])==1,'a distant city path must not replace the original lawn under service buildings')
+print('PASS complete MART sign plane, aligned door and original local lawn')
+
+-- Both original service drawings have angled outer wall corners. Geometry
+-- must restore that silhouette without mapping the preprojected diagonal art.
+for _,kind in ipairs({'mart','center'})do
+ local width=kind=='mart' and 4 or 5
+ local g={kind=kind,cx=0,cy=0,width=width,depth=4}
+ local corner,left,right=false,false,false
+ C.append(g,function(v,t)
+  if v[1][2]~=v[3][2] and v[1][2]<=26 then
+   local dx,dz=v[2][1]-v[1][1],v[2][3]-v[1][3]
+   if math.abs(dx)==6 and math.abs(dz)==6 then
+    corner=true;left=left or math.min(v[1][1],v[2][1])==2
+    right=right or math.max(v[1][1],v[2][1])==width*16-2
+    assert(t[1][1]==t[2][1] and t[1][2]==t[3][2],'corners must use unprojected wall courses')
+   end
+  end
+ end)
+ assert(corner and left and right,kind..' needs both native angled corners')
+end
+print('PASS authored service chamfers and native straight wall courses')

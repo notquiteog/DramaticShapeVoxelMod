@@ -120,14 +120,11 @@ function M.prepare(cells,gyms,families)
  -- never be stretched down the retaining face below a building.
  for _,g in ipairs(out)do
   local candidates={}
-  local kantoService=not g.custom and (g.kind=='center' or g.kind=='mart')
-  local paving
-  if kantoService then
-   for yy=g.cy-4,g.cy+g.depth+4 do for xx=g.cx-4,g.cx+g.width+4 do
-    local c=cells[xx..':'..yy]
-    if c and c.pair==g.pair and c.collision==0 and c.mid==0x16E then paving=c.mid end
-   end end
-  end
+  -- These exact native lower corner tiles include the lawn around the
+  -- chamfered foundation. A road nearby must not replace that original lawn.
+  local last=g.rows[#g.rows]
+  g.nativeLawn=not g.custom and ((g.kind=='mart' and last[1]==0x40 and last[#last]==0x63)
+   or (g.kind=='center' and last[1]==0x60 and last[#last]==0x19F))
   local service=g.custom and (g.custom.centerRoof or g.custom.martRoof)
   for yy=g.cy-2,g.cy+g.depth+1 do for xx=g.cx-2,g.cx+g.width+1 do
    local c=cells[xx..':'..yy]
@@ -145,7 +142,7 @@ function M.prepare(cells,gyms,families)
     local d=(xx-c.cx)^2+(yy-c.cy)^2
     if not distance or d<distance then best,distance=c,d end
    end
-   if paving or best then g.grounds[xx..':'..yy]=paving or best.mid end
+   if best then g.grounds[xx..':'..yy]=best.mid end
   end end
  end
  return out
@@ -154,6 +151,7 @@ function M.ground(c)
  for _,q in ipairs(c.civic.custom and c.civic.custom.groundPreserve or {})do
   if c.cx==c.civic.cx+q[1] and c.cy==c.civic.cy+q[2] then return c.mid end
  end
+ if c.civic.nativeLawn then return 1 end
  if c.civic.custom and c.civic.custom.ground then return c.civic.custom.ground end
  if c.civic.custom and c.civic.custom.preserveWalkableFloor and c.collision==0 then return c.mid end
  return c.civic.grounds and c.civic.grounds[c.cx..':'..c.cy]
@@ -501,8 +499,8 @@ function M.append(g,emit)
  local roofBack=math.max(p.back,bodyBack-2)
  p.roofBack=roofBack
  local wingFront=kantoGym and 64 or p.front
- local sideFront=wingFront-(civicCorners and not nativeService and 6 or 0)+(nativeService and g.kind=='mart' and p.projection or 0)
- local serviceInset=nativeService and 8 or 2
+ local sideFront=wingFront-(civicCorners and 6 or 0)+(nativeService and g.kind=='mart' and p.projection or 0)
+ local serviceInset=2
  local function facadeFace(v,tex,shade)
   if gymPorch then
    for _,q in ipairs(v)do local xx=q[1]-x
@@ -622,10 +620,33 @@ function M.append(g,emit)
   face({{x+a,bottom,front},{x+b,bottom,front},{x+b,bottom,back},{x+a,bottom,back}},uv(a,d-.2,b,d),.7)
  end
  -- Closed recessed body and entrance cheeks, with no upright floor pixels.
- for _,sx in ipairs({serviceInset,p.w-serviceInset})do
-  face({{x+sx,p.wall,z+bodyBack},{x+sx,p.wall,z+sideFront},{x+sx,0,z+sideFront},{x+sx,0,z+bodyBack}},wall,.84)
+ if nativeService then
+  -- The source's diagonal corner strips are a view of real chamfered walls.
+  -- Build those walls in space; sample straight native wall courses so their
+  -- painted perspective is not projected a second time. The MART word stays
+  -- entirely on the flat front, and no entrance cheek slices its sign panel.
+  local frontZ=g.kind=='mart' and p.front+p.projection or wingFront
+  local ring={{2,bodyBack},{p.w-2,bodyBack},{p.w-2,sideFront},
+   {p.w-8,frontZ},{8,frontZ},{2,sideFront}}
+  local sampleX=p.w-9.5
+  for i,a in ipairs(ring)do
+   local b=ring[i%#ring+1]
+   if i~=4 then -- source-faithful front panels and recessed openings above
+    for row=p.wallTop,p.wallBottom-1 do
+     local top=p.wall*(p.wallBottom-row)/(p.wallBottom-p.wallTop)
+     local bottom=p.wall*(p.wallBottom-row-1)/(p.wallBottom-p.wallTop)
+     local tone=uv(sampleX,row+.5,sampleX,row+.5)
+     face({{x+a[1],top,z+a[2]},{x+b[1],top,z+b[2]},
+      {x+b[1],bottom,z+b[2]},{x+a[1],bottom,z+a[2]}},tone,i==1 and .8 or (i==3 or i==5) and .94 or .86)
+    end
+   end
+  end
+ else
+  for _,sx in ipairs({serviceInset,p.w-serviceInset})do
+   face({{x+sx,p.wall,z+bodyBack},{x+sx,p.wall,z+sideFront},{x+sx,0,z+sideFront},{x+sx,0,z+bodyBack}},wall,.84)
+  end
+  face({{x+p.w-serviceInset,p.wall,z+bodyBack},{x+serviceInset,p.wall,z+bodyBack},{x+serviceInset,0,z+bodyBack},{x+p.w-serviceInset,0,z+bodyBack}},wall,.8)
  end
- face({{x+p.w-serviceInset,p.wall,z+bodyBack},{x+serviceInset,p.wall,z+bodyBack},{x+serviceInset,0,z+bodyBack},{x+p.w-serviceInset,0,z+bodyBack}},wall,.8)
 
  if gymPorch then
   -- Closed shallow canopy: sample an unprojected patch of the native gold
@@ -648,7 +669,7 @@ function M.append(g,emit)
    face({{x+a[1],p.wall-.8,z+a[2]},{x+b[1],p.wall-.8,z+b[2]},
     {x+b[1],p.wall-2,z+b[2]},{x+a[1],p.wall-2,z+a[2]}},trim,.8)
   end
- else
+ elseif not(nativeService and g.kind=='mart') then
  for _,sx in ipairs({p.doorLeft,p.doorRight})do
   face({{x+sx,p.wall,z+wingFront},{x+sx,p.wall,z+p.front+p.projection},{x+sx,0,z+p.front+p.projection},{x+sx,0,z+wingFront}},trim,.9)
  end

@@ -1,3 +1,29 @@
+# Corrected native chamfers and lawn — 2026-10-13 follow-up
+
+The earlier straight-side interpretation below was rejected: native drawings
+have angled outer wall corners. Restored closed six-pixel chamfer planes on
+both Center and Mart. Their courses use unprojected source colours rather
+than bending the diagonal source strips twice. Removed the leftover Mart
+vestibule cheeks intersecting its continuous lower front. The original MART
+lettering and separate doorway remain intact.
+
+User confirmed both buildings should sit on grass. Removed global nearby-paving
+preference. Exact native lawn corner tile families retain grass across their
+entire foundation; other/custom buildings still use explicit or local donors.
+
+Latest official release rechecked with GitHub API: 0.3.85. Final isolated
+LeafGreen front/right/back/left, eye, day/night and door-state captures:
+`.scratch/building-form-20261013/service-source-ground-final`. Inspected both
+day front/side views and earlier restored-chamfer right-side view. Strict native
+footprint: two buildings, zero walkable intersections (`service-chamfer-footprint`).
+Focused Civic/service/Hoenn suites pass. Identical source family covers FR/LG;
+this follow-up runtime was LeafGreen only. Existing triangular soft-shadow
+artifacts near eaves are still visible and are not claimed fixed. User saves
+and native collision unchanged. Earlier straight-side/paving sign-off below
+is historical and superseded by this correction.
+
+---
+
 # FRLG service façade correction — 2026-10-13
 
 Reported Viridian Center `(24,22)` and Mart `(34,16)` night captures showed
