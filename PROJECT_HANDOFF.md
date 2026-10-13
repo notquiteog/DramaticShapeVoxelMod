@@ -1,3 +1,28 @@
+# Movement, follower seams and streaming — 2026-10-13
+
+Current work targets official Gen1Recomp0.3.85. Shared `3D MOVE` defaults GRID
+and offers continuous FREE in first/rotating third person. Static views retain
+native movement. Gen1 consumes native speed hooks. Yellow real-input GRID,
+fractional FREE and GRID handback pass in Viridian; see
+`docs/MOVEMENT_MODE_2026-10-13.md` and native adapter verification record.
+
+Gen3 streaming retains useful pending work as the player runs instead of
+repeatedly canceling it; provider readiness does not force cold world rebuilds.
+Gen1/2 connected-map precaching uses native IDs and resolvers. Crystal's tested
+seam full-mesh wait fell4→0frames; Yellow remained0. At1440p on5060Ti the paired
+Emerald synthetic running stress reduced worst frame161→73ms and canceled
+builds6→0, while mean46ms was effectively unchanged. Connected scenery and
+visual quality retained. Cold loads/uploads still need further optimization.
+See `docs/STREAMING_2026-10-13.md` and `docs/GEN12_PREDICTIVE_STREAMING_QA.md`.
+
+Wilds companion preserves followers and trail coordinates across native seams,
+removes ordinary teleport catch-up, and uses native running cadence. Same actor
+verified across one Yellow/Crystal/Emerald connection each. Sustained Emerald
+native-run test crossed Oldale→Route103, bounded followers to120px/s, then
+observed16px catch-up after stopping. See companion
+`docs/FOLLOWER_CONNECTION_QA.md`; not every edition/route/companion combination
+has runtime evidence. No release/push performed for this batch.
+
 # Shared instance binding reuse — 2026-10-13
 
 ModelInstances retains immutable placement bindings across shadow/scene passes;
