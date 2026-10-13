@@ -1,6 +1,6 @@
 local enabled=true;local V={};local cache={}
 function V.require(k)
- if k=='CommunityVisuals'then return{referenceBuildings=function()return enabled end}end
+ if k=='CommunityVisuals'then return{referenceBuildings=function()return enabled end,casino={get=function()return enabled and'n64memory'or'default'end}}end
  if k=='Gen3Civic'then return{profile=function()return{w=64,back=8,front=63}end}end
  if not cache[k]then cache[k]=assert(loadfile('lib/'..k..'.lua'))(V)end;return cache[k]
 end
@@ -16,3 +16,10 @@ def.warps={};assert(not M.geometry(g,def,cells));def.warps={{x=3,y=6}}
 def.id='CUSTOM_VERMILION';assert(not M.geometry(g,def,cells));def.id='FR_VERMILION_CITY'
 enabled=false;assert(not M.geometry(g,def,cells))
 print('PASS native shared buildings: true authored geometry, solid-body gate, native doors, warp/source/default fallback')
+
+enabled=true;g.family='celadon_short_block';def.id='FR_CELADON_CITY';def.warps={{x=3,y=6,map='FR_CELADON_CITY_GAME_CORNER'}}
+local casino,ci,_,cs=M.geometry(g,def,cells);assert(casino and #ci>1000 and cs.kind=='arcade' and cs.doorHeight==22)
+for _,p in ipairs(casino)do if p[2]<32 then assert(p[1]>=32 and p[1]<=96 and p[3]>=66 and p[3]<=111,'casino model intrudes into floor')end end
+def.warps[1].map='FR_CELADON_CITY_HOUSE';assert(not M.geometry(g,def,cells))
+print('PASS native casino destination, authored facade, source footprint and custom house fallback')
+local projected=M.doorSurface({placement=g,legendaryBuilding=cs},3,6);assert(projected.vertices[1][3]>g.cy*16+cs.z1+.72,'native door behind ornamental handles')

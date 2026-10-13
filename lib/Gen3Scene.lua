@@ -203,7 +203,10 @@ local function build(req,cache,previous)
  if V.require("Gen3Hoenn").active() then V.require("Gen3Hoenn").prepareTrees(cells) end
  M.forestTrees=Forest.prepare(cells)
  local gyms=Buildings.prepare(cells);M.gymCount=#gyms
- local civics=Civic.prepare(cells,gyms,V.data("gen3_exteriors"));M.civicCount=#civics
+ local recipes=V.data("gen3_exteriors")
+ local optional=V.require('NativeLegendaryBuildings').recipes(def)
+ if #optional>0 then local combined={};for _,r in ipairs(optional)do combined[#combined+1]=r end;for _,r in ipairs(recipes)do combined[#combined+1]=r end;recipes=combined end
+ local civics=Civic.prepare(cells,gyms,recipes);M.civicCount=#civics
  M.stairCount=Stairs.prepare(cells)
  local props=Furniture.extract(cells)
  cache.healer,cache.healScreen=nil,nil

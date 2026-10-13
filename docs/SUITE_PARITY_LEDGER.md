@@ -327,3 +327,23 @@ adapter tests pass; 541 option-consumer checks pass. This option stays **partial
 authored courtyard paving and special landscaping are not yet adapted.
 Driver `tools/qa/native-legendary-fences.lua`; evidence:
 `.scratch/parity-073-20261011/results/{firered,leafgreen}-native-legendary-fences-host`.
+
+### Native CASINO exterior consumer (0.3.85)
+
+The optional Gen3 CASINO setting now installs the existing Gen1 CityArchitecture
+and CasinoFacade models for Celadon's casino and prize annex. Exact native 7x5
+and 3x4 drawing recipes are added only when enabled; native warp destinations
+identify each building and source blocked-body guards preserve all walkways.
+Shared neon/material tags remain intact. Native door animation draws ahead of
+carved relief, preserving its native callbacks/timing. OFF retains original art.
+No native map, collision, script, encounter or menu data is modified.
+
+FireRed and LeafGreen fresh isolated official 0.3.85 imports each rendered two
+actual models, first-person views and original fallback and completed native
+door open/close callbacks. LeafGreen overview and FireRed final open-door renders
+inspected; final door projection depth correction was visually checked in FireRed.
+Shared model, native warp/destination rejection, low-footprint bounds, civic,
+adapter and 541 option-consumer checks pass. CASINO remains **partial** because
+native interiors and non-Celadon families still use their original presentation.
+Driver: `tools/qa/native-legendary-casino.lua`; evidence under
+`.scratch/parity-073-20261011/results/{firered,leafgreen}-native-legendary-casino-host`.
