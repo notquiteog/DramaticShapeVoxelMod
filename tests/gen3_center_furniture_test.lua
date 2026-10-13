@@ -38,3 +38,10 @@ for i=1,#v,4 do
  end
 end
 print('PASS '..count..' Center fixtures, animated escalator aliases and open diorama foundation')
+
+local byName={};for _,r in ipairs(F.recipes)do byName[r.name]=r end
+assert(byName.center_counter_right.rows[1][1]==0x2AD and byName.center_counter_right.rows[2][1]==0x2B5,'right wing is the medical device')
+assert(byName.center_medical_cabinet.rows[1][1]==0x2AC and byName.center_medical_cabinet.kind=='centerMedical','medical pedestal lost its own design')
+assert(byName.center_table.kind=='centerTable','glass table lost actual chamfers')
+for _,r in ipairs(F.recipes)do if r.kind=='centerSeat'and r.pair=='network'then assert(r.walkablePad,'native walking pad became an obstruction')end end
+print('PASS exact counter/device source identities, chamfered tables and walking pads')

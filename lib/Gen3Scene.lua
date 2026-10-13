@@ -829,13 +829,16 @@ end
 local effectCanvases={}
 local function fieldEffects(draw,cam)
  local g=love.graphics
- local function effect(name,w,h,paint,verts,base)
+ local function effect(name,w,h,paint,verts,base,geometry)
   local c=effectCanvases[name]
   if c and (c:getWidth()~=w or c:getHeight()~=h)then c:release();c=nil end
   if not c then c=g.newCanvas(w,h);c:setFilter('nearest','nearest');effectCanvases[name]=c end
   g.push('all');g.setCanvas(c);g.origin();g.setShader();g.setScissor();g.setDepthMode();g.setBlendMode('alpha');g.clear(0,0,0,0);g.setColor(1,1,1,1)
   local ok,err=pcall(paint);g.pop();if not ok then error(err,0)end
-  local v,i={},{};quad(v,i,verts,{{0,0},{1,0},{1,1},{0,1}})
+  local v,i={},{}
+  local modeled=geometry and geometry(c,function(p,uv,shade)quad(v,i,p,uv,shade)end)
+  if not modeled then quad(v,i,verts,{{0,0},{1,0},{1,1},{0,1}})end
+  if #v==0 then return end
   Elevation.lift(v,0,base or 0)
   local mesh=R.newMesh(v,i);draw(mesh,c);mesh:release()
  end
@@ -870,7 +873,8 @@ local function fieldEffects(draw,cam)
   if prop then
    local x,z,h=prop.cx*16,prop.cy*16,prop.recipe.h+.18+(prop.groundHeight or 0)
    effect('heal-balls',32,24,function()g.translate(-80,-28);heal.drawBalls()end,
-    {{x+3,h,z+12},{x+29,h,z+12},{x+29,h,z+28},{x+3,h,z+28}})
+    {{x+3,h,z+12},{x+29,h,z+12},{x+29,h,z+28},{x+3,h,z+28}},nil,
+    function(c,emit)return V.require('Gen3HealingBalls').canvas(c,x,h,z,emit)end)
    if screen then
     local sx,sz=screen.cx*16,screen.cy*16+(screen.recipe.frontOffset or 32.2)+.04
     effect('heal-monitor',32,16,function()g.translate(-112,-16);heal.drawMonitor()end,

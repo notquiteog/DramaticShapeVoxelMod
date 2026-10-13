@@ -57,12 +57,12 @@ recipe('center_screen',center,{{0x286,0x287},{0x28E,0x28F}},'cabinet',28,0x281,{
 recipe('center_terminal',center,{{0x285},{0x62},{0x295}},'cabinet',28,0x281,{depth=11,facade={0,8,16,39}})
 recipe('center_map',center,{{0x296,0x297},{0x29E,0x29F}},'cabinet',27,0x281,{base=11,depth=1.5,frontOffset=32.2,facade={0,13,32,17}})
 recipe('center_healer',center,{{0x2AA,0x2AB},{0x2B2,0x2B3}},'centerHealer',13,0x281)
-recipe('center_medical_cabinet',center,{{0x2AD},{0x2B5}},'cabinet',22,0x281,{facade={0,0,16,16},depth=10})
+recipe('center_medical_cabinet',center,{{0x2AC},{0x2B4}},'centerMedical',18,0x281)
 for _,mid in ipairs({0x2B9,0x2BC,0x298,0x2BD})do
  recipe('center_counter_'..mid,center,{{mid}},'counter',7,0x281,{top=10,depth=6,single=true})
 end
-recipe('center_table',center,{{0x29C,0x29D},{0x2A4,0x2A5}},'table',7,0x281,{top=26})
-for _,mid in ipairs({0x2F5,0x2FD})do recipe('center_seat_'..mid,center,{{mid}},'centerSeat',6,0x281,{top=13})end
+recipe('center_table',center,{{0x29C,0x29D},{0x2A4,0x2A5}},'centerTable',7,0x281,{top=26})
+for _,mid in ipairs({0x2F5,0x2FD})do recipe('center_seat_'..mid,center,{{mid}},'centerSeat',1.25,0x281,{top=13,walkablePad=true})end
 recipe('lab_plant_left','oak_lab',{{0x293},{0x29B}},'plant',26,0x289,{cutout=true})
 recipe('lab_plant_right','oak_lab',{{0x294},{0x29C}},'plant',26,0x289,{cutout=true})
 recipe('house_plant', 'player_house',{{0x47},{0x4F}},'plant',24,1,{cutout=true})

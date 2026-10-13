@@ -1,3 +1,12 @@
+## 2026-10-13 Center/Mart inventory and reception models
+
+See [native Center/Mart evidence](GEN3_CENTER_MART_2026-10-13.md): separate
+FR/LG/E/Ru/Sa source inventories, 20 distinct-layout production render runs,
+closed reception/medical/healer/table models and source-driven six-ball healing.
+Changed Center fixtures: zero native walkable-cell intersections; unchanged
+legacy fixtures/Mart geometry are not included in that footprint claim.
+All map aliases and all interior props are not individually visually certified.
+
 # Gen3 native model coverage — ongoing
 
 This checklist records inspected models, not inferred coverage from tile

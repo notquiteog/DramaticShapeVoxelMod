@@ -1,3 +1,20 @@
+# Gen3 native Center furniture and healing trays — 2026-10-13
+
+Corrected FR/LG medical-device/right-return source identities; closed, source-
+colored medical pedestals, healing housings, rounded counter ornaments and
+chamfered glass tables. Low counters retain nurse visibility. Native walkable
+pads stay shallow. Native healing draw supplies actual one-to-six closed balls,
+including native palette pulses and reset, without reading private heal state.
+
+Official 0.3.85: inventory covers 225 named Center/Mart map entries, four distinct
+layouts per edition; all 20 representatives rendered from four orbit directions
+and eye level. Changed Center fixtures have zero full-cell native walking
+intersections. All five editions show native 1 -> 2 -> 6 ball fill and reset.
+Final flower refinement additionally inspected in LeafGreen. Existing Mart
+models reviewed, not rewritten; this is not all-object/all-room completion.
+Evidence, commands, tests and remaining legacy-fixture audit gaps:
+`docs/GEN3_CENTER_MART_2026-10-13.md`.
+
 # FR/LG service corner and foundation correction — 2026-10-13
 
 Restored native angled outer walls with straight source-colour courses; removed
