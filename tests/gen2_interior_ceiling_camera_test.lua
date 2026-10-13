@@ -4,6 +4,7 @@ local draws=0
 love={image={newImageData=function()return {setPixel=function()end,release=function()end}end},
  graphics={newImage=function()return {setFilter=function()end}end}}
 local V={require=function(n)
+ if n=='KfpInterior'then return {dressing={get=function()return false end},cutaway={get=function()return true end},ceiling={get=function()return true end},headroom={get=function()return 0 end},height=function(h)return h end}end
  if n=='FirstPerson' then return {engaged=function()return fp end}end
  if n=='ThirdPerson' then return {
   selected=function()if broken then error('no camera')end;return selected end,

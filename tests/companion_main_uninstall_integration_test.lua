@@ -83,6 +83,7 @@ function setting:cycle() return true end
 function setting:sync() return true end
 
 local settings = {
+  aircraft=true,ambient=true,birds=true,bob=true,ceiling=true,cutaway=true,door=true,doors=true,dressing=true,dust=true,foam=true,headroom=true,horizon=true,jump=true,leaves=true,rain=true,rainbows=true,rustle=true,setting=true,sky=true,smoke=true,steps=true,vines=true,
   arenaFill=true,art=true,audio=true,audioVolume=true,backAnimationSetting=true,backPlacementSetting=true,backdropOffset=true,battleUi=true,fullBody=true,beam=true,bossBg=true,buildings=true,captureSpeed=true,casino=true,caveDetails=true,caveSound=true,caves=true,cityGround=true,courtyards=true,cutTrees=true,details=true,duplicateSetting=true,elevator=true,enabled=true,forest=true,frontAnimationSetting=true,frontFlipSetting=true,fxScale=true,grass=true,hudColor=true,hudScaleSetting=true,invertYSetting=true,kantoLife=true,masonry=true,openTime=true,pillars=true,playerAnimationSetting=true,playerArtSetting=true,pokemonGlow=true,preset=true,prizeRoom=true,props=true,roads=true,rocket=true,safari=true,scalingSetting=true,setting=true,signs=true,size=true,sky=true,speed=true,spriteLight=true,stadiumCircle=true,streamers=true,suction=true,suctionParticles=true,surfaces=true,textboxFill=true,thickness=true,tower=true,towerWall=true,trainerBattleSetting=true,trainerSetting=true,treeDetail=true,trees=true,tunnels=true,viewSetting=true,walls=true,
   setting = true, trainerSetting = true, playerArtSetting = true,
   playerAnimationSetting = true, frontAnimationSetting = true,

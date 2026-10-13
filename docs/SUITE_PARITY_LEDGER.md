@@ -429,3 +429,25 @@ not a pixel-identical claim against that engine renderer. Focused classifier,
 alpha/state restoration and adapter tests pass. Driver
 `tools/qa/native-world-flash.lua`; evidence under
 `.scratch/parity-073-20261011/results/emerald-native-world-flash-host`.
+
+### Settings grouping and consolidated regression closure (0.3.85)
+
+All 26 KFP/ceiling/headroom controls now join the existing shared WORLD category
+instead of becoming loose uncategorized rows. Their labels, values, saved keys,
+setting owners and native menu rendering are unchanged. Three stale fixtures
+were updated for installed KFP settings, native HUD gender/caught indicators,
+and default interior policy. The four previously failing focused suites now
+pass, retaining their original lifecycle/ceiling/native-HUD assertions.
+
+Official 0.3.85 source test helpers (omitted from its .love) are installed only in
+the isolated QA runtime. The first complete run then had 260 passes, 4 failures,
+58 missing-fixture skips; those four are the cases above. Missing datasets are
+not represented as passing tests.
+
+Crystal Safari feasibility check: the imported unused SAFARI_ZONE_BETA exists,
+but its PARK artwork did not produce complete native tree model drawings during
+an actual 0.3.85 inspection. The experimental map-ID adapter was removed rather
+than ship a no-op setting. Gen2 Safari remains missing/source-limited; no native
+map, tile, warp or gameplay content was invented to make the row look complete.
+The failed isolated investigation is recorded at
+`.scratch/parity-073-20261011/results/crystal-gen2-legendary-safari-host`.

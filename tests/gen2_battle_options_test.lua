@@ -9,7 +9,7 @@ local stageOn=true;local shot={heads={player={.3,.6},enemy={.7,.4}}}
 modules.OverworldBattle={enabled=function()return stageOn end,shot=function()return shot end,
  hudScaleSetting={get=function()return 'scaled'end}}
 local cards,buttons,texts=0,0,{}
-modules.BattleTheme={scale=function()return 1 end,layoutStatusCards=function(items)
+modules.BattleTheme={gender=function()end,caught=function()end,scale=function()return 1 end,layoutStatusCards=function(items)
  local out={};for _,p in ipairs(items)do out[p.id]=p end;return out end,
  statusCard=function()cards=cards+1 end,button=function()buttons=buttons+1 end,
  text=function(t)texts[#texts+1]=t end,commandHub=function()end,hpColor=function()return 0,1,0,1 end}
