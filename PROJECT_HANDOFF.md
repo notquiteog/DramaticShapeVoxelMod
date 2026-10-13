@@ -1,3 +1,17 @@
+# Oceanic Museum native exterior across R/S/E — 2026-10-13
+
+Closed museum shell, teal columns, side/rear native windows, wide recessed
+entrance and roof built from public source art at Slateport (28,22). Separately
+exported085 sources prove different roof art: Emerald perforations/rounded
+lights, RS plain panel/square lights. Explicit RS allowlist enables only this
+checked family. Original steps below the five-row blocked body stay unclaimed.
+
+Three-edition production front/back/sides/eye/door captures inspected; scoped
+native floor audits1/0 each. Oceanic/Civic/RS suites pass. Story NPCs and existing
+HUD obscure lower entry/side details; normal traversal unverified. Fresh085
+private imports/profiles and evidence in `.scratch/gen3-20261013`; no user saves,
+collision or warp data touched. Wider Hoenn source coverage remains unfinished.
+
 # Saffron two-storey house batch on engine 0.3.85 — 2026-10-13
 
 Two exact door-house variants add three native placements per FR/LG edition;

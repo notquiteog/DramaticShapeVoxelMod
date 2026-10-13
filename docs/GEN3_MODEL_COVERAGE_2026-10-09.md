@@ -655,3 +655,34 @@ render cost; final review used three representatives and distance24.
 
 Focused suites: `gen3_saffron_houses_test`, `gen3_civic_test`,
 `gen3_rear_roof_test` pass. All QA processes closed; unrelated edits preserved.
+
+## Oceanic Museum exterior: Emerald / Ruby / Sapphire — 2026-10-13
+
+Exact 6×5 native body at `{EM,RU,SA}_SLATEPORT_CITY (28,22)` now has a
+closed shell/roof, teal columns, original facade and narrow native windows on
+sides/rear. Wide entrance aligns to both native warp cells. Source stairs and
+column projections on the sixth, walking row are deliberately unclaimed.
+Twelve roof lights are rounded low domes in Emerald and raised squares in RS;
+Emerald panel perforations remain absent from the native plain RS roof.
+
+Fresh public import-only085 runs used the user's existing three ROMs in private
+`gen3-{edition}-qa` identities under `.scratch/gen3-20261013/profiles`. Separate
+public native atlas exports: `{edition}-slateport-source`, enlarged crops
+`{edition}-museum-source.png`. Layout/collision matches, pixels differ, and the
+edition roof distinction was inspected before enabling RS. No assumed complete
+Emerald/RS parity; the RS allowlist expands by this one reviewed family only.
+
+Production review `{edition}-museum-review`: front, rear, both sides, eye-height
+and requested native door states. Roof differences, closed faces and native
+facade details inspected. New-game story NPCs block portions of the entrance;
+selected-ball HUD obscures lower regions of some orbit images. Captures do not
+establish normal doorway traversal. Native floor audit `{edition}-museum-footprint`:
+1 assembly / 0 low-face intersections with central8×8 collision-0 cells each.
+This scoped check is not exhaustive gameplay collision proof. Driver PASS/audit
+records present; wrapper shutdown status1 as in preceding085 batch.
+
+Tests: `gen3_oceanic_museum_test`, `gen3_civic_test`, `gen3_ruby_sapphire_test`
+pass. RS test updates its approved exterior count to12 and models the museum's
+actual blocked rear row. No user save, native collision/warp or other agent edits
+changed. Remaining Slateport shipyard/facilities and Lilycove museum/store
+exteriors are pending; no all-city/all-game completion claim.
