@@ -138,7 +138,7 @@ function M.install()
  mod.hooks:wrap('input.key',function(next,game,ev)
   local input=game and game.input
   local bound=input and (input.captureArmed or input.keyBindings and input.keyBindings[ev.key]~=nil)
-  if not bound and looking(game) and M.active and M.level==7 and (ev.key=='q' or ev.key=='e')then
+  if not bound and looking(game) and M.level==7 and (ev.key=='q' or ev.key=='e')then
    if ev.phase=='pressed'then controls:step(ev.key=='q' and 1 or -1)end
    return true
   end
@@ -164,7 +164,7 @@ function M.install()
    if (ev.axis=='rightx' or ev.axis=='righty') and stickClaimed(game) then
     return true
    end
-  elseif ev.phase=='pressed' and looking(game) and M.active and M.level==7 and (ev.button=='leftstick' or ev.button=='rightstick')then
+  elseif ev.phase=='pressed' and looking(game) and M.level==7 and (ev.button=='leftstick' or ev.button=='rightstick')then
    controls:step(ev.button=='leftstick' and 1 or -1);return true
   elseif ev.phase=='removed'then stick.x,stick.y=0,0 end
   return next(game,ev)
@@ -175,7 +175,10 @@ function M.install()
   legendary.migrate(game)
   fullPreset:update(M.level,game)
   SceneOptions.update(dt)
-  controls:update(dt,looking(game) and M.active,love.mouse)
+  -- Native fly/teleport/flash presentations temporarily own drawing, not the
+  -- chosen look direction. Continue mouse/boom input so returning to the
+  -- voxel field resumes exactly where the player aimed. Menus still own input.
+  controls:update(dt,looking(game) and free(),love.mouse)
   if BattleStage.active and Battle.isActive()then
    local camera=V.require('BattleCam')
    camera.stickOrbit(stick.x,math.min(dt,.1));camera.stickPitch(stick.y,math.min(dt,.1))
@@ -203,7 +206,7 @@ function M.install()
  mod.hooks:wrap('input.wheel',function(next,game,dy)
   if not dy or dy==0 then return next(game,dy)end
   if BattleStage.active and Battle.isActive()then V.require('BattleCam').stepZoom(dy>0 and -1 or 1);return true end
-  if looking(game) and M.active and controls:step(dy>0 and -1 or dy<0 and 1 or 0)then return true end
+  if looking(game) and free() and controls:step(dy>0 and -1 or dy<0 and 1 or 0)then return true end
   return next(game,dy)
  end)
  mod.hooks:wrap('input.pointer',function(next,game,ev)

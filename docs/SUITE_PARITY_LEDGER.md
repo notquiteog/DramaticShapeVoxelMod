@@ -386,3 +386,20 @@ KantoFirstPerson/KfpBirdArt/KfpAtmosphere consumers: native public sprite
 providers, owned-cache invalidation, outdoor gate and independent OFF default.
 This is a source audit plus focused bird-cache/541-consumer regression checks;
 it does not relabel prior sky captures as current or claim all-edition runtime QA.
+
+### Native-effect camera input continuity (0.3.85)
+
+Gen3 native fly/teleport/flash and other temporary presentations retain their
+native artwork, but no longer suspend polled right-mouse look or third-person
+boom controls merely because the voxel field did not draw that frame. The
+current yaw/pitch/zoom remains live and returns with the next voxel frame.
+Native menus still own input; unsupported effect renderers are not replaced.
+
+Focused integration regressions cover effect entry, mouse motion, zoom, return
+and menu ownership, plus existing escalator/boom checks. A real Emerald native
+background flash on official 0.3.85 retained polled mouse direction and returned
+to the voxel field; returned render inspected. Fixture:
+`tools/qa/native-effect-camera.lua`; results
+`.scratch/parity-073-20261011/results/emerald-native-effect-camera-host`.
+This verifies input-state continuity, not 3D replacement of every native special
+effect or an all-generation/all-transition camera claim.

@@ -113,7 +113,22 @@ assert(forwarded==1,'Emerald options failed to keep wheel ownership')
 package.loaded['src.ui.game3.rse.option_menu']=nil
 needsNative=true;Field.draw(game);assert(not A.active and native==1)
 Player.update(game,{isDown=function(_,key)return key=='up' end});assert(moves[2].up and not moves[2].right)
-needsNative=false;canDraw=false;Field.draw(game);assert(not A.active and native==2)
+local savedYaw=A.yaw
+local mx,my=10,10
+love.mouse={isDown=function()return true end,getPosition=function()return mx,my end}
+hooks['core.update'](function()end,game,.01)
+mx=30;hooks['core.update'](function()end,game,.01)
+assert(A.yaw~=savedYaw,'temporary native presentation discarded mouse look')
+local goalBefore=A.boomZoom
+hooks['input.wheel'](function()error('native presentation stole boom')end,game,1)
+hooks['core.update'](function()end,game,.1)
+assert(A.boomZoom<goalBefore,'native presentation blocked camera boom')
+local targetYaw=A.yaw
+needsNative=false;Field.draw(game)
+assert(A.active and A.yaw==targetYaw,'native presentation exit reset user look')
+needsNative=true;Field.draw(game);love.mouse=nil
+
+needsNative=false;canDraw=false;Field.draw(game);assert(not A.active and native==3)
 canDraw=true;hooks['input.key'](function()error('3 forwarded')end,game,{key='3',phase='pressed'});assert(A.level==0)
 local schemaLength=#definedSchema
 events['mod.options_changed']({mod=mod.id,key='fireredCamera',value=7});assert(A.level==7)
@@ -121,8 +136,8 @@ assert(#definedSchema==schemaLength,'option changes appended duplicate Crystal r
 assert(treeStyle.flat(),'flat trunks must be default')
 events['mod.options_changed']({mod=mod.id,key='hdTreeTrunks',value='solid'});assert(not treeStyle.flat() and SceneInvalidated,'tree option did not refresh scene')
 SceneInvalidated=false;events['mod.options_changed']({mod=mod.id,key='communityGrass',value='n64memory'});assert(SceneInvalidated,'grass option did not refresh scene')
-fail=true;Field.draw(game);assert(native==3 and not A.active)
-Field.draw(game);assert(native==4 and draws==3,'failed GPU must stop retrying each frame')
+fail=true;Field.draw(game);assert(native==4 and not A.active)
+Field.draw(game);assert(native==5 and draws==4,'failed GPU must stop retrying each frame')
 local restored=false;hooks['core.quit_to_launcher'](function()restored=true end);assert(restored)
-assert(Field.draw~=nil);Field.draw(game);assert(native==5)
+assert(Field.draw~=nil);Field.draw(game);assert(native==6)
 print('PASS FireRed generation isolation, tileset scope, folded columns, native fallback, camera intent, options and unload')
