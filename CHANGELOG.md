@@ -1,3 +1,12 @@
+## 1.34.0 — 2026-10-13
+
+- Improve running-window streaming, connected-map precaching and reuse of GPU instance bindings. Connected scenery and visual quality are preserved.
+- Add shared 3D MOVE: GRID / FREE. GRID is the default; FREE enables continuous movement in first-person and rotating third-person views, preserving native collision and special-move handling.
+- Improve Gen2/Gen3 Center/Mart furnishings, healing trays, source-art tree defaults and replacement coverage, building facades, doorway/lamp lighting and sprite grounding.
+- Integrate optional compact Modern UI cards and command layouts without requiring the companion.
+
+Verified on Gen1Recomp 0.3.85: 1,173 main checks passed; representative runtime movement checks cover Yellow and all eight Gen2/Gen3 editions. Emerald's paired 1440p running stress reduced the worst frame from 161 to 73 ms, while average performance was effectively unchanged. Cold-load stalls, exhaustive map coverage and complete feature parity remain unfinished.
+
 ## 1.33.1 — 2026-10-13
 
 Camera retention for puddles, shallow-water effects, scripted truck motion and native flash transitions; native-menu input ownership fixes. Adds shared Legendary tree/fence/casino consumers and source-specific Saffron, Oceanic Museum and Slateport shipyard models. Representative captures used Gen1Recomp 0.3.85. Consolidated checks: 260 passed, 4 failed, 58 skipped; remaining failures concern uninstall/battle/ceiling fixtures and KFP option categorization. Full coverage and feature parity remain incomplete.
