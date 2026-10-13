@@ -26,3 +26,16 @@ M.draw(wet,function(x,z)assert(x==40 and z==72);return 3 end,function(id,w,h,pai
 end,{level=6,yaw=math.pi/2})
 assert(attached==1 and M.supports('camera_shake'),'attached water effects or shake lose camera')
 print('PASS player-attached native splash art, rotated upright card and terrain support')
+
+local burst={cx=2,cy=3,timer=4,kind='cut_grass_scatter',particles={{x=44,y=45,vx=2,vy=-1}}}
+local count=0
+love.graphics.draw=function(img,frame,x,y)assert(img=='native-leaf'and frame=='original'and x==0 and y==0)end
+M.draw({_anims={burst},loadSheet=function(n,w,h,total)assert(n=='cut_grass'and w==8 and h==8 and total==1);return {image='native-leaf',quads={[0]='original'}}end},
+ function(x,z)assert(x==40 and z==56);return 12 end,
+ function(id,w,h,paint,v,base)
+  count=count+1;assert(w==8 and h==8 and base==12)
+  assert(math.abs(v[1][1]-40)<.001 and math.abs(v[1][3]-60)<.001 and v[1][2]==15)
+  assert(v[3][2]==7,'native leaf motion changed');paint()
+ end,{level=6,yaw=math.pi/2})
+assert(count==1 and burst.timer==4 and burst.particles[1].y==45 and M.supports('cut_grass_scatter'))
+print('PASS native Cut leaf frame, camera-facing plane, terrain support and unchanged particle lifecycle')

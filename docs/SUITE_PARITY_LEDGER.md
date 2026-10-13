@@ -455,3 +455,22 @@ The failed isolated investigation is recorded at
 Final matching-engine consolidated rerun after those fixes: **264 passed,
 0 failed, 58 skipped**. Log:
 `.scratch/parity-073-20261011/parity085-suite.log`.
+
+### Native Sweet Scent and Cut presentation (0.3.85)
+
+Sweet Scent retains its native pink expanding rings, alpha and lifetime over the
+voxel world; centered native screen proportions scale to the output resolution.
+Cut leaf bursts use the actual native cut_grass frame on upright camera-facing
+cards at the cut origin, retaining engine particle offsets, timer and callback.
+Neither effect now surrenders the voxel view. No encounter selection, RNG,
+collision, map edits or native callback ownership is changed.
+
+Actual Emerald 0.3.85 runs kept the camera active and completed each native
+callback exactly once. Sweet Scent and Cut captures inspected; the Cut fixture
+was moved from an obstructed initial view to the clear south path and counted
+184 actual native card draws. Unit tests cover native art, rotated placement,
+terrain support, original particle state, screen alpha/scale and classification.
+Drivers `tools/qa/native-world-{scent,cut}.lua`; evidence under
+`.scratch/parity-073-20261011/results/emerald-native-world-{scent,cut}-host`.
+Other special presentations remain listed separately; this is not blanket
+verification of all field moves or editions.
