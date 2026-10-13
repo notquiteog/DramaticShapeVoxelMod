@@ -1,3 +1,31 @@
+# Source-faithful urban shells and cached building lighting — 2026-10-13
+
+Seven reviewed Rustboro urban source families (eight placements) now have closed
+window recesses, native front apertures, matching side/rear windows, masonry
+piers, parapet coping and horizontal rooftop vent wells. Unseen elevations are
+source-based interpretations. Native door dimensions/animations remain intact.
+Native scoped footprint audit: eight placements, zero walkable intersections.
+FR/LG service fronts preserve uninterrupted MART lettering and straight side
+materials; evidence and exact scope are in GEN3_SERVICE_FACADE_2026-10-13.md.
+
+Authored window masks and actual native streetlamps feed a scene-cached spatial
+light field. Every source participates (no global source-count budget); the GPU
+uses two field samples per fragment. Service-building spill originates at the
+actual entrance. Powered emission has a subtle daylight contribution and becomes
+visible at twilight/night. Removed invented external service lanterns. This is
+cached approximate light spill, not ray-traced or fully occluded local lighting;
+large-map atlas memory and frame-time benchmarks remain unmeasured.
+
+Official engine 0.3.85 / extracted Linux LOVE shell: root inspected urban
+front/side/rear/eye captures, LeafGreen final service day/night and door states,
+and Emerald native-lamp night street capture. Worker evidence covers native
+Emerald/Ruby/Sapphire lamps and FR/LG service footprint audits. Paths under
+.scratch/building-form-20261013/{after,footprint,leafgreen-final-field} and
+.scratch/gen3-20261013. All five focused LuaJIT suites pass: building_lights,
+gen3_native_lamps, gen3_urban_building, gen3_civic, gen3_service_facade.
+Private isolated profiles; user saves/game collision unchanged. This is scoped
+rendered verification, not all-building/all-game coverage or live traversal.
+
 # Native Rustboro lamps replace rejected additions — 2026-10-13
 
 User rejected decorative service wall lanterns; helper/test removed and root

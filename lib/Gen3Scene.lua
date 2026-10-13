@@ -119,8 +119,10 @@ local function releaseGeometry(cache)
  if cache.prizeWalls then cache.prizeWalls.mesh:release();cache.prizeWalls.image:release()end
  if cache.rocketWalls then cache.rocketWalls.mesh:release();cache.rocketWalls.image:release()end
  for _,part in ipairs(cache.civics or {})do
-  if part.mesh then part.mesh:release()end;if part.image then part.image:release()end
+  if part.mesh then part.mesh:release()end;if part.image then part.image:release()end;if part.glow then part.glow:release()end
  end
+ if cache.lightField then cache.lightField.image:release()end
+ for _,part in ipairs(cache.lamps or{})do part.mesh:release()end
  V.require('NativeLegendaryTrees').release(cache.legendaryTreeInstances)
  for _,batch in ipairs(cache.treeInstances or {})do batch:release()end
  for _,name in ipairs({'wood','leaves'})do if cache[name] then cache[name]:release() end end
@@ -208,6 +210,7 @@ local function build(req,cache,previous)
  local optional=V.require('NativeLegendaryBuildings').recipes(def)
  if #optional>0 then local combined={};for _,r in ipairs(optional)do combined[#combined+1]=r end;for _,r in ipairs(recipes)do combined[#combined+1]=r end;recipes=combined end
  local civics=Civic.prepare(cells,gyms,recipes);M.civicCount=#civics
+ local nativeLamps=V.require('Gen3NativeLamps').prepare(cells)
  M.stairCount=Stairs.prepare(cells)
  local props=Furniture.extract(cells)
  cache.healer,cache.healScreen=nil,nil
@@ -292,6 +295,8 @@ local function build(req,cache,previous)
   if c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
+  elseif c.nativeLamp then
+   plane(b.v,b.i,x,z,uvFor(ts,c.nativeLampGround or V.require('Gen3NativeLamps').ground) or uv)
   elseif c.civic then
    plane(b.v,b.i,x,z,uvFor(ts,Civic.ground(c)) or uv)
   elseif shape.kind=='water' then
@@ -547,10 +552,34 @@ local function build(req,cache,previous)
   if g.chimneyOutlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=g.chimneyOutlet end
   Elevation.lift(vertices,0,g.groundHeight or 0)
   local part={placement=g};cache.civics[#cache.civics+1]=part
-  part.mesh=assert(R.newMesh(vertices,indices));part.image=Civic.material(g)
+  part.mesh=assert(R.newMesh(vertices,indices))
+  local read;part.image,part.glow,read=Civic.material(g)
+  part.lights=V.require('BuildingLights').collect(vertices,read,g.width*32+4,g.depth*16)
+  if g.kind=='center' or g.kind=='mart' then
+   part.lights={}
+   for ty=g.cy,g.cy+g.depth-1 do for tx=g.cx,g.cx+g.width-1 do
+    local door=Civic.doorSurface(g,tx,ty)
+    if door and #part.lights==0 then
+     local a,b,d=door.vertices[1],door.vertices[2],door.vertices[4]
+     part.lights[1]={(a[1]+b[1])/2,d[2]+door.h*.35+(g.groundHeight or 0),a[3]+1.5,32,0,1}
+    end
+   end end
+  end
   end
   Budget.check()
  end end
+ cache.lamps={}
+ for _,g in ipairs(nativeLamps)do
+  if not BattleClear.hits(cam,g.cx*16,g.cy*16,g.cx*16+16,g.cy*16+16)then
+   local vertices,indices={},{}
+   V.require('Gen3NativeLamps').append(g,function(v,t,shade)quad(vertices,indices,v,t,shade)end,uvFor)
+   Elevation.lift(vertices,0,g.groundHeight or 0)
+   cache.lamps[#cache.lamps+1]={mesh=assert(R.newMesh(vertices,indices)),ts=g.ts,lights=V.require('Gen3NativeLamps').lights(g)}
+  end
+ end
+ local lightParts={}
+ for _,group in ipairs({cache.civics,cache.lamps})do for _,part in ipairs(group)do lightParts[#lightParts+1]=part end end
+ cache.lightField=V.require('BuildingLights').texture(lightParts,Budget.check)
  for _,p in ipairs(chimneys)do if not BattleClear.hits(cam,p.cx*16,p.cy*16,p.cx*16+16,p.cy*16+16)then
   local b=batches[p.pair];local start=#b.rv
   Roof.appendChimney(p,function(vertices,uv,shade)quad(b.rv,b.ri,vertices,uv,shade)end,uvFor)
@@ -634,7 +663,14 @@ local function terrain(draw)
  if cache.prizeWalls then draw(cache.prizeWalls.mesh,cache.prizeWalls.image)end
  if cache.rocketWalls then draw(cache.rocketWalls.mesh,cache.rocketWalls.image)end
  for _,part in ipairs(cache.civics or {})do
+  local oldMask=R.glassMask
+  R.glassMaskNow(part.glow);R.glass(true)
   if not V.require('NativeLegendaryTower').draw(part.placement,draw)then draw(part.mesh,part.image)end
+  R.glassMaskNow(oldMask)
+ end
+ for _,part in ipairs(cache.lamps or{})do
+  R.glass(true);draw(part.mesh,part.ts.image)
+  if part.ts.overImage then draw(part.mesh,part.ts.overImage)end
  end
  draw(cache.wood,bark);draw(cache.leaves,TreeStyle.original() and V.require('NativeTreeArt').image() or foliage)
  V.require('NativeLegendaryTrees').draw(cache.legendaryTreeInstances,draw)
@@ -964,6 +1000,8 @@ function M.draw(game,vw,vh,cam)
  R.fog=not indoor and Distance.haze(background,M.fadeExtent,{cx,0,cz},
   {bounds[1]*16,bounds[2]*16,(bounds[3]+1)*16,(bounds[4]+1)*16})or nil
  R.fog=atmosphere.fog(atmosphereMap) or R.fog
+ R.glassMask=nil;R.glassNight=not indoor and V.require('DayNight').windowLight() or 0
+ R.buildingLightField=not indoor and cache.lightField or nil
  if not R.beginScene(renderWidth,renderHeight,cx,cz,vw,vh,background,'firered') then M.restore();return false end
  if cam.actors then
   local p=cam.actors.points

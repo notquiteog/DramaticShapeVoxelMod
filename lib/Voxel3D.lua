@@ -361,8 +361,25 @@ local SHADER = [[
     float falloff=1.0-smoothstep(0.0,30.0,length(d.xz));
     return falloff*falloff*(1.0-smoothstep(1.0,9.0,abs(d.y)));
   }
+  uniform float buildingLampOn;
+  uniform Image buildingLightField;
+  uniform vec3 buildingLightOrigin;
+  uniform vec3 buildingLightStep;
+  uniform vec3 buildingLightSize;
+  uniform vec3 buildingLightAtlas;
+  float lightSlice(vec3 cell,float layer) {
+    vec2 tile=vec2(mod(layer,buildingLightAtlas.z),floor(layer/buildingLightAtlas.z));
+    vec2 pixel=tile*(buildingLightSize.xz+vec2(2.0))+vec2(1.5)+cell.xz;
+    return Texel(buildingLightField,pixel/buildingLightAtlas.xy).r;
+  }
+  float buildingPool() {
+    vec3 cell=(vFoliageRay+eye-buildingLightOrigin)/buildingLightStep;
+    if(any(lessThan(cell,vec3(0.0))) || any(greaterThan(cell,buildingLightSize-vec3(1.0)))) return 0.0;
+    float layer=floor(cell.y);
+    return mix(lightSlice(cell,layer),lightSlice(cell,min(layer+1.0,buildingLightSize.y-1.0)),fract(cell.y))*1.2;
+  }
   uniform float casinoPhase; // smooth marquee chase; only new neon material IDs
-  uniform float glassNight;   // 0 = daylight .. 1 = the lamps are on
+  uniform float glassNight;   // 0 = daylight adaptation .. 1 = night adaptation
   uniform float glassPhase;   // the glint's phase: advances with TRAVEL
   uniform float glassGlint;   // and its strength: 0 while standing still
   uniform float glassOn;      // 0 for sprite-sheet draws (see Voxel3D.glass)
@@ -652,7 +669,8 @@ float gardenRipple(vec2 q, float t) {
       float stain=sin(world.x*.13+world.z*.11)*sin(world.y*.17+world.z*.07);
       rgb*=.89+grain*.20+stain*.10;
     }
-    rgb+=p.rgb*vec3(.95,.53,.18)*vDockWarm*glassNight;
+    rgb+=p.rgb*vec3(.95,.53,.18)*vDockWarm*(.04+.96*glassNight);
+    if(buildingLampOn>0.001) rgb+=p.rgb*vec3(.66,.44,.22)*buildingPool()*buildingLampOn;
     if (fireLightPower > 0.001) {
       rgb += p.rgb * vec3(1.65,0.90,0.23) * breathLight();
     }
@@ -697,7 +715,9 @@ float gardenRipple(vec2 q, float t) {
       vec3 pane = mix(rgb, vec3(0.93, 0.97, 1.0), glint * glass);
       float shine = dot(p.rgb, vec3(0.299, 0.587, 0.114));
       vec3 lamp = vec3(1.0, 0.84, 0.5) * (0.5 + 0.55 * shine);
-      rgb = mix(pane, lamp, glassNight * glass);
+      // Fixtures remain powered in daylight; daylight adaptation makes their
+      // contribution subtle. Twilight/night reveal their warm radiance.
+      rgb = mix(pane, lamp, (.04+.96*glassNight) * glass);
     }
     // Physical tubes stay luminous without the warm window-glass recolor.
     // Their steady colored casing and pale core retain legible lettering.
@@ -1502,8 +1522,17 @@ function Voxel3D.beginScene(w, h, cx, cy, vw, vh, sky, slot, modelShadow, borrow
     pcall(sh.send,sh,"interiorBounds",{b[1]-e[1],b[2]-e[3],b[3]-e[1],b[4]-e[3]})
     pcall(sh.send,sh,"interiorFloor",-e[2])
   end
+  local building=Voxel3D.buildingLightField
+  pcall(sh.send,sh,"buildingLampOn",building and (.04+.96*(Voxel3D.glassNight or 0)) or 0)
+  if building then
+    pcall(sh.send,sh,"buildingLightField",building.image)
+    pcall(sh.send,sh,"buildingLightOrigin",building.origin)
+    pcall(sh.send,sh,"buildingLightStep",building.step)
+    pcall(sh.send,sh,"buildingLightSize",building.size)
+    pcall(sh.send,sh,"buildingLightAtlas",building.atlas)
+  end
   local lamps=Voxel3D.streetLamps
-  pcall(sh.send,sh,"streetLampOn",lamps and (Voxel3D.glassNight or 0) or 0)
+  pcall(sh.send,sh,"streetLampOn",lamps and (.04+.96*(Voxel3D.glassNight or 0)) or 0)
   if lamps then
     for i,name in ipairs({"streetLampA","streetLampB","streetLampC","streetLampD"}) do
       local p=lamps[i];local e=Voxel3D.eye or {0,0,0}
@@ -2261,6 +2290,7 @@ function Voxel3D.endScene()
   -- Map-local lamps are configured by the next world pass. Do not carry
   -- Lavender lighting into a battle or a companion-owned scene.
   Voxel3D.streetLamps = nil
+  Voxel3D.buildingLightField = nil
   Voxel3D.battleFireLight = nil
   if not active then return nil end
   love.graphics.setShader()

@@ -6,7 +6,7 @@ for _,kind in ipairs({'gym','center','mart'})do
   faces[#faces+1]={v,uv}
   for i,a in ipairs(v)do
    assert(a[1]>=47 and a[1]<=49+p.w and a[3]>=80+p.back-1.5 and a[3]<=80+p.front+p.projection,'building escaped its reviewed footprint')
-   assert(a[2]>=0 and a[2]<=math.max(p.wall+p.bevel,p.doorHeight)+.05,'building grew a ridge or underground wall')
+   assert(a[2]>=0 and a[2]<=math.max(p.wall+p.bevel,p.doorHeight,kind=='mart' and 32 or 0)+.05,'building grew a ridge or underground wall')
    assert(uv[i][1]>0 and uv[i][1]<1 and uv[i][2]>0 and uv[i][2]<1,'material samples an adjacent source rectangle')
   end
  end)
@@ -34,10 +34,10 @@ for _,kind in ipairs({'gym','center','mart'})do
   assert(p.roofEnd==53,'window band folded onto roof')
   local corner=false;local recess=false
   for _,f in ipairs(faces)do for _,v in ipairs(f[1])do
-   corner=corner or (v[1]==48 and v[2]==0 and v[3]==80+p.front-8)
+   corner=corner or (v[1]==48+8 and v[2]==0 and v[3]==80+p.front)
    recess=recess or (v[1]==48+33 and v[3]==80+p.front+p.projection-1)
   end end
-  assert(corner,'native rounded facade still represented by flat rectangle')
+  assert(corner,'source projected corner pixels must not bend the upright front')
   assert(recess,'native doorway no longer recessed')
  end
 end
@@ -84,7 +84,7 @@ print('PASS complete connected tower claim, mismatch isolation, closed dome and 
 -- inside a row. A tiny image implementation exercises the real material path.
 local function imageData(w,h)
  local pixels={}
- return {getPixel=function(_,x,y)return unpack(pixels[y*w+x]or{0,0,0,0})end,
+ return {getDimensions=function()return w,h end,getPixel=function(_,x,y)return unpack(pixels[y*w+x]or{0,0,0,0})end,
  setPixel=function(_,x,y,...)pixels[y*w+x]={...}end,release=function()end}
 end
 love={image={newImageData=imageData},graphics={newImage=function(data)

@@ -120,6 +120,14 @@ function M.prepare(cells,gyms,families)
  -- never be stretched down the retaining face below a building.
  for _,g in ipairs(out)do
   local candidates={}
+  local kantoService=not g.custom and (g.kind=='center' or g.kind=='mart')
+  local paving
+  if kantoService then
+   for yy=g.cy-4,g.cy+g.depth+4 do for xx=g.cx-4,g.cx+g.width+4 do
+    local c=cells[xx..':'..yy]
+    if c and c.pair==g.pair and c.collision==0 and c.mid==0x16E then paving=c.mid end
+   end end
+  end
   local service=g.custom and (g.custom.centerRoof or g.custom.martRoof)
   for yy=g.cy-2,g.cy+g.depth+1 do for xx=g.cx-2,g.cx+g.width+1 do
    local c=cells[xx..':'..yy]
@@ -137,7 +145,7 @@ function M.prepare(cells,gyms,families)
     local d=(xx-c.cx)^2+(yy-c.cy)^2
     if not distance or d<distance then best,distance=c,d end
    end
-   if best then g.grounds[xx..':'..yy]=best.mid end
+   if paving or best then g.grounds[xx..':'..yy]=paving or best.mid end
   end end
  end
  return out
@@ -201,7 +209,7 @@ function M.profile(g)
    doorLeft=24,doorRight=56,doorTop=44,doorBottom=79,doorHeight=32,projection=2,bevel=6}
  else
   return {w=w,h=64,back=3,front=62,wall=20,roofEnd=44,wallTop=44,wallBottom=63,
-   doorLeft=16,doorRight=48,doorTop=28,doorBottom=63,doorHeight=32,projection=2,bevel=6}
+   doorLeft=16,doorRight=48,doorTop=44,doorBottom=63,doorHeight=20,projection=2,bevel=6}
  end
 end
 -- Match an animated native door to its authored facade aperture. Coordinates
@@ -321,11 +329,18 @@ function M.material(g)
    if nearest then for xx=0,p.w-1 do data:setPixel(p.w+xx,yy,data:getPixel(p.w+xx,nearest))end end
   end
  end
+ if not g.custom and (g.kind=='center' or g.kind=='mart') then
+  for yy=(g.kind=='mart' and 28 or p.doorTop),p.roofEnd-1 do
+   for xx=p.doorLeft,p.doorRight-1 do
+    data:setPixel(p.w+xx,yy,data:getPixel(p.w+12,yy))
+   end
+  end
+ end
  -- Isolate the raised emblem from the roof surrounding it. Walk inward
  -- from each edge; stop at its neutral outline, preserving the coloured
  -- Pokeball enclosed by that outline.
  if g.kind=='mart' or g.kind=='center' then
-  for y=p.doorTop,(g.kind=='mart' and 35 or p.wallTop-1) do
+  for y=(g.kind=='mart' and not g.custom and 28 or p.doorTop),(g.kind=='mart' and 35 or p.wallTop-1) do
    for _,side in ipairs({1,-1})do
     local x=side==1 and p.doorLeft or p.doorRight-1
     while x>=p.doorLeft and x<p.doorRight do
@@ -404,13 +419,23 @@ function M.material(g)
    for yy=0,55 do data:setPixel(p.w+xx,yy,rr,gg,bb,aa)end
   end
  end
+ if g.custom and g.custom.geometry=='urban' then
+  -- A reviewed blank native wall tile is a reusable masonry material for
+  -- side/rear elevations; never stretch a window-bearing facade around them.
+  local mid=g.custom.name:find('white',1,true)and 0x215 or 0x239
+  if g.ts.midToSlot[mid]then for yy=0,15 do for xx=0,15 do
+   data:setPixel(p.w+xx,48+yy,sourcePixel(g,xx,yy,mid))
+  end end end
+ end
  if g.launchDisplay then
   -- Native red launch-gantry swatch, without bundling its art.
   local rr,gg,bb,aa=sourcePixel(g,4,4,0x379)
   data:setPixel(p.w*2,2,rr,gg,bb,aa)
  end
+ local Glow=V and V.require('Gen3BuildingGlow') or dofile('lib/Gen3BuildingGlow.lua')
+ local glow,read=Glow.build(g,p,data)
  local image=love.graphics.newImage(data);image:setFilter('nearest','nearest');data:release()
- return image
+ return image,glow,read
 end
 -- Reuse one real facade window for unseen elevations, excluding tall door
 -- glass and panes that reach the ground. Native source pixels stay private.
@@ -468,6 +493,7 @@ function M.append(g,emit)
  local gymPorch=g.custom and g.custom.profile=='hoenn_gym'
  local kantoGym=g.kind=='gym' and not g.custom
  local civicCorners=(g.kind=='center' or g.kind=='mart') and p.w>=64
+ local nativeService=civicCorners and not g.custom
  local bodyBack=math.max(g.bodyBack or p.back,g.custom and g.custom.bodyBack or p.back)
  if gymPorch and bodyBack>p.back then bodyBack=bodyBack+2 end -- keep rear trim inside blocked cells
  -- Source roof rows describe projection, not the roof's world footprint.
@@ -475,14 +501,15 @@ function M.append(g,emit)
  local roofBack=math.max(p.back,bodyBack-2)
  p.roofBack=roofBack
  local wingFront=kantoGym and 64 or p.front
- local sideFront=wingFront-(civicCorners and 6 or 0)
+ local sideFront=wingFront-(civicCorners and not nativeService and 6 or 0)+(nativeService and g.kind=='mart' and p.projection or 0)
+ local serviceInset=nativeService and 8 or 2
  local function facadeFace(v,tex,shade)
   if gymPorch then
    for _,q in ipairs(v)do local xx=q[1]-x
     if q[3]>z+p.front and xx>=40 and xx<=72 then q[3]=q[3]-math.max(0,48-xx,xx-64)*p.projection/8 end
    end
   end
-  if civicCorners then
+  if civicCorners and not nativeService then
    for _,q in ipairs(v)do
     local xx=q[1]-x
     q[3]=q[3]-math.max(0,8-xx,xx-(p.w-8))
@@ -491,6 +518,7 @@ function M.append(g,emit)
   face(v,tex,shade)
  end
  local function front(l,r,sy,ey,height,depth)
+  if nativeService then l=math.max(l,8);r=math.min(r,p.w-8)end
   local openings=g.custom and g.custom.openings
   -- Hoenn service buildings reuse this exact two-cell sliding-door drawing.
   -- Match its native cells, not a generic opening on every custom facade.
@@ -553,6 +581,13 @@ function M.append(g,emit)
    end
   end
  end
+ if not g.custom and g.kind=='mart' then
+  -- The MART word spans the old x=16 vestibule cut. Keep its entire
+  -- lower facade on one plane; only the native badge sits above it.
+  front(8,p.w-8,44,63,20,p.front+p.projection)
+  face({{x+16,32,z+p.front+p.projection},{x+48,32,z+p.front+p.projection},
+   {x+48,20,z+p.front+p.projection},{x+16,20,z+p.front+p.projection}},uv(16.03,28.03,47.97,43.97))
+ else
  if p.doorLeft>0 then front(0,p.doorLeft,p.wallTop,p.wallBottom,p.wall,wingFront)end
  if p.doorRight<p.w then front(p.doorRight,p.w,p.wallTop,p.wallBottom,p.wall,wingFront)end
  if gymPorch then
@@ -572,6 +607,7 @@ function M.append(g,emit)
  else
   front(p.doorLeft,p.doorRight,p.doorTop,p.doorBottom,p.doorHeight,p.front+p.projection)
  end
+ end
  -- Native timber stiles have their own shallow, closed relief. Keep the
  -- original face drawing and stop inside the last blocked tile, rather than
  -- growing generic columns into the path or covering the doorway.
@@ -586,10 +622,10 @@ function M.append(g,emit)
   face({{x+a,bottom,front},{x+b,bottom,front},{x+b,bottom,back},{x+a,bottom,back}},uv(a,d-.2,b,d),.7)
  end
  -- Closed recessed body and entrance cheeks, with no upright floor pixels.
- for _,sx in ipairs({2,p.w-2})do
+ for _,sx in ipairs({serviceInset,p.w-serviceInset})do
   face({{x+sx,p.wall,z+bodyBack},{x+sx,p.wall,z+sideFront},{x+sx,0,z+sideFront},{x+sx,0,z+bodyBack}},wall,.84)
  end
- face({{x+p.w-2,p.wall,z+bodyBack},{x+2,p.wall,z+bodyBack},{x+2,0,z+bodyBack},{x+p.w-2,0,z+bodyBack}},wall,.8)
+ face({{x+p.w-serviceInset,p.wall,z+bodyBack},{x+serviceInset,p.wall,z+bodyBack},{x+serviceInset,0,z+bodyBack},{x+p.w-serviceInset,0,z+bodyBack}},wall,.8)
 
  if gymPorch then
   -- Closed shallow canopy: sample an unprojected patch of the native gold
@@ -717,10 +753,10 @@ function M.append(g,emit)
  end
  local window=M.window(g)
  for yy=5,((boarded or g.custom and g.custom.verticalSiding) and 0 or p.wall-3),6 do
-  for _,sx in ipairs({1.94,p.w-1.94})do
+  for _,sx in ipairs({serviceInset-.06,p.w-serviceInset+.06})do
    face({{x+sx,yy+.22,z+bodyBack},{x+sx,yy+.22,z+sideFront},{x+sx,yy,z+sideFront},{x+sx,yy,z+bodyBack}},wall,.78)
   end
-  face({{x+p.w-2,yy+.22,z+bodyBack-.02},{x+2,yy+.22,z+bodyBack-.02},{x+2,yy,z+bodyBack-.02},{x+p.w-2,yy,z+bodyBack-.02}},wall,.74)
+  face({{x+p.w-serviceInset,yy+.22,z+bodyBack-.02},{x+serviceInset,yy+.22,z+bodyBack-.02},{x+serviceInset,yy,z+bodyBack-.02},{x+p.w-serviceInset,yy,z+bodyBack-.02}},wall,.74)
  end
  if window then
   local glass=uv(window[1]+.05,window[2]+.05,window[3]-.05,window[4]-.05)
@@ -734,7 +770,7 @@ function M.append(g,emit)
   for _,fraction in ipairs({.30,.70})do
    local center=z+bodyBack+(p.front-bodyBack)*fraction
    for _,side in ipairs({-1,1})do
-    local sx=x+(side<0 and 2 or p.w-2)
+    local sx=x+(side<0 and serviceInset or p.w-serviceInset)
     Architecture.opening(function(v,t,shade)
      local out={};for i,q in ipairs(v)do out[i]={sx+side*q[3],q[2],center+q[1]}end;face(out,t,shade)
     end,-ww/2,low,ww/2,top,boarded and .5 or .05,frame,glass,false,gymPorch and 'native' or nil)
@@ -747,7 +783,7 @@ function M.append(g,emit)
  end
  end
  -- Thin foundation/eave courses and side windows continue the facade.
- for _,sx in ipairs({boarded and 1.72 or 1.95,p.w-(boarded and 1.72 or 1.95)})do
+ for _,sx in ipairs({boarded and 1.72 or serviceInset-.05,p.w-(boarded and 1.72 or serviceInset-.05)})do
   for _,y in ipairs({1,p.wall-1})do
    face({{x+sx,y+1,z+bodyBack},{x+sx,y+1,z+sideFront},{x+sx,y,z+sideFront},{x+sx,y,z+bodyBack}},trim,.88)
   end
