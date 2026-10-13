@@ -451,3 +451,7 @@ than ship a no-op setting. Gen2 Safari remains missing/source-limited; no native
 map, tile, warp or gameplay content was invented to make the row look complete.
 The failed isolated investigation is recorded at
 `.scratch/parity-073-20261011/results/crystal-gen2-legendary-safari-host`.
+
+Final matching-engine consolidated rerun after those fixes: **264 passed,
+0 failed, 58 skipped**. Log:
+`.scratch/parity-073-20261011/parity085-suite.log`.
