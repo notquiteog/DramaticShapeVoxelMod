@@ -70,3 +70,16 @@ Billboards.mesh({
 eq(#made, 3, "asset invalidation rebuilds custom-sized cards")
 
 print(("%d checks passed (oversized sprite billboards)"):format(checks))
+local now,ready,reads=0,false,0
+love={timer={getTime=function()return now end}}
+package.loaded['src.render.Assets'].imageData=function()
+ reads=reads+1;if not ready then error('streaming')end
+ return {getDimensions=function()return 16,16 end,getPixel=function(_,x,y)return 0,0,0,y==12 and 1 or 0 end,release=function()end}
+end
+local stream={image='stream.png',frameWidth=16,frameHeight=16,trueColor=true}
+local before=Billboards.mesh(stream,0);eq(before.verts[1][2],0,'unavailable art retains fallback')
+Billboards.mesh(stream,0);eq(reads,1,'failed read debounced')
+ready=true;now=2
+local after=Billboards.mesh(stream,0);eq(after.verts[1][2],-3,'loaded visible feet replace fallback mesh anchor')
+assert(after~=before,'measured anchor must participate in mesh cache key')
+print('PASS streamed GB anchor retries and measured mesh cache')

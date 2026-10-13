@@ -35,6 +35,7 @@ local SpriteBillboards = {}
 local meshes = {}
 local tableAnchors = {}
 local footAnchors = {}
+local function anchorClock()return love and love.timer and love.timer.getTime()or os.clock()end
 
 -- Oak's original item card has two transparent rows below its visible ball.
 -- Measure the source before offering a per-pose 3D anchor; replacement art,
@@ -83,8 +84,8 @@ function SpriteBillboards.frameAnchor(def, frame)
   local fh,fw=def.frameHeight or 16,def.frameWidth or 16
   local key=def.image..":"..fw..":"..fh..":"..tostring(def.trueColor)
   local frames=footAnchors[key]
-  if not frames then
-    frames={};footAnchors[key]=frames
+  if not frames or frames.retryAt and anchorClock()>=frames.retryAt then
+    frames={retryAt=anchorClock()+1};footAnchors[key]=frames
     local ok,data=pcall(Assets.imageData,def.image)
     if ok and data and data.getDimensions and data.getPixel then
       local w,h=data:getDimensions()
@@ -100,6 +101,7 @@ function SpriteBillboards.frameAnchor(def, frame)
         frames[f]=anchor or fh
       end
       if data.release then data:release() end
+      frames.retryAt=nil;footAnchors[key]=frames
     end
   end
   return frames[frame] or frames[0] or fh
@@ -162,15 +164,16 @@ end
 -- ground whether or not anything hides it; and the sun must see the same
 -- outline the camera does, or a shadow stops matching what casts it.
 function SpriteBillboards.mesh(def, frame, visualAnchorY)
+  local measuredAnchor=def.anchorY or visualAnchorY or SpriteBillboards.frameAnchor(def,frame)
   -- Geometry-affecting sprite metadata is part of the key too: two defs can
   -- point at the same sheet with different sizes or anchors and must not
   -- alias the first mesh built for that image/frame pair.
   local key = def.image .. "#" .. frame .. "#"
               .. (def.frameWidth or 16) .. "x" .. (def.frameHeight or 16)
               .. "@" .. (def.anchorX or "default")
-              .. "," .. (def.anchorY or visualAnchorY or "default")
+              .. "," .. measuredAnchor
   if meshes[key] == nil then
-    local ok, m = pcall(buildCard, def, frame, visualAnchorY)
+    local ok, m = pcall(buildCard, def, frame, measuredAnchor)
     meshes[key] = (ok and m) or false
   end
   return meshes[key] or nil

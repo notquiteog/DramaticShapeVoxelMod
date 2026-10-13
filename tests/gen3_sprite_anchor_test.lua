@@ -36,3 +36,23 @@ for _,lift in ipairs({0,4,9.12,36,96})do
  assert(math.abs(height-lift)<.00001,'authored jump/ride/support height changed')
 end
 print('PASS animation-union anchors, Canvas snapshot/cache/release, authored baselines and explicit height offsets')
+assert(A.playerLift({spriteYOffset=-7,jumpSpriteY=function()return -7 end})==7,'native jump lift counted twice')
+assert(A.playerLift({spriteYOffset=0,jumpSpriteY=function()return -7 end})==0,'native resting offset must win')
+assert(A.playerLift({jumpSpriteY=function()return -7 end})==7,'legacy jump-only provider lost its arc')
+assert(A.playerLift({spriteYOffset=2})==-2,'surf bob may descend below baseline')
+-- GPU-only LOVE Images have no newImageData method. Snapshot once into a
+-- temporary Canvas; preserve graphics state and release both owned objects.
+local copies,pushes,pops,freed,now=0,0,0,0,0
+love={timer={getTime=function()return now end},graphics={}}
+local gfx=love.graphics
+for _,name in ipairs{'setCanvas','origin','setShader','setScissor','setColor','setBlendMode','clear','draw'}do gfx[name]=function()end end
+gfx.push=function()pushes=pushes+1 end;gfx.pop=function()pops=pops+1 end
+gfx.newCanvas=function()copies=copies+1;return {newImageData=function()return {getPixel=function(_,x,y)return 0,0,0,y%16==10 and 1 or 0 end,release=function()freed=freed+1 end}end,release=function()freed=freed+1 end}end
+local gpu={image={getDimensions=function()return 16,32 end},quads={[0]=quad(0),[1]=quad(16)}}
+assert(A.framePadding(gpu,1)==5,'GPU-only provider missing inferred frame padding')
+assert(A.framePadding(gpu,1)==5 and copies==1 and freed==2 and pushes==pops,'readback must be cached and graphics state restored')
+local attempts=0;gfx.newCanvas=function()attempts=attempts+1;error('stream not ready')end
+local pending={image={getDimensions=function()return 16,16 end},quads={[0]=quad(0)}}
+assert(A.framePadding(pending,0)==0 and A.framePadding(pending,0)==0 and attempts==1,'failed GPU readback needs debounce')
+now=2;A.framePadding(pending,0);assert(attempts==2,'streaming failure was cached forever')
+print('PASS GPU-only images, inferred frames, cached readback, retry debounce and single native jump arc')

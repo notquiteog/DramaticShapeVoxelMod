@@ -821,7 +821,7 @@ local function actors(game,cam,draw)
  if cam.level~=6 and Player.isVisible() then
   actor(Sprites.playerGraphicsId(game),(Player.px or 0)+(Player.spriteXOffset or 0),Player.py or 0,
    Player.facing,Player.walkPhase(),Player.drawFlip(),
-   {elevation=Player.currentElevation,fieldMove=(Player.fieldMoveAnim or 0)>0,lift=-(Player.spriteYOffset or 0)-(Player.jumpSpriteY and Player.jumpSpriteY()or 0)},cam,draw)
+   {elevation=Player.currentElevation,fieldMove=(Player.fieldMoveAnim or 0)>0,lift=SpriteAnchor.playerLift(Player)},cam,draw)
  end
 end
 -- Project the engine-owned door/healing frames into the existing 3D room.
@@ -931,7 +931,7 @@ function M.draw(game,vw,vh,cam)
   local ey=48+ground
   if cam.level==6 then
    ey=ground+SpriteAnchor.eyeHeight(Sprites.getDraw(Sprites.playerGraphicsId(game)))
-     -(Player.spriteYOffset or 0)-(Player.jumpSpriteY and Player.jumpSpriteY()or 0)
+     +SpriteAnchor.playerLift(Player)
   end
   local exports=game and game.mods and game.mods.exports
   local ride=exports and exports.DRAMATIC_SKY_RIDE
@@ -943,7 +943,7 @@ function M.draw(game,vw,vh,cam)
   R.camera={eye={cx-dx*dist,ey,cz-dz*dist},focus={cx+dx*focusDistance,ey-focusDistance*math.tan(cam.pitch),cz+dz*focusDistance},fov=math.rad(62),curve=cam.level==6 and 0 or nil}
   if cam.level==6 and not cam.battle and not cam.replay then
    local ox,oy,oz=V.require('KfpMotion').sample({px=cx,py=cz,
-    lift=math.max(0,-(Player.spriteYOffset or 0)-(Player.jumpSpriteY and Player.jumpSpriteY()or 0))},Map.current,math.pi-cam.yaw,love.timer.getTime())
+    lift=math.max(0,SpriteAnchor.playerLift(Player))},Map.current,math.pi-cam.yaw,love.timer.getTime())
    for _,p in ipairs({R.camera.eye,R.camera.focus})do p[1]=p[1]+ox;p[2]=p[2]+oy;p[3]=p[3]+oz end
   else V.require('KfpMotion').reset()end
   if cam.battle then

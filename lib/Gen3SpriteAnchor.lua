@@ -2,8 +2,10 @@
 -- transparent animation padding is not a world-space height.
 local V=...
 local Eye=V and V.require('CameraEye') or dofile((os.getenv('DS_MOD_PATH')or '.')..'/lib/CameraEye.lua')
+local Pixels=V and V.require('SpritePixels') or dofile((os.getenv('DS_MOD_PATH')or '.')..'/lib/SpritePixels.lua')
 local M={}
 local cache=setmetatable({},{__mode='k'})
+local function clock()return love and love.timer and love.timer.getTime() or os.clock()end
 local function padding(data,q)
  local x,y,w,h=q:getViewport()
  for row=y+h-1,y,-1 do
@@ -18,17 +20,16 @@ end
 local function scan(spr)
  if not spr then return {padding=0,frames={}} end
  local old=cache[spr]
- if old and old.image==spr.image and old.data==spr.imageData and old.quads==spr.quads then return old end
+ if old and old.image==spr.image and old.data==spr.imageData and old.quads==spr.quads and (not old.retryAt or clock()<old.retryAt) then return old end
  local data,owned=spr.imageData,false
  -- Native images already expose CPU pixels. Companion sheets can instead
  -- expose a Canvas; read it once through its public API, without asset paths.
- if not data and spr.image and spr.image.newImageData then
-  local ok,result=pcall(spr.image.newImageData,spr.image)
-  if ok then data,owned=result,true end
- end
+ if not data then data=Pixels.snapshot(spr.image);owned=data~=nil end
  local bottom,frames=nil,{}
  if data and spr.quads then
-  for frame=0,math.max(0,math.min(512,tonumber(spr.frameCount)or 1)-1) do
+  local count=tonumber(spr.frameCount)
+  if not count then count=1;for frame in pairs(spr.quads)do if type(frame)=='number' then count=math.max(count,frame+1)end end end
+  for frame=0,math.max(0,math.min(512,count)-1) do
    local q=spr.quads[frame]
    if q then
     local n=padding(data,q)
@@ -39,6 +40,8 @@ local function scan(spr)
  end
  if owned and data.release then data:release() end
  bottom=bottom or 0
+ -- A streamed provider may gain readable pixels later; never cache failure.
+ if not data then cache[spr]={image=spr.image,data=spr.imageData,quads=spr.quads,padding=0,frames={},retryAt=clock()+1};return cache[spr] end
  cache[spr]={image=spr.image,data=spr.imageData,quads=spr.quads,padding=bottom,frames=frames}
  return cache[spr]
 end
@@ -55,6 +58,13 @@ function M.framePadding(spr,frame)
  n=valid(spr and spr.groundPadding);if n then return n end
  local entry=scan(spr)
  return entry.frames[frame] or entry.padding
+end
+-- Official native spriteYOffset already includes jumpSpriteY while jumping.
+-- The fallback supports providers exposing only the jump function.
+function M.playerLift(player)
+ local offset=tonumber(player and player.spriteYOffset)
+ if offset==nil and player and type(player.jumpSpriteY)=='function'then offset=player.jumpSpriteY()end
+ return -(offset or 0)
 end
 function M.eyeHeight(spr)
  local q=spr and spr.quads and spr.quads[0]
