@@ -108,6 +108,9 @@ function M.commandHub(x,y)
  G.setColor(.07,.08,.07,1);G.setLineWidth(.6)
  G.polygon('line',{x,y-8,x+8,y,x,y+8,x-8,y})
 end
+-- Optional semantic card providers may own both layout and geometry.
+function M.combatCardSize()return nil end
+function M.combatCard()return false end
 -- Resolve at draw time: companions may load after Battle Art or be toggled
 -- off. The fallback is independent; no theme/provider is required to load.
 return setmetatable({}, {__index=function(_,key)

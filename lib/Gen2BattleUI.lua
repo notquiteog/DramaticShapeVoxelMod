@@ -98,7 +98,7 @@ function M.install()
     local head=shot.heads and shot.heads[side]
     local visible=side=='player' and state.showPlayerHud or side=='enemy' and state.showEnemyHud
     if mon and head and visible and not state:hudCleared(side)then
-     items[#items+1]={id=i,x=(rect.vux+head[1]*rect.vuw)/k,y=(rect.vuy+head[2]*rect.vuh)/k,w=76,h=side=='player' and 29 or 26}
+     items[#items+1]={id=i,x=(rect.vux+head[1]*rect.vuw)/k,y=(rect.vuy+head[2]*rect.vuh)/k,w=select(1,Theme.combatCardSize(side=='player'))or 76,h=select(2,Theme.combatCardSize(side=='player'))or(side=='player' and 29 or 26)}
      mons[i]={mon=mon,side=side}
     end
    end
@@ -108,6 +108,10 @@ function M.install()
   for _,item in ipairs(items)do
    local entry=mons[item.id];local mon,side=entry.mon,entry.side
    local p=layout[item.id];local x,y=p.x,p.y
+   local maximum=math.max(1,mon.maxHp or (mon.stats and mon.stats.hp)or 1)
+   local hp=math.max(0,math.min(maximum,state:hudHp(mon,side)))
+   local exp=side=='player'and(state.shownExp or 0)/require('src.ui.gen2.BattleHud').EXP_LENGTH_PX or nil
+   if not Theme.combatCard(x,y,item.w,item.h,item.x,false,{ally=side=='player',name=state:name(mon),level=mon.level or 1,gender=mon.gender,caught=side=='enemy'and state.battle.wild and state:dexCaught(mon),status=state:statusTag(mon,side),hp=hp,maximum=maximum,exp=exp})then
    Theme.statusCard(x,y,76,item.h,item.x,false)
    Theme.text(state:name(mon),x+3,y+2,49,ink)
    Theme.text('Lv.'..tostring(mon.level or 1),x+53,y+2,21,ink)
@@ -123,6 +127,7 @@ function M.install()
     local length=require('src.ui.gen2.BattleHud').EXP_LENGTH_PX
     g.setColor(.20,.27,.29,1);g.rectangle('fill',x+3,y+27,70,1)
     g.setColor(.24,.57,.81,1);g.rectangle('fill',x+3,y+27,70*math.max(0,math.min(1,(state.shownExp or 0)/length)),1)
+   end
    end
   end
   if UI.uiHidden('text') or not state:bottomUIVisible()then return end

@@ -148,13 +148,16 @@ function M.install(stage)
   local function label(value,x,y,width)return Theme.text(value,x,y,width,Options.ink())end
   local items={}
   for id=0,3 do local c=M.cards[id];if c then
-   items[#items+1]={id=id,x=c.anchor[1]/k,y=c.anchor[2]/k,w=76,h=id%2==0 and 29 or 26}
+   items[#items+1]={id=id,x=c.anchor[1]/k,y=c.anchor[2]/k,w=select(1,Theme.combatCardSize(id%2==0))or 76,h=select(2,Theme.combatCardSize(id%2==0))or(id%2==0 and 29 or 26)}
   end end
   local layout=Theme.layoutStatusCards(items,w,h)
   for id=0,3 do local c=M.cards[id];if c then
    local ally=id%2==0
    local cardH=ally and 29 or 26
    local x,y=layout[id].x,layout[id].y
+   local cw,ch=Theme.combatCardSize(ally)
+   local selected=Ui._mode=='target' and Ui.targetCursor()==id
+   if not Theme.combatCard(x,y,cw or 76,ch or cardH,c.anchor[1]/k,selected,{ally=ally,name=c.name,level=c.level,gender=c.gender,caught=c.caught,status=c.status,hp=c.hp,maximum=c.maximum,exp=c.exp})then
    Options.card(x,y,76,cardH,c.anchor[1]/k,Ui._mode=='target' and Ui.targetCursor()==id)
    label(c.name,x+3,y+2,49);label('Lv.'..c.level,x+53,y+2,21)
    Theme.gender(c.gender,x+4,y+17);if c.caught then Theme.caught(x+15,y+18)end
@@ -166,6 +169,7 @@ function M.install(stage)
     label(c.hp..' / '..c.maximum,x+24,y+16,48)
     G.setColor(.20,.27,.29,1);G.rectangle('fill',x+3,y+27,70,1)
     G.setColor(.24,.57,.81,1);G.rectangle('fill',x+3,y+27,70*math.max(0,math.min(1,c.exp or 0)),1)
+   end
    end
   end end
   if M.menu and not UI.uiHidden('text') then

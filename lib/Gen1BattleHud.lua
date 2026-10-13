@@ -32,7 +32,7 @@ local function paint(b)
       if visible then
         local id=i-1
         items[#items+1]={id=id,x=(r.vux+p[1]*r.vuw)/scale,
-          y=(r.vuy+p[2]*r.vuh)/scale,w=76,h=ally and 27 or 22}
+          y=(r.vuy+p[2]*r.vuh)/scale,w=select(1,Theme.combatCardSize(ally))or 76,h=select(2,Theme.combatCardSize(ally))or(ally and 27 or 22)}
         mons[id]=mon;M.cards[slot]=mon
       end
     end
@@ -43,6 +43,8 @@ local function paint(b)
     local card=layout[item.id];local x,y=card.x,card.y
     local maximum=math.max(1,mon.mon.stats and mon.mon.stats.hp or mon.mon.maxHp or 1)
     local hp=math.max(0,math.min(maximum,math.floor(mon.shownHP or mon.mon.hp or 0)))
+    local status=mon.shownStatus and b:statusLabel({status=mon.shownStatus}) or nil
+    if not Theme.combatCard(x,y,item.w,item.h,item.x,b.__dbAimBattler==mon or b.__dbSwitchAim==mon,{ally=ally,name=mon.name or mon.mon.nickname or mon.mon.species,level=mon.mon.level or 1,status=status,hp=hp,maximum=maximum})then
     Theme.statusCard(x,y,76,item.h,item.x,b.__dbAimBattler==mon or b.__dbSwitchAim==mon)
     Theme.text(mon.name or mon.mon.nickname or mon.mon.species,x+3,y+2,49)
     Theme.text('Lv.'..tostring(mon.mon.level or 1),x+53,y+2,21)
@@ -51,6 +53,7 @@ local function paint(b)
     G.setColor(.20,.27,.29,1);G.rectangle('fill',x+24,y+12,48,3,1,1)
     G.setColor(Theme.hpColor(hp/maximum));G.rectangle('fill',x+24,y+12,48*hp/maximum,3,1,1)
     if ally then Theme.text(hp..' / '..maximum,x+24,y+16,48)end
+    end
   end
   if not commands(b)then return end
   local x,y=width-168,height-62
