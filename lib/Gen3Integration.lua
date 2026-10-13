@@ -52,6 +52,9 @@ function M.install()
  V.require('KantoLifeAudio').install(mod)
  V.require('NativeCaveAudio').install(3,function()return M.level~=0 end)
  local draw,present,update=FieldView.draw,Display.present,Player.update
+ local nativeWalk=V.require('NativeFreeMove')
+ local walkPhase=Player.walkPhase
+ Player.walkPhase=function()return nativeWalk.phase(Player)or walkPhase()end
  local function ready(game)return recovery:ready(Scene.context and Scene.context()or game.session)end
  mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original battle background.'),Trees.art:schema('Solid voxel trees carved from the original game art (default), original flat cards, or illustrated cards.'),Trees.setting:schema('For card trees: flat trunks follow the crown, or use modeled trunks. Original model trees are fully solid.'),mode:schema('Gen 3 2.5D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
  local fullPreset=V.require('Gen3FullPreset').new(M.level)
@@ -70,7 +73,7 @@ function M.install()
  for _,setting in ipairs(V.require('Gen3BattleOptions').settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(V.require('Gen3BattleBackdrop').settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(sharedSettings)do
-  schema[#schema+1]=setting:schema(setting.key=='spatialUpscale' and V.require('SpatialUpscale').description or 'Shared renderer option; applies immediately to the native Gen 3 presentation.')
+  schema[#schema+1]=setting:schema(setting.key=='movementMode' and V.require('MovementMode').description or setting.key=='spatialUpscale' and V.require('SpatialUpscale').description or 'Shared renderer option; applies immediately to the native Gen 3 presentation.')
  end
  for _,row in ipairs(V.require('NativeCrystalArt').schemas())do schema[#schema+1]=row end
  for _,setting in ipairs(nativeArt.settings())do schema[#schema+1]=setting:schema('Shared Battle Art sprite settings. ANIMATED uses installed atlases or bundled BW backs (dex 1–251); missing art falls back to static full-body images. ROM/MODDED preserves native/provider art.')end
@@ -125,6 +128,12 @@ function M.install()
   return result
  end
  Player.update=function(game,input)
+  local enabled=M.active and free() and field(game) and ready(game) and not Scene.nativeRequired(game)
+  if enabled and input and input.isDown and V.require('MovementMode').free()then
+   local right,forward=nativeWalk.intent(input)
+   local x,z=M.moveVector(forward,right)
+   if nativeWalk.gen3(game,input,Player,update,x,z)then return end
+  else nativeWalk.drop(Player,true)end
   if M.active and free() and field(game) and ready(game) and not Scene.nativeRequired(game) and input and input.isDown then
    local proxy=setmetatable({}, {__index=input})
    -- Game3 prefers freshly pressed directions over held directions. Rotate
@@ -240,7 +249,8 @@ function M.install()
   end
  end)
  mod.hooks:wrap('core.quit_to_launcher',function(next,...)
-  FieldView.draw,Display.present,Player.update=draw,present,update
+  nativeWalk.drop(Player,true)
+  FieldView.draw,Display.present,Player.update,Player.walkPhase=draw,present,update,walkPhase
   uninstallInterface();uninstallCapture();uninstallBattle();uninstallRecap();Scene.release();return next(...)
  end)
  mod.exports.version=mod.version;mod.exports.lib=V
