@@ -1,6 +1,6 @@
 -- One retained scene and one cooperative candidate. Never expose partially
 -- uploaded geometry, keep abandoned GPU resources out of the live scene, and
--- rebuild immediately when map/provider/gameplay dependencies change.
+-- rebuild immediately when map/gameplay dependencies change.
 local V=...
 local Budget=V.require('BuildBudget')
 local clock=(love and love.timer and love.timer.getTime) or os.clock
@@ -22,7 +22,13 @@ function M.new(release)
   if key and self.active and key==self.key and context==self.context then
    self:cancel();self.stats.hits=self.stats.hits+1;return self.active
   end
-  if self.pending and (self.pending.key~=key or self.pending.context~=context)then self:cancel()end
+  -- Running can cross another window boundary before a candidate finishes.
+  -- Restarting on each boundary starves the renderer forever. Complete the
+  -- in-flight snapshot of this same world, then pursue the newest window.
+  -- Returning to the active window above still cancels needless work; genuine
+  -- map/collision context changes must never publish stale geometry. Provider
+  -- readiness stays in the scene key and can be updated cooperatively.
+  if self.pending and (self.pending.context~=context or not key)then self:cancel()end
   local immediate=not self.active or not context or context~=self.context or not key
   if not self.pending then
    local p={key=key,context=context,value={}}
@@ -48,7 +54,8 @@ function M.new(release)
    end
    -- A cold build may load a previously absent tileset. Its final key owns
    -- that new provider identity; the next request rechecks the context.
-   self.key=result.terrainKey or key;self.context=context
+   self.key=result.terrainKey or p.key
+   self.context=result.terrainContext or p.context
   end
   return self.active
  end

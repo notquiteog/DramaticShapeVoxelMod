@@ -23,6 +23,17 @@ local b
 for i=1,20 do b=s:update('b','map',build('b'),.002);if not s.pending then break end end
 assert(b~=a and b.ready and releases[a],'complete candidate not atomically swapped')
 assert(s.stats.maxStreamSlice<=.0031,'cooperative slice overran its checkpoint')
+-- A running player can change requested windows every slice. Finish useful
+-- work instead of continually restarting it, and publish its OWN key.
+local running=s:update('run1','map',build('run1'),.002)
+for i=2,20 do
+ running=s:update('run'..i,'map',build('run'..i),.002)
+ if running~=b then break end
+end
+assert(running~=b and running.name=='run1' and s.key=='run1','moving window starved or was mislabeled')
+local completed=s.stats.completed
+assert(s:update('run1','map',build('unused'),.002)==running and s.stats.completed==completed)
+b=running
 local c=s:update('c','other map',build('c'),.002)
 assert(c.ready and releases[b] and not s.pending,'warp used old map geometry')
 s:update('d','other map',build('bad',true),.002)

@@ -142,11 +142,11 @@ local function request(game,cam)
  local regions=replay and {{def=def,x=0,y=0,w=def.midLayout.width,h=def.midLayout.height}} or Boundary.regions(def,Map.world)
  local x0,z0,x1,z1=bx-radius,bz-radius,bx+radius+6,bz+radius+6
  if not budget then x0,z0,x1,z1=BoundarySelect.bounds(regions,16)end
- local context=SceneCache.key(regions,0,0,0,0,Tiles._pairs,cam)
- local key=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam)
+ local key,context=SceneCache.keys(regions,x0,z0,x1,z1,Tiles._pairs,cam)
  return {game=game,cam=cam,replay=replay,def=def,regions=regions,key=key,
   -- Replays and battle culling need immediate, camera-exact geometry. A
-  -- warp, Cut/door edit or provider replacement also bypasses retained art.
+  -- warp or Cut/door edit also bypasses retained art. Provider readiness can
+  -- stream while the last complete snapshot remains visible.
   context=not (replay or cam.battle) and context or nil,
   x0=x0,z0=z0,x1=x1,z1=z1,px=px,pz=pz,radius=radius,budget=budget}
 end
@@ -617,7 +617,10 @@ local function build(req,cache,previous)
  cache.treeInstances={}
  V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li,cache.treeInstances)
  cache.wood=R.newMesh(wood,wi);Budget.check();cache.leaves=R.newMesh(leaf,li)
- cache.terrainKey=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam)
+ -- Tiles loaded during this build now belong to the published context. Do
+ -- not immediately rebuild the same scene on the next frame just because
+ -- its formerly missing neighbor atlas is now ready.
+ cache.terrainKey,cache.terrainContext=SceneCache.keys(regions,x0,z0,x1,z1,Tiles._pairs,cam)
  return cache
 end
 local function prepare(game,vw,vh,cam)
