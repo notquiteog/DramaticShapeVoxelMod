@@ -1,3 +1,7 @@
+## 1.33.1 — 2026-10-13
+
+Camera retention for puddles, shallow-water effects, scripted truck motion and native flash transitions; native-menu input ownership fixes. Adds shared Legendary tree/fence/casino consumers and source-specific Saffron, Oceanic Museum and Slateport shipyard models. Representative captures used Gen1Recomp 0.3.85. Consolidated checks: 260 passed, 4 failed, 58 skipped; remaining failures concern uninstall/battle/ceiling fixtures and KFP option categorization. Full coverage and feature parity remain incomplete.
+
 ## 1.33.0 — 2026-10-11
 
 Native battle-card gender, caught markers and EXP; grounded capture presentation; continuous battle obstruction clearing; source-aware KFP atmosphere/interior adapters; native building, tunnel and Prize Room options; compressed native model caching. Representative rendering and focused checks used official Gen1Recomp 0.3.74–0.3.76. Full-world coverage and complete option parity remain unfinished; see the included coverage ledgers.
