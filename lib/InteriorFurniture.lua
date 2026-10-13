@@ -529,6 +529,14 @@ function M.draw(id,A)
    B(.75,0,z,1.15,7.8,z+.5,flute)
    B(14.85,0,z,15.25,7.8,z+.5,flute)
   end
+ elseif id=='gb_roof_lightwell' then
+  -- Native rooftop opening: see the store's yellow floor through a low
+  -- concrete/metal curb. Its floor artwork never becomes a vertical wall.
+  local rim=T(1,1)
+  B(.5,0,.5,63.5,3,2.5,rim);B(.5,0,29.5,63.5,3,31.5,rim)
+  B(.5,0,2.5,2.5,3,29.5,rim);B(61.5,0,2.5,63.5,3,29.5,rim)
+  B(2.5,0,2.5,61.5,.1,29.5,T(20,26))
+  top({8,8,48,24},2.5,2.5,61.5,29.5,.12)
  elseif id=='gb_department_directory' then
   -- Native background event identifies this as the floor directory, not a
   -- cupboard. The original lettering belongs only on its recessed front.
@@ -1952,12 +1960,45 @@ function M.draw(id,A)
   B(1,8,15.92,15,23,16.2,frame);front({2,2,12,12},2,9,14,22,16.22)
  elseif id=='gb_short_books' then
   shelves(1,6,14,9,13,{{2,10,{1,4,14,8}}},T(1,1),T(2,8))
+ elseif id=='gb_link_partition' then
+  local blue,cap=T(4,32),T(5,5)
+  B(.5,0,.5,15.5,1.5,63.5,blue)
+  B(1,1.5,1,15,18,63,blue)
+  B(1,18,1,15,19,62,cap)
+  B(1,18,62,15,19,63,blue)
+  -- Only the staffed partition has the native front button cluster.
+  if A.recipe and A.recipe.id=='crystal_link_partition_controls' then
+   front({2,49,12,6},2,10,14,16,63.02)
+  end
+ elseif id=='gb_link_mobile' then
+  local blue,cap=T(8,20),T(1,3)
+  -- Three blocked rear cells, two side counters and an unobstructed center
+  -- warp approach. No beam or cabinet floor occupies that doorway cell.
+  B(.5,0,.5,47.5,6,31.5,blue)
+  B(.5,6,.5,8,32,31,blue);B(40,6,.5,47.5,32,31,blue)
+  B(8,6,.5,40,32,4,blue)
+  B(8,31,4,40,32,24,blue)
+  B(10,18,5,38,30,13,cap)
+  front({10,0,28,17},10,18,38,30,13.02)
+  front({2,0,6,20},1,8,7,31,31.02)
+  front({40,0,6,20},41,8,47,31,31.02)
+  B(16,24,24,32,32,31.5,blue)
+  front({16,24,16,8},16,24,32,32,31.52)
+  for _,x in ipairs({.5,32})do
+   B(x,0,31.5,x+15.5,7,47.5,blue)
+   B(x,7,31.5,x+15.5,8,47.5,cap)
+  end
+  front({16,32,16,16},16,0,32,24,32)
  elseif id=='gb_link_controls' then
-  local case,dark=T(1,1),T(4,8)
-  B(1,0,16,31,7,25,case)
-  keyboard({1,4,14,9},1,18,14,6,7.1,case)
-  crt(17,16,14,9,21,{17,1,14,11},case,dark)
-  front({1,12,14,4},1,3,15,7,25.02)
+  -- Link-room art pairs a wall control panel with a red doorway. The
+  -- doorway is a native warp, never a desk/CRT occupying the approach.
+  local case=T(1,1)
+  B(0,0,0,16,24,13,case)
+  B(1,12,13,15,22,15.5,case)
+  front({1,1,14,14},1,12,15,22,15.52)
+  front({16,0,16,16},16,0,32,24,0)
+ elseif id=='gb_link_door' then
+  front({0,0,16,16},0,0,16,24,0)
  elseif id=='gb_bed' then
   local case,linen=T(1,1),T(5,12)
   B(1,0,2,3,7,30,case);B(13,0,2,15,7,30,case)
@@ -2119,6 +2160,46 @@ function M.draw(id,A)
   shelves(1,21,14,10,24,{{3,11,{1,17,14,6}},{13,22,{1,9,14,6}}},T(1,1),T(3,12))
  elseif id=='gb_house_books' then
   shelves(1,13,14,10,21,{{2,9,{1,9,14,6}},{11,19,{1,1,14,6}}},T(1,1),T(3,8))
+ elseif id=='gb_center_pc' then
+  -- Native cabinet: a single recessed screen, sloping keyboard and lower
+  -- equipment cupboard. Only the source face belongs on the front.
+  local case,dark=T(3,2),T(6,6)
+  B(1,0,9,15,1.5,23,case)
+  B(1,1.5,9,15,8,22,case)
+  front({1,15,14,8},1,1.5,15,8,22.02)
+  B(2,8,9,14,21,17,case)
+  B(1,9,16,2,20,18,case);B(14,9,16,15,20,18,case)
+  B(2,9,17,14,10,18,case);B(2,20,16,14,21,18,case)
+  front({2,4,12,7},2,10,14,20,17.98)
+  keyboard({2,12,11,3},1,18,14,4,8.1,case)
+  -- Close the thin wedge below the angled native keyboard surface.
+  A.face({{1,8.1,18},{1,8.7,18},{1,8.15,22},{1,8.1,22}},case,.78)
+  A.face({{15,8.1,22},{15,8.15,22},{15,8.7,18},{15,8.1,18}},case,.84)
+  A.face({{15,8.1,18},{15,8.7,18},{1,8.7,18},{1,8.1,18}},case,.72)
+  A.face({{1,8.1,22},{1,8.15,22},{15,8.15,22},{15,8.1,22}},case,.86)
+  for y=11,17,2 do B(14, y,11,14.05,y+.5,15,dark)end
+ elseif id=='gb_center_status' then
+  local case,blue=T(1,17),T(4,4)
+  B(1,0,17,15,8,31,case)
+  front({1,17,14,13},1,0,15,8,31.02)
+  B(1,8,18,15,21,26,blue)
+  front({1,1,14,14},1,8,15,21,26.02)
+  top({2,18,11,6},2,27,13,30,8.02)
+ elseif id=='gb_center_healer' then
+  -- The cross is on the front apron, not folded across the tray. The bay
+  -- stays at the native animation's six-pixel support height; live balls
+  -- remain owned by the game's healing animation.
+  local case,dark=T(2,15),T(14,16)
+  B(3,0,2,29,6,31,case);B(1,1,4,31,6,29,case)
+  B(3,6,2,29,7,5,case)
+  B(1,6,5,4,8,27,case);B(28,6,5,31,8,27,case)
+  B(3,6,27,7,7.5,30,case);B(25,6,27,29,7.5,30,case)
+  -- Recessed dark bed with a closed underside and stepped corner shoulders.
+  B(4,5.3,5,28,6,27,dark)
+  top({8,12,16,12},4,5,28,27,6.02)
+  B(8,6,2,24,12,5,case)
+  front({9,0,14,7},9,7,23,12,5.02)
+  front({10,25,12,6},10,.7,22,5.8,31.02)
  elseif id=='gb_pc' then
   local case,dark=T(2,2),T(4,10)
   B(2,0,13,14,7,23,case);front({2,18,12,5},2,0,14,7,23.02)
@@ -2142,11 +2223,26 @@ function M.draw(id,A)
   shelves(1,20,14,10,25,{{3,11,{1,21,14,8}},{13,22,{1,9,14,10}}},T(1,1),T(2,16),true)
   B(12,6,30,13,18,30.4,T(1,1))
  elseif id=='gb_mart_display' then
-  local case=T(1,1)
-  B(1,0,5,30,5,29,case);B(13,5,4,17,16,30,case)
-  for _,q in ipairs({{1,12},{18,30}})do
-   B(q[1],5,6,q[2],7,28,case);stock({q[1],5,q[2]-q[1],22},q[1]+.5,7,q[2]-q[1]-1,18,7,11,3)
+  -- Stock shelving and the large native ball panel are two portions of one
+  -- cabinet, not a repeated texture wrapped around arbitrary stock boxes.
+  local case,dark=T(2,2),T(3,10)
+  B(.5,0,2,31.5,2,31,case)
+  B(.5,2,2,31.5,22,4,case)
+  B(.5,2,4,1.5,22,30,case);B(30.5,2,4,31.5,22,30,case)
+  B(15,2,4,16,22,30,case)
+  B(.5,22,2,31.5,24,30,case)
+  top({1,1,30,5},1,3,31,29,24.02)
+  B(16,2,4,30.5,21.5,28,dark)
+  front({16,8,15,18},16,3,30.5,21.5,28.02)
+  for _,row in ipairs({{3,10,17},{12,20,8}})do
+   B(1.5,row[1],4,15,row[1]+1,30,case)
+   for j=0,3 do
+    local x=2+j*3
+    B(x,row[1]+1,24,x+2,row[2],28,T(2+j*3,row[3]+2))
+    front({2+j*3,row[3],2,5},x,row[1]+1,x+2,row[2],28.02)
+   end
   end
+  front({1,26,30,5},1,.3,31,2.5,31.02)
  elseif id=='gb_seat' then cushion(1,1,14,13,{2,2,12,9},T(7,5),T(3,13))
  elseif id=='gb_receiver' then
   local case=T(1,9)

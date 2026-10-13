@@ -55,6 +55,20 @@ function M.backing(S,map,perRow,aw,ah)
   local shape=S.shapeAt and S.shapeAt[k]
   -- Continue wallpaper behind north-row stairs, never across their entry.
   local z=shape and shape.art=='stair' and -.1 or 15.9
+  -- The healing bay fills two blocked rows. A backing at z=16 would cut
+  -- through its tray and hide the rear display/native ball animation.
+  if map.tileset.id=='TILESET_POKECENTER' and map.tileAt then
+   local tx=math.floor(x/16)*2
+   if map:tileAt(tx,0)==34 and map:tileAt(tx+1,0)==35 then z=-.1 end
+   for tx=math.max(0,math.floor(x/8)-3),math.floor(x/8) do
+    if map:tileAt(tx,0)==28 and map:tileAt(tx+1,0)==29
+      and map:tileAt(tx+2,0)==30 and map:tileAt(tx+3,0)==31
+      and x>=tx*8 and x<(tx+4)*8 then z=-.1;break end
+   end
+  end
+  if map.id=='INDIGO_PLATEAU_POKECENTER_1F' then
+   z=x<32 and 95.9 or x<256 and 111.9 or 15.9
+  end
   S.objectQuads[#S.objectQuads+1]={{x,24,z},{x+8,24,z},{x+8,0,z},{x,0,z},uv=uv,shade=1,own=true}
  end
 end

@@ -36,6 +36,7 @@ function M.profile(def,gen)
   if not cave and spec.primary~='building' and spec.secondary~='rom_082d4d94'
     and not rooms[spec.secondary] then return end
  elseif gen==2 then
+  if id=='GOLDENROD_DEPT_STORE_ROOF' or id=='CELADON_DEPT_STORE_ROOF' then return end
   if def.environment~='INDOOR' and def.environment~='GATE' and not cave then return end
  else
   -- These source maps reuse indoor tilesets for outdoor terraces/decks.
@@ -103,6 +104,25 @@ local function texture(theme)
  local image=love.graphics.newImage(data);image:setFilter('nearest','nearest');data:release();materials[theme]=image;return image
 end
 function M.geometry(p,side,opened)
+ -- A reviewed irregular room can supply native boundary segments. Each
+ -- uses the same closed wall construction/materials as rectangular rooms.
+ if p.boundarySegments and side<=4 then
+  local verts,indices={},{}
+  for _,bounds in ipairs(p.boundarySegments[side] or {})do
+   local sub={bounds=bounds,height=p.height,theme=p.theme,gen=p.gen,noInteriorTrim=true}
+   if p.doorways then
+    sub.doorways={[side]={}}
+    local lo,hi=bounds[(side==1 or side==3)and 1 or 2],bounds[(side==1 or side==3)and 3 or 4]
+    for _,q in ipairs(p.doorways[side] or {})do
+     if q[1]>=lo and q[2]<=hi then sub.doorways[side][#sub.doorways[side]+1]=q end
+    end
+   end
+   local v,i=M.geometry(sub,side,opened);local base=#verts
+   for _,q in ipairs(v)do verts[#verts+1]=q end
+   for _,n in ipairs(i)do indices[#indices+1]=base+n end
+  end
+  return verts,indices
+ end
  local b,h=p.bounds,p.height;local x0,z0,x1,z1=b[1],b[2],b[3],b[4]
  local verts,indices={},{}
  local function face(points,swatch,shade)
@@ -148,7 +168,7 @@ function M.geometry(p,side,opened)
   local outward=(side==1 or side==4)and -1 or 1
   local function rawPart(a,y0,c,y1,swatch,depth)
    local function strip(l,r,at)
-    local near,far=at-outward*math.max(0,(depth or 3)-3),at+outward*(depth or 3)
+    local near,far=at-outward*(p.noInteriorTrim and 0 or math.max(0,(depth or 3)-3)),at+outward*(depth or 3)
     if horizontal then box(l,y0,math.min(near,far),r,y1,math.max(near,far),swatch)
     else box(math.min(near,far),y0,l,math.max(near,far),y1,r,swatch)end
    end
@@ -281,10 +301,36 @@ function M.forMap(map,gen)
     p.openings[#p.openings+1]={x*16,y*16,(x+1)*16,(y+1)*16}
    end
   end end
+  -- Gen2's healing bay is drawn across two blocked north rows. Retain
+  -- its full authored depth instead of sealing its rear screen into a wall.
+  if gen==2 and map.tileset.id=='TILESET_POKECENTER' then
+   for x=0,(map.widthCells or def.width*2)-1 do
+    if map:tileAt(x*2,0)==34 and map:tileAt(x*2+1,0)==35 then
+     p.northRecesses[#p.northRecesses+1]={x*16,(x+1)*16,-.3}
+    end
+   end
+   for tx=0,(map.widthCells or def.width*2)*2-4 do
+    if map:tileAt(tx,0)==28 and map:tileAt(tx+1,0)==29
+      and map:tileAt(tx+2,0)==30 and map:tileAt(tx+3,0)==31 then
+     p.northRecesses[#p.northRecesses+1]={tx*8,(tx+4)*8,-.3}
+    end
+   end
+  end
   if #p.northRecesses>0 then
    p.northFront=p.bounds[2]
    for _,q in ipairs(p.northRecesses)do p.bounds[2]=math.min(p.bounds[2],q[3])end
   end
+ end
+ if gen==2 and def.id=='INDIGO_PLATEAU_POKECENTER_1F'
+   and map:tileAt(0,0)==61 and map:tileAt(0,12)==28 then
+  -- Native L-shaped lobby plus the west alcove on its northern corridor.
+  -- The dark source padding is outside the room, never a raised black room.
+  p.boundarySegments={
+   {{0,95.7,32,224},{32,111.7,256,224},{224,15.7,288,224}},
+   {{0,16,288,224},{0,95.7,32,111.7}},
+   {{0,16,288,224},{224,16,256,64.3}},
+   {{0,95.7,288,224},{256,64.3,288,111.7},{224,15.7,288,64.3}},
+  }
  end
  if not p.cave then
   p.doorways={{},{},{},{}}

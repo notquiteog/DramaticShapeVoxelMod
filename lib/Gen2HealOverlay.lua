@@ -19,7 +19,7 @@ function M.points(state,ha)
     local dx=math.max(f.x0-ax,0,ax-f.x1)
     local dz=math.max(f.z0-az,0,az-f.z1)
     local dist=dx*dx+dz*dz
-    if dist<best then best=dist;height=f.height or 6;bed=f end
+    if dist<best then best=dist;height=f.support or 6;bed=f end
    end
   end
  end

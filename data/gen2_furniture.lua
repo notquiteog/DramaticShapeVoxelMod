@@ -93,6 +93,9 @@ local commonHouse={
   house[#house], -- same complete stool drawing, including floor and leg zones
 }
 local mart={
+  {id='crystal_roof_lightwell',keep={174,175,173},maps={GOLDENROD_DEPT_STORE_ROOF=true},tiles={{155,129,129,129,129,129,129,156},{171,141,142,142,142,142,142,172},{171,158,158,158,158,158,158,172},{171,158,1,1,1,1,1,172},{174,175,175,175,175,175,175,173}},groundTiles={{145}},design='gb_roof_lightwell',parts={},support=0},
+  {id='crystal_roof_bench',maps={GOLDENROD_DEPT_STORE_ROOF=true},tiles={{34,35},{50,51},{36,37},{139,140}},groundTiles={{145}},design='gb_department_bench',parts={},support=4},
+
   {id='crystal_department_directory',tiles={{44,45},{60,61}},groundTiles={{1}},design='gb_department_directory',parts={},support=0},
   {id='crystal_department_register',tiles={{32,33},{48,49}},groundTiles={{1}},design='gb_department_register',parts={},support=7},
   {id='crystal_department_counter_window',tiles={{14,15},{42,43}},groundTiles={{1}},design='gb_department_counter_window',parts={},support=0},
@@ -112,8 +115,14 @@ local mart={
     {upright(0,15,0,11,12,15,0,16,4)},8),
 }
 local center={
+  {id='crystal_link_mobile',tiles={{6,54,31,92,55,7},{6,54,45,46,55,7},{58,62,62,62,62,59},{54,55,86,87,54,55},{54,55,34,35,54,55},{70,71,50,51,70,71}},groundTiles={{17}},design='gb_link_mobile',parts={},support=0},
+  {id='crystal_link_partition',tiles={{22,23},{22,23},{22,23},{13,14},{54,55},{54,55},{54,55},{70,71}},groundTiles={{17}},design='gb_link_partition',parts={},support=0},
+  {id='crystal_link_partition_controls',tiles={{22,23},{22,23},{22,23},{13,14},{54,55},{54,55},{56,57},{70,71}},groundTiles={{17}},design='gb_link_partition',parts={},support=0},
+  {id='crystal_link_receiver',tiles={{3,37},{19,53},{36,36}},groundTiles={{17}},design='gb_receiver',parts={},support=0},
+
   {id='crystal_link_controls',tiles={{8,9,34,35},{24,25,50,51}},groundTiles={{17}},design='gb_link_controls',parts={},support=0},
   {id='crystal_trade_controls',tiles={{38,39,34,35},{40,41,50,51}},groundTiles={{17}},design='gb_link_controls',parts={},support=0},
+  {id='crystal_link_door',tiles={{34,35},{50,51}},groundTiles={{17}},design='gb_link_door',parts={},support=0},
   item("crystal_center_healer",{{28,29,30,31},{44,45,46,47},{60,61,61,63},{76,77,78,79}},17,
     {upright(0,31,0,27,28,31,0,32,2)},6),
   item("crystal_center_terminal",{{32,33},{48,49},{64,65}},17,
@@ -158,16 +167,17 @@ local traditional={
  {id='crystal_traditional_table',tiles={{35,34,34,36},{66,21,21,67},{66,21,21,67},{51,50,50,52},{37,81,81,38}},design='gb_traditional_table',support=5},
 }
 for _,t in ipairs(traditional)do t.groundTiles=tatami;t.groundAligned=true;t.parts={};t.support=t.support or 0 end
+center[#center+1]={id='crystal_center_status',tiles={{4,5},{20,21},{10,11},{26,27}},groundTiles={{17}},design='gb_center_status',parts={},support=0}
 local designs={
  crystal_kitchen='gb_kitchen',crystal_bedroom_workstation='gb_desk',
- crystal_television='gb_tv',crystal_books='gb_short_books',crystal_bed='gb_tv',crystal_bedroom_pc='gb_pc',crystal_center_terminal='gb_pc',
+ crystal_television='gb_tv',crystal_books='gb_short_books',crystal_bed='gb_tv',crystal_bedroom_pc='gb_pc',crystal_center_terminal='gb_center_pc',
  crystal_bedroom_books='gb_books',crystal_lab_shelves='gb_books',
  crystal_lab_computer='gb_lab_pc',crystal_elm_desk='gb_elm_desk',
  crystal_mart_shelf='gb_mart_shelf',crystal_mart_cooler='gb_mart_cooler',
  crystal_mart_display='gb_mart_display',crystal_center_seat='gb_seat',
  crystal_center_receiver='gb_receiver',crystal_bedroom_table='gb_table',
  crystal_center_counter='gb_counter',crystal_center_counter_ball='gb_counter',crystal_center_counter_balls='gb_counter',
- crystal_healing_machine='gb_healer',crystal_center_healer='gb_healer',
+ crystal_healing_machine='gb_healer',crystal_center_healer='gb_center_healer',
  crystal_house_tv='gb_tv',crystal_house_radio='gb_radio',
  crystal_house_bookcase='gb_house_books',crystal_house_table='gb_table',
 }
@@ -177,7 +187,7 @@ for _,list in ipairs({house,lab,commonHouse,mart,center,bedroom})do
   if t.id=='crystal_bed' then t.id='crystal_bedroom_tv';t.support=0 end
   if t.design=='gb_seat' then t.support=2.5 end
   if t.design=='gb_counter'then t.support=7;t.supportBounds={0,8.5,16,15.5}end
-  if t.design=='gb_table' or t.design=='gb_desk' or t.design=='gb_healer'then
+  if t.design=='gb_table' or t.design=='gb_desk' or t.design=='gb_healer' or t.design=='gb_center_healer'then
    t.supportBounds={0,8,32,24}
   end
  end

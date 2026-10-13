@@ -827,3 +827,21 @@ from the central aisle and clearly shows the closed side/stock depth. No shelf
 intrudes into that aisle. Targeted shelf/source checks pass; the engine-integrated
 Gen2 tile-shape suite also passes114/114. Story/secret-stair transitions at
 Mahogany were not triggered; source blocks, collision and events are untouched.
+
+## Gold/Silver/Crystal Center/Mart family review — October 13, engine 0.3.85
+
+- [x] Source-derived Center healer, separate PC/status cabinet, native tray-height
+  healing effect; continuous Mart ball-panel cabinet with stock and closed sides.
+- [x] Upstairs wall controls/warp approaches, closed blue partitions and glass
+  booth; Indigo L-shaped room boundary and native dark-padding correction.
+- [x] Crystal department roof enclosure removed; central native floor drawing
+  lies horizontal behind low curb; native walking apron remains flat.
+- [x] 13 Gold, 13 Silver and 14 Crystal representative room sweeps: native grids
+  unchanged, changed-fixture positive-area footprints avoid walkable cells.
+- [ ] Every named room/legacy object, beta/mobile/Japanese variants and story
+  transitions are not exhaustive coverage. Gen2 healing balls remain native
+  projected sprites. Roof planters/parapets retain older source-mapped forms.
+
+Detailed inventory, exact runs, inspected angles, initial curb-footprint failure
+and corrected rerun: `docs/GEN2_CENTER_MART_2026-10-13.md`. Earlier 0.3.52 captures
+remain historical evidence, not this runtime's proof.

@@ -17,6 +17,7 @@ local texture
 local ENCLOSED = { INDOOR = true, DUNGEON = true }
 
 function M.geometry(map,policy)
+  if map and map.def and (map.def.id=='GOLDENROD_DEPT_STORE_ROOF' or map.def.id=='CELADON_DEPT_STORE_ROOF') then return nil end
   if not (map and map.def and ENCLOSED[map.def.environment]) then return nil end
   local w,h=map.def.width*32,map.def.height*32
   if w<=0 or h<=0 then return nil end

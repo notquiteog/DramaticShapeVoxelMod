@@ -568,6 +568,10 @@ function Gen2TileShape.at(map, shapes, tile, tx, ty)
   -- The red carpet edge runs under blocked reception cells as well as
   -- walkable floor. Collision controls access, not this drawing's height.
   if map.tileset.id=='TILESET_POKECENTER' and (tile==1 or tile==17) then return classes.ground end
+  if map.id=='INDIGO_PLATEAU_POKECENTER_1F' and tile==61
+    and (ty<8 and tx<28 or ty>=8 and ty<12 and tx<32) then
+   return classes.ground -- exact native padding; preserve its dark floor art
+  end
   local cx, cy = math.floor(tx / 2), math.floor(ty / 2)
   local tileset = map.tileset
   local okT, top = pcall(map.tileAt, map, cx * 2, cy * 2)

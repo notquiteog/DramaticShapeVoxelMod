@@ -1,3 +1,20 @@
+# Gen2 Center/Mart source-faithful fixture batch — 2026-10-13
+
+Gold/Silver/Crystal: separate Center PC/status console; recessed healer tray,
+continuous front badge, native balls anchored to tray support; coherent Mart
+ball-panel cabinet; upstairs blue partitions/glass booth with clear warp lanes.
+Indigo retains its irregular lobby footprint; Crystal department roof is open
+with a low horizontal lightwell and native walking apron. No collision changes.
+
+Engine0.3.85 isolated QA: 13/13/14 room-family sweeps, changed-fixture footprint
+checks and native-grid equality; revised common fixtures inspected in all three
+editions, detailed source/front/side/rear/eye views retained. Initial roof curb
+walkspace failure was repaired and rerun. Seven focused suites, 403-object
+interior suite, 114 tile-shape and 202 support checks pass. Gen2 healing balls
+remain native projected sprites; beta/mobile variants and every legacy prop are
+not exhaustive 3D coverage. See `docs/GEN2_CENTER_MART_2026-10-13.md` for exact
+inventory, fixtures, commands, source evidence and remaining scope.
+
 # Gen3 native Center furniture and healing trays — 2026-10-13
 
 Corrected FR/LG medical-device/right-return source identities; closed, source-
