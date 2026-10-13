@@ -39,3 +39,12 @@ M.draw({_anims={burst},loadSheet=function(n,w,h,total)assert(n=='cut_grass'and w
  end,{level=6,yaw=math.pi/2})
 assert(count==1 and burst.timer==4 and burst.particles[1].y==45 and M.supports('cut_grass_scatter'))
 print('PASS native Cut leaf frame, camera-facing plane, terrain support and unchanged particle lifecycle')
+
+local rock={kind='deoxys_rock_destroy',state='shatter',x=32,y=48,frags={{x=24,y=28,frame=2},{x=48,y=60,frame=1,off=true}}}
+local pieces=0
+love.graphics.draw=function(img,q)assert(img=='native-rock'and q=='piece2')end
+M.draw({_anims={rock},loadSheet=function(n,w,h,total)assert(n=='deoxys_rock_fragments'and total==4);return{image='native-rock',quads={[2]='piece2'}}end},
+ function(x,z)assert(x==40 and z==56);return 9 end,
+ function(id,w,h,paint,v,base)pieces=pieces+1;assert(base==9 and v[1][1]==24 and v[1][2]==36 and v[3][2]==28);paint()end,{level=3})
+assert(pieces==1 and not rock.frags[1].off,'native fragment state changed')
+print('PASS native Deoxys frames, off-fragment filtering and unchanged original positions')

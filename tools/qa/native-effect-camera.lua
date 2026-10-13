@@ -9,7 +9,7 @@ return function(game)
  I.setLevel(7,game);scene.invalidate()
  for i=1,1800 do U.wait(1);if I.active then break end end
  assert(I.active,'native voxel field not ready')
- local Fx=require('src.core.game3.field_effects');Fx.startBgFlash(90)
+ local Fx=require('src.core.game3.field_effects');Fx.animateFlashLevel(1,0)
  U.wait(2);assert(not I.active and scene.nativeRequired(game),'native flash not presented')
  local down,pos=love.mouse.isDown,love.mouse.getPosition;local x,y=10,10
  love.mouse.isDown=function(b)return b==2 end;love.mouse.getPosition=function()return x,y end

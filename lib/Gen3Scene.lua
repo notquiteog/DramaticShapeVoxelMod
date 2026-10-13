@@ -997,6 +997,7 @@ function M.draw(game,vw,vh,cam)
     if not ok then error(err,0)end
    end)
   end
+  if not cam.replay then V.require('Gen3ScreenEffects').background(require('src.core.game3.field_effects'),renderWidth,renderHeight)end
   actors(game,cam,R.draw)
   local rainProps=V.require('KfpRainProps')
   if not cam.battle and not cam.replay and rainProps.setting:get()then

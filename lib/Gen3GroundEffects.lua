@@ -1,7 +1,7 @@
 -- Native field-effect frames, laid onto their terrain rather than triggering
 -- the native 2D camera. The engine retains animation lifetime and timing.
 local M={}
-function M.supports(kind) return kind=='tracks' or kind=='ripple' or kind=='splash' or kind=='feet_water' or kind=='hot_springs' or kind=='camera_shake' or kind=='cut_grass_scatter' or kind=='deoxys_rock_move' end
+function M.supports(kind) return kind=='tracks' or kind=='ripple' or kind=='splash' or kind=='feet_water' or kind=='hot_springs' or kind=='camera_shake' or kind=='cut_grass_scatter' or kind=='deoxys_rock_move' or kind=='deoxys_rock_destroy' end
 -- Deoxys sliding uses the native Objects px/py interpolation already drawn by
 -- Gen3Scene; it needs no duplicate effect sprite or alternate camera.
 function M.draw(fx,groundAt,emit,cam)
@@ -22,6 +22,22 @@ function M.draw(fx,groundAt,emit,cam)
   end
  end
  for i,a in ipairs(fx._anims or {})do
+  if a.kind=='deoxys_rock_destroy'and a.state=='shatter'and a.x and a.y then
+   local sheet=fx.loadSheet('deoxys_rock_fragments',8,8,4)
+   if sheet then
+    local yaw=cam and cam.level>=6 and cam.yaw or 0
+    local rx,rz=math.cos(yaw),math.sin(yaw);local ox,oz=a.x+8,a.y+8
+    for j,p in ipairs(a.frags or{})do local frame=not p.off and sheet.quads[p.frame]
+     if frame then
+      local offset=p.x+4-ox;local x,z=ox+offset*rx,oz+offset*rz
+      local top=a.y+16-p.y;local dx,dz=4*rx,4*rz
+      emit('rock-shard-'..i..'-'..j,8,8,function()
+       love.graphics.setColor(1,1,1,1);love.graphics.draw(sheet.image,frame,0,0)
+      end,{{x-dx,top,z-dz},{x+dx,top,z+dz},{x+dx,top-8,z+dz},{x-dx,top-8,z-dz}},groundAt(ox,oz))
+     end
+    end
+   end
+  end
   if a.kind=='cut_grass_scatter'and a.cx and a.cy then
    local sheet=fx.loadSheet('cut_grass',8,8,1);local frame=sheet and sheet.quads[0]
    if frame then

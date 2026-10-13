@@ -484,3 +484,26 @@ renders inspected. Classifier and ground-effect regressions pass. Destruction,
 background-only whitening, Fly and Teleport remain separate native effects.
 Driver `tools/qa/native-event-rock.lua`; evidence
 `.scratch/parity-073-20261011/results/emerald-native-event-rock-host`.
+
+Native Birth Island destruction follow-up (0.3.85): background-only whitening
+now draws after terrain/water and before actors, retaining scene depth. Native
+shake, object hide/remove, palette alpha and completion remain engine-owned.
+Emerald's actual full shake→shatter→remove sequence kept the voxel camera;
+inspected captures show whitened terrain, unchanged player colors and restored
+terrain afterward. `tools/qa/native-event-rock-destroy.lua` records the event.
+
+**Fragment art is provider-blocked on this engine/import:** public
+`FieldEffects.loadSheet('deoxys_rock_fragments',8,8,4)` returns nil because its
+manifest entry contains indexed `.idx` data and palette tag 4378, while the
+public loader requires `.rgba`. Native `drawFront` uses that same loader. The
+adapter renders supplied native sheets, with tested frame/off filtering and
+upright original offsets, but this run did not display shards. No private cache
+reader or substitute artwork was introduced. This is not full Deoxys visual
+parity. Evidence: `.scratch/parity-073-20261011/results/emerald-native-event-rock-destroy-host`.
+
+LeafGreen's remaining native cave-aperture presentation still preserves mouse
+look and restores the same direction afterward (0.3.85 actual run). Updated
+`native-effect-camera.lua` to exercise this unsupported native aperture rather
+than the now-supported BG flash. Focused screen/ground/classifier tests pass.
+Fly/Teleport, cave aperture itself, special field animations and shop camera
+remain separate outstanding adapters; full suite/global parity is not claimed.

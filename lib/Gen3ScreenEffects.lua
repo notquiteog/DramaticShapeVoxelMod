@@ -1,7 +1,7 @@
 -- Native full-world flashes and scent rings without surrendering the camera.
 -- BG-only whitening, cave aperture and actor motion remain separate effects.
 local M={}
-function M.supports(kind)return kind=='flash'or kind=='sweet_scent'end
+function M.supports(kind)return kind=='flash'or kind=='sweet_scent'or kind=='bg_flash'end
 function M.alpha(anims)
  local remaining=1
  for _,a in ipairs(anims or{})do
@@ -11,6 +11,20 @@ function M.alpha(anims)
   end
  end
  return 1-remaining
+end
+-- Native BG-only palette whitening belongs between terrain/water and actors.
+-- Keep the scene's depth attachment intact; only color is veiled.
+function M.background(fx,w,h)
+ local alpha=fx.bgFlashAlpha and tonumber(fx.bgFlashAlpha())or 0
+ if not alpha or alpha~=alpha or alpha<=0 then return false end
+ local g=love.graphics;g.push('all')
+ local ok,err=pcall(function()
+  g.origin();g.setShader();g.setScissor();g.setDepthMode()
+  g.setBlendMode('alpha','alphamultiply');g.setColor(1,1,1,math.min(1,alpha))
+  g.rectangle('fill',0,0,w,h)
+ end)
+ g.pop();if not ok then error(err,0)end
+ return true
 end
 function M.draw(canvas,anims)
  local alpha=M.alpha(anims);local scents={}

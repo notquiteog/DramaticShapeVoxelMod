@@ -26,7 +26,7 @@ fx._anims={{kind='dust'},{kind='flash_level'}};assert(Scene.nativeRequired(g),'u
 fx._anims={{kind='emote'}};assert(not Scene.nativeRequired(g),'exclamation stole voxel camera')
 fx._anims={{kind='exclamation'},{kind='dust'}};assert(not Scene.nativeRequired(g),'legacy emote plus dust stole camera')
 fx._anims={{kind='emote'},{kind='flash_level'}};assert(Scene.nativeRequired(g),'unsupported effect no longer falls back')
-for _,kind in ipairs({'splash','feet_water','hot_springs','camera_shake','cut_grass_scatter','deoxys_rock_move'})do fx._anims={{kind=kind}};assert(not Scene.nativeRequired(g),kind..' stole camera')end
+for _,kind in ipairs({'splash','feet_water','hot_springs','camera_shake','cut_grass_scatter','deoxys_rock_move','deoxys_rock_destroy','bg_flash'})do fx._anims={{kind=kind}};assert(not Scene.nativeRequired(g),kind..' stole camera')end
 fx._anims={{kind='flash'}};assert(not Scene.nativeRequired(g),'full-world flash stole camera')
 fx._anims={{kind='sweet_scent'}};assert(not Scene.nativeRequired(g),'Sweet Scent stole camera')
 fx._anims={};battle=true;assert(Scene.nativeRequired(g),'battle transition lost native renderer')
