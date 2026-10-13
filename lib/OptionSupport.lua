@@ -16,6 +16,7 @@ for _,row in ipairs(V.require('SettingsCatalog'))do
  end
 end
 for gen=2,3 do
+ set(gen,'movementMode','implemented','lib/MovementMode.lua; lib/NativeFreeMove.lua; lib/Gen2CameraWalk.lua; lib/Gen3Integration.lua','GRID defaults to native tile movement; FREE uses fractional camera-relative movement with native collision and cell arrival handoffs in first/rotating third person.')
  set(gen,'sceneryProps','implemented','lib/TreePresentation.lua; lib/NativeTreeArt.lua; lib/Gen2Rocks.lua; lib/Gen2VoxelRock.lua; lib/Gen3Cave.lua; lib/Gen3Outdoor.lua','Native solid rocks/bushes or source-art cutouts. Terrain/collision unchanged; actors, grass and flowers remain sprites.')
 end
 for gen=2,3 do set(gen,'kfpBirds','implemented','lib/KantoFirstPerson.lua; lib/KfpBirdArt.lua; lib/KfpAtmosphere.lua','Shared optional distant-bird sky consumer derives owned silhouettes from each active games public native sprite provider, clears on game/data change, and stays off indoors/when disabled. Source consumer audit; per-edition runtime evidence is tracked separately.')end

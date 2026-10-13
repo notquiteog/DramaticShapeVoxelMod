@@ -937,6 +937,7 @@ local SETTINGS = {
     .. "set an explicit range. FULL includes the loaded connected maps. "
     .. "Distant outdoor scenery fades into the sky.",
     full = true },
+  { V.require('MovementMode').setting, V.require('MovementMode').description },
   { RamPrecache.setting,
     "Maximum compressed voxel cache eagerly loaded after CONTINUE, in MiB. "
     .. "FULL loads every generated cache file; OFF skips the preload and "

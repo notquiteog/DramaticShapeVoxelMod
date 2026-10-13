@@ -107,6 +107,7 @@ return {
  {key="pokeballSuctionParticles",label="SUCTION PARTICLES",module="PokeballSettings"},
  {key="ramPrecacheMb",label="RAM PRECACHE MB",module="RamPrecache"},
  {key="renderDistance",label="R.DIST",module="RenderDistance"},
+ {key="movementMode",label="3D MOVE",module="MovementMode"},
  {key="shadowQuality",label="SHADOWS",module="Shadows"},
  {key="spriteLight",label="SPRITE LIGHT",module="UiBackplates"},
  {key="spritePack",label="SPRITE PACK (RESTART)",module="CrystalSprites"},

@@ -37,5 +37,5 @@ provider changes and gameplay edits. Full SDK: 1173/1173 checks passed.
 
 Evidence in projects `.scratch/streaming-20261013/emerald-{baseline,after}1440`.
 Gen1/Gen2 connected destination precaching is documented separately in
-`GEN2_PRECACHE_2026-10-13.md` if present; its native seam tests measure readiness,
+`GEN12_PREDICTIVE_STREAMING_QA.md`; its native seam tests measure readiness,
 not a broad FPS improvement. No all-game smooth-frame-rate claim is made.

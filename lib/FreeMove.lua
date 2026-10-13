@@ -1,4 +1,5 @@
--- Voxel world mode: free movement for the free-roam rungs.
+-- Voxel world mode: optional free movement for the free-roam rungs.
+-- GRID is the shared default; this continuous solver runs only in FREE.
 --
 -- The engine walks a grid: sixteen frames per cell, four directions,
 -- input locked mid-step. Inside a camera that stands with the player that
@@ -49,6 +50,7 @@ local V = ...
 
 local FirstPerson = V.require("FirstPerson")
 local Generation = V.require("Generation")
+local MovementMode = V.require("MovementMode")
 
 local FreeMove = {}
 
@@ -317,6 +319,9 @@ function FreeMove.tick(state)
 
   local speed = (Game.save and Game.save.onBike) and FreeMove.BIKE
                 or FreeMove.WALK
+  -- Reuse the public native speed calculation, including running-shoes hooks
+  -- and Cycling Road, instead of silently forcing free movement to walking.
+  if p.stepLength then speed=16/math.max(1,p:stepLength(p.facing))end
   local dx, dz = wx * speed, wz * speed
 
   local hitX = slideX(state, p, dx)
@@ -373,7 +378,8 @@ function FreeMove.install()
   local inner = OverworldState.handleInput
 
   function OverworldState:handleInput()
-    if not FirstPerson.driving() then
+    local driving=FirstPerson.driving()
+    if not driving or not MovementMode.free() then
       if pos then
         -- stepping off the rung: back onto the grid, on the cell the
         -- free walk stood in
@@ -381,6 +387,8 @@ function FreeMove.install()
         p.px, p.py = p.cellX * 16, p.cellY * 16
         FreeMove.drop()
       end
+      FirstPerson.releaseBody()
+      if driving then return MovementMode.grid(self,inner)end
       return inner(self)
     end
     return FreeMove.tick(self)
