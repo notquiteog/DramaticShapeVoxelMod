@@ -121,6 +121,7 @@ local function releaseGeometry(cache)
  for _,part in ipairs(cache.civics or {})do
   if part.mesh then part.mesh:release()end;if part.image then part.image:release()end
  end
+ V.require('NativeLegendaryTrees').release(cache.legendaryTreeInstances)
  for _,batch in ipairs(cache.treeInstances or {})do batch:release()end
  for _,name in ipairs({'wood','leaves'})do if cache[name] then cache[name]:release() end end
 end
@@ -199,7 +200,7 @@ local function build(req,cache,previous)
  local sig=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam) or table.concat(signature,';')
  if previous and previous.signature==sig then return previous end
  cache.signature=sig;cache.parts={};cache.cells=cells
- local treeGroups={}
+ local treeGroups,legendaryTreeGroups={},{};M.legendaryTreeCount=0
  if V.require("Gen3Hoenn").active() then V.require("Gen3Hoenn").prepareTrees(cells) end
  M.forestTrees=Forest.prepare(cells)
  local gyms=Buildings.prepare(cells);M.gymCount=#gyms
@@ -322,7 +323,8 @@ local function build(req,cache,previous)
      local tx,tz=x+(shape.anchorX or 16),z+(shape.anchorZ or 12)
      if TreeStyle.voxel() then
       local card=V.require('NativeLegendaryForest').card(native.gen3(c),c,def.id or Map.current)
-      if not native.addInstance(card,treeGroups,tx,c.base or 0,tz)then native.appendModel(card,leaf,li,0,tx,0,tz)end
+      if V.require('NativeLegendaryTrees').add(card,c,cells,legendaryTreeGroups,tx,c.base or 0,tz)then M.legendaryTreeCount=M.legendaryTreeCount+1
+      elseif not native.addInstance(card,treeGroups,tx,c.base or 0,tz)then native.appendModel(card,leaf,li,0,tx,0,tz)end
      else native.append(native.gen3(c),leaf,li,0,tx,0,tz,TreeStyle.flat()) end
      if not TreeStyle.voxel() and not TreeStyle.flat() then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,c.cx*73+c.cy*139) end
     else
@@ -582,6 +584,7 @@ local function build(req,cache,previous)
    local mesh=assert(R.newMesh(g.v,g.i));part.waters[#part.waters+1]={mesh=mesh,height=h};Budget.check()
   end
  end
+ cache.legendaryTreeInstances=V.require('NativeLegendaryTrees').build(legendaryTreeGroups)
  cache.treeInstances={}
  V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li,cache.treeInstances)
  cache.wood=R.newMesh(wood,wi);Budget.check();cache.leaves=R.newMesh(leaf,li)
@@ -595,7 +598,7 @@ local function prepare(game,vw,vh,cam)
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
  M.prepares=stream.stats.started;M.builds=stream.stats.completed;M.cacheHits=stream.stats.hits
- for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount'})do M[name]=cache[name]end
+ for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
  return true
 end
 local function terrain(draw)
@@ -634,6 +637,7 @@ local function terrain(draw)
   if not V.require('NativeLegendaryTower').draw(part.placement,draw)then draw(part.mesh,part.image)end
  end
  draw(cache.wood,bark);draw(cache.leaves,TreeStyle.original() and V.require('NativeTreeArt').image() or foliage)
+ V.require('NativeLegendaryTrees').draw(cache.legendaryTreeInstances,draw)
  for _,batch in ipairs(cache.treeInstances or {})do draw(batch,V.require('NativeTreeArt').image())end
 end
 local function waterMeshes()

@@ -830,6 +830,9 @@ function MOUND.publishTreePart(p, rawParts, parts)
     end
     p.dI = ordered
   end
+  -- Public native-generation template requests retain CPU geometry only.
+  -- They never publish map jobs, upload duplicate meshes or mutate live trees.
+  if ctx.captureTemplate then ctx.captureTemplate(p);parts[#parts+1]=p;return rawParts end
   -- Build the same proven unindexed stream used by cache hits even when the
   -- host cannot persist it. This gives every fresh mature section bounded
   -- setVertices writes instead of one large immutable constructor call.
@@ -1734,7 +1737,7 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
   for saplingKey in pairs(saplingReg) do
     saplingHistory[saplingKey] = true
   end
-  local cfgTrunk = config() or {}
+  local cfgTrunk = MOUND.treeContext().nativeConfig or config() or {}
   local tsid = tostring((map.def or {}).tileset or "")
   local boulderSet = MOUND.BOULDER_TILES[tsid] or {}
   -- TEST224: these are invariant for the entire build. TEST223/216 rebuilt
@@ -1915,7 +1918,7 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
           (not boulder) and (base + (sapling and 15 or (lift + 3))) or nil }
       local mx, mz = cx * 16 + 8, cy * 16 + 8
       if type(map.cellCollision) == "function" and lift == 20 then mx,mz=mx+8,mz-8 end
-      if not boulder and not sapling and lift>4 and(type(map.cellCollision)~="function"or not V.require("TreePresentation").original())then V.require("KfpTreeDetails").record(map,mx,base,mz,base+lift+3)end
+      if not MOUND.treeContext().captureTemplate and not boulder and not sapling and lift>4 and(type(map.cellCollision)~="function"or not V.require("TreePresentation").original())then V.require("KfpTreeDetails").record(map,mx,base,mz,base+lift+3)end
       -- A connected wall is already planted across its full authored footprint;
       -- repeated square boulder shadows underneath would show as dark stepping
       -- stones. Standalone pillars and every tree retain their locked shadows.
@@ -7785,6 +7788,36 @@ Flora.drawCommunityTrees = MOUND.Timings.wrap("tree_other", Flora.drawCommunityT
 -- The textures remain owned and invalidated here, including style switches.
 function Flora.crystalTreeMaterials()
   return MOUND.barkImg(), MOUND.detailImg()
+end
+
+-- Pure geometry access for native renderers. The normal Gen1 registry and its
+-- published map/cache resources remain untouched. Callers own derived meshes.
+function Flora.nativeTreeTemplate(variant)
+ variant=math.floor(tonumber(variant) or 0)%4
+ local cx,cy=variant+1,1;local id='__BAV_NATIVE_TREE_'..variant
+ local parts={}
+ local function build()
+  local co=coroutine.running();local previous=MOUND.treeContexts[co]
+  MOUND.treeContexts[co]={registry={[cx..'|'..cy]=20},bases={[id..':'..(cx*16+8)..'|'..(cy*16+8)]=0},
+   saplings={},buildGroup='mature',buildRecipe=V.require('CommunityVisuals').treeDetailLevel(),
+   nativeConfig={shadows=false},captureTemplate=function(p)parts[#parts+1]=p end}
+  local ok,err=pcall(MOUND.buildTrunks,{id=id,def={width=4,height=2,tileset='NATIVE_TEMPLATE'},
+   cellTile=function()return 0 end,isWalkableCell=function()return false end},nil,'mature')
+  MOUND.treeContexts[co]=previous;MOUND.TRUNK.saplingHistory[id]=nil
+  if not ok then error(err)end
+ end
+ -- Keep the caller's cooperative scene-build budget; only main-thread callers
+ -- need a private coroutine. Context restoration also covers errors/yields.
+ if coroutine.running()then build()else
+  local co=coroutine.create(build)
+  while coroutine.status(co)~='dead'do local ok,err=coroutine.resume(co);if not ok then error(err)end end
+ end
+ return parts,cx*16+8,cy*16+8
+end
+function Flora.nativeTreeMaterial(kind)
+ if kind=='trunks'then return MOUND.barkImg()end
+ if kind=='hoods'then return MOUND.leafyImg()end
+ if kind=='detail'then return MOUND.detailImg()end
 end
 
 return Flora

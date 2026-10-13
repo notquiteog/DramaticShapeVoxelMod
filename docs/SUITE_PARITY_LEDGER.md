@@ -347,3 +347,25 @@ adapter and 541 option-consumer checks pass. CASINO remains **partial** because
 native interiors and non-Celadon families still use their original presentation.
 Driver: `tools/qa/native-legendary-casino.lua`; evidence under
 `.scratch/parity-073-20261011/results/{firered,leafgreen}-native-legendary-casino-host`.
+
+
+### Native mature TREES consumer (0.3.85)
+
+Gen3 TREES now shares the actual Gen1 CommunityFlora mature builder, materials
+and detail recipe through a CPU-only template API. Instanced prototypes reuse
+GPU geometry; native source width/height determine scale. Low geometry must
+fit blocked native cells, so unknown boundary cells and walkable footprints
+retain native models. Dedicated forest/Safari families keep their own settings.
+OFF restores original models. No map/collision/live Gen1 tree registry changes.
+
+Fresh isolated FireRed and LeafGreen 0.3.85 each rendered 85 replacements;
+Emerald Oldale rendered 128. Actual LeafGreen and Emerald overview renders
+inspected, first-person and OFF captures produced. First Emerald boot fixture
+exhausted its frame wait during initial build; the diagnostic rerun completed
+with actual collision guards and OFF assertions. CPU template, cooperative
+build-budget/context restoration, footprint, forest/OFF guards, Gen1 tree
+regressions, native adapter and option-consumer tests pass. Ruby/Sapphire are
+not runtime-verified for this batch; full wind and unknown/synthetic footprint
+coverage remain partial. Driver: `tools/qa/native-legendary-trees.lua`; evidence
+under `.scratch/parity-073-20261011/results/`, including
+`emerald-trees-debug-host` and `{firered,leafgreen}-native-legendary-trees-host`.
