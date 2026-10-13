@@ -27,5 +27,6 @@ fx._anims={{kind='dust'},{kind='flash'}};assert(Scene.nativeRequired(g),'unsuppo
 fx._anims={{kind='emote'}};assert(not Scene.nativeRequired(g),'exclamation stole voxel camera')
 fx._anims={{kind='exclamation'},{kind='dust'}};assert(not Scene.nativeRequired(g),'legacy emote plus dust stole camera')
 fx._anims={{kind='emote'},{kind='flash'}};assert(Scene.nativeRequired(g),'unsupported effect no longer falls back')
+for _,kind in ipairs({'splash','feet_water','hot_springs','camera_shake'})do fx._anims={{kind=kind}};assert(not Scene.nativeRequired(g),kind..' stole camera')end
 fx._anims={};battle=true;assert(Scene.nativeRequired(g),'battle transition lost native renderer')
 print('PASS escalator phase gaps preserve camera; unrelated native effects unchanged')

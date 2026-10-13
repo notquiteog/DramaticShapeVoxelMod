@@ -808,7 +808,7 @@ local function fieldEffects(draw,cam)
    {{x+8-dx,8,z+8-dz},{x+8+dx,8,z+8+dz},{x+8+dx,0,z+8+dz},{x+8-dx,0,z+8-dz}},M.groundAt(x+8,z+8))
  end end
  V.require('Gen3EmoteCards').draw(fx,cam,M.groundAt,effect)
- V.require('Gen3GroundEffects').draw(fx,M.groundAt,effect)
+ V.require('Gen3GroundEffects').draw(fx,M.groundAt,effect,cam)
  local doors=require('src.core.game3.doors');local a=doors._activeAnim
  if a then
   local surface
@@ -922,6 +922,18 @@ function M.draw(game,vw,vh,cam)
  local atmosphere=V.require("NativeAtmosphere")
  local atmosphereMap=atmosphere.gen3(M.sceneDef,Map.current)
  if atmosphere.kind(atmosphereMap)=="forest" then V.require("DayNight").applyRig(false) end
+ -- Truck/earthquake scripts pan the native field while its input remains
+ -- locked. Apply that displacement within our rig; yaw/pitch stay user-owned.
+ if not cam.battle and not cam.replay then
+  local fv=require('src.core.game3.field_view')
+  local panX,panY=tonumber(fv.cameraPanX)or 0,tonumber(fv.cameraPanY)or 0
+  if R.camera then
+   local yaw=cam.level>=6 and cam.yaw or 0
+   for _,p in ipairs({R.camera.eye,R.camera.focus})do
+    p[1]=p[1]+panX*math.cos(yaw);p[2]=p[2]-panY;p[3]=p[3]+panX*math.sin(yaw)
+   end
+  else cx,cz=cx+panX,cz+panY end
+ end
  R.orbitGround=support
  R.viewProjection(cx,cz,vw,vh)
  if cam.actors then cam.actors:prepare(cam,support,R.eye)end

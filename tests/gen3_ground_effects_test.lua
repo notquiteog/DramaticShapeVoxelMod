@@ -17,3 +17,12 @@ end)
 assert(emits==1 and paints==1)
 assert(M.supports('tracks') and M.supports('ripple') and not M.supports('flash'))
 print('PASS native sand frames/flips, terrain placement, fade and fallback eligibility')
+local attached=0
+local wet={_anims={{kind='splash'},{kind='feet_water'},{kind='hot_springs'}},collectActors=function(out)
+ out[1]={kind='field_effect_splash',i=1,x=32,y=68,sortY=64.5,draw=function(_,x,y)assert(x==32 and y==68);attached=attached+1 end}
+end}
+M.draw(wet,function(x,z)assert(x==40 and z==72);return 3 end,function(id,w,h,paint,v,base)
+ assert(w==16 and h==8 and base==3);assert(v[1][2]==8 and v[3][2]==0);paint()
+end,{level=6,yaw=math.pi/2})
+assert(attached==1 and M.supports('camera_shake'),'attached water effects or shake lose camera')
+print('PASS player-attached native splash art, rotated upright card and terrain support')
