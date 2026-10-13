@@ -413,3 +413,19 @@ opened, received the forwarded axis without changing yaw, and returned to the
 active voxel view. Native Options capture inspected during its fade-in. Focused
 adapter and 541 consumer checks pass. Driver `tools/qa/native-camera-menu.lua`;
 results `.scratch/parity-073-20261011/results/ruby-native-camera-menu085`.
+
+### Native full-world flash adapter (0.3.85)
+
+The native `flash` animation now paints its white world veil on the completed
+voxel canvas, keeping the 3D camera active and leaving UI in its native plane.
+The engine still owns alpha/timer and completion callback; overlapping flashes
+compose as native alpha layers. Graphics state is restored even if drawing fails.
+BG-only flashes, cave light apertures and moving-actor effects remain distinct
+native fallbacks. Emerald 0.3.85 actually rendered the veil and clear return,
+kept look input, and fired the native callback exactly once. Both captures were
+inspected. An unchanged flat-camera comparison did not show an obvious white
+veil at the same early frame, so this is documented native-alpha presentation,
+not a pixel-identical claim against that engine renderer. Focused classifier,
+alpha/state restoration and adapter tests pass. Driver
+`tools/qa/native-world-flash.lua`; evidence under
+`.scratch/parity-073-20261011/results/emerald-native-world-flash-host`.

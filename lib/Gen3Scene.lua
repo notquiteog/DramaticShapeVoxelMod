@@ -79,7 +79,7 @@ end
 -- Unsupported full-screen effects still retain their native presentation.
 function M.nativeEffects(anims)
  for _,a in ipairs(anims or {})do
-  if type(a)~='table' or (a.kind~='dust' and not V.require('Gen3EmoteCards').supports(a.kind) and not V.require('Gen3GroundEffects').supports(a.kind))then return true end
+  if type(a)~='table' or (a.kind~='dust' and not V.require('Gen3EmoteCards').supports(a.kind) and not V.require('Gen3GroundEffects').supports(a.kind) and not V.require('Gen3ScreenEffects').supports(a.kind))then return true end
  end
  return false
 end
@@ -1045,6 +1045,7 @@ function M.draw(game,vw,vh,cam)
   local apply=cam.battle and weather.applyBattle or weather.apply
   apply(canvas,width,height,{id=Map.current,def={outdoor=not indoor}},math.max(1,width/640))
  end
+ if not cam.battle and not cam.replay then V.require('Gen3ScreenEffects').draw(canvas,require('src.core.game3.field_effects')._anims)end
  R.fog=nil
  R.tint={1,1,1}
  love.graphics.pop();love.graphics.setCanvas(savedCanvas);saved=false;savedCanvas=nil
