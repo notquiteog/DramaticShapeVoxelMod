@@ -1,3 +1,16 @@
+# Saffron two-storey house batch on engine 0.3.85 — 2026-10-13
+
+Two exact door-house variants add three native placements per FR/LG edition;
+seven existing houses now use closed curved green roofs, yellow siding and
+paving. Source-matched doors have 20px clear height; side/rear windows repeat
+on both storeys. Scoped native audit: ten placements / zero low-face walking
+cell flags in each edition. Three focused suites pass. Representative three
+families rendered front/rear/sides/eye and door states; final two-storey rear
+window correction separately inspected. Dense neighbors/UI obscure portions
+of some angles; no controller traversal or all-world coverage claim.
+Evidence in `.scratch/gen3-20261013`, coverage ledger updated. Separate public
+native imports linked to private disposable profiles; user saves untouched.
+
 # KFP interior dressing on official engine0.3.74 — 2026-10-11
 
 Added remaining authored interior primitives in the optional dressing pass:

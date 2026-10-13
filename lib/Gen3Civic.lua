@@ -723,6 +723,8 @@ function M.append(g,emit)
   local wh=math.min(10,p.wall*.4);local ww=math.min(22,(window[3]-window[1])*wh/(window[4]-window[2]))
   local low=math.max(4,(p.wall-wh)*.58)
   if gymPorch then wh,ww,low=5,14,17 end
+  for _,rowLow in ipairs(g.custom and g.custom.sideWindowRows or {low})do
+  low=rowLow
   local top=low+wh
   local frame=gymPorch and uv(8.1,49.1,8.2,49.2) or trim
   for _,fraction in ipairs({.30,.70})do
@@ -738,6 +740,7 @@ function M.append(g,emit)
     local out={};for i,q in ipairs(v)do out[i]={centerX-q[1],q[2],z+bodyBack-q[3]}end;face(out,t,shade)
    end,-ww/2,low,ww/2,top,boarded and .5 or .05,frame,glass,false,gymPorch and 'native' or nil)
   end
+ end
  end
  -- Thin foundation/eave courses and side windows continue the facade.
  for _,sx in ipairs({boarded and 1.72 or 1.95,p.w-(boarded and 1.72 or 1.95)})do

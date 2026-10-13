@@ -623,3 +623,35 @@ Native scoped audit 3 recognized / 0 low-face flags each, before the final
 material-only correction. Tests: `gen3_saffron_low_test`, `gen3_civic_test`,
 `gen3_rear_roof_test`, `gen3_scene_cache_test` pass. No normal input traversal
 claim. More green-roof families remain flat; city/game coverage unfinished.
+
+## Saffron two-storey house batch — 2026-10-13
+
+Complete source matching adds four-cell door houses at (21,10), (46,17) and
+five-cell door house at (41,34), while refining seven existing non-door houses.
+All three families use closed shallow green barrel roofs, source yellow siding,
+paved underlay and two rows of side/rear native windows. Door plane is recessed
+and aligned to native animations; source-proportioned 52px walls give 20px
+opening height. First native walking row remains clear. No collision/warp/save
+changes. Narrow truncated drawings beside Silph and southern boundary fragments
+remain deliberately unmatched; this is not full-city coverage.
+
+Verified runtime: official 0.3.85 bundled Linux LÖVE shell, fresh parity-worker
+FR/LG imported caches linked to private `gen3-{game}-qa` identities under
+`.scratch/gen3-20261013/profiles`. Root verified the runtime release; this worker's
+additional latest-release fetch was unavailable (web/DNS), so no independent
+latest-release claim. Source patterns came from prior separately matching
+FR/LG public atlas exports and match fresh 0.3.85 maps.
+
+Drivers `saffron-review.lua`, `saffron-footprint.lua`; captures under
+`.scratch/gen3-20261013/{firered,leafgreen}-saffron-final`: three representative
+families' front/rear/exposed sides, entrance eye and native door states inspected.
+`-saffron-storeys` records final two-row side/rear window refinement. Dense
+neighbors and existing selected-ball HUD obscure portions of several angles.
+Native audits `-saffron-footprint`: 10 placements / 0 scoped low-face overlaps
+with central 8×8 collision-0 cells each. No normal input/warp traversal claim.
+Drivers logged completion; wrapper returned status1 at shutdown without a logged
+driver error. Initial high-distance all-instance run stopped for excessive
+render cost; final review used three representatives and distance24.
+
+Focused suites: `gen3_saffron_houses_test`, `gen3_civic_test`,
+`gen3_rear_roof_test` pass. All QA processes closed; unrelated edits preserved.
