@@ -56,7 +56,7 @@ recipe('center_vending',center,{{0x2C9,0x2CA},{0x2CB,0x2CC},{0x2CD,0x2CE}},'cabi
 recipe('center_screen',center,{{0x286,0x287},{0x28E,0x28F}},'cabinet',28,0x281,{base=12,depth=1.5,frontOffset=32.2,facade={2,10,28,16}})
 recipe('center_terminal',center,{{0x285},{0x62},{0x295}},'cabinet',28,0x281,{depth=11,facade={0,8,16,39}})
 recipe('center_map',center,{{0x296,0x297},{0x29E,0x29F}},'cabinet',27,0x281,{base=11,depth=1.5,frontOffset=32.2,facade={0,13,32,17}})
-recipe('center_healer',center,{{0x2AA,0x2AB},{0x2B2,0x2B3}},'centerHealer',13,0x281)
+recipe('center_healer',center,{{0x2AA,0x2AB},{0x2B2,0x2B3}},'centerHealer',7,0x281)
 recipe('center_medical_cabinet',center,{{0x2AC},{0x2B4}},'centerMedical',18,0x281)
 for _,mid in ipairs({0x2B9,0x2BC,0x298,0x2BD})do
  recipe('center_counter_'..mid,center,{{mid}},'counter',7,0x281,{top=10,depth=6,single=true})

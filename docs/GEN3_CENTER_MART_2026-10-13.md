@@ -1,5 +1,32 @@
 # Native Gen3 Centers and Marts — 2026-10-13
 
+## Follow-up: lower healing-machine base
+
+The initial model overinterpreted the source's short dark foot/shadow as a
+six-pixel gray pedestal. The revised closed housing has a 1.5px foot; tray height
+is 7px (was 13), matching the neighboring counter, with its scanner at 14px (was
+20). Front badge, chamfered outline, rails and source palettes are retained.
+Both FR/LG and Hoenn recipe heights now drive the same physical tray and native
+healing-ball anchor; no Scene/effect-timing changes. X/Z footprint is unchanged.
+
+Source drawings inspected again: Emerald Battle Frontier Center and LeafGreen
+Celadon Center in `centers-marts-20261013/*-source`. Official latest remains
+[0.3.85](https://github.com/bryanthaboi/gen1recomp/releases/tag/v0.3.85).
+Actual isolated Emerald, LeafGreen and Ruby runs all pass the existing changed-
+fixture native-walkable audit (zero intersections), native 1/2/6 ball fill and
+reset, with orbit/eye captures. Front healing closeups inspected in all three;
+Emerald rear, LeafGreen side and eye inspected. Ruby's companion quick-item UI
+partially covers its closeup; Emerald cleanly shows the same Hoenn housing.
+FireRed/Sapphire inherit their respective changed recipes; not rerun this narrow
+follow-up. No user save touched and all test processes exited.
+
+Evidence: `/home/admin/Projects/.scratch/healer-base-20261013/`, driver `review.lua`,
+subdirectories `emerald`, `leafgreen`, `ruby`. Compare each `heal_100.png` with prior
+`centers-marts-20261013/emerald-detail/heal_100.png` and
+`centers-marts-20261013/leafgreen-polish/heal_100.png`.
+Focused LuaJIT suites pass: Center furniture, healing balls, Hoenn recipes and
+Ruby/Sapphire dispatch. Height/ball-bound tests use the new shared tray anchor.
+
 Official release rechecked as **0.3.85** (`releases/latest` -> `v0.3.85`).
 Runtime: extracted official Linux LOVE shell, `.scratch/runtime-0.3.85/engine`.
 Checkout loaded as `BATTLE_ART_VOXEL_FORK`; separate `gen3-<game>-qa` identities

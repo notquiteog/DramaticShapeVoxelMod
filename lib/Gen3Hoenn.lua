@@ -378,7 +378,7 @@ add('birch_starter_desk',lab,{{0x229,0x23a},{0x231,0x242}},'designed',{design='e
 add('birch_machine',lab,{{0x214,0x215},{0x21c,0x21d},{0x247,0x23f}},'labMachine',{h=25,topY=0,bodyY=24,panelY=26,depthOffset=-16})
 add('birch_server',lab,{{0x216},{0x21e},{0x292}},'designed',{design='em_lab_server'})
 add('birch_plant',lab,{{0x23c},{0x244}},'plant',{h=20,cutout=true})
-add('center_healer',center,{{0x222,0x223},{0x22a,0x22b}},'centerHealer',{h=13})
+add('center_healer',center,{{0x222,0x223},{0x22a,0x22b}},'centerHealer',{h=7})
 add('center_screen',center,{{0x24a,0x24b},{0x252,0x253}},'cabinet',{h=28,base=12,depth=1.5,frontOffset=32.2,facade={2,10,28,16}})
 add('hoenn_center_front_desk',center,{{0x258,0x221,0x221,0x205,0x221,0x259}},'centerCounter',{h=7})
 add('hoenn_center_left',center,{{0x248},{0x250}},'centerWing',{h=7})

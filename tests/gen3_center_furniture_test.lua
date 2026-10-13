@@ -19,6 +19,9 @@ for _,r in ipairs(list)do if r.pair=='network' then
   assert(maxY<7.1,'counter hides staff torso')
   assert(minZ>=(r.kind=='centerCounter' and 9 or 25),'counter intersects rotating staff card')
  end
+ if r.kind=='centerHealer'then
+  assert(r.h==7 and maxY==14 and minY==0,'healer tray/base exceeds native low housing proportions')
+ end
  if r.kind=='escalator'then assert(minY<0 and maxY<25,'unbounded escalator')
   if r.down then assert(maxY<8 and r.noGround,'down escalator is a raised staircase')end
  end
@@ -45,3 +48,9 @@ assert(byName.center_medical_cabinet.rows[1][1]==0x2AC and byName.center_medical
 assert(byName.center_table.kind=='centerTable','glass table lost actual chamfers')
 for _,r in ipairs(F.recipes)do if r.kind=='centerSeat'and r.pair=='network'then assert(r.walkablePad,'native walking pad became an obstruction')end end
 print('PASS exact counter/device source identities, chamfered tables and walking pads')
+
+local H=dofile('lib/Gen3Hoenn.lua')
+local hoennHealer
+for _,r in ipairs(H.recipes)do if r.kind=='centerHealer'then hoennHealer=r end end
+assert(hoennHealer and hoennHealer.h==7,'Hoenn healing balls use old tall tray anchor')
+print('PASS shared low healer tray anchor across FRLG and Hoenn recipes')

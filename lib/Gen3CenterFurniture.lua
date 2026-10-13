@@ -158,22 +158,24 @@ function M.append(p,source,box,sample,emit,uvFor)
   return true
  elseif r.kind=='centerHealer' then
   local white,shadow=sample(r.family=='rse' and 6 or 26,r.family=='rse' and 16 or 19),sample(r.family=='rse' and 3 or 2,r.family=='rse' and 17 or 12)
-  -- A recessed tray inside the native tapered housing. The source contains
-  -- an empty machine: temporary balls are supplied by the native heal effect.
-  bevel(3,10,29,30,3,0,6,shadow)
-  bevel(2,9,30,30,3,6,12.8,white)
-  box(x+5,12.8,z+12,x+27,13,z+28,sample(15,15))
+  -- The short dark source strip is a foot/shadow, not a tall pedestal.
+  -- Keep the tray at counter height; the recipe height is also the public
+  -- healing-ball anchor, so its six balls follow this physical tray.
+  local tray=r.h or 7
+  bevel(3,10,29,30,3,0,1.5,shadow)
+  bevel(2,9,30,30,3,1.5,tray-.2,white)
+  box(x+5,tray-.2,z+12,x+27,tray,z+28,sample(15,15))
   for _,xx in ipairs({2,27})do
-   box(x+xx,12.8,z+12,x+xx+3,15,z+26,white)
-   box(x+xx+.5,15,z+13,x+xx+2.5,15.4,z+17,sample(5,18))
+   box(x+xx,tray-.2,z+12,x+xx+3,tray+2,z+26,white)
+   box(x+xx+.5,tray+2,z+13,x+xx+2.5,tray+2.4,z+17,sample(5,18))
   end
-  bevel(4,8,28,12,1,13,20,white)
-  source(4,0,24,9,{x+4,20,z+12.02},{x+28,20,z+12.02},
-   {x+28,13,z+12.02},{x+4,13,z+12.02})
-  source(7,9,18,17,{x+5,13.03,z+12},{x+27,13.03,z+12},
-   {x+27,13.03,z+28},{x+5,13.03,z+28})
-  source(5,26,22,5,{x+5,12.8,z+30.02},{x+27,12.8,z+30.02},
-   {x+27,6,z+30.02},{x+5,6,z+30.02})
+  bevel(4,8,28,12,1,tray,tray+7,white)
+  source(4,0,24,9,{x+4,tray+7,z+12.02},{x+28,tray+7,z+12.02},
+   {x+28,tray,z+12.02},{x+4,tray,z+12.02})
+  source(7,9,18,17,{x+5,tray+.03,z+12},{x+27,tray+.03,z+12},
+   {x+27,tray+.03,z+28},{x+5,tray+.03,z+28})
+  source(5,26,22,5,{x+5,tray-.2,z+30.02},{x+27,tray-.2,z+30.02},
+   {x+27,1.5,z+30.02},{x+5,1.5,z+30.02})
   return true
  elseif r.kind=='centerTable' then
   -- The glass tables have chamfered corners in both editions. Model the rim
