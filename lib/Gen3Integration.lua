@@ -81,10 +81,17 @@ function M.install()
  V.require('InGameOptions').install(mod,Support.rows(schema,3),'BATTLE ART',V.require('OptionCategories'),liveSettings)
  mod.exports.optionSupport=Support.inventory(3)
  local function field(game)return game and game.phase=='field' and game.session and not Battle.isActive() end
+ local stackOk,nativeStack=pcall(require,'src.ui.game3.stack')
  local function looking(game)
   if not(field(game) or game and game.phase=='quest_log')then return false end
+  -- Public native stack also covers Ruby/Sapphire and extension menus; engine
+  -- modules are not guaranteed to appear in the mod sandbox package cache.
+  if stackOk and nativeStack.top then
+   local top=nativeStack.top()
+   if top and top.isMenu then return false end
+  end
   for _,name in ipairs({'start_menu','option_menu','controls_menu','bag_menu','party_menu','summary_menu','pokedex','pc_menu','shop_menu'})do
-   for _,prefix in ipairs({'src.ui.game3.','src.ui.game3.rse.'})do
+   for _,prefix in ipairs({'src.ui.game3.','src.ui.game3.rse.','src.ui.game3.rs.'})do
     local menu=package.loaded[prefix..name]
     if menu and menu.isOpen and menu.isOpen()then return false end
    end
@@ -155,7 +162,7 @@ function M.install()
  -- is camera-only; with the rungs off and no staged lens the engine's new
  -- twin-stick walk is preserved untouched.
  local function stickClaimed(game)
-  if free() then return true end
+  if free() and looking(game) then return true end
   return BattleStage.active and Battle.isActive()
  end
  mod.hooks:wrap('input.gamepad',function(next,game,ev)

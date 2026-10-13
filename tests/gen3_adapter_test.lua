@@ -96,6 +96,8 @@ local V={mod=mod};function V.require(name)
  if name=='ModSetting' then return assert(loadfile(root..'/lib/ModSetting.lua'))(V) end
  return fallback.require(name)
 end
+local nativeMenu
+package.loaded['src.ui.game3.stack']={top=function()return nativeMenu end}
 local A=assert(loadfile(root..'/lib/Gen3Integration.lua'))(V);A.install()
 local game={phase='field',session={},options={}}
 Display.present(game);assert(A.active and draws==1 and native==0 and Tilt.angle==1 and Tilt.level==4)
@@ -111,6 +113,14 @@ package.loaded['src.ui.game3.rse.option_menu']={isOpen=function()return true end
 hooks['input.wheel'](function()forwarded=forwarded+1 end,game,1)
 assert(forwarded==1,'Emerald options failed to keep wheel ownership')
 package.loaded['src.ui.game3.rse.option_menu']=nil
+nativeMenu={isMenu=true,id='rs_option'}
+local menuYaw=A.yaw;local axisForwarded=false
+hooks['input.gamepad'](function()axisForwarded=true end,game,{phase='axis',axis='rightx',value=1})
+hooks['core.update'](function()end,game,.1)
+assert(axisForwarded and A.yaw==menuYaw,'native stacked menu lost stick input or moved camera')
+hooks['input.gamepad'](function()end,game,{phase='axis',axis='rightx',value=0})
+nativeMenu=nil
+
 needsNative=true;Field.draw(game);assert(not A.active and native==1)
 Player.update(game,{isDown=function(_,key)return key=='up' end});assert(moves[2].up and not moves[2].right)
 local savedYaw=A.yaw

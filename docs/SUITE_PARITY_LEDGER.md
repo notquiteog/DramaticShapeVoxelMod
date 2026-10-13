@@ -403,3 +403,13 @@ to the voxel field; returned render inspected. Fixture:
 `.scratch/parity-073-20261011/results/emerald-native-effect-camera-host`.
 This verifies input-state continuity, not 3D replacement of every native special
 effect or an all-generation/all-transition camera claim.
+
+Native menu ownership follow-up: Gen3 free-camera input now consults the
+public native menu stack (including Ruby/Sapphire and custom menu layers)
+instead of relying only on the sandbox's base/Emerald module cache. Right-stick
+axes forward to native menus rather than silently being consumed by the camera.
+Ordinary speech/effects retain look controls. Ruby 0.3.85's real Options menu
+opened, received the forwarded axis without changing yaw, and returned to the
+active voxel view. Native Options capture inspected during its fade-in. Focused
+adapter and 541 consumer checks pass. Driver `tools/qa/native-camera-menu.lua`;
+results `.scratch/parity-073-20261011/results/ruby-native-camera-menu085`.
