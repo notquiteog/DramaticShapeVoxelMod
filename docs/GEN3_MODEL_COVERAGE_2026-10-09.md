@@ -1,3 +1,10 @@
+## 2026-10-14 terrain, sea rocks and RS parity
+
+See [terrain/parity evidence](GEN3_TERRAIN_PARITY_2026-10-14.md). RS now has
+57 recognized assemblies (0 flags) and reviewed Emerald terrain vocabulary;
+Hoenn sea rocks, regional rock bands and FR/LG Mt. Ember are 3D. Census tool
+counts remaining unclaimed non-walkable outdoor cells per edition.
+
 ## 2026-10-13 Center/Mart inventory and reception models
 
 See [native Center/Mart evidence](GEN3_CENTER_MART_2026-10-13.md): separate

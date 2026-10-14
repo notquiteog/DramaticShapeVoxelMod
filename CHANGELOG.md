@@ -1,3 +1,12 @@
+## Unreleased — 2026-10-14
+
+- Ruby/Sapphire: reviewed Emerald terrain vocabulary (cliffs, trees, ledges, fences, grass, steps) through a source-equivalence table, and 40 more native building families (all remaining Centers/Marts, five gyms, homes, harbors, Contest Hall).
+- Hoenn: closed 3D sea boulders and sea stacks, volcanic/khaki/limestone rock bands and round forest trees; walkable conifer crown cells no longer place a tree that traps the player.
+- FireRed/LeafGreen: Mt. Ember / Kindle Road mountain band.
+- QA tools for gap census, metatile hashes, source views, RS parity and scene review.
+
+Verified on Gen1Recomp 0.3.86: 275 suites passed, 0 failed, 58 skipped; representative five-edition renders and zero-flag building footprint audits. Full-world coverage remains unfinished.
+
 ## 1.34.0 — 2026-10-13
 
 - Improve running-window streaming, connected-map precaching and reuse of GPU instance bindings. Connected scenery and visual quality are preserved.

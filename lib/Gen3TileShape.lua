@@ -77,6 +77,8 @@ fence(0xFC,false,4,'north');fence(0xFD,false,12,'north')
 fence(0xEE,false,12,nil,'south');fence(0xEF,false,12,nil,true)
 fence(0xF6,false,12,nil,'north');fence(0x1F0,false,4,nil,'south')
 for _,mid in ipairs{0xD6,0xD7}do fence(mid,false);fences[mid].coveredGround=true end
+local emberCliffs={}
+for _,id in ipairs({0x334,0x335,0x336,0x351,0x353,0x355,0x357,0x359,0x35B,0x35C,0x35D})do emberCliffs[id]=true end
 local localProps={
  pallet_town={
   [0x284]={kind='fence',ground=0x285,material=0x284},
@@ -185,6 +187,12 @@ function M.of(primary,secondary,mid,behavior,collision)
  end
  if primary=='general' then
   if localProps[secondary] and localProps[secondary][mid] then return localProps[secondary][mid]end
+  -- Mt. Ember / Kindle Road grey mountain band (sevii_islands_123, source
+  -- region inspected 2026-10-14). Only native solid copies rise; the cave
+  -- mouth 0x346 and loose boulders 0x344/0x356 stay native.
+  if collision==7 and secondary=='sevii_islands_123' and emberCliffs[mid] and firlgMetatileIds() then
+   return {kind='cliff',height=32,ground=0x351,cap=0x351,side=0x335}
+  end
   -- FRLG-numbered shapes only. Another Gen 3 cart shares these numbers with
   -- unrelated artwork, so on a non-FRLG cart the floor stays flat instead of
   -- being extruded into cliffs/trees/fences/ledges it never was.

@@ -1,3 +1,23 @@
+# Gen3 terrain, sea rocks and RS parity on engine 0.3.86 — 2026-10-14
+
+Official 0.3.86 (released today) verified and used with fresh five-edition QA
+imports. New identifier-only QA tools: gap census, metatile hashes/source view,
+RS parity candidates/table, generic scene review. Gen3 collision values are
+Gen2 permission codes; the census uses `Permissions.isWalkable`.
+
+RS reuses Emerald terrain vocabulary only via reviewed `data/gen3_rs_parity.lua`
+(hash-identical or inspected same-object drawings; rails/treads rejected) and
+gains 40 Emerald building recipes (57 assemblies, 0 footprint flags). New
+`Gen3SeaRocks` 2x2 boulders/sea stacks, Hoenn regional rock bands, round forest
+trees, FR/LG Mt. Ember rock band. Walkable conifer crowns no longer plant a
+trapping second tree (Emerald too). Outdoor unclaimed non-walkable cells:
+Emerald 27,548→12,271, RS 49,109→11,081, FR/LG 11,527→8,815.
+
+Standalone engine copy and all-partner run both pass; 275 suites pass, 0 fail.
+Not every map was visually signed off; see
+`docs/GEN3_TERRAIN_PARITY_2026-10-14.md` for evidence, holds and next targets.
+No push/release performed.
+
 # Movement, follower seams and streaming — 2026-10-13
 
 Current work targets official Gen1Recomp 0.3.85. Shared `3D MOVE` defaults GRID
