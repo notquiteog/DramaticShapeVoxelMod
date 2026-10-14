@@ -5,13 +5,21 @@ local V,cache={},{}
 function V.require(n)if not cache[n]then cache[n]=assert(loadfile('lib/'..n..'.lua'))(V)end;return cache[n]end
 local H,S,C=V.require('Gen3Hoenn'),V.require('Gen3TileShape'),V.require('Gen3Civic')
 for _,game in ipairs({'ruby','sapphire'})do
- version=game;assert(H.active());local recipes=H.exteriorRecipes();assert(#recipes==13)
+ version=game;assert(H.active());local recipes=H.exteriorRecipes();assert(#recipes==53,#recipes)
  assert(S.of('general','petalburg',0x1dc,0,7).kind=='tree')
  assert(S.of('general','petalburg',0x14,0,7).kind=='flat','Kanto trees leaked')
  assert(S.of('general','petalburg',0x66,0,7).kind=='flat','unreviewed Emerald terrain leaked')
  assert(S.of('general','petalburg',1,0x10,0).kind=='water')
  assert(S.of('general','petalburg',0x2a,0x2a,0).kind=='flat','seaweed became Kanto stairs')
  assert(S.of('building','facility',0x2f8,0,7).kind=='flat','unreviewed Emerald interior leaked')
+ -- Source-reviewed parity table: same object, own RS pixels.
+ assert(S.of('general','mauville',0x71,0,7).kind=='cliff','reviewed RS cliff stayed flat')
+ assert(S.of('general','fortree',0xc7,0,7).kind=='tree','reviewed RS conifer stayed flat')
+ assert(S.of('general','mauville',0x71,0,0).kind~='cliff','walkable copy raised as cliff')
+ assert(S.of('general','mauville',0x3e,0,7).kind=='flat','rejected white rail became a tree')
+ assert(S.of('general','meteor_falls',0x202,0,0).kind~='steps','rejected RS treads became Emerald steps')
+ assert(S.of('general','mauville',0x1dc,0,7).root==true,'RS-owned round tree shape replaced')
+ assert(S.of('general','fortree',0xe,0,7).root==true and S.of('general','fortree',0xe,0,0).root==false,'walkable crown cell planted a trapping tree')
  local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop' or r.pair=='building__lab')end end;assert(approved==43)
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do

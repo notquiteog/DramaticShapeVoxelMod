@@ -39,7 +39,7 @@ local modules={SpatialUpscale={setting=s},ModSetting=Setting,CameraSettings={inv
  Voxel3D={},WorldUnderlay={setting=s,COLORS={black={0,0,0}},selected=function()return 'black'end,
  draw=function(_,x,z,color)hit('underlay',color);return true end},
  TiltShift={setLevel=function(n)hit('tilt',n)end,apply=function(c)hit('blur',c);return 'blurred'end,invalidate=function()end},
- CommunityVisuals={sky=s},Water={setting=s}}
+ CommunityVisuals={sky=s},Water={setting=s},MovementMode={setting=s}}
 for _,name in ipairs({'KfpGroundFlock','KfpAmbientDetails','KfpTreeDetails','KfpSurfaceLife','KfpWetGround','KfpRainProps','KfpAtmosphere','KfpMotion','KfpInterior','KantoFirstPerson'})do
  modules[name]={settings={s}}
 end

@@ -33,10 +33,29 @@ local fenceMauville={
  [0x273]={axis=2,turn='north'},[0x290]={axis=2,turn='north'},
  [0x2b2]={axis=2,stop=true},[0x2ba]={axis=2,stop=true},
 }
+-- Regional rock masses with their own cap/face drawings (source sheets
+-- inspected 2026-10-14). Only native solid (0x07) copies are raised; walkable
+-- copies of the same drawings stay native ground.
+local regionalCliffs={}
+local function rockBand(secondary,ids,cap,side,height)
+ local t=regionalCliffs[secondary] or {};regionalCliffs[secondary]=t
+ for _,id in ipairs(ids)do t[id]={kind='cliff',height=height or 24,ground=cap,cap=cap,side=side}end
+end
+-- Mt. Chimney / Jagged Pass / Route 112 volcanic red rock (2BD lava excluded).
+rockBand('lavaridge',{0x268,0x269,0x26a,0x270,0x271,0x272,0x273,0x274,0x275,0x278,0x279,0x27a,0x27b,0x27c,0x27e,0x27f},0x271,0x274)
+-- Route 113/114 khaki mountain faces.
+rockBand('fallarbor',{0x23c,0x240,0x241,0x242,0x243,0x244,0x245,0x246,0x247},0x241,0x243,32)
+-- Sootopolis crater and Mossdeep white limestone (2E8 water edge excluded).
+rockBand('sootopolis',{0x2d0,0x2d1,0x2d2,0x2d3,0x2d4,0x2d8,0x2d9,0x2da,0x2db,0x2e0,0x2e1,0x2e2,0x2e9},0x2d9,0x2e1,32)
+rockBand('mossdeep',{0x2a8,0x2a9,0x2aa,0x2b0,0x2b1,0x2b2,0x2b8,0x2b9,0x2ba},0x2a9,0x2b9)
+M.regionalCliffs=regionalCliffs
 -- Ocean barrier rocks remain low, with their own water underlay. Resolve
 -- before the engine's surfable behavior because the artwork includes water.
-function M.surface(primary,mid,collision)
- if rubySapphire() then return end
+function M.surface(primary,mid,collision,secondary)
+ if rubySapphire() then return RS().surface and RS().surface(primary,mid,collision,secondary,M.emeraldSurface) end
+ return M.emeraldSurface(primary,mid,collision)
+end
+function M.emeraldSurface(primary,mid,collision)
  if primary=='general' and collision==7 and (mid==0xc5 or mid==0x18c or mid==0x194)then
   return {kind='rock',ground=0x2d,height=6}
  end
@@ -80,7 +99,12 @@ function M.prepareTrees(cells)
  return count
 end
 function M.shape(primary,secondary,mid,behavior,collision)
- if rubySapphire() then return RS().shape(primary,secondary,mid,behavior,collision)end
+ -- RS receives an Emerald classification only through its reviewed parity
+ -- table: the same ID can draw a different object in another edition.
+ if rubySapphire() then return RS().shape(primary,secondary,mid,behavior,collision,M.emeraldShape)end
+ return M.emeraldShape(primary,secondary,mid,behavior,collision)
+end
+function M.emeraldShape(primary,secondary,mid,behavior,collision)
  if primary=='building' and secondary=='shop' and collision==7 and (mid==0x222 or mid==0x244)then
   return {kind='roomWall',ground=0x201}
  end
@@ -117,13 +141,22 @@ function M.shape(primary,secondary,mid,behavior,collision)
     secondary=='meteor_falls' and mid==0x202) then
    return {kind='steps',height=6}
   end
+  local band=collision==7 and regionalCliffs[secondary] and regionalCliffs[secondary][mid]
+  if band then local out={};for k,v in pairs(band)do out[k]=v end;return out end
   if trees[mid]then return {kind='tree',ground=1,root=roots[mid],anchorX=16,anchorZ=8,treeRows=treeRows,treeFamily='round',treeTrim=0}end
+  -- One-cell round trees packed into dense Hoenn forest walls.
+  if collision==7 and (mid==0x16 or mid==0x17)then
+   return {kind='tree',ground=1,root=true,anchorX=8,anchorZ=8,treeRows={{mid}},treeFamily='round',treeTrim=0}
+  end
+  -- A walkable cell carries only the projected crown of the tree whose
+  -- blocked cell is below it. Planting a second volume there would trap
+  -- the player inside foliage; keep its native ground and no trunk.
   if narrowTrees[mid]then
-   return {kind='tree',ground=1,root=true,anchorX=8,anchorZ=8,
+   return {kind='tree',ground=1,root=collision~=0,anchorX=8,anchorZ=8,
     treeRows={{0xe},{0xc7}},treeFamily='conifer',treeTrim=0}
   end
   if secondary=='dewford' and (mid==0x239 or mid==0x243 or mid==0x23a)then
-   return {kind='tree',ground=0x124,root=true,anchorX=8,anchorZ=8,
+   return {kind='tree',ground=0x124,root=collision~=0,anchorX=8,anchorZ=8,
     treeRows={{0x239},{0x23a}},treeFamily='conifer',treeTrim=0}
   end
   if secondary=='mauville' and fenceMauville[mid]then
@@ -141,10 +174,15 @@ function M.shape(primary,secondary,mid,behavior,collision)
   end
   -- Reviewed native cliff band: 64/65 are house facades; 6D..6F,
   -- 7F and 8F are ground. Never turn blocked decorative ground into peaks.
-  if collision==7 and ((mid>=0x66 and mid<=0x6c) or
+  if collision==7 and (mid==0xa9 or (mid>=0x66 and mid<=0x6c) or
     (mid>=0x70 and mid<=0x7e) or (mid>=0x80 and mid<=0x8e) or
     (mid>=0x90 and mid<=0x9e)) then
    return {kind='cliff',height=24,ground=1,cap=0x6c,side=0x71}
+  end
+  -- Open-sea island rims: corner/side drawings around the same rock band,
+  -- standing in deep water (identical primary art in RS and Emerald).
+  if collision==7 and (mid==0x17a or mid==0x17c or mid==0x182 or mid==0x184)then
+   return {kind='cliff',height=24,ground=0x170,cap=0x6c,side=0x71}
   end
   if collision==7 and behavior==0xc and mid<0x200 then
    return {kind='cliff',height=24,ground=1,cap=0x6c,side=0x71}

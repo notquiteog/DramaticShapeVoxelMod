@@ -144,7 +144,7 @@ function M.of(primary,secondary,mid,behavior,collision)
  end
  -- The native behavior table identifies actual surfable pixels independently
  -- of edition-specific metatile IDs. Keep their original animated artwork.
- if hoenn then local surface=H.surface(primary,mid,collision);if surface then return surface end end
+ if hoenn then local surface=H.surface(primary,mid,collision,secondary);if surface then return surface end end
  if behavior and require('src.core.game3.collision').isSurfable(behavior) then
   return {kind='water',reviewedSurface=true,behavior=behavior}
  end

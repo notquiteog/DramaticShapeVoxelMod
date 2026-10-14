@@ -1,0 +1,159 @@
+-- Hoenn open-sea rocks: complete 2x2 native drawings become one closed stone.
+-- Two primary-tileset families (hash-identical in Emerald, Ruby, Sapphire):
+--   boulder 150/151/158/159 - grey boulder inside a dark water/ripple ring
+--   peak    175/176/17D/17E - brown sea stack rising from open water
+-- Only complete groups whose four cells are native solid (0x07) are claimed; the
+-- hull is carved from the drawing's own rock pixels (water/ripple colours and
+-- thin foam lines are excluded) so it stays inside the blocked 2x2 footprint.
+-- The cells beneath take the adjacent native water drawing. Presentation only.
+local V=...
+local M={}
+M.families={
+ {name='sea_boulder',rows={{0x150,0x151},{0x158,0x159}},height=13,style='rock'},
+ -- The stack keeps its pointed silhouette: a row hull, not rounded masses.
+ {name='sea_peak',rows={{0x175,0x176},{0x17d,0x17e}},height=30,trimOutline=true},
+}
+local member={}
+for _,f in ipairs(M.families)do for iy,row in ipairs(f.rows)do for ix,mid in ipairs(row)do member[mid]={f,ix-1,iy-1}end end end
+M.member=member
+local function hoenn()
+ local ok,GV=pcall(require,'src.core.GameVersion');local v=ok and GV.get()
+ return v=='emerald' or v=='ruby' or v=='sapphire'
+end
+function M.prepare(cells)
+ if not hoenn() then return 0 end
+ local count=0
+ for _,c in pairs(cells)do
+  local m=c.primary=='general' and member[c.mid]
+  if m and m[2]==0 and m[3]==0 and not c.seaRock then
+   local f=m[1];local parts,ok={},true
+   for iy,row in ipairs(f.rows)do for ix,mid in ipairs(row)do
+    local n=cells[(c.cx+ix-1)..':'..(c.cy+iy-1)]
+    if not n or n.pair~=c.pair or n.mid~=mid or n.seaRock or n.civic or n.prop
+     or n.collision~=7 then ok=false else parts[#parts+1]=n end
+   end end
+   if ok then
+    -- Underlay: the most common adjacent native water drawing.
+    local votes,ground,best={},0x170,0
+    for y=c.cy-1,c.cy+#f.rows do for x=c.cx-1,c.cx+#f.rows[1] do
+     local n=cells[x..':'..y]
+     if n and n.pair==c.pair and not member[n.mid] and n.shape and n.shape.kind=='water' then
+      votes[n.mid]=(votes[n.mid] or 0)+1
+      if votes[n.mid]>best then best,ground=votes[n.mid],n.mid end
+     end
+    end end
+    local g={family=f,root=c,cx=c.cx,cy=c.cy,ground=ground}
+    for _,n in ipairs(parts)do
+     n.seaRock=g;n.shape={kind='rock',ground=ground,seaRock=g,root=n==c}
+    end
+    count=count+1
+   end
+  end
+ end
+ return count
+end
+local function pixel(ts,x,y)
+ local r,g,b,a=ts.imageData:getPixel(x,y)
+ if ts.overImageData then local rr,gg,bb,aa=ts.overImageData:getPixel(x,y)
+  r,g,b,a=rr*aa+r*(1-aa),gg*aa+g*(1-aa),bb*aa+b*(1-aa),aa+a*(1-aa)
+ end
+ return r,g,b,a
+end
+-- Rock pixels: not part of the water underlay palette and not a saturated
+-- blue (deep water shadow, ripple ring). Grey stone and brown stacks pass.
+function M.isRock(r,g,b,water)
+ if water[math.floor(r*255+.5)*65536+math.floor(g*255+.5)*256+math.floor(b*255+.5)]then return false end
+ local blue=b-math.max(r,g)
+ return blue<.26
+end
+-- Mask over the whole drawing: erode once to cut 1px foam lines, keep the
+-- component nearest the centre, then grow back within the raw mask.
+function M.mask(w,h,sample,water)
+ local raw={}
+ for y=0,h-1 do for x=0,w-1 do local r,g,b,a=sample(x,y);raw[y*w+x]=a>.5 and M.isRock(r,g,b,water) or nil end end
+ local core={}
+ for y=0,h-1 do for x=0,w-1 do
+  local k=y*w+x
+  if raw[k] and x>0 and x<w-1 and y>0 and y<h-1 and raw[k-1] and raw[k+1] and raw[k-w] and raw[k+w] then core[k]=true end
+ end end
+ local best,bestScore
+ local seen={}
+ for k in pairs(core)do if not seen[k]then
+  local comp,q,at={}, {k},1;seen[k]=true
+  while q[at]do local p=q[at];at=at+1;comp[#comp+1]=p
+   local x,y=p%w,math.floor(p/w)
+   for _,d in ipairs({{1,0},{-1,0},{0,1},{0,-1}})do
+    local nx,ny=x+d[1],y+d[2];local nk=ny*w+nx
+    if nx>=0 and ny>=0 and nx<w and ny<h and core[nk] and not seen[nk]then seen[nk]=true;q[#q+1]=nk end
+   end
+  end
+  local sx,sy=0,0;for _,p in ipairs(comp)do sx=sx+p%w;sy=sy+math.floor(p/w)end
+  local dx,dy=sx/#comp-w/2,sy/#comp-h/2
+  local score=#comp/(1+(dx*dx+dy*dy)/64)
+  if not bestScore or score>bestScore then best,bestScore=comp,score end
+ end end
+ local out={}
+ if not best then return out end
+ for _,p in ipairs(best)do out[p]=true end
+ for _,p in ipairs(best)do
+  local x,y=p%w,math.floor(p/w)
+  for _,d in ipairs({{1,0},{-1,0},{0,1},{0,-1},{1,1},{-1,-1},{1,-1},{-1,1}})do
+   local nx,ny=x+d[1],y+d[2];local nk=ny*w+nx
+   if nx>=0 and ny>=0 and nx<w and ny<h and raw[nk]then out[nk]=true end
+  end
+ end
+ return out
+end
+function M.append(c,emit,uvFor)
+ local g=c.shape.seaRock;if not (g and c.shape.root)then return end
+ local ts=c.ts;local f=g.family;local cols,rowsN=#f.rows[1],#f.rows;local w,h=cols*16,rowsN*16
+ local water={}
+ local ws=ts.midToSlot[g.ground]
+ if ws then for y=0,15 do for x=0,15 do
+  local r,gg,b=pixel(ts,ws%ts.cols*16+x,math.floor(ws/ts.cols)*16+y)
+  water[math.floor(r*255+.5)*65536+math.floor(gg*255+.5)*256+math.floor(b*255+.5)]=true
+ end end end
+ local function at(x,y)
+  local mid=f.rows[math.floor(y/16)+1][math.floor(x/16)+1];local slot=ts.midToSlot[mid]
+  if not slot then return 0,0,0,0 end
+  return pixel(ts,slot%ts.cols*16+x%16,math.floor(slot/ts.cols)*16+y%16)
+ end
+ local mask=M.mask(w,h,at,water)
+ -- The stack's waterline outline is cool grey ink; extruded through the
+ -- row hull it would become a flat grey band. Its brown body carries the form.
+ if f.trimOutline then for k in pairs(mask)do
+  local r,gg,b=at(k%w,math.floor(k/w))
+  if b>=r and b>=gg then mask[k]=nil end
+ end end
+ local minX,minY,maxX,maxY=w,h,-1,-1
+ for k in pairs(mask)do local x,y=k%w,math.floor(k/w)
+  minX,minY,maxX,maxY=math.min(minX,x),math.min(minY,y),math.max(maxX,x+1),math.max(maxY,y+1)
+ end
+ if maxX<minX then return end
+ local hw,hh=maxX-minX,maxY-minY
+ local function uvOf(sx,sy)
+  local mid=f.rows[math.floor(sy/16)+1][math.floor(sx/16)+1];local uv=uvFor(ts,mid)
+  local lx,ly=sx%16+.5,sy%16+.5
+  return uv[1][1]+(uv[2][1]-uv[1][1])*lx/16,uv[1][2]+(uv[3][2]-uv[1][2])*ly/16
+ end
+ local sample=function(x,y)
+  local sx,sy=minX+x,minY+y
+  local r,gg,b,a=at(sx,sy);local u,v=uvOf(sx,sy)
+  return r,gg,b,mask[sy*w+sx] and a or 0,u,v
+ end
+ local H=V.require('VoxelHull')
+ local hull=H.build(hw,hh,sample,1,0,nil,f.style)
+ -- VoxelHull depth equals the hull width; clamp it to the drawing's own
+ -- vertical extent so a wide stack never reaches past its blocked rows.
+ local ox,oz=minX+hw/2,minY+hh/2
+ local scaleY=f.height/math.max(1,hh)
+ local depthScale=math.min(1,hh/math.max(1,hw))
+ for _,q in ipairs(hull)do
+  local points={};local t={q.u,q.v}
+  for _,p in ipairs(q)do
+   points[#points+1]={c.cx*16+ox+p[1],p[2]*scaleY,c.cy*16+oz+p[3]*depthScale}
+  end
+  emit(points,{t,t,t,t},q.shade)
+ end
+end
+return M

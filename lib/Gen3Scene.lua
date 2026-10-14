@@ -204,6 +204,7 @@ local function build(req,cache,previous)
  cache.signature=sig;cache.parts={};cache.cells=cells
  local treeGroups,legendaryTreeGroups={},{};M.legendaryTreeCount=0
  if V.require("Gen3Hoenn").active() then V.require("Gen3Hoenn").prepareTrees(cells) end
+ M.seaRockCount=V.require('Gen3SeaRocks').prepare(cells)
  M.forestTrees=Forest.prepare(cells)
  local gyms=Buildings.prepare(cells);M.gymCount=#gyms
  local recipes=V.data("gen3_exteriors")
@@ -630,7 +631,7 @@ local function prepare(game,vw,vh,cam)
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
  M.prepares=stream.stats.started;M.builds=stream.stats.completed;M.cacheHits=stream.stats.hits
- for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
+ for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
  return true
 end
 local function terrain(draw)

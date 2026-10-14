@@ -29,6 +29,7 @@ function M.wall(cells,c,emit,uvFor)
  return V.require('Gen3Terrain').append(cells,c,emit,uvFor)
 end
 function M.rock(c,emit,uvFor)
+ if c.shape.seaRock then return V.require('Gen3SeaRocks').append(c,emit,uvFor)end
  local mask=V.require('Gen3Outdoor').mask(c.ts,c.mid,c.shape.ground)
  if not mask then return end
  mask=boulderMask(mask)

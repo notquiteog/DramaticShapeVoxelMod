@@ -3,7 +3,7 @@
 -- Run as POKEPORT_DRIVER with SHOT_DIR set to an existing output directory.
 return function(game)
  local U=dofile('tests/drivers/util.lua');local ver=require('src.core.GameVersion').get()
- game:_handleBootAction({action='new_game',start={map=ver=='emerald'and'EM_OLDALE_TOWN'or'FR_PALLET_TOWN',x=10,y=9,facing='down'}})
+ game:_handleBootAction({action='new_game',start={map=ver=='emerald'and'EM_OLDALE_TOWN'or ver=='ruby' and 'RU_OLDALE_TOWN' or ver=='sapphire' and 'SA_OLDALE_TOWN' or'FR_PALLET_TOWN',x=10,y=9,facing='down'}})
  local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib;local Map=require('src.core.game3.map');local P=V.require('Gen3Tilesets');local C=V.require('Gen3Civic')
  local ids={};for id,d in pairs(game.data.maps)do Map.ensureMidLayout(game,id,d);ids[#ids+1]=id end;table.sort(ids);P.bind(game.data.maps)
  local f=assert(io.open(os.getenv('SHOT_DIR')..'/footprints.csv','w'));f:write('map,family,x,y,walkable_cells\n');local count,bad=0,0

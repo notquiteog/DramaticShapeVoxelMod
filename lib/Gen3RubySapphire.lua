@@ -1,10 +1,26 @@
 -- Independently reviewed Ruby/Sapphire source families. Do not dispatch the
 -- entire Emerald catalogue: several identical IDs draw different objects.
+local V=...
 local M={recipes={}}
 local exteriorNames={slateport_shipyard=true,slateport_oceanic_museum=true,oldale_house=true,oldale_mart=true,oldale_center=true,
  petalburg_city_mart=true,petalburg_city_center=true,petalburg_city_gym=true,
  petalburg_city_wide_home=true,petalburg_city_home=true,birch_lab=true,
  littleroot_player_house=true,littleroot_rival_house=true}
+-- 2026-10-14 source batch: RS and Emerald native maps contain these complete
+-- drawings with the same layout, openings and roof form; RS pixels differ
+-- only in roof texture/palette (side-by-side source sheets inspected). Held
+-- back: Rustboro urban/Devon (different window vocabulary), Mossdeep and
+-- Verdanturf homes (different roof decks/windows), Space Center/Frontier,
+-- and Lilycove's gold residence (RS leaves its lower-tier corners walkable).
+for _,name in ipairs({'rustboro_city_center','rustboro_city_mart','dewford_town_center','slateport_city_center',
+ 'slateport_city_mart','mauville_city_center','mauville_city_mart','verdanturf_town_mart','verdanturf_town_center',
+ 'fallarbor_town_center','fallarbor_town_mart','lavaridge_town_mart','lavaridge_town_center','fortree_city_center',
+ 'fortree_city_mart','lilycove_city_center','mossdeep_city_center','mossdeep_city_mart','sootopolis_city_mart',
+ 'sootopolis_city_center','pacifidlog_town_center','ever_grande_city_center',
+ 'rustboro_city_gym','dewford_town_gym','mauville_city_gym','lavaridge_town_gym','mossdeep_city_gym',
+ 'lilycove_north_home','lilycove_west_cliff_home','lilycove_wide_home','lilycove_east_home',
+ 'lilycove_southwest_home','dewford_town_hall','dewford_town_home','dewford_town_south_home','lavaridge_town_home',
+ 'fallarbor_town_west_home','lilycove_harbor','slateport_harbor','lilycove_contest_hall'})do exteriorNames[name]=true end
 local furnitureNames={center_healer=true,center_screen=true,hoenn_center_front_desk=true,
  hoenn_center_left=true,hoenn_center_right=true,hoenn_center_pc=true,
  hoenn_center_map=true,hoenn_center_medicine=true,hoenn_center_terminal=true,
@@ -34,12 +50,37 @@ function M.exteriors(source)
   copy.header=#r.rows -- require every native source cell, including facade
   if r.name=='slateport_oceanic_museum' then copy.squareRoofLights=true end
   if r.name=='birch_lab' then copy.ventShape='rectangular' end
+  -- RS Slateport harbor has rectangular windows, not Emerald's portholes.
+  if r.name=='slateport_harbor' then copy.roundWindows=false end
   if r.name:match('^littleroot_') then copy.roofShape='littleroot_tiered' end
   out[#out+1]=copy
  end end
  return out
 end
-function M.shape(primary,secondary,mid,behavior,collision)
+-- Reviewed source-equivalence table (identifiers only). Loaded lazily so the
+-- module also works in standalone unit tests without the mod loader.
+local parity
+local function approved(primary,secondary,mid,kind)
+ if not parity then
+  parity=type(V)=='table' and V.data and V.data('gen3_rs_parity')
+   or dofile((os.getenv('DS_MOD_PATH') or '.')..'/data/gen3_rs_parity.lua')
+ end
+ return parity[('%s__%s:%03X'):format(primary or '',secondary or '',mid or 0)]==kind
+end
+M.approved=approved
+function M.surface(primary,mid,collision,secondary,emerald)
+ if M.disableParity then return end -- QA candidate generation only
+ local e=emerald and emerald(primary,mid,collision)
+ if e and approved(primary,secondary,mid,e.kind)then return e end
+end
+function M.shape(primary,secondary,mid,behavior,collision,emerald)
+ local own=M.ownShape(primary,secondary,mid,behavior,collision)
+ if own.kind~='flat' or own.reviewedSurface or not emerald or M.disableParity then return own end
+ local e=emerald(primary,secondary,mid,behavior,collision)
+ if e and (e.kind~='flat' or e.reviewedSurface) and approved(primary,secondary,mid,e.kind)then return e end
+ return own
+end
+function M.ownShape(primary,secondary,mid,behavior,collision)
  if primary=='general' then
   if trees[mid]then return {kind='tree',ground=1,root=roots[mid],anchorX=16,anchorZ=8,
    treeRows={{0x1d4,0x1d5},{0x1dc,0x1dd}},treeFamily='round',treeTrim=0}end
