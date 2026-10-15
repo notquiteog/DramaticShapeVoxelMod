@@ -1,3 +1,4 @@
+package.loaded['src.render.Assets']={register=function()end}
 package.loaded['src.ui.gen2.BattleHud']={EXP_LENGTH_PX=64}
 local checks=0
 local function check(v,msg)checks=checks+1;assert(v,msg)end
@@ -71,5 +72,25 @@ local oldcards=cards;game.stack.top=function()return {}end
 hooks['render.hud'](function()end,game,{})
 check(cards==oldcards,'covering menu retains frame ownership')
 s.battle.doubles=true;s:drawEnemyHud();check(calls.hud==nativeHud+1,'native doubles companion retains ownership')
+-- Native status layers and their separately drawn backplates share anchors.
+Mode.setting:setIndex(2);s.battle.doubles=false;UI.hudColor:setIndex(1)
+local layers={};local compact=V.require('NativeHudLayer').scale
+modules.NativeHudLayer={scale=compact,draw=function(owner,w,h,k,x,y,pal,fn,...)
+ layers[#layers+1]={w,h,k,x,y};return fn(...)
+end}
+package.loaded['src.render.Renderer'].frameRects=function()return{Ux=2,Uy=2}end
+local boxes=0;package.loaded['src.render.Font'].drawBox=function()boxes=boxes+1 end
+check(Adapter.backplate(s,0,0,12,4)and Adapter.backplate(s,9,6,11,7),'compact COLOR backplates are owned')
+s:drawEnemyHud();s:drawPlayerHud()
+check(boxes==2 and #layers==4,'each original backplate and HUD drawn once')
+check(layers[1][3]==.5 and layers[1][4]==0 and layers[1][5]==0 and layers[3][4]==0 and layers[3][5]==0,'enemy backplate and HUD share compact transform')
+check(layers[2][4]==160 and layers[2][5]==48 and layers[4][4]==160 and layers[4][5]==48,'player backplate and HUD share right/top transform')
+modules.OverworldBattle.hudScaleSetting.get=function()return'og'end
+local priorLayers=#layers;s:drawEnemyHud();check(not Adapter.backplate(s,0,0,12,4)and #layers==priorLayers,'OG preserves original native layer and backplate fallback')
+modules.OverworldBattle.hudScaleSetting.get=function()return'scaled'end
+s.usesModernDoublesHud=function()return true end;s:drawEnemyHud()
+check(#layers==priorLayers,'independent companion HUD keeps scale ownership')
+s.usesModernDoublesHud=nil;s.battle.doubles=true;s:drawEnemyHud()
+check(#layers==priorLayers,'native doubles retain original scale')
 undo();check(State.drawEnemyHud==savedEnemy and State.drawBottom==savedBottom,'unload restores native UI methods')
 print('PASS '..checks..' Gen2 native battle option checks')

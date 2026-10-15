@@ -18,13 +18,33 @@ local function modern(state)
  if type(state.usesModernDoublesHud)=='function' and state:usesModernDoublesHud() then return false end
  return not (state.battle and state.battle.doubles)
 end
+local function nativeScale(state)
+ if not active(state)or modern(state)or(state.battle and state.battle.doubles)
+  or(type(state.usesModernDoublesHud)=='function'and state:usesModernDoublesHud())then return 1 end
+ local rect=require('src.render.Renderer'):frameRects()
+ return V.require('NativeHudLayer').scale(Stage.hudScaleSetting:get(),rect)
+end
+local function nativeLayer(state,player,fn,...)
+ local scale=nativeScale(state)
+ if scale==1 then return fn(...)end
+ return V.require('NativeHudLayer').draw('gen2',160,144,scale,player and 160 or 0,player and 48 or 0,nil,fn,...)
+end
+function M.nativeHudOwned()
+ return active(screen)and not(screen.battle and screen.battle.doubles)
+  and not(type(screen.usesModernDoublesHud)=='function'and screen:usesModernDoublesHud())or false
+end
 function M.backplate(state,x,y,w,h)
  if not Mode.providerEnabled() then return false end
+ screen=state
  if UI.uiHidden('hud') or modern(state) then return true end
- if UI.hudUsesColor() then return false end
- local g=love.graphics;g.push('all');g.setShader();g.setColor(.06,.08,.1,.94)
- g.rectangle('fill',x*8,y*8,w*8,h*8);g.setColor(.55,.65,.72,1)
- g.rectangle('line',x*8+.5,y*8+.5,w*8-1,h*8-1);g.pop()
+ local color=UI.hudUsesColor()
+ if color and nativeScale(state)==1 then return false end
+ nativeLayer(state,x>0,function()
+  if color then return require('src.render.Font').drawBox(x,y,w,h)end
+  local g=love.graphics;g.push('all');g.setShader();g.setColor(.06,.08,.1,.94)
+  g.rectangle('fill',x*8,y*8,w*8,h*8);g.setColor(.55,.65,.72,1)
+  g.rectangle('line',x*8+.5,y*8+.5,w*8-1,h*8-1);g.pop()
+ end)
  return true
 end
 local function scopedText(fn,dark,fill,...)
@@ -69,12 +89,18 @@ function M.install()
   if type(original)~='function' then return end
   saved[key]=original;State[key]=function(self,...)return fn(original,self,...)end
  end
+ wrap('drawPanel',function(original,self,...)
+  V.require('NativeHudLayer').begin('gen2')
+  return original(self,...)
+ end)
  for _,key in ipairs({'drawEnemyHud','drawPlayerHud'})do wrap(key,function(original,self,...)
   if not active(self) then return original(self,...)end
   screen=self
   if UI.uiHidden('hud') or modern(self) then return end
-  if not UI.hudUsesColor()then return scopedText(original,true,nil,self,...)end
-  return original(self,...)
+  if not UI.hudUsesColor()then
+   return nativeLayer(self,key=='drawPlayerHud',scopedText,original,true,nil,self,...)
+  end
+  return nativeLayer(self,key=='drawPlayerHud',original,self,...)
  end)end
  wrap('drawBottom',function(original,self,...)
   if not active(self)then return original(self,...)end
@@ -157,6 +183,9 @@ function M.install()
  V.mod.hooks:wrap('render.hud',function(next,game,viewport)
   local result=next(game,viewport)
   local top=game and game.stack and game.stack.top and game.stack:top()
+  if screen and top==screen and M.nativeHudOwned()and not modern(screen)and not UI.uiHidden('hud')then
+   V.require('NativeHudLayer').paint('gen2',require('src.render.Renderer'):frameRects())
+  end
   if screen and top==screen and modern(screen)then
    local g=love.graphics;g.push('all');g.setShader();g.setScissor()
    local ok,err=pcall(paint,screen);g.pop();if not ok then error(err,0)end

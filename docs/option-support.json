@@ -2098,9 +2098,9 @@
         "key": "hudScale",
         "label": "HUD SCALE",
         "module": "OverworldBattle",
-        "status": "partial",
-        "consumer": "lib/Gen2BattleUI.lua",
-        "detail": "Changes the modern HUD scale; original native HUD scale is still engine-owned.",
+        "status": "implemented",
+        "consumer": "lib/Gen2BattleUI.lua; lib/NativeHudLayer.lua",
+        "detail": "Native original singles HUD and its backplates share OG or compact integer display scaling, composed at window resolution without dropping glyph pixels; modern HUD scale remains supported. Independent doubles HUD providers retain their own layout and scaling.",
         "verification": "source audit"
       },
       {
@@ -3330,9 +3330,9 @@
         "key": "hudScale",
         "label": "HUD SCALE",
         "module": "OverworldBattle",
-        "status": "partial",
-        "consumer": "lib/Gen3BattleOptions.lua; lib/Gen3BattleHud.lua",
-        "detail": "Live modern status-card palette/scale; original native HUD art remains engine-owned.",
+        "status": "implemented",
+        "consumer": "lib/Gen3BattleOptions.lua; lib/Gen3BattleHud.lua; lib/NativeGen3Hud.lua; lib/NativeHudLayer.lua",
+        "detail": "Original native healthboxes consume OG or compact integer display scaling at window resolution; native clipping, HP/EXP, doubles centers and slides remain original. Modern status cards retain their existing scale consumer.",
         "verification": "source audit"
       },
       {

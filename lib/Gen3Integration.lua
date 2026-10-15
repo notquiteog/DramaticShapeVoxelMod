@@ -259,7 +259,7 @@ function M.install()
  mod.exports.gen3Camera=M
  mod.exports.battleTheme=V.require('BattleTheme')
  mod.exports.battlePresentation={modernUIEnabled=V.require('ModernBattleUI').enabled,
-  nativeHudOwned=function()return BattleStage.active and V.require('ModernBattleUI').enabled()end}
+  nativeHudOwned=function()return BattleStage.active and V.require('ModernBattleUI').providerEnabled()end}
  mod.exports.firered={camera=M,outdoor=true,battles=BattleStage,presentation='beta'}
  -- Emerald shares this entire pipeline -- the camera, the battle stage and the
  -- presentation flags are all lineage-generic -- but the namespace was named
