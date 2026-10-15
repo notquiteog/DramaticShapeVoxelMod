@@ -35,3 +35,35 @@ assert(Shapes.of('building','lab',113).kind~='cliff','indoor metatile was raised
 assert(Shapes.of('general','town',0x87).kind=='ledge','small jump ledges became cliffs')
 for _,c in pairs(cells)do assert(c.mid==1 or c.mid==113,'native tile was modified')end
 print('PASS raised rock caps, shared boundary heights, tower contact, dome-ground exclusion and classifier isolation')
+
+local height,calls=T.height,0
+T.height=function(...)calls=calls+1;return height(...)end
+T.append(cells,cells['0:0'],function()end,function()return uv end)
+assert(calls==25,'cliff recomputed shared corner heights')
+T.height=height
+print('PASS cliff samples each of its 25 shared corners once')
+
+-- Exact output across neighboring cells/profiles, plus fresh samplers after edits.
+cells['2:0'].cy=0
+local function mesh(c,sample)
+ local out={}
+ T.append(cells,c,function(v,tex,shade)
+  for i,p in ipairs(v)do out[#out+1]=table.concat({p[1],p[2],p[3],tex[i][1],tex[i][2],shade},',')end
+ end,function()return uv end,sample)
+ return table.concat(out,';')
+end
+local sample=T.sampler(cells);calls=0
+T.height=function(...)calls=calls+1;return height(...)end
+for _,key in ipairs({'0:0','1:0','0:1','1:1'})do
+ local expected=mesh(cells[key]);local before=calls
+ assert(mesh(cells[key],sample)==expected,'shared sampler changed terrain mesh')
+ assert(calls-before<=25)
+end
+local before=calls
+mesh(cells['0:0'],sample);assert(calls==before,'shared samples were recomputed')
+cells['0:0'].shape.height=16
+assert(mesh(cells['0:0'],sample)==mesh(cells['0:0']),'wall profiles shared heights')
+cells['-1:0'].base=7
+assert(mesh(cells['0:0'],T.sampler(cells))==mesh(cells['0:0']),'new build retained stale heights')
+T.height=height
+print('PASS numeric terrain neighborhoods, shared scene corners, wall profiles and fresh edit sampling')

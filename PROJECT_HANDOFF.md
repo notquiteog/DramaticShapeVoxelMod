@@ -1,3 +1,156 @@
+# Coordinated streaming release — 2026-10-15
+
+Merged published tower/museum models (origin 1.41.0) with existing streaming and
+native-art parity work at 5d9a773. Museum approach keeps floorLink/steps and local
+classification cache. Gen 3 tree rebuilds now reuse the already resolved crown
+instead of resolving source artwork twice (Route 104: 1648 -> 824 calls).
+
+Merged suite: 303 passed, 0 failed, 58 prerequisite skips, SDK1173 included.
+Official Gen1Recomp 0.3.89 / native NVIDIA RTX 5060 Ti, 2560x1440 benchmarks.
+A bounded Gen 3 mesh-upload experiment was rejected after inconsistent results;
+no MeshChunks module or renderer changes from that experiment are retained.
+Baseline five-game GBA crossing p95: 13.85–18.39 ms; Emerald battle p95 3.28 ms.
+Cold rebuild timings are variable; no stable 165 FPS or complete parity claim.
+Prior measured Gen 2 boundary slicing improvements remain; see
+`docs/BOUNDARY_FRAME_TIME_2026-10-15.md`.
+
+All seven mods receive coordinated releases; companions only receive packaging
+version bumps (no new runtime changes). Exact-package results and checksums are
+recorded in the release evidence directory. Parity drafts remain outside this
+release until independently verified. Source data, private packs, saves and ROMs
+are excluded. Follow-up: unprepared warps/cold builds and GBA lookahead preparation
+still exceed the 6.06 ms budget; do not reduce lookahead without checking readiness.
+
+# Native Hoenn PokeNav selected art — 2026-10-15
+
+Ruby/Sapphire condition/ribbons and Emerald condition/ribbon summary now
+consume selected interface art during native draws, with original mon identity,
+graphs, ribbons, slides and controls. Official0.3.89 all3 runtime fixtures pass
+FIT/FULL/OFF, shiny condition navigation, ribbon descriptions and B exits;
+all24 captures inspected. Native party/ribbon/contest state unchanged.
+
+Focused65, inventory549, broad300/0fail/58skip including SDK1173 pass. Evidence:
+`docs/GEN3_POKENAV_ART_2026-10-15.md`. Remaining interface consumers include
+RS indexed hatch, cached Pokeblock/Factory/contest pictures, minigames, credits
+and scripted portraits. Inventory stays partial. No model/asset/release changes.
+
+# Boundary frame-time optimization — 2026-10-15
+
+Root: G/S/C perimeter generation now streams in 1ms update slices, keeps the
+complete prior window, and uploads ground in 4096-vertex batches. Shadow/color
+passes share the same published geometry. Reversal/warp/cancel releases tested.
+GBA terrain now reuses scene corner heights and numeric neighbor rows, preserving
+exact meshes. No geometry/material/quality/gameplay changes.
+
+Official0.3.89 NVIDIA1440p final Crystal stress: boundary peak79.99→2.85ms;
+whole-frame85.05→19.19ms. Gold/Silver boundary<=3.4ms. Five native GBA running
+crossings retained camera/scenery,1prefetch/1promotion/0failures,peak18–21ms.
+Emerald stationary battle mean2.76/p953.75/max4.13ms,zero rebuilds; moving peak
+24.55→17.85ms. Cold Route104694→679ms,Petalburg231→211ms. All11 editions smoke
+ran; NOT a165FPS guarantee or every-map review. Shared suite300/0/58,SDK1173.
+See `docs/BOUNDARY_FRAME_TIME_2026-10-15.md` for fixtures/caveats, including
+synthetic Gen2 movement and initial poor capture angles. No release/push.
+Parity worker committed c3b2489 and continues PokeNav readers independently.
+
+# Native Gen3 trade/hatch selected art — 2026-10-15
+
+All five native trade scenes and FireRed/LeafGreen/Emerald revealed hatchlings
+now consume scoped selected interface art. Native timers, callbacks, prompts,
+egg shells and party ownership remain original. Mon/PID/shiny identity and
+exact return tuples survive scoped readers; Spinda/Deoxys special art stays
+native. Fixed a real existing Crystal FIT/FULL bypass by preparing owned CPU
+PNG data once before animation-union fitting, without GPU readback/recoloring.
+
+Official0.3.89 all5 complete trade sequences and FR/LG/EM hatch sequences pass;
+final selected/native captures inspected. Focused53, Crystal cache/CPU checks
+and inventory549 pass. Shared final broad300/0fail/58skip, including SDK1173,
+passes with the root boundary/sampler batch.
+See `docs/GEN3_TRADE_HATCH_ART_2026-10-15.md`. RS hatch remains indexed PPU;
+PokeNav/Pokeblock/contest/Factory/minigame/credits/scripted pictures remain
+unscoped. Interface rows explicitly partial; no full parity claim. No model,
+asset, version, release or push changes. Isolated fixture saves only.
+
+# Native Gen3 capture-card intake color — 2026-10-15
+
+The native enemy capture card now consumes the same intake color/full-bright
+state as GB sprites. Original transforms/shrink/masks/timing stay native;
+other actors and OFF retain original rendering. Intake tint/light/shader state
+restores after each draw and on native draw errors. No models/core renderer
+changes.
+
+Official0.3.89 all5 GBA ON checks plus FireRed OFF pass; FR A/B and all final
+intake/OFF/result captures inspected. Native counters/storage/reset preserved.
+Broad300pass/0fail/58skip, SDK1173, inventory549 pass. See
+`docs/GEN3_CAPTURE_TINT_2026-10-15.md`. Model-specific materials, send-out
+geometry and specialty/doubles capture remain partial. Source audit identified
+native Gen3 trade/hatch picture readers still unscoped; inventory now says so.
+No assets/version/release/push changes. Parity work continues on real consumers.
+
+# Native Gen2 DUDE tutorial capture — 2026-10-15
+
+G/S/C's existing native Poke Ball tutorial now consumes shared capture effects.
+Original DUDE backpic, auto-input/menus/temporary pack, timers and guaranteed
+catch/no-storage result remain native. No player Pokemon is invented; contest
+Park Balls and unsupported paths keep their original presentation.
+
+Official0.3.89 full G/S/C ON and Crystal OFF tutorials pass, including real
+party/bag/dex invariants and name/text-speed restoration. Final capture/returned
+world screenshots inspected; initial too-early Crystal white-fade shot replaced
+by final post-fade evidence. Broad299/0fail/58skip, SDK1173, inventory549 pass.
+See `docs/GEN2_TUTORIAL_CAPTURE_2026-10-15.md`. Remaining native actor material,
+send-out geometry, specialty balls and other parity limits stay explicit.
+No model/asset/version/release/push changes.
+
+# Cross-generation cold-load optimization — 2026-10-15
+
+Root batch: linear Gen1/2 packed cache assembly (unchanged persistent bytes),
+shared terrain network union/find, Gen3 field-local classification and cliff
+corner reuse, scene metadata reuse, Gen2 boundary GPU instances and edge-sample
+reuse. Models/materials/footprints/collision unchanged; non-instanced GPU and
+flat-card fallbacks retained. All11 edition smoke fixtures exercised; final
+G/S/C forest/lab/first-person passed and captures inspected.
+
+Official0.3.89 NVIDIA: Red encoding550→357ms total. Gen3 cold Route104829→694ms,
+Petalburg250→231ms. G/S/C forest startup peak1077/1184/710–1106ms before boundary
+instances →173/170/289ms after (single runs, not guaranteed FPS). Five native
+GBA Running Shoes boundaries1prefetch/1promotion/0failure,peak20–23ms,camera kept.
+Kanto fixture uses2-cell valid lane; Hoenn12. No claim of equal workloads.
+Broad299pass/0fail/58fixture skips; exact geometry/cache byte regressions pass.
+Initial main builds, unprepared warps and remaining boundary work can still hitch.
+Evidence/limits: `docs/LOAD_OPTIMIZATION_2026-10-15.md`. No release/version/push.
+Parity worker independently continues native tutorial capture after8b295d7.
+
+# Native Gen2 send-out audio — 2026-10-15
+
+Optional Ember audio/volume now consumes G/S/C's native normal send-out poof,
+using actual shiny DVs. Separate shiny-star arms, cries and capture retain their
+ownership. Missing/failed playback, OFF and missing/stale stage keep native
+sound; live master, native returns and lifecycle cleanup are preserved.
+
+Actual official0.3.89 G/S/C native switches each pass2 replacements/1 failed
+fallback/1 OFF cue; final captures inspected. Playback sink verifies routing,
+not audible asset coverage (optional files absent). Shared final broad suite
+299pass/0fail/58skip includes root optimization batch; SDK1173, inventory549.
+Native Gen2 recall has no dedicated display sound/animation cue and remains a
+stated limitation. Other capture/effect/model parity remains unfinished. See
+`docs/GEN2_BALL_AUDIO_2026-10-15.md`. No version/release/push/model changes.
+
+# Native Gen3 send-out/recall audio — 2026-10-15
+
+Existing optional Ember audio/volume now consumes native intro/send-out and
+withdraw sound events, preserving actual battler/shiny identity and event order.
+Native capture keeps its adapter. Failed/missing playback, explicit mixer
+options, ambiguous simultaneous opens and OFF retain original sound/returns;
+live native master and lifecycle cleanup are included. No bundled audio/model,
+version, release or push changes.
+
+Official0.3.89 FR/E actual native routing/switch fixtures pass with injected
+playback sink (optional files absent):3 replacements/2 failed fallbacks/2 OFF
+native cues each. Final battle images inspected. Broad297/0fail/58skip, SDK1173,
+inventory549 and focused contracts pass. This verifies routing, not audible
+pack coverage. See `docs/GEN3_BALL_AUDIO_2026-10-15.md` for exact limits; GSC
+send-out/recall, broader effects/models and other parity gaps remain unfinished.
+
 # Tower reception interiors and Trainer Tower halls — 2026-10-15
 
 1.41.0 continues after published1.40.0 exteriors. Closed reception desks, PCs,

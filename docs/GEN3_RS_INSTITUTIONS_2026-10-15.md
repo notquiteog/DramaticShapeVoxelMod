@@ -2,7 +2,7 @@
 
 ## Scope and design
 
-Version 1.42.0 follows the published 1.41.0 tower batch. Independently reviewed
+Version 1.42.0 follows the published 1.41.0 tower batch and preserves the merged 1.41.1 fixes. Independently reviewed
 Ruby/Sapphire source patterns cover nine interiors per edition:
 
 | Family | Native map suffixes | Changes |

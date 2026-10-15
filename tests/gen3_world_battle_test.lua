@@ -24,6 +24,7 @@ local modules={StandingTrainer={prepare=function()end,draw=function()end,clear=f
  BattleBillboard={mesh=function()return {}end,yawToward=function()return 0 end},
  UiBackplates={spritesUnlit=function()return false end}}
 local V={require=function(k)return assert(modules[k],k)end}
+modules.NativeGen3CaptureTint=assert(loadfile('lib/NativeGen3CaptureTint.lua'))(V)
 package.loaded['src.core.game3.battle.ui']={battlerSpriteCenter=function(id)return id%2==0 and 72 or 176,id%2==0 and 80 or 40 end}
 package.loaded['src.core.game3.battle.anim_coords']={battler=function()return {species=6}end,coords=function(_,id)return {y=id%2==0 and 80 or 40}end}
 package.loaded['src.core.game3.pokemon']={}

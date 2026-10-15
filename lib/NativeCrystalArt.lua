@@ -6,6 +6,7 @@ M.pack.defaultIndex=2 -- Gen3 keeps its existing selected/native art on first us
 local Assets=require('src.render.Assets')
 local durations=V.require('Crystal/animation_data')
 local entries,started={},{}
+local imagePaths=setmetatable({},{__mode="k"})
 local owner
 local function option(key)return V.mod.options:get(key)end
 function M.active()return M.pack:get()=='crystal'end
@@ -21,8 +22,17 @@ function M.begin(battle)
  if owner~=battle then owner=battle;started={}end
 end
 local function load(path)
- local ok,img=pcall(Assets.image,V.mod.path..'/assets/crystal/'..path)
- if ok and img then img:setFilter('nearest','nearest');return img end
+ local absolute=V.mod.path..'/assets/crystal/'..path
+ local ok,img=pcall(Assets.image,absolute)
+ if ok and img then imagePaths[img]=absolute;img:setFilter('nearest','nearest');return img end
+end
+-- Decode owned source pixels for interface fitting; never read textures back
+-- from the GPU or mutate the shared battle pictures.
+function M.imageData(image)
+ local path=imagePaths[image]
+ if not path or type(Assets.imageData)~='function'then return end
+ local ok,data=pcall(Assets.imageData,path)
+ if ok then return data end
 end
 local portraits={}
 local function portrait(path)
@@ -85,5 +95,5 @@ function M.image(mon,side)
  end
  return e.images[1],e.images
 end
-Assets.register({release=function()entries={};started={};portraits={};owner=nil end})
+Assets.register({release=function()entries={};started={};portraits={};imagePaths=setmetatable({},{__mode="k"});owner=nil end})
 return M

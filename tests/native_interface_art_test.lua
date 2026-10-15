@@ -35,6 +35,25 @@ local Evolution={_mon={species=1025,personality=700,isShiny=true},draw=function(
 local Hof={draw=function()seen=P.monFrontPic({species=1027,personality=800,isShiny=true})end}
 package.loaded['src.ui.game3.evolution_scene']=Evolution
 package.loaded['src.ui.game3.hall_of_fame']=Hof
+P.SPECIES_EGG,P.SPECIES_SPINDA,P.SPECIES_DEOXYS=1412,1327,1386
+P.monFrontPicDontHandleDeoxys=function(mon)return P.monFrontPic(mon)end
+local Hatch={_mon={species=1025,personality=900,isShiny=true}}
+local eggSeen
+Hatch.draw=function()eggSeen=P.frontPic(P.SPECIES_EGG);seen=Anim.framePic(1025,1,true);return nil,'hatch',false end
+local offer={species=1025,personality=901,isShiny=false}
+local received={species=1025,personality=902,isShiny=true};local tradeMons={}
+local Trade={draw=function()
+ P.monFrontPic(offer);tradeMons[1]=lastMon
+ seen=P.monFrontPicDontHandleDeoxys(received);tradeMons[2]=lastMon
+ return nil,'trade',false
+end}
+package.loaded['src.ui.game3.egg_hatch']=Hatch
+package.loaded['src.ui.game3.trade_scene']=Trade
+local navs={}
+for _,name in ipairs({'rs.pokenav.condition','rs.pokenav.ribbons','rse.pokenav.condition','rse.pokenav.ribbons_summary'})do
+ local screen={draw=function(self)seen=P.monFrontPic(self.mon);return self.marker,nil,false end}
+ package.loaded['src.ui.game3.'..name]=screen;navs[#navs+1]=screen
+end
 local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated,NativeCrystalPortraits={install=function()return function()end end}})[name],name)end}
 local Native=assert(loadfile('lib/NativeInterfaceArt.lua'))(V)
 local initialSummary,initialDex=Summary.draw,Dex.draw
@@ -54,5 +73,41 @@ Evolution.draw();check(lastMon.species==26 and lastMon.personality==700 and seen
 check(Anim.framePic==framePic,'native frame provider restored')
 Hof.draw();check(lastMon.species==27 and lastMon.personality==800 and lastMon.isShiny,'Hall-of-Fame mon identity retained')
 check(P.monFrontPic==monFront,'native mon reader restored')
+local a,b,c=Hatch.draw();check(a==nil and b=='hatch'and c==false,'hatch exact native returns')
+check(eggSeen.image.id=='rom'and lastMon.personality==900 and lastMon.isShiny,'egg art native and revealed hatch identity retained')
+a,b,c=Trade.draw();check(a==nil and b=='trade'and c==false,'trade exact native returns')
+check(tradeMons[1].personality==901 and not tradeMons[1].isShiny and tradeMons[2].personality==902 and tradeMons[2].isShiny,'same-species trade partners keep distinct identity')
+received.isEgg=true;Trade.draw();check(seen.image.id=='rom','traded egg stays native');received.isEgg=nil
+for _,species in ipairs({P.SPECIES_SPINDA,P.SPECIES_DEOXYS})do
+ received.species=species;Trade.draw();check(seen.image.id=='rom','PID spots and Deoxys form stay native')
+end
+received.species=1025
+check(P.monFrontPic==monFront and P.frontPic==original and Anim.framePic==framePic,'trade/hatch readers restored')
+for _,screen in ipairs(navs)do
+ local instance=setmetatable({mon={species=1025,personality=903,isShiny=true},marker='nav'},{__index=screen})
+ local a,b,c=instance:draw();check(a=='nav'and b==nil and c==false and lastMon.personality==903 and lastMon.isShiny,'PokeNav class instance/returns/identity retained')
+ selected='off';instance:draw();check(seen.image.id=='rom','PokeNav OFF retains native picture');selected='battle_art'
+end
+local picture=Animated.picture
+Animated.picture=function(mon,side)if mon.personality==902 then error('missing selected image')end;return picture(mon,side)end
+local success=pcall(Trade.draw)
+check(not success and P.monFrontPic==monFront and P.frontPic==original and Anim.framePic==framePic,'trade reader error unwinds all temporary providers')
+Animated.picture=picture
+local raw={img('raw1'),img('raw2')};local preparedFrames={img('prepared1'),img('prepared2')};local reads=0
+Native.crystal={active=function()return true end,image=function()return raw[2],raw end,
+ imageData=function(image)reads=reads+1;return image end}
+Art.prepareData=function(data,mode)check(mode=='color','Crystal pixels retain original palette');return data==raw[1]and preparedFrames[1]or preparedFrames[2]end
+Art.fitPreparedFrames=function(input,w,h,full)
+ check(input[1]==preparedFrames[1]and input[2]==preparedFrames[2],'CPU-prepared complete Crystal animation')
+ check(w==64 and h==64,'Crystal receives native target dimensions')
+ return {img(full and 'full1'or'fit1'),img(full and 'full2'or'fit2')}
+end
+scale='fit';check(Native.picture({species=25}).id=='fit2'and reads==2,'Crystal fitted current frame')
+scale='full';check(Native.picture({species=25}).id=='full2'and reads==2,'Crystal FULL reuses source preparation')
+raw={img('missing')};check(Native.picture({species=25})==nil,'absent current frame falls back')
+Native.crystal.image=function()return raw[1],raw end
+Native.crystal.imageData=function()reads=reads+1;return nil end
+check(Native.picture({species=25})==nil,'missing CPU data retains native art')
+local before=reads;check(Native.picture({species=25})==nil and reads==before,'failed preparation avoids per-frame IO')
 undo();check(Summary.draw==initialSummary and Dex.draw==initialDex,'unload restores native owners')
 print('PASS '..checks..' native interface art checks')

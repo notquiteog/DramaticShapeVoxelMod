@@ -436,6 +436,7 @@ mod.content.render_pipelines:register("voxel", {
       -- no prebuild button, startup pause or whole-world resident cache.
       pcall(V.require("LoadTimings").call, "prefetch", VoxelPrecache.update, Game)
     end
+    if ow and ow.map then V.require("Gen2Boundary").update(ow)end
     ChunkMesher.pump(Game and Game.stack
                      and Game.stack:top() ~= ow)
   end,

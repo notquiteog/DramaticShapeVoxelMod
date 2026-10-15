@@ -254,6 +254,21 @@ stored[keyB] = blobB
 local restored = assert(Disk.loadTerrain(map, "full"), "valid FORMAT 3 survives after rejection reset")
 eq(restored.terrain.chunks[1], terrainB.chunks[1], "valid variant still decodes normally")
 
+-- Encoding is independent of caller chunk boundaries, including fragments
+-- spanning multiple megabyte cache blocks. Preserve byte-identical records.
+local payload=string.rep('abcdefghijklmnopqrstuvwx',100000)
+local function saveChunks(chunks)
+ check(Disk.saveTerrain(map,'full',nil,{n=#payload/24,chunks=chunks},water),'fragmented cache save')
+ return stored[keyB]
+end
+local whole=saveChunks({payload})
+local fragments={};for first=1,#payload,73331 do fragments[#fragments+1]=payload:sub(first,first+73330)end
+fragments[#fragments+1]=''
+eq(saveChunks(fragments),whole,'fragmented encoder changed block boundaries or bytes')
+local decoded=assert(Disk.loadTerrain(map,'full'))
+eq(table.concat(decoded.terrain.chunks),payload,'multi-block cache roundtrip')
+check(Disk.saveTerrain(map,'full',nil,terrainB,water),'restore small fixture')
+
 -- <=0.1.83 has a flat native-filesystem backend. FORMAT 3 logical variants
 -- must survive its logical<->physical filename adapter too.
 local legacyFiles = {}

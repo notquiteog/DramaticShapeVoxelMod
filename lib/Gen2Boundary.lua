@@ -6,14 +6,21 @@ local Select=V.require('BoundaryScenery')
 local Distance=V.require('RenderDistance')
 local R=V.require('Voxel3D')
 local cache={}
+local Budget=V.require("BuildBudget")
+local quadIndices={1,2,3,1,3,4}
 function M.enabled(map)
  return V.require('Generation').isGen2() and map and map.def and
   (map.def.environment=='TOWN' or map.def.environment=='ROUTE' or map.def.environment=='FOREST' or map.tileset and map.tileset.id=='TILESET_FOREST')
 end
-function M.clear()
- for _,b in pairs(cache.batches or {})do if b.mesh then b.mesh:release()end end
+local function release(cache)
+ for _,b in pairs(cache.batches or {})do for _,mesh in ipairs(b.meshes or {})do mesh:release()end end
+ for _,batch in ipairs(cache.instances or {})do batch:release()end
  for _,k in ipairs({'wood','leaves'})do if cache[k]then cache[k]:release()end end
- cache={}
+end
+local stream=V.require("SceneStream").new(release)
+M.streaming=stream.stats
+function M.clear()
+ stream:clear();cache={};M.counts={}
 end
 local function sample(r,x,y)
  local map=r.map;local ts=map.tileset
@@ -31,7 +38,7 @@ end
 local function quad(b,p,uv,shade)
  local base=#b.v
  for i,a in ipairs(p)do b.v[#b.v+1]={a[1],a[2],a[3],uv[i][1],uv[i][2],shade or 1}end
- for _,i in ipairs({1,2,3,1,3,4})do b.i[#b.i+1]=base+i end
+ for _,i in ipairs(quadIndices)do b.i[#b.i+1]=base+i end
 end
 local function tileUV(map,tile)
  local ts=map.tileset;local pr=ts.tilesPerRow or 16
@@ -60,41 +67,58 @@ function M.haze(state,cx,cz,color)
  end
  return Distance.haze(color,nil,{cx,0,cz},bounds)
 end
-function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
+local function request(state,cx,cz)
  if not M.enabled(state and state.map)then return false end
  local p=state.player
  if p and p.px and p.py then cx,cz=p.px+8,p.py+8 end
- local draw=drawMesh or R.draw
- M.map=state.map
+ if not(cx and cz)then return false end
  local rs=regions(state)
  local radius=Distance.radius();local cells=radius and radius/16 or 64
  local bx,bz=math.floor(cx/96)*6,math.floor(cz/96)*6
  local x0,y0,x1,y1=bx-cells,bz-cells,bx+cells+6,bz+cells+6
  if not radius then x0,y0,x1,y1=Select.bounds(rs,16)end
  local flat=V.require('TreePresentation').flat()
- local parts={x0,y0,x1,y1,tostring(flat),V.require('TreePresentation').art:get(),V.require('CommunityVisuals').treeDetail:get(),V.require('CommunityVisuals').forest:get(),V.require('CommunityVisuals').safari:get()}
+ local parts={tostring(flat),V.require('TreePresentation').art:get(),V.require('CommunityVisuals').treeDetail:get(),V.require('CommunityVisuals').forest:get(),V.require('CommunityVisuals').safari:get()}
  for _,r in ipairs(rs)do parts[#parts+1]=tostring(r.map)..':'..r.x..':'..r.y end
- local key=table.concat(parts,';')
- if cache.key~=key then
-  M.clear();M.builds=(M.builds or 0)+1;cache.key=key;cache.batches={};M.counts={forest=0,water=0,mountain=0,ground=0}
+ local context=table.concat(parts,';')
+ return {key=table.concat({x0,y0,x1,y1,context},';'),context=context,rs=rs,flat=flat,x0=x0,y0=y0,x1=x1,y1=y1}
+end
+local function build(req,cache)
+  local rs,flat,x0,y0,x1,y1=req.rs,req.flat,req.x0,req.y0,req.x1,req.y1
+  M.builds=(M.builds or 0)+1;cache.batches={};cache.counts={forest=0,water=0,mountain=0,ground=0}
   local wood,wi,leaves,li={},{},{},{}
+  local native=V.require('NativeTreeArt')
+  local treeGroups={}
+  local samples,uvs={},{}
+  local function uvFor(map,tile)
+   local t=uvs[map];if not t then t={};uvs[map]=t end
+   if not t[tile]then t[tile]=tileUV(map,tile)end
+   return t[tile]
+  end
+  local function cachedSample(r,x,y)
+   local byMap=samples[r.map];if not byMap then byMap={};samples[r.map]=byMap end
+   local key=y*r.w+x
+   local c=byMap[key];if not c then c=sample(r,x,y);byMap[key]=c end
+   return c
+  end
   local Trees=V.require('Gen2Trees');local Leaves=V.require('Gen2DepthTrees')
   for y=y0,y1 do for x=x0,x1 do
+   Budget.tick()
    local _,_,_,real=Select.owner(rs,x,y)
    if not real then
-    local donor=Select.resolve(rs,x,y,sample)
+    local donor=Select.resolve(rs,x,y,cachedSample)
     if donor then
      local map=donor.map;local biome=donor.biome or 'ground'
      local b=cache.batches[map]
      if not b then b={v={},i={}};cache.batches[map]=b end
-     M.counts[biome]=M.counts[biome]+1
+     cache.counts[biome]=cache.counts[biome]+1
      local h=biome=='water' and -2 or biome=='mountain' and 16 or 0
      for dz=0,1 do for dx=0,1 do
       local tile
       if biome=='forest' or biome=='ground' and donor.kind~='ground' then tile=V.require('Gen2DepthGrass').groundTile(map)or 5
       else tile=map:tileAt(donor.x*2+dx,donor.y*2+dz)end
       local xx,zz=x*16+dx*8,y*16+dz*8
-      local uv=tileUV(map,tile)
+      local uv=uvFor(map,tile)
       quad(b,{{xx,h,zz},{xx+8,h,zz},{xx+8,h,zz+8},{xx,h,zz+8}},uv)
       if biome=='mountain' then
        -- Closed cliff walls around the raised block, including edges exposed
@@ -116,11 +140,11 @@ function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
       local _,_,_,occupied=Select.owner(rs,math.floor(tx/16),math.floor(tz/16))
       if not occupied then
        if V.require('TreePresentation').original() then
-        local native=V.require('NativeTreeArt')
         local card=native.gen2(map,donor.x,donor.y,lift,true)
         card=V.require('NativeLegendaryForest').card(card,{cx=donor.x,cy=donor.y},map.id)
         -- Donor artwork and palette are shared with the neighboring map.
-        if V.require('TreePresentation').voxel() then native.appendModel(card,leaves,li,0,tx,0,tz)
+        if V.require('TreePresentation').voxel() then
+         if not native.addInstance(card,treeGroups,tx,0,tz)then native.appendModel(card,leaves,li,0,tx,0,tz)end
         else native.append(card,leaves,li,0,tx,0,tz,flat) end
         if card and not V.require('TreePresentation').voxel() and not flat then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,seed)end
        else
@@ -133,16 +157,52 @@ function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
     end
    end
   end end
-  for _,b in pairs(cache.batches)do b.mesh=R.newMesh(b.v,b.i);b.v,b.i=nil,nil end
+  for _,b in pairs(cache.batches)do
+   -- A single large table-based Mesh upload is atomic in LOVE. Bound each
+   -- upload without changing any vertex, UV, winding or draw coverage.
+   b.meshes={}
+   for first=1,#b.v,4096 do
+    Budget.check()
+    local vertices,indices={},{}
+    local last=math.min(first+4095,#b.v)
+    for n=first,last do vertices[#vertices+1]=b.v[n]end
+    local base=first-1
+    for n=base/4*6+1,last/4*6 do indices[#indices+1]=b.i[n]-base end
+    b.meshes[#b.meshes+1]=R.newMesh(vertices,indices)
+   end
+   b.v,b.i=nil,nil
+  end
+  cache.instances={}
+  native.buildInstances(treeGroups,leaves,li,cache.instances)
   cache.wood=R.newMesh(wood,wi);cache.leaves=R.newMesh(leaves,li)
- end
+  return cache
+end
+local function prepare(req)
+ cache=stream:update(req.key,req.context,function(candidate)return build(req,candidate)end,.001)
+ M.counts=cache.counts
+end
+-- Advance once from the update hook, never between the shadow and color pass.
+-- Keep the complete previous window until all replacement buffers are ready.
+function M.update(state)
+ local req=request(state)
+ if not req then if stream.active then M.clear()end;return end
+ prepare(req)
+end
+function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
+ local req=request(state,cx,cz);if not req then return false end
+ -- Direct callers and genuine map/options changes retain the cold-build
+ -- contract; stale map scenery must never survive a warp or option switch.
+ if not stream.active or stream.context~=req.context then prepare(req)end
+ M.map=state.map
+ local draw=drawMesh or R.draw
  for map,b in pairs(cache.batches)do
   local atlas=atlasFor and atlasFor(map)or V.require('TerrainAtlas').forMap(map)
-  if b.mesh and atlas then draw(b.mesh,atlas,nil)end
+  if atlas then for _,mesh in ipairs(b.meshes or {})do draw(mesh,atlas,nil)end end
  end
  local bark,leaf=V.require('CommunityFlora').crystalTreeMaterials()
  if cache.wood and bark then draw(cache.wood,bark,nil)end
  if cache.leaves and leaf then draw(cache.leaves,leaf,nil)end
+ if leaf then for _,batch in ipairs(cache.instances or {})do draw(batch,leaf,nil)end end
  return true
 end
 return M

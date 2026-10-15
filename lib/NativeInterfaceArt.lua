@@ -8,23 +8,38 @@ local Interface=V.require('InterfaceSprites')
 local Art=V.require('BattleArt')
 local Animated=V.require('AnimatedBattleArt')
 local prepared=setmetatable({},{__mode='k'})
+local function pack(...)return {n=select('#',...),...}end
 M.settings={Interface.setting,Interface.scalingSetting}
 function M.picture(mon,size,side)
  size=size or 64
  side=side or 'front'
  if Interface.setting:get()~='battle_art' then return nil end
  local image,frames
- if M.crystal and M.crystal.active()then image,frames=M.crystal.image(mon,side)
+ local crystal=M.crystal and M.crystal.active()
+ if crystal then image,frames=M.crystal.image(mon,side)
  else image,frames=Animated.picture(mon,side)end
  if not image then return nil end
  local full=Interface.scalingSetting:get()=='full'
  local owner=frames or image
  local cache=prepared[owner]
  if not cache then cache={};prepared[owner]=cache end
+ if crystal and cache.base==nil then
+  -- Raw Crystal PNGs have no BattleArt bounds. Prepare their CPU pixels once
+  -- so FIT/FULL shares the complete animation union just like selected art.
+  local base={}
+  for _,frame in ipairs(frames or {image})do
+   local data=M.crystal.imageData and M.crystal.imageData(frame)
+   local ready=data and Art.prepareData(data,'color')
+   if not ready then base=false;break end
+   base[#base+1]=ready
+  end
+  cache.base=base
+ end
+ if cache.base==false then return nil end
  local key=(full and 'full:' or 'fit:')..size
  if not cache[key] then
   -- Fit the complete animation union, keeping authored movement intact.
-  cache[key]=Art.fitPreparedFrames(frames or {image},size,size,full)
+  cache[key]=Art.fitPreparedFrames(cache.base or frames or {image},size,size,full)
  end
  local index=1
  for i,candidate in ipairs(frames or {})do if candidate==image then index=i;break end end
@@ -33,6 +48,14 @@ end
 function M.install()
  local undoPortraits=V.require('NativeCrystalPortraits').install()
  local Pokemon=require('src.core.game3.pokemon')
+ local function eligible(species,form,source)
+  if form and form~=0 or source and Pokemon.isEgg(source)then return false end
+  -- These native pictures encode egg state, PID spots or edition-specific
+  -- forms that a species-only selected illustration cannot reproduce.
+  local n=tonumber(species)
+  if n and(n==Pokemon.SPECIES_EGG or n==Pokemon.SPECIES_SPINDA or n==Pokemon.SPECIES_DEOXYS)then return false end
+  return true
+ end
  local Summary=require('src.ui.game3.summary_menu')
  local Dex=require('src.ui.game3.pokedex')
  local undo={}
@@ -44,12 +67,12 @@ function M.install()
    local monPic=Pokemon.monFrontPic;local supplied
    if monPic then Pokemon.monFrontPic=function(mon,...)
     local previous=supplied;supplied=mon
-    local r={pcall(monPic,mon,...)};supplied=previous
-    if not r[1]then error(r[2],0)end;return unpack(r,2)
+    local r=pack(pcall(monPic,mon,...));supplied=previous
+    if not r[1]then error(r[2],0)end;return unpack(r,2,r.n)
    end end
    Pokemon.frontPic=function(species,form,...)
     local source=supplied or(monFor and monFor()or nil)
-    if (not form or form==0) and not (source and Pokemon.isEgg(source)) then
+    if eligible(species,form,source)then
      local mon={species=Pokemon.national(species)}
      if source then
       mon.personality=source.personality;mon.otId=source.otId
@@ -68,7 +91,7 @@ function M.install()
    if type(framePic)=='function'then
     anim.framePic=function(species,frame,shiny,...)
      local source=supplied or(monFor and monFor()or nil)
-     if not(source and Pokemon.isEgg(source))then
+     if eligible(species,nil,source)then
       local mon={species=Pokemon.national(species),isShiny=shiny}
       if source then for _,k in ipairs({'personality','otId','otSecretId','isShiny'})do mon[k]=source[k]end end
       local image=M.picture(mon)
@@ -77,22 +100,24 @@ function M.install()
      return framePic(species,frame,shiny,...)
     end
    end
-   local result={pcall(original,...)}
+   local result=pack(pcall(original,...))
    if type(framePic)=='function'then anim.framePic=framePic end
    Pokemon.frontPic=pic;Pokemon.monFrontPic=monPic
    if not result[1]then error(result[2],0)end
-   return unpack(result,2)
+   return unpack(result,2,result.n)
   end
   undo[#undo+1]=function()menu.draw=original end
  end
  wrap(Summary,function()return Summary._party and Summary._party[Summary._cursor or 1]end)
  wrap(Dex)
  -- These public draw seams resolve their pictures per frame; preserve all
- -- native evolution sequencing, confirmation input and Hall-of-Fame layout.
- for _,name in ipairs({'evolution_scene','hall_of_fame','hall_of_fame_pc'})do
+ -- native scene sequencing, PokeNav navigation and layout. PokeNav class
+ -- methods supply their own mon to monFrontPic during the scoped draw.
+ for _,name in ipairs({'evolution_scene','hall_of_fame','hall_of_fame_pc','trade_scene','egg_hatch',
+  'rs.pokenav.condition','rs.pokenav.ribbons','rse.pokenav.condition','rse.pokenav.ribbons_summary'})do
   local ok,screen=pcall(require,'src.ui.game3.'..name)
   if ok and type(screen.draw)=='function'then
-   wrap(screen,name=='evolution_scene'and function()return screen._mon end or nil)
+   wrap(screen,(name=='evolution_scene'or name=='egg_hatch')and function()return screen._mon end or nil)
   end
  end
  return function()

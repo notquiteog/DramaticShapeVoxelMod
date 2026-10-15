@@ -1,9 +1,9 @@
 local time=0;local selected='selected';local options={crystalAnimations='loop'}
-local images={};local loaded=0
+local images={};local loaded=0;local release;local reads=0
 package.loaded['src.render.Assets']={image=function(path)
  if path:find('/252/')then error('absent')end
  loaded=loaded+1;images[path]=images[path]or{path=path,setFilter=function()end};return images[path]
-end,register=function()end}
+end,imageData=function(path)reads=reads+1;return {path=path}end,register=function(hooks)release=hooks.release end}
 love={timer={getTime=function()return time end}}
 local settings={setting={get=function()return selected end},schemas=function()return{{key='crystalFront'},{key='crystalAnimations'},{key='crystalTrainers'}}end}
 local V={mod={path='mod',options={get=function(_,key)return options[key]end}},require=function(n)
@@ -28,4 +28,7 @@ options.crystalBattlePic='back';p,flip=C.player();assert(p.path:find('/back/gold
 p=C.player('front');assert(p.path:find('/player/gold_flip.png'),'interface portrait followed battle back preference')
 assert(C.opponent('bug-catcher').path:find('bugcatcher.png'))
 options.crystalTrainers='overworld';assert(not C.player()and not C.opponent('brock'))
+assert(C.imageData(first).path==first.path and reads==1,'owned CPU source pixels')
+assert(not C.imageData({})and reads==1,'unknown image must not read arbitrary paths')
+release();assert(not C.imageData(first),'released images retain no path ownership')
 print('PASS native Crystal pack opt-in/default, LOOP/ONCE authentic timing, session reset, shiny/back/fallback and preference scope')

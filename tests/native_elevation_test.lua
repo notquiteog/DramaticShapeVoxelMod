@@ -85,3 +85,16 @@ G.invalidate()
 local ordinary=G.field({id='EM_ROUTE119',mapType=3,midLayout=bridge})
 assert(not ordinary.cells['1:1'].underpass,'ordinary variable-layer art became a bridge')
 print('PASS underpass requires matching walkable banks and native bridge behavior')
+
+-- A repeated native tile with a different collision still classifies separately;
+-- every cell retains its own layer/support data and edits rebuild classification.
+local oldOf=modules.Gen3TileShape.of;local classified=0
+modules.Gen3TileShape.of=function(...)classified=classified+1;return oldOf(...)end
+local repeated={width=12,height=10,pair='fixture',cells={},overrides={}}
+function repeated:cellAt(x,y)return self.overrides[y*1024+x] or {mid=1,coll=x%2==0 and 0 or 7,elev=y%2==0 and 3 or 4}end
+local rd={id='REPEATED',mapType=3,midLayout=repeated}
+local rf=G.field(rd);assert(classified==2 and rf.cells['1:0'].floor==false,'classification did not preserve collision variants')
+repeated.overrides[0]={mid=2,coll=0,elev=3};classified=0
+local edited=G.field(rd);assert(edited~=rf and edited.cells['0:0'].step and classified==3,'native edit reused stale classification')
+modules.Gen3TileShape.of=oldOf
+print('PASS build-local tile classification reuse, collision variants and edit invalidation')
