@@ -42,7 +42,9 @@ local function call(module, method, fallback)
 end
 
 function M.snapshot(hostVersion)
-  local ram = call("VoxelMeshDisk", "ramStats", {})
+  local generation = call("Generation", "number", 1)
+  local native = generation == 3
+  local ram = not native and call("VoxelMeshDisk", "ramStats", {}) or {}
   local timing = call("LoadTimings", "snapshot", {})
   local out = {
     apiVersion = M.API_VERSION,
@@ -50,19 +52,27 @@ function M.snapshot(hostVersion)
     sourceModId = M.SOURCE_MOD_ID,
     sourceVersion = tostring(hostVersion or "unknown"),
     monotonicSeconds = clock(),
+    generation = generation,
+    game = call("Generation", "version", nil),
     timings = copy(timing),
     cache = {
-      available = call("VoxelMeshDisk", "available", false) and true or false,
-      precacheAvailable = call("VoxelMeshDisk", "precacheAvailable", false) and true or false,
-      readOnly = call("VoxelMeshDisk", "cacheReadOnly", true) and true or false,
+      available = not native and call("VoxelMeshDisk", "available", false) and true or false,
+      precacheAvailable = not native and call("VoxelMeshDisk", "precacheAvailable", false) and true or false,
+      readOnly = native or call("VoxelMeshDisk", "cacheReadOnly", true) and true or false,
       ram = copy(ram),
-      trace = copy(call("CacheTrace", "snapshot", {})),
+      trace = copy(not native and call("CacheTrace", "snapshot", {}) or {}),
     },
-    mesher = copy(call("ChunkMesher", "stats", {})),
-    trees = copy(call("CommunityFlora", "treeStats", {})),
+    mesher = copy(not native and call("ChunkMesher", "stats", {}) or {}),
+    trees = copy(not native and call("CommunityFlora", "treeStats", {}) or {}),
     shadow = copy(call("ShadowMap", "stats", {})),
-    saplings = copy(call("SaplingEdits", "stats", {})),
+    saplings = copy(not native and call("SaplingEdits", "stats", {}) or {}),
   }
+  if native then
+    -- The GB mesher counters are not Gen3 workload measurements. Export the
+    -- actual native scene/CPU cache without loading a foreign game facade,
+    -- enumerating disk contents or changing any render/cache state.
+    out.nativeScene = copy(call("Gen3Scene", "performanceSnapshot", {}))
+  end
   return out
 end
 
@@ -82,9 +92,11 @@ function M.export(hostVersion)
       trees = 1,
       shadow = 1,
       saplings = 1,
+      nativeScene = 1,
     },
     snapshot = function() return M.snapshot(hostVersion) end,
     storageSnapshot = function()
+      if call("Generation", "number", 1) == 3 then return {} end
       return copy(call("VoxelMeshDisk", "stats", {}))
     end,
   }

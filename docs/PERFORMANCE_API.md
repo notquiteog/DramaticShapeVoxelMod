@@ -51,3 +51,21 @@ Consumers should require only `apiVersion == 1` and inspect `capabilities` befor
 depending on an optional section. `schemaVersion` can advance when fields are
 added without changing the calling convention; an incompatible calling contract
 requires a new `apiVersion`.
+
+### Native Gen3 workload (additive schema1 fields)
+
+`snapshot()` also identifies `generation` and `game`. On FireRed, LeafGreen,
+Ruby, Sapphire and Emerald, `nativeScene` contains the actual native renderer's
+`stream` counters (`started`, `completed`, `cancelled`, `hits`, `slices`,
+`maxSlice`, `maxStreamSlice` in seconds), `prepares`, `builds`, `cacheHits`,
+map ID, distance/bounds, render size and compressed CPU `geometryCache` counters.
+`capabilities.nativeScene == 1` advertises this optional branch. Tables are
+copied; modifying a snapshot cannot change the renderer.
+
+The legacy GB `mesher`, `trees`, `saplings` and `cache` fields are not native
+Gen3 workload measurements and remain empty/unavailable there; the monitor
+must use `nativeScene` instead. Gen3 snapshots do not load GB mesh/cache
+modules or scan storage. `storageSnapshot()` currently returns an empty table
+for Gen3; CPU cache counters do not pretend to enumerate persistent bytes.
+Gen1/2 keep their existing detailed GB diagnostics. None of these reads changes
+render quality, cache policies or the world, and no monitor mod is required.

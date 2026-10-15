@@ -1121,6 +1121,13 @@ function M.draw(game,vw,vh,cam)
  love.graphics.pop()
  return true
 end
+-- Read-only producer data; PerformanceExport detaches the tables for callers.
+function M.performanceSnapshot()
+ return {stream=stream.stats,prepares=M.prepares or 0,builds=M.builds or 0,
+  cacheHits=M.cacheHits or 0,map=M.sceneDef and M.sceneDef.id,
+  distance=M.distance,renderWidth=M.renderWidth,renderHeight=M.renderHeight,
+  geometryCache=V.require('NativeGeometryCache').stats}
+end
 function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();stream:clear();cache={}end
 function M.release()
  V.require("NativeLegendaryTower").clear()

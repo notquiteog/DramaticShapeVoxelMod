@@ -54,3 +54,20 @@ Remaining: hardware frame-time verification, Gen1/2 runtime battle coverage of
 this shared uniform change, further profiling of GPU shadow/fill cost, and the
 separate feature/consumer gaps in the live option-support inventory. This work
 is not a claim of complete optimization or full11-game feature parity.
+
+## Diagnostic parity follow-up
+
+Actual runtime verification found the public performance provider was entirely
+absent from Gen3's early-return install path. It is now exported in all five
+Gen3 editions, with native scene/stream/compressed-geometry counters. Those reads
+avoid loading GB-only mesher/cache facades or enumerating storage. The native
+`gen3` integration namespace also has matching LeafGreen/Ruby/Sapphire aliases,
+joining the existing FireRed/Emerald aliases. Public API/version remain backward
+compatible; no companion is required.
+
+Five current-engine native startup contract runs pass (each game's public API,
+correct version/generation, alias identity, detached counters). The producer
+unit tests additionally verify unchanged Gen1/2 diagnostics and no GB/storage
+work on Gen3. Reusable fixture: `tools/qa/performance-provider.lua`; actual run
+logs under `.scratch/battle-perf-20261015/diagnostics-*/`. Existing legacy fields
+are not mislabeled as native work; see `docs/PERFORMANCE_API.md`.

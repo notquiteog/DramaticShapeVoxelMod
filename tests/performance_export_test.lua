@@ -82,3 +82,25 @@ check(#ts.recent == 2 and ts.recent[2].map == 'ROUTE_7',
       'CacheTrace retains bounded recent event details')
 
 print(checks .. ' checks passed (performance export API)')
+-- Native snapshots must not load/inspect the GB mesh cache or walk storage.
+modules.Generation={number=function()return 3 end,version=function()return 'emerald' end}
+local scene={stream={hits=120,started=2},geometryCache={bytes=123,hits=4},map='EM_ROUTE104'}
+modules.Gen3Scene={performanceSnapshot=function()return scene end}
+local foreignLoads=0
+local nativeV={require=function(name)
+ if name=='VoxelMeshDisk' or name=='ChunkMesher' or name=='CommunityFlora' or name=='CacheTrace' or name=='SaplingEdits' then foreignLoads=foreignLoads+1 end
+ assert(name~='VoxelMeshDisk' and name~='ChunkMesher' and name~='CommunityFlora'
+  and name~='CacheTrace' and name~='SaplingEdits','foreign workload loaded')
+ return assert(modules[name],name)
+end}
+local nativeApi=assert(loadfile('lib/PerformanceExport.lua'))(nativeV).export('test')
+local n=nativeApi.snapshot()
+assert(n.generation==3 and n.game=='emerald' and n.nativeScene.stream.hits==120)
+assert(n.nativeScene.geometryCache.bytes==123 and n.mesher.pending==nil)
+n.nativeScene.stream.hits=0
+assert(scene.stream.hits==120 and nativeApi.snapshot().nativeScene.stream.hits==120)
+assert(next(nativeApi.storageSnapshot())==nil and storageCalls==1)
+assert(nativeApi.capabilities.nativeScene==1 and foreignLoads==0)
+modules.Generation.number=function()return 2 end
+assert(api.snapshot().nativeScene==nil and api.snapshot().mesher.pending==2)
+print('PASS native scene metrics, detached cache data, no GB facade/storage work, Gen2 fallback')

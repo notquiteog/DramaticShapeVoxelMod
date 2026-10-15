@@ -254,6 +254,7 @@ function M.install()
   uninstallInterface();uninstallCapture();uninstallBattle();uninstallRecap();Scene.release();return next(...)
  end)
  mod.exports.version=mod.version;mod.exports.lib=V
+ mod.exports.performance=V.require("PerformanceExport").export(mod.exports.version)
  mod.exports.gen3Camera=M
  mod.exports.battleTheme=V.require('BattleTheme')
  mod.exports.battlePresentation={modernUIEnabled=V.require('ModernBattleUI').enabled,
@@ -265,7 +266,7 @@ function M.install()
  -- and fell back to no camera. Publish the same table under every Gen 3 cart
  -- id rather than renaming: eleven test drivers reach for exports.firered.
  local gen3Namespace=mod.exports.firered
- for _,cart in ipairs{'emerald'}do mod.exports[cart]=gen3Namespace end
+ for _,cart in ipairs{'leafgreen','ruby','sapphire','emerald'}do mod.exports[cart]=gen3Namespace end
  -- ...and once under the durable, cart-neutral name.
  mod.exports.gen3=gen3Namespace
  gen3Namespace.scenery={apiVersion=1,registerTilesetAlias=function(pair,target)
