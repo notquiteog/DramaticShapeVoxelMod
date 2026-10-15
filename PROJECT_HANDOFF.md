@@ -1,3 +1,19 @@
+# Native Gen3 Safari/tutorial capture — 2026-10-15
+
+Existing shared Safari Ball art and Poke/Great/Ultra/Master capture effects now
+consume native Safari and old-man/Pokedude/Wally capture events. Native trainer
+wind-up, capture odds/results, inventory and Safari counters remain authoritative.
+Ghost dodge, unmodeled specialty balls, doubles/other targets and OFF stay native.
+Shared native capture no longer imports GB terrain/Map dependencies; legacy
+scene initialization remains unchanged. No model/asset/version/release changes.
+
+All five native Safari fixtures, FireRed OFF/old-man/Pokedude capture-only and
+Emerald Wally return/throw pass on official0.3.89; final captures inspected.
+Broad296/0fail/58skip, SDK1173, inventory549 and focused dependency/capture tests
+pass. Full Teachy TV lessons and broader send-out/recall/material effects remain
+outside this coverage. See `docs/GEN3_CAPTURE_SCENES_2026-10-15.md` for exact
+fixtures, corrected rejected setup and remaining limits. Full parity not claimed.
+
 # NVIDIA boundary streaming optimization — 2026-10-15
 
 Confirmed actual Route104→Rustboro stalled499ms in scene rebuilding. One bounded

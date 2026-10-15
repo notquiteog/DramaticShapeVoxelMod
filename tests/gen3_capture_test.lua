@@ -24,9 +24,26 @@ Seq.begin(st,1,true,3,{});Audio.playSe(1);Audio.playSe(2);Audio.playSe(3);assert
 active=false;Audio.playSe(3);assert(not M.active(st));local before=starts
 Seq.begin(st,4,true,3,{});Audio.playSe(1);assert(starts==before)
 active=true
-for _,case in ipairs({{wild=false},{wild=true,double=true},{wild=true,safari=true},{wild=true,pokedude=true}})do Seq.begin(case,4,true,3,{});Audio.playSe(1);assert(starts==before)end
+for _,case in ipairs({{wild=false},{wild=true,double=true},{wild=true,double=true,safari=true}})do Seq.begin(case,4,true,3,{});Audio.playSe(1);assert(starts==before)end
 Seq.begin(st,6,true,3,{});Audio.playSe(1);assert(starts==before,'unmodeled ball lost native art')
-assert(sounds>0);undo();print('PASS Gen3 native capture events, native returns/audio, zero-shake breakout, successful click, floor, OFF/specialty/tutorial/doubles fallback')
+for _,case in ipairs({{wild=true,safari=true},{wild=true,oldManTutorial=true},{wild=true,pokedude=true},{wild=true,kinds={tutorial='wally'}}})do
+ local item=case.safari and 5 or 4
+ local count=starts;Seq.begin(case,item,true,3,{});assert(starts==count,'started before native throw cue')
+ Audio.playSe(1);assert(starts==count+1 and M.active(case),'native Safari/tutorial throw not consumed')
+ assert(events[#events][2]==(case.safari and 'SAFARI_BALL'or'POKE_BALL'))
+ M.prepare({st=case,byId={[4]={}},points={[0]={16,8,32},[4]={8,8,24},[1]={64,8,80}}},8)
+ local arena=events[#events][2];assert(arena.player[1]==8 and arena.player[2]==24,'visible trainer throw origin ignored')
+ assert(events[#events][3]==case,'native state identity changed')
+ Seq.reset();assert(not M.active(case))
+end
+for _,opts in ipairs({{headless=true},{ghostDodge=true},{target=3}})do
+ local count=starts;Seq.begin(st,4,false,0,opts);Audio.playSe(1);assert(starts==count,'unsupported native sequence intercepted')
+end
+-- A failed prop cannot suppress the native capture or optional sound fallback.
+local start=scene.startNormalBall;scene.startNormalBall=function()return false end
+Seq.begin(st,5,true,3,{});local count=sounds;Audio.playSe(1);assert(not M.active(st)and sounds==count+1)
+scene.startNormalBall=start
+assert(sounds>0);undo();print('PASS Gen3 native capture events, native returns/audio, zero-shake breakout, successful click, floor, Safari/tutorial trainer origins, OFF/specialty/ghost/doubles fallback')
 -- Only successfully played optional replacement sounds may suppress native SE.
 local requireBefore=V.require;local available,played=true,true;local captured,volume={}
 V.require=function(k)

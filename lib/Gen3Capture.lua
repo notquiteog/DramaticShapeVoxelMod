@@ -7,7 +7,7 @@ function M.settings()
  local p=V.require("PokeballSettings")
  return {p.enabled,p.size,p.captureSpeed,p.openTime,p.preset,p.streamers,p.beam,p.suction,p.pokemonGlow,p.suctionParticles,p.fxScale,p.audio,p.audioVolume}
 end
-local ballNames={[1]='MASTER_BALL',[2]='ULTRA_BALL',[3]='GREAT_BALL',[4]='POKE_BALL'}
+local ballNames={[1]='MASTER_BALL',[2]='ULTRA_BALL',[3]='GREAT_BALL',[4]='POKE_BALL',[5]='SAFARI_BALL'}
 local function call(name,...)
  local loaded,scene=pcall(V.require,'BattleScene')
  if not loaded then M.lastError=tostring(scene);pending=nil;return false end
@@ -43,7 +43,10 @@ function M.install()
  Seq.begin=function(st,item,caught,shakes,opts)
   local result=begin(st,item,caught,shakes,opts)
   opts=opts or{}
-  if ballNames[item]and st and st.wild and not(st.double or st.safari or st.oldManTutorial or st.pokedude or st.wally or opts.headless)
+  -- Native tutorials and Safari share this sequence, including their trainer
+  -- wind-up. Ghost dodge never opens a ball and needs its native trajectory.
+  if ballNames[item]and st and st.wild and not(st.double or opts.headless or opts.ghostDodge)
+    and (opts.target==nil or tonumber(opts.target)==1)
     and V.require('PokeballSettings').active()and V.require('Gen3Battle').enabled()then
    pending={st=st,item=ballNames[item],caught=caught,shakes=shakes}
   end
@@ -74,7 +77,10 @@ function M.install()
 end
 function M.prepare(actors,floor)
  if not M.active(actors.st)then if pending and pending.started then M.finish()end;return end
- local p,e=actors.points[0],actors.points[1]
+ -- Safari and the old-man/Wally tutorials throw from a visible trainer,
+ -- whose world anchor sits behind the ordinary allied Pokemon slot.
+ local trainer=actors.byId and actors.byId[4]
+ local p,e=actors.points[trainer and 4 or 0],actors.points[1]
  if not(p and e)then return end
  ground=floor;arena={player={p[1],p[3]},enemy={e[1],e[3]},mid={(p[1]+e[1])/2,(p[3]+e[3])/2}}
  call('prepareNativeCapture',arena,actors.st,floor)
