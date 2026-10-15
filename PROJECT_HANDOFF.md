@@ -1,3 +1,17 @@
+# Native Hoenn credits portraits after release checkpoint — 2026-10-15
+
+Ruby/Sapphire/Emerald original credit slides now consume selected portraits with
+native scale/fades/text. Shared frontPic scopes preserve explicit shiny/PID
+arguments when no source mon is supplied. All3 official0.3.89 original slideshow
+fixtures pass FIT/FULL/OFF, natural slide/fade, finish/reset lifecycle; all12
+captures inspected. Focused77/inventory549 and broad306/0fail/58skip (SDK1173)
+pass. Evidence: `docs/GEN3_CREDITS_ART_2026-10-15.md`.
+
+Separate source batch after4bc557a; no release metadata changes. Remaining:
+RS indexed hatch, FRLG cropped credit reveals, starter fixed64 quad and minigame
+cached/custom-pose pictures. Inventory remains partial; no complete ending,
+full parity or existing1.41.1 archive inclusion claim.
+
 # Native Hoenn Pokeblock portraits after release checkpoint — 2026-10-15
 
 Ruby/Sapphire/Emerald selection and feed screens now consume selected portraits

@@ -54,6 +54,10 @@ for _,name in ipairs({'rs.pokenav.condition','rs.pokenav.ribbons','rse.pokenav.c
  local screen={draw=function(self)seen=P.monFrontPic(self.mon);return self.marker,nil,false end}
  package.loaded['src.ui.game3.'..name]=screen;navs[#navs+1]=screen
 end
+local creditShiny,creditPid=true,1234
+local Credits={draw=function()seen=P.frontPic(1025,0,creditShiny,creditPid,'credits');return nil,'credits',false end}
+local initialCredits=Credits.draw
+package.loaded['src.ui.game3.rse.credits']=Credits
 local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated,NativePokeblockArt={install=function()return function()end end},NativeScriptedArt={install=function()return function()end end},NativeCrystalPortraits={install=function()return function()end end}})[name],name)end}
 local Native=assert(loadfile('lib/NativeInterfaceArt.lua'))(V)
 local initialSummary,initialDex=Summary.draw,Dex.draw
@@ -88,6 +92,10 @@ for _,screen in ipairs(navs)do
  local a,b,c=instance:draw();check(a=='nav'and b==nil and c==false and lastMon.personality==903 and lastMon.isShiny,'native menu instance/returns/identity retained')
  selected='off';instance:draw();check(seen.image.id=='rom','native menu OFF retains native picture');selected='battle_art'
 end
+local a,b,c=Credits.draw()
+check(a==nil and b=='credits'and c==false and lastMon.personality==1234 and lastMon.isShiny==true,'credits explicit PID/shiny and exact return tuple')
+creditShiny=false;Credits.draw();check(lastMon.isShiny==false,'explicit false shiny remains false')
+selected='off';Credits.draw();check(seen.image.id=='rom','credits OFF remains native');selected='battle_art'
 local picture=Animated.picture
 Animated.picture=function(mon,side)if mon.personality==902 then error('missing selected image')end;return picture(mon,side)end
 local success=pcall(Trade.draw)
@@ -110,4 +118,5 @@ Native.crystal.imageData=function()reads=reads+1;return nil end
 check(Native.picture({species=25})==nil,'missing CPU data retains native art')
 local before=reads;check(Native.picture({species=25})==nil and reads==before,'failed preparation avoids per-frame IO')
 undo();check(Summary.draw==initialSummary and Dex.draw==initialDex,'unload restores native owners')
+check(Credits.draw==initialCredits,'credits unload restores native draw')
 print('PASS '..checks..' native interface art checks')

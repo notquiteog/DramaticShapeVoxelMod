@@ -75,10 +75,12 @@ function M.install()
    Pokemon.frontPic=function(species,form,...)
     local source=supplied or(monFor and monFor()or nil)
     if eligible(species,form,source)then
-     local mon={species=Pokemon.national(species)}
+     local shiny,personality=...
+     local mon={species=Pokemon.national(species),isShiny=shiny,personality=personality}
      if source then
-      mon.personality=source.personality;mon.otId=source.otId
-      mon.otSecretId=source.otSecretId;mon.isShiny=source.isShiny
+      for _,k in ipairs({'personality','otId','otSecretId','isShiny'})do
+       if source[k]~=nil then mon[k]=source[k]end
+      end
      end
      local image=M.picture(mon)
      if image then
@@ -117,7 +119,7 @@ function M.install()
  -- methods supply their own mon to monFrontPic during the scoped draw.
  for _,name in ipairs({'evolution_scene','hall_of_fame','hall_of_fame_pc','trade_scene','egg_hatch',
   'rs.pokenav.condition','rs.pokenav.ribbons','rse.pokenav.condition','rse.pokenav.ribbons_summary',
-  'rse.factory_select','rse.factory_swap'})do
+  'rse.factory_select','rse.factory_swap','rse.credits'})do
   local ok,screen=pcall(require,'src.ui.game3.'..name)
   if ok and type(screen.draw)=='function'then
    wrap(screen,(name=='evolution_scene'or name=='egg_hatch')and function()return screen._mon end or nil)
