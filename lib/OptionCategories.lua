@@ -11,7 +11,7 @@ M.legendary={
  row('legendary_tower','POKEMON TOWER','communityTower communityTowerWall towerDetails towerFog towerFogThickness towerFogSpeed'),
  row('legendary_caves','CAVES','communityCaves communityCaveDetails communityCaveSound'),
  row('legendary_pillars','PILLARS & MASONRY','communityPillars communityMasonry'),
- row('legendary_signs','SIGNS & PROPS','communitySigns communityCutTrees'),
+ row('legendary_signs','SIGNS & PROPS','communitySigns communityCutTrees itemBall'),
  row('legendary_nature','GRASS & TREES','communityGrass communityTrees communityTreeDetail communityForest communitySafari atmos communityKantoLife treeArtwork hdTreeTrunks sceneryProps surfaceArtwork'),
  row('legendary_structures','ROADS & STRUCTURES','vermilionBuildings communityRoads communityWalls communityCourtyards'),
  row('legendary_sky','SKY & BACKGROUND','communitySky'),
