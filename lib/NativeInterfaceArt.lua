@@ -31,6 +31,7 @@ function M.picture(mon,size,side)
  return cache[key] and cache[key][index] or image
 end
 function M.install()
+ local undoPortraits=V.require('NativeCrystalPortraits').install()
  local Pokemon=require('src.core.game3.pokemon')
  local Summary=require('src.ui.game3.summary_menu')
  local Dex=require('src.ui.game3.pokedex')
@@ -95,6 +96,7 @@ function M.install()
   end
  end
  return function()
+  undoPortraits()
   for i=#undo,1,-1 do undo[i]()end
   prepared=setmetatable({},{__mode='k'})
  end

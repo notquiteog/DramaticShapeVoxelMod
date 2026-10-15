@@ -73,8 +73,9 @@ reveal still intentionally draws the native image, then resumes selected art.
 Gen2 cinematic titles lack the Gen1 cycling-starter reader and retain their
 original art. Unown forms and eggs retain native ownership by design.
 
-Gen3 trainer-card/intro Crystal portraits and Crystal-specific shiny reveal
-choreography still need separate public-seam adapters. Broader native audio,
+Gen3 trainer-card/intro/Hall-of-Fame Crystal player portraits were added in
+the later `GEN3_CRYSTAL_PORTRAITS_2026-10-15.md` batch. Crystal-specific shiny
+reveal choreography still needs a separate native adapter. Broader native audio,
 HUD sizing, regional backdrop routing and terrain/cache consumer gaps remain
 in the option inventory. Optional-provider rows remain provider-dependent.
 This batch does not establish full feature parity or model coverage.

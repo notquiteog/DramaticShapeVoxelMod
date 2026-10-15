@@ -1,3 +1,14 @@
+# Native Gen3 Crystal player portraits — 2026-10-15
+
+Selected Crystal front portraits now reach all five GBA trainer cards,
+Hall-of-Fame player slides and FRLG/Hoenn intro players. Native card input,
+flips, fade/scale transforms, text and local/remote identity remain original;
+BATTLE PIC=BACK stays battle-only. All five bounded0.3.89 fixtures pass and
+captures were inspected.25 focused portrait contracts and SDK1173 pass.
+Evidence/limits: `docs/GEN3_CRYSTAL_PORTRAITS_2026-10-15.md`.
+Crystal shiny reveal choreography and other inventory gaps remain open.
+No model changes, version bump, release or push for this batch.
+
 # Native Gen2 interface consumers — 2026-10-15
 
 Official0.3.89 verified; fresh G/S/C v16 imports. Trade/hatch, Bill's PC and

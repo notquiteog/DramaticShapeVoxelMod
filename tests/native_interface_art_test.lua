@@ -35,7 +35,7 @@ local Evolution={_mon={species=1025,personality=700,isShiny=true},draw=function(
 local Hof={draw=function()seen=P.monFrontPic({species=1027,personality=800,isShiny=true})end}
 package.loaded['src.ui.game3.evolution_scene']=Evolution
 package.loaded['src.ui.game3.hall_of_fame']=Hof
-local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated})[name],name)end}
+local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated,NativeCrystalPortraits={install=function()return function()end end}})[name],name)end}
 local Native=assert(loadfile('lib/NativeInterfaceArt.lua'))(V)
 local initialSummary,initialDex=Summary.draw,Dex.draw
 local undo=Native.install()

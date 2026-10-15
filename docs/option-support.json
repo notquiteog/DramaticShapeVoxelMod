@@ -2800,9 +2800,9 @@
         "key": "crystalTrainers",
         "label": "CRYSTAL CUSTOM SPRITES",
         "module": "CrystalSprites",
-        "status": "partial",
-        "consumer": "lib/NativeCrystalArt.lua; lib/Gen3TrainerArt.lua",
-        "detail": "Selected Crystal pack supplies native trainer portraits and player front/back choice, preserving scripted/link/native fallbacks. OVERWORLD/ALL adapt bundled player walk/bike and FRLG named-trainer sheets, preserving companion replacements and special poses. Trainer-card/intro screens still need adapters.",
+        "status": "implemented",
+        "consumer": "lib/NativeCrystalArt.lua; lib/Gen3TrainerArt.lua; lib/NativeCrystalPortraits.lua",
+        "detail": "Selected Crystal pack supplies native trainer portraits and player front/back choice, preserving scripted/link/native fallbacks. OVERWORLD/ALL adapt bundled player walk/bike and FRLG named-trainer sheets, preserving companion replacements and special poses. Local trainer-card, Hall-of-Fame player and FRLG/Hoenn intro public draw seams use the selected front portrait independently of the battle-back preference. Native card flips, intro transforms/fades, remote cards and missing art retain their own behavior.",
         "verification": "source audit"
       },
       {
@@ -2810,9 +2810,9 @@
         "key": "crystalPlayerSprite",
         "label": "CRYSTAL PLAYER PORTRAIT",
         "module": "CrystalSprites",
-        "status": "partial",
-        "consumer": "lib/NativeCrystalArt.lua; lib/Gen3TrainerArt.lua",
-        "detail": "Selected Crystal pack supplies native trainer portraits and player front/back choice, preserving scripted/link/native fallbacks. OVERWORLD/ALL adapt bundled player walk/bike and FRLG named-trainer sheets, preserving companion replacements and special poses. Trainer-card/intro screens still need adapters.",
+        "status": "implemented",
+        "consumer": "lib/NativeCrystalArt.lua; lib/Gen3TrainerArt.lua; lib/NativeCrystalPortraits.lua",
+        "detail": "Selected Crystal pack supplies native trainer portraits and player front/back choice, preserving scripted/link/native fallbacks. OVERWORLD/ALL adapt bundled player walk/bike and FRLG named-trainer sheets, preserving companion replacements and special poses. Local trainer-card, Hall-of-Fame player and FRLG/Hoenn intro public draw seams use the selected front portrait independently of the battle-back preference. Native card flips, intro transforms/fades, remote cards and missing art retain their own behavior.",
         "verification": "source audit"
       },
       {
@@ -2820,9 +2820,9 @@
         "key": "crystalBattlePic",
         "label": "CRYSTAL TRAINER VIEW",
         "module": "CrystalSprites",
-        "status": "partial",
-        "consumer": "lib/NativeCrystalArt.lua; lib/Gen3TrainerArt.lua",
-        "detail": "Selected Crystal pack supplies native trainer portraits and player front/back choice, preserving scripted/link/native fallbacks. OVERWORLD/ALL adapt bundled player walk/bike and FRLG named-trainer sheets, preserving companion replacements and special poses. Trainer-card/intro screens still need adapters.",
+        "status": "implemented",
+        "consumer": "lib/NativeCrystalArt.lua; lib/Gen3TrainerArt.lua; lib/NativeCrystalPortraits.lua",
+        "detail": "Selected Crystal pack supplies native trainer portraits and player front/back choice, preserving scripted/link/native fallbacks. OVERWORLD/ALL adapt bundled player walk/bike and FRLG named-trainer sheets, preserving companion replacements and special poses. Local trainer-card, Hall-of-Fame player and FRLG/Hoenn intro public draw seams use the selected front portrait independently of the battle-back preference. Native card flips, intro transforms/fades, remote cards and missing art retain their own behavior.",
         "verification": "source audit"
       },
       {
@@ -3572,7 +3572,7 @@
         "module": "CrystalSprites",
         "status": "partial",
         "consumer": "lib/NativeCrystalArt.lua; lib/NativeBattleArt.lua; lib/NativeInterfaceArt.lua",
-        "detail": "SELECTED ART remains Gen3 default; CRYSTAL supplies bundled normal/shiny battlers and opted-in Summary/Dex art, retaining native missing-species/forms. Trainer battle portraits are supported; native player walk/bike and FRLG named-trainer sheets are supported. Evolution and Hall-of-Fame public picture paths are supported; trainer-card/intro and shiny-reveal effects still need native adapters.",
+        "detail": "SELECTED ART remains Gen3 default; CRYSTAL supplies bundled normal/shiny battlers and opted-in Summary/Dex art, retaining native missing-species/forms. Trainer battle portraits are supported; native player walk/bike and FRLG named-trainer sheets are supported. Evolution and Hall-of-Fame Pokemon pictures are supported. Local trainer cards, Hall-of-Fame player portraits and native FRLG/Hoenn intro players consume the selected front with native transforms/fades and remote identity fallback. Crystal-specific shiny-reveal effects still need a native adapter.",
         "verification": "source audit"
       },
       {

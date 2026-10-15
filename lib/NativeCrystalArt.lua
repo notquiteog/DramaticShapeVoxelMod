@@ -35,14 +35,14 @@ function M.opponent(key)
  if mode~='both'and mode~='trainers'and mode~='all'then return end
  return portrait('trainers/opponent/'..key:gsub('%-','')..'.png')
 end
-function M.player()
+function M.player(pose)
  if not M.active()then return end
  local mode=option('crystalTrainers')or'both'
  if mode~='both'and mode~='player'and mode~='all'then return end
  local selection=option('crystalPlayerSprite')or'red.png'
  if selection=='default'then return end
  local stem=selection:gsub('_flip%.png$',''):gsub('%.png$','')
- if option('crystalBattlePic')=='back'then
+ if pose~='front'and option('crystalBattlePic')=='back'then
   local image=portrait('trainers/back/'..stem..'.png')
   if image then return image,false end
  end
