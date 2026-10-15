@@ -764,6 +764,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  local contact=cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]
  if contact and contact.prop then floor=contact.prop.groundHeight or floor end
  local height=floor+(opts.lift or 0)
+ if V.require('NativeItemPokeballs').draw(gid,x,z+(opts.depthOffset or 0),height,draw,reflectPlane)then return end
  if V.require('NativeLegendarySapling').draw(gid,x,z,height,spr.image,draw,reflectPlane)then return end
  if draw~=Shadow.draw and not reflectPlane and (opts.depthOffset or 0)==0 then
   V.require("ActorContact").draw(x+8,z+8,floor,height-floor,spr.width)
