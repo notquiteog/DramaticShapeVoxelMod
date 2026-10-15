@@ -1,3 +1,33 @@
+# Native Center/Mart polish — 2026-10-15
+
+1.43.0 addresses the user's service-room priority within the first-three-settlement
+pass. Thirty edition-map placements: both Center floors plus Marts in Viridian,
+Pewter, Oldale and Petalburg, independently reviewed across all five editions.
+Native corner drawings now select chamfered joined room shells with continuous
+wallpaper behind separate healing/staff/storage fixtures. Closed beveled healer
+arch retains the low ball tray; registers have drawers, displays, sloping keys.
+Kanto rear glazing/low case/racks and complete escalator footprints are bounded.
+Native entrance mats, descending wells, staff lanes and normal warps remain clear.
+Unknown source corner families stand down; existing tileset aliases permit reuse.
+Mesh99; HD-2D actors/Pokémon/flowers, native UI/gameplay/collision preserved.
+
+Official0.3.89: broad307/0fail/58fixture skips; 560 component instances across
+30 rooms / zero ordinary-solid walking overlaps /118 explicit native seat pads
+plus four low Kanto counter patches. Exact archive150 orbit/eye renders inspected;
+native aisles,10 heals,20 escalators,20 exits and8 shops/2 Parcel branches.
+Native input fixture corrections (apron warp, clerk positions/IDs, Parcel branch)
+are documented separately from passes. All6 current optional partners clean and
+on published main; combined Sapphire service smoke has zero mod errors.
+11,394 archive files/487 Lua; tested runtime payload hashes retained during final
+evidence repackage. See `docs/GEN3_SERVICE_ROOMS_2026-10-15.md`.
+
+Regional queue marks only these30/125 placements verified;95 remain queued:
+starting homes, labs/school/gyms, route buildings and outdoor/terrain review.
+All125 have initial private source/render captures; capture is not completion.
+RS starting homes still need separately reviewed native recipes, not a blanket
+Emerald-catalog enable. Petalburg Gym has detached native chambers to preserve.
+No complete regional, ORAS-equivalent or multiplayer validation is claimed.
+
 # Ruby/Sapphire institutions and continuous native wallpaper — 2026-10-15
 
 1.42.0 adds 55 separately reviewed native component patterns to nine interiors

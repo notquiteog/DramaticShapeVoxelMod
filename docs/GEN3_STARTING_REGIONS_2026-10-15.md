@@ -13,6 +13,10 @@ are a starting point, not proof of complete visual coverage.
 The requested institutional batch is separate; see
 [its evidence](GEN3_RS_INSTITUTIONS_2026-10-15.md).
 
+Service-room batch 1.43.0 verifies 30 of the 125 edition-map placements below;
+the remaining 95 stay queued. See [the service-room evidence](GEN3_SERVICE_ROOMS_2026-10-15.md).
+A source/render capture alone does not complete a queued map.
+
 Walls must be flat and continuous, with no gaps or overlapping grey backing.
 Furniture is separate in front. Stairs follow original art and walking cells.
 Characters, Pokémon and flowers remain HD-2D; partners remain optional.
@@ -30,11 +34,11 @@ identifiers; Sapphire uses the corresponding `SA_` identifiers.
 | `FR_PEWTER_CITY_GYM` | `pewter_gym` | Queued for this regional pass |
 | `FR_PEWTER_CITY_HOUSE1` | `house` | Queued for this regional pass |
 | `FR_PEWTER_CITY_HOUSE2` | `house` | Queued for this regional pass |
-| `FR_PEWTER_CITY_MART` | `building__rom_082d4bcc` | Queued for this regional pass |
+| `FR_PEWTER_CITY_MART` | `building__rom_082d4bcc` | Verified service-room polish 1.43.0 |
 | `FR_PEWTER_CITY_MUSEUM_1F` | `building__rom_082d4c2c` | Queued for this regional pass |
 | `FR_PEWTER_CITY_MUSEUM_2F` | `building__rom_082d4c2c` | Queued for this regional pass |
-| `FR_PEWTER_CITY_POKEMON_CENTER_1F` | `network` | Queued for this regional pass |
-| `FR_PEWTER_CITY_POKEMON_CENTER_2F` | `network` | Queued for this regional pass |
+| `FR_PEWTER_CITY_POKEMON_CENTER_1F` | `network` | Verified service-room polish 1.43.0 |
+| `FR_PEWTER_CITY_POKEMON_CENTER_2F` | `network` | Verified service-room polish 1.43.0 |
 | `FR_PLAYERS_HOUSE_1F` | `player_house` | Queued for this regional pass |
 | `FR_PLAYERS_HOUSE_2F` | `player_house` | Queued for this regional pass |
 | `FR_RIVALS_HOUSE` | `house` | Queued for this regional pass |
@@ -47,9 +51,9 @@ identifiers; Sapphire uses the corresponding `SA_` identifiers.
 | `FR_VIRIDIAN_CITY` | `viridian_outdoor` | Queued for this regional pass |
 | `FR_VIRIDIAN_CITY_GYM` | `building__rom_082d4cbc` | Queued for this regional pass |
 | `FR_VIRIDIAN_CITY_HOUSE` | `house` | Queued for this regional pass |
-| `FR_VIRIDIAN_CITY_MART` | `building__rom_082d4bcc` | Queued for this regional pass |
-| `FR_VIRIDIAN_CITY_POKEMON_CENTER_1F` | `network` | Queued for this regional pass |
-| `FR_VIRIDIAN_CITY_POKEMON_CENTER_2F` | `network` | Queued for this regional pass |
+| `FR_VIRIDIAN_CITY_MART` | `building__rom_082d4bcc` | Verified service-room polish 1.43.0 |
+| `FR_VIRIDIAN_CITY_POKEMON_CENTER_1F` | `network` | Verified service-room polish 1.43.0 |
+| `FR_VIRIDIAN_CITY_POKEMON_CENTER_2F` | `network` | Verified service-room polish 1.43.0 |
 | `FR_VIRIDIAN_CITY_SCHOOL` | `building__rom_082d4f5c` | Queued for this regional pass |
 | `FR_VIRIDIAN_FOREST` | `general__rom_082d4dc4` | Queued for this regional pass |
 
@@ -69,16 +73,16 @@ identifiers; Sapphire uses the corresponding `SA_` identifiers.
 | `EM_OLDALE_TOWN` | `general__petalburg` | Queued for this regional pass |
 | `EM_OLDALE_TOWN_HOUSE1` | `building__generic_building` | Queued for this regional pass |
 | `EM_OLDALE_TOWN_HOUSE2` | `building__generic_building` | Queued for this regional pass |
-| `EM_OLDALE_TOWN_MART` | `building__shop` | Queued for this regional pass |
-| `EM_OLDALE_TOWN_POKEMON_CENTER_1F` | `building__pokemon_center` | Queued for this regional pass |
-| `EM_OLDALE_TOWN_POKEMON_CENTER_2F` | `building__pokemon_center` | Queued for this regional pass |
+| `EM_OLDALE_TOWN_MART` | `building__shop` | Verified service-room polish 1.43.0 |
+| `EM_OLDALE_TOWN_POKEMON_CENTER_1F` | `building__pokemon_center` | Verified service-room polish 1.43.0 |
+| `EM_OLDALE_TOWN_POKEMON_CENTER_2F` | `building__pokemon_center` | Verified service-room polish 1.43.0 |
 | `EM_PETALBURG_CITY` | `general__petalburg` | Queued for this regional pass |
 | `EM_PETALBURG_CITY_GYM` | `building__petalburg_gym` | Queued for this regional pass |
 | `EM_PETALBURG_CITY_HOUSE1` | `building__generic_building` | Queued for this regional pass |
 | `EM_PETALBURG_CITY_HOUSE2` | `building__generic_building` | Queued for this regional pass |
-| `EM_PETALBURG_CITY_MART` | `building__shop` | Queued for this regional pass |
-| `EM_PETALBURG_CITY_POKEMON_CENTER_1F` | `building__pokemon_center` | Queued for this regional pass |
-| `EM_PETALBURG_CITY_POKEMON_CENTER_2F` | `building__pokemon_center` | Queued for this regional pass |
+| `EM_PETALBURG_CITY_MART` | `building__shop` | Verified service-room polish 1.43.0 |
+| `EM_PETALBURG_CITY_POKEMON_CENTER_1F` | `building__pokemon_center` | Verified service-room polish 1.43.0 |
+| `EM_PETALBURG_CITY_POKEMON_CENTER_2F` | `building__pokemon_center` | Verified service-room polish 1.43.0 |
 | `EM_PETALBURG_CITY_WALLYS_HOUSE` | `building__generic_building` | Queued for this regional pass |
 | `EM_ROUTE101` | `general__petalburg` | Queued for this regional pass |
 | `EM_ROUTE102` | `general__petalburg` | Queued for this regional pass |
@@ -100,16 +104,16 @@ identifiers; Sapphire uses the corresponding `SA_` identifiers.
 | `RU_OLDALE_TOWN` | `general__petalburg` | Queued for this regional pass |
 | `RU_OLDALE_TOWN_HOUSE1` | `building__generic_building` | Queued for this regional pass |
 | `RU_OLDALE_TOWN_HOUSE2` | `building__generic_building` | Queued for this regional pass |
-| `RU_OLDALE_TOWN_MART` | `building__shop` | Queued for this regional pass |
-| `RU_OLDALE_TOWN_POKEMON_CENTER_1F` | `building__pokemon_center` | Queued for this regional pass |
-| `RU_OLDALE_TOWN_POKEMON_CENTER_2F` | `building__pokemon_center` | Queued for this regional pass |
+| `RU_OLDALE_TOWN_MART` | `building__shop` | Verified service-room polish 1.43.0 |
+| `RU_OLDALE_TOWN_POKEMON_CENTER_1F` | `building__pokemon_center` | Verified service-room polish 1.43.0 |
+| `RU_OLDALE_TOWN_POKEMON_CENTER_2F` | `building__pokemon_center` | Verified service-room polish 1.43.0 |
 | `RU_PETALBURG_CITY` | `general__petalburg` | Queued for this regional pass |
 | `RU_PETALBURG_CITY_GYM` | `building__petalburg_gym` | Queued for this regional pass |
 | `RU_PETALBURG_CITY_HOUSE1` | `building__generic_building` | Queued for this regional pass |
 | `RU_PETALBURG_CITY_HOUSE2` | `building__generic_building` | Queued for this regional pass |
-| `RU_PETALBURG_CITY_MART` | `building__shop` | Queued for this regional pass |
-| `RU_PETALBURG_CITY_POKEMON_CENTER_1F` | `building__pokemon_center` | Queued for this regional pass |
-| `RU_PETALBURG_CITY_POKEMON_CENTER_2F` | `building__pokemon_center` | Queued for this regional pass |
+| `RU_PETALBURG_CITY_MART` | `building__shop` | Verified service-room polish 1.43.0 |
+| `RU_PETALBURG_CITY_POKEMON_CENTER_1F` | `building__pokemon_center` | Verified service-room polish 1.43.0 |
+| `RU_PETALBURG_CITY_POKEMON_CENTER_2F` | `building__pokemon_center` | Verified service-room polish 1.43.0 |
 | `RU_PETALBURG_CITY_WALLYS_HOUSE` | `building__generic_building` | Queued for this regional pass |
 | `RU_ROUTE101` | `general__petalburg` | Queued for this regional pass |
 | `RU_ROUTE102` | `general__petalburg` | Queued for this regional pass |

@@ -52,12 +52,36 @@ pixels are excluded from Git and releases.
   counter stool patches; decorative foliage is not classified as furniture solid.
 - Front, sides, rear and low-eye rendered views inspected independently in all
   five editions, including Emerald's upper counters and RS privacy booths.
-- Native input, exact archive and optional-partner evidence is recorded below
-  after package verification.
+- Exact-archive native input: all 30 room aisles, ten Nurse heals (three-mon
+  disposable party), twenty escalator warps and twenty exterior exits. Hoenn
+  completed both cities in each edition. Kanto's Viridian Parcel branch and
+  Pewter shopping are checked separately; Pewter uses its actual clerk (object
+  3), rather than assuming Viridian's object 1. Eight ordinary shops and two
+  fresh Viridian Parcel interactions retain their native script branches.
+- OFF and actual first-person captures retain native UI and actors. All 150
+  archive orbit/low-eye captures were inspected, independently by edition.
+- Neighbor render checks retain FireRed Oak's Lab and Ruby Lilycove Museum
+  furniture/wallpaper after the shared-module changes. An initial museum fixture
+  used an incomplete map identifier and is not counted as evidence.
+- Standalone archive runs use no companion mods. A separate Sapphire Petalburg
+  native-input smoke loads all six optional partners: wild_skies 1.15.2,
+  dramatic-sky-ride 0.5.5, double-battles-gen2 0.14.3, gen1online-plus 0.11.2,
+  overworld-spawn-mod 2.6.4 and modern-ui 0.4.2. Healing, both escalators,
+  shopping, aisles and exits complete with no mod errors. This is a local
+  compatibility smoke, not a multiplayer session or network test.
+- All six companion checkouts are clean and match remote main; their latest
+  release versions match the loaded versions above. No companion runtime
+  changes or packaging-only releases are needed for this batch.
+- Package: 11,394 files, 487 compiled Lua files, ZIP integrity checked and
+  manifest dependencies empty. ROMs, saves, imported pixels, private model packs,
+  caches and test captures are excluded. Runtime payload hashes are frozen
+  before the final evidence-only repackage; release checksum ships alongside
+  the archive.
 
 Early QA fixtures selected a decorative FRLG exit-apron warp instead of the
 native south-arrow tile, assumed Hoenn's customer approach for the Kanto clerk,
-and expected a shop menu during the fresh Viridian Oak's Parcel branch. These
+and expected a shop menu during the fresh Viridian Oak's Parcel branch.
+A later fixture assumed object 1 was always the clerk; Pewter uses object 3. These
 failed fixture attempts are not passes. Final input uses native arrow behaviors
 and counter/clerk positions, preserving the Parcel script instead of forcing
 quest flags or replacing native callbacks/VMs.

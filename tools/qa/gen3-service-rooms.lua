@@ -68,14 +68,18 @@ return function(game)
   id=pre..city..'_POKEMON_CENTER_1F';place(id,7,4);exit(id)
   id=pre..city..'_MART';place(id,5,5);views(id,5,5)
   local Objects=require('src.core.game3.objects');local Std=require('src.core.game3.scripting.collision_std')
-  local clerk;for _,o in ipairs(Objects.forDraw())do if o.localId==1 then clerk=o;break end end
-  assert(clerk,'native clerk missing');local approach
-  for _,a in ipairs{{'up',0,-1},{'left',-1,0},{'down',0,1},{'right',1,0}}do
-   local mx,my=clerk.cellX-a[2],clerk.cellY-a[3]
-   if Std.isCounter(Collision.cell(mx,my))then
-    local x,y=clerk.cellX-a[2]*2,clerk.cellY-a[3]*2
-    if Collision.isWalkable(x,y)and not Collision.warpAt(x,y)and not Objects.at(x,y)then approach={x,y,a[1]};break end
+  -- Native local IDs differ: Pewter's clerk is object 3, not object 1.
+  -- Find the actual counter/customer lane rather than assuming an actor ID.
+  local clerk,approach
+  for _,o in ipairs(Objects.forDraw())do
+   for _,a in ipairs{{'up',0,-1},{'left',-1,0},{'down',0,1},{'right',1,0}}do
+    local mx,my=o.cellX-a[2],o.cellY-a[3]
+    if Std.isCounter(Collision.cell(mx,my))then
+     local x,y=o.cellX-a[2]*2,o.cellY-a[3]*2
+     if Collision.isWalkable(x,y)and not Collision.warpAt(x,y)and not Objects.at(x,y)then clerk=o;approach={x,y,a[1]};break end
+    end
    end
+   if approach then break end
   end
   assert(approach,'native clerk counter approach missing')
   print('[SERVICE CLERK APPROACH]',id,clerk.cellX,clerk.cellY,unpack(approach))
