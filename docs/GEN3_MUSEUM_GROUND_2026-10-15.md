@@ -69,3 +69,8 @@ Final archive and current merged test results are recorded after verification.
 Captures, source artwork, imported pixels, caches and saves are excluded from Git
 and release ZIPs. No new network-gameplay or all-map coverage claim is made.
 Other large buildings/interiors remain incomplete; tower work is parked separately.
+
+The isolated release also includes the already committed f6cd4c0 native HUD
+option fixes, with their separate eight-edition0.3.89 evidence in
+`NATIVE_HUD_OPTIONS_2026-10-15.md`. Current uncommitted scene/cache/menu work
+remains excluded. No museum architecture redesign was made.

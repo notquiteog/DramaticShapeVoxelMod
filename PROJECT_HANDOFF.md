@@ -15,6 +15,20 @@ Route121 and LeafGreen Oak lab. Evidence and remaining work:
 other large buildings/interiors remain unfinished. Current uncommitted shared
 scene/cache/menu work is excluded and preserved.
 
+# Native original HUD options — 2026-10-15
+
+G/S/C original HUDs and backplates now share OG/compact scaling. All five GBA
+original healthboxes also consume COLOR/INVERTED, preserving native palette
+flashes, HP/status/gender colors and WHITE-arena ink. Compact text is composed
+at window resolution so glyph pixels remain intact. Native gameplay and the
+standalone/optional-companion contract remain unchanged.
+Actual eight-edition 0.3.89 fixtures pass and captures inspected; 66 focused
+contracts, SDK1173, broad295/0fail/58external-fixture skips pass. Evidence:
+`docs/NATIVE_HUD_OPTIONS_2026-10-15.md`. Modern semantic-card palettes remain
+owned by their independent provider in all generations; the inventory states
+that contract limit. Other non-model and model gaps remain; no full parity
+claim. This batch makes no model changes, version bump, release or push.
+
 # Lilycove Museum ORAS architectural rebuild — 2026-10-15
 
 1.39.0 replaces the three Hoenn museums with authored architecture/materials:

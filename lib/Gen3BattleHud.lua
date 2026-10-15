@@ -8,6 +8,7 @@ local Options=V.require('Gen3BattleOptions')
 local UI=Options.ui
 local M={cards={},drawn=0}
 local Bounds=V.require('SpriteHeadBounds')
+local NativeLayer=V.require('NativeHudLayer')
 function M.install(stage)
  local uninstallOptions=Options.install(stage)
  local Health=require('src.core.game3.battle.healthbox')
@@ -22,6 +23,7 @@ function M.install(stage)
  local Coords=require('src.core.game3.battle.anim_coords')
  local Pokemon=require('src.core.game3.pokemon')
  local original,input=Health.draw,Ui.handleInput
+ local nativeHud=V.require('NativeGen3Hud')
  Ui.handleInput=function(keys)
   if Mode.enabled() and stage.active and Ui._mode=='menu' and M.menu and M.menu.mode=='menu' and keys and keys.wasPressed then
    local swap={up='left',down='right',left='up',right='down'}
@@ -56,7 +58,7 @@ function M.install(stage)
   end
   return panel(mode,...)
  end
- function M.reset()M.cards={};M.menu=nil;M.covered=false;capturing=false;underlayReady=false;Options.drawing=false end
+ function M.reset()NativeLayer.begin('gen3');M.cards={};M.menu=nil;M.covered=false;capturing=false;underlayReady=false;Options.drawing=false end
  function M.begin()M.reset();capturing=Mode.enabled();Options.drawing=true end
  function M.finish()
   Options.drawing=false
@@ -99,7 +101,7 @@ function M.install(stage)
   if stage.active and UI.uiHidden('hud') then return end
   local st=Battle._st
   if not capturing or not stage.active or not st or st.safari or not battler then
-   return original(side,battler,opts)
+   return nativeHud.draw(original,stage,side,battler,opts)
   end
   local id=type(side)=='number' and side or side=='player' and 0 or 1
   local key=id==0 and 'player' or id==1 and 'enemy' or id
@@ -108,7 +110,7 @@ function M.install(stage)
   if hb and hb.visible==false then return end
   -- Preserve native level-up palette flashes until the high-resolution HUD
   -- has an equivalent effect, rather than silently dropping that feedback.
-  if hb and hb.levelUpBlend then return original(side,battler,opts)end
+  if hb and hb.levelUpBlend then return nativeHud.draw(original,stage,side,battler,opts)end
   local mon=battler.mon or {}
   local _,hp,maxHp=Anim.displayHpRatio(side,battler)
   local p=Anim.present and Anim.present(side)
@@ -190,6 +192,9 @@ function M.install(stage)
  end
  V.mod.hooks:wrap('render.hud',function(inner,game,viewport)
   local result=inner(game,viewport)
+  if stage.active and Mode.providerEnabled()and not Options.covered()and not UI.uiHidden('hud')then
+   NativeLayer.paint('gen3',require('src.render.Renderer'):frameRects())
+  end
   if stage.active and not M.covered and not Options.covered() and Battle.isActive() and (next(M.cards)~=nil or M.menu) then
    local G=love.graphics;G.push('all');G.setShader();G.setScissor()
    local ok,err=pcall(paint);G.pop()

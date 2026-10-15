@@ -99,6 +99,7 @@ function BattlePresentation.export()
     theme = V.require('BattleTheme'),
     modernUIEnabled = V.require('ModernBattleUI').enabled,
     nativeHudOwned = function()
+      if V.require('Generation').isGen2()then return V.require('Gen2BattleUI').nativeHudOwned()end
       local shot=V.require('OverworldBattle').shot()
       return V.require('ModernBattleUI').enabled() and shot and shot.heads~=nil or false
     end,
