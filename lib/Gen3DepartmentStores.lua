@@ -45,15 +45,15 @@ local function context(g,emit)
  end
  -- Each elevation is cut around actual recessed apertures, rather than
  -- covering a solid box with glass cards. All reveals meet the inset pane.
- function C.elevation(a,b,H,holes,wall,native)
+ function C.elevation(a,b,H,holes,wall,native,floor)
   local dx,dz=b[1]-a[1],b[2]-a[2];local length=math.sqrt(dx*dx+dz*dz)
   local ax,az=dx/length,dz/length;local nx,nz=-az,ax
   local function draw(v,t,s)
    local q={};for i,p in ipairs(v)do q[i]={a[1]+ax*p[1]+nx*p[3],p[2],a[2]+az*p[1]+nz*p[3]}end;C.face(q,t,s)
   end
-  local xs,ys={0,length},{0,H}
+  local xs,ys={0,length},{floor or 0,H}
   for u=16,length-1,16 do xs[#xs+1]=u end
-  for y=16,H-1,16 do ys[#ys+1]=y end
+  for y=math.max(16,math.ceil((floor or 0)/16)*16),H-1,16 do ys[#ys+1]=y end
   for _,o in ipairs(holes)do xs[#xs+1]=o.l;xs[#xs+1]=o.r;ys[#ys+1]=o.b;ys[#ys+1]=o.t end
   table.sort(xs);table.sort(ys)
   for j=1,#ys-1 do for i=1,#xs-1 do
@@ -236,6 +236,8 @@ local function celadon(g,C)
   C.face({{a[1],0,a[2]},{b[1],0,b[2]},{b[1],0,front-9},{a[1],0,front-9}},purple,.65)
  end
 end
+-- Shared closed-shell primitives for other source-specific large architecture.
+M.context=context
 function M.append(g,emit)
  local C=context(g,emit)
  if g.custom.store=='celadon'then celadon(g,C)else lilycove(g,C)end

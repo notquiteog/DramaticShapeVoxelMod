@@ -59,7 +59,7 @@ cache.BuildBudget={tick=function()end,check=function()end}
 local Civic=V.require('Gen3Civic')
 for _,r in ipairs(H.exteriors)do
  local cells={};for y,row in ipairs(r.rows)do for x,mid in ipairs(row)do
-  cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair=r.pair,primary='general',collision=r.blockedStart~=nil and (y<=r.blockedStart and 0 or 7)or nil,ts={}}
+  cells[(x-1)..':'..(y-1)]={cx=x-1,cy=y-1,mid=mid,pair=r.pair,primary='general',collision=r.permissions and r.permissions[y][x] or r.blockedStart~=nil and (y<=r.blockedStart and 0 or 7)or nil,ts={}}
  end end
  local found=Civic.prepare(cells,{},{});assert(#found==1 and found[1].family==r.name,r.name)
  local p=Civic.profile(found[1]);assert(p.wall>0 and p.wallBottom<=#r.rows*16,'roof/wall extent includes outside ground')

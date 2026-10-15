@@ -3,15 +3,15 @@
 local V=...
 local M={recipes={}}
 local exteriorNames={slateport_shipyard=true,slateport_oceanic_museum=true,oldale_house=true,oldale_mart=true,oldale_center=true,
- lilycove_department_store=true,
+ lilycove_department_store=true,lilycove_museum=true,rustboro_devon_corporation=true,mossdeep_space_center=true,
  petalburg_city_mart=true,petalburg_city_center=true,petalburg_city_gym=true,
  petalburg_city_wide_home=true,petalburg_city_home=true,birch_lab=true,
  littleroot_player_house=true,littleroot_rival_house=true}
 -- 2026-10-14 source batch: RS and Emerald native maps contain these complete
 -- drawings with the same layout, openings and roof form; RS pixels differ
--- only in roof texture/palette (side-by-side source sheets inspected). Held
--- back: Devon (different facade vocabulary), Space Center/Frontier,
--- and Lilycove's gold residence (RS leaves its lower-tier corners walkable).
+-- only in roof texture/palette (side-by-side source sheets inspected). Devon
+-- and Space Center now use the distinct reviewed RS models below. Still held:
+-- Frontier and Lilycove's gold residence (walkable lower-tier corners).
 -- Mossdeep/Verdanturf homes use their own reviewed variants below (2026-10-15).
 for _,name in ipairs({'rustboro_city_center','rustboro_city_mart','dewford_town_center','slateport_city_center',
  'slateport_city_mart','mauville_city_center','mauville_city_mart','verdanturf_town_mart','verdanturf_town_center',
@@ -50,11 +50,46 @@ M.recipes[#M.recipes+1]={name='birch_east_small_desk',edition='rs',family='rse',
 local trees={}
 for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1e4,0x1e5,0x1e6,0x1e7}do trees[id]=true end
 local roots={[0x1dc]=true,[0x1e4]=true,[0x1e6]=true}
+local rsSpace={name='rs_mossdeep_space_center',family='rse',pair='general__mossdeep',kind='space_center',geometry='landmark',landmark='rs_space',header=8,wallSample={4,44},trimSample={4,33},openings={{64,112,80,128,door=true}},permissions={
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,0,7,7,7,0,7,7},
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,113,7,7,7,7},
+},rows={
+ {0x32b,0x337,0x32c,0x32c,0x32d,0x32c,0x32c,0x337,0x32e},
+ {0x333,0x334,0x317,0x32f,0x335,0x32f,0x317,0x334,0x336},
+ {0x2da,0x2db,0x2db,0x2dc,0x2dd,0x2de,0x2df,0x2df,0x2c7},
+ {0x2da,0x2db,0x2db,0x2dc,0x2dd,0x2de,0x2df,0x2df,0x2c7},
+ {0x2da,0x2db,0x2db,0x2dc,0x2dd,0x2de,0x2df,0x2df,0x2c7},
+ {0x2da,0x2db,0x2db,0x2dc,0x2dd,0x2de,0x2df,0x2df,0x2c7},
+ {0x2e2,0x2e3,0x2e3,0x2e4,0x2e5,0x2e6,0x2e7,0x2e7,0x2cf},
+ {0x2ea,0x2eb,0x2eb,0x2ec,0x2ed,0x2ee,0x2ef,0x2ef,0x2d7},
+}}
 function M.exteriors(source)
  local out={}
  for _,r in ipairs(source)do if exteriorNames[r.name]then
   local copy={};for k,v in pairs(r)do copy[k]=v end
+  if r.name=='mossdeep_space_center'then for k,v in pairs(rsSpace)do copy[k]=v end end
   copy.header=#r.rows -- require every native source cell, including facade
+  if r.landmark=='museum' then copy.squareWindows=true end
+  if r.geometry=='devon' then
+   copy.geometry='landmark';copy.landmark='rs_devon'
+   copy.permissions={
+ {7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7},
+ {0,0,0,7,113,113,7,0,0,0},
+}
+  end
   if r.store=='lilycove' then copy.squareWindows=true end
   if r.geometry=='urban'then
    copy.squareWindows=true
@@ -87,6 +122,7 @@ function M.exteriors(source)
   end
   out[#out+1]=copy
  end end
+
  return out
 end
 -- Reviewed source-equivalence table (identifiers only). Loaded lazily so the
