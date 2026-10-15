@@ -3570,9 +3570,9 @@
         "key": "spritePack",
         "label": "SPRITE PACK (RESTART)",
         "module": "CrystalSprites",
-        "status": "partial",
-        "consumer": "lib/NativeCrystalArt.lua; lib/NativeBattleArt.lua; lib/NativeInterfaceArt.lua",
-        "detail": "SELECTED ART remains Gen3 default; CRYSTAL supplies bundled normal/shiny battlers and opted-in Summary/Dex art, retaining native missing-species/forms. Trainer battle portraits are supported; native player walk/bike and FRLG named-trainer sheets are supported. Evolution and Hall-of-Fame Pokemon pictures are supported. Local trainer cards, Hall-of-Fame player portraits and native FRLG/Hoenn intro players consume the selected front with native transforms/fades and remote identity fallback. Crystal-specific shiny-reveal effects still need a native adapter.",
+        "status": "implemented",
+        "consumer": "lib/NativeCrystalArt.lua; lib/NativeBattleArt.lua; lib/NativeInterfaceArt.lua; lib/NativeCrystalShiny.lua",
+        "detail": "SELECTED ART remains Gen3 default; CRYSTAL supplies bundled normal/shiny battlers and opted-in Summary/Dex art, retaining native missing-species/forms. Trainer battle portraits are supported; native player walk/bike and FRLG named-trainer sheets are supported. Evolution and Hall-of-Fame Pokemon pictures are supported. Local trainer cards, Hall-of-Fame player portraits and native FRLG/Hoenn intro players consume the selected front with native transforms/fades and remote identity fallback. The bundled seven-star Crystal reveal and sound use native shiny selection, battler IDs, VM timing and completion; unavailable assets and other packs retain native effects.",
         "verification": "source audit"
       },
       {

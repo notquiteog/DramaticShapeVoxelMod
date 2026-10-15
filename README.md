@@ -10,7 +10,7 @@ retaining terrace no longer forms two rock spikes beside the entrance.
 Characters, Pokémon and flowers stay HD-2D. Native walking routes, collision,
 warps and UI remain unchanged, and every partner mod stays optional. Verified
 with official Gen1Recomp 0.3.89, three-edition views, six native entries, rear-lane
-walks and 288 passing Lua suites. Full regional coverage remains in progress.
+walks and 289 passing Lua suites. Full regional coverage remains in progress.
 [Evidence and architectural direction](docs/GEN3_MUSEUM_REBUILD_2026-10-15.md).
 
 ## 1.38.0 — League, museum and RS science landmarks

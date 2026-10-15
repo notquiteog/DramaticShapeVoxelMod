@@ -75,7 +75,7 @@ Runtime shell: `/home/admin/Projects/.scratch/runtime-0.3.89/engine-museum/`.
 - `emerald-route121/`: unrelated outdoor map with the same Lilycove tileset
   retains its terrain/stairs. `firered-lab/`: unrelated busy Oak lab retains
   modeled furniture, native item balls and HD-2D actors. Rendered views inspected.
-- `tests-release.log`: 288 suites pass, zero fail,58 explicit absent-external-
+- `tests-release.log`: 289 suites pass, zero fail,58 explicit absent-external-
   fixture skips. New museum test covers authored material allocation without a
   source atlas, palette/glass gradient, exact apron guard and unchanged unrelated
   cliff heights. Existing nine-landmark test covers full all-height bounds,
@@ -95,6 +95,21 @@ overworld-spawn-mod2.6.3, modern-ui0.4.1. Optional providers remain optional.
 This batch does not claim new network gameplay verification or all-map parity.
 
 The isolated baseline includes already committed native-interface/performance
-work recorded in the root handoff, including Gen3 Crystal portraits. Current
+work recorded in the root handoff, including Gen3 Crystal portraits and the separately verified shiny-VM adapter.
+The adapter's five-edition evidence is recorded in
+`GEN3_CRYSTAL_SHINY_2026-10-15.md`; its runtime source was inspected and
+its focused contracts repeated before this release. Current
 uncommitted scene/uniform/mask edits in the shared primary checkout are excluded
 and preserved. Full scenery coverage and the parked tower batch remain open.
+
+## Release-archive checks
+
+The Git-archive package excludes tests/tools, ROMs, private native pixel data,
+imports, saves and caches. All packaged Lua files compile and the ZIP passes
+its integrity check. Original archive standalone first-person checks passed
+in Emerald (day/night) and Ruby (day), with actual1ST camera, from native
+(11,9)/(11,6). Captures were inspected; the final entry fascia has no lettering.
+Sapphire archive night views with all six optional partners loaded pass; all
+seven IDs/versions are present without loader/driver errors. No new network
+gameplay claim is made. Final archive additionally includes the already
+verified committed shiny adapter; final source/compatibility checks are below.

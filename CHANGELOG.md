@@ -11,8 +11,11 @@
   unrelated cliffs, collision, routes, door warps or stair drawing.
 - Keep characters, Pokémon and flowers HD-2D; preserve native UI and standalone
   optional integrations. Mesh cache92 invalidates the old building/terrace.
+- Include the previously committed native interface, sprite-bound performance,
+  item-ball option, Gen3 Crystal portrait and shiny-VM work; their individual
+  evidence and remaining feature limits remain in the root handoff.
 - Official 0.3.89: three-edition views, six native entries, three rear lanes,
-  source/permission bounds and 288 Lua suites pass. Other landmarks and interiors
+  source/permission bounds and 289 Lua suites pass. Other landmarks and interiors
   remain unfinished. See the museum evidence document.
 
 ## 1.38.0 — 2026-10-15
