@@ -115,7 +115,8 @@ function M.install()
  -- native scene sequencing, PokeNav navigation and layout. PokeNav class
  -- methods supply their own mon to monFrontPic during the scoped draw.
  for _,name in ipairs({'evolution_scene','hall_of_fame','hall_of_fame_pc','trade_scene','egg_hatch',
-  'rs.pokenav.condition','rs.pokenav.ribbons','rse.pokenav.condition','rse.pokenav.ribbons_summary'})do
+  'rs.pokenav.condition','rs.pokenav.ribbons','rse.pokenav.condition','rse.pokenav.ribbons_summary',
+  'rse.factory_select','rse.factory_swap'})do
   local ok,screen=pcall(require,'src.ui.game3.'..name)
   if ok and type(screen.draw)=='function'then
    wrap(screen,(name=='evolution_scene'or name=='egg_hatch')and function()return screen._mon end or nil)

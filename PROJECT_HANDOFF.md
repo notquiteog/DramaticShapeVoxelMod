@@ -1,3 +1,17 @@
+# Native Emerald Factory portraits after release checkpoint — 2026-10-15
+
+Factory rental/swap draws now consume selected interface frames with native
+mon/PID/shiny context and FIT/FULL/OFF behavior. Original three-rental selection,
+confirmation, enemy-pool switch, accepted/cancelled swap callbacks and party
+ownership remain native. Official0.3.89 Emerald original-UI fixture passes;
+all8 final captures inspected. It observes callbacks, not tournament progression.
+
+Focused71, inventory549, broad305/0fail/58skip including SDK1173 pass. Evidence:
+`docs/GEN3_FACTORY_ART_2026-10-15.md`. Source-only follow-up to4bc557a; no release
+metadata changes or claim of inclusion in existing1.41.1 archives. Remaining
+interface consumers: RS indexed hatch, Pokeblock, minigames, credits, starter
+selection. Inventory remains partial; model art untouched.
+
 # Native scripted/contest pictures after release checkpoint — 2026-10-15
 
 Separate from release4bc557a: native MonPic windows now consume selected art

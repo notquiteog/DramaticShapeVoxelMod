@@ -50,7 +50,7 @@ end}
 package.loaded['src.ui.game3.egg_hatch']=Hatch
 package.loaded['src.ui.game3.trade_scene']=Trade
 local navs={}
-for _,name in ipairs({'rs.pokenav.condition','rs.pokenav.ribbons','rse.pokenav.condition','rse.pokenav.ribbons_summary'})do
+for _,name in ipairs({'rs.pokenav.condition','rs.pokenav.ribbons','rse.pokenav.condition','rse.pokenav.ribbons_summary','rse.factory_select','rse.factory_swap'})do
  local screen={draw=function(self)seen=P.monFrontPic(self.mon);return self.marker,nil,false end}
  package.loaded['src.ui.game3.'..name]=screen;navs[#navs+1]=screen
 end
@@ -85,8 +85,8 @@ received.species=1025
 check(P.monFrontPic==monFront and P.frontPic==original and Anim.framePic==framePic,'trade/hatch readers restored')
 for _,screen in ipairs(navs)do
  local instance=setmetatable({mon={species=1025,personality=903,isShiny=true},marker='nav'},{__index=screen})
- local a,b,c=instance:draw();check(a=='nav'and b==nil and c==false and lastMon.personality==903 and lastMon.isShiny,'PokeNav class instance/returns/identity retained')
- selected='off';instance:draw();check(seen.image.id=='rom','PokeNav OFF retains native picture');selected='battle_art'
+ local a,b,c=instance:draw();check(a=='nav'and b==nil and c==false and lastMon.personality==903 and lastMon.isShiny,'native menu instance/returns/identity retained')
+ selected='off';instance:draw();check(seen.image.id=='rom','native menu OFF retains native picture');selected='battle_art'
 end
 local picture=Animated.picture
 Animated.picture=function(mon,side)if mon.personality==902 then error('missing selected image')end;return picture(mon,side)end
