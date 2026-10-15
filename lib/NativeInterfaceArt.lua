@@ -49,6 +49,7 @@ function M.install()
  local undoPortraits=V.require('NativeCrystalPortraits').install()
  local Pokemon=require('src.core.game3.pokemon')
  local undoScripted=V.require('NativeScriptedArt').install(M,Pokemon)
+ local undoPokeblock=V.require('NativePokeblockArt').install(M,Pokemon)
  local function eligible(species,form,source)
   if form and form~=0 or source and Pokemon.isEgg(source)then return false end
   -- These native pictures encode egg state, PID spots or edition-specific
@@ -123,6 +124,7 @@ function M.install()
   end
  end
  return function()
+  undoPokeblock()
   undoScripted()
   undoPortraits()
   for i=#undo,1,-1 do undo[i]()end

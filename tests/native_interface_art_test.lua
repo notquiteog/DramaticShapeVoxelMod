@@ -54,7 +54,7 @@ for _,name in ipairs({'rs.pokenav.condition','rs.pokenav.ribbons','rse.pokenav.c
  local screen={draw=function(self)seen=P.monFrontPic(self.mon);return self.marker,nil,false end}
  package.loaded['src.ui.game3.'..name]=screen;navs[#navs+1]=screen
 end
-local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated,NativeScriptedArt={install=function()return function()end end},NativeCrystalPortraits={install=function()return function()end end}})[name],name)end}
+local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated,NativePokeblockArt={install=function()return function()end end},NativeScriptedArt={install=function()return function()end end},NativeCrystalPortraits={install=function()return function()end end}})[name],name)end}
 local Native=assert(loadfile('lib/NativeInterfaceArt.lua'))(V)
 local initialSummary,initialDex=Summary.draw,Dex.draw
 local undo=Native.install()

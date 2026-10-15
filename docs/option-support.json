@@ -3341,8 +3341,8 @@
         "label": "INTERFACE SCALING",
         "module": "InterfaceSprites",
         "status": "partial",
-        "consumer": "lib/NativeInterfaceArt.lua; lib/NativeCrystalArt.lua; lib/NativeScriptedArt.lua",
-        "detail": "Native Summary/Pokedex, evolution, Hall-of-Fame, all five trade scenes, Hoenn PokeNav condition/ribbon portraits and Emerald Factory rental/swap portraits consume animation-wide FIT/FULL with mon/shiny context. FireRed/LeafGreen/Emerald revealed hatchlings also consume selected art; native egg shells, Spinda PID spots and Deoxys edition forms remain original. Crystal frames are prepared from owned CPU assets before fitting. Scripted MonPic windows and Hoenn contest entry pictures consume selected art with native cached frames/transforms restored after draws and correct packed OT/shiny identity. Ruby/Sapphire hatch retains its indexed PPU art. Pokeblock, minigame, credits and starter-selection pictures remain unscoped.",
+        "consumer": "lib/NativeInterfaceArt.lua; lib/NativeCrystalArt.lua; lib/NativeScriptedArt.lua; lib/NativePokeblockArt.lua",
+        "detail": "Native Summary/Pokedex, evolution, Hall-of-Fame, all five trade scenes, Hoenn PokeNav condition/ribbon portraits and Emerald Factory rental/swap portraits consume animation-wide FIT/FULL with mon/shiny context. FireRed/LeafGreen/Emerald revealed hatchlings also consume selected art; native egg shells, Spinda PID spots and Deoxys edition forms remain original. Crystal frames are prepared from owned CPU assets before fitting. Scripted MonPic windows and Hoenn contest entry pictures consume selected art with native cached frames/transforms restored after draws and correct packed OT/shiny identity. Hoenn Pokeblock selection/feed pictures retain cached source identity through native cursor slides and affine feeding animation, with native consumption/stat updates unchanged. Ruby/Sapphire hatch retains its indexed PPU art. Minigame, credits and starter-selection pictures remain unscoped.",
         "verification": "source audit"
       },
       {
@@ -3351,8 +3351,8 @@
         "label": "INTERFACE SPRITES",
         "module": "InterfaceSprites",
         "status": "partial",
-        "consumer": "lib/NativeInterfaceArt.lua; lib/NativeCrystalArt.lua; lib/NativeScriptedArt.lua",
-        "detail": "Native Summary/Pokedex, evolution, Hall-of-Fame, all five trade scenes, Hoenn PokeNav condition/ribbon portraits and Emerald Factory rental/swap portraits consume animation-wide FIT/FULL with mon/shiny context. FireRed/LeafGreen/Emerald revealed hatchlings also consume selected art; native egg shells, Spinda PID spots and Deoxys edition forms remain original. Crystal frames are prepared from owned CPU assets before fitting. Scripted MonPic windows and Hoenn contest entry pictures consume selected art with native cached frames/transforms restored after draws and correct packed OT/shiny identity. Ruby/Sapphire hatch retains its indexed PPU art. Pokeblock, minigame, credits and starter-selection pictures remain unscoped.",
+        "consumer": "lib/NativeInterfaceArt.lua; lib/NativeCrystalArt.lua; lib/NativeScriptedArt.lua; lib/NativePokeblockArt.lua",
+        "detail": "Native Summary/Pokedex, evolution, Hall-of-Fame, all five trade scenes, Hoenn PokeNav condition/ribbon portraits and Emerald Factory rental/swap portraits consume animation-wide FIT/FULL with mon/shiny context. FireRed/LeafGreen/Emerald revealed hatchlings also consume selected art; native egg shells, Spinda PID spots and Deoxys edition forms remain original. Crystal frames are prepared from owned CPU assets before fitting. Scripted MonPic windows and Hoenn contest entry pictures consume selected art with native cached frames/transforms restored after draws and correct packed OT/shiny identity. Hoenn Pokeblock selection/feed pictures retain cached source identity through native cursor slides and affine feeding animation, with native consumption/stat updates unchanged. Ruby/Sapphire hatch retains its indexed PPU art. Minigame, credits and starter-selection pictures remain unscoped.",
         "verification": "source audit"
       },
       {

@@ -1,3 +1,18 @@
+# Native Hoenn Pokeblock portraits after release checkpoint — 2026-10-15
+
+Ruby/Sapphire/Emerald selection and feed screens now consume selected portraits
+through scoped cached-image substitution. Outgoing slides keep the source mon's
+identity after cursor changes; native affine animation, cancellation, callbacks,
+party ownership, inventory consumption and condition updates remain original.
+Official0.3.89 original-UI fixtures pass all3; all24 captures inspected. Exactly
+one original feed consumes one block and applies expected cool10/sheen20.
+
+Focused16/interface71/inventory549, broad306/0fail/58skip including SDK1173 pass.
+Evidence: `docs/GEN3_POKEBLOCK_ART_2026-10-15.md`. Separate source batch after
+4bc557a; no release metadata changes or claim of existing1.41.1 inclusion.
+Remaining interface consumers: RS indexed hatch, minigames, credits and starter
+selection. Inventory remains partial; models and independent assets untouched.
+
 # Native Emerald Factory portraits after release checkpoint — 2026-10-15
 
 Factory rental/swap draws now consume selected interface frames with native
