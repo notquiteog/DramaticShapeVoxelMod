@@ -11,7 +11,9 @@ Official0.3.89: all five normal-input native entrances pass; front/side/rear/eye
 captures and source diagrams inspected. Broad298/0fail/58fixture skips. Exact
 package and companion evidence: `docs/GEN3_BATTLE_TOWERS_2026-10-15.md`.
 Includes museum-ground339b11f and verified optimization/capture8bf1ab4; primary
-checkout's later independent work is preserved separately. Large interiors next.
+checkout's later independent work is preserved separately. Exact standalone archive entries pass all5; six-partner Sapphire pass; native
+building census129/129/82/78/78 with0 flags; three Hoenn museum stair regressions
+pass. Runtime-identical evidence repackage; large interiors next.
 
 # Museum ground and staircase repair — 2026-10-15
 

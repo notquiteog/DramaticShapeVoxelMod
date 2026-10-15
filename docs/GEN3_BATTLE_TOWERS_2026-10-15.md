@@ -61,3 +61,28 @@ work was incorporated. Exact-package checks are recorded below before release.
 Large interiors and other unique landmarks remain in progress. Recipe
 classification does not certify every room or visual family. Unseen back/roof
 surfaces are architectural interpretations using each game's native materials.
+
+## Exact archive and partner checks
+
+The1.40.0 archive installs standalone in `engine-tower-package`; all five
+normal-input tower entries and camera recovery pass from this exact archive.
+`engine-tower-package-all` adds all six partner mods: wild_skies1.15.1,
+dramatic-sky-ride0.5.4, double-battles-gen20.14.2, gen1online-plus0.11.1,
+overworld-spawn-mod2.6.3 and modern-ui0.4.1. Combined Sapphire tower entry and
+front/side/rear views pass and captures were inspected. Partner checkouts were
+clean at the audit; no partner code/dependencies were added to this release.
+
+Exact archive footprint census: FireRed129/LeafGreen129/Emerald82/Ruby78/
+Sapphire78 recognized buildings,0 flagged walking-center intersections each.
+The census checks low-face bounding boxes against native cell centers; the new
+tower tests separately check all heights and entire walking cells.
+
+Exact archive museum regression: both native stair lanes ascend/descend in all
+three Hoenn editions,12→24 support with1.5 maximum tread increments; native
+entry warps and camera/actor contact remain authoritative. Rendered lower and
+upper approach captures inspected. This carries the approved building unchanged.
+
+Packaged Lua compiles,ZIP integrity passes,dependencies remain empty, no native
+imports/caches/captures ship. The evidence-only final repackage preserves every
+runtime file byte-for-byte from the archive used by the checks above. QA
+processes quit; player saves are untouched.
