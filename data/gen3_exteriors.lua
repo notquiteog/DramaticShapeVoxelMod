@@ -1,6 +1,26 @@
 -- Native metatile identifiers only; no imported pixels or ROM data.
 -- A family matches its complete roof header and both facade boundaries.
 return {
+{name='seven_island_trainer_tower',pair='general__rom_082d507c',kind='battle_tower',geometry='battle_tower',tower='trainer',header=8,openings={{64,112,80,128,door=true}},claimRanges={{1,7},{1,7},{1,7},{0,8},{0,8},{0,8},{0,7},{3,5}},permissions={
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,0},
+ {7,7,7,7,113,7,7,7,7},
+},rows={
+ {0x79,0x2a0,0x2a9,0x2aa,0x2ab,0x2ac,0x2ad,0x2a6,0x79},
+ {0x71,0x2a8,0x2b1,0x2b2,0x2b3,0x2b4,0x2b5,0x2ae,0x71},
+ {0x287,0x2a0,0x2a1,0x2a2,0x2a3,0x2a4,0x2a5,0x2a6,0x71},
+ {0x28f,0x2a8,0x2a9,0x2aa,0x2ab,0x2ac,0x2ad,0x2ae,0x2af},
+ {0x297,0x2b0,0x2b1,0x2b2,0x2b3,0x2b4,0x2b5,0x2b6,0x2b7},
+ {0x29f,0x2b8,0x2b9,0x2ba,0x2bb,0x2bc,0x2bd,0x2be,0x2bf},
+ {0x2a7,0x2c0,0x2c1,0x2c2,0x2c3,0x2c4,0x2c5,0x2c6,0x2c7},
+ {0x79,0x79,0x79,0x2cb,0x2cc,0x2cd,0x79,0x79,0x79},
+}},
+
 {name='indigo_plateau_league',pair='general__rom_082d4b84',kind='league',geometry='landmark',landmark='indigo',claimExtras={{1,6},{3,6},{7,6},{9,6}},header=7,wallSample={4,70},trimSample={68,99},claimRanges={{0,10},{0,10},{0,10},{0,10},{0,10},{0,10},{4,6}},openings={{80,96,96,112,door=true}},permissions={
  {7,7,7,7,7,7,7,7,7,7,7},
  {7,7,7,7,7,7,7,7,7,7,7},

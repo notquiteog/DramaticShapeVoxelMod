@@ -5,7 +5,7 @@ local V,cache={},{}
 function V.require(n)if not cache[n]then cache[n]=assert(loadfile('lib/'..n..'.lua'))(V)end;return cache[n]end
 local H,S,C=V.require('Gen3Hoenn'),V.require('Gen3TileShape'),V.require('Gen3Civic')
 for _,game in ipairs({'ruby','sapphire'})do
- version=game;assert(H.active());local recipes=H.exteriorRecipes();assert(#recipes==70,#recipes)
+ version=game;assert(H.active());local recipes=H.exteriorRecipes();assert(#recipes==71,#recipes)
  assert(S.of('general','petalburg',0x1dc,0,7).kind=='tree')
  assert(S.of('general','petalburg',0x14,0,7).kind=='flat','Kanto trees leaked')
  assert(S.of('general','petalburg',0x66,0,7).kind=='flat','unreviewed Emerald terrain leaked')
@@ -41,7 +41,7 @@ for _,game in ipairs({'ruby','sapphire'})do
    if r.blockedStart then for _,q in ipairs(v)do
     assert(q[1]>0 and q[1]<#r.rows[1]*16 and q[3]>r.blockedStart*16 and q[3]<#r.rows*16,'RS roof/window crosses native blocked footprint')
    end end
-   for _,q in ipairs(v)do if r.name:match('^littleroot_') and q[2]>=25 then assert(q[3]>=14.5,'tiered roof projects beyond rear wall')end;if r.geometry~='landmark' and q[2]>1.5 and q[2]<16 then assert(q[3]>=(r.blockedStart==0 and 0 or r.name=='petalburg_city_gym' and 0 or r.name=='slateport_oceanic_museum' and 8 or 16),'RS rear lane blocked')end end
+   for _,q in ipairs(v)do if r.name:match('^littleroot_') and q[2]>=25 then assert(q[3]>=14.5,'tiered roof projects beyond rear wall')end;if r.geometry~='landmark' and r.geometry~='battle_tower' and q[2]>1.5 and q[2]<16 then assert(q[3]>=(r.blockedStart==0 and 0 or r.name=='petalburg_city_gym' and 0 or r.name=='slateport_oceanic_museum' and 8 or 16),'RS rear lane blocked')end end
   end)
   assert(count>20)
   if r.blockedStart then

@@ -1,3 +1,18 @@
+# Trainer Tower and Battle Towers — 2026-10-15
+
+1.40.0 adds three source-specific tower families across all five GBA editions.
+Closed sides/backs/undersides, recessed glazing, angled bays, brick pier returns
+and separate entry shells replace the native projected drawing. Exact full-source
+and permission matching protects third-party walking lanes. Mesh95; native door
+animation uses the same recessed surface. Characters/Pokémon/flowers stay HD-2D;
+collision, warps, UI and optional partner independence remain unchanged.
+
+Official0.3.89: all five normal-input native entrances pass; front/side/rear/eye
+captures and source diagrams inspected. Broad298/0fail/58fixture skips. Exact
+package and companion evidence: `docs/GEN3_BATTLE_TOWERS_2026-10-15.md`.
+Includes museum-ground339b11f and verified optimization/capture8bf1ab4; primary
+checkout's later independent work is preserved separately. Large interiors next.
+
 # Museum ground and staircase repair — 2026-10-15
 
 User clarified that the building looked fine: preserve its existing design.

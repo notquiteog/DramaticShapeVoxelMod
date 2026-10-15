@@ -1,3 +1,9 @@
+## 1.40.0
+
+- Model all five native Trainer Tower/Battle Tower placements with three distinct architectural families, closed shells, recessed glazing and native animated entrance seams.
+- Preserve walking cells, HD-2D actors/flowers, native UI and optional standalone integrations.
+- Carry forward the published museum ground repair and previously verified native capture/streaming improvements; refresh geometry cache revision to 95.
+
 ## 1.39.1 — 2026-10-15
 
 - Fix the Lilycove Museum ground and staircase in Emerald/Ruby/Sapphire while

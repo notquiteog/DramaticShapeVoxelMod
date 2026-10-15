@@ -3,7 +3,7 @@
 local V=...
 local M={recipes={}}
 local exteriorNames={slateport_shipyard=true,slateport_oceanic_museum=true,oldale_house=true,oldale_mart=true,oldale_center=true,
- lilycove_department_store=true,lilycove_museum=true,rustboro_devon_corporation=true,mossdeep_space_center=true,
+ battle_frontier_tower=true,lilycove_department_store=true,lilycove_museum=true,rustboro_devon_corporation=true,mossdeep_space_center=true,
  petalburg_city_mart=true,petalburg_city_center=true,petalburg_city_gym=true,
  petalburg_city_wide_home=true,petalburg_city_home=true,birch_lab=true,
  littleroot_player_house=true,littleroot_rival_house=true}
@@ -69,12 +69,34 @@ local rsSpace={name='rs_mossdeep_space_center',family='rse',pair='general__mossd
  {0x2e2,0x2e3,0x2e3,0x2e4,0x2e5,0x2e6,0x2e7,0x2e7,0x2cf},
  {0x2ea,0x2eb,0x2eb,0x2ec,0x2ed,0x2ee,0x2ef,0x2ef,0x2d7},
 }}
+local rsBattle={name='rs_battle_tower',pair='general__dewford',kind='battle_tower',geometry='battle_tower',tower='rs',header=9,openings={{96,128,112,144,door=true}},permissions={
+ {7,7,7,7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7,7,7,7},
+ {7,7,7,7,7,7,7,7,7,7,7,7,7},
+ {0,0,0,0,7,7,113,7,7,0,0,0,0},
+},rows={
+ {0x280,0x249,0x24a,0x24a,0x278,0x279,0x27a,0x27b,0x262,0x24a,0x24a,0x260,0x281},
+ {0x280,0x249,0x24a,0x24a,0x278,0x279,0x27a,0x27b,0x262,0x24a,0x24a,0x260,0x281},
+ {0x272,0x249,0x24a,0x24a,0x278,0x279,0x27a,0x27b,0x262,0x24a,0x24a,0x260,0x273},
+ {0x26a,0x249,0x24a,0x24a,0x278,0x279,0x27a,0x27b,0x262,0x24a,0x24a,0x260,0x26b},
+ {0x248,0x249,0x24a,0x24a,0x278,0x279,0x27a,0x27b,0x262,0x24a,0x24a,0x260,0x261},
+ {0x248,0x249,0x24a,0x24a,0x278,0x279,0x27a,0x27b,0x262,0x24a,0x24a,0x260,0x261},
+ {0x248,0x249,0x24a,0x24a,0x24b,0x24c,0x24d,0x24e,0x24f,0x24a,0x24a,0x260,0x261},
+ {0x250,0x251,0x252,0x252,0x253,0x254,0x255,0x256,0x257,0x252,0x252,0x268,0x269},
+ {0x258,0x259,0x25a,0x25a,0x25b,0x25c,0x25d,0x25e,0x25f,0x25a,0x25a,0x270,0x271},
+}}
 function M.exteriors(source)
  local out={}
  for _,r in ipairs(source)do if exteriorNames[r.name]then
   local copy={};for k,v in pairs(r)do copy[k]=v end
   if r.name=='mossdeep_space_center'then for k,v in pairs(rsSpace)do copy[k]=v end end
-  copy.header=#r.rows -- require every native source cell, including facade
+  if r.name=='battle_frontier_tower'then copy={};for k,v in pairs(rsBattle)do copy[k]=v end end
+  copy.header=#copy.rows -- require every native source cell, including facade
   if r.landmark=='museum' then copy.squareWindows=true end
   if r.geometry=='devon' then
    copy.geometry='landmark';copy.landmark='rs_devon'
