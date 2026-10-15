@@ -93,3 +93,24 @@ world battle projection/grounding/error-restoration tests pass.
 
 Fixture: `tools/qa/sprite-bounds.lua`; log:
 `.scratch/battle-perf-20261015/sprite-bounds/run.log`.
+
+## Official0.3.89 recheck
+
+A new official release appeared during the final batch. Its `.love` engine
+and AppImage were downloaded and verified against the published SHA256 values.
+No engine source was changed. The distribution omits test helpers: only the
+existing0.3.88 public `tests/drivers/util.lua`, `harness`, `love_stub`, `fs_io`,
+`modkit` and synthetic `fixture_data` were copied into the isolated runtime;
+SDK/unit results therefore use that harness against0.3.89 engine code.
+
+The complete current-engine suite passes284, fails0, skips58 external-fixture
+checks. Three old profile tests initially lacked the upstream ItemPokeballs
+setting dependency; their fixtures now load the real module and pass. The
+Emerald30-frame native battle again reports30hits/0scans, retains orbit and
+returns with both stage/battle inactive. FireRed Oak lab toggles live item
+models/native sprite actors under CUSTOM; both captures inspected. Native
+pickup ownership remains unchanged. The96fit GPU bounds comparison also
+passes on0.3.89 (56CPU/40fallback). Hardware FPS remains unverified.
+
+Evidence: `.scratch/battle-perf-20261015/{suite-0389.log,0389-emerald,
+0389-items,0389-bounds}`. These supplement, not relabel, the older captures.
