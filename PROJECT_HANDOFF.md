@@ -10,7 +10,11 @@ all companion integrations stay optional.
 
 Official0.3.89:49 edition geometry fixtures and broad299/0fail/58fixture skips.
 Evidence, exact native placements, input tests and remaining large interiors:
-`docs/GEN3_TOWER_INTERIORS_2026-10-15.md`. Primary checkout's later independent
+`docs/GEN3_TOWER_INTERIORS_2026-10-15.md`. Exact archive170 native component
+placements/0 solid walking overlaps; all5 aisles/all5 internal doors and6 FRLG
+directional stair warps pass. All6-partner Emerald pass; Oak lab neighbor render
+inspected; six partner checkouts clean and latest released. Runtime-identical
+evidence repackage. Primary checkout's later independent
 work is preserved separately; no imported pixels/caches/captures are packaged.
 
 # Trainer Tower and Battle Towers — 2026-10-15

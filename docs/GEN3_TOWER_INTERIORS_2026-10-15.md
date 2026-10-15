@@ -87,3 +87,35 @@ native walkable bench drawings and figural reception ornaments retain their
 existing presentation; they are not silently turned into solid walking obstacles
 or full3D Pokémon. Broader inventory/coverage ledgers remain authoritative.
 Exact-package inventory/input/partner results are recorded below before release.
+
+## Verified release archive
+
+Exact1.41.0 package in `engine-tower-interior-package`, standalone:
+FireRed78/LeafGreen78/Emerald8/Ruby3/Sapphire3 new component placements
+(170 total),0 solid-face intersections with native walking cells at any height.
+Level floor surfaces at height0 are intentionally excluded from solid flags.
+The census follows production preparation order: authored tower flights first,
+then generic stairs, then other furniture. It records the partner-room doorway
+reuse rather than silently assuming every frontier room was reviewed.
+
+All five native front-aisle walks and all five internal doorway transitions pass.
+FRLG additionally pass six ordinary directional stair transitions: lobby→1F,
+1F→2F and1F→lobby in each edition. Production camera recovery remains active
+without failures. Exact archive OFF/native, actual1ST and destination captures
+are inspected. Final source-specific closed stairwell and neighboring Oak lab
+views are inspected (`package-neighbors/`), preserving unrelated lab furniture.
+
+Exact archive with all six optional partner mods (`package-all-native/`) passes
+Emerald's aisle/internal-door fixture; rendered first-person capture inspected.
+Versions: wild_skies1.15.1, dramatic-sky-ride0.5.4, double-battles-gen20.14.2,
+gen1online-plus0.11.1, overworld-spawn-mod2.6.3, modern-ui0.4.1. All six local
+checkouts are clean and match their latest published tags. Online's latest tag
+was absent locally; the remote v0.11.1 and main both match local0a48e10. No
+uncommitted or unreleased partner changes were found in this audit. The combined
+fixture uses the published online package, as in the previous tower release.
+
+Package:11,376 files,480 Lua files compile;ZIP integrity passes; manifest hard
+dependencies remain empty. Runtime bytes are hash-compared after the final
+evidence-only repackage. Only docs/handoff change after these archive checks.
+QA processes exit normally; player progress is untouched. This batch is fully
+reviewable and releasable, with the remaining interior queues listed above.
