@@ -1,3 +1,21 @@
+# Boundary frame-time optimization — 2026-10-15
+
+Root: G/S/C perimeter generation now streams in 1ms update slices, keeps the
+complete prior window, and uploads ground in 4096-vertex batches. Shadow/color
+passes share the same published geometry. Reversal/warp/cancel releases tested.
+GBA terrain now reuses scene corner heights and numeric neighbor rows, preserving
+exact meshes. No geometry/material/quality/gameplay changes.
+
+Official0.3.89 NVIDIA1440p final Crystal stress: boundary peak79.99→2.85ms;
+whole-frame85.05→19.19ms. Gold/Silver boundary<=3.4ms. Five native GBA running
+crossings retained camera/scenery,1prefetch/1promotion/0failures,peak18–21ms.
+Emerald stationary battle mean2.76/p953.75/max4.13ms,zero rebuilds; moving peak
+24.55→17.85ms. Cold Route104694→679ms,Petalburg231→211ms. All11 editions smoke
+ran; NOT a165FPS guarantee or every-map review. Shared suite300/0/58,SDK1173.
+See `docs/BOUNDARY_FRAME_TIME_2026-10-15.md` for fixtures/caveats, including
+synthetic Gen2 movement and initial poor capture angles. No release/push.
+Parity worker committed c3b2489 and continues PokeNav readers independently.
+
 # Native Gen3 trade/hatch selected art — 2026-10-15
 
 All five native trade scenes and FireRed/LeafGreen/Emerald revealed hatchlings

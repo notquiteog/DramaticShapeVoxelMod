@@ -272,6 +272,7 @@ local function build(req,cache,previous)
  for _,c in pairs(cells)do if c.gym then c.column=Buildings.column(c.gym)end end
  Elevation.bind(cells,regions)
  cache.floorRegions=regions
+ local terrainHeight=Terrain.sampler(cells,Budget.tick)
  local chimneys=Roof.prepare(cells)
  cache.chimneyOutlets={}
  M.chimneyCount=#chimneys
@@ -324,7 +325,7 @@ local function build(req,cache,previous)
   elseif shape.kind=='cliff' then
    M.cliffCount=M.cliffCount+1
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
-   Terrain.append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)
+   Terrain.append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor,terrainHeight)
   elseif c.prop then
    if not c.prop.recipe.noGround then
     plane(b.v,b.i,x,z,uvFor(ts,V.require('Gen3Furniture').groundAt(c)) or uvFor(ts,1) or uv)

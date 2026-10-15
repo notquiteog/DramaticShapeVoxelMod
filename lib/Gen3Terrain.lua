@@ -7,19 +7,20 @@ local function solid(c)
  local g=c.civic
  return g and g.custom and g.custom.geometry=='tower' and c.cy>=g.cy+(g.northRows or 0)
 end
-function M.height(cells,x,z,height)
+function M.height(cells,x,z,height,rows)
  local cx,cy=math.floor(x/16),math.floor(z/16)
  local distance,boundary=4,0
  local low,high=math.huge,-math.huge
  for y=cy-2,cy+2 do for xx=cx-2,cx+2 do
-  local c=cells[xx..':'..y]
+  local c;if rows then c=rows[y] and rows[y][xx]else c=cells[xx..':'..y]end
   if c and not solid(c) then
    local h=c.floorHigh or c.base or 0
    low,high=math.min(low,h),math.max(high,h)
   end
  end end
  local top=height or 32
- local support=cells[cx..':'..cy];local terrace=support and support.museumTerrace
+ local support;if rows then support=rows[cy] and rows[cy][cx]else support=cells[cx..':'..cy]end
+ local terrace=support and support.museumTerrace
  if terrace then top=terrace.groundHeight or support.base or 0
  elseif high>-math.huge then
   -- A retaining face meets the upper terrace. An outer enclosure above a
@@ -27,7 +28,7 @@ function M.height(cells,x,z,height)
   top=high>low and high or high+top
  end
  for y=cy-1,cy+1 do for xx=cx-1,cx+1 do
-  local c=cells[xx..':'..y]
+  local c;if rows then c=rows[y] and rows[y][xx]else c=cells[xx..':'..y]end
   if not solid(c)then
    local dx=math.max(xx*16-x,0,x-(xx+1)*16)
    local dz=math.max(y*16-z,0,z-(y+1)*16)
@@ -44,7 +45,23 @@ function M.height(cells,x,z,height)
  end end
  return boundary+(top-boundary)*math.min(1,distance/4)
 end
-function M.append(cells,c,emit,uvFor)
+-- One sampler per completed scene layout, never retained across world edits.
+-- Adjacent cliff cells share corners and numeric rows avoid temporary string
+-- keys in both neighborhood scans. Heights remain separated by wall profile.
+function M.sampler(cells,tick)
+ local rows,heights={},{}
+ for _,c in pairs(cells)do
+  local row=rows[c.cy];if not row then row={};rows[c.cy]=row end
+  row[c.cx]=c;if tick then tick()end
+ end
+ return function(_,x,z,height)
+  local layer=heights[height];if not layer then layer={};heights[height]=layer end
+  local row=layer[z];if not row then row={};layer[z]=row end
+  if row[x]==nil then row[x]=M.height(cells,x,z,height,rows)end
+  return row[x]
+ end
+end
+function M.append(cells,c,emit,uvFor,heightAt)
  local x,z=c.cx*16,c.cy*16;local height=c.shape.height or 32
  local cap=assert(uvFor(c.ts,c.shape.cap or 113));local cliff=assert(uvFor(c.ts,c.shape.side or 121))
  local function sub(uv,a,b,u,v)
@@ -55,7 +72,8 @@ function M.append(cells,c,emit,uvFor)
  -- Sixteen quads share twenty-five corners. Sample each exact corner
  -- once; this cache cannot outlive changes to the surrounding cells.
  local heights={}
- for iz=0,4 do for ix=0,4 do heights[iz*5+ix+1]=M.height(cells,x+ix*4,z+iz*4,height)end end
+ heightAt=heightAt or M.height
+ for iz=0,4 do for ix=0,4 do heights[iz*5+ix+1]=heightAt(cells,x+ix*4,z+iz*4,height)end end
  for iz=0,3 do for ix=0,3 do
   local a,b=ix*4,iz*4;local u,v=a+4,b+4
   local k=iz*5+ix+1
