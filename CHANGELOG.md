@@ -1,3 +1,11 @@
+## 1.42.0
+
+- Model the Ruby/Sapphire Lilycove and Oceanic Museum galleries, displays and reception desks, Devon research/office furniture and Space Center controls/workstations.
+- Keep wall faces continuous and flat, close native T-junctions and place furniture separately in front. Remove synthetic trim penetrating native wall finishes; offset decorative surfaces and ceiling caps to avoid z-fighting.
+- Wrap the native wallpaper and lower trim around the other outer room walls, composing native layers once to prevent paint bleed-through.
+- Add complete Oceanic Museum stair frames/flights using the native Hoenn floor materials, guarded by exact source permissions.
+- Preserve HD-2D actors/Pokémon/flowers, native gameplay/UI and optional standalone integrations. Mesh revision 97.
+
 ## 1.41.0
 
 - Add native-art reception desks, closed terminals/screens and complete animated door frames across the five GBA tower lobbies.

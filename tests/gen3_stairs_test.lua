@@ -22,6 +22,12 @@ for _,r in ipairs(recipes)do
   assert(r.down and lo<0 and hi<2 or not r.down and lo<=0 and hi>16,'wrong flight direction')
  end
  counts[r.down and 'down' or 'up']=counts[r.down and 'down' or 'up']+1
+ if r.permissions then
+  for z=0,#r.rows-1 do for x=0,#r.rows[1]-1 do local c=cells[x..':'..z];c.stairs=nil;c.collision=r.permissions[z+1][x+1]end end
+  assert(S.prepare(cells)==1,'complete native permissions rejected')
+  for _,c in pairs(cells)do c.stairs=nil end
+  cells['0:0'].collision=0;assert(S.prepare(cells)==0,'modified third-party walking lane became solid stair frame')
+ end
  for _,c in pairs(cells)do c.stairs=nil end
  cells['1:1'].mid=-1;assert(S.prepare(cells)==0,'partial artwork borrowed an unrelated tile')
 end

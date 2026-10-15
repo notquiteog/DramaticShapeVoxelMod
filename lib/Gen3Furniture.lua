@@ -89,6 +89,8 @@ local Hoenn=V and V.require('Gen3Hoenn') or dofile((os.getenv('DS_MOD_PATH') or 
 for _,r in ipairs(Hoenn.recipes)do recipes[#recipes+1]=r end
 local RS=V and V.require('Gen3RubySapphire') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3RubySapphire.lua')
 for _,r in ipairs(RS.recipes)do recipes[#recipes+1]=r end
+local RSInstitutions=V and V.require('Gen3RSInstitutions') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3RSInstitutions.lua')
+for _,r in ipairs(RSInstitutions.recipes)do recipes[#recipes+1]=r end
 local function recipeActive(r)
  if Hoenn.recipeActive then return Hoenn.recipeActive(r)end
  return Hoenn.active()==(r.family=='rse')
@@ -162,7 +164,7 @@ end
 -- split them at atlas boundaries, preserving their native pixels and layers.
 function M.append(p,emit,uvFor)
  local r,x,z=p.recipe,p.cx*16,p.cy*16
- local function source(sx,sy,sw,sh,a,b,c,d)
+ local function source(sx,sy,sw,sh,a,b,c,d,shade)
   local xend,yend=sx+sw,sy+sh
   local function point(u,v)
    local q={};for k=1,3 do q[k]=(a[k]*(1-u)+b[k]*u)*(1-v)+(d[k]*(1-u)+c[k]*u)*v end;return q
@@ -173,7 +175,7 @@ function M.append(p,emit,uvFor)
    local uv=uvFor(p.ts,r.rows[ty+1][tx+1]);assert(uv,'missing furniture source')
    local function tex(px,py)return {uv[1][1]+(uv[2][1]-uv[1][1])*(px-tx*16)/16,uv[1][2]+(uv[3][2]-uv[1][2])*(py-ty*16)/16}end
    emit({point((l-sx)/sw,(t-sy)/sh),point((rr-sx)/sw,(t-sy)/sh),point((rr-sx)/sw,(bb-sy)/sh),point((l-sx)/sw,(bb-sy)/sh)},
-    {tex(l,t),tex(rr,t),tex(rr,bb),tex(l,bb)},1,r.kind=='plant' and {x+p.w/2,z+p.d-6,.001} or nil)
+    {tex(l,t),tex(rr,t),tex(rr,bb),tex(l,bb)},shade or 1,r.kind=='plant' and {x+p.w/2,z+p.d-6,.001} or nil)
   end end
  end
  local uv=uvFor(p.ts,r.rows[1][1]);local u,v=uv[1][1]+(uv[2][1]-uv[1][1])*.08,uv[1][2]+(uv[3][2]-uv[1][2])*.1
@@ -216,6 +218,7 @@ function M.append(p,emit,uvFor)
  if r.kind=='martCheckout' or r.kind=='martRegister' then V.require('Gen3MartCheckout').append(p,source,box,sample,emit);return end
  if r.kind=='labWorkstation' or r.kind=='labStacks' or r.kind=='labSideCabinet' or r.kind=='labSideDesk' then V.require('Gen3LabWorkstation').append(p,source,box,sample,emit);return end
  if r.kind:match('^tower')then Tower.append(p,source,box,sample,emit,uvFor);return end
+ if r.kind=='rsInstitution'then RSInstitutions.append(p,source,box,sample,emit);return end
  if Designed.append(p,source,box,sample,emit)then return end
  if Center.append(p,source,box,sample,emit,uvFor)then return end
  if r.kind=='relief' or r.kind=='bin' or r.kind=='plaque' then

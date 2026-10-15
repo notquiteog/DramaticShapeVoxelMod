@@ -29,6 +29,12 @@ reported location. Passing Lua tests alone is insufficient.
   Top-down perspective is evidence of a 3D object, not a texture net: author
   closed sides, backs, undersides, recesses and actual angled corners. Do not
   flatten a silhouette to hide a UV defect or double-project diagonal pixels.
+- Keep wall faces flat and continuous. Furniture is a separate object in
+  front of the wall; place stairs in front or in an actual opening as the
+  native drawing and walkable tiles indicate. Close wall/partition/stair-frame
+  joins without gaps. Carry native wallpaper and trim around the other room
+  walls where appropriate; keep native openings clear. Do not fold furniture art
+  into walls.
 - Preserve source proportions, roofs, lettering, fixtures and regional art.
   Do not invent attachments or substitute unrelated furniture. Continuous
   lettering must remain on a continuous sign surface.

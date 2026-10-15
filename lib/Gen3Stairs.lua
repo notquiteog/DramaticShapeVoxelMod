@@ -18,7 +18,8 @@ function M.prepare(cells)
     local match=true
     for z=0,#r.rows-1 do for x=0,width-1 do
      local q=cells[(c.cx+x)..':'..(c.cy+z)]
-     if not q or q.pair~=c.pair or q.mid~=r.rows[z+1][x+1] or q.stairs or q.prop then match=false end
+     if not q or q.pair~=c.pair or q.mid~=r.rows[z+1][x+1] or q.stairs or q.prop
+      or (r.permissions and q.collision~=nil and q.collision~=r.permissions[z+1][x+1])then match=false end
      group.cells[z*width+x+1]=q
     end end
     local landing=group.cells[r.landing and (r.landing[2]*width+r.landing[1]+1) or ((#r.rows-1)*width+(r.east and 1 or 2))]

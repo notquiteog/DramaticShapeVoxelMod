@@ -245,6 +245,15 @@ local function build(req,cache,previous)
  -- depth corrections must not turn its cornice into a cabinet-shaped zigzag.
  local roomProfile=Interior.forMap(def,3)
  local sourcePair=Pairs.canonical(def.midLayout.pair)
+ if roomProfile and V.require('Gen3RSInstitutions').flatWalls(sourcePair,def.id or req.mapId,def.voxelFlatWalls)then
+  cache.flatNativeWalls=true
+  cache.northWallFront=4
+  cache.furnitureRecesses={{roomProfile.bounds[1],roomProfile.bounds[3],3.8}}
+  local origin=cells['0:0']
+  if origin then Interior.setWallpaper(roomProfile,V.require('Gen3RoomWallpaper').material(def,origin.ts))end
+  local floor=tonumber(def.voxelWallFloor)or((def.id or req.mapId or''):find('DEVON',1,true)and 0x380 or sourcePair:find('facility',1,true)and 0x2f0 or sourcePair:find('oceanic',1,true)and 0x201 or(def.id or req.mapId or''):find('_2F',1,true)and 0x270 or 0x203)
+  for _,c in pairs(cells)do if c.cy>=0 and c.cy<=1 and c.cx>=0 and c.cx<def.width then c.institutionWallFloor=floor end end
+ end
  if roomProfile and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='player_house' or sourcePair=='house' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
   local north=roomProfile.originalNorth or roomProfile.bounds[2]
   for _,q in ipairs(cache.furnitureRecesses)do north=math.min(north,q[3])end
@@ -305,6 +314,8 @@ local function build(req,cache,previous)
   if c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
+  elseif c.institutionWallFloor then
+   plane(b.v,b.i,x,z,uvFor(ts,c.institutionWallFloor)or uv)
   elseif c.nativeLamp then
    plane(b.v,b.i,x,z,uvFor(ts,c.nativeLampGround or V.require('Gen3NativeLamps').ground) or uv)
   elseif c.civic then
@@ -397,7 +408,7 @@ local function build(req,cache,previous)
     local top=column.height-row*step
     local portal=c.gym and (c.cx==c.gym.cx+3 or c.cx==c.gym.cx+4)
     local front=column.front+(portal and 4 or 0)
-    quad(b.v,b.i,{{x,top,front},{x+16,top,front},{x+16,top-step,front},{x,top-step,front}},uv)
+    quad(b.v,b.i,{{x,top,front},{x+16,top,front},{x+16,top-step,front},{x,top-step,front}},uv,cache.flatNativeWalls and -1 or 1)
     if portal then
      local u,t=uv[1][1]+(uv[2][1]-uv[1][1])*.12,uv[1][2]+(uv[3][2]-uv[1][2])*.12
      local trim=swatch(ts,u,t)
@@ -538,16 +549,18 @@ local function build(req,cache,previous)
  for _,c in pairs(cells)do if c.cy==0 and c.mid~=0 and c.mid~=8 then
   local house=c.pair=='player_house' or c.pair=='house'
   local shop=c.pair=='building__rom_082d4bcc'
+  local institution=cache.flatNativeWalls and c.pair==sourcePair and c.cx>=0 and c.cx<def.width
   local below=cells[c.cx..':1']
   -- Fill only furniture claims; keep native posters/windows on unclaimed walls.
-  if (house and (c.prop or (below and below.prop))) or shop then
+  if (house and (c.prop or (below and below.prop))) or shop or (institution and below and((c.mid==0x2f8 and below.mid==0x300)or(c.mid==0x389 and below.mid==0x391)))then
    local b=batches[c.pair];local x=c.cx*16;local f=wallFront(c.cx,31.92)
    local upper=uvFor(c.ts,house and 0x20 or 0x285)
    local lower=uvFor(c.ts,house and 0x28 or 0x285)
+   if institution then upper,lower=uvFor(c.ts,c.mid),uvFor(c.ts,below.mid)end
    if upper and lower then
-    quad(b.v,b.i,{{x,32,f},{x+16,32,f},{x+16,16,f},{x,16,f}},upper)
+    quad(b.v,b.i,{{x,32,f},{x+16,32,f},{x+16,16,f},{x,16,f}},upper,institution and -1 or 1)
     if shop then local u,v=lower[1][1],lower[3][2]-.001;lower=swatch(c.ts,u,v)end
-    quad(b.v,b.i,{{x,16,f},{x+16,16,f},{x+16,0,f},{x,0,f}},lower)
+    quad(b.v,b.i,{{x,16,f},{x+16,16,f},{x+16,0,f},{x,0,f}},lower,institution and -1 or 1)
    end
   end
  end end

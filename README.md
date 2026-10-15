@@ -1,3 +1,17 @@
+## 1.42.0 — Ruby/Sapphire institutions and continuous walls
+
+Adds closed native-art furniture to both museum floors, all three Devon floors,
+and both Space Center floors in Ruby/Sapphire. Gallery figures remain HD-2D.
+Flat, continuous wall faces sit behind separate furniture; closed junctions
+remove wall gaps, and separated backing/finish surfaces prevent grey bleeding.
+Native wallpaper and trim continue around all four outer walls.
+Oceanic Museum gains complete framed staircases in all three Hoenn editions.
+
+Native collision, scripts, warps and UI remain unchanged; every partner is
+optional. Verified on official Gen1Recomp 0.3.89. [Evidence and coverage limits](docs/GEN3_RS_INSTITUTIONS_2026-10-15.md).
+The queued first-three-settlement pass covers both regions across all five games;
+[the map-by-map queue](docs/GEN3_STARTING_REGIONS_2026-10-15.md) tracks that work.
+
 ## 1.41.0 — Tower reception rooms and Trainer Tower halls
 
 Models the three native tower reception families with closed desks, terminals,

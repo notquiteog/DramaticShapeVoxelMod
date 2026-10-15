@@ -1,6 +1,9 @@
 -- Reviewed native stair assemblies including their landing. Exact four-cell
 -- matches prevent borrowing floors/walls from unrelated furniture drawings.
 return {
+ -- Oceanic Museum's native framed staircases, including their side jambs.
+ {pair='building__oceanic_museum',rows={{0x25d,0x206,0x257},{0x25e,0x20e,0x25f}},permissions={{7,7,7},{7,114,7}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',floor=0x201,down=false},
+ {pair='building__oceanic_museum',rows={{0x261,0x207,0x263},{0x262,0x20f,0x264}},permissions={{7,7,7},{7,114,7}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',floor=0x201,down=true},
  -- Lilycove Museum uses the same complete north-facing framed flight,
  -- with floor-specific artwork rather than the generic house palette.
  {pair='building__lilycove_museum',rows={{0x205,0x206,0x207},{0x20d,0x20e,0x20f}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',floor=0x203,down=false},
