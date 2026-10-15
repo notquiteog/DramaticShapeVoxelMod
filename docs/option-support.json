@@ -3341,8 +3341,8 @@
         "label": "INTERFACE SCALING",
         "module": "InterfaceSprites",
         "status": "partial",
-        "consumer": "lib/NativeInterfaceArt.lua",
-        "detail": "Native Summary/Pokedex, evolution and Hall-of-Fame scoped picture readers consume animation-wide FIT/FULL and available mon/shiny context. Native trade and hatch scenes are not yet scoped; Ruby/Sapphire hatch uses a separate PPU scene. Other native screens retain their own art pending reader audits.",
+        "consumer": "lib/NativeInterfaceArt.lua; lib/NativeCrystalArt.lua",
+        "detail": "Native Summary/Pokedex, evolution, Hall-of-Fame and all five trade scenes consume animation-wide FIT/FULL with mon/shiny context. FireRed/LeafGreen/Emerald revealed hatchlings also consume selected art; native egg shells, Spinda PID spots and Deoxys edition forms remain original. Crystal frames are prepared from owned CPU assets before fitting. Ruby/Sapphire hatch retains its indexed PPU art. PokeNav, Pokeblock, contest entry, Factory, minigame, credits and some scripted pictures remain unscoped.",
         "verification": "source audit"
       },
       {
@@ -3351,8 +3351,8 @@
         "label": "INTERFACE SPRITES",
         "module": "InterfaceSprites",
         "status": "partial",
-        "consumer": "lib/NativeInterfaceArt.lua",
-        "detail": "Native Summary/Pokedex, evolution and Hall-of-Fame scoped picture readers consume animation-wide FIT/FULL and available mon/shiny context. Native trade and hatch scenes are not yet scoped; Ruby/Sapphire hatch uses a separate PPU scene. Other native screens retain their own art pending reader audits.",
+        "consumer": "lib/NativeInterfaceArt.lua; lib/NativeCrystalArt.lua",
+        "detail": "Native Summary/Pokedex, evolution, Hall-of-Fame and all five trade scenes consume animation-wide FIT/FULL with mon/shiny context. FireRed/LeafGreen/Emerald revealed hatchlings also consume selected art; native egg shells, Spinda PID spots and Deoxys edition forms remain original. Crystal frames are prepared from owned CPU assets before fitting. Ruby/Sapphire hatch retains its indexed PPU art. PokeNav, Pokeblock, contest entry, Factory, minigame, credits and some scripted pictures remain unscoped.",
         "verification": "source audit"
       },
       {

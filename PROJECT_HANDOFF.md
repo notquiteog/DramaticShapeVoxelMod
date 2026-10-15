@@ -1,3 +1,21 @@
+# Native Gen3 trade/hatch selected art — 2026-10-15
+
+All five native trade scenes and FireRed/LeafGreen/Emerald revealed hatchlings
+now consume scoped selected interface art. Native timers, callbacks, prompts,
+egg shells and party ownership remain original. Mon/PID/shiny identity and
+exact return tuples survive scoped readers; Spinda/Deoxys special art stays
+native. Fixed a real existing Crystal FIT/FULL bypass by preparing owned CPU
+PNG data once before animation-union fitting, without GPU readback/recoloring.
+
+Official0.3.89 all5 complete trade sequences and FR/LG/EM hatch sequences pass;
+final selected/native captures inspected. Focused53, Crystal cache/CPU checks
+and inventory549 pass. Shared final broad300/0fail/58skip, including SDK1173,
+passes with the root boundary/sampler batch.
+See `docs/GEN3_TRADE_HATCH_ART_2026-10-15.md`. RS hatch remains indexed PPU;
+PokeNav/Pokeblock/contest/Factory/minigame/credits/scripted pictures remain
+unscoped. Interface rows explicitly partial; no full parity claim. No model,
+asset, version, release or push changes. Isolated fixture saves only.
+
 # Native Gen3 capture-card intake color — 2026-10-15
 
 The native enemy capture card now consumes the same intake color/full-bright
