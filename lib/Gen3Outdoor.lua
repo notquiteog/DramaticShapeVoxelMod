@@ -186,9 +186,17 @@ end
 -- from its reviewed ground swatch. Never ship or read private imported pixels.
 local images={}
 function M.image(ts,frame)
- local old=images[ts.pair];if old and old.ts==ts and old.frame==frame then return old.image end
+ local old=images[ts.pair]
+ local reusable=old and old.ts==ts and old.source==ts.imageData and old.over==ts.overImageData
+ if reusable and old.frame==frame then return old.image end
  if not ts.imageData then return end
- local data=ts.imageData:clone()
+ -- Keep one CPU scratch atlas and one GPU image per provider. Native pixels
+ -- are recopied before masking, so animated flowers/palettes never freeze.
+ local data
+ if reusable then
+  data=old.data;local w,h=ts.imageData:getDimensions()
+  data:paste(ts.imageData,0,0,0,0,w,h)
+ else data=ts.imageData:clone()end
  local masks={}
  local artPair=V.require('Gen3Tilesets').canonical(ts.pair)
  masks=V.require('Gen3Furniture').cutouts(artPair)
@@ -203,10 +211,17 @@ function M.image(ts,frame)
    data:setPixel(px,py,r,g,b,a)
   end end end
  end
- local img=love.graphics.newImage(data);img:setFilter('nearest','nearest');data:release()
- if old then old.image:release()end;images[ts.pair]={ts=ts,image=img,frame=frame};return img
+ local img
+ if reusable and old.image.replacePixels and pcall(old.image.replacePixels,old.image,data)then img=old.image
+ else img=love.graphics.newImage(data);img:setFilter('nearest','nearest')end
+ if old then
+  if old.image~=img then old.image:release()end
+  if old.data~=data then old.data:release()end
+ end
+ images[ts.pair]={ts=ts,source=ts.imageData,over=ts.overImageData,data=data,image=img,frame=frame}
+ return img
 end
 function M.release()
- for _,p in pairs(images)do p.image:release()end;images={}
+ for _,p in pairs(images)do p.image:release();p.data:release()end;images={}
 end
 return M

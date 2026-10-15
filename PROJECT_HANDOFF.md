@@ -17,6 +17,57 @@ walks pass in all three Hoenn editions; all-six-partner Sapphire smoke passes.
 Release runtime files remain identical after the evidence-only repackage.
 Later shared streaming/cache/capture and terrain/sea-rock work is preserved and
 excluded; this archive freezes the museum repair plus verified f6cd4c0.
+# Cold hull reuse and resumable terrain scans — 2026-10-15
+
+Root optimization batch: per-build identical Hoenn sea-rock hull sharing,
+allocation-free hull face scanning, dense bounded terrain topology lookup and
+cooperative yields through flood/support passes. Exact old/new comparisons pass
+36 hulls,100 terrain graphs and rock instances at positive/negative origins.
+Model geometry, palette, collision and footprint unchanged.
+
+Official0.3.89 NVIDIA desktop: matched cold Route1041371→829ms and Petalburg405→250ms;
+rock construction558→45ms. Native running boundary peak27.75→20.64ms,p9516.70,
+prefetch1/promotion1/failure0. Smaller2/4ms budgets still stalled189ms and were
+reverted: accepted4/8ms budget unchanged. Battle1440p mean3.97ms,p956.60,zero
+rebuilds. FireRed reversal/warp/Oak lab/invalidation lifecycle PASS and captures
+inspected. Broad296pass/0fail/58fixture skips. Cold first load/unprepared warps
+still synchronous; not an all-game FPS claim. See
+`docs/COLD_GEOMETRY_GPU_2026-10-15.md`. No version bump/release/push.
+Parity worker continues independently after capture commit9fb3696.
+
+# Native Gen3 Safari/tutorial capture — 2026-10-15
+
+Existing shared Safari Ball art and Poke/Great/Ultra/Master capture effects now
+consume native Safari and old-man/Pokedude/Wally capture events. Native trainer
+wind-up, capture odds/results, inventory and Safari counters remain authoritative.
+Ghost dodge, unmodeled specialty balls, doubles/other targets and OFF stay native.
+Shared native capture no longer imports GB terrain/Map dependencies; legacy
+scene initialization remains unchanged. No model/asset/version/release changes.
+
+All five native Safari fixtures, FireRed OFF/old-man/Pokedude capture-only and
+Emerald Wally return/throw pass on official0.3.89; final captures inspected.
+Broad296/0fail/58skip, SDK1173, inventory549 and focused dependency/capture tests
+pass. Full Teachy TV lessons and broader send-out/recall/material effects remain
+outside this coverage. See `docs/GEN3_CAPTURE_SCENES_2026-10-15.md` for exact
+fixtures, corrected rejected setup and remaining limits. Full parity not claimed.
+
+# NVIDIA boundary streaming optimization — 2026-10-15
+
+Confirmed actual Route104→Rustboro stalled499ms in scene rebuilding. One bounded
+connected destination now builds ahead; same native crossing peaks7.82ms, and
+all five GBA editions promote correctly (7.8–14.9ms measured). Native map sampler,
+camera and cancellation checks pass. Cold running eastward Route104→Petalburg
+also now promotes ready geometry:27.75ms worst approach frame versus846ms before;
+this is not yet a guaranteed60fps floor. Initial scenes/unprepared warps can stall.
+
+Removed durable geometry-cache writes from rendering; native Gen3 CACHE SAVE/DROP
+now mirrors the explicit legacy contract, with native controls/chrome. Shared
+uniform/mask allocation work and Gen3 scene-key/animated-atlas reuse reduce churn.
+Final1440p RTX5060Ti battle command phase averages3.17ms,p954.83ms,zero rebuilds.
+Official0.3.89; isolated profiles; model designs/assets unchanged. Root evidence,
+fixtures, test results and precise limitations: `docs/STREAMING_GPU_2026-10-15.md`.
+Parity worker's HUD batch isf6cd4c0; capture-effect parity continues separately.
+No root version bump, release or push. Do not confuse this with full11-game parity.
 
 # Native original HUD options — 2026-10-15
 

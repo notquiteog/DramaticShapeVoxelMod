@@ -8,6 +8,8 @@
 -- The cells beneath take the adjacent native water drawing. Presentation only.
 local V=...
 local M={}
+local sides={{1,0},{-1,0},{0,1},{0,-1}}
+local around={{1,0},{-1,0},{0,1},{0,-1},{1,1},{-1,-1},{1,-1},{-1,1}}
 M.families={
  {name='sea_boulder',rows={{0x150,0x151},{0x158,0x159}},height=13,style='rock'},
  -- The stack keeps its pointed silhouette: a row hull, not rounded masses.
@@ -23,6 +25,7 @@ end
 function M.prepare(cells)
  if not hoenn() then return 0 end
  local count=0
+ local templates={} -- owned by this build; never shared across provider reloads
  for _,c in pairs(cells)do
   local m=c.primary=='general' and member[c.mid]
   if m and m[2]==0 and m[3]==0 and not c.seaRock then
@@ -42,7 +45,10 @@ function M.prepare(cells)
       if votes[n.mid]>best then best,ground=votes[n.mid],n.mid end
      end
     end end
-    local g={family=f,root=c,cx=c.cx,cy=c.cy,ground=ground}
+    local byTiles=templates[c.ts or c.pair or c];if not byTiles then byTiles={};templates[c.ts or c.pair or c]=byTiles end
+    local byFamily=byTiles[f];if not byFamily then byFamily={};byTiles[f]=byFamily end
+    local template=byFamily[ground];if not template then template={};byFamily[ground]=template end
+    local g={family=f,root=c,cx=c.cx,cy=c.cy,ground=ground,template=template}
     for _,n in ipairs(parts)do
      n.seaRock=g;n.shape={kind='rock',ground=ground,seaRock=g,root=n==c}
     end
@@ -82,7 +88,7 @@ function M.mask(w,h,sample,water)
   local comp,q,at={}, {k},1;seen[k]=true
   while q[at]do local p=q[at];at=at+1;comp[#comp+1]=p
    local x,y=p%w,math.floor(p/w)
-   for _,d in ipairs({{1,0},{-1,0},{0,1},{0,-1}})do
+   for _,d in ipairs(sides)do
     local nx,ny=x+d[1],y+d[2];local nk=ny*w+nx
     if nx>=0 and ny>=0 and nx<w and ny<h and core[nk] and not seen[nk]then seen[nk]=true;q[#q+1]=nk end
    end
@@ -97,15 +103,15 @@ function M.mask(w,h,sample,water)
  for _,p in ipairs(best)do out[p]=true end
  for _,p in ipairs(best)do
   local x,y=p%w,math.floor(p/w)
-  for _,d in ipairs({{1,0},{-1,0},{0,1},{0,-1},{1,1},{-1,-1},{1,-1},{-1,1}})do
+  for _,d in ipairs(around)do
    local nx,ny=x+d[1],y+d[2];local nk=ny*w+nx
    if nx>=0 and ny>=0 and nx<w and ny<h and raw[nk]then out[nk]=true end
   end
  end
  return out
 end
-function M.append(c,emit,uvFor)
- local g=c.shape.seaRock;if not (g and c.shape.root)then return end
+local function geometry(c,uvFor)
+ local g=c.shape.seaRock
  local ts=c.ts;local f=g.family;local cols,rowsN=#f.rows[1],#f.rows;local w,h=cols*16,rowsN*16
  local water={}
  local ws=ts.midToSlot[g.ground]
@@ -129,7 +135,7 @@ function M.append(c,emit,uvFor)
  for k in pairs(mask)do local x,y=k%w,math.floor(k/w)
   minX,minY,maxX,maxY=math.min(minX,x),math.min(minY,y),math.max(maxX,x+1),math.max(maxY,y+1)
  end
- if maxX<minX then return end
+ if maxX<minX then return {} end
  local hw,hh=maxX-minX,maxY-minY
  local function uvOf(sx,sy)
   local mid=f.rows[math.floor(sy/16)+1][math.floor(sx/16)+1];local uv=uvFor(ts,mid)
@@ -148,11 +154,23 @@ function M.append(c,emit,uvFor)
  local ox,oz=minX+hw/2,minY+hh/2
  local scaleY=f.height/math.max(1,hh)
  local depthScale=math.min(1,hh/math.max(1,hw))
- for _,q in ipairs(hull)do
-  local points={};local t={q.u,q.v}
-  for _,p in ipairs(q)do
-   points[#points+1]={c.cx*16+ox+p[1],p[2]*scaleY,c.cy*16+oz+p[3]*depthScale}
-  end
+ return {hull=hull,ox=ox,oz=oz,scaleY=scaleY,depthScale=depthScale}
+end
+function M.append(c,emit,uvFor)
+ local g=c.shape.seaRock;if not(g and c.shape.root)then return end
+ local template=g.template or {}
+ -- Build-local sharing permits identical rocks to reuse their carved volume.
+ -- Only emitted copies get world placement/elevation; templates stay immutable.
+ local ts=c.ts
+ if not template.quads or template.image~=ts.imageData or template.over~=ts.overImageData or template.uvFor~=uvFor then
+  template.quads=geometry(c,uvFor);template.image=ts.imageData;template.over=ts.overImageData;template.uvFor=uvFor
+ end
+ local x,z=c.cx*16,c.cy*16
+ local model=template.quads
+ for _,q in ipairs(model.hull or {})do
+  local points={}
+  for _,p in ipairs(q)do points[#points+1]={x+model.ox+p[1],p[2]*model.scaleY,z+model.oz+p[3]*model.depthScale}end
+  local t={q.u,q.v}
   emit(points,{t,t,t,t},q.shade)
  end
 end

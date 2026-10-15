@@ -37,6 +37,7 @@ function M.install()
  V.require('CommunityVisuals').buildings.defaultIndex=1
  V.require("KfpAtmosphere").install(function()return (M.level or 0)>0 end)
  local mod=V.mod
+ V.require("Gen3CacheMenu").install()
  local FieldView=require('src.core.game3.field_view')
  local Display=require('src.core.game3.display')
  local Player=require('src.core.game3.player')

@@ -43,7 +43,7 @@ return function(game)
    assert(Outdoor.image(ts,frame)==before,'same-frame material not reused')
    U.wait(20)
    assert(math.floor(Anim.counter/16)~=frame,'native flower animation clock stalled')
-   assert(Outdoor.image(ts,math.floor(Anim.counter/16))~=before,'plant atlas froze its first frame')
+   assert(Outdoor.image(ts,math.floor(Anim.counter/16))==before,'animated plant atlas unnecessarily recreated its GPU texture')
   end
  end
  dofile('/home/admin/Projects/DramaticShapeVoxelMod/tests/canopy_billboard_gpu.lua')(V)

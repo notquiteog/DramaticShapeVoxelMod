@@ -42,3 +42,19 @@ assert(T.at(reverse,8,8)==0 and T.at(reverse,8,56)==12)
 assert(T.at(reverse,8,16)==1.5 and T.at(reverse,8,44)==12)
 assert(reverse.cells['0:1'].reverse and reverse.cells['0:2'].low==6)
 print('PASS south-up mound access uses the same tread heights as actor support')
+
+-- The expensive topology/support scans must cooperate with scene streaming,
+-- including after the input-decoding loop has finished.
+local reads,ticks=0,0
+local co=coroutine.create(function()
+ return T.build(20,20,function(x,y)reads=reads+1;return{floor=x==0,seed=6}end,nil,6,function()
+  if reads==400 then ticks=ticks+1;coroutine.yield()end
+ end)
+end)
+local yielded
+repeat local ok,value=coroutine.resume(co);assert(ok,value);yielded=value until coroutine.status(co)=='dead'
+assert(ticks>800,'terrain flood/support passes cannot yield')
+assert(yielded.cells['19:19'].height==6 and yielded.cells['19:19'].distance==19,'yielded support flood changed topology')
+local edge=T.build(2,2,function(x,y)return{floor=x==1 and y==0,seed=6}end)
+assert(edge.cells['0:1'].distance==2,'dense indexing wrapped across a map edge')
+print('PASS resumable terrain topology/support and bounded dense neighbors')

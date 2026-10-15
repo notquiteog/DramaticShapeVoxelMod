@@ -32,34 +32,49 @@
 -- the mod namespace (see main.lua): V.require loads a sibling module
 local V = ...
 
+-- Native capture uses the shared prop/FX only. Defer GB terrain dependencies
+-- so loading it cannot ask a Gen3 runtime for absent legacy Map facades.
+-- Preserve the established eager initialization for the GB scene renderer.
+local generationOK, generation = pcall(V.require, "Generation")
+local nativeCapture = generationOK and type(generation) == "table"
+  and type(generation.isGen3) == "function" and generation.isGen3()
+local function gbSceneDependency(name)
+  if not nativeCapture then return V.require(name) end
+  local target
+  return setmetatable({}, {__index = function(_, key)
+    target = target or V.require(name)
+    return target[key]
+  end})
+end
+
 local Mat4 = V.require("Mat4")
 local Voxel3D = V.require("Voxel3D")
 local ShadowMap = V.require("ShadowMap")
-local ChunkMesher = V.require("ChunkMesher")
-local TerrainAtlas = V.require("TerrainAtlas")
-local VoxelScene = V.require("VoxelScene")
-local BattleCam = V.require("BattleCam")
+local ChunkMesher = gbSceneDependency("ChunkMesher")
+local TerrainAtlas = gbSceneDependency("TerrainAtlas")
+local VoxelScene = gbSceneDependency("VoxelScene")
+local BattleCam = gbSceneDependency("BattleCam")
 local BattleBillboard = V.require("BattleBillboard")
-local StadiumModels = V.require("StadiumModels")
-local DayNight = V.require("DayNight")
+local StadiumModels = gbSceneDependency("StadiumModels")
+local DayNight = gbSceneDependency("DayNight")
 local UiBackplates = V.require("UiBackplates")
-local Gen6Backdrop = V.require("Gen6Backdrop")
-local Images = V.require("BackdropImage")
-local BossBackdrop = V.require("BossBackdrop")
-local AntiAlias = V.require("AntiAlias")
-local CommunityFlora = V.require("CommunityFlora")
-local CommunityVisuals = V.require("CommunityVisuals")
-local CavePerimeter = V.require("CavePerimeter")
-local CaveSconces = V.require("CaveSconces")
-local TowerLobbyDetails = V.require("TowerLobbyDetails")
-local TowerGraveMist = V.require("TowerGraveMist")
-local LegendaryTowerExterior = V.require("LegendaryTowerExterior")
-local CaveAtmosphere3D = V.require("CaveAtmosphere3D")
-local WorldUnderlay = V.require("WorldUnderlay")
-local Backdrop = V.require("Backdrop")
-local SkyLayer = V.require("SkyLayer")
-local ForestAtmos = V.require("ForestAtmos")
-local ForestDressing = V.require("ForestDressing")
+local Gen6Backdrop = gbSceneDependency("Gen6Backdrop")
+local Images = gbSceneDependency("BackdropImage")
+local BossBackdrop = gbSceneDependency("BossBackdrop")
+local AntiAlias = gbSceneDependency("AntiAlias")
+local CommunityFlora = gbSceneDependency("CommunityFlora")
+local CommunityVisuals = gbSceneDependency("CommunityVisuals")
+local CavePerimeter = gbSceneDependency("CavePerimeter")
+local CaveSconces = gbSceneDependency("CaveSconces")
+local TowerLobbyDetails = gbSceneDependency("TowerLobbyDetails")
+local TowerGraveMist = gbSceneDependency("TowerGraveMist")
+local LegendaryTowerExterior = gbSceneDependency("LegendaryTowerExterior")
+local CaveAtmosphere3D = gbSceneDependency("CaveAtmosphere3D")
+local WorldUnderlay = gbSceneDependency("WorldUnderlay")
+local Backdrop = gbSceneDependency("Backdrop")
+local SkyLayer = gbSceneDependency("SkyLayer")
+local ForestAtmos = gbSceneDependency("ForestAtmos")
+local ForestDressing = gbSceneDependency("ForestDressing")
 local CharacterRenderers = V.require("CharacterRenderers")
 local PaletteFX = require("src.render.PaletteFX")
 

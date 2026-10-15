@@ -7,16 +7,22 @@ M.key=key
 function M.build(w,h,read,compatible,rise,tick)
  local f={width=w,height=h,cells={},groups={},flights={},conflicts={}}
  local cells=f.cells
+ -- Public cell keys remain unchanged; topology scans use dense indexing to
+ -- avoid constructing coordinate strings for every neighbor of every cell.
+ local grid={}
+ local function at(x,y)
+  if x>=0 and y>=0 and x<w and y<h then return grid[y*w+x+1]end
+ end
  for y=0,h-1 do for x=0,w-1 do
-  local c=read(x,y);c.x,c.y=x,y;cells[key(x,y)]=c
+  local c=read(x,y);c.x,c.y=x,y;cells[key(x,y)]=c;grid[y*w+x+1]=c
   if tick then tick()end
  end end
- for y=0,h-1 do for x=0,w-1 do local c=cells[key(x,y)]
+ for y=0,h-1 do for x=0,w-1 do if tick then tick()end;local c=at(x,y)
   if c.floor and not c.group then
    local g={cells={},edges={}};f.groups[#f.groups+1]=g
    local queue={c};c.group=g;local head=1
-   while queue[head]do local a=queue[head];head=head+1;g.cells[#g.cells+1]=a
-    for d,dir in ipairs(directions)do local b=cells[key(a.x+dir[1],a.y+dir[2])]
+   while queue[head]do local a=queue[head];head=head+1;if tick then tick()end;g.cells[#g.cells+1]=a
+    for d,dir in ipairs(directions)do local b=at(a.x+dir[1],a.y+dir[2])
      if b and b.floor and not b.group and (not compatible or compatible(a,b,d))then b.group=g;queue[#queue+1]=b end
     end
    end
@@ -41,11 +47,11 @@ function M.build(w,h,read,compatible,rise,tick)
  end
  f.groups=groups
  -- One flight per column; adjacent columns independently prove equal heights.
- for y=0,h-1 do for x=0,w-1 do local c=cells[key(x,y)];local north=cells[key(x,y-1)]
+ for y=0,h-1 do for x=0,w-1 do if tick then tick()end;local c=at(x,y);local north=at(x,y-1)
   if c.step and not(north and north.step)then
    local bottom=y+1
-   while cells[key(x,bottom)]and cells[key(x,bottom)].step do bottom=bottom+1 end
-   local south=cells[key(x,bottom)]
+   while at(x,bottom)and at(x,bottom).step do bottom=bottom+1 end
+   local south=at(x,bottom)
    local flight={x=x,top=y,bottom=bottom,high=north and north.group,low=south and south.group,rise=(bottom-y)*(rise or 6)}
    -- Native mound-top artwork can be SOUTH of its access stair. The
    -- stair pixels alone do not encode uphill direction in Hoenn.
@@ -67,9 +73,9 @@ function M.build(w,h,read,compatible,rise,tick)
   end
   return seen
  end
- for y=0,h-1 do for x=0,w-1 do local c=cells[key(x,y)]
+ for y=0,h-1 do for x=0,w-1 do if tick then tick()end;local c=at(x,y)
   if c.drop then local dx,dy=c.drop[1],c.drop[2]
-   local a,b=cells[key(x-dx,y-dy)],cells[key(x+dx,y+dy)]
+   local a,b=at(x-dx,y-dy),at(x+dx,y+dy)
    local high,low=a and a.group,b and b.group
    if high and low and high~=low and #high.edges>0 and #low.edges>0 and not network(high)[low]then
     high.edges[#high.edges+1]={low,-(rise or 6)};low.edges[#low.edges+1]={high,rise or 6}
@@ -108,7 +114,7 @@ function M.build(w,h,read,compatible,rise,tick)
   local high=s.high and s.high.height or low+s.rise
   if not s.low then low=math.max(0,high-s.rise)end
   if high<low then high=low end
-  for y=s.top,s.bottom-1 do local c=cells[key(s.x,y)]
+  for y=s.top,s.bottom-1 do local c=at(s.x,y)
    local fraction=(y-s.top)/(s.bottom-s.top)
    if s.reverse then
     c.low=low+(high-low)*fraction;c.high=low+(high-low)*(fraction+1/(s.bottom-s.top));c.reverse=true
@@ -120,12 +126,12 @@ function M.build(w,h,read,compatible,rise,tick)
  end
  -- Stable, full-map nearest support under props. It cannot change when a
  -- render window moves. Equal-distance ties follow source row order.
- local queue={};for y=0,h-1 do for x=0,w-1 do local c=cells[key(x,y)]
+ local queue={};for y=0,h-1 do for x=0,w-1 do if tick then tick()end;local c=at(x,y)
   if c.height~=nil then c.distance=0;c.support=c;queue[#queue+1]=c end
  end end
  local head=1
- while queue[head]do local a=queue[head];head=head+1
-  for _,dir in ipairs(directions)do local b=cells[key(a.x+dir[1],a.y+dir[2])]
+ while queue[head]do local a=queue[head];head=head+1;if tick then tick()end
+  for _,dir in ipairs(directions)do local b=at(a.x+dir[1],a.y+dir[2])
    if b and b.distance==nil then b.height=a.height;b.distance=a.distance+1;b.support=a.support;queue[#queue+1]=b end
   end
  end

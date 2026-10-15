@@ -47,6 +47,33 @@ local d=cells(function(x,y)return (x==1 and y==0) and 0x18 or 7 end)
 check(S.prepare(d)==0 and d['0:0'].shape.kind=='flat','walkable cell rejects the whole group')
 local e=cells(function()return 7 end);e['1:1'].mid=0x170
 check(S.prepare(e)==0,'partial drawing rejected')
+-- Repeated native art shares carving only within this prepared scene. Emitted
+-- geometry remains independently writable by terrain elevation consumers.
+local repeated=cells(function()return 7 end)
+local second=cells(function()return 7 end)
+for _,v in pairs(second)do v.cx=v.cx+5;v.cy=v.cy+7;repeated[v.cx..':'..v.cy]=v end
+check(S.prepare(repeated)==2,'both separated rocks prepared')
+local H=V.require('VoxelHull');local build=H.build;local builds=0
+H.build=function(...)builds=builds+1;return build(...)end
+local function render(root)
+ local out={};S.append(root,function(points,uv,shade)out[#out+1]={points=points,uv=uv,shade=shade}end,uvFor);return out
+end
+local first=render(repeated['0:0']);local nextRock=render(repeated['5:7'])
+check(builds==1 and #first==#nextRock,'identical art carved once per scene')
+for i,q in ipairs(first)do for j,p in ipairs(q.points)do
+ local b=nextRock[i].points[j]
+ check(b[1]==p[1]+80 and b[2]==p[2] and math.abs(b[3]-p[3]-112)<1e-12,'shared hull preserves world placement')
+end end
+first[1].points[1][1]=9999;first[1].uv[1][1]=9999
+local again=render(repeated['0:0'])
+check(again[1].points[1][1]~=9999 and again[1].uv[1][1]~=9999,'consumer mutation cannot corrupt shared template')
+ts.imageData={getPixel=img.getPixel};render(repeated['0:0'])
+check(builds==2,'atlas replacement invalidates template')
+uvFor=function(t,m)local s=t.midToSlot[m];local l=s/8;return {{l,0},{l+1/8,0},{l+1/8,1},{l,1}}end
+render(repeated['0:0']);check(builds==3,'UV provider replacement invalidates template')
+local fresh=cells(function()return 7 end);S.prepare(fresh);render(fresh['0:0'])
+check(builds==4,'fresh scene never inherits another build template')
+H.build=build
 version='firered'
 check(S.prepare(cells(function()return 7 end))==0,'Kanto IDs never claimed')
 print(('PASS %d Hoenn sea-rock checks'):format(checks))
