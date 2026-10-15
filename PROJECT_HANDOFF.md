@@ -1,3 +1,31 @@
+# Ruby/Sapphire institutions and continuous native wallpaper — 2026-10-15
+
+1.42.0 adds 55 separately reviewed native component patterns to nine interiors
+per Ruby/Sapphire edition: both museum families, Devon and Space Center. Closed
+furniture, flat continuous walls, closed T-junctions and outward finish offsets
+address wall gaps and grey bleed-through. Native BG layers compose once and the
+back-wall wallpaper/trim repeat around all four outer walls, with native openings
+and north fixtures preserved. Oceanic Museum gains complete exact-permission
+stair assemblies in all three Hoenn editions. Mesh97; actors/Pokémon/flowers stay
+HD-2D, gameplay/UI/collision remain native, partner dependencies stay optional.
+Third-party map metadata supports additional flat native-papered rooms.
+
+Includes newly published 1.41.1 main4bc557a; unrelated primary-checkout work was
+preserved. Official0.3.89 broad305/0fail/58missing-fixture skips. Exact archive:
+140 new native component placements per edition / zero ordinary-solid walking
+overlaps /32 explicit low seats each; all18 aisles and18 native stair warps;
+OFF/actual1ST,90 inspected orbit/eye captures, both Emerald museum stair warps,
+FireRed Oak lab/Emerald Devon neighbor inspection. Sapphire exterior terrace
+retains12-unit rise/both native stair lanes/door. All6 latest partner smoke passes
+with no mod errors. 11,391 archive files/485 compiled Lua; final evidence-only
+repackage must retain all tested runtime hashes. Evidence and caveats:
+`docs/GEN3_RS_INSTITUTIONS_2026-10-15.md`.
+
+The requested first three settlements in both Kanto and Hoenn, connecting routes
+and interiors remain the next regional pass:125 native edition-map placements
+tracked in `docs/GEN3_STARTING_REGIONS_2026-10-15.md`. This batch does not claim
+complete all-five-game scenery or ORAS-equivalent visual coverage.
+
 # Coordinated streaming release — 2026-10-15
 
 Merged published tower/museum models (origin 1.41.0) with existing streaming and

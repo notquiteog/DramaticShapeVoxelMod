@@ -66,15 +66,39 @@ native source diagrams and rendered captures stay in the dedicated private
   cells. Native low seats are explicit exceptions: their occupied cell remains
   walkable as in the source, with original presentation support and no new
   collision. Staff lanes remain empty.
-- Broad Lua suite: **301 passed, zero failed, 58 explicit missing-fixture skips**.
+- Broad combined Lua suite (including published 1.41.1): **305 passed, zero failed, 58 explicit missing-fixture skips**.
 - Native Ruby and Sapphire census: **140 new component placements per edition**,
   **zero ordinary-solid overlaps with walking cells**, and **32 low native seats**
   per edition, reported separately.
 - Front, sides, rear and low-eye renders inspected for all nine rooms in each
   edition (90 captures); native source comparison and reverse views check wall
   continuity, wallpaper, closed backs and grey bleed-through.
-- Archived-package native input and companion checks are recorded after packaging.
+- Exact archived build `8b98623`, preserving published main `4bc557a`: all nine
+  native aisles and stair warps per Ruby/Sapphire edition pass. OFF fallback and
+  actual camera level 6 (1ST) are captured in every room. A nearby NPC obscures
+  part of Oceanic 1F's actual first-person view; separate eye-height/orbit review
+  covers its fixtures.
+- Emerald Oceanic Museum native up/down stair warps pass, with aisle/OFF/1ST
+  checks. FireRed `FR_OAKS_LAB` and the older Emerald Devon 1F renders are
+  inspected as shared-renderer neighbors.
+- Sapphire museum exterior regression: both lanes x11/x12 traverse the original
+  12-unit terrace rise in both directions, maximum per-frame support step 1.5;
+  actor/camera support agreement and original entrance warp pass.
+- Exact archive with all six latest partners: loaded-version assertions,
+  museum aisle/1ST/OFF/stair warp and empty mod-error list pass. Partners were
+  clean: wild_skies 1.15.2 (`463913e`), sky ride 0.5.5 (`fd425f0`), doubles
+  0.14.3 (`5bfc0ef`), online 0.11.2 (`6e838e2`), overworld spawns 2.6.4
+  (`b81dc23b`), modern UI 0.4.2 (`bcde575`). This is a combined local smoke
+  test, not a new multiplayer-network or complete quest-progression claim.
+- Archive integrity and exclusion checks pass: **11,391 files / 485 Lua files**,
+  every packaged Lua file compiles, no hard dependencies, imported pixels,
+  captures, ROMs, engine binaries or generated caches. Evidence-only final
+  repackaging compares every runtime file hash with this tested archive.
   Synthetic source fixtures alone do not establish visual QA.
+
+One early Emerald run used a copied profile with this mod disabled; an Oak lab
+review initially requested an invalid map name. Those driver setup failures are
+not passes; final archive checks use the enabled profile and native `FR_OAKS_LAB`.
 
 Initial QA message clearing discarded a pending callback; later chained room
 fixtures remained script-locked. Those failed input attempts are not passes.
