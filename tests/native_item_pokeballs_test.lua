@@ -1,5 +1,5 @@
 -- Production native adapter against each engine constant table, no guessed IDs.
-local engine=assert(arg[1],'pass engine directory')
+local engine=assert(arg[1] or os.getenv('ASTRA_ENGINE'),'ASTRA_ENGINE required')
 package.path=engine..'/?.lua;'..package.path
 local modules={}
 local V={require=function(n)return assert(modules[n],n)end}

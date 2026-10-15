@@ -1,3 +1,21 @@
+# Upstream merge and sprite-bound stalls — 2026-10-15
+
+Original upstream/master a07146b is merged (1b8d9b0). Its optional ITEM BALL
+row retains upstream labels/profile meaning and our small ground-anchored model.
+Shared categories expose it; native GBA editions resolve each engine's actual
+item-object constant, retaining native pickup ownership, support height,
+reflections and shadow passes. Five-edition identity/anchor tests pass. Current
+FireRed Oak lab CUSTOM-profile model/native toggle rendered and both captures
+inspected; Emerald native settings121rows/0missing. Fixtures are in tools/qa.
+
+Battle bounds now reuse retained CPU art across generations and unambiguous
+native fitted art. GPU comparison96fits agrees exactly (56CPU/40fallback).
+Final Emerald battle retains30cache hits/0scans, orbit and native cleanup.
+Performance diagnostics available on all11editions; full feature parity remains
+incomplete. Gen2 native Hall-of-Fame and evolution consumers were added by the
+parity worker; see its separate evidence docs and option-support inventory.
+Model work belongs to the separate model worker. No release/version bump here.
+
 # Battle performance regression — 2026-10-15
 
 Gen3 battle snapshots now keep matching request/published contexts: actual
