@@ -1,3 +1,27 @@
+## 1.38.0 — 2026-10-15
+
+- FireRed/LeafGreen Indigo Plateau League: source-colored timber wings, recessed
+  slender glazing, true central gable/chevron, closed roofs and four bounded
+  ornamental trees. Native statue drawings and approach art stay intact.
+- Emerald/Ruby/Sapphire Lilycove Museum: stepped roof tiers, edition-specific
+  recessed windows, structural piers, continuous entrance grille and open portal.
+  Rear elevations partition shared edges; no overlapping coplanar shells.
+- Ruby/Sapphire Devon: own native I-shaped window artwork, dual recessed arched
+  portals, tiered central bay, closed roof and intact winged crest. RS Space
+  Center: green five-storey facade, recessed glass spine, twin closed roof vents;
+  no Emerald rocket, gantry or dish is inherited.
+- Exact complete-art/permission matching vetoes altered third-party walking
+  cells. Every modeled surface stays inside native solid bounds; museum projected
+  roof rows and the original stair landing remain clear. Mesh cache90.
+- HD-2D characters/Pokémon/flowers, native UI/gameplay and optional integrations
+  are preserved. No partner requirement or imported art is introduced.
+
+279 Lua suites pass, 0 fail, 58 external-fixture skips. Fourteen actual native
+entries and all three Hoenn museum rear walking checks pass on official0.3.88.
+Recognized building footprint results: FRLG128/0 each, Emerald81/0, RS77/0 each.
+Nine requested landmark placements are covered; other architecture/interiors
+remain in progress. See docs/GEN3_LANDMARKS_2026-10-15.md.
+
 ## 1.37.0 — 2026-10-15
 
 - FireRed/LeafGreen Celadon department store: chamfered recessed glazing,

@@ -44,6 +44,28 @@ fixtures pass on official0.3.88; SDK1173/1173 and focused checks pass. GPU timin
 is unverified because the NVIDIA driver is unavailable; llvmpipe whole-scene
 measurements do not show an FPS gain. Evidence/limits:
 `docs/BATTLE_PERFORMANCE_2026-10-15.md`. No release/version bump for this batch.
+# Gen3 League, museum and RS science landmarks — 2026-10-15
+
+1.38.0 adds nine placements: FR/LG Indigo Plateau, EM/RU/SA Lilycove Museum,
+RS Devon and RS Space Center. Closed component shells/recesses retain each
+edition's art. Indigo has a true gable and four bounded ornamental trees;
+statue drawings stay native. RS Space Center keeps green cladding/twin vents
+and never inherits Emerald rocket equipment. Museum rear shells are partitioned.
+Mesh90. Exact complete source permissions protect walking rows/portals and
+third-party reuse; the original museum landing stays native. HD-2D actors,
+flowers, native UI/gameplay and optional-provider contracts are unchanged.
+
+Official0.3.88, separate copy of existing0.3.86 QA imports. Five-edition views,
+14 real native entries, three museum rear lanes and camera0 fallback inspected.
+279 suites pass,0fail/58 external-fixture skips. Building assemblies/flags:
+FRLG128/0 each, EM81/0, RS77/0 each. These nine requested landmarks are covered;
+other regional architecture, Route23 decorative composites and large interiors
+remain. Full evidence: `docs/GEN3_LANDMARKS_2026-10-15.md`.
+
+Concurrent battle-rendering/option-inventory edits appeared in the shared
+checkout. Landmark changes were isolated from baseline409b7cf; those unrelated
+working edits are preserved and excluded from this batch. Six partner repos
+were clean/synced. Exact archive and optional-partner smoke checks precede release.
 
 # Gen3 department-store architecture — 2026-10-15
 

@@ -1,3 +1,19 @@
+## 1.38.0 — League, museum and RS science landmarks
+
+Adds Indigo Plateau in FireRed/LeafGreen, Lilycove Museum in Emerald/Ruby/Sapphire,
+and distinct Ruby/Sapphire Devon Corporation and Space Center models. Nine large
+placements have closed elevations, native-art roofs, real window/door recesses
+and source-specific trim. Indigo's gable and small ornamental trees are modeled;
+its statue drawings retain their native presentation. RS keeps its own lancet
+windows, green Space Center, twin roof vents and continuous Devon crest.
+
+Characters, Pokémon and flowers remain HD-2D. Native collision, warps, UI and
+standalone optional integrations are preserved. Exact source permissions protect
+walking rows, the museum stair landing and doors, including third-party reuse.
+Verified with official Gen1Recomp 0.3.88, five-edition rendered views, 14 native
+entries, footprint audits and 279 passing Lua suites. Complete scenery coverage
+remains in progress. [Evidence](docs/GEN3_LANDMARKS_2026-10-15.md).
+
 ## 1.37.0 — Celadon and Lilycove department stores
 
 Adds large native-art department-store models across all five GBA editions.
