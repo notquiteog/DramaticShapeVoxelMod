@@ -1,5 +1,7 @@
 local A=assert(loadfile('lib/Mat4.lua'))()
-local Ball=assert(loadfile('lib/ItemPokeballs.lua'))({require=function(id) assert(id=='Mat4');return A end})
+local modules={Mat4=A};local V={require=function(id)return assert(modules[id],id)end}
+modules.ModSetting=assert(loadfile('lib/ModSetting.lua'))(V)
+local Ball=assert(loadfile('lib/ItemPokeballs.lua'))(V)
 local v,ix=Ball.geometry()
 local lo,hi={math.huge,math.huge,math.huge},{-math.huge,-math.huge,-math.huge}
 for _,p in ipairs(v) do for i=1,3 do lo[i]=math.min(lo[i],p[i]);hi[i]=math.max(hi[i],p[i]) end end

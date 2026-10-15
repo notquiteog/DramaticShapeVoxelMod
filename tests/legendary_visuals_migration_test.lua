@@ -73,6 +73,7 @@ local function fixture(stored)
   local V={mod={id='BATTLE_ART_VOXEL_FORK',options={
     get=function(_,key) return stored[key] end,
   }},require=function(name) return assert(modules[name],name) end}
+  modules.ItemPokeballs=assert(loadfile('lib/ItemPokeballs.lua'))(V)
   local P=assert(loadfile('lib/LegendaryVisualsPreset.lua'))(V)
   return P,C
 end

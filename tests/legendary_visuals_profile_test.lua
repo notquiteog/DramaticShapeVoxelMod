@@ -39,7 +39,8 @@ local F={setting=S('forestFx',{'low','off'})}; function F.invalidate() end
 local modules={ModSetting=Setting,CommunityVisuals=C,TowerFogSettings=T,ForestAtmos=F}
 local V={mod={id='BATTLE_ART_VOXEL_FORK',options={get=function() return nil end}},
   require=function(name) return assert(modules[name],name) end}
-local P=assert(loadfile('lib/LegendaryVisualsPreset.lua'))(V)
+modules.ItemPokeballs=assert(loadfile('lib/ItemPokeballs.lua'))(V)
+  local P=assert(loadfile('lib/LegendaryVisualsPreset.lua'))(V)
 
 check(P.mode()=='off','fresh installs default to OFF')
 C.tower:setIndex(2); C.cityGround:setIndex(1); C.trees:setIndex(3); C.treeDetail:setIndex(3)
