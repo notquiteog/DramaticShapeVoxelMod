@@ -23,6 +23,8 @@ local BoundarySelect=V.require('BoundaryScenery')
 local SceneCache=V.require('Gen3SceneCache')
 local Budget=V.require('BuildBudget')
 local SceneStream=V.require('SceneStream')
+local Lookahead=V.require('SceneLookahead')
+local Connections=require('src.core.game3.connections')
 local Forest=V.require('Gen3Forest')
 local Cladding=V.require('HouseCladding')
 local Interior=V.require('InteriorDiorama')
@@ -143,7 +145,7 @@ local function request(game,cam)
  local x0,z0,x1,z1=bx-radius,bz-radius,bx+radius+6,bz+radius+6
  if not budget then x0,z0,x1,z1=BoundarySelect.bounds(regions,16)end
  local key,context=SceneCache.keys(regions,x0,z0,x1,z1,Tiles._pairs,cam)
- return {game=game,cam=cam,replay=replay,def=def,regions=regions,key=key,
+ return {game=game,cam=cam,replay=replay,def=def,regions=regions,key=key,mapId=Map.current,
   -- Battle center/yaw already belong to the scene context: changing them,
   -- warping or editing a native tile forces an immediate build. Keep that
   -- context on unchanged battle frames too, matching the published cache;
@@ -157,9 +159,10 @@ local function build(req,cache,previous)
  local x0,z0,x1,z1=req.x0,req.z0,req.x1,req.z1
  local M=cache -- Publish geometry and its metadata together, never halfway.
  M.sceneDef=def
+ M.terrainKey,M.terrainContext=req.key,req.context
  M.distance={radius=req.radius,full=not req.budget,regions=#regions,bounds={x0,z0,x1,z1}}
  M.fadeExtent=req.budget or math.max(math.abs(x0*16-req.px),math.abs(x1*16-req.px),math.abs(z0*16-req.pz),math.abs(z1*16-req.pz))
- local cells,groups,signature={}, {}, {replay and replay.scene.map or Map.current,x0,z0,x1,z1}
+ local cells,groups,signature={}, {}, {replay and replay.scene.map or req.mapId,x0,z0,x1,z1}
  M.fillCounts={forest=0,water=0,mountain=0,ground=0}
  for cy=z0,z1 do for cx=x0,x1 do
   Budget.tick()
@@ -169,6 +172,7 @@ local function build(req,cache,previous)
    isVoid=cx<0 or cy<0 or cx>=def.midLayout.width or cy>=def.midLayout.height
    if tile then mid,pair,isVoid=tile[1],tile[2],false
    elseif not isVoid then mid,pair=def.midLayout:midAt(cx,cy),def.midLayout.pair end
+  elseif req.sample then mid,pair,isVoid=req.sample(cx,cy)
   else mid,pair,isVoid=Map.worldMidAt(cx,cy,def)end
   local fillShape,biome
   if isVoid and Pairs.outdoor(def) then
@@ -251,7 +255,7 @@ local function build(req,cache,previous)
  for _,c in pairs(cells)do if c.stairs and c.stairs.owner==c and c.stairs.r.down then
   local s=c.stairs;cache.openings[#cache.openings+1]={s.cx*16,s.cy*16,(s.cx+s.width)*16,(s.cy+#s.r.rows)*16}
  end end
- V.require('NativeRocketWalls').prepare(cells,def.id or Map.current)
+ V.require('NativeRocketWalls').prepare(cells,def.id or req.mapId)
  Shapes.layout(cells)
  if cache.northWallFront then
   for _,c in pairs(cells)do local col=c.column
@@ -275,15 +279,15 @@ local function build(req,cache,previous)
   c.stageHidden=BattleClear.hits(cam,c.cx*16,c.cy*16,c.cx*16+(c.shape.kind=='tree' and 32 or 16),c.cy*16+32)
   if col then col.stageHidden=group and BattleClear.hits(cam,group.left,group.back,group.right,group.front)or c.stageHidden end
  end
- cache.legendaryPillars=V.require('NativeLegendaryPillars').build(cells,def.id or Map.current)
- cache.legendaryRoads=V.require('NativeLegendaryRoads').build(cells,def.id or Map.current)
- cache.cityGround=V.require('NativeCityGround').build(cells,def.id or Map.current)
+ cache.legendaryPillars=V.require('NativeLegendaryPillars').build(cells,def.id or req.mapId)
+ cache.legendaryRoads=V.require('NativeLegendaryRoads').build(cells,def.id or req.mapId)
+ cache.cityGround=V.require('NativeCityGround').build(cells,def.id or req.mapId)
  M.cityGroundCount=cache.cityGround and cache.cityGround.count or nil
- cache.legendaryTunnels=V.require('NativeLegendaryTunnels').build(cells,def.id or Map.current)
+ cache.legendaryTunnels=V.require('NativeLegendaryTunnels').build(cells,def.id or req.mapId)
  M.tunnelCounts=cache.legendaryTunnels and cache.legendaryTunnels.counts or nil
- cache.prizeWalls=V.require('NativePrizeWalls').build(cells,def.id or Map.current)
+ cache.prizeWalls=V.require('NativePrizeWalls').build(cells,def.id or req.mapId)
  M.prizeWallCount=cache.prizeWalls and cache.prizeWalls.count or nil
- cache.rocketWalls=V.require('NativeRocketWalls').build(cells,def.id or Map.current)
+ cache.rocketWalls=V.require('NativeRocketWalls').build(cells,def.id or req.mapId)
  local masonry=V.require("NativeMasonry").new(def)
  M.cliffCount=0
  local batches={};local wood,wi,leaf,li={},{},{},{}
@@ -330,7 +334,7 @@ local function build(req,cache,previous)
      local native=V.require('NativeTreeArt')
      local tx,tz=x+(shape.anchorX or 16),z+(shape.anchorZ or 12)
      if TreeStyle.voxel() then
-      local card=V.require('NativeLegendaryForest').card(native.gen3(c),c,def.id or Map.current)
+      local card=V.require('NativeLegendaryForest').card(native.gen3(c),c,def.id or req.mapId)
       if V.require('NativeLegendaryTrees').add(card,c,cells,legendaryTreeGroups,tx,c.base or 0,tz)then M.legendaryTreeCount=M.legendaryTreeCount+1
       elseif not native.addInstance(card,treeGroups,tx,c.base or 0,tz)then native.appendModel(card,leaf,li,0,tx,0,tz)end
      else native.append(native.gen3(c),leaf,li,0,tx,0,tz,TreeStyle.flat()) end
@@ -550,7 +554,7 @@ local function build(req,cache,previous)
   local b=batches[p.pair]
   local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout
-  modelCache.append(def.id or Map.current,p,function(item,emit)return Furniture.append(item,emit,uvFor)end,function(vertices,uv,shade,anchor)
+  modelCache.append(def.id or req.mapId,p,function(item,emit)return Furniture.append(item,emit,uvFor)end,function(vertices,uv,shade,anchor)
    if cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
     local shift=cache.northWallFront-31.92
     for _,v in ipairs(vertices)do v[3]=v[3]+shift end
@@ -564,7 +568,7 @@ local function build(req,cache,previous)
   local nativeKit=V.require('NativeLegendaryBuildings').build(g,def,cells)
   if nativeKit then cache.civics[#cache.civics+1]=nativeKit;M.legendaryBuildingCount=M.legendaryBuildingCount+1 else
   local vertices,indices={},{}
-  modelCache.append(def.id or Map.current,g,Civic.append,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
+  modelCache.append(def.id or req.mapId,g,Civic.append,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
   if g.chimneyOutlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=g.chimneyOutlet end
   Elevation.lift(vertices,0,g.groundHeight or 0)
   local part={placement=g};cache.civics[#cache.civics+1]=part
@@ -639,9 +643,48 @@ local function build(req,cache,previous)
  cache.terrainKey,cache.terrainContext=SceneCache.keys(regions,x0,z0,x1,z1,Tiles._pairs,cam)
  return cache
 end
+local future
+local futureKeys=SceneCache.new()
+local function prefetch(req)
+ if req.replay or req.cam and req.cam.battle or not Pairs.outdoor(req.def)then
+  future=nil;stream:discardPrefetch();return
+ end
+ local entry=Lookahead.entry(req.def,Connections.each(req.def),req.game.data.maps,req.px,req.pz,24)
+ if not entry or not Pairs.outdoor(entry.def)then future=nil;stream:discardPrefetch();return end
+ local world=Map.world
+ if not future or future.source~=req.def or future.world~=world or future.id~=entry.id or future.radius~=req.radius then
+  local reach=req.radius*2+12
+  local neighbors=Map.computeWorld(req.game.data.maps,entry.id,Map.WORLD_HOPS,reach,reach)
+  local direct={}
+  for _,n in ipairs(Connections.each(entry.def))do
+   local def=req.game.data.maps[n.map]
+   if not(def and def.midLayout)then return end
+   direct[#direct+1]={def=def,dir=n.dir,offset=n.offset}
+  end
+  for _,r in ipairs(neighbors)do if not r.def.midLayout then return end end
+  future={source=req.def,world=world,id=entry.id,radius=req.radius,neighbors=neighbors,direct=direct,
+   regions=Boundary.regions(entry.def,neighbors)}
+ end
+ local bx,bz=math.floor(entry.px/96)*6,math.floor(entry.pz/96)*6
+ local x0,z0,x1,z1=bx-req.radius,bz-req.radius,bx+req.radius+6,bz+req.radius+6
+ if not req.budget then x0,z0,x1,z1=BoundarySelect.bounds(future.regions,16)end
+ local key,context=futureKeys.keys(future.regions,x0,z0,x1,z1,Tiles._pairs)
+ -- A stable destination keeps its original coroutine snapshot. Nothing here
+ -- changes Map.current, native actors, scripts or collision while it builds.
+ local target={game=req.game,def=entry.def,mapId=entry.id,regions=future.regions,
+  key=key,context=context,x0=x0,z0=z0,x1=x1,z1=z1,px=entry.px,pz=entry.pz,
+  radius=req.radius,budget=req.budget}
+ local direct,neighbors=future.direct,future.neighbors
+ target.sample=function(x,y)return Lookahead.sample(target.def,direct,neighbors,x,y)end
+ -- Reserve more build time on the approach so running reaches a ready scene.
+ -- Budgets are cooperative targets; an individual engine upload can overrun.
+ -- Pending local-window work must not starve the destination while running.
+ stream:prefetch(key,context,function(candidate)return build(target,candidate)end,entry.distance<=8 and .008 or .004)
+end
 local function prepare(game,vw,vh,cam)
  local req=request(game,cam);if not req then return false end
- cache=stream:update(req.key,req.context,function(candidate,previous)return build(req,candidate,previous)end,.002)
+ cache=stream:update(req.key,req.context,function(candidate,previous)return build(req,candidate,previous)end,.002,function(candidate)return Lookahead.accept(candidate,req)end)
+ prefetch(req)
  -- Native tileset construction binds its animation clock. Restore the live
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
@@ -1129,14 +1172,14 @@ function M.performanceSnapshot()
   distance=M.distance,renderWidth=M.renderWidth,renderHeight=M.renderHeight,
   geometryCache=V.require('NativeGeometryCache').stats}
 end
-function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();stream:clear();cache={}end
+function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();future=nil;stream:clear();cache={}end
 function M.release()
  V.require("NativeLegendaryTower").clear()
  V.require("NativeLegendarySapling").clear()
  if dustMesh then dustMesh:release();dustMesh=nil end
  if dustImage then dustImage:release();dustImage=nil end
  for _,c in pairs(effectCanvases)do c:release()end;effectCanvases={}
- stream:clear();cache={}
+ future=nil;stream:clear();cache={}
  for _,mesh in pairs(spriteMeshes)do if mesh then mesh:release() end end
  spriteMeshes={}
  if foliage then foliage:release();foliage=nil end

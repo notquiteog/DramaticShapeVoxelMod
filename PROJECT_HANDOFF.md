@@ -1,3 +1,21 @@
+# NVIDIA boundary streaming optimization — 2026-10-15
+
+Confirmed actual Route104→Rustboro stalled499ms in scene rebuilding. One bounded
+connected destination now builds ahead; same native crossing peaks7.82ms, and
+all five GBA editions promote correctly (7.8–14.9ms measured). Native map sampler,
+camera and cancellation checks pass. Cold running eastward Route104→Petalburg
+also now promotes ready geometry:27.75ms worst approach frame versus846ms before;
+this is not yet a guaranteed60fps floor. Initial scenes/unprepared warps can stall.
+
+Removed durable geometry-cache writes from rendering; native Gen3 CACHE SAVE/DROP
+now mirrors the explicit legacy contract, with native controls/chrome. Shared
+uniform/mask allocation work and Gen3 scene-key/animated-atlas reuse reduce churn.
+Final1440p RTX5060Ti battle command phase averages3.17ms,p954.83ms,zero rebuilds.
+Official0.3.89; isolated profiles; model designs/assets unchanged. Root evidence,
+fixtures, test results and precise limitations: `docs/STREAMING_GPU_2026-10-15.md`.
+Parity worker's HUD batch isf6cd4c0; capture-effect parity continues separately.
+No root version bump, release or push. Do not confuse this with full11-game parity.
+
 # Native original HUD options — 2026-10-15
 
 G/S/C original HUDs and backplates now share OG/compact scaling. All five GBA

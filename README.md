@@ -349,7 +349,7 @@ licensed differently, open an issue.
 | `0.1.84+` | Supported | Packed `ByteData` meshes held in session memory | Unavailable; the sandbox blocks the required raw filesystem and FFI access |
 | Earlier than `0.1.69` | Unsupported | Missing APIs used by Battle Art 1.9.0 | Not a supported configuration |
 
-The `0.1.83` boundary is inclusive: persistent BAVC precaching works through `0.1.83`. Starting with `0.1.84`, the mod hides the `PRECACHE` and `CACHE` actions and uses the newer sandbox-compatible path automatically. This is expected behavior, not an incomplete installation.
+The `0.1.83` boundary is inclusive: persistent BAVC precaching works through `0.1.83`. Starting with `0.1.84`, the legacy bulk `PRECACHE` action is unavailable and the mod uses the newer sandbox-compatible path automatically. Native Gen 3 exposes a separate `CACHE` action for its compressed model records. This is expected behavior, not an incomplete installation.
 
 Some older engine builds exposed enough filesystem functionality for the cache backend itself, but Battle Art 1.9.0 as a whole requires APIs introduced in `0.1.69`. Those older builds are therefore not advertised as supported merely because they can write a cache file.
 
@@ -511,7 +511,7 @@ BAVC is a versioned, fingerprinted, LZ4-compressed geometry container. Corrupt o
 
 Current engines do not grant content mods the raw filesystem and FFI access used by the persistent cache. Battle Art instead packs mesh vertices into bounded `ByteData` buffers, uploads them through the supported API, keeps only the current session's useful meshes in memory, and releases map meshes as they become unnecessary.
 
-There is no precache button in this mode. Use `R.DIST` to trade connected-world breadth for loading time and memory use; `MEDIUM` is the recommended default. All supported voxel, camera, battle, battle-art, backdrop, and compatibility features remain available.
+There is no bulk terrain-precache button in this mode. Native Gen 3 building/furniture records use sandboxed mod storage: generation stays in the RAM budget and **CACHE → SAVE** writes it explicitly; **DROP** clears compressed RAM records without changing live geometry. Durable writes never run inside the geometry-build loop. This is a model-record cache, not full-world terrain precaching. Use `R.DIST` to trade connected-world breadth for loading time and memory use; `MEDIUM` is the recommended default. All supported voxel, camera, battle, battle-art, backdrop, and compatibility features remain available.
 
 ## Controls
 

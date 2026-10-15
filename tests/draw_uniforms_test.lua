@@ -30,3 +30,16 @@ U.vector(other,'cut',v);assert(count==before+4)
 U.reset();U.vector(other,'cut',v);assert(count==before+5)
 U.vector(bad,'cut',v);U.vector(bad,'cut',v);assert(count==before+7)
 print('PASS vector value snapshots, mutable cameras, size changes, pass/shader reset and retry')
+
+-- Every new pass must upload, even when its retained numeric buffers match.
+for i=1,50 do
+ U.reset();local n=count
+ U.matrix(sh,'model',m);U.vector(sh,'cut',v);U.send(sh,'flag',false)
+ assert(count==n+3,'retained buffer skipped pass initialization')
+ U.matrix(sh,'model',m);U.vector(sh,'cut',v);U.send(sh,'flag',false)
+ assert(count==n+3,'same-pass state failed to reuse')
+end
+U.vector(sh,'cut',{1,2,3,4});U.reset();local n=count
+U.vector(sh,'cut',{1,2});U.vector(sh,'cut',{1,2})
+assert(count==n+1,'shrinking retained vector kept stale trailing values')
+print('PASS reusable snapshot buffers retain per-pass uploads and vector lengths')

@@ -51,10 +51,11 @@ local function trim()
   M.stats.bytes=M.stats.bytes-#records[key].bytes;records[key]=nil;M.stats.evicted=M.stats.evicted+1
  end
 end
-local function retain(key,bytes)
+local function retain(key,bytes,owner)
  clock=clock+1
  if records[key]then M.stats.bytes=M.stats.bytes-#records[key].bytes end
- records[key]={bytes=bytes,used=clock};M.stats.bytes=M.stats.bytes+#bytes;trim()
+ local previous=records[key]
+ records[key]={bytes=bytes,used=clock,owner=owner or(previous and previous.owner),dirty=owner~=nil or(previous and previous.dirty)};M.stats.bytes=M.stats.bytes+#bytes;trim()
 end
 function M.prepare(game,regions)
  if not(love and love.data and V.mod.storage and V.mod.storage.readBytes and V.mod.storage.writeBytes)then return false end
@@ -172,14 +173,44 @@ function M.append(map,g,build,emit)
  if supported and count>0 and count<=524288 then
   local c=g.chimneyOutlet;local raw=love.data.pack('string','<ffff',c and 1 or 0,c and c.x or 0,c and c.y or 0,c and c.z or 0)..table.concat(chunks)
   local encoded='BAG2'..love.data.pack('string','<I4',count)..love.data.compress('string','zlib',raw,1)
-  retain(key,encoded)
-  if not RAM.retainGenerated()then
-   if write(prefix..key,encoded)then
-    index[key]=hash(map)
-    local rows={};for k,v in pairs(index)do rows[#rows+1]=v..' '..k..'\n'end;table.sort(rows);write(prefix..'index',table.concat(rows))
-   end
-  end
+  -- Match the legacy cache contract: rendering only stages compressed RAM
+  -- records. Durable storage (including its verification/backup) is explicit
+  -- CACHE > SAVE work, never part of a map-streaming frame.
+  retain(key,encoded,hash(map))
  end
  return result
+end
+function M.ramStats()
+ local files,dirty=0,0
+ for _,r in pairs(records)do files=files+1;if r.dirty then dirty=dirty+1 end end
+ return {files=files,dirty=dirty,bytes=M.stats.bytes}
+end
+function M.drop()
+ records={};preloaded={};M.stats.bytes=0
+end
+function M.saveRamToDisk()
+ local pending={}
+ for key,r in pairs(records)do if r.dirty then pending[#pending+1]=key end end
+ table.sort(pending)
+ if #pending==0 then return true,0,0,{} end
+ local staged,errors={},{}
+ for _,key in ipairs(pending)do
+  local r=records[key]
+  if write(prefix..key,r.bytes)then staged[key]=r.owner
+  else errors[#errors+1]='Cannot write native geometry '..key end
+ end
+ local count=0;local merged={}
+ for key,owner in pairs(index)do merged[key]=owner end
+ for key,owner in pairs(staged)do merged[key]=owner;count=count+1 end
+ if count>0 then
+  local rows={};for key,owner in pairs(merged)do rows[#rows+1]=owner..' '..key..'\n' end
+  table.sort(rows)
+  if write(prefix..'index',table.concat(rows))then
+   index=merged;for key in pairs(staged)do records[key].dirty=false end
+  else
+   errors[#errors+1]='Cannot write native geometry index';count=0
+  end
+ end
+ return count==#pending,count,#pending-count,errors
 end
 return M

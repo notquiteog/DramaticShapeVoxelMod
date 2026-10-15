@@ -24,3 +24,28 @@ assert(F.prepare(cells)==3,'overlapping crowns lost or bottom tree doubled')
 assert(cells['1:1'].shape.anchorZ==56 and not cells['1:8'].shape.root)
 cells['1:5']=nil;assert(F.prepare(cells)==3 and cells['1:8'].shape.root,'clipped crown lost exposed trunk')
 print('PASS complete and overlapping forest crowns, edge fragments and no duplicate trunks')
+
+-- Exercise the allocation-free shortcut after warming it, then change every
+-- mutable input the native renderer permits (including edits in place).
+l.overrides={};rs[1].x=0
+local function changed(edit,label)
+ local before=key();assert(key()==before);edit();assert(key()~=before,label)
+end
+changed(function()l.borderMids[1]=666 end,'border mutation missed')
+changed(function()l.cells={} end,'layout cell replacement missed')
+changed(function()rs[1].w=7 end,'connected region dimensions missed')
+changed(function()l.overrides[4]={mid=2,coll=0,elev=1}end,'added edit missed')
+changed(function()l.overrides[4].coll=1 end,'collision edit missed')
+changed(function()l.overrides[4].elev=2 end,'elevation edit missed')
+changed(function()l.overrides[4]=nil end,'removed edit missed')
+local battle={battle=true,center={10,20},yaw=0}
+local bk=key(battle);assert(key(battle)==bk)
+battle.center[1]=11;assert(key(battle)~=bk);bk=key(battle)
+battle.yaw=.2;assert(key(battle)~=bk);assert(key()~=key(battle),'battle context leaked into field')
+local prior,context=K.keys(rs,0,0,6,6,ts)
+local window,nextContext=K.keys(rs,6,0,12,6,ts)
+assert(window~=prior and context==nextContext,'window movement changed context')
+local foreign={{def={midLayout={cells={},pair='foreign'}}}}
+assert(K.keys(foreign,0,0,6,6,ts)==nil,'unknown provider cached')
+assert(key(),'unknown provider poisoned later native layout')
+print('PASS memoized border, cells, region, edit, battle, window and unknown-provider invalidation')
