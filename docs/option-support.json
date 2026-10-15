@@ -1999,8 +1999,8 @@
         "label": "EMBER LEGACY AUDIO",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen2Capture.lua; lib/EmberLegacyAudio.lua",
-        "detail": "Native supported capture throw/poof/bounce/wobble events replace sound only after optional audio plays, with live native SFX master and selected volume. Optional files are not bundled; other native capture/send-out/recall sound ownership remains incomplete.",
+        "consumer": "lib/Gen2Capture.lua; lib/Gen2BallAudio.lua; lib/EmberLegacyAudio.lua",
+        "detail": "Native supported capture cues and normal send-out poof replace sound only after optional playback succeeds, with actual shiny identity and live native SFX master/selected volume. Shiny-star arms, cries, failed/missing playback and OFF retain native sound. Optional files are not bundled; native recall lacks a dedicated sound/animation cue, and other capture paths/full audible asset coverage remain incomplete.",
         "verification": "source audit"
       },
       {
@@ -2009,8 +2009,8 @@
         "label": "EMBER LEGACY VOLUME",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen2Capture.lua; lib/EmberLegacyAudio.lua",
-        "detail": "Native supported capture throw/poof/bounce/wobble events replace sound only after optional audio plays, with live native SFX master and selected volume. Optional files are not bundled; other native capture/send-out/recall sound ownership remains incomplete.",
+        "consumer": "lib/Gen2Capture.lua; lib/Gen2BallAudio.lua; lib/EmberLegacyAudio.lua",
+        "detail": "Native supported capture cues and normal send-out poof replace sound only after optional playback succeeds, with actual shiny identity and live native SFX master/selected volume. Shiny-star arms, cries, failed/missing playback and OFF retain native sound. Optional files are not bundled; native recall lacks a dedicated sound/animation cue, and other capture paths/full audible asset coverage remain incomplete.",
         "verification": "source audit"
       },
       {
@@ -2140,7 +2140,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Supported capture audio has its own partial adapter; broader native send-out/recall audio remains incomplete.",
+        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {
@@ -2200,7 +2200,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Supported capture audio has its own partial adapter; broader native send-out/recall audio remains incomplete.",
+        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {
@@ -2210,7 +2210,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Supported capture audio has its own partial adapter; broader native send-out/recall audio remains incomplete.",
+        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {
@@ -2230,7 +2230,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Supported capture audio has its own partial adapter; broader native send-out/recall audio remains incomplete.",
+        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {
@@ -2250,7 +2250,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Supported capture audio has its own partial adapter; broader native send-out/recall audio remains incomplete.",
+        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {
@@ -2260,7 +2260,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Supported capture audio has its own partial adapter; broader native send-out/recall audio remains incomplete.",
+        "detail": "Native wild-single Poke/Great/Ultra/Master throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, tutorial/contest and doubles retain native presentation. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {

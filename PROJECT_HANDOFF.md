@@ -1,3 +1,18 @@
+# Native Gen2 send-out audio — 2026-10-15
+
+Optional Ember audio/volume now consumes G/S/C's native normal send-out poof,
+using actual shiny DVs. Separate shiny-star arms, cries and capture retain their
+ownership. Missing/failed playback, OFF and missing/stale stage keep native
+sound; live master, native returns and lifecycle cleanup are preserved.
+
+Actual official0.3.89 G/S/C native switches each pass2 replacements/1 failed
+fallback/1 OFF cue; final captures inspected. Playback sink verifies routing,
+not audible asset coverage (optional files absent). Shared final broad suite
+299pass/0fail/58skip includes root optimization batch; SDK1173, inventory549.
+Native Gen2 recall has no dedicated display sound/animation cue and remains a
+stated limitation. Other capture/effect/model parity remains unfinished. See
+`docs/GEN2_BALL_AUDIO_2026-10-15.md`. No version/release/push/model changes.
+
 # Native Gen3 send-out/recall audio — 2026-10-15
 
 Existing optional Ember audio/volume now consumes native intro/send-out and
