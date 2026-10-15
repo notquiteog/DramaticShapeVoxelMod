@@ -3340,9 +3340,9 @@
         "key": "interfaceScaling",
         "label": "INTERFACE SCALING",
         "module": "InterfaceSprites",
-        "status": "implemented",
+        "status": "partial",
         "consumer": "lib/NativeInterfaceArt.lua",
-        "detail": "Native Summary/Pokedex, evolution and Hall-of-Fame scoped picture readers consume animation-wide FIT/FULL and available mon/shiny context. Other native screens retain their own art.",
+        "detail": "Native Summary/Pokedex, evolution and Hall-of-Fame scoped picture readers consume animation-wide FIT/FULL and available mon/shiny context. Native trade and hatch scenes are not yet scoped; Ruby/Sapphire hatch uses a separate PPU scene. Other native screens retain their own art pending reader audits.",
         "verification": "source audit"
       },
       {
@@ -3350,9 +3350,9 @@
         "key": "interfaceSprites",
         "label": "INTERFACE SPRITES",
         "module": "InterfaceSprites",
-        "status": "implemented",
+        "status": "partial",
         "consumer": "lib/NativeInterfaceArt.lua",
-        "detail": "Native Summary/Pokedex, evolution and Hall-of-Fame scoped picture readers consume animation-wide FIT/FULL and available mon/shiny context. Other native screens retain their own art.",
+        "detail": "Native Summary/Pokedex, evolution and Hall-of-Fame scoped picture readers consume animation-wide FIT/FULL and available mon/shiny context. Native trade and hatch scenes are not yet scoped; Ruby/Sapphire hatch uses a separate PPU scene. Other native screens retain their own art pending reader audits.",
         "verification": "source audit"
       },
       {
@@ -3371,8 +3371,8 @@
         "label": "EMBER LEGACY",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders and send-out geometry remain incomplete; optional audio has separate native event adapters.",
+        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Model-specific material effects and send-out geometry remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3431,8 +3431,8 @@
         "label": "CAPTURE FX PRESET",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/Pokeball.lua",
-        "detail": "Native shared capture balls consume the preset streamer profile and CUSTOM streamer intensity during their throw trail. Shared Q57 intake also consumes the selected beam profile; capture actor material and other effects remain incomplete.",
+        "consumer": "lib/Gen3Capture.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
+        "detail": "Native shared capture balls consume the preset streamer profile and CUSTOM streamer intensity during their throw trail. Shared Q57 intake also consumes the selected beam profile. The native enemy card uses shared intake color/full brightness while retaining its native transform; model-specific material effects and send-out geometry remain incomplete.",
         "verification": "source audit"
       },
       {
@@ -3441,8 +3441,8 @@
         "label": "CAPTURE SPEED",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders and send-out geometry remain incomplete; optional audio has separate native event adapters.",
+        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Model-specific material effects and send-out geometry remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3461,8 +3461,8 @@
         "label": "BALL OPEN TIME",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders and send-out geometry remain incomplete; optional audio has separate native event adapters.",
+        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Model-specific material effects and send-out geometry remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3481,8 +3481,8 @@
         "label": "BALL SIZE",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders and send-out geometry remain incomplete; optional audio has separate native event adapters.",
+        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Model-specific material effects and send-out geometry remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3491,8 +3491,8 @@
         "label": "STREAMERS",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/Pokeball.lua",
-        "detail": "Native shared capture balls consume the preset streamer profile and CUSTOM streamer intensity during their throw trail. Shared Q57 intake also consumes the selected beam profile; capture actor material and other effects remain incomplete.",
+        "consumer": "lib/Gen3Capture.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
+        "detail": "Native shared capture balls consume the preset streamer profile and CUSTOM streamer intensity during their throw trail. Shared Q57 intake also consumes the selected beam profile. The native enemy card uses shared intake color/full brightness while retaining its native transform; model-specific material effects and send-out geometry remain incomplete.",
         "verification": "source audit"
       },
       {

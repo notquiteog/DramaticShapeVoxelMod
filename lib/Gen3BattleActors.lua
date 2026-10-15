@@ -175,7 +175,7 @@ function M:draw(shadow)
    -- in the lit pass so this does not add self-shadow striping.
    local sun=V.require('ShadowMap').snug(c.model)
    if shadow then draw(mesh,c.tex,sun)
-   else draw(mesh,c.tex,c.model,0,sun)end
+   else V.require('NativeGen3CaptureTint').draw(self.st,c,mesh,sun)end
   end
  end
  if not shadow then R.lighting(true)end

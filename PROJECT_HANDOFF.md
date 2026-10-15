@@ -1,3 +1,19 @@
+# Native Gen3 capture-card intake color — 2026-10-15
+
+The native enemy capture card now consumes the same intake color/full-bright
+state as GB sprites. Original transforms/shrink/masks/timing stay native;
+other actors and OFF retain original rendering. Intake tint/light/shader state
+restores after each draw and on native draw errors. No models/core renderer
+changes.
+
+Official0.3.89 all5 GBA ON checks plus FireRed OFF pass; FR A/B and all final
+intake/OFF/result captures inspected. Native counters/storage/reset preserved.
+Broad300pass/0fail/58skip, SDK1173, inventory549 pass. See
+`docs/GEN3_CAPTURE_TINT_2026-10-15.md`. Model-specific materials, send-out
+geometry and specialty/doubles capture remain partial. Source audit identified
+native Gen3 trade/hatch picture readers still unscoped; inventory now says so.
+No assets/version/release/push changes. Parity work continues on real consumers.
+
 # Native Gen2 DUDE tutorial capture — 2026-10-15
 
 G/S/C's existing native Poke Ball tutorial now consumes shared capture effects.

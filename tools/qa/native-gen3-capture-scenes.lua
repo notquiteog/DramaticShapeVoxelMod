@@ -11,6 +11,16 @@ return function(game)
  local vm=space.getVm();if vm then vm:halt(true)end
  require('src.ui.game3.message').reset();require('src.ui.game3.map_preview_screen').reset()
  local V=game.mods.exports.BATTLE_ART_VOXEL_FORK.lib
+ local verifyTint=os.getenv('VERIFY_CAPTURE_TINT')=='1';local tintCalls,tintShot=0,false
+ local Tint=verifyTint and V.require('NativeGen3CaptureTint');local tintDraw=Tint and Tint.draw
+ if Tint then Tint.draw=function(st,card,mesh,sun)
+  local active=Tint.intake(st,card.id);local model,texture=card.model,card.tex
+  local R=V.require('Voxel3D');local saved=R.tint
+  if os.getenv('TINT_BYPASS')=='1'then R.draw(mesh,card.tex,card.model,0,sun)
+  else tintDraw(st,card,mesh,sun)end
+  assert(card.model==model and card.tex==texture and R.tint==saved,'intake changed native actor/render state')
+  if active then tintCalls=tintCalls+1 end
+ end end
  V.require('Gen3Integration').setLevel(3,game);V.require('Gen3Battle').setting:sync(true)
  V.require('Shadows').setting:sync('off');V.require('RenderDistance').setting:sync(16)
  V.require('PokeballSettings').enabled:sync(not off)
@@ -55,6 +65,7 @@ return function(game)
    end})
   end
   local cap=V.require('Gen3Capture').status()
+  if tintCalls>0 and not tintShot then tintShot=true;assert(U.shot(game,dir..'/intake-tint.png'))end
   if cap.started then started=true end
   local frame=V.require('Gen3Battle').frame
   trainerSeen=trainerSeen or(frame and frame.byId and frame.byId[4]~=nil)
@@ -69,6 +80,7 @@ return function(game)
  assert(age>0 and not Seq.busy(),'native capture did not finish: '..tostring(B._phase))
  assert(trainerSeen or mode=='pokedude','native trainer was not rendered')
  assert(off and draws==0 and not started or not off and draws>0 and started,'presentation ownership')
+ if verifyTint then assert(off and tintCalls==0 or not off and tintCalls>0 and tintShot,'native intake tint was not exercised')end
  if mode=='safari'then
   assert(game.session.safari.balls==29,'native Safari counter changed incorrectly')
   assert(#game.session.party==partyBefore+1,'native Safari result did not store exactly one Pokemon')
@@ -77,6 +89,8 @@ return function(game)
  assert(U.shot(game,dir..'/result.png'))
  Seq.reset();assert(not V.require('Gen3Capture').active(st),'reset retained capture')
  UI.takeCommand=command;Ball.draw=draw;game.update=update
+ if Tint then Tint.draw=tintDraw end
+ if verifyTint then print('[PASS native intake tint]',version,tintCalls,off and'OFF'or'ON')end
  print('[PASS native capture scenes]',version,mode,off and'OFF'or'ON',draws,'native counters/result/reset')
  love.event.quit()
 end
