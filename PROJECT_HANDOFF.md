@@ -1,3 +1,18 @@
+# Native Hoenn starter selected-art adapter — 2026-10-15
+
+Starter previews now draw selected art at the public final-fade seam, retaining
+native affine policy, UI, timing and choice callbacks. FULL uses its true canvas
+instead of the fixed64 quad. Temporary mon/fade/graphics owners restore on errors.
+All3 official0.3.89 fixtures pass native missing-art fallback, decline/accept/reset
+and explicit ROM-derived test-provider FIT/FULL/OFF (66x94 FULL); all15 captures
+inspected. Bundled Crystal ends at251, so these are not shipped Hoenn pack images.
+
+Focused14/interface77/inventory549, broad308/0fail/58skip including SDK1173 pass.
+Evidence: `docs/GEN3_STARTER_ART_2026-10-15.md`. Source-only after4bc557a; no release
+metadata/asset changes. Remaining native interface limits: RS indexed hatch,
+FRLG dedicated credit poses, Dodrio action sheets and optional artwork coverage.
+Other capture/backdrop/scenery gaps remain explicit in the partial inventory.
+
 # Native Pokemon Jump participant portraits — 2026-10-15
 
 FR/LG/E participant pictures now consume selected art through a temporary

@@ -58,7 +58,7 @@ local creditShiny,creditPid=true,1234
 local Credits={draw=function()seen=P.frontPic(1025,0,creditShiny,creditPid,'credits');return nil,'credits',false end}
 local initialCredits=Credits.draw
 package.loaded['src.ui.game3.rse.credits']=Credits
-local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated,NativeJumpArt={install=function()return function()end end},NativePokeblockArt={install=function()return function()end end},NativeScriptedArt={install=function()return function()end end},NativeCrystalPortraits={install=function()return function()end end}})[name],name)end}
+local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated,NativeStarterArt={install=function()return function()end end},NativeJumpArt={install=function()return function()end end},NativePokeblockArt={install=function()return function()end end},NativeScriptedArt={install=function()return function()end end},NativeCrystalPortraits={install=function()return function()end end}})[name],name)end}
 local Native=assert(loadfile('lib/NativeInterfaceArt.lua'))(V)
 local initialSummary,initialDex=Summary.draw,Dex.draw
 local undo=Native.install()
