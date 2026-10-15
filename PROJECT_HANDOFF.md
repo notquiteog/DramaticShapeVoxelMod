@@ -1,3 +1,19 @@
+# Native Gen3 send-out/recall audio — 2026-10-15
+
+Existing optional Ember audio/volume now consumes native intro/send-out and
+withdraw sound events, preserving actual battler/shiny identity and event order.
+Native capture keeps its adapter. Failed/missing playback, explicit mixer
+options, ambiguous simultaneous opens and OFF retain original sound/returns;
+live native master and lifecycle cleanup are included. No bundled audio/model,
+version, release or push changes.
+
+Official0.3.89 FR/E actual native routing/switch fixtures pass with injected
+playback sink (optional files absent):3 replacements/2 failed fallbacks/2 OFF
+native cues each. Final battle images inspected. Broad297/0fail/58skip, SDK1173,
+inventory549 and focused contracts pass. This verifies routing, not audible
+pack coverage. See `docs/GEN3_BALL_AUDIO_2026-10-15.md` for exact limits; GSC
+send-out/recall, broader effects/models and other parity gaps remain unfinished.
+
 # Cold hull reuse and resumable terrain scans — 2026-10-15
 
 Root optimization batch: per-build identical Hoenn sea-rock hull sharing,

@@ -3231,8 +3231,8 @@
         "label": "EMBER LEGACY AUDIO",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/EmberLegacyAudio.lua",
-        "detail": "Native supported capture events use optional Ember sounds only after successful playback, with native SFX master and selected volume. Missing/failed assets retain original sounds. Optional audio files are not bundled; send-out/recall, unmodeled specialty balls and doubles audio remain native. Safari and native tutorial throws share the supported capture sound events.",
+        "consumer": "lib/Gen3Capture.lua; lib/NativeGen3BallAudio.lua; lib/EmberLegacyAudio.lua",
+        "detail": "Supported capture, visible native send-out and sequenced withdraw cues use optional Ember sounds only after successful playback, with live native SFX master and selected volume. Send-outs preserve the actual battler shiny variant. Missing/failed assets, explicit mixer options, ambiguous simultaneous opens and unrelated cues retain native sound. Safari/tutorial capture events are included. Optional audio files are not bundled; full audible asset coverage and other native sound paths remain unverified.",
         "verification": "source audit"
       },
       {
@@ -3241,8 +3241,8 @@
         "label": "EMBER LEGACY VOLUME",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/EmberLegacyAudio.lua",
-        "detail": "Native supported capture events use optional Ember sounds only after successful playback, with native SFX master and selected volume. Missing/failed assets retain original sounds. Optional audio files are not bundled; send-out/recall, unmodeled specialty balls and doubles audio remain native. Safari and native tutorial throws share the supported capture sound events.",
+        "consumer": "lib/Gen3Capture.lua; lib/NativeGen3BallAudio.lua; lib/EmberLegacyAudio.lua",
+        "detail": "Supported capture, visible native send-out and sequenced withdraw cues use optional Ember sounds only after successful playback, with live native SFX master and selected volume. Send-outs preserve the actual battler shiny variant. Missing/failed assets, explicit mixer options, ambiguous simultaneous opens and unrelated cues retain native sound. Safari/tutorial capture events are included. Optional audio files are not bundled; full audible asset coverage and other native sound paths remain unverified.",
         "verification": "source audit"
       },
       {
@@ -3372,7 +3372,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders, broader audio and send-outs remain incomplete.",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders and send-out geometry remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3442,7 +3442,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders, broader audio and send-outs remain incomplete.",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders and send-out geometry remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3462,7 +3462,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders, broader audio and send-outs remain incomplete.",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders and send-out geometry remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3482,7 +3482,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders, broader audio and send-outs remain incomplete.",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Legendary actor shaders and send-out geometry remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
