@@ -1,3 +1,15 @@
+# Battle performance regression — 2026-10-15
+
+Gen3 battle snapshots now keep matching request/published contexts: actual
+Emerald120-frame run changes120 full terrain rescans to0 (120cache hits).
+Shared battle/foliage uniform vectors also reuse unchanged uploads across all
+three generations. Camera changes/native edits still invalidate; no reduced
+production quality or draw distance. All five Gen3 bounded battle/orbit/return
+fixtures pass on official0.3.88; SDK1173/1173 and focused checks pass. GPU timing
+is unverified because the NVIDIA driver is unavailable; llvmpipe whole-scene
+measurements do not show an FPS gain. Evidence/limits:
+`docs/BATTLE_PERFORMANCE_2026-10-15.md`. No release/version bump for this batch.
+
 # Gen3 department-store architecture — 2026-10-15
 
 1.37.0: five large placements across all GBA editions. Celadon has chamfered glass

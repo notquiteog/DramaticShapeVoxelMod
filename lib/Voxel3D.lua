@@ -2055,10 +2055,10 @@ function Voxel3D.draw(mesh, texture, model, pull, sunModel)
   drawUniforms.send(sh,"canopyFacing",Voxel3D.canopyFacing and 1 or 0)
   drawUniforms.send(sh,"battleCutOn",battleCutScope and 1 or 0)
   if battleCutScope then
-    pcall(sh.send,sh,"battleCutFloor",battleCutScope.floor)
-    pcall(sh.send,sh,"battleCutView",battleCutScope.view)
-    pcall(sh.send,sh,"battleCutA",battleCutScope[1])
-    pcall(sh.send,sh,"battleCutB",battleCutScope[2])
+    drawUniforms.send(sh,"battleCutFloor",battleCutScope.floor)
+    drawUniforms.vector(sh,"battleCutView",battleCutScope.view)
+    drawUniforms.vector(sh,"battleCutA",battleCutScope[1])
+    drawUniforms.vector(sh,"battleCutB",battleCutScope[2])
   end
   if texture then mesh:setTexture(texture) end
   -- LOVE defaults matrix uniforms to column-major; Mat4 is row-major
@@ -2091,8 +2091,8 @@ function Voxel3D.drawFoliage(mesh, texture, model, pull, sunModel, nativeOnly)
   if not (targets and active and sh and mesh) then
     return Voxel3D.draw(mesh, texture, model, pull, sunModel)
   end
-  pcall(sh.send, sh, "foliageTargetA", targets[1])
-  pcall(sh.send, sh, "foliageTargetB", targets[2])
+  drawUniforms.vector(sh, "foliageTargetA", targets[1])
+  drawUniforms.vector(sh, "foliageTargetB", targets[2])
   pcall(sh.send, sh, "foliageRadius", 26)
   pcall(sh.send, sh, "foliageNativeOnly", nativeOnly and 1 or 0)
   pcall(sh.send, sh, "foliageCutOn", 1)

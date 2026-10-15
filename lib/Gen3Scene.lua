@@ -144,10 +144,12 @@ local function request(game,cam)
  if not budget then x0,z0,x1,z1=BoundarySelect.bounds(regions,16)end
  local key,context=SceneCache.keys(regions,x0,z0,x1,z1,Tiles._pairs,cam)
  return {game=game,cam=cam,replay=replay,def=def,regions=regions,key=key,
-  -- Replays and battle culling need immediate, camera-exact geometry. A
-  -- warp or Cut/door edit also bypasses retained art. Provider readiness can
-  -- stream while the last complete snapshot remains visible.
-  context=not (replay or cam.battle) and context or nil,
+  -- Battle center/yaw already belong to the scene context: changing them,
+  -- warping or editing a native tile forces an immediate build. Keep that
+  -- context on unchanged battle frames too, matching the published cache;
+  -- discarding it here caused a full terrain scan on every battle draw.
+  -- Replays have no immutable context and still build synchronously.
+  context=context,
   x0=x0,z0=z0,x1=x1,z1=z1,px=px,pz=pz,radius=radius,budget=budget}
 end
 local function build(req,cache,previous)

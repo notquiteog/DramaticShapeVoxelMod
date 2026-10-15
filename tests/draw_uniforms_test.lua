@@ -19,3 +19,14 @@ U.reset();U.matrix(sh,'model',m);assert(count==before+4)
 U.matrix(other,'model',m);assert(count==before+5)
 U.matrix(bad,'model',m);U.matrix(bad,'model',m);assert(count==before+7)
 print('PASS matrix value snapshots, in-place animation, scene/shader reset and failed-send retry')
+U.reset();before=count
+local v={3,4,5,6}
+for _=1,120 do U.vector(sh,'cut',v)end
+assert(count==before+1,'battle corridor uploaded once per terrain draw')
+U.vector(sh,'cut',{3,4,5,6});assert(count==before+1)
+v[3]=7;U.vector(sh,'cut',v);assert(count==before+2,'camera motion kept stale corridor')
+U.vector(sh,'cut',{3,4,7});assert(count==before+3,'vector length ignored')
+U.vector(other,'cut',v);assert(count==before+4)
+U.reset();U.vector(other,'cut',v);assert(count==before+5)
+U.vector(bad,'cut',v);U.vector(bad,'cut',v);assert(count==before+7)
+print('PASS vector value snapshots, mutable cameras, size changes, pass/shader reset and retry')

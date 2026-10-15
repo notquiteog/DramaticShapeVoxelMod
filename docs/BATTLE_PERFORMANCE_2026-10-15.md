@@ -1,0 +1,56 @@
+# Battle cache regression and shared renderer work — 2026-10-15
+
+Gen3Scene requested a nil streaming context for battles, but its completed
+snapshot published a non-nil context from Gen3SceneCache. Every subsequent draw
+missed SceneStream's early return, rescanned the entire visible/connected tile
+window, then rediscovered the unchanged geometry signature. Keeping the same
+context on request and publication removes that work. Battle center/yaw, map
+and native edits remain context dependencies and still rebuild synchronously;
+replays retain their uncached path. Connected scenery is not reduced.
+
+Shared DrawUniforms now snapshots vector values as well as matrices/scalars.
+Battle cutaway floor/view/target values and foliage target vectors no longer
+upload identical data for every terrain draw. This consumer is shared by all
+three generations. In-place camera changes, shader/pass changes and failed
+uploads still invalidate/retry. No geometry, lighting quality, distance default,
+actor animation or UI behavior was intentionally changed.
+
+## Evidence
+
+Official Gen1Recomp0.3.88 was checked through the GitHub release API. Native
+runtime: `.scratch/runtime-0.3.88/squashfs-root/bin/love`, source in its `engine`
+folder, checkout linked as `mods/BATTLE_ART_VOXEL_FORK`. Private Gen3 imports
+from0.3.86 and disposable `gen3-*-qa` profiles were reused; player saves were
+not touched. No companions were enabled in this test engine.
+
+- Emerald Route104,1280x720,AUTO distance,shadows ON:120 stationary battle
+  frames before the change performed120 terrain scans/0 cache hits; after the
+  context fix,0 scans/120 cache hits. Both images inspected: terrain, both
+  animated combatants, shadows and native UI remain rendered.
+- Whole Scene.draw time on **llvmpipe** was135.294ms before and161.320ms after.
+  These were separate software-rendered runs with concurrent machine work;
+  they do **not** establish an FPS improvement. The NVIDIA run failed GLX
+  context creation and `nvidia-smi` could not communicate with the driver.
+- Final-code bounded tests in all five Gen3 editions at480x270,LOW distance,
+  shadows OFF:30/30 cache hits,0 terrain scans each, camera orbit remains
+  active, and native `abort('run')` returns with both battle/stage inactive.
+  All five rendered captures inspected. These reduced settings are fixture
+  settings only, not changed production defaults.
+- Scene-cache regression test executes the production request policy with
+  real keys/streaming:120 stable hits, immediate yaw/edit/overworld transitions.
+  Existing stream/cache/occlusion tests pass. Vector tests verify120 identical
+  sends collapse to1, mutable values and lengths invalidate, and failed sends
+  retry. Shared SDK suite:1173/1173 checks passed on0.3.88.
+
+Drivers/logs/captures: `.scratch/battle-perf-20261015/` (`gen3.lua` paired
+720p runs, `smoke.lua` final five-edition runs). The runner returns1 after its
+quit path even when the final cleanup record is printed; treat the explicit
+assertions and captures as evidence, not a clean process-exit certification.
+The original720p fixture used an arbitrary abort result and did not complete
+its cleanup assertion; the final smoke fixture uses the native 'run' result.
+All test processes ended; live player game was not stopped.
+
+Remaining: hardware frame-time verification, Gen1/2 runtime battle coverage of
+this shared uniform change, further profiling of GPU shadow/fill cost, and the
+separate feature/consumer gaps in the live option-support inventory. This work
+is not a claim of complete optimization or full11-game feature parity.
