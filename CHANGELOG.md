@@ -1,3 +1,10 @@
+## 1.41.0
+
+- Add native-art reception desks, closed terminals/screens and complete animated door frames across the five GBA tower lobbies.
+- Add Trainer Tower stair flights, round hall piers and all eight native floor displays; preserve the native directional stair approaches.
+- Allow complete recipe matches to use already-owned drawing context while claiming only their own cells. Exact native permissions protect staff and third-party walking lanes. Mesh revision 96.
+- Keep characters, Pokémon, flowers, native gameplay/UI and optional partner contracts unchanged.
+
 ## 1.40.0
 
 - Model all five native Trainer Tower/Battle Tower placements with three distinct architectural families, closed shells, recessed glazing and native animated entrance seams.

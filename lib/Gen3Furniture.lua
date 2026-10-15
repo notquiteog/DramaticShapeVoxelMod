@@ -82,6 +82,8 @@ for _,r in ipairs(Center.recipes)do recipes[#recipes+1]=r end
 local Designed=V and V.require('Gen3DesignedFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3DesignedFurniture.lua')
 local Institution=V and V.require('Gen3InstitutionFurniture') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3InstitutionFurniture.lua')
 for _,r in ipairs(Institution)do recipes[#recipes+1]=r end
+local Tower=V and V.require('Gen3TowerInteriors') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3TowerInteriors.lua')
+for _,r in ipairs(Tower.recipes)do recipes[#recipes+1]=r end
 Designed.install(recipes)
 local Hoenn=V and V.require('Gen3Hoenn') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3Hoenn.lua')
 for _,r in ipairs(Hoenn.recipes)do recipes[#recipes+1]=r end
@@ -106,9 +108,9 @@ local Budget=V and V.require('BuildBudget') or {tick=function()end}
   if as~=bs then return as>bs end
   return a.name<b.name
  end)
-local candidates,aliases={},{}
+local candidates,aliases,contextRoots={},{},{}
 for _,r in ipairs(recipes)do
- local mid=r.rows[1][1];local list=candidates[mid] or {};candidates[mid]=list;list[#list+1]=r
+ local mid=r.rows[1][1];if r.claimCells and not r.claimCells['1:1']then contextRoots[mid]=true end;local list=candidates[mid] or {};candidates[mid]=list;list[#list+1]=r
 end
 local function choices(mid)
  if aliases[mid]then return aliases[mid]end
@@ -118,17 +120,18 @@ local function choices(mid)
  local out={};for _,r in ipairs(recipes)do if matched(mid,r.rows[1][1],r)then out[#out+1]=r end end
  aliases[mid]=out;return out
 end
-function M.extract(cells)
+function M.extract(cells,onlyKind)
  local out,ordered={},{}
  for _,c in pairs(cells)do if (c.primary=='building' or c.primary=='general') and #choices(c.mid)>0 then ordered[#ordered+1]=c end;Budget.tick()end
  table.sort(ordered,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
- for _,c in ipairs(ordered)do Budget.tick();if not c.prop and not c.stairs then
+ for _,c in ipairs(ordered)do Budget.tick();if not c.prop and not c.stairs or contextRoots[c.mid]then
   for _,r in ipairs(choices(c.mid))do
-   if recipeActive(r) and c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
+   if (not onlyKind or r.kind==onlyKind)and recipeActive(r) and c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
     local match=true;local parts={}
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
-     if not n or n.prop or n.stairs or n.pair~=c.pair or not matched(n.mid,mid,r)
+     local owned=not r.claimCells or r.claimCells[dx..':'..dy]
+     if not n or n.prop and owned or n.stairs and owned or n.pair~=c.pair or not matched(n.mid,mid,r)
       or (r.blockedRows and r.blockedRows[dy] and n.collision~=nil and n.collision~=7)
       or (r.collisionRows and r.collisionRows[dy] and r.collisionRows[dy][dx]~=nil and n.collision~=nil and n.collision~=r.collisionRows[dy][dx]) then match=false else parts[#parts+1]=n end
     end end
@@ -145,7 +148,9 @@ function M.extract(cells)
        end
       end end
      end
-     for _,n in ipairs(parts)do n.prop=p end
+     for _,n in ipairs(parts)do
+      if not r.claimCells or r.claimCells[(n.cx-c.cx+1)..':'..(n.cy-c.cy+1)]then n.prop=p end
+     end
      out[#out+1]=p;break
     end
    end
@@ -210,6 +215,7 @@ function M.append(p,emit,uvFor)
  if r.kind=='rsLinkBooth' or r.kind=='rsLinkPartition' then V.require('Gen3LinkBooth').append(p,source,box,sample,emit);return end
  if r.kind=='martCheckout' or r.kind=='martRegister' then V.require('Gen3MartCheckout').append(p,source,box,sample,emit);return end
  if r.kind=='labWorkstation' or r.kind=='labStacks' or r.kind=='labSideCabinet' or r.kind=='labSideDesk' then V.require('Gen3LabWorkstation').append(p,source,box,sample,emit);return end
+ if r.kind:match('^tower')then Tower.append(p,source,box,sample,emit,uvFor);return end
  if Designed.append(p,source,box,sample,emit)then return end
  if Center.append(p,source,box,sample,emit,uvFor)then return end
  if r.kind=='relief' or r.kind=='bin' or r.kind=='plaque' then

@@ -1,3 +1,18 @@
+# Tower reception interiors and Trainer Tower halls — 2026-10-15
+
+1.41.0 continues after published1.40.0 exteriors. Closed reception desks, PCs,
+wall consoles/screens and framed animated doors cover the three native lobby
+families. Trainer Tower adds east/west closed flights, round piers and all eight
+source floor displays. Full identifier/permission matches protect native actors,
+clerk spaces and walking cells; partial claims retain earlier screens/portals.
+Mesh96. Characters/Pokémon/flowers stay HD-2D; native UI/gameplay unchanged;
+all companion integrations stay optional.
+
+Official0.3.89:49 edition geometry fixtures and broad299/0fail/58fixture skips.
+Evidence, exact native placements, input tests and remaining large interiors:
+`docs/GEN3_TOWER_INTERIORS_2026-10-15.md`. Primary checkout's later independent
+work is preserved separately; no imported pixels/caches/captures are packaged.
+
 # Trainer Tower and Battle Towers — 2026-10-15
 
 1.40.0 adds three source-specific tower families across all five GBA editions.
