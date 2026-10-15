@@ -1,3 +1,19 @@
+# Native scripted/contest pictures after release checkpoint — 2026-10-15
+
+Separate from release4bc557a: native MonPic windows now consume selected art
+only during their draw, restoring cached images/dimensions/animation transforms.
+Hoenn contest entries preserve packed OT/PID/shiny identity; show/hide/reset
+clear context. FULL compensates the native viewport clamp for oversized art.
+Native windows, timing, cries, special-species art and disabled fallback remain.
+
+Official0.3.89 all5 scripted fixtures and all3 Hoenn contest-picture components
+pass; all34 captures inspected. Focused20/interface65/inventory549, real native
+MonPic renderer contract, broad305/0fail/58skip including SDK1173 pass. Evidence:
+`docs/GEN3_SCRIPTED_ART_2026-10-15.md`. These are component fixtures, not full
+contest progression. Remaining interface consumers: RS indexed hatch, Pokeblock,
+Factory, minigames, credits and starter selection. No release metadata changes;
+this later source batch is not claimed included in existing1.41.1 archives.
+
 # Coordinated streaming release — 2026-10-15
 
 Merged published tower/museum models (origin 1.41.0) with existing streaming and
