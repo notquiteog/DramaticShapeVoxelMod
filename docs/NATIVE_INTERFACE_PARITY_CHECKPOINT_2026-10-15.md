@@ -1,6 +1,6 @@
 # Native interface parity checkpoint — 2026-10-15
 
-Current adapter source checkpoint: **cb6e7ff**, following release **4bc557a /
+Prior adapter source checkpoint: **cb6e7ff**, following release **4bc557a /
 1.41.1**. The six following source commits are separate from the published
 1.41.1 archive; they changed no release metadata, models or independent assets.
 
@@ -45,13 +45,17 @@ one-consumer checks. They are not every-option gameplay or visual acceptance.
 Older registration evidence remains labeled with its original runtime/source.
 All processes ended; isolated QA profiles were used, player saves untouched.
 
+The later bounded RS hatch adapter and current verification are documented in
+`RS_INDEXED_HATCH_ART_2026-10-15.md`; the all-edition sweep above remains evidence
+for its original source checkpoint.
+
 ## Precise remaining non-model limits
 
-- **Ruby/Sapphire hatch:** `rs/egg_hatch.lua` uses public `Vram.indexedPic` to
-  create a15-color indexed sprite/palette, then GBA OAM/PPU compositing. There
-  is no equivalent RGBA per-object draw hook in this hatch path. General
-  selected frames require an indexed/color-reduction or compositor contract
-  that preserves native affine, layer priority and hatch palette effects.
+- **Ruby/Sapphire hatch:** the bounded adapter now accepts selected64x64,
+  binary-alpha frames with at most15 opaque GBA RGB5 colors through the native
+  indexed PPU. Oversized FULL, translucent/richer-color and special-form frames
+  retain native pictures. General arbitrary RGBA art still needs a broader
+  indexed/color-reduction or compositor contract preserving native effects.
 - **FRLG credits:** `Credits.state()` exposes the current mon, but later reveal
   stages use independently authored ROM pose frames extracted by
   `credits_extract.lua`. They are not simple crops of ordinary front pictures.

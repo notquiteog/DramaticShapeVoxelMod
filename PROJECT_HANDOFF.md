@@ -1,3 +1,23 @@
+# Ruby/Sapphire indexed hatch interface art — 2026-10-15
+
+Selected representable frames now reach the original RS hatch PPU, preserving
+native egg/shards, affine/reveal timing and party/naming ownership. Unsupported
+oversized, translucent, richer-color and special-form pictures remain native.
+A native nickname-frame RGB555/RGB5 mismatch reproduced with art OFF is adapted
+only during its draw; native records restore on success/error.
+
+Official0.3.89 Ruby/Sapphire full normal/shiny hatch fixtures pass,1454 clean
+restored draws each; all20 shell/reveal/FIT/FULL/OFF captures inspected. Focused
+32, actual decoder/palette51, interface77 and inventory549 pass. Shared broad
+run311 pass/1 fail/58 skip: only the performance integration adapter fixture's
+missing Game3 dependency stub fails; its owner is correcting it separately.
+SDK1173 passes. Evidence: `docs/RS_INDEXED_HATCH_ART_2026-10-15.md`.
+
+This is source-only after published1.41.1; no model/release metadata changed.
+Overall interface parity remains partial. Next public consumer found but not
+changed: native PC `pc_chrome.drawLeftDataPanel` hovered-mon picture. Additional
+feature work is frozen for the user's requested release checkpoint.
+
 # Post-release parity source checkpoint and all11 startup check — 2026-10-15
 
 Six native interface batches after4bc557a are committed throughcb6e7ff; no changes
