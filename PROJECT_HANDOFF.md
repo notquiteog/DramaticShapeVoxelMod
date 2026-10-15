@@ -1,3 +1,14 @@
+# Native Gen3 Crystal shiny reveal — 2026-10-15
+
+The Crystal pack now supplies its bundled seven-star reveal/sound through the
+native shiny-selection and animation VM seams in all five GBA editions. Native
+IDs, completion, SFX volume, reset and selected-art fallback remain original.
+All five bounded 0.3.89 runtime fixtures pass; rendered captures inspected.
+23 focused contracts, integration contract and SDK1173 pass; broad suite
+291 passed/0 failed/58 external-fixture skips. Evidence and precise remaining
+non-model limits: `docs/GEN3_CRYSTAL_SHINY_2026-10-15.md`.
+No model changes, version bump, release or push. Full parity remains incomplete.
+
 # Native Gen3 Crystal player portraits — 2026-10-15
 
 Selected Crystal front portraits now reach all five GBA trainer cards,

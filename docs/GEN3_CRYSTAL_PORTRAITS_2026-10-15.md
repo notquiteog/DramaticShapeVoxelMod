@@ -71,3 +71,6 @@ Gen2 Oak indexed-rotation reveals retain native art during that effect. Other
 capture/audio, original-HUD scaling, specialty geometry and optional-provider
 limits remain in `OptionSupport.lua`. Full non-model and model parity are not
 claimed. No model edits, version bump, release or push in this batch.
+
+The subsequent native shiny-reveal adapter and five-edition evidence are in
+`GEN3_CRYSTAL_SHINY_2026-10-15.md`; the shiny gap described above is now closed.
