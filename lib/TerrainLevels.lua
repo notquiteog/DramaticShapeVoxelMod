@@ -22,6 +22,24 @@ function M.build(w,h,read,compatible,rise,tick)
    end
   end
  end end
+ -- Complete source assemblies can prove that disconnected walking patches
+ -- share one physical floor (e.g. a terrace split by a blocked building).
+ -- Merge only explicit same-floor identities before constructing stair edges.
+ local roots,named={},{}
+ local function root(g)while roots[g]do g=roots[g]end;return g end
+ for y=0,h-1 do for x=0,w-1 do local c=cells[key(x,y)]
+  if c.floorLink and c.group then
+   local prior=named[c.floorLink]
+   if prior then local a,b=root(c.group),root(prior);if a~=b then roots[a]=b end
+   else named[c.floorLink]=c.group end
+  end
+ end end
+ local groups={}
+ for _,g in ipairs(f.groups)do local r=root(g)
+  if r==g then groups[#groups+1]=g
+  else for _,c in ipairs(g.cells)do c.group=r;r.cells[#r.cells+1]=c end end
+ end
+ f.groups=groups
  -- One flight per column; adjacent columns independently prove equal heights.
  for y=0,h-1 do for x=0,w-1 do local c=cells[key(x,y)];local north=cells[key(x,y-1)]
   if c.step and not(north and north.step)then

@@ -61,6 +61,8 @@ local function builder(c,emit,uvFor)
  return tex,solid,box,face,ox,oz
 end
 function M.append(c,emit,uvFor)
+ if c.shape.museumStep then return V.require('Gen3MuseumApproach').appendStep(c,emit,uvFor)end
+ if c.stairs and c.stairs.r.design=='museum_apron'then return V.require('Gen3MuseumApproach').appendRail(c,emit,uvFor)end
  local tex,solid,box,face,ox,oz=builder(c,emit,uvFor)
  local g=c.stairs
  if g then

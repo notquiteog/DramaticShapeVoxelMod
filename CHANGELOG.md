@@ -1,3 +1,18 @@
+## 1.39.1 — 2026-10-15
+
+- Fix the Lilycove Museum ground and staircase in Emerald/Ruby/Sapphire while
+  retaining the approved building design and materials. The garden and door
+  landing now share one raised terrace; real closed treads descend to the path.
+- Complete source/permission matching includes the terrace cliff boundary.
+  Shared logical-floor links join garden/landing patches separated by the
+  blocked building; an altered source, opened flank or perimeter vetoes them.
+- Native actor contact and the first-person camera follow the same tread
+  heights. Closed cheeks, retaining faces and foundations prevent ground gaps.
+  Rear walking cells retain their actual solved floor height; mesh cache94.
+- Preserve native collision/warps/UI, HD-2D characters/Pokémon/flowers and
+  standalone optional integrations. Native up/down walking and original door
+  checks pass; full evidence is in the museum ground document.
+
 ## 1.39.0 — 2026-10-15
 
 - Reconstruct Lilycove Museum in Emerald/Ruby/Sapphire using the supplied ORAS

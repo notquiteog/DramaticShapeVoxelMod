@@ -924,7 +924,7 @@ function M.draw(game,vw,vh,cam)
  if cam.battle and cam.center then cx,cz=cam.center[1],cam.center[2]end
  local layer=Player.currentElevation
  if cam.battle then layer=cam.elevation elseif cam.replay then layer=focus.elevation end
- local support=cam.battle and cam.floorHeight or M.groundAt(cx,cz+8-.001,layer)
+ local support=cam.battle and cam.floorHeight or M.groundAt(cx,cz,layer)
  local width,height=love.graphics.getCanvas():getDimensions()
  local Renderer=require('src.render.Renderer')
  local Display=require('src.core.game3.display')

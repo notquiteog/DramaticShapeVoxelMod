@@ -4,22 +4,7 @@
 -- atlas. No reference image or imported game pixels are distributed.
 local V=...
 local M={}
--- The museum stands on a retaining terrace. Only its complete native stair
--- apron qualifies these cliff cells as the terrace edge, rather than rocks
--- rising a second wall-height above the landing. Keep unrelated cliffs intact.
-function M.prepare(cells,g)
- local rows={{0x7c,0x79,0x79,0x219,0x21a,0x21b,0x21c,0x79,0x79,0x79},
-  {0x89,0x23b,0x23b,0x221,0x222,0x223,0x224,0x22b,0x23b,0x23b}}
- local permissions={{7,7,7,7,0,0,7,7,7,7},{7,0,0,7,0,0,7,0,0,0}}
- for iy,row in ipairs(rows)do for ix,mid in ipairs(row)do
-  local c=cells[(g.cx+ix-1)..':'..(g.cy+g.depth+iy-1)]
-  if not c or c.pair~=g.pair or c.mid~=mid or c.collision~=permissions[iy][ix]then return end
- end end
- for ix,mid in ipairs(rows[1])do if mid==0x79 then
-  local c=cells[(g.cx+ix-1)..':'..(g.cy+g.depth)]
-  if c.shape and c.shape.kind=='cliff'then c.museumTerrace=g end
- end end
-end
+function M.prepare(cells,g)return V.require('Gen3MuseumApproach').prepare(cells,g)end
 function M.material(g)
  local data=love.image.newImageData(g.width*32+4,g.depth*16)
  -- Quiet ceramic, slate, blue glazing, white frames and pale brass. Material
@@ -134,6 +119,13 @@ function M.append(g,emit)
    C.box(xx,10,f-.5,xx+3,H+1,f+.7,white)
    C.box(xx-.3,H-3,f-.7,xx+3.3,H+1.5,f+.8,gold)
   end
+ end
+ -- Closed foundations meet the lower path even though the entry sits on
+ -- its raised terrace. Never extend these volumes into native walking cells.
+ local depth=g.foundationDepth or 0
+ if depth>0 then
+  C.box(1,-depth,33,48,0,111,slate);C.box(112,-depth,33,159,0,111,slate)
+  C.box(48.5,-depth,33,111.5,0,95,slate)
  end
  -- Both projected roof rows are walkable in the original map. All geometry,
  -- even skylights, begins inside the native blocked row at z32.

@@ -1,3 +1,20 @@
+# Museum ground and staircase repair — 2026-10-15
+
+User clarified that the building looked fine: preserve its existing design.
+1.39.1 fixes the site, not the façade/roof. Exact museum+apron+cliff-boundary
+matching ties the garden and entrance landing to one physical terrace. Actual
+closed treads descend12units to the lower path; native collision is unchanged.
+Cheeks/retaining faces and buried foundations close ground seams. Camera support
+now samples the same cell-center contact as Gen3 actor cards. Mesh94.
+HD-2D characters/Pokémon/flowers, native UI/warps and optional partners remain.
+
+Official0.3.89 with copied disposable QA imports: source-specific terrace tests,
+three-edition stair walks and rendered site views, unrelated FireRed stairs,
+Route121 and LeafGreen Oak lab. Evidence and remaining work:
+`docs/GEN3_MUSEUM_GROUND_2026-10-15.md`. Tower WIP remains parked separately;
+other large buildings/interiors remain unfinished. Current uncommitted shared
+scene/cache/menu work is excluded and preserved.
+
 # Lilycove Museum ORAS architectural rebuild — 2026-10-15
 
 1.39.0 replaces the three Hoenn museums with authored architecture/materials:

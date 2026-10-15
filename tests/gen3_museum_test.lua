@@ -10,12 +10,18 @@ assert(recipe)
 local function fixture(changed)
  local cells={};local g={cx=7,cy=0,width=10,depth=7,pair=recipe.pair,groundHeight=12}
  for y=0,11 do for x=4,20 do cells[x..':'..y]={cx=x,cy=y,mid=1,collision=0,pair=g.pair,shape={kind='flat'},base=12}end end
+ for iy,row in ipairs(recipe.rows)do for ix,mid in ipairs(row)do
+  local c=cells[(ix+6)..':'..(iy-1)];c.mid=mid;c.collision=recipe.permissions[iy][ix]
+ end end
  local apron={{0x7c,0x79,0x79,0x219,0x21a,0x21b,0x21c,0x79,0x79,0x79},
   {0x89,0x23b,0x23b,0x221,0x222,0x223,0x224,0x22b,0x23b,0x23b}}
  for y,row in ipairs(apron)do for x,mid in ipairs(row)do local c=cells[(x+6)..':'..(y+6)];c.mid=mid
   c.collision=(y==1 and x~=5 and x~=6 or y==2 and(x==1 or x==4 or x==7))and 7 or 0
   if mid<0x200 then c.shape={kind='cliff',height=24}end
  end end
+ local perimeter={{-2,1,0x68},{11,1,0x6a},{-2,7,0x78},{-1,7,0x7c},{10,7,0x79},{11,7,0x7a}}
+ for y=2,6 do perimeter[#perimeter+1]={-2,y,0x70};perimeter[#perimeter+1]={11,y,0x72}end
+ for _,p in ipairs(perimeter)do local c=cells[(g.cx+p[1])..':'..(g.cy+p[2])];c.mid=p[3];c.collision=7 end
  if changed=='art'then cells['10:8'].mid=1 elseif changed=='permission'then cells['10:8'].collision=0 elseif changed=='pair'then cells['10:8'].pair='general__third_party'end
  Museum.prepare(cells,g);return cells,g
 end
