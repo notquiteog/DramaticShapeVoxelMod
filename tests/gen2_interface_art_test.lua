@@ -9,7 +9,11 @@ local Hall={monPic=function(_,mon,back)return 'hof-'..mon.species..(back and '-b
 local oldHof,oldHofAnim=Hall.monPic,Hall.picAnimFrame
 package.loaded['src.ui.gen2.HallOfFame']=Hall
 package.loaded['src.ui.gen2.SummaryMenu']=Summary;package.loaded['src.ui.gen2.PokedexMenu']=Dex
-local V={require=function(name)assert(name=='NativeInterfaceArt');return {picture=picture}end}
+local evolutionRestored=false
+local V={require=function(name)
+ if name=='Gen2EvolutionArt'then return {install=function()return function()evolutionRestored=true end end}end
+ assert(name=='NativeInterfaceArt');return {picture=picture}
+end}
 local M=assert(loadfile('lib/Gen2InterfaceArt.lua'))(V);local undo=M.install()
 local mon={species='PIKACHU',shiny=true,dvs={attack=10}}
 local self=setmetatable({mon=mon,picAnim='native-animation'},{__index=Summary})
@@ -30,4 +34,5 @@ V.crystalSpritesActive=true;check(self:picFor(mon)=='native-PIKACHU','Crystal na
 check(hof:monPic(mon,false)=='hof-PIKACHU' and hof:picAnimFrame()=='hof-animation','Crystal owns Hall of Fame art')
 undo();check(Summary.picFor==oldSummary and Summary.picAnimFrame==oldAnim and Dex.picFor==oldDex,'menu methods restored at unload')
 check(Hall.monPic==oldHof and Hall.picAnimFrame==oldHofAnim,'Hall of Fame methods restored at unload')
+check(evolutionRestored,'evolution adapter restored at unload')
 print('PASS '..n..' Gen2 interface owner/frame checks')

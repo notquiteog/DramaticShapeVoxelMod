@@ -3,6 +3,16 @@
     "1": [
       {
         "generation": 1,
+        "key": "itemBall",
+        "label": "ITEM BALL",
+        "module": "ItemPokeballs",
+        "status": "implemented",
+        "consumer": "lib/ItemPokeballs.lua",
+        "detail": "Gen1 source consumer; device validation is separate.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
         "key": "kfpHorizon",
         "label": "KFP HORIZON",
         "module": "KantoFirstPerson",
@@ -1225,6 +1235,16 @@
     "2": [
       {
         "generation": 2,
+        "key": "itemBall",
+        "label": "ITEM BALL",
+        "module": "ItemPokeballs",
+        "status": "implemented",
+        "consumer": "lib/ItemPokeballs.lua; lib/CharacterRenderers.lua; lib/NativeItemPokeballs.lua",
+        "detail": "Shared optional Legendary item model; native live actors retain pickup ownership and floor/support height in world, reflection and shadow passes.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
         "key": "kfpHorizon",
         "label": "KFP HORIZON",
         "module": "KantoFirstPerson",
@@ -2089,8 +2109,8 @@
         "label": "INTERFACE SCALING",
         "module": "InterfaceSprites",
         "status": "partial",
-        "consumer": "lib/Gen2InterfaceArt.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
-        "detail": "Native Summary/Dex fronts and Hall-of-Fame front/back slides consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Native Hall-of-Fame timers and records are unchanged. Eggs/Unown keep native art and Crystal retains ownership; evolution blackout choreography and other screens still need adapters/coverage.",
+        "consumer": "lib/Gen2InterfaceArt.lua; lib/Gen2EvolutionArt.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
+        "detail": "Native Summary/Dex, Hall-of-Fame front/back slides and evolution consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Evolution preserves selected alpha silhouettes during BLACKOUT, native cancellation, timers and party writeback. Eggs/Unown keep native art and Crystal retains ownership. Animated trade and hatch screens still use native pictures outside the existing static-path hook; they need dedicated frame consumers.",
         "verification": "source audit"
       },
       {
@@ -2099,8 +2119,8 @@
         "label": "INTERFACE SPRITES",
         "module": "InterfaceSprites",
         "status": "partial",
-        "consumer": "lib/Gen2InterfaceArt.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
-        "detail": "Native Summary/Dex fronts and Hall-of-Fame front/back slides consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Native Hall-of-Fame timers and records are unchanged. Eggs/Unown keep native art and Crystal retains ownership; evolution blackout choreography and other screens still need adapters/coverage.",
+        "consumer": "lib/Gen2InterfaceArt.lua; lib/Gen2EvolutionArt.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
+        "detail": "Native Summary/Dex, Hall-of-Fame front/back slides and evolution consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Evolution preserves selected alpha silhouettes during BLACKOUT, native cancellation, timers and party writeback. Eggs/Unown keep native art and Crystal retains ownership. Animated trade and hatch screens still use native pictures outside the existing static-path hook; they need dedicated frame consumers.",
         "verification": "source audit"
       },
       {
@@ -2445,6 +2465,16 @@
       }
     ],
     "3": [
+      {
+        "generation": 3,
+        "key": "itemBall",
+        "label": "ITEM BALL",
+        "module": "ItemPokeballs",
+        "status": "implemented",
+        "consumer": "lib/ItemPokeballs.lua; lib/CharacterRenderers.lua; lib/NativeItemPokeballs.lua",
+        "detail": "Shared optional Legendary item model; native live actors retain pickup ownership and floor/support height in world, reflection and shadow passes.",
+        "verification": "source audit"
+      },
       {
         "generation": 3,
         "key": "kfpHorizon",

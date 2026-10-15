@@ -9,6 +9,7 @@ local function picture(mon,back)
  return Pictures.picture(mon,56,back and 'back' or 'front')
 end
 function M.install()
+ local undoEvolution=V.require('Gen2EvolutionArt').install()
  local Summary=require('src.ui.gen2.SummaryMenu')
  local Dex=require('src.ui.gen2.PokedexMenu')
  local summary,animation,dex=Summary.picFor,Summary.picAnimFrame,Dex.picFor
@@ -46,6 +47,7 @@ function M.install()
   end
  end
  return function()
+  undoEvolution()
   Summary.picFor,Summary.picAnimFrame,Dex.picFor=summary,animation,dex
   if hofPic then Hall.monPic,Hall.picAnimFrame=hofPic,hofAnim end
  end
