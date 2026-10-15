@@ -15,7 +15,10 @@ inspected. 289 suites pass/0fail/58 external-fixture skips. Six partner checkout
 are clean/synced with published runtime versions. See
 `docs/GEN3_MUSEUM_REBUILD_2026-10-15.md` for fixture and package evidence.
 
-Museum is isolated from79eb7fb; unrelated shared working edits remain untouched.
+Museum starts from79eb7fb and merges the verified4f6f99b shiny adapter.
+Final archive standalone first-person/day-night and all-six-partner scenery
+checks pass;11362 files/473 compiled Lua. Evidence-only repackage retains exact
+verified runtime hashes. Unrelated shared working edits remain untouched.
 Tower WIP remains parked in the separate tower-worktree-20261015 checkout.
 Other unique landmarks, regional buildings and interiors remain unfinished.
 

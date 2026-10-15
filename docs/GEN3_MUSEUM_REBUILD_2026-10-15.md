@@ -75,7 +75,7 @@ Runtime shell: `/home/admin/Projects/.scratch/runtime-0.3.89/engine-museum/`.
 - `emerald-route121/`: unrelated outdoor map with the same Lilycove tileset
   retains its terrain/stairs. `firered-lab/`: unrelated busy Oak lab retains
   modeled furniture, native item balls and HD-2D actors. Rendered views inspected.
-- `tests-release.log`: 289 suites pass, zero fail,58 explicit absent-external-
+- `tests-merged-release.log`: 289 suites pass, zero fail,58 explicit absent-external-
   fixture skips. New museum test covers authored material allocation without a
   source atlas, palette/glass gradient, exact apron guard and unchanged unrelated
   cliff heights. Existing nine-landmark test covers full all-height bounds,
@@ -113,3 +113,13 @@ Sapphire archive night views with all six optional partners loaded pass; all
 seven IDs/versions are present without loader/driver errors. No new network
 gameplay claim is made. Final archive additionally includes the already
 verified committed shiny adapter; final source/compatibility checks are below.
+
+Final merged source:289 suites pass/0fail/58 explicit fixture skips. Exact final
+archive first-person Sapphire and all-six-partner daytime orbit checks pass
+(`package-final-sapphire-first-person/`, `package-final-sapphire-allmods/`);
+rendered captures inspected, no lettering and no terrace spikes. Both native
+museum portals retain their original source animations and native warp behavior.
+All final runtime files are hash-compared against the inspected archive after
+the final evidence-only documentation update. Final ZIP:11362 files,473 Lua,
+all Lua compiled and ZIP integrity checked. Checksum is supplied with the release.
+QA processes exited cleanly; disposable test options only, no player saves touched.
