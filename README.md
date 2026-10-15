@@ -1,5 +1,11 @@
 ## 1.30.0 — 2026-10-04
 
+## 1.35.0 — Regional GBA models and RS house variants
+
+Adds bounded native-art tree families for Berry Forest, Safari, Fallarbor and Mt. Chimney, plus Ruby/Sapphire Verdanturf and Mossdeep homes with edition-specific roofs/windows. Includes the previous Hoenn terrain, sea-rock and RS building-parity batch. Characters, Pokémon and flowers remain HD-2D; every companion is optional.
+
+Verified on official Gen1Recomp 0.3.88 with five-edition inventories, representative rendered views, footprint checks and native house-entry tests. This is an incremental release: full regional scenery coverage remains in progress. [Evidence and remaining work](docs/GEN3_REGIONAL_MODELS_2026-10-15.md).
+
 Gen3 battle actors, trainers, balls and local attack artwork now render inside the world depth/shadow pass. Both sides share source-pixel scale; camera perspective supplies distance. Native battle logic and animation timing remain engine-owned. Added shared orbit/pitch/zoom, projected status-card anchors, wider doubles staging, camera-relative scenery clearing, grounded capture balls and cleanup on battle exit. Full-screen effects and menus retain their native screen presentation.
 
 Added original-art Littleroot houses, Birch lab exterior with raised roof extractor, nine Birch lab furniture recipes and Hoenn noticeboards. Furniture has separate structural parts and closed backs. Emerald remains a regional preview; complete every-map coverage is not claimed.

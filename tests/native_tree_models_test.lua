@@ -14,7 +14,7 @@ local function sample(x,y)
  if y>=26 then return .4,.25,.1,1,(x+.5)/32,(y+.5)/32 end
  return .15,.3+math.floor(y/5)*.1,.1,1,(x+.5)/32,(y+.5)/32
 end
-for _,family in ipairs({'conifer','tiered','broad','round','sapling'})do
+for _,family in ipairs({'conifer','tiered','broad','round','sapling','ash'})do
  for _,step in ipairs({1,2,4})do
   local faces=Hull.build(32,32,sample,step,0,nil,'tree',family)
   assert(#faces>6 and #faces<8000,family..' mesh budget')
@@ -32,4 +32,14 @@ for _,family in ipairs({'conifer','tiered','broad','round','sapling'})do
   local count=0;for _ in pairs(sides)do count=count+1 end;assert(count==6,'open hull')
  end
 end
-print('PASS five native tree families, full 3D depth, closed faces and three detail levels')
+print('PASS six native tree families, full 3D depth, closed faces and three detail levels')
+
+local golden=Hull.build(32,32,function(x,y)
+ if y>=26 then return .4,.25,.1,1,(x+.5)/32,(y+.5)/32 end
+ return .95,.94,.3,1,(x+.5)/32,(y+.5)/32
+end,2,0,nil,'tree','broad','gold')
+for _,q in ipairs(golden)do
+ local low=math.huge;for _,p in ipairs(q)do low=math.min(low,p[2])end
+ if low>24 then assert(q.v<26/32,'yellow crown sampled trunk palette')end
+end
+print('PASS yellow native foliage stays in the crown palette')

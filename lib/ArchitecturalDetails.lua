@@ -29,11 +29,46 @@ function M.opening(emit,l,b,r,h,depth,frame,glass,door,details)
   M.box(emit,r-1.6,(h+b)*.46,depth+.1,r-.8,(h+b)*.46+1.4,depth+.75,frame)
  end
 end
+-- Source-colored circular aperture. Corner fans close the rectangular wall
+-- cut; a continuous annular frame joins a genuinely recessed glass disk.
+-- tex(x,y) samples the unchanged native drawing in normalized coordinates.
+function M.roundOpening(emit,l,b,r,h,depth,tex)
+ local cx,cy=(l+r)/2,(b+h)/2;local rx,ry=(r-l)/2,(h-b)/2
+ local function point(a,radius,z,square)
+  local x,y=math.cos(a),math.sin(a)
+  if square then radius=1/math.max(math.abs(x),math.abs(y))end
+  return {cx+rx*x*radius,cy+ry*y*radius,depth+z}
+ end
+ local function uv(p)return tex((p[1]-l)/(r-l),1-(p[2]-b)/(h-b))end
+ local function face(a,bb,c,d,shade)emit({a,bb,c,d},{uv(a),uv(bb),uv(c),uv(d)},shade or 1)end
+ for i=0,31 do
+  local a,bb=i*math.pi/16,(i+1)*math.pi/16
+  face(point(a,1,0,true),point(bb,1,0,true),point(bb,1,0),point(a,1,0))
+  face(point(a,1,0),point(bb,1,0),point(bb,1,.25),point(a,1,.25),.9)
+  face(point(a,1,.25),point(bb,1,.25),point(bb,.76,.25),point(a,.76,.25))
+  face(point(a,.76,.25),point(bb,.76,.25),point(bb,.76,-.85),point(a,.76,-.85),.8)
+  face(point(0,0,-.85),point(a,.76,-.85),point(bb,.76,-.85),point(0,0,-.85))
+ end
+end
 -- An authored pitched or barrel profile. Every roof bay is a prism: the
 -- gables, underside and eave thickness are closed, not stretched wall cards.
 function M.roof(p,style,rise,uv,emit,trim)
  local w,n,f=p.w,p.roofBack or p.back,p.front
  local h=p.wall;local t=1.2
+ if style=='flat_panel' then
+  -- Keep the RS green sheet continuous and inside the original footprint.
+  -- The raised yellow edge in its source is a fascia, not a pitched ridge.
+  local l,r=.02,w-.02;local back,front=math.max(16,n),f-.02
+  local top=h+1.2
+  emit({{l,top,back},{r,top,back},{r,top,front},{l,top,front}},uv(w+.05,p.back+.05,w+w-.05,p.roofEnd-.05),1)
+  local paint=uv(w+w*.5,p.back+4,w+w*.5,p.back+4)
+  for _,q in ipairs{{{l,top,front},{r,top,front},{r,h-t,front},{l,h-t,front}},
+   {{r,top,back},{l,top,back},{l,h-t,back},{r,h-t,back}},
+   {{l,top,back},{l,top,front},{l,h-t,front},{l,h-t,back}},
+   {{r,top,front},{r,top,back},{r,h-t,back},{r,h-t,front}}}do emit(q,paint,.9)end
+  emit({{l,h-t,front},{r,h-t,front},{r,h-t,back},{l,h-t,back}},trim,.65)
+  return
+ end
  local roofPaint=uv(p.w+w*.25,p.back+12,p.w+w*.25,p.back+12)
  local axis=(style=='barrel' or style=='hipped_barrel') and 'x' or 'z'
  local profile=axis=='x' and {{0,0},{8,rise*.65},{18,rise},{w-18,rise},{w-8,rise*.65},{w,0}}

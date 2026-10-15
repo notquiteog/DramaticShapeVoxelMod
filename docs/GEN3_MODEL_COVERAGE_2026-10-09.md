@@ -1,3 +1,7 @@
+# Latest batch — 2026-10-15
+
+See [regional models and RS houses](GEN3_REGIONAL_MODELS_2026-10-15.md) for the current 0.3.88 evidence, counts, limitations and remaining queue. Historical entries below retain their original engine/test scope.
+
 ## 2026-10-14 terrain, sea rocks and RS parity
 
 See [terrain/parity evidence](GEN3_TERRAIN_PARITY_2026-10-14.md). RS now has

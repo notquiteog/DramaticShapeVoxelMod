@@ -1,4 +1,13 @@
-## Unreleased — 2026-10-14
+## 1.35.0 — 2026-10-15
+
+- Model/refine 1,927 regional tree placements across the five GBA editions: yellow Berry Forest crowns, Safari overlapping broad crowns, Fallarbor trees on ash and volcanic ground, and Mt. Chimney ash-encrusted trees. Solid hulls fit complete native blocked rectangles; projected crowns stay walkable. Optional replacement and procedural trees share the new bounds.
+- Add six Ruby/Sapphire house families (eight placements per edition) in Verdanturf and Mossdeep. Preserve RS flat green roofs, circular recessed windows, native door warps and original wall/roof art. All roof edges and window frames stay inside each verified body envelope. Modified walking lanes retain native artwork.
+- Include the previous unreleased Hoenn terrain/sea-rock/RS parity and FRLG Mt. Ember work below. Mesh revision 87 refreshes generated geometry.
+- Fix QA captures to dismiss native location previews, await completed streaming windows and assert the requested map/camera. Add native footprint inventories and input-driven house-entry checks.
+
+Official Gen1Recomp 0.3.88: 276 suites pass, 0 fail, 58 require unavailable external fixtures. New regional-tree inventory: 1,927 placements, 9,033 blocked cells, zero walking intersections. RS recognized-building audits: 65 assemblies per edition, zero flagged overlaps. Six native house-entry checks pass. Representative five-edition source/orbit/eye views inspected; Ruby also loads all six optional partners. Characters, Pokemon and flowers retain HD-2D. Complete world coverage remains unfinished; see `docs/GEN3_REGIONAL_MODELS_2026-10-15.md`.
+
+### Included terrain/parity batch — 2026-10-14
 
 - Ruby/Sapphire: reviewed Emerald terrain vocabulary (cliffs, trees, ledges, fences, grass, steps) through a source-equivalence table, and 40 more native building families (all remaining Centers/Marts, five gyms, homes, harbors, Contest Hall).
 - Hoenn: closed 3D sea boulders and sea stacks, volcanic/khaki/limestone rock bands and round forest trees; walkable conifer crown cells no longer place a tree that traps the player.

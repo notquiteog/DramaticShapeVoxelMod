@@ -93,3 +93,21 @@ local narrow=native.gen3({ts=ts,shape={ground=1,treeRows={{14},{36}},treeFamily=
 assert(narrow~=c and narrow.w==16 and narrow.h==32,'different native drawings shared a tree cache entry')
 assert(native.gen3({ts=ts,shape={ground=1,treeRows={{14},{36}},treeFamily='conifer',treeTrim=0}})==narrow)
 print('PASS native tree cache separates source drawings and crop policies')
+
+-- A 48px source drawing can belong to a 48x32 blocked rectangle. Source art
+-- remains shared, but geometry and GPU prototypes must keep distinct fits.
+local wideShape={ground=1,treeRows={{14,15},{28,29},{36,37}},treeFamily='broad',treeTrim=0,modelWidth=31.96,modelDepth=15.96}
+local fitted=native.gen3({ts=ts,shape=wideShape})
+local otherShape={};for k,v in pairs(wideShape)do otherShape[k]=v end;otherShape.modelDepth=31.96
+local deep=native.gen3({ts=ts,shape=otherShape})
+assert(fitted~=deep and fitted.u0==deep.u0,'fits overwrite each other or duplicate pixels')
+for _,card in ipairs{fitted,deep}do
+ local v,i={},{};native.appendModel(card,v,i,0,20,0,30)
+ assert(#v>24 and #i>36,'fitted tree is not a solid hull')
+ for _,p in ipairs(v)do
+  assert(math.abs(p[1]-20)<=card.modelWidth/2+.00001,'fitted crown crosses native x boundary')
+  assert(math.abs(p[3]-30)<=card.modelDepth/2+.00001,'fitted crown crosses native z boundary')
+ end
+end
+assert(c.modelWidth==nil and c.modelDepth==nil,'regional fit mutated existing native tree')
+print('PASS source-shared tree fits retain independent closed models inside blocked rectangles')

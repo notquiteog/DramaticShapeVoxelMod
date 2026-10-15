@@ -1,10 +1,14 @@
 -- Viridian/Pattern Bush's overlapping crowns each denote a complete tree.
 -- Only looking for exposed trunk 676 drops nearly every tree inside a grove.
+local V=...
 local M={}
 function M.prepare(cells)
  local count=0
+ local ok,GV=pcall(require,'src.core.GameVersion')
+ if ok and V and V.require then count=V.require('Gen3RegionalTrees').prepare(cells,GV.get())end
  for _,c in pairs(cells)do
-  if c.shape.safariTree and not c.boundary then
+  if c.regionalTree then -- already fitted to a complete native solid rectangle
+  elseif c.shape.safariTree and not c.boundary then
    local root=c.mid==0x2FE or c.mid==0x326
    if c.mid==0x30E then
     local crown=cells[c.cx..':'..(c.cy-2)]

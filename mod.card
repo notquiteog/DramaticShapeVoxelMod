@@ -55,6 +55,7 @@ return {
   credits = {
     { who = "pret/pokered", for_ = "the tile and sprite data the geometry is derived from" },
   },
-  compat = { engine = ">=0.1.37 <2.0.0", modApi = 2,
-             games = { "red", "blue", "yellow", "gold", "silver", "crystal" } },
+  compat = { engine = "0.0.0-dev || >=0.2.73 <3.0.0", modApi = 2,
+             games = { "red", "blue", "yellow", "gold", "silver", "crystal",
+                       "firered", "leafgreen", "emerald", "ruby", "sapphire" } },
 }

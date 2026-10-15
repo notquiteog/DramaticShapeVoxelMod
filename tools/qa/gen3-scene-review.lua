@@ -15,7 +15,7 @@ return function(game)
  game:_handleBootAction({action='new_game',start={map=prefix=='FR_' and 'FR_PALLET_TOWN' or prefix..'OLDALE_TOWN',x=10,y=9,facing='down'}})
  U.wait(10)
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
- V.require('DayNight').setting:sync(os.getenv('QA_TIME') or 'day');V.require('RenderDistance').setting:sync(24)
+ V.require('DayNight').setting:sync(os.getenv('QA_TIME') or 'day');V.require('RenderDistance').setting:sync(32)
  local Map=require('src.core.game3.map');local Collision=require('src.core.game3.collision')
  local R=V.require('Voxel3D');local project=R.viewProjection;local inspection
  R.viewProjection=function(cx,cy,w,h)
@@ -31,6 +31,11 @@ return function(game)
   inspection=nil
   local def=assert(game.data.maps[s.id],'missing map '..s.id)
   assert(Map.load(nil,game,s.id,{x=s.x,y=s.y,facing='up'}))
+  -- Current native engines show a forest/location preview over the field.
+  -- These are QA teleports: dismiss through public APIs before judging art.
+  local Preview=require('src.ui.game3.map_preview_screen')
+  Preview.dismiss()
+  require('src.ui.game3.map_name_popup').dismiss()
   local best,pos
   for yy=0,def.height-1 do for xx=0,def.width-1 do
    if Collision.isWalkable(xx,yy) and not Collision.warpAt(xx,yy) and not Collision.isWater(xx,yy)then
@@ -41,10 +46,24 @@ return function(game)
   game.mods.exports.BATTLE_ART_VOXEL_FORK.firered.camera.setLevel(7,game);U.wait(tonumber(os.getenv('QA_SETTLE')) or 40)
   for _=1,400 do if game.mods.exports.BATTLE_ART_VOXEL_FORK.firered.camera.active then break end;U.wait(1)end
   U.wait(30)
-  local Scene=V.require('Gen3Scene')
+  -- Moving the inspection fixture across one map can retain the preceding
+  -- complete window while its replacement streams. Wait for completion,
+  -- including a short provider-readiness settle, rather than capturing it.
+  local Scene=V.require('Gen3Scene');local stable,last=0
+  for _=1,1800 do
+   U.wait(1);local stats=Scene.streaming
+   if Scene.sceneDef==def and stats.started==stats.completed+stats.cancelled and stats.started==last then stable=stable+1 else stable=0 end
+   last=stats.started;if stable>=8 then break end
+  end
+  assert(stable>=8,'inspection window still streaming')
+  assert(not Preview.isActive(),'location preview obscures scene')
+  assert(Map.current==s.id,'scene changed during review')
+  assert(game.mods.exports.BATTLE_ART_VOXEL_FORK.firered.camera.active,'voxel camera not active')
+  assert(Scene.sceneDef==def,'renderer retained a different map')
   print('[SCENE]',s.id,s.x,s.y,'player',pos[1],pos[2],'cliffs',Scene.cliffCount,'civic',Scene.civicCount,'trees',Scene.legendaryTreeCount)
   local cx,cz=s.x*16+8,s.y*16+8
   local base=Scene.groundAt and Scene.groundAt(cx,cz) or 0
+  print('[CAMERA BASE]',s.id,s.x,s.y,base,'player',Scene.groundAt(pos[1]*16+8,pos[2]*16+8),'window',Scene.distance and table.concat(Scene.distance.bounds,','))
   local dist=s.r*16
   for i,d in ipairs({{0,1},{1,0},{0,-1},{-1,0}})do
    inspection={eye={cx+d[1]*dist,base+dist*.75,cz+d[2]*dist},focus={cx,base+8,cz},fov=math.rad(65),up={0,1,0},curve=0}

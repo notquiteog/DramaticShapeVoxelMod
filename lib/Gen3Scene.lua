@@ -349,6 +349,19 @@ local function build(req,cache,previous)
      end
      resize(wood,ws);resize(leaf,ls)
     end
+    if shape.modelWidth or shape.modelDepth then
+     -- The procedural model option obeys the same native rectangle as the
+     -- source-art and optional replacement trees, including the full crown.
+     local rx,rz=0,0
+     for _,part in ipairs{{wood,ws},{leaf,ls}}do for j=part[2]+1,#part[1]do
+      local v=part[1][j];rx=math.max(rx,math.abs(v[1]-tx));rz=math.max(rz,math.abs(v[3]-tz))
+     end end
+     local sx=math.min(1,(shape.modelWidth or rx*2)/math.max(.001,rx*2))
+     local sz=math.min(1,(shape.modelDepth or rz*2)/math.max(.001,rz*2))
+     for _,part in ipairs{{wood,ws},{leaf,ls}}do for j=part[2]+1,#part[1]do
+      local v=part[1][j];v[1]=tx+(v[1]-tx)*sx;v[3]=tz+(v[3]-tz)*sz
+     end end
+    end
     end
    end
   elseif cache.legendaryPillars and cache.legendaryPillars.claims[c.cx..':'..c.cy] then

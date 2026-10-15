@@ -71,6 +71,10 @@ function M.prepare(cells,gyms,families)
     else
      rows[dy][dx]=n.mid
      if (dy<=r.header or dx==1 or dx==w) and n.mid~=r.rows[dy][dx] then match=false end
+     -- The new RS house variants require their entire modeled rectangle to
+     -- remain solid, including third-party maps reusing the source drawing.
+     if r.blockedStart and dy>r.blockedStart and n.collision~=7
+      and not (dy==h and n.mid==r.nativeDoorMid and n.collision==0x71)then match=false end
     end
    end end
    if match then
@@ -441,7 +445,7 @@ function M.window(g)
  if g.custom and g.custom.roundWindows then return end
  if g.custom and g.custom.profile=='hoenn_gym' then return {9,49,23,54}end
  for _,o in ipairs(g.custom and g.custom.openings or {})do
-  if not o.door then return {o[1],o[2],o[3],o[4]}end
+  if not o.door then return {o[1],o[2],o[3],o[4],round=o.round}end
  end
  if g.kind=='mart' or not(g.ts and g.ts.imageData)then return end
  local p=M.profile(g);local seen={};local best,score
@@ -487,7 +491,17 @@ function M.append(g,emit)
  g.chimneyOutlet=nil
  local function uv(l,t,r,b)return {{l/(p.w*2+4),t/p.h},{r/(p.w*2+4),t/p.h},{r/(p.w*2+4),b/p.h},{l/(p.w*2+4),b/p.h}}end
  local wall,trim=uv(p.w*2+.5,.5,p.w*2+.5,.5),uv(p.w*2+2.5,.5,p.w*2+2.5,.5)
- local function face(v,tex,shade)emit(v,tex,shade or 1)end
+ local function face(v,tex,shade)
+  if g.custom and g.custom.blockedStart then
+   -- Keep every roof edge, ridge, sill and window ring inside the verified
+   -- blocked rectangle, rather than allowing high eaves over walking cells.
+   for _,q in ipairs(v)do
+    q[1]=math.max(x+.02,math.min(x+p.w-.02,q[1]))
+    q[3]=math.max(z+g.custom.blockedStart*16+.02,math.min(z+g.depth*16-.02,q[3]))
+   end
+  end
+  emit(v,tex,shade or 1)
+ end
  local gymPorch=g.custom and g.custom.profile=='hoenn_gym'
  local kantoGym=g.kind=='gym' and not g.custom
  local civicCorners=(g.kind=='center' or g.kind=='mart') and p.w>=64
@@ -570,11 +584,17 @@ function M.append(g,emit)
     -- The native drawing already contains the door/window surround. Recess
     -- the pane into it; no second grey frame or projecting concrete sill.
     local a,b,top,bottom=o[1],o[3],y(o[2]),y(o[4])
+    if o.round then
+     Architecture.roundOpening(localFace,a,bottom,b,top,0,function(xx,yy)
+      return uv(a+(b-a)*xx,o[2]+(o[4]-o[2])*yy,a+(b-a)*xx,o[2]+(o[4]-o[2])*yy)[1]
+     end)
+    else
     localFace({{a,top,-1},{b,top,-1},{b,bottom,-1},{a,bottom,-1}},uv(a+.05,o[2]+.05,b-.05,o[4]-.05))
     localFace({{a,top,0},{a,top,-1},{a,bottom,-1},{a,bottom,0}},uv(a-.45,o[2]+.05,a-.05,o[4]-.05),.8)
     localFace({{b,top,-1},{b,top,0},{b,bottom,0},{b,bottom,-1}},uv(b+.05,o[2]+.05,b+.45,o[4]-.05),.8)
     localFace({{a,top,0},{b,top,0},{b,top,-1},{a,top,-1}},uv(a+.05,o[2]-.45,b-.05,o[2]-.05),.85)
     localFace({{a,bottom,-1},{b,bottom,-1},{b,bottom,0},{a,bottom,0}},uv(a+.05,o[4]-.45,b-.05,o[4]-.05))
+    end
 
    end
   end
@@ -781,6 +801,15 @@ function M.append(g,emit)
  end
  if window then
   local glass=uv(window[1]+.05,window[2]+.05,window[3]-.05,window[4]-.05)
+  local function opening(draw,l,b,r,t,depth,frame,glass,door,details)
+   if window.round then
+    return Architecture.roundOpening(draw,l,b,r,t,1.4,function(xx,yy)
+     return uv(window[1]+(window[3]-window[1])*xx,window[2]+(window[4]-window[2])*yy,
+      window[1]+(window[3]-window[1])*xx,window[2]+(window[4]-window[2])*yy)[1]
+    end)
+   end
+   return Architecture.opening(draw,l,b,r,t,depth,frame,glass,door,details)
+  end
   local wh=math.min(10,p.wall*.4);local ww=math.min(22,(window[3]-window[1])*wh/(window[4]-window[2]))
   local low=math.max(4,(p.wall-wh)*.58)
   if gymPorch then wh,ww,low=5,14,17 end
@@ -792,12 +821,12 @@ function M.append(g,emit)
    local center=z+bodyBack+(p.front-bodyBack)*fraction
    for _,side in ipairs({-1,1})do
     local sx=x+(side<0 and serviceInset or p.w-serviceInset)
-    Architecture.opening(function(v,t,shade)
+    opening(function(v,t,shade)
      local out={};for i,q in ipairs(v)do out[i]={sx+side*q[3],q[2],center+q[1]}end;face(out,t,shade)
     end,-ww/2,low,ww/2,top,boarded and .5 or .05,frame,glass,false,gymPorch and 'native' or nil)
    end
    local centerX=x+p.w*fraction
-   Architecture.opening(function(v,t,shade)
+   opening(function(v,t,shade)
     local out={};for i,q in ipairs(v)do out[i]={centerX-q[1],q[2],z+bodyBack-q[3]}end;face(out,t,shade)
    end,-ww/2,low,ww/2,top,boarded and .5 or .05,frame,glass,false,gymPorch and 'native' or nil)
   end

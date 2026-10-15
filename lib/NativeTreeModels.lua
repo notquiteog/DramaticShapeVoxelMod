@@ -46,6 +46,15 @@ function M.part(family,x,y,z)
   -- Crystal's Kanto border trees are compact rounded crowns, not pines.
   if oval(x,y,z,0,.51,0,.49,.47,.49)then return 'foliage' end
   if y>=0 and y<.35 and radial<.065^2 then return 'wood' end
+ elseif family=='ash' then
+  -- Mt. Chimney's ash-encrusted trees: a forked stem and broken, heavy
+  -- crown lobes, colored from their own pale volcanic drawing.
+  if oval(x,y,z,0,.78,0,.27,.21,.29)
+   or oval(x,y,z,-.24,.59,0,.24,.23,.30)
+   or oval(x,y,z,.24,.59,0,.24,.23,.30)
+   or oval(x,y,z,0,.49,-.19,.31,.20,.25)then return 'foliage' end
+  if y>=0 and y<.73 and radial<(.08+.04*math.max(0,1-y/.2))^2 then return 'wood' end
+  if y>.24 and y<.68 and math.abs(math.abs(x)-(y-.24)*.6)<.065 and math.abs(z)<.08 then return 'wood' end
  elseif family=='sapling' then
   if oval(x,y,z,0,.63,0,.34,.36,.34)
    or oval(x,y,z,-.24,.47,0,.23,.23,.29)

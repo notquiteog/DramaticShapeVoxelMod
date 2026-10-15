@@ -9,9 +9,9 @@ local exteriorNames={slateport_shipyard=true,slateport_oceanic_museum=true,oldal
 -- 2026-10-14 source batch: RS and Emerald native maps contain these complete
 -- drawings with the same layout, openings and roof form; RS pixels differ
 -- only in roof texture/palette (side-by-side source sheets inspected). Held
--- back: Rustboro urban/Devon (different window vocabulary), Mossdeep and
--- Verdanturf homes (different roof decks/windows), Space Center/Frontier,
+-- back: Rustboro urban/Devon (different window vocabulary), Space Center/Frontier,
 -- and Lilycove's gold residence (RS leaves its lower-tier corners walkable).
+-- Mossdeep/Verdanturf homes use their own reviewed variants below (2026-10-15).
 for _,name in ipairs({'rustboro_city_center','rustboro_city_mart','dewford_town_center','slateport_city_center',
  'slateport_city_mart','mauville_city_center','mauville_city_mart','verdanturf_town_mart','verdanturf_town_center',
  'fallarbor_town_center','fallarbor_town_mart','lavaridge_town_mart','lavaridge_town_center','fortree_city_center',
@@ -20,7 +20,9 @@ for _,name in ipairs({'rustboro_city_center','rustboro_city_mart','dewford_town_
  'rustboro_city_gym','dewford_town_gym','mauville_city_gym','lavaridge_town_gym','mossdeep_city_gym',
  'lilycove_north_home','lilycove_west_cliff_home','lilycove_wide_home','lilycove_east_home',
  'lilycove_southwest_home','dewford_town_hall','dewford_town_home','dewford_town_south_home','lavaridge_town_home',
- 'fallarbor_town_west_home','lilycove_harbor','slateport_harbor','lilycove_contest_hall'})do exteriorNames[name]=true end
+ 'fallarbor_town_west_home','lilycove_harbor','slateport_harbor','lilycove_contest_hall',
+ 'verdanturf_town_west_home','verdanturf_town_center_home',
+ 'mossdeep_city_west_home','mossdeep_city_north_home','mossdeep_city_northeast_home','mossdeep_city_east_home'})do exteriorNames[name]=true end
 local furnitureNames={center_healer=true,center_screen=true,hoenn_center_front_desk=true,
  hoenn_center_left=true,hoenn_center_right=true,hoenn_center_pc=true,
  hoenn_center_map=true,hoenn_center_medicine=true,hoenn_center_terminal=true,
@@ -53,6 +55,24 @@ function M.exteriors(source)
   -- RS Slateport harbor has rectangular windows, not Emerald's portholes.
   if r.name=='slateport_harbor' then copy.roundWindows=false end
   if r.name:match('^littleroot_') then copy.roofShape='littleroot_tiered' end
+  if r.name:match('^verdanturf_town_.*home$')then
+   -- RS has an unbroken green sheet roof and circular windows; Emerald's
+   -- ridged roof and square panes must not leak into these native houses.
+   copy.roofShape='flat_panel';copy.roofRise=0
+   copy.blockedStart=1
+   copy.nativeDoorMid=0x3a1
+   copy.openings={}
+   for _,o in ipairs(r.openings)do local q={};for k,v in pairs(o)do q[k]=v end
+    if not q.door then q.round=true end;copy.openings[#copy.openings+1]=q
+   end
+  end
+  if r.name:match('^mossdeep_city_.*home$')then
+   -- Native RS glazing is a wider, dark inset beneath the pale surround.
+   copy.openings={{17,42,30,62,door=true},{40,42,60,58}}
+   copy.blockedStart=1
+   copy.nativeDoorMid=0x2a1
+   copy.bodyBack=18 -- also exclude the projected roof row when it is solid
+  end
   out[#out+1]=copy
  end end
  return out

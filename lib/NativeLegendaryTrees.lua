@@ -10,7 +10,7 @@ end
 local function template(card,variant)
  local detail=V.require('CommunityVisuals').treeDetailLevel()
  local height=card.h-(card.bottom or 0)
- local key=table.concat({card.w,height,variant,detail},':')
+ local key=table.concat({card.w,height,variant,detail,card.modelWidth or card.w,card.modelDepth or card.w},':')
  if templates[key]then return templates[key]end
  local parts,cx,cz=V.require('CommunityFlora').nativeTreeTemplate(variant)
  local radius,top,foot=0,0,0
@@ -18,13 +18,13 @@ local function template(card,variant)
   radius=math.max(radius,math.abs(v[1]-cx),math.abs(v[3]-cz));top=math.max(top,v[2]);foot=math.min(foot,v[2])
  end end end
  if radius==0 or top<=foot then return end
- local sx,sy=card.w/(2*radius),height/(top-foot)
+ local sx,sy,sz=(card.modelWidth or card.w)/(2*radius),height/(top-foot),(card.modelDepth or card.w)/(2*radius)
  local result={groups={},low={1e9,1e9,-1e9,-1e9}}
  for kind,pair in pairs(names)do
   local vs,ix={},{}
   for _,p in ipairs(parts)do local offset=#vs
    for _,v in ipairs(p[pair[1]])do
-    local x,y,z=(v[1]-cx)*sx,(v[2]-foot)*sy,(v[3]-cz)*sx
+    local x,y,z=(v[1]-cx)*sx,(v[2]-foot)*sy,(v[3]-cz)*sz
     vs[#vs+1]={x,y,z,v[4],v[5],v[6]}
     if y<24 then local b=result.low;b[1]=math.min(b[1],x);b[2]=math.min(b[2],z);b[3]=math.max(b[3],x);b[4]=math.max(b[4],z)end
    end

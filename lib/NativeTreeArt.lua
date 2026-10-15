@@ -86,13 +86,13 @@ function M.append(c,v,i,q,x,y,z,flat)
 end
 -- Atlas entries are shared by pixel content; geometry variants must not
 -- overwrite each other when identical artwork serves a bush and a Cut tree.
-local function variant(c,family,rows,shape)
+local function variant(c,family,rows,shape,width,depth,palette)
  if not c then return end
- local id=family..':'..rows..':'..shape
+ local id=family..':'..rows..':'..shape..':'..tostring(width)..':'..tostring(depth)..':'..tostring(palette)
  c.variants=c.variants or {}
  if not c.variants[id]then
   c.variants[id]={w=c.w,h=c.h,bottom=c.bottom,u0=c.u0,u1=c.u1,v0=c.v0,v1=c.v1,
-   modelFamily=family,modelRows=rows,modelShape=shape}
+   modelFamily=family,modelRows=rows,modelShape=shape,modelWidth=width,modelDepth=depth,modelPalette=palette}
  end
  return c.variants[id]
 end
@@ -108,7 +108,14 @@ function M.appendModel(c,v,i,q,x,y,z)
   c.models[step]=Hull.build(c.w,c.h,function(px,py)
    local r,g,b,a=data:getPixel(x0+px,y0+py)
    return r,g,b,a,(x0+px+.5)/size,(y0+py+.5)/size
-  end,step,c.bottom,nil,c.modelShape or 'tree',c.modelFamily)
+  end,step,c.bottom,nil,c.modelShape or 'tree',c.modelFamily,c.modelPalette)
+  if c.modelWidth or c.modelDepth then
+   for _,q in ipairs(c.models[step])do for _,p in ipairs(q)do
+    p[1]=p[1]*(c.modelWidth or c.w)/c.w
+    -- Hull pads coarse detail to whole voxels; scale its actual depth.
+    p[3]=p[3]*(c.modelDepth or c.w)/(math.ceil(c.w/step)*step)
+   end end
+  end
  end
  local rows=c.modelRows or 1
  local span=(rows-1)*c.w
@@ -178,8 +185,8 @@ function M.gen3(c)
  local family=c.shape.treeFamily or (forest and 'tiered' or 'conifer')
  local signature={}
  for _,row in ipairs(c.shape.treeRows or {})do signature[#signature+1]=table.concat(row,',')end
- local id=tostring(ts.imageData)..':'..tostring(ts.overImageData)..':'..family..':'..(c.shape.ground or 1)..':'..table.concat(signature,';')..':'..tostring(c.shape.treeTrim)
- if entries[id]then return variant(entries[id],family,1,'tree')end
+ local id=tostring(ts.imageData)..':'..tostring(ts.overImageData)..':'..family..':'..(c.shape.ground or 1)..':'..table.concat(signature,';')..':'..tostring(c.shape.treeTrim)..':'..tostring(c.shape.treeGroundColors)
+ if entries[id]then return variant(entries[id],family,1,'tree',c.shape.modelWidth,c.shape.modelDepth,c.shape.treePalette)end
  -- Complete General drawings, not cropped root tiles. Forest has its own
  -- three-column family. Source IDs are scoped by the resolved tileset.
  -- Dense map borders use cropped overlap cells (20/22, 664, etc.).
@@ -197,7 +204,7 @@ function M.gen3(c)
   return r,g,b,a
  end
  local ground=background(16,16,function(x,y)return pixel(c.shape.ground or 1,x,y)end)
- if family=='mossdeep' then
+ if family=='mossdeep' or c.shape.treeGroundColors then
   -- This drawing includes the speckled lawn around its crown. Exclude all
   -- native lawn colors, not only its dominant color, from the solid model.
   for y=0,15 do for x=0,15 do local r,g,b=pixel(c.shape.ground or 1,x,y);ground[key(r,g,b)]=true end end
@@ -205,6 +212,6 @@ function M.gen3(c)
  local result=card(id,#rows[1]*16,#rows*16,function(x,y)
   return pixel(rows[math.floor(y/16)+1][math.floor(x/16)+1],x%16,y%16)
  end,ground,c.shape.treeTrim or (forest and 16 or 8))
- return variant(result,family,1,'tree')
+ return variant(result,family,1,'tree',c.shape.modelWidth,c.shape.modelDepth,c.shape.treePalette)
 end
 return M

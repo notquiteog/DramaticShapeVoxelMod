@@ -6,7 +6,7 @@ local V=...
 local Trees=V and V.require('NativeTreeModels') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/NativeTreeModels.lua')
 local Budget=V and V.require("BuildBudget") or {tick=function()end,check=function()end}
 local M={}
-function M.build(w,h,sample,step,bottom,depthLimit,organic,family)
+function M.build(w,h,sample,step,bottom,depthLimit,organic,family,palette)
  step=step or 1;bottom=bottom or 0
  local nx,ny=math.ceil(w/step),math.ceil(h/step)
  local depth=w
@@ -29,7 +29,8 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic,family)
      all[#all+1]=k
      -- Ink outlines belong to the 2D drawing; distributing them across a
      -- solid crown makes black blocks. Lighting supplies the 3D shadows.
-     if (family or sy<h*.76) and g>r*1.12 and g>b*1.08 then
+     local leaf=palette=='gold' and g>=r*.88 and g>b*1.2 or palette~='gold' and g>r*1.12 and g>b*1.08
+     if (family or sy<h*.76) and leaf then
       foliage[#foliage+1]=k
       local leafRow=nativeRows[y] or {};nativeRows[y]=leafRow;leafRow[x]=k
      end

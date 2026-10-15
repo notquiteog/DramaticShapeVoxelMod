@@ -1,3 +1,23 @@
+# Regional Gen3 trees and RS house variants — 2026-10-15
+
+Official 0.3.88 verified; native 0.3.86 private imports reused. Regional tree
+inventory now 1,927 placements / 9,033 solid cells / zero walking intersections,
+including refined Safari roots. Berry crowns retain yellow; Fallarbor ash and
+volcanic grounds stay separate. Procedural/optional replacements share bounds.
+
+Six RS house families add eight placements per edition; Verdanturf keeps flat
+green roofs and circular recessed windows, Mossdeep keeps its own native art.
+Whole-body permission checks explicitly allow only the reviewed native warp
+doors; altered walking lanes retain native art. Roof/frame geometry is bounded.
+RS building audits65/0 each; six actual native-input door entries pass. Mesh87.
+
+276 suites pass, 0 fail, 58 external-fixture skips;16 focused partner checks pass,
+two old Wild Skies harness suites unavailable. Solo native runs and a Ruby
+all-partner smoke preserve optional integration. Details and evidence in
+`docs/GEN3_REGIONAL_MODELS_2026-10-15.md`. Full five-game coverage remains open;
+FR/LG outdoor gap cells6,649 each, Emerald11,770, RS10,481 each. Next targets
+remain architecture, regional composites, landmarks and the interior census.
+
 # Gen3 terrain, sea rocks and RS parity on engine 0.3.86 — 2026-10-14
 
 Official 0.3.86 (released today) verified and used with fresh five-edition QA
