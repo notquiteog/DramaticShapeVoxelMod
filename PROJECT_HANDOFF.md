@@ -14,6 +14,11 @@ Final Emerald battle retains30cache hits/0scans, orbit and native cleanup.
 Performance diagnostics available on all11editions; full feature parity remains
 incomplete. Gen2 native Hall-of-Fame and evolution consumers were added by the
 parity worker; see its separate evidence docs and option-support inventory.
+Official0.3.89 appeared during this batch; its engine/AppImage hashes were
+verified. Rechecks:284suites pass/0fail/58external-fixture skips, SDK1173/1173,
+Emerald30cachehits/0scans and clean battle exit, FR live item/native toggle,
+96GPU-compared fitted bounds. The release omits test helpers; isolated runtime
+uses the preceding public QA harness with unmodified0.3.89 engine code.
 Model work belongs to the separate model worker. No release/version bump here.
 
 # Battle performance regression — 2026-10-15
