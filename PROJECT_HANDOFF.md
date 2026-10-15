@@ -1,3 +1,15 @@
+# Post-release parity source checkpoint and all11 startup check — 2026-10-15
+
+Six native interface batches after4bc557a are committed throughcb6e7ff; no changes
+to published1.41.1 archives. Final shared suite308/0fail/58skip includes SDK1173.
+Current-source official0.3.89 all11 native options startup sweep passes119 rows
+per GB edition/121 per GBA, zero missing, inversion changed/restored in all11.
+This proves registration and startup, not full feature/gameplay parity.
+
+Consolidated evidence and exact remaining renderer/asset/provider contracts:
+`docs/NATIVE_INTERFACE_PARITY_CHECKPOINT_2026-10-15.md`. All runtime processes
+ended; source/GPU clear. Models, release metadata and independent assets untouched.
+
 # Native Hoenn starter selected-art adapter — 2026-10-15
 
 Starter previews now draw selected art at the public final-fade seam, retaining
