@@ -17,5 +17,8 @@ a,b=M.sources('CUSTOM_REGION_ROOM',{1,2});assert(a==1 and b==2,'third-party nati
 for _,invalid in ipairs{{-1,2},{1.5,2},{1,1024},{1,2,column=16},{1,2,column=-1},{1,2,column=.5}}do
  assert(not M.sources('RU_LILYCOVE_MUSEUM',invalid),'invalid custom wallpaper did not stand down')
 end
+local single={};assert(M.pixels(ts,1,1,nil,function(x,y,...)single[y*16+x]={...}end,true))
+for y=0,31 do assert(single[y*16+1][2]==math.floor(y/2)/16,'single-row wallpaper repeats its cap halfway down the wall')end
+a,b,col=M.sources('CUSTOM',{1,1,single=true});assert(a==1 and b==1 and col==nil)
 assert(not M.sources('UNRELATED_ROOM'),'unrelated source acquired institution paint')
 print('PASS native wallpaper BG composition, full rows, source isolation, window-free frame repeat and optional map metadata')

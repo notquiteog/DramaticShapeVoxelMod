@@ -2,6 +2,7 @@
 -- or bed consumes its entire drawing once; no cell is folded into a wall.
 local V=...
 local M={}
+local CashRegister=V and V.require('Gen3CashRegister')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3CashRegister.lua')
 local recipes={
  {name='route23_stone_bollard',primary='general',pair='general__rom_082d4b84',rows={{0x2c6}},kind='stoneBollard',ground=0x28a,localGround=true,blockedRows={[1]=true}},
  {name='pallet_mailbox',primary='general',pair='pallet_outdoor',rows={{0x2A5},{0x2AD}},kind='mailbox',h=20,ground=0x296,depth=7},
@@ -203,6 +204,7 @@ function M.append(p,emit,uvFor)
   local v=t[1][2]+(t[3][2]-t[1][2])*(sy%16+.5)/16
   return {{u,v},{u,v},{u,v},{u,v}}
  end
+ if V and V.require('Gen3ServiceRooms').fixture(p,source,box,sample,emit)then return end
  if r.spriteAlternative=='rock' and V and p.ts.imageData and V.require('TreePresentation').props:get()=='cards' then
   V.require('Gen3Cave').rock({cx=p.cx,cy=p.cy,ts=p.ts,mid=r.rows[1][1],shape={ground=r.ground,height=7}},emit,uvFor)
   return
@@ -215,7 +217,8 @@ function M.append(p,emit,uvFor)
  end
  if r.kind=='stoneBollard' then V.require('Gen3StoneBollard').append(p,emit,sample);return end
  if r.kind=='rsLinkBooth' or r.kind=='rsLinkPartition' then V.require('Gen3LinkBooth').append(p,source,box,sample,emit);return end
- if r.kind=='martCheckout' or r.kind=='martRegister' then V.require('Gen3MartCheckout').append(p,source,box,sample,emit);return end
+ if r.kind=='martRegister'then CashRegister.append(p,source,box,sample,emit);return end
+ if r.kind=='martCheckout' then V.require('Gen3MartCheckout').append(p,source,box,sample,emit);return end
  if r.kind=='labWorkstation' or r.kind=='labStacks' or r.kind=='labSideCabinet' or r.kind=='labSideDesk' then V.require('Gen3LabWorkstation').append(p,source,box,sample,emit);return end
  if r.kind:match('^tower')then Tower.append(p,source,box,sample,emit,uvFor);return end
  if r.kind=='rsInstitution'then RSInstitutions.append(p,source,box,sample,emit);return end

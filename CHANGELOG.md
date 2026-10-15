@@ -1,3 +1,11 @@
+## 1.43.0
+
+- Match Center/Mart native chamfered corners with closed joined polygon walls and clipped floor/foundation/ceiling geometry.
+- Keep continuous native wallpaper behind separate healing, storage, computer and wall fixtures. Reconstruct the healer's white arch without changing its low animated ball tray; align the native healing monitor with its wall screen.
+- Model west-facing Mart tills with separate drawers, displays, sloping keypads and raised keys. Add Kanto rear glass cases and restore Hoenn's original clock.
+- Keep escalator rails inside the native blocked/warp row, maintain the descending well, and correct Kanto rack, display-table and counter-edge footprints.
+- Preserve native collision, scripts, UI, HD-2D actors/Pokémon/flowers and optional standalone partners. Mesh revision 99.
+
 ## 1.42.0
 
 - Model the Ruby/Sapphire Lilycove and Oceanic Museum galleries, displays and reception desks, Devon research/office furniture and Space Center controls/workstations.

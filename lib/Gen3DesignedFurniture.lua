@@ -189,11 +189,13 @@ function M.install(recipes)
    other.name='neighbor_'..r.name;other.pair='house';recipes[#recipes+1]=other
   end
  end
+ add('mart_complete_glass_bank','building__rom_082d4bcc',{{0x287,0x287,0x287},{0x28f,0x28f,0x28f}},'em_mart_glass',0x281)
+ recipes[#recipes].collisionRows={{7,7,7},{7,7,7}}
  add('mart_edge_island','building__rom_082d4bcc',{{0x296},{0x29e},{0x2a6},{0x2ae}},'fr_mart_sidecase',0x281)
  add('lab_free_books','oak_lab',{{0x28b,0x28c},{0x73,0x74},{0x283,0x284}},'fr_lab_free_books',0x289)
  local designs={museum_bookcase='fr_museum_bookcase',center_vending='fr_center_storage',kitchen_sink_hob='fr_kitchen',center_terminal='fr_center_pc',
   center_2f_terminal_758='fr_upper_pc',lab_computer='fr_lab_pc',
-  lab_terminal='fr_lab_terminal',lab_server='fr_lab_server',mart_rear_books='fr_mart_cooler',mart_checkout_return='fr_mart_register',mart_checkout='fr_mart_counter',mart_checkout_end='fr_mart_counter_end'}
+  lab_terminal='fr_lab_terminal',lab_server='fr_lab_server',mart_rear_books='fr_mart_cooler',mart_bench='fr_mart_bench',mart_checkout_return='fr_mart_register',mart_checkout='fr_mart_counter',mart_checkout_end='fr_mart_counter_end'}
  for _,r in ipairs(recipes)do
   if designs[r.name]then r.design=designs[r.name]end
   if r.kind=='cabinet' and not r.design then r.design='fr_native_cabinet' end
@@ -206,6 +208,8 @@ function M.install(recipes)
   if r.name=='kitchen_sink_hob'then r.h=8 end
   if r.name=='mart_rear_display'then r.depth=1.5;r.frontOffset=32.2;r.base=12 end
   if r.name:find('mart_checkout',1,true)then r.h=7;r.join=true end
+  if r.name=='mart_checkout_return'then r.kind='martRegister' end
+  if r.name=='mart_checkout'then r.walkablePads={{0,0,16,16,3}}end
  end
 end
 function M.append(p,source,box,sample,emit)

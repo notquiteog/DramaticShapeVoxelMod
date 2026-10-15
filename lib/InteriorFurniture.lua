@@ -1893,8 +1893,8 @@ function M.draw(id,A)
   local wide=id=='fr_mart_island'
   local case,trim=T(14,23),T(10,53)
   local spine=wide and 16 or 14
-  B(2,0,14,wide and 30 or 15,2,60,trim)
-  B(spine-1,2,12,spine+1,15,60,case)
+  B(2,0,16.2,wide and 30 or 15,2,60,trim)
+  B(spine-1,2,16.2,spine+1,15,60,case)
   for _,side in ipairs(wide and {-1,1} or {-1})do
    local l,r=side<0 and 2 or spine+1,side<0 and spine-1 or 30
    for row=0,1 do
@@ -1930,12 +1930,18 @@ function M.draw(id,A)
   B(0,6.2,n,w,7,32,T(long and 1 or 0,17))
   if long then
    top({0,17,48,10},0,n,48,32,7.02)
-   front({0,27,48,5},0,0,48,6.2,32.02)
+   front({0,27,48,5},0,0,48,6.2,31.98)
    cushion(1,1,14,14,{0,0,16,16},T(4,4),T(1,1))
   else
    top({0,0,16,24},0,0,16,32,7.02)
-   front({0,26,16,6},0,0,16,6.2,32.02)
+   front({0,26,16,6},0,0,16,6.2,31.98)
   end
+ elseif id=='fr_mart_bench' then
+  local case,glass=T(2,25),T(12,11)
+  B(1,0,17,31,1,31,case)
+  for _,x in ipairs{1,29}do for _,z in ipairs{17,29}do B(x,1,z,x+2,6,z+2,case)end end
+  B(1,5,17,31,6,31,case)
+  top({1,8,30,15},2,18,30,30,6.02)
  elseif id=='fr_mart_register' then
   local case,dark=T(11,18),T(5,21)
   -- A full counter pedestal supports the till, display and sloped keypad.

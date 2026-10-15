@@ -2,6 +2,11 @@
 -- collision remain authoritative. Camera-facing walls open outside the room;
 -- an eye inside the room sees all four walls and a ceiling.
 local V=...
+local Service
+local function services()
+ if not Service then Service=V and V.require and V.require('Gen3ServiceRooms')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3ServiceRooms.lua')end
+ return Service
+end
 local M={background={.022,.032,.046,1}}
 local cache=setmetatable({},{__mode='k'})
 local materials={}
@@ -95,9 +100,15 @@ function M.profile(def,gen)
  local institutional=spec and(spec.secondary=='facility' or spec.secondary=='lilycove_museum' or spec.secondary=='oceanic_museum' or def.voxelFlatWalls==true)
  local named=id:find('DEVON_CORP',1,true)or id:find('SPACE_CENTER',1,true)or id:find('LILYCOVE_MUSEUM',1,true)or id:find('OCEANIC_MUSEUM',1,true)
  local flatInstitution=gen==3 and not cave and institutional and((named and(id:match('^RU_')~=nil or id:match('^SA_')~=nil))or def.voxelFlatWalls==true)
+ local service
+ if gen==3 and not cave then
+  local pairs=V.require('Gen3Tilesets');local pair=pairs.canonical and pairs.canonical(def.midLayout.pair)or def.midLayout.pair
+  if pair=='network'or pair=='building__pokemon_center'or pair=='building__shop'or pair=='building__rom_082d4bcc'then service=services().profile(def,pair)end
+ end
+ if service then b=service.bounds end
  if flatInstitution then b[2]=3.8 end
- return {bounds=b,height=cave and 96 or gen==3 and (flatInstitution or theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen,cave=cave,
-  nativeWallFinish=flatInstitution,noInteriorTrim=flatInstitution}
+ return {bounds=b,height=cave and 96 or gen==3 and (flatInstitution or service or theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen,cave=cave,
+  nativeWallFinish=flatInstitution or service~=nil,noInteriorTrim=flatInstitution or service~=nil,serviceRoom=service}
 end
 local function texture(theme)
  if materials[theme]then return materials[theme]end
@@ -109,6 +120,7 @@ local function texture(theme)
  local image=love.graphics.newImage(data);image:setFilter('nearest','nearest');data:release();materials[theme]=image;return image
 end
 function M.geometry(p,side,opened)
+ if p.serviceRoom then return services().geometry(p,side,opened)end
  -- A reviewed irregular room can supply native boundary segments. Each
  -- uses the same closed wall construction/materials as rectangular rooms.
  if p.boundarySegments and side<=4 then
@@ -380,7 +392,7 @@ end
 -- Recess north-wall backing behind corrected fixture footprints. Moving a
 -- desk into its real blocked row must not bury it in the synthetic shell.
 function M.setRecesses(p,fixtures)
- if not p or p.gen~=3 or p.cave then return end
+ if not p or p.gen~=3 or p.cave or p.serviceRoom then return end
  p.originalNorth=p.originalNorth or p.bounds[2]
  local cuts={};local keys={}
  for _,q in ipairs(fixtures or {})do

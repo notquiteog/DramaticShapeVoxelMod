@@ -250,6 +250,17 @@ local function build(req,cache,previous)
  -- depth corrections must not turn its cornice into a cabinet-shaped zigzag.
  local roomProfile=Interior.forMap(def,3)
  local sourcePair=Pairs.canonical(def.midLayout.pair)
+ if roomProfile and roomProfile.serviceRoom then
+  local plan=roomProfile.serviceRoom
+  cache.serviceRoom=plan;cache.flatNativeWalls=true;cache.northWallFront=4
+  cache.furnitureRecesses={}
+  for _,p in ipairs(props)do p.serviceRoom=true end
+  local origin=cells['0:0']
+  if origin then Interior.setWallpaper(roomProfile,V.require('Gen3RoomWallpaper').material({id=def.id,voxelWallpaper=plan.wall},origin.ts))end
+  for _,c in pairs(cells)do
+   if V.require('Gen3ServiceRooms').replacesFloor(c,plan)then c.serviceRoomFloor=plan.floor end
+  end
+ end
  if roomProfile and V.require('Gen3RSInstitutions').flatWalls(sourcePair,def.id or req.mapId,def.voxelFlatWalls)then
   cache.flatNativeWalls=true
   cache.northWallFront=4
@@ -259,7 +270,7 @@ local function build(req,cache,previous)
   local floor=tonumber(def.voxelWallFloor)or((def.id or req.mapId or''):find('DEVON',1,true)and 0x380 or sourcePair:find('facility',1,true)and 0x2f0 or sourcePair:find('oceanic',1,true)and 0x201 or(def.id or req.mapId or''):find('_2F',1,true)and 0x270 or 0x203)
   for _,c in pairs(cells)do if c.cy>=0 and c.cy<=1 and c.cx>=0 and c.cx<def.width then c.institutionWallFloor=floor end end
  end
- if roomProfile and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='player_house' or sourcePair=='house' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
+ if roomProfile and not roomProfile.serviceRoom and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='player_house' or sourcePair=='house' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
   local north=roomProfile.originalNorth or roomProfile.bounds[2]
   for _,q in ipairs(cache.furnitureRecesses)do north=math.min(north,q[3])end
   cache.northWallFront=north+.04
@@ -267,7 +278,7 @@ local function build(req,cache,previous)
  end
  cache.openings={}
  for _,p in ipairs(props)do if p.recipe.noGround and p.recipe.down then
-  cache.openings[#cache.openings+1]={p.cx*16,p.cy*16,(p.cx*16)+p.w,(p.cy*16)+p.d}
+  cache.openings[#cache.openings+1]={p.cx*16,p.cy*16+(p.recipe.kind=='escalator'and 16 or 0),(p.cx*16)+p.w,(p.cy*16)+(p.recipe.kind=='escalator'and 32 or p.d)}
  end end
  for _,c in pairs(cells)do if c.stairs and c.stairs.owner==c and c.stairs.r.down then
   local s=c.stairs;cache.openings[#cache.openings+1]={s.cx*16,s.cy*16,(s.cx+s.width)*16,(s.cy+#s.r.rows)*16}
@@ -320,6 +331,8 @@ local function build(req,cache,previous)
   if c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
+  elseif c.serviceRoomFloor then
+   V.require('Gen3ServiceRooms').floor(c,cache.serviceRoom,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.serviceRoomFloor)or uv)
   elseif c.institutionWallFloor then
    plane(b.v,b.i,x,z,uvFor(ts,c.institutionWallFloor)or uv)
   elseif c.nativeLamp then
@@ -577,7 +590,7 @@ local function build(req,cache,previous)
   local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout
   modelCache.append(def.id or req.mapId,p,function(item,emit)return Furniture.append(item,emit,uvFor)end,function(vertices,uv,shade,anchor)
-   if cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
+   if not p.serviceRoom and cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
     local shift=cache.northWallFront-31.92
     for _,v in ipairs(vertices)do v[3]=v[3]+shift end
    end
@@ -965,7 +978,7 @@ local function fieldEffects(draw,cam)
     {{x+3,h,z+12},{x+29,h,z+12},{x+29,h,z+28},{x+3,h,z+28}},nil,
     function(c,emit)return V.require('Gen3HealingBalls').canvas(c,x,h,z,emit)end)
    if screen then
-    local sx,sz=screen.cx*16,screen.cy*16+(screen.recipe.frontOffset or 32.2)+.04
+    local sx,sz=screen.cx*16,screen.serviceRoom and 4.30 or screen.cy*16+(screen.recipe.frontOffset or 32.2)+.04
     effect('heal-monitor',32,16,function()g.translate(-112,-16);heal.drawMonitor()end,
      {{sx+2,28,sz},{sx+30,28,sz},{sx+30,12,sz},{sx+2,12,sz}},screen.groundHeight or 0)
    end

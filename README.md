@@ -1,3 +1,17 @@
+## 1.43.0 — Native Center and Mart polish
+
+Match the native angled corners in Kanto/Hoenn Centers and Marts. Continuous
+native wall finishes sit behind the healing bay, storage, screens and maps.
+The healing machine has an open beveled 3D arch above its original low ball tray.
+Marts gain closed west-facing cash registers with drawers, displays, sloping
+key beds and raised keys; Kanto gains modeled rear glazing and a bounded glass
+case. Corrected rack, counter and escalator footprints keep native lanes clear.
+
+The starting-region batch covers 30 service interiors across all five games.
+Characters, Pokémon and flowers stay HD-2D; native UI, scripts, collision and
+optional partner independence remain authoritative. Full regional scenery is
+still in progress. [Evidence](docs/GEN3_SERVICE_ROOMS_2026-10-15.md).
+
 ## 1.42.0 — Ruby/Sapphire institutions and continuous walls
 
 Adds closed native-art furniture to both museum floors, all three Devon floors,

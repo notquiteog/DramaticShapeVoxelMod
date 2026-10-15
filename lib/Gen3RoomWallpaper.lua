@@ -5,8 +5,8 @@ local cache=setmetatable({},{__mode='k'})
 function M.sources(id,custom)
  if custom~=nil then
   local function integer(n,max)return type(n)=='number'and n>=0 and n<=max and n%1==0 end
-  if type(custom)=='table'and integer(custom[1],1023)and integer(custom[2],1023)and(custom.column==nil or integer(custom.column,15))then
-   return custom[1],custom[2],custom.column
+  if type(custom)=='table'and integer(custom[1],1023)and integer(custom[2],1023)and(custom.column==nil or integer(custom.column,15))and(custom.single==nil or type(custom.single)=='boolean')then
+   return custom[1],custom[2],custom.column,custom.single
   end
   return -- Invalid extensions stand down instead of reading outside the atlas.
  end
@@ -21,12 +21,12 @@ function M.sources(id,custom)
   return 0x2f8,0x300,0
  end
 end
-function M.pixels(ts,upper,lower,column,put)
+function M.pixels(ts,upper,lower,column,put,single)
  if not(ts and ts.imageData and ts.midToSlot and ts.cols)then return false end
  local a,b=ts.midToSlot[upper],ts.midToSlot[lower]
  if not(a and b)then return false end
  for y=0,31 do for x=0,15 do
-  local slot=y<16 and a or b;local px=slot%ts.cols*16+(column or x);local py=math.floor(slot/ts.cols)*16+y%16
+  local slot=(single or y<16)and a or b;local px=slot%ts.cols*16+(column or x);local py=math.floor(slot/ts.cols)*16+(single and math.floor(y/2)or y%16)
   local r,g,bb,alpha=ts.imageData:getPixel(px,py)
   if ts.overImageData then
    local rr,gg,bbb,aa=ts.overImageData:getPixel(px,py)
@@ -37,11 +37,11 @@ function M.pixels(ts,upper,lower,column,put)
  return true
 end
 function M.material(def,ts)
- local a,b,col=M.sources(def.id or'',def.voxelWallpaper);if not a then return end
- local key=table.concat({a,b,col or'all'},':');local entries=cache[ts]
+ local a,b,col,single=M.sources(def.id or'',def.voxelWallpaper);if not a then return end
+ local key=table.concat({a,b,col or'all',single and'single'or'double'},':');local entries=cache[ts]
  if entries and entries[key]and entries[key].under==ts.imageData and entries[key].over==ts.overImageData then return entries[key].image end
  local pixels=love.image.newImageData(16,32)
- if not M.pixels(ts,a,b,col,function(...)pixels:setPixel(...)end)then pixels:release();return end
+ if not M.pixels(ts,a,b,col,function(...)pixels:setPixel(...)end,single)then pixels:release();return end
  local image=love.graphics.newImage(pixels);pixels:release();image:setFilter('nearest','nearest');image:setWrap('repeat','repeat')
  entries=entries or{};cache[ts]=entries
  if entries[key]then entries[key].image:release()end
