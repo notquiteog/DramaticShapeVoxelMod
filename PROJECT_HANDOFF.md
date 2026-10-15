@@ -1,3 +1,25 @@
+# Gen3 department-store architecture — 2026-10-15
+
+1.37.0: five large placements across all GBA editions. Celadon has chamfered glass
+bays, two tiled entrance piers, closed roof terrace/vents and native door seams.
+Lilycove has EM arches / RS square sash, native cladding, closed canopies and
+raised emblem, closed side/back/roof/underside surfaces. Art repair preserves
+untouched originals for raised details; no imported pixels ship. Mesh89.
+
+Source/permission matching protects native lanes and exact warp doors; translated
+third-party fixture placement works. Local reviewed paving/grass supplies ground.
+HD-2D actors/flowers, base UI/gameplay and optional integrations are unchanged.
+Official0.3.88, reused0.3.86 private imports; five-edition views, seven native
+entries, FRLG rear-row movement, camera0 fallback and footprint audits pass.
+278 suites pass,0fail/58 external-fixture skips. Building assemblies/flags:
+FRLG127/0 each, Emerald80/0, RS74/0 each. Evidence and remaining work:
+`docs/GEN3_DEPARTMENT_STORES_2026-10-15.md`.
+
+This is not complete architecture coverage. Next: League/Route23 composites,
+Lilycove museum, RS Devon/Space Center, regional landmarks and large interiors.
+Expected outdoor gaps: FRLG6512 each, Emerald11624, RS10119 each; final package
+inventory and optional-partner evidence are recorded with the release.
+
 # Gen3 urban buildings and field props — 2026-10-15
 
 1.36.0 batch adds346 placements: FR/LG58 Route23 bollards each; Emerald84 and

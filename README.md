@@ -1,3 +1,16 @@
+## 1.37.0 — Celadon and Lilycove department stores
+
+Adds large native-art department-store models across all five GBA editions.
+Celadon gains chamfered recessed glass bays, its two tiled entrance piers and
+closed roof terrace/vents. Lilycove keeps Emerald arches or RS square windows,
+separate striped canopies and its original emblem on a continuous raised plaque.
+Both families have modeled sides, backs, roofs, undersides and native door seams.
+
+Characters, Pokémon and flowers stay HD-2D. Every companion remains optional.
+Verified on official Gen1Recomp 0.3.88 with five-edition rendered views, seven
+native entrance tests, rear-lane movement, footprint audits and 278 Lua suites.
+Large-building/landmark coverage remains in progress. [Evidence and remaining work](docs/GEN3_DEPARTMENT_STORES_2026-10-15.md).
+
 ## 1.36.0 — Rustboro buildings and regional field props
 
 Adds seven Ruby/Sapphire urban building families with their native square

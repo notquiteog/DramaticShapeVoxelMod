@@ -133,7 +133,7 @@ function M.prepare(cells,gyms,families)
   for yy=g.cy-2,g.cy+g.depth+1 do for xx=g.cx-2,g.cx+g.width+1 do
    local c=cells[xx..':'..yy]
    if c and c.pair==g.pair and not c.civic and c.collision==0 and c.shape and c.shape.kind=='flat'
-    and (service or c.shape.reviewedSurface or c.mid==1) then
+    and (service or c.shape.reviewedSurface or c.mid==1 or g.custom and g.custom.groundCandidates and g.custom.groundCandidates[c.mid]) then
     -- Unclassified flat tiles can contain decorative artwork. Only the
     -- previously reviewed service assemblies accept their local floor set.
     candidates[#candidates+1]=c
@@ -165,6 +165,7 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.geometry=='department_store' then return V.require('Gen3DepartmentStores').profile(g)end
   if r.geometry=='shipyard' then return {w=w,h=112,back=8,front=111,wall=40,roofEnd=72,wallTop=72,wallBottom=112,bevel=0,doorLeft=32,doorRight=48,doorTop=72,doorBottom=112,doorHeight=40,projection=0}end
   if r.geometry=='oceanic_museum' then return {w=w,h=80,back=8,front=79,wall=40,roofEnd=48,wallTop=48,wallBottom=80,bevel=0,doorLeft=32,doorRight=64,doorTop=48,doorBottom=80,doorHeight=40,projection=0}end
   if r.geometry=='saffron_office' then return {w=w,h=96,back=0,front=95,wall=64,roofEnd=32,wallTop=32,wallBottom=96,bevel=0,doorLeft=0,doorRight=0,doorTop=96,doorBottom=96,doorHeight=0,projection=0}end
@@ -218,6 +219,7 @@ end
 -- returned here are shared with the fixed mesh, so animation never grows into
 -- a freestanding 32x48 card or floats in front of the entrance.
 function M.doorSurface(g,tx,ty)
+ if g.custom and g.custom.geometry=='department_store' then return V.require('Gen3DepartmentStores').doorSurface(g,tx,ty)end
  if g.custom and g.custom.geometry=='pewter_museum' then return V.require('Gen3PewterMuseum').doorSurface(g,tx,ty)end
  local p=M.profile(g);local openings=g.custom and g.custom.openings
  if not openings then
@@ -429,6 +431,13 @@ function M.material(g)
    data:setPixel(p.w+xx,48+yy,sourcePixel(g,xx,yy,mid))
   end end end
  end
+ -- Raised store plaques and canopies keep their untouched pixels in the
+ -- second atlas half. Repair only their old projection on the front wall.
+ for _,r in ipairs(g.custom and g.custom.facadePatches or {})do
+  for yy=r[2],r[2]+r[4]-1 do for xx=r[1],r[1]+r[3]-1 do
+   data:setPixel(xx,yy,sourcePixel(g,16+xx%16,16+yy%16))
+  end end
+ end
  if g.launchDisplay then
   -- Native red launch-gantry swatch, without bundling its art.
   local rr,gg,bb,aa=sourcePixel(g,4,4,0x379)
@@ -474,6 +483,7 @@ function M.window(g)
  return best
 end
 function M.append(g,emit)
+ if g.custom and g.custom.geometry=='department_store' then return V.require('Gen3DepartmentStores').append(g,emit)end
  if g.custom and g.custom.geometry=='shipyard' then return V.require('Gen3Shipyard').append(g,p,emit)end
  if g.custom and g.custom.geometry=='oceanic_museum' then return V.require('Gen3OceanicMuseum').append(g,p,emit)end
  if g.custom and g.custom.geometry=='saffron_office' then return V.require('Gen3SaffronOffice').append(g,p,emit)end

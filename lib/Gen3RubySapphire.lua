@@ -3,6 +3,7 @@
 local V=...
 local M={recipes={}}
 local exteriorNames={slateport_shipyard=true,slateport_oceanic_museum=true,oldale_house=true,oldale_mart=true,oldale_center=true,
+ lilycove_department_store=true,
  petalburg_city_mart=true,petalburg_city_center=true,petalburg_city_gym=true,
  petalburg_city_wide_home=true,petalburg_city_home=true,birch_lab=true,
  littleroot_player_house=true,littleroot_rival_house=true}
@@ -54,6 +55,7 @@ function M.exteriors(source)
  for _,r in ipairs(source)do if exteriorNames[r.name]then
   local copy={};for k,v in pairs(r)do copy[k]=v end
   copy.header=#r.rows -- require every native source cell, including facade
+  if r.store=='lilycove' then copy.squareWindows=true end
   if r.geometry=='urban'then
    copy.squareWindows=true
    copy.windowInset=r.name:find('white',1,true) and {2,2,14,15} or {1,4,15,16}

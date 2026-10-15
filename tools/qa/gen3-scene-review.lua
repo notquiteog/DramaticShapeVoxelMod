@@ -1,6 +1,8 @@
 -- Production scene review at arbitrary native cells (Gen3 only).
 --   POKEPORT_DRIVER=tools/qa/gen3-scene-review.lua SHOT_DIR=<dir>
 --   QA_SPOTS="MAP,x,y[,radius][;MAP,x,y...]"  QA_TIME=day|night
+--   QA_FOCUS_HEIGHT=42 optionally centers orbit views on a tall building.
+--   QA_RENDER_DISTANCE=64 uses the public FAR setting for clear rear views.
 -- For each spot: loads the map, parks the player on the nearest native
 -- walkable/dry/non-warp cell, then captures four orbit views and one low
 -- eye-height view through the production renderer with a QA-only inspection
@@ -15,7 +17,7 @@ return function(game)
  game:_handleBootAction({action='new_game',start={map=prefix=='FR_' and 'FR_PALLET_TOWN' or prefix..'OLDALE_TOWN',x=10,y=9,facing='down'}})
  U.wait(10)
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
- V.require('DayNight').setting:sync(os.getenv('QA_TIME') or 'day');V.require('RenderDistance').setting:sync(32)
+ V.require('DayNight').setting:sync(os.getenv('QA_TIME') or 'day');V.require('RenderDistance').setting:sync(tonumber(os.getenv('QA_RENDER_DISTANCE'))or 32)
  local Map=require('src.core.game3.map');local Collision=require('src.core.game3.collision')
  local R=V.require('Voxel3D');local project=R.viewProjection;local inspection
  R.viewProjection=function(cx,cy,w,h)
@@ -65,8 +67,9 @@ return function(game)
   local base=Scene.groundAt and Scene.groundAt(cx,cz) or 0
   print('[CAMERA BASE]',s.id,s.x,s.y,base,'player',Scene.groundAt(pos[1]*16+8,pos[2]*16+8),'window',Scene.distance and table.concat(Scene.distance.bounds,','))
   local dist=s.r*16
+  local focusHeight=tonumber(os.getenv('QA_FOCUS_HEIGHT'))or 8
   for i,d in ipairs({{0,1},{1,0},{0,-1},{-1,0}})do
-   inspection={eye={cx+d[1]*dist,base+dist*.75,cz+d[2]*dist},focus={cx,base+8,cz},fov=math.rad(65),up={0,1,0},curve=0}
+   inspection={eye={cx+d[1]*dist,base+dist*.75,cz+d[2]*dist},focus={cx,base+focusHeight,cz},fov=math.rad(65),up={0,1,0},curve=0}
    U.wait(3);assert(U.shot(game,dir..('/%s_%d_%d_%d.png'):format(s.id,s.x,s.y,i)))
   end
   local px,pz=pos[1]*16+8,pos[2]*16+8

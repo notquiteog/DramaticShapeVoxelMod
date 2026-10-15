@@ -1,3 +1,24 @@
+## 1.37.0 — 2026-10-15
+
+- FireRed/LeafGreen Celadon department store: chamfered recessed glazing,
+  source-faithful red/white entrance piers, two animated native door apertures,
+  closed roof terrace, railings and real slotted roof channels.
+- Emerald/Ruby/Sapphire Lilycove department store: edition-specific arched or
+  square recessed windows, native cladding, separate closed striped canopies,
+  uninterrupted raised emblem, and closed side/rear/roof/underside surfaces.
+- Complete source-pattern and solid-cell guards preserve native walking rows
+  and explicit warp doors. Reviewed adjacent paving/grass continues underneath.
+  Duplicate canopy/emblem projections are removed only from these facades;
+  untouched source pixels remain available for their raised elements.
+- Mesh cache89. HD-2D actors/flowers, native gameplay/UI, optional providers and
+  third-party map reuse remain supported. No companion requirements added.
+
+278 Lua suites pass, zero failures, 58 external-fixture skips. Seven real native
+store entries and FRLG rear-lane movement pass on official0.3.88. Recognized
+building footprint flags: FRLG127/0 each, Emerald80/0, RS74/0 each. This adds five
+large building placements; the remaining landmarks and architecture are not
+claimed complete. See docs/GEN3_DEPARTMENT_STORES_2026-10-15.md.
+
 ## 1.36.0 — 2026-10-15
 
 - Ruby/Sapphire: seven Rustboro urban families, eight placements per edition;
