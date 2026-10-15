@@ -1,3 +1,21 @@
+# Cold hull reuse and resumable terrain scans — 2026-10-15
+
+Root optimization batch: per-build identical Hoenn sea-rock hull sharing,
+allocation-free hull face scanning, dense bounded terrain topology lookup and
+cooperative yields through flood/support passes. Exact old/new comparisons pass
+36 hulls,100 terrain graphs and rock instances at positive/negative origins.
+Model geometry, palette, collision and footprint unchanged.
+
+Official0.3.89 NVIDIA desktop: matched cold Route1041371→829ms and Petalburg405→250ms;
+rock construction558→45ms. Native running boundary peak27.75→20.64ms,p9516.70,
+prefetch1/promotion1/failure0. Smaller2/4ms budgets still stalled189ms and were
+reverted: accepted4/8ms budget unchanged. Battle1440p mean3.97ms,p956.60,zero
+rebuilds. FireRed reversal/warp/Oak lab/invalidation lifecycle PASS and captures
+inspected. Broad296pass/0fail/58fixture skips. Cold first load/unprepared warps
+still synchronous; not an all-game FPS claim. See
+`docs/COLD_GEOMETRY_GPU_2026-10-15.md`. No version bump/release/push.
+Parity worker continues independently after capture commit9fb3696.
+
 # Native Gen3 Safari/tutorial capture — 2026-10-15
 
 Existing shared Safari Ball art and Poke/Great/Ultra/Master capture effects now

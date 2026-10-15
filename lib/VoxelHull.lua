@@ -6,6 +6,7 @@ local V=...
 local Trees=V and V.require('NativeTreeModels') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/NativeTreeModels.lua')
 local Budget=V and V.require("BuildBudget") or {tick=function()end,check=function()end}
 local M={}
+local quadIndices={1,2,3,1,3,4}
 function M.build(w,h,sample,step,bottom,depthLimit,organic,family,palette)
  step=step or 1;bottom=bottom or 0
  local nx,ny=math.ceil(w/step),math.ceil(h/step)
@@ -128,19 +129,21 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic,family,palette)
  local out={}
  -- Slice along each normal. Rectangle merging keeps the pixel silhouette
  -- while avoiding six independent cube faces for every solid pixel.
- for axis=1,3 do for _,sign in ipairs({-1,1})do
-  local limits={nx,ny,nz};local uaxis=axis%3+1;local vaxis=(axis+1)%3+1
+ local limits,strides={nx,ny,nz},{nz,nx*nz,1}
+ for axis=1,3 do for sign=-1,1,2 do
+ local uaxis=axis%3+1;local vaxis=(axis+1)%3+1
   for plane=0,limits[axis]-1 do
    Budget.check()
    local grid={};local nw,nh=limits[uaxis],limits[vaxis]
-   for v=0,nh-1 do for u=0,nw-1 do
-    local p={};p[axis]=plane;p[uaxis]=u;p[vaxis]=v
-    local colour=vox[key(p[1],p[2],p[3])]
-    if colour then
-     p[axis]=plane+sign
-     local neighbour=p[axis]>=0 and p[axis]<limits[axis] and vox[key(p[1],p[2],p[3])]
-     if not neighbour then grid[v*nw+u]=colour end
-    end
+   -- Linear voxel strides preserve axis/winding order without allocating
+   -- a coordinate table for every tested face (including empty voxels).
+   local base=plane*strides[axis]
+   local du,dv=strides[uaxis],strides[vaxis]
+   local adjacent=plane+sign>=0 and plane+sign<limits[axis]
+   local offset=sign*strides[axis]
+   for v=0,nh-1 do local row=base+v*dv;for u=0,nw-1 do
+    local k=row+u*du;local colour=vox[k]
+    if colour and not(adjacent and vox[k+offset])then grid[v*nw+u]=colour end
    end end
    for v=0,nh-1 do for u=0,nw-1 do
     local colour=grid[v*nw+u]
@@ -154,8 +157,10 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic,family,palette)
      end
      for dv=0,hh-1 do for du=0,ww-1 do grid[(v+dv)*nw+u+du]=nil end end
      local q={u=paints[colour][1],v=paints[colour][2],shade=axis==2 and (sign>0 and 1 or .68) or axis==1 and .85 or .94}
-     for _,uv in ipairs({{u,v},{u+ww,v},{u+ww,v+hh},{u,v+hh}})do
-      local p={};p[axis]=(plane+(sign>0 and 1 or 0))*step;p[uaxis]=uv[1]*step;p[vaxis]=uv[2]*step
+     for corner=1,4 do
+      local uu=(corner==2 or corner==3)and u+ww or u
+      local vv=corner>=3 and v+hh or v
+      local p={};p[axis]=(plane+(sign>0 and 1 or 0))*step;p[uaxis]=uu*step;p[vaxis]=vv*step
       p[1]=p[1]-w/2;p[2]=math.max(0,p[2]-bottom);p[3]=p[3]-nz*step/2
       q[#q+1]=p
      end
@@ -184,7 +189,7 @@ function M.append(quads,v,i,count,x,y,z)
   Budget.tick()
   local base=#v
   for _,p in ipairs(q)do v[#v+1]={x+p[1],y+p[2],z+p[3],q.u,q.v,q.shade,0,0,0} end
-  for _,k in ipairs({1,2,3,1,3,4})do i[#i+1]=base+k end
+  for _,k in ipairs(quadIndices)do i[#i+1]=base+k end
  end
  return (count or 0)+#quads
 end
