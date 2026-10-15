@@ -1,10 +1,10 @@
--- Reviewed landmark architecture. Native pixels are read from each live
--- edition; only source identifiers, dimensions and closed geometry ship.
+-- Reviewed landmark architecture. Native-art families read each live edition;
+-- the museum delegates to its authored architectural materials and geometry.
 local V=...
 local M={}
 function M.profile(g)
  local D=g.depth*16;local k=g.custom.landmark
- return {w=g.width*16,h=D,back=0,front=D-1,wall=k=='rs_devon'and 112 or 64,
+ return {w=g.width*16,h=D,back=0,front=D-1,wall=k=='rs_devon'and 112 or k=='museum'and 84 or 64,
   roofEnd=k=='indigo'and 64 or 32,wallTop=32,wallBottom=D,
   doorTop=D-16,doorBottom=D,doorHeight=16,projection=0,bevel=0}
 end
@@ -56,64 +56,6 @@ local function roof(C,l,n,r,f,b,h,tex,edge)
   C.face({{cx,b,cz},{q[1],b,q[2]},{a[1],b,a[2]},{cx,b,cz}},edge,.65)
   C.face({{a[1],h,a[2]},{a[1],b,a[2]},{q[1],b,q[2]},{q[1],h,q[2]}},edge,.85)
  end
-end
-local function museum(g,C)
- local stone,blue,dark,white=C.sw(44,53),C.sw(10,70),C.sw(55,90),C.sw(64,20)
- local window={10.05,80.05,21.95,87.95,8,12};local steppedLowerWindow=g.custom.squareWindows
- -- The first two source rows are a walkable roof projection. All solid
- -- elevations, caps and piers start south of them, including upper stories.
- for _,r in ipairs{{1,64},{96,159}}do
-  local holes={}
-  for _,sx in ipairs(r[1]<64 and {10,34}or{106,130})do
-   holes[#holes+1]=hole(sx,sx+12,24,32,{sx+.05,80.05,sx+11.95,87.95},steppedLowerWindow,false,stone)
-  end
-  front(C,r[1],r[2],111,48,64,112,holes,blue)
-  if r[1]<64 then
-   side(C,{1,33},{1,111},48,blue,window,{24})
-   side(C,{64,111},{64,95},48,blue,window,{})
-   side(C,{32,33},{1,33},48,blue,window,{24})
-  else
-   side(C,{159,111},{159,33},48,blue,window,{24})
-   side(C,{96,95},{96,111},48,blue,window,{})
-   side(C,{159,33},{128,33},48,blue,window,{24})
-  end
-  C.face({{r[1],0,111},{r[2],0,111},{r[2],0,33},{r[1],0,33}},blue,.65)
-  roof(C,r[1]<64 and .5 or 96.2,32.5,r[1]<64 and 63.8 or 159.5,111.5,48,50,C.uv(r[1]+.05,32.05,r[2]-.05,47.95),stone)
-  -- Native fascia, yellow capitals and structural bays have real depth.
-  for _,xx in ipairs(r[1]<64 and {2,26,50}or{98,122,154})do
-   C.box(xx,0,110.7,xx+3,47,111.7,stone)
-   C.box(xx-.4,43,110.5,xx+3.4,48,111.8,stone)
-  end
-  C.box(r[1],34,110.6,r[2],37,111.6,blue)
- end
- local holes={hole(64,96,0,24,{64.05,80.05,95.95,95.95},false,true,stone)}
- for _,sx in ipairs{51,75,99}do holes[#holes+1]=hole(sx,sx+10,160/3,64,{sx+.05,48.05,sx+9.95,55.95},false,false,stone)end
- front(C,32,128,95,64,48,96,holes,blue)
- side(C,{32,33},{32,95},64,blue,window,{54},48)
- side(C,{128,95},{128,33},64,blue,window,{54},48)
- side(C,{128,33},{32,33},64,blue,window,{12,54})
- C.face({{32,0,95},{128,0,95},{128,0,33},{32,0,33}},blue,.65)
- -- Native blue fascia and pale yellow pilasters continue around unseen
- -- elevations. Shared rear edges are partitioned, avoiding coplanar shells.
- for _,y in ipairs{1,34,46}do
-  C.box(.7,y,33,1.3,y+1.2,111,blue);C.box(158.7,y,33,159.3,y+1.2,111,blue)
-  C.box(1,y,32.7,159,y+1.2,33.3,blue)
- end
- for _,xx in ipairs{2,26,50,74,98,122,154}do C.box(xx,0,32.7,xx+2,47,33.3,stone)end
- for zz=36,100,24 do
-  C.box(.7,0,zz,1.3,47,zz+2,stone);C.box(158.7,0,zz,159.3,47,zz+2,stone)
- end
- -- Projected source corners become actual stepped roof tiers; native
- -- white roof pattern remains continuous on the two horizontal decks.
- roof(C,31.5,32.5,128.5,95.5,64,67,C.uv(33.05,16.05,126.95,39.95),stone)
- for _,xx in ipairs{41,65,89,113}do C.box(xx,43,95,xx+4,64,95.6,stone)end
- -- The long native grille/lettering stays on one uninterrupted sign panel.
- C.box(59,25,95,101,39,95.7,white)
- C.face({{60,38,95.72},{100,38,95.72},{100,27,95.72},{60,27,95.72}},C.uv(64.05,72.05,95.95,79.95))
- C.box(59,24,91,101,26,95.8,blue)
- -- Portal jambs stop at z96. The native walking corridor through row6
- -- and the original stair flight below it stay completely unobstructed.
- for _,xx in ipairs{59,96}do C.box(xx,0,94,xx+5,24,95.7,stone)end
 end
 local function devon(g,C)
  local wall,stone,trim=C.sw(9,41),C.sw(3,48),C.sw(6,63)
@@ -227,7 +169,7 @@ end
 function M.append(g,emit)
  local C=V.require('Gen3DepartmentStores').context(g,emit)
  local k=g.custom.landmark
- if k=='museum'then museum(g,C)elseif k=='rs_devon'then devon(g,C)
+ if k=='museum'then V.require('Gen3Museum').append(g,emit)elseif k=='rs_devon'then devon(g,C)
  elseif k=='rs_space'then space(g,C)elseif k=='indigo'then indigo(g,C)else error('unknown landmark '..tostring(k))end
 end
 return M

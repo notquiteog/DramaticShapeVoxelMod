@@ -13,7 +13,7 @@ return function(game)
  local GV=require('src.core.GameVersion').get()
  local prefix=GV=='ruby' and 'RU_' or GV=='sapphire' and 'SA_' or GV=='emerald' and 'EM_' or 'FR_'
  local update=game.update;game.update=function(self,dt) self.input:reset();return require('src.mods.Runtime').call('core.update',update,self,dt)end
- love.window.setMode(1280,720,{resizable=true})
+ love.window.setMode(tonumber(os.getenv('QA_WIDTH'))or 1280,tonumber(os.getenv('QA_HEIGHT'))or 720,{resizable=true})
  game:_handleBootAction({action='new_game',start={map=prefix=='FR_' and 'FR_PALLET_TOWN' or prefix..'OLDALE_TOWN',x=10,y=9,facing='down'}})
  U.wait(10)
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
@@ -77,7 +77,8 @@ return function(game)
   -- Step ahead of the player billboard so the sprite never fills the view.
   local dx,dz=cx-px,cz-pz;local len=math.max(1,math.sqrt(dx*dx+dz*dz));local step=math.min(20,len*.4)
   local ex,ez=px+dx/len*step,pz+dz/len*step
-  inspection={eye={ex,pb+14,ez},focus={cx,base+14,cz},fov=math.rad(70),up={0,1,0},curve=0}
+  local eb=Scene.groundAt and Scene.groundAt(ex,ez)or pb
+  inspection={eye={ex,eb+14,ez},focus={cx,base+14,cz},fov=math.rad(70),up={0,1,0},curve=0}
   U.wait(3);assert(U.shot(game,dir..('/%s_%d_%d_eye.png'):format(s.id,s.x,s.y)))
  end
  R.viewProjection=project

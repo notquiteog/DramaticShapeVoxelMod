@@ -1,3 +1,24 @@
+# Lilycove Museum ORAS architectural rebuild — 2026-10-15
+
+1.39.0 replaces the three Hoenn museums with authored architecture/materials:
+taller central hall, lower wings, inset glazing, closed frames/piers and pitched
+skylights. User direction: use Omega Ruby / Alpha Sapphire as references for
+unique buildings/interiors when sprite-wrapping fails; preserve original map
+footprint, doors and routes. No oversized lettering: final fascia is decorative.
+Source-scoped museum stair apron fixes two terrace rock spikes, without changing
+unrelated cliff heights or collision. Mesh92. Actors/Pokémon/flowers remain HD-2D;
+base UI and standalone/optional companion contracts are unchanged.
+
+Official0.3.89: EM/RS final multi-angle captures inspected, six native entries,
+three rear walks and camera0 fallback pass. Route121 and Oak lab neighbor views
+inspected. 288 suites pass/0fail/58 external-fixture skips. Six partner checkouts
+are clean/synced with published runtime versions. See
+`docs/GEN3_MUSEUM_REBUILD_2026-10-15.md` for fixture and package evidence.
+
+Museum is isolated from79eb7fb; unrelated shared working edits remain untouched.
+Tower WIP remains parked in the separate tower-worktree-20261015 checkout.
+Other unique landmarks, regional buildings and interiors remain unfinished.
+
 # Native Gen3 Crystal player portraits — 2026-10-15
 
 Selected Crystal front portraits now reach all five GBA trainer cards,

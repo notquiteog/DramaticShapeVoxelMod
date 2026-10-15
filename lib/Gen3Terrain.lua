@@ -19,7 +19,9 @@ function M.height(cells,x,z,height)
   end
  end end
  local top=height or 32
- if high>-math.huge then
+ local support=cells[cx..':'..cy];local terrace=support and support.museumTerrace
+ if terrace then top=terrace.groundHeight or support.base or 0
+ elseif high>-math.huge then
   -- A retaining face meets the upper terrace. An outer enclosure above a
   -- single floor keeps its full wall height relative to that floor.
   top=high>low and high or high+top

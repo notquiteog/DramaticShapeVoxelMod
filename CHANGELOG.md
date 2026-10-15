@@ -1,3 +1,20 @@
+## 1.39.0 — 2026-10-15
+
+- Reconstruct Lilycove Museum in Emerald/Ruby/Sapphire using the supplied ORAS
+  architectural reference. Three closed building masses, recessed window bays,
+  structural frames and piers, slate foundations, roof decks and pitched glazed
+  skylights replace the folded sprite façade. A runtime-generated original
+  ceramic/slate/glass/brass material atlas replaces projected wall artwork.
+- Keep the reference's small decorative entry fascia; no invented museum text.
+- Exact complete museum/stair-apron matching limits the retaining-edge repair
+  to its native terrace. Remove the two raised rock spikes without changing
+  unrelated cliffs, collision, routes, door warps or stair drawing.
+- Keep characters, Pokémon and flowers HD-2D; preserve native UI and standalone
+  optional integrations. Mesh cache92 invalidates the old building/terrace.
+- Official 0.3.89: three-edition views, six native entries, three rear lanes,
+  source/permission bounds and 288 Lua suites pass. Other landmarks and interiors
+  remain unfinished. See the museum evidence document.
+
 ## 1.38.0 — 2026-10-15
 
 - FireRed/LeafGreen Indigo Plateau League: source-colored timber wings, recessed

@@ -5,7 +5,7 @@ return function(game)
  local prefix=ed=='ruby'and'RU_'or ed=='sapphire'and'SA_'or ed=='emerald'and'EM_'or'FR_'
  local spots=prefix=='FR_'and{{'INDIGO_PLATEAU_EXTERIOR',11,7,'INDIGO_PLATEAU_POKEMON_CENTER_1F'}}
   or{{'LILYCOVE_CITY',11,6,'LILYCOVE_CITY_LILYCOVE_MUSEUM_1F'},{'LILYCOVE_CITY',12,6,'LILYCOVE_CITY_LILYCOVE_MUSEUM_1F'}}
- if ed=='ruby'or ed=='sapphire'then
+ if os.getenv('QA_MUSEUM_ONLY')~='1'and(ed=='ruby'or ed=='sapphire')then
   for _,x in ipairs{11,12}do spots[#spots+1]={'RUSTBORO_CITY',x,16,'RUSTBORO_CITY_DEVON_CORP_1F'}end
   spots[#spots+1]={'MOSSDEEP_CITY',64,14,'MOSSDEEP_CITY_SPACE_CENTER_1F'}
  end

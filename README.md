@@ -1,3 +1,18 @@
+## 1.39.0 — Lilycove Museum architectural rebuild
+
+Rebuilds the Emerald/Ruby/Sapphire museum around the supplied Omega Ruby / Alpha
+Sapphire reference: a taller central hall, lower side wings, recessed blue glass,
+white structural frames, pale brass accents and real pitched skylights. Authored
+materials replace the stretched native façade. The entrance has a small decorative
+fascia with no added lettering. The original stair approach stays clear; its
+retaining terrace no longer forms two rock spikes beside the entrance.
+
+Characters, Pokémon and flowers stay HD-2D. Native walking routes, collision,
+warps and UI remain unchanged, and every partner mod stays optional. Verified
+with official Gen1Recomp 0.3.89, three-edition views, six native entries, rear-lane
+walks and 288 passing Lua suites. Full regional coverage remains in progress.
+[Evidence and architectural direction](docs/GEN3_MUSEUM_REBUILD_2026-10-15.md).
+
 ## 1.38.0 — League, museum and RS science landmarks
 
 Adds Indigo Plateau in FireRed/LeafGreen, Lilycove Museum in Emerald/Ruby/Sapphire,

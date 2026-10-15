@@ -105,6 +105,7 @@ function M.prepare(cells,gyms,families)
  end
  -- Source roofs often occupy walkable cells behind the wall.
  for _,g in ipairs(out)do
+  if g.custom and g.custom.landmark=='museum'then V.require('Gen3Museum').prepare(cells,g)end
   if g.custom and g.custom.geometry=='space_center' then V.require('Gen3SpaceCenter').prepare(cells,g)end
  end
  -- Keep the roof overhang, but begin its solid shell inside the first row
@@ -261,6 +262,7 @@ local function sourcePixel(g,x,y,override)
  return r,b,c,a
 end
 function M.material(g)
+ if g.custom and g.custom.landmark=='museum'then return V.require('Gen3Museum').material(g)end
  local p=M.profile(g);local data=love.image.newImageData(p.w*2+4,p.h)
  for y=0,p.h-1 do Budget.check();for x=0,p.w-1 do
   local r,gr,b,a=sourcePixel(g,x,y)
