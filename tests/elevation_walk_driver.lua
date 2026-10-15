@@ -8,7 +8,7 @@ return function(game)
  if gen==3 then
   game:_handleBootAction({action='new_game',start={map='FR_MT_EMBER_EXTERIOR',x=29,y=32,facing='up'}})
   require('src.ui.game3.map_preview_screen').reset();V.require('Gen3Integration').setLevel(3,game)
-  player=require('src.core.game3.player');ground=function()return V.require('Gen3Scene').groundAt(player.px+8,player.py+16-.001)end
+  player=require('src.core.game3.player');ground=function()return V.require('Gen3Scene').groundAt(player.px+8,player.py+8)end
  else
   local w=game.world;w.noWildEncounters=true;w.trySceneScript=function()return false end
   game.stack:clear();assert(w:setMap('DANCE_THEATER',1,5,'up'));w.vm=nil;w.textbox=nil

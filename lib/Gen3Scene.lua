@@ -223,8 +223,11 @@ local function build(req,cache,previous)
  if #optional>0 then local combined={};for _,r in ipairs(optional)do combined[#combined+1]=r end;for _,r in ipairs(recipes)do combined[#combined+1]=r end;recipes=combined end
  local civics=Civic.prepare(cells,gyms,recipes);M.civicCount=#civics
  local nativeLamps=V.require('Gen3NativeLamps').prepare(cells)
- M.stairCount=Stairs.prepare(cells)
+ -- Source-specific tower flights claim before the generic stair adapter.
+ local towerFlights=Furniture.extract(cells,'towerStairs')
+ M.stairCount=Stairs.prepare(cells)+#towerFlights
  local props=Furniture.extract(cells)
+ for _,p in ipairs(towerFlights)do props[#props+1]=p end
  cache.healer,cache.healScreen=nil,nil
  for _,p in ipairs(props)do
   if p.recipe.name=='center_healer'then cache.healer=p end
@@ -928,6 +931,10 @@ local function fieldEffects(draw,cam)
    if part.placement then surface=V.require('NativeLegendaryBuildings').doorSurface(part,a.x,a.y)or Civic.doorSurface(part.placement,a.x,a.y)end
    if surface then break end
   end
+  if not surface then
+   local cell=cache.cells and cache.cells[a.x..':'..a.y]
+   surface=V.require('Gen3TowerInteriors').doorSurface(cell and cell.prop,a.x,a.y)
+  end
   if surface then
    effect('door',surface.w,surface.h,function()doors.draw(surface.sourceX,surface.sourceY,surface.w,surface.h)end,surface.vertices,surface.base)
   else
@@ -973,7 +980,7 @@ function M.draw(game,vw,vh,cam)
  if cam.battle and cam.center then cx,cz=cam.center[1],cam.center[2]end
  local layer=Player.currentElevation
  if cam.battle then layer=cam.elevation elseif cam.replay then layer=focus.elevation end
- local support=cam.battle and cam.floorHeight or M.groundAt(cx,cz+8-.001,layer)
+ local support=cam.battle and cam.floorHeight or M.groundAt(cx,cz,layer)
  local width,height=love.graphics.getCanvas():getDimensions()
  local Renderer=require('src.render.Renderer')
  local Display=require('src.core.game3.display')

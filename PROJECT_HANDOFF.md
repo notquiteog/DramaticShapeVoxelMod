@@ -128,6 +128,61 @@ inventory549 and focused contracts pass. This verifies routing, not audible
 pack coverage. See `docs/GEN3_BALL_AUDIO_2026-10-15.md` for exact limits; GSC
 send-out/recall, broader effects/models and other parity gaps remain unfinished.
 
+# Tower reception interiors and Trainer Tower halls — 2026-10-15
+
+1.41.0 continues after published1.40.0 exteriors. Closed reception desks, PCs,
+wall consoles/screens and framed animated doors cover the three native lobby
+families. Trainer Tower adds east/west closed flights, round piers and all eight
+source floor displays. Full identifier/permission matches protect native actors,
+clerk spaces and walking cells; partial claims retain earlier screens/portals.
+Mesh96. Characters/Pokémon/flowers stay HD-2D; native UI/gameplay unchanged;
+all companion integrations stay optional.
+
+Official0.3.89:49 edition geometry fixtures and broad299/0fail/58fixture skips.
+Evidence, exact native placements, input tests and remaining large interiors:
+`docs/GEN3_TOWER_INTERIORS_2026-10-15.md`. Exact archive170 native component
+placements/0 solid walking overlaps; all5 aisles/all5 internal doors and6 FRLG
+directional stair warps pass. All6-partner Emerald pass; Oak lab neighbor render
+inspected; six partner checkouts clean and latest released. Runtime-identical
+evidence repackage. Primary checkout's later independent
+work is preserved separately; no imported pixels/caches/captures are packaged.
+
+# Trainer Tower and Battle Towers — 2026-10-15
+
+1.40.0 adds three source-specific tower families across all five GBA editions.
+Closed sides/backs/undersides, recessed glazing, angled bays, brick pier returns
+and separate entry shells replace the native projected drawing. Exact full-source
+and permission matching protects third-party walking lanes. Mesh95; native door
+animation uses the same recessed surface. Characters/Pokémon/flowers stay HD-2D;
+collision, warps, UI and optional partner independence remain unchanged.
+
+Official0.3.89: all five normal-input native entrances pass; front/side/rear/eye
+captures and source diagrams inspected. Broad298/0fail/58fixture skips. Exact
+package and companion evidence: `docs/GEN3_BATTLE_TOWERS_2026-10-15.md`.
+Includes museum-ground339b11f and verified optimization/capture8bf1ab4; primary
+checkout's later independent work is preserved separately. Exact standalone archive entries pass all5; six-partner Sapphire pass; native
+building census129/129/82/78/78 with0 flags; three Hoenn museum stair regressions
+pass. Runtime-identical evidence repackage; large interiors next.
+
+# Museum ground and staircase repair — 2026-10-15
+
+User clarified that the building looked fine: preserve its existing design.
+1.39.1 fixes the site, not the façade/roof. Exact museum+apron+cliff-boundary
+matching ties the garden and entrance landing to one physical terrace. Actual
+closed treads descend12units to the lower path; native collision is unchanged.
+Cheeks/retaining faces and buried foundations close ground seams. Camera support
+now samples the same cell-center contact as Gen3 actor cards. Mesh94.
+HD-2D characters/Pokémon/flowers, native UI/warps and optional partners remain.
+
+Official0.3.89 with copied disposable QA imports: source-specific terrace tests,
+three-edition stair walks and rendered site views, unrelated FireRed stairs,
+Route121 and LeafGreen Oak lab. Evidence and remaining work:
+`docs/GEN3_MUSEUM_GROUND_2026-10-15.md`. Tower WIP remains parked separately;
+other large buildings/interiors remain unfinished. 292 suites pass/0fail/58 explicit fixture skips. Exact archive native stair
+walks pass in all three Hoenn editions; all-six-partner Sapphire smoke passes.
+Release runtime files remain identical after the evidence-only repackage.
+Later shared streaming/cache/capture and terrain/sea-rock work is preserved and
+excluded; this archive freezes the museum repair plus verified f6cd4c0.
 # Cold hull reuse and resumable terrain scans — 2026-10-15
 
 Root optimization batch: per-build identical Hoenn sea-rock hull sharing,

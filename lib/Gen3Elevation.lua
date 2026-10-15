@@ -31,12 +31,14 @@ function M.field(def)
   if not value then value=shapes.of(spec.primary,spec.secondary,mid,beh,coll).kind;byCollision[k]=value end
   return value
  end
+ local museumSteps,museumLinks={},{}
+ if spec.primary=='general'and spec.secondary=='lilycove'then museumSteps,museumLinks=V.require('Gen3MuseumApproach').steps(l)end
  local f=Levels.build(l.width,l.height,function(x,y)
   local raw=l:cellAt(x,y);local beh=behaviors[raw.mid]
   local shapeKind=kind(raw.mid,beh,raw.coll)
-  local step=shapeKind=='steps';local jump=beh and beh>=0x38 and beh<=0x3F
-  return {floor=raw.coll~=7 and not step and not jump,step=step,drop=drop[beh],layer=raw.elev,behavior=beh,
-   mid=raw.mid,kind=shapeKind,stairUpper=def.id and def.id:sub(1,3)=='EM_' and beh==0xc,seed=spec.secondary=='fortree' and beh==0x170 and raw.elev==15 and 32 or shapeKind~='water' and (deck or (outdoor or cave)and raw.elev==4)and 6 or 0}
+  local step=shapeKind=='steps'or museumSteps[x..':'..y];local jump=beh and beh>=0x38 and beh<=0x3F
+  return {floorLink=museumLinks[x..':'..y],floor=raw.coll~=7 and not step and not jump,step=step,drop=drop[beh],layer=raw.elev,behavior=beh,
+   mid=raw.mid,kind=step and 'steps'or shapeKind,stairUpper=def.id and def.id:sub(1,3)=='EM_' and beh==0xc,seed=spec.secondary=='fortree' and beh==0x170 and raw.elev==15 and 32 or shapeKind~='water' and (deck or (outdoor or cave)and raw.elev==4)and 6 or 0}
  end,function(a,b,d)
   local layer=a.layer==b.layer or a.layer==0 or b.layer==0 or a.layer==15 or b.layer==15
   -- A variable-layer bridge is a deck, not a doorway joining both the
@@ -118,11 +120,16 @@ function M.bind(cells,regions)
   if g then
    if g.groundHeight==nil then
     local x=g.cx or c.cx;local y=g.cy or c.cy
-    if g.front then x=math.floor((g.left+g.right)/32);y=math.floor(g.front/16)
+    if g.foundationCell then x=x+g.foundationCell[1];y=y+g.foundationCell[2]
+    elseif g.front then x=math.floor((g.left+g.right)/32);y=math.floor(g.front/16)
     else x=x+math.floor((g.width or (g.w or 16)/16)/2);y=y+(g.depth or (g.d or 16)/16)end
     local below=cells[x..':'..y]or c;g.groundHeight=below.base or 0
+    if g.foundationFoot then
+     local foot=cells[(g.cx+g.foundationFoot[1])..':'..(g.cy+g.foundationFoot[2])]
+     g.foundationDepth=math.max(0,g.groundHeight-(foot and foot.base or g.groundHeight))
+    end
    end
-   c.base=g.groundHeight
+   if not(g.preserveNativeFloor and c.collision==0)then c.base=g.groundHeight end
   end
  end
 end

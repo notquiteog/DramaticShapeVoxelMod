@@ -1,3 +1,31 @@
+## 1.41.0
+
+- Add native-art reception desks, closed terminals/screens and complete animated door frames across the five GBA tower lobbies.
+- Add Trainer Tower stair flights, round hall piers and all eight native floor displays; preserve the native directional stair approaches.
+- Allow complete recipe matches to use already-owned drawing context while claiming only their own cells. Exact native permissions protect staff and third-party walking lanes. Mesh revision 96.
+- Keep characters, Pokémon, flowers, native gameplay/UI and optional partner contracts unchanged.
+
+## 1.40.0
+
+- Model all five native Trainer Tower/Battle Tower placements with three distinct architectural families, closed shells, recessed glazing and native animated entrance seams.
+- Preserve walking cells, HD-2D actors/flowers, native UI and optional standalone integrations.
+- Carry forward the published museum ground repair and previously verified native capture/streaming improvements; refresh geometry cache revision to 95.
+
+## 1.39.1 — 2026-10-15
+
+- Fix the Lilycove Museum ground and staircase in Emerald/Ruby/Sapphire while
+  retaining the approved building design and materials. The garden and door
+  landing now share one raised terrace; real closed treads descend to the path.
+- Complete source/permission matching includes the terrace cliff boundary.
+  Shared logical-floor links join garden/landing patches separated by the
+  blocked building; an altered source, opened flank or perimeter vetoes them.
+- Native actor contact and the first-person camera follow the same tread
+  heights. Closed cheeks, retaining faces and foundations prevent ground gaps.
+  Rear walking cells retain their actual solved floor height; mesh cache94.
+- Preserve native collision/warps/UI, HD-2D characters/Pokémon/flowers and
+  standalone optional integrations. Native up/down walking and original door
+  checks pass; full evidence is in the museum ground document.
+
 ## 1.39.0 — 2026-10-15
 
 - Reconstruct Lilycove Museum in Emerald/Ruby/Sapphire using the supplied ORAS

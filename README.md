@@ -1,3 +1,30 @@
+## 1.41.0 — Tower reception rooms and Trainer Tower halls
+
+Models the three native tower reception families with closed desks, terminals,
+door frames and aligned animated panes. Trainer Tower gains closed stair flights,
+round battle-hall piers and all eight native floor displays. Complete drawings
+protect staff gaps, walking routes and each edition's original materials.
+
+Characters, Pokémon and flowers remain HD-2D. Native gameplay, collision, warps
+and UI remain authoritative; companions stay optional. Verified on official
+Gen1Recomp 0.3.89 with native input, source/rendered views and 299 passing Lua
+suites. [Evidence and remaining interiors](docs/GEN3_TOWER_INTERIORS_2026-10-15.md).
+This is an incremental large-interior batch; complete scenery coverage is ongoing.
+
+## 1.40.0 — Trainer Tower and Battle Towers
+
+Adds distinct closed 3D models for the FireRed/LeafGreen Trainer Tower,
+Emerald Battle Frontier tower, and Ruby/Sapphire Battle Tower. Native blue
+metal, red brick, glazing and entrance art become recessed windows, angled bays,
+closed elevations, roof caps and separate entrance canopies. Source-specific
+permissions protect native walking lanes and animated doors.
+
+Characters, Pokémon and flowers remain HD-2D. Native collision, warps and UI
+remain authoritative; every partner mod is optional. Verified with official
+Gen1Recomp 0.3.89, five-edition native entries, rendered source comparisons and
+298 passing Lua suites. [Evidence](docs/GEN3_BATTLE_TOWERS_2026-10-15.md).
+Large interiors and broader scenery coverage remain in progress.
+
 ## 1.39.0 — Lilycove Museum architectural rebuild
 
 Rebuilds the Emerald/Ruby/Sapphire museum around the supplied Omega Ruby / Alpha

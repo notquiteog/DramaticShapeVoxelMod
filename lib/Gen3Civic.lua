@@ -170,6 +170,7 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.geometry=='battle_tower' then return V.require('Gen3BattleTowers').profile(g)end
   if r.geometry=='landmark' then return V.require('Gen3LandmarkBuildings').profile(g)end
   if r.geometry=='department_store' then return V.require('Gen3DepartmentStores').profile(g)end
   if r.geometry=='shipyard' then return {w=w,h=112,back=8,front=111,wall=40,roofEnd=72,wallTop=72,wallBottom=112,bevel=0,doorLeft=32,doorRight=48,doorTop=72,doorBottom=112,doorHeight=40,projection=0}end
@@ -225,6 +226,7 @@ end
 -- returned here are shared with the fixed mesh, so animation never grows into
 -- a freestanding 32x48 card or floats in front of the entrance.
 function M.doorSurface(g,tx,ty)
+ if g.custom and g.custom.geometry=='battle_tower' then return V.require('Gen3BattleTowers').doorSurface(g,tx,ty)end
  if g.custom and g.custom.geometry=='landmark' then return V.require('Gen3LandmarkBuildings').doorSurface(g,tx,ty)end
  if g.custom and g.custom.geometry=='department_store' then return V.require('Gen3DepartmentStores').doorSurface(g,tx,ty)end
  if g.custom and g.custom.geometry=='pewter_museum' then return V.require('Gen3PewterMuseum').doorSurface(g,tx,ty)end
@@ -268,7 +270,7 @@ function M.material(g)
   local r,gr,b,a=sourcePixel(g,x,y)
   -- Ground-colour removal is restricted to the outside of this complete
   -- known drawing. Window glass/roof colours inside it remain intact.
-  if not(g.custom and (g.custom.geometry=='tower' or g.custom.geometry=='landmark')) and (x<4 or x>=p.w-4 or y<p.back or y>=p.wallBottom) and gr>r+.035 and gr>b+.02 then a=0 end
+  if not(g.custom and (g.custom.geometry=='tower' or g.custom.geometry=='landmark' or g.custom.geometry=='battle_tower')) and (x<4 or x>=p.w-4 or y<p.back or y>=p.wallBottom) and gr>r+.035 and gr>b+.02 then a=0 end
   if g.custom and g.custom.geometry=='contest_hall' and y>=88 and y<96 and
     ((x>=16 and x<40) or (x>=72 and x<96))then r,gr,b,a=sourcePixel(g,22,98)end
   data:setPixel(x,y,r,gr,b,a)
@@ -491,6 +493,7 @@ function M.window(g)
  return best
 end
 function M.append(g,emit)
+ if g.custom and g.custom.geometry=='battle_tower' then return V.require('Gen3BattleTowers').append(g,emit)end
  if g.custom and g.custom.geometry=='landmark' then return V.require('Gen3LandmarkBuildings').append(g,emit)end
  if g.custom and g.custom.geometry=='department_store' then return V.require('Gen3DepartmentStores').append(g,emit)end
  if g.custom and g.custom.geometry=='shipyard' then return V.require('Gen3Shipyard').append(g,p,emit)end

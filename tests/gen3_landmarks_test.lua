@@ -18,13 +18,13 @@ for _,edition in ipairs{'firered','leafgreen','emerald','ruby','sapphire'}do
    return cells
   end
   local list=C.prepare(fixture(),{},recipes);assert(#list==1,r.name..' did not translate')
-  local g=list[1];local faces,panes,bottoms=0,0,0
+  local g=list[1];if r.landmark=='museum'then g.foundationDepth=12 end;local faces,panes,bottoms=0,0,0
   local minx,minz,maxx,maxz=ox*16,oy*16,(ox+#r.rows[1])*16,(oy+#r.rows)*16
   C.append(g,function(v,uv)
    faces=faces+1;local l,n,b,rr,f,t=math.huge,math.huge,math.huge,-math.huge,-math.huge,-math.huge
    for i,q in ipairs(v)do
     assert(q[1]>=minx and q[1]<=maxx and q[3]>=minz and q[3]<=maxz,'landmark exceeds native footprint')
-    assert(q[2]>=0 and q[2]<130,'invalid landmark height')
+    assert(q[2]>=(r.landmark=='museum'and -12 or 0)and q[2]<130,'invalid landmark height')
     assert(uv[i][1]>=0 and uv[i][1]<=1 and uv[i][2]>=0 and uv[i][2]<=1,'invalid native UV')
     l=math.min(l,q[1]);rr=math.max(rr,q[1]);n=math.min(n,q[3]);f=math.max(f,q[3]);b=math.min(b,q[2]);t=math.max(t,q[2])
    end

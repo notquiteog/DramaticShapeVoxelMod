@@ -4,6 +4,7 @@
 -- Unmapped art is kept flat; never infer a wall from a blocked floor alone.
 local V=...
 local M={}
+local Towers=V and V.require('Gen3TowerInteriors') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3TowerInteriors.lua')
 local profiles=V and V.require('Gen3InteriorProfiles') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3InteriorProfiles.lua')
 
 -- The tables below are FIRERED/LEAFGREEN metatile numbers. They are looked up
@@ -150,6 +151,7 @@ function M.of(primary,secondary,mid,behavior,collision)
  if behavior and require('src.core.game3.collision').isSurfable(behavior) then
   return {kind='water',reviewedSurface=true,behavior=behavior}
  end
+ local tower=Towers.shape(primary,secondary,mid,collision);if tower then return tower end
  if hoenn then return H.shape(primary,secondary,mid,behavior,collision)end
  if primary=='general' and caves[secondary] and mid>=0x280 then
   if mid==0x282 or mid==0x283 then return {kind='rock',ground=0x281,height=mid==0x282 and 14 or 10} end
