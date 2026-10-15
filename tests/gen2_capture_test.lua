@@ -42,3 +42,11 @@ available=false;s.anim.hooks.sound('SFX_BALL_POOF');assert(events[#events]=='nat
 available=true;played=false;s.anim.hooks.sound('SFX_BALL_POOF');assert(events[#events]=='nativeSound')
 s.game.options.sfxVol=0;assert(master()==0)
 print('PASS Crystal optional audio master and native fallback on missing/failed playback')
+-- Tutorial capture owns no player Pokemon or inventory. Its original script
+-- supplies the same caught/wobble events; contest's separate Park Ball stays native.
+M.finish();s.tutorial=true;s.battle.player=nil;s.ballThrow.caught=true
+local prior=#events;s:startBallAnim(0,'POKE_BALL');assert(events[prior+1]=='start')
+s.result=1;s:pokeballWobble();assert(events[#events]=='caught')
+M.finish();s.contest=true;prior=#events;s:startBallAnim(0,'PARK_BALL')
+View:drawObjects(s.anim);assert(#events==prior+1 and events[#events]=='nativeObjects')
+print('PASS native tutorial events with empty player party and native contest fallback')

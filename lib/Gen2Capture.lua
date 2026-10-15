@@ -18,7 +18,9 @@ local function enabled(s)
  local stage=V.require('Gen2Battle')
  return V.require('PokeballSettings').active() and stage.enabled() and stage.sceneOverrideEnabled~=false
   and s and s.battle and s.battle.wild and not s.battle.doubles
-  and not s.contest and not s.tutorial
+  -- The DUDE's tutorial uses the same Poke Ball script and confirmed result;
+  -- its native temporary pack, empty party and auto-input remain untouched.
+  and not s.contest
 end
 function M.finish()
  if owner then call('finishNormalBattleBall')end

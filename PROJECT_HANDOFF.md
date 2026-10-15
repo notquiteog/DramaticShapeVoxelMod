@@ -1,3 +1,18 @@
+# Native Gen2 DUDE tutorial capture — 2026-10-15
+
+G/S/C's existing native Poke Ball tutorial now consumes shared capture effects.
+Original DUDE backpic, auto-input/menus/temporary pack, timers and guaranteed
+catch/no-storage result remain native. No player Pokemon is invented; contest
+Park Balls and unsupported paths keep their original presentation.
+
+Official0.3.89 full G/S/C ON and Crystal OFF tutorials pass, including real
+party/bag/dex invariants and name/text-speed restoration. Final capture/returned
+world screenshots inspected; initial too-early Crystal white-fade shot replaced
+by final post-fade evidence. Broad299/0fail/58skip, SDK1173, inventory549 pass.
+See `docs/GEN2_TUTORIAL_CAPTURE_2026-10-15.md`. Remaining native actor material,
+send-out geometry, specialty balls and other parity limits stay explicit.
+No model/asset/version/release/push changes.
+
 # Cross-generation cold-load optimization — 2026-10-15
 
 Root batch: linear Gen1/2 packed cache assembly (unchanged persistent bytes),
