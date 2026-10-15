@@ -1,6 +1,9 @@
 local Urban=dofile('lib/Gen3UrbanBuilding.lua');local recipes={}
 for _,r in ipairs(dofile('data/gen3_hoenn_exteriors.lua'))do if r.geometry=='urban'then recipes[#recipes+1]=r end end
 assert(#recipes==7)
+local rs=dofile('lib/Gen3RubySapphire.lua').exteriors(recipes)
+assert(#rs==7)
+for _,r in ipairs(rs)do recipes[#recipes+1]=r end
 local V={require=function(n)
  if n=='BuildBudget'then return {tick=function()end,check=function()end}end
  if n=='ArchitecturalDetails'then return dofile('lib/ArchitecturalDetails.lua')end
@@ -29,7 +32,7 @@ for _,r in ipairs(recipes)do
    low=math.min(low,q[2]);high=math.max(high,q[2]);back=math.min(back,q[3])
   end
   if high>1.5 and low<16 then assert(back>=16,r.name..' rear lane blocked')end
-  if low==p.wall and high==p.wall and back==16 then underside=true end
+  if low==p.wall and high==p.wall and (back==16 or r.blockedStart and math.abs(back-16.02)<.001) then underside=true end
  end)
  assert(n>40 and underside,r.name..' incomplete closed roof')
  local sourcePanes=0;for iy,row in ipairs(r.rows)do if iy>=4 then for _,mid in ipairs(row)do if mid==0x23a or mid==0x242 then sourcePanes=sourcePanes+1 end end end end
@@ -42,4 +45,4 @@ for _,r in ipairs(recipes)do
  for _,c in pairs(cells)do c.civic=nil end
  cells['1:1'].mid=1;assert(#C.prepare(cells,{}, {})==0,r.name..' incomplete source claimed')
 end
-print('Rustboro 7 urban source families: matching, roof undersides, rear lanes, native doors and material bounds PASS')
+print('Rustboro Emerald/RS urban variants: matching, roof undersides, rear lanes, native doors and material bounds PASS')

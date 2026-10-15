@@ -1,3 +1,15 @@
+## 1.36.0 — Rustboro buildings and regional field props
+
+Adds seven Ruby/Sapphire urban building families with their native square
+windows, closed roof details and modeled side/rear elevations. FireRed/LeafGreen
+Route 23 gains closed stone bollards; all three Hoenn editions gain native-art
+field boulders. This batch adds 346 model placements across the five editions.
+Characters, Pokémon and flowers remain HD-2D. Every companion remains optional.
+
+Verified on official Gen1Recomp 0.3.88, including five-edition scene captures,
+Ruby/Sapphire footprint audits, native door entries and 277 passing Lua suites.
+Full scenery coverage remains unfinished. [Evidence and remaining work](docs/GEN3_URBAN_PROPS_2026-10-15.md).
+
 ## 1.30.0 — 2026-10-04
 
 ## 1.35.0 — Regional GBA models and RS house variants

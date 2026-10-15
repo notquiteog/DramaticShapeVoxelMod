@@ -8,7 +8,11 @@ function M.append(g,p,emit)
  local function uv(a,b,c,d)return {{a/atlasW,b/D},{c/atlasW,b/D},{c/atlasW,d/D},{a/atlasW,d/D}}end
  local function sw(a,b)return uv(a+.5,b+.5,a+.5,b+.5)end
  local wall,trim=sw(W*2,0),sw(W*2+2,0)
- local function face(v,t,s)local q={};for i,a in ipairs(v)do q[i]={x+a[1],a[2],z+a[3]}end;emit(q,t,s or 1)end
+ local function face(v,t,s)local q={};for i,a in ipairs(v)do
+  local xx,zz=a[1],a[3]
+  if r.blockedStart then xx=math.max(.02,math.min(W-.02,xx));zz=math.max(r.blockedStart*16+.02,math.min(D-.02,zz))end
+  q[i]={x+xx,a[2],z+zz}
+ end;emit(q,t,s or 1)end
  local function solid(draw,l,b,n,rr,h,f,t)
   draw({{l,h,n},{rr,h,n},{rr,h,f},{l,h,f}},t,1)
   draw({{l,b,f},{rr,b,f},{rr,b,n},{l,b,n}},t,.65)
@@ -25,12 +29,19 @@ function M.append(g,p,emit)
  local edge=sw(a+2,b+(white and 5 or 4))
  local sill=sw(a+6,b+(white and 15 or 13))
  local glass=uv(a+4.05,b+4.05,a+11.95,b+12.95)
+ local inset=r.windowInset
+ if r.squareWindows then
+  stone=sw(a+(white and 12 or 0),b+(white and 6 or 0))
+  edge=sw(a+(white and 3 or 1),b+5);sill=sw(a+6,b+14)
+  glass=uv(a+inset[1]+.05,b+inset[2]+.05,a+inset[3]-.05,b+inset[4]-.05)
+ end
  local bays,levels={},{}
  -- The two known native window drawings are used only inside exact recipes.
  for iy,row in ipairs(g.rows)do if iy>=4 then for ix,mid in ipairs(row)do
   if mid==0x23a or mid==0x242 then
    local y=D-iy*16
-   bays[#bays+1]={l=(ix-1)*16+2,r=(ix-1)*16+14,b=y,t=y+16}
+   bays[#bays+1]=inset and {l=(ix-1)*16+inset[1],r=(ix-1)*16+inset[3],b=y+16-inset[4],t=y+16-inset[2]}
+    or {l=(ix-1)*16+2,r=(ix-1)*16+14,b=y,t=y+16}
    levels[y]=true
   end
  end end end
@@ -71,6 +82,12 @@ function M.append(g,p,emit)
    if o.door then
     local src=o.source
     draw({{l,hi,-.95},{rr,hi,-.95},{rr,lo,-.95},{l,lo,-.95}},uv(src[1]+.05,src[2]+.05,src[3]-.05,src[4]-.05),1)
+   elseif r.squareWindows then
+    -- RS uses an uninterrupted dark rectangular pane and low horizontal
+    -- reflection bands. Preserve the full native sash, without an arch or
+    -- Emerald mullion; closed reveals give it depth on every elevation.
+    draw({{l,hi,-1.08},{rr,hi,-1.08},{rr,lo,-1.08},{l,lo,-1.08}},glass,64.92)
+    block(l,lo,-1.1,rr,lo+.35,.35,sill)
    else
     -- Window glass remains the original native sash/reflection artwork.
     draw({{l+.8,hi-3,-1.08},{rr-.8,hi-3,-1.08},{rr-.8,lo+2,-1.08},{l+.8,lo+2,-1.08}},glass,64.92)
@@ -99,7 +116,10 @@ function M.append(g,p,emit)
  -- Unseen elevations use the original masonry and exact front window
  -- shapes/heights. Their placement is an architectural interpretation.
  local side={}
- for y in pairs(levels)do for u=8,front-back-18,24 do side[#side+1]={l=u,r=u+12,b=y,t=y+16}end end
+ for y in pairs(levels)do for u=8,front-back-18,24 do
+  side[#side+1]=inset and {l=u,r=u+inset[3]-inset[1],b=y+16-inset[4],t=y+16-inset[2]}
+   or {l=u,r=u+12,b=y,t=y+16}
+ end end
  elevation(2,back,0,1,-1,0,0,front-back,side,false)
  elevation(W-2,front,0,-1,1,0,0,front-back,side,false)
  local rear={};for _,o in ipairs(bays)do rear[#rear+1]={l=W-o.r,r=W-o.l,b=o.b,t=o.t}end

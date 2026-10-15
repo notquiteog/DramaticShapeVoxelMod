@@ -1,3 +1,21 @@
+## 1.36.0 — 2026-10-15
+
+- Ruby/Sapphire: seven Rustboro urban families, eight placements per edition;
+  native rectangular glazing, recessed sash/reveals, closed parapets, roof decks
+  and chimney wells. Preserve Emerald arches/mullions. Match complete native
+  drawings and veto altered walking lanes except the explicit native warp door.
+- FireRed/LeafGreen: 58 Route 23 stone bollards per edition, closed octagonal
+  shell, stepped plinth and pale crown. Use nearby reviewed native ground.
+- Emerald/Ruby/Sapphire: brown field boulders (84/65/65 placements), carved from
+  native rock pixels with grass excluded, bounded to their original solid cell.
+- Mesh cache revision 88. Characters, Pokémon and flowers remain HD-2D; no
+  companion requirements or gameplay/collision changes.
+
+277 Lua suites pass, 0 fail, 58 external-fixture skips on official 0.3.88.
+Five-edition views and 14 native RS door entries inspected; 73 recognized RS
+building assemblies per edition, zero flagged walking-center intersections.
+Full five-game scenery coverage remains open; see the batch evidence document.
+
 ## 1.35.0 — 2026-10-15
 
 - Model/refine 1,927 regional tree placements across the five GBA editions: yellow Berry Forest crowns, Safari overlapping broad crowns, Fallarbor trees on ash and volcanic ground, and Mt. Chimney ash-encrusted trees. Solid hulls fit complete native blocked rectangles; projected crowns stay walkable. Optional replacement and procedural trees share the new bounds.

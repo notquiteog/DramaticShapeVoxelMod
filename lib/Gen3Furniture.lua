@@ -3,6 +3,7 @@
 local V=...
 local M={}
 local recipes={
+ {name='route23_stone_bollard',primary='general',pair='general__rom_082d4b84',rows={{0x2c6}},kind='stoneBollard',ground=0x28a,localGround=true,blockedRows={[1]=true}},
  {name='pallet_mailbox',primary='general',pair='pallet_outdoor',rows={{0x2A5},{0x2AD}},kind='mailbox',h=20,ground=0x296,depth=7},
  {name='saffron_mailbox',primary='general',pair='general__rom_082d4b9c',rows={{0x327},{0x32F}},kind='mailbox',h=20,ground=0x2E9,depth=7},
  {name='saffron_gym_notice_board',primary='general',scopeField='gymNotice',rows={{0x304},{0x30C}},kind='sign',h=19,ground=0x2E9,cutout=true},
@@ -133,6 +134,17 @@ function M.extract(cells)
     end end
     if match then
      local p={recipe=r,cx=c.cx,cy=c.cy,pair=c.pair,ts=c.ts,w=#r.rows[1]*16,d=#r.rows*16}
+     if r.localGround then
+      local votes,best={},0
+      for yy=c.cy-1,c.cy+#r.rows do for xx=c.cx-1,c.cx+#r.rows[1] do
+       local n=cells[xx..':'..yy]
+       if n and n.pair==c.pair and n.collision==0 and n.shape and n.shape.kind=='flat'
+        and (n.shape.reviewedSurface or n.mid==r.ground)then
+        votes[n.mid]=(votes[n.mid]or 0)+1
+        if votes[n.mid]>best then best,p.ground=votes[n.mid],n.mid end
+       end
+      end end
+     end
      for _,n in ipairs(parts)do n.prop=p end
      out[#out+1]=p;break
     end
@@ -194,6 +206,7 @@ function M.append(p,emit,uvFor)
  if r.kind=='statue' and V then
   V.require('Gen3Statue').append(p,emit,uvFor,box,source,sample);return
  end
+ if r.kind=='stoneBollard' then V.require('Gen3StoneBollard').append(p,emit,sample);return end
  if r.kind=='rsLinkBooth' or r.kind=='rsLinkPartition' then V.require('Gen3LinkBooth').append(p,source,box,sample,emit);return end
  if r.kind=='martCheckout' or r.kind=='martRegister' then V.require('Gen3MartCheckout').append(p,source,box,sample,emit);return end
  if r.kind=='labWorkstation' or r.kind=='labStacks' or r.kind=='labSideCabinet' or r.kind=='labSideDesk' then V.require('Gen3LabWorkstation').append(p,source,box,sample,emit);return end
@@ -445,7 +458,7 @@ end
 function M.groundAt(c)
  local p=c.prop;local r=p.recipe;local rows=r.groundRows
  local row=rows and rows[c.cy-p.cy+1]
- return row and row[c.cx-p.cx+1] or r.ground
+ return row and row[c.cx-p.cx+1] or p.ground or r.ground
 end
 function M.cutouts(pair)
  local out={}

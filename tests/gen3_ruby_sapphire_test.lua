@@ -5,7 +5,7 @@ local V,cache={},{}
 function V.require(n)if not cache[n]then cache[n]=assert(loadfile('lib/'..n..'.lua'))(V)end;return cache[n]end
 local H,S,C=V.require('Gen3Hoenn'),V.require('Gen3TileShape'),V.require('Gen3Civic')
 for _,game in ipairs({'ruby','sapphire'})do
- version=game;assert(H.active());local recipes=H.exteriorRecipes();assert(#recipes==59,#recipes)
+ version=game;assert(H.active());local recipes=H.exteriorRecipes();assert(#recipes==66,#recipes)
  assert(S.of('general','petalburg',0x1dc,0,7).kind=='tree')
  assert(S.of('general','petalburg',0x14,0,7).kind=='flat','Kanto trees leaked')
  assert(S.of('general','petalburg',0x66,0,7).kind=='flat','unreviewed Emerald terrain leaked')
@@ -25,6 +25,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)
   if r.name=='birch_lab' then assert(r.ventShape=='rectangular')end
+  if r.geometry=='urban'then assert(r.squareWindows and r.windowInset,'RS acquired Emerald arches')end
   if r.name:match('^littleroot_') then assert(r.roofShape=='littleroot_tiered')end
   if r.name:match('^verdanturf_town_.*home$')then
    assert(r.roofShape=='flat_panel' and r.roofRise==0,'RS green roof acquired Emerald ridges')
@@ -47,7 +48,7 @@ for _,game in ipairs({'ruby','sapphire'})do
    for _,c in pairs(cells)do c.civic=nil end
    local door
    for _,c in pairs(cells)do if c.cy==#r.rows-1 and c.mid==r.nativeDoorMid then door=c;door.collision=0x71 end end
-   assert(door and #C.prepare(cells,{}, {})==1,'native warp door was rejected as a walking lane')
+   assert((door or not r.nativeDoorMid) and #C.prepare(cells,{}, {})==1,'native warp door was rejected as a walking lane')
    for _,c in pairs(cells)do c.civic=nil end
    cells['1:2'].collision=0
    assert(#C.prepare(cells,{}, {})==0,'modified third-party walking lane gained a house')

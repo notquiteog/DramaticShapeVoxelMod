@@ -1,3 +1,25 @@
+# Gen3 urban buildings and field props — 2026-10-15
+
+1.36.0 batch adds346 placements: FR/LG58 Route23 bollards each; Emerald84 and
+RS65 field boulders each; RS8 urban buildings each across7 source families.
+Square RS sash/reveals retain native art and do not inherit Emerald arches.
+Complete blocked-source guards protect rear lanes and explicit native warp doors.
+Closed bollard shells vote nearby native ground. Mesh88; HD-2D exceptions and
+standalone optional-provider contracts preserved.
+
+Official0.3.88 native renders inspected across five editions; 277 suites pass,
+0fail/58 external-fixture skips. RS footprint73/0 each;14 native door entries
+pass. Exact evidence and limitations: `docs/GEN3_URBAN_PROPS_2026-10-15.md`.
+Full scenery remains unfinished: outdoor gap cells FR/LG6591 each, EM11686,
+RS10181 each. Next: landmarks/large architecture, composite rock bands, interiors.
+
+Ecosystem audit: six partner repos clean; Online had two unpushed QA commits.
+Those and current QA fixes are now pushed/released as Online0.11.1. Current0.3.88
+four-native-client Emerald singles work with Online alone, doubles with optional
+Double Battles; both return with all peers/observers. Other five partner mains
+match their published release tags. Current all-seven battle completion remains
+unverified after a five-minute timeout; historical0.3.85 evidence stays labeled.
+
 # Regional Gen3 trees and RS house variants — 2026-10-15
 
 Official 0.3.88 verified; native 0.3.86 private imports reused. Regional tree

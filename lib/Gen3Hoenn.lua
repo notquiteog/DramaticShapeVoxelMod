@@ -133,6 +133,9 @@ function M.emeraldShape(primary,secondary,mid,behavior,collision)
   if mid==0x2f0 or mid==0x380 then return {kind='flat',reviewedSurface=true}end
  end
  if primary=='general' then
+  -- The native one-cell brown field boulder is shared across Hoenn. Its
+  -- grass corner pixels are underlay, not geometry; solid copies only.
+  if mid==0xe0 and collision==7 then return {kind='rock',ground=1,height=14}end
   -- Hoenn stairs use NORMAL behavior, not FRLG's 0x2A (seaweed here).
   -- Match native tread artwork and retain blocked copies as scenery.
   if collision~=7 and ((mid==0xaf or mid==0xcf) or

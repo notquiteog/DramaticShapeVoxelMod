@@ -9,7 +9,7 @@ local exteriorNames={slateport_shipyard=true,slateport_oceanic_museum=true,oldal
 -- 2026-10-14 source batch: RS and Emerald native maps contain these complete
 -- drawings with the same layout, openings and roof form; RS pixels differ
 -- only in roof texture/palette (side-by-side source sheets inspected). Held
--- back: Rustboro urban/Devon (different window vocabulary), Space Center/Frontier,
+-- back: Devon (different facade vocabulary), Space Center/Frontier,
 -- and Lilycove's gold residence (RS leaves its lower-tier corners walkable).
 -- Mossdeep/Verdanturf homes use their own reviewed variants below (2026-10-15).
 for _,name in ipairs({'rustboro_city_center','rustboro_city_mart','dewford_town_center','slateport_city_center',
@@ -23,6 +23,10 @@ for _,name in ipairs({'rustboro_city_center','rustboro_city_mart','dewford_town_
  'fallarbor_town_west_home','lilycove_harbor','slateport_harbor','lilycove_contest_hall',
  'verdanturf_town_west_home','verdanturf_town_center_home',
  'mossdeep_city_west_home','mossdeep_city_north_home','mossdeep_city_northeast_home','mossdeep_city_east_home'})do exteriorNames[name]=true end
+-- Exact native layouts reviewed separately from Emerald; rectangular glazing
+-- and square sash frames are selected below, never Emerald's arched windows.
+for _,name in ipairs({'rustboro_small_tan','rustboro_wide_tan','rustboro_east_tan','rustboro_south_tan',
+ 'rustboro_white_small','rustboro_white_tall','rustboro_white_thin'})do exteriorNames[name]=true end
 local furnitureNames={center_healer=true,center_screen=true,hoenn_center_front_desk=true,
  hoenn_center_left=true,hoenn_center_right=true,hoenn_center_pc=true,
  hoenn_center_map=true,hoenn_center_medicine=true,hoenn_center_terminal=true,
@@ -50,6 +54,12 @@ function M.exteriors(source)
  for _,r in ipairs(source)do if exteriorNames[r.name]then
   local copy={};for k,v in pairs(r)do copy[k]=v end
   copy.header=#r.rows -- require every native source cell, including facade
+  if r.geometry=='urban'then
+   copy.squareWindows=true
+   copy.windowInset=r.name:find('white',1,true) and {2,2,14,15} or {1,4,15,16}
+   copy.blockedStart=1
+   if #r.openings>0 then copy.nativeDoorMid=r.name:find('white',1,true) and 0x21f or 0x22f end
+  end
   if r.name=='slateport_oceanic_museum' then copy.squareRoofLights=true end
   if r.name=='birch_lab' then copy.ventShape='rectangular' end
   -- RS Slateport harbor has rectangular windows, not Emerald's portholes.
@@ -102,6 +112,8 @@ function M.shape(primary,secondary,mid,behavior,collision,emerald)
 end
 function M.ownShape(primary,secondary,mid,behavior,collision)
  if primary=='general' then
+  -- Independently inspected RS drawing: same brown field boulder, own pixels.
+  if mid==0xe0 and collision==7 then return {kind='rock',ground=1,height=14}end
   if trees[mid]then return {kind='tree',ground=1,root=roots[mid],anchorX=16,anchorZ=8,
    treeRows={{0x1d4,0x1d5},{0x1dc,0x1dd}},treeFamily='round',treeTrim=0}end
   if mid==3 then return {kind='sign',height=12,ground=1,hoenn=true}end
