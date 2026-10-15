@@ -1,3 +1,16 @@
+# Native Hoenn PokeNav selected art — 2026-10-15
+
+Ruby/Sapphire condition/ribbons and Emerald condition/ribbon summary now
+consume selected interface art during native draws, with original mon identity,
+graphs, ribbons, slides and controls. Official0.3.89 all3 runtime fixtures pass
+FIT/FULL/OFF, shiny condition navigation, ribbon descriptions and B exits;
+all24 captures inspected. Native party/ribbon/contest state unchanged.
+
+Focused65, inventory549, broad300/0fail/58skip including SDK1173 pass. Evidence:
+`docs/GEN3_POKENAV_ART_2026-10-15.md`. Remaining interface consumers include
+RS indexed hatch, cached Pokeblock/Factory/contest pictures, minigames, credits
+and scripted portraits. Inventory stays partial. No model/asset/release changes.
+
 # Boundary frame-time optimization — 2026-10-15
 
 Root: G/S/C perimeter generation now streams in 1ms update slices, keeps the

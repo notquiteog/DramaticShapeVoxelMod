@@ -111,8 +111,10 @@ function M.install()
  wrap(Summary,function()return Summary._party and Summary._party[Summary._cursor or 1]end)
  wrap(Dex)
  -- These public draw seams resolve their pictures per frame; preserve all
- -- native evolution sequencing, confirmation input and Hall-of-Fame layout.
- for _,name in ipairs({'evolution_scene','hall_of_fame','hall_of_fame_pc','trade_scene','egg_hatch'})do
+ -- native scene sequencing, PokeNav navigation and layout. PokeNav class
+ -- methods supply their own mon to monFrontPic during the scoped draw.
+ for _,name in ipairs({'evolution_scene','hall_of_fame','hall_of_fame_pc','trade_scene','egg_hatch',
+  'rs.pokenav.condition','rs.pokenav.ribbons','rse.pokenav.condition','rse.pokenav.ribbons_summary'})do
   local ok,screen=pcall(require,'src.ui.game3.'..name)
   if ok and type(screen.draw)=='function'then
    wrap(screen,(name=='evolution_scene'or name=='egg_hatch')and function()return screen._mon end or nil)
