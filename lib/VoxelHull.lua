@@ -7,6 +7,28 @@ local Trees=V and V.require('NativeTreeModels') or dofile((os.getenv('DS_MOD_PAT
 local Budget=V and V.require("BuildBudget") or {tick=function()end,check=function()end}
 local M={}
 local quadIndices={1,2,3,1,3,4}
+-- Native shape occupancy is independent of source pixels, UVs and palettes.
+-- Retain at most eight compact masks; artwork and generated meshes are never
+-- cached here. Invalid/very large requests simply use the original evaluator.
+local volumes,order={},{}
+local function treeVolume(family,w,h,step,bottom,nx,ny,nz)
+ if nx*ny*nz>262144 or h<=bottom then return end
+ local id=table.concat({family,w,h,step,bottom,nx,ny,nz},':')
+ if volumes[id]then return volumes[id]end
+ local rows={}
+ for y=0,ny-1 do
+  local row={};local yy=((y+.5)*step-bottom)/(h-bottom)
+  for x=0,nx-1 do Budget.tick();for z=0,nz-1 do
+   local part=yy>=0 and Trees.part(family,(x+.5)*step/w-.5,yy,(z+.5)*step/w-.5)
+   row[#row+1]=part=='foliage' and '\1' or part=='wood' and '\2' or '\0'
+  end end
+  rows[#rows+1]=table.concat(row);Budget.check()
+ end
+ local packed=table.concat(rows)
+ if #order>=8 then volumes[table.remove(order,1)]=nil end
+ order[#order+1]=id;volumes[id]=packed
+ return packed
+end
 function M.build(w,h,sample,step,bottom,depthLimit,organic,family,palette)
  step=step or 1;bottom=bottom or 0
  local nx,ny=math.ceil(w/step),math.ceil(h/step)
@@ -69,6 +91,7 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic,family,palette)
    end
   end end
   local height=h-bottom
+  local volume=organic=='tree' and family and treeVolume(family,w,h,step,bottom,nx,ny,nz)
   local function oval(x,y,z,cx,cy,cz,rx,ry,rz)
    return ((x-cx)/rx)^2+((y-cy)/ry)^2+((z-cz)/rz)^2<=1
   end
@@ -78,7 +101,9 @@ function M.build(w,h,sample,step,bottom,depthLimit,organic,family,palette)
    local pool
    if yy>=0 then
     if organic=='tree' and family then
-     local part=Trees.part(family,xx,yy,zz)
+     local part
+     if volume then local code=volume:byte(key(x,y,z)+1);part=code==1 and 'foliage' or code==2 and 'wood'
+     else part=Trees.part(family,xx,yy,zz)end
      if part then pool=part=='foliage' and foliage or wood end
     elseif organic=='tree' then
      -- Overlapping canopy lobes surround real trunk/branch volumes. The

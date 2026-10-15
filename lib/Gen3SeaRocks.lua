@@ -174,4 +174,51 @@ function M.append(c,emit,uvFor)
   emit(points,{t,t,t,t},q.shade)
  end
 end
+-- Scene-owned batches share the exact carved hull; native atlas layers and
+-- terrain heights stay separate from the immutable local model.
+function M.queue(c,groups)
+ if not c.shape.seaRock or not V.require('ModelInstances').available()then return false end
+ if not c.shape.root then return true end
+ local template=c.shape.seaRock.template
+ if not template then return false end
+ local group=groups[template]
+ if not group then group={cells={},ts=c.ts};groups[template]=group end
+ group.cells[#group.cells+1]=c
+ return true
+end
+function M.buildInstances(groups,uvFor,newMesh,quad,out)
+ local Instances=V.require('ModelInstances');local Budget=V.require('BuildBudget')
+ for _,group in pairs(groups)do
+  local v,i={},{};local c=group.cells[1]
+  local localCell={shape=c.shape,ts=c.ts,cx=0,cy=0}
+  M.append(localCell,function(p,t,s)quad(v,i,p,t,s)end,uvFor)
+  if #v>0 then
+   -- Transfer ownership before any yielding work, including fallback assembly.
+   local part={ts=group.ts,pair=c.nativePair};out[#out+1]=part
+   part.model=assert(newMesh(v,i));Budget.check()
+   local positions={}
+   for _,cell in ipairs(group.cells)do positions[#positions+1]={cell.cx*16,cell.base or 0,cell.cy*16}end
+   part.mesh=Instances.new(part.model,positions)
+   if not part.mesh then
+    -- Drivers without attribute instancing retain the identical merged hull.
+    part.model:release();part.model=nil;v,i={},{}
+    for _,cell in ipairs(group.cells)do
+     M.append(cell,function(p,t,s)
+      for _,vertex in ipairs(p)do vertex[2]=vertex[2]+(cell.base or 0)end
+      quad(v,i,p,t,s)
+     end,uvFor)
+     Budget.check()
+    end
+    part.mesh=assert(newMesh(v,i))
+   end
+   Budget.check()
+  end
+ end
+end
+function M.releaseInstances(parts)
+ for _,p in ipairs(parts or {})do
+  if p.mesh then p.mesh:release()end
+  if p.model then p.model:release()end
+ end
+end
 return M

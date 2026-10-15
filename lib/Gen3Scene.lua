@@ -128,6 +128,7 @@ local function releaseGeometry(cache)
  for _,part in ipairs(cache.lamps or{})do part.mesh:release()end
  V.require('NativeLegendaryTrees').release(cache.legendaryTreeInstances)
  for _,batch in ipairs(cache.treeInstances or {})do batch:release()end
+ V.require('Gen3SeaRocks').releaseInstances(cache.rockInstances)
  for _,name in ipairs({'wood','leaves'})do if cache[name] then cache[name]:release() end end
 end
 local stream=SceneStream.new(releaseGeometry)
@@ -213,7 +214,7 @@ local function build(req,cache,previous)
  local sig=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam) or table.concat(signature,';')
  if previous and previous.signature==sig then return previous end
  cache.signature=sig;cache.parts={};cache.cells=cells
- local treeGroups,legendaryTreeGroups={},{};M.legendaryTreeCount=0
+ local treeGroups,legendaryTreeGroups,rockGroups={},{},{};M.legendaryTreeCount=0
  if V.require("Gen3Hoenn").active() then V.require("Gen3Hoenn").prepareTrees(cells) end
  M.seaRockCount=V.require('Gen3SeaRocks').prepare(cells)
  M.forestTrees=Forest.prepare(cells)
@@ -348,7 +349,7 @@ local function build(req,cache,previous)
    if not c.stageHidden then V.require('Gen3Cave').wall(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
   elseif shape.kind=='rock' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
-   if not c.stageHidden then V.require('Gen3Cave').rock(c,function(v,t,shade,anchor)quad(anchor and b.pv or b.v,anchor and b.pi or b.i,v,t,shade,anchor)end,uvFor)end
+   if not c.stageHidden and not V.require('Gen3SeaRocks').queue(c,rockGroups)then V.require('Gen3Cave').rock(c,function(v,t,shade,anchor)quad(anchor and b.pv or b.v,anchor and b.pi or b.i,v,t,shade,anchor)end,uvFor)end
   elseif shape.kind=='cliff' then
    M.cliffCount=M.cliffCount+1
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
@@ -668,6 +669,8 @@ local function build(req,cache,previous)
    local mesh=assert(R.newMesh(g.v,g.i));part.waters[#part.waters+1]={mesh=mesh,height=h};Budget.check()
   end
  end
+ cache.rockInstances={}
+ V.require('Gen3SeaRocks').buildInstances(rockGroups,uvFor,R.newMesh,quad,cache.rockInstances)
  cache.legendaryTreeInstances=V.require('NativeLegendaryTrees').build(legendaryTreeGroups)
  cache.treeInstances={}
  V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li,cache.treeInstances)
@@ -684,7 +687,7 @@ local function prefetch(req)
  if req.replay or req.cam and req.cam.battle or not Pairs.outdoor(req.def)then
   future=nil;stream:discardPrefetch();return
  end
- local entry=Lookahead.entry(req.def,Connections.each(req.def),req.game.data.maps,req.px,req.pz,24)
+ local entry=Lookahead.entry(req.def,Connections.each(req.def),req.game.data.maps,req.px,req.pz,24,Player.moving and Player.moveDir or Player.facing)
  if not entry or not Pairs.outdoor(entry.def)then future=nil;stream:discardPrefetch();return end
  local world=Map.world
  if not future or future.source~=req.def or future.world~=world or future.id~=entry.id or future.radius~=req.radius then
@@ -751,6 +754,11 @@ local function terrain(draw)
     if not material and ts.overImage then draw(p.roof,ts.overImage)end
    end
   end
+ end
+ for _,part in ipairs(cache.rockInstances or {})do
+  local ts=Tiles._pairs[part.pair] or part.ts
+  draw(part.mesh,ts.image)
+  if ts.overImage then draw(part.mesh,ts.overImage)end
  end
  if cache.legendaryPillars then V.require('NativeLegendaryPillars').draw(cache.legendaryPillars,draw)end
  if cache.legendaryRoads then draw(cache.legendaryRoads.mesh,cache.legendaryRoads.image)end

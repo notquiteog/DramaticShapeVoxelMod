@@ -2,10 +2,12 @@
 -- All inputs are public map definitions; no warps, collision or scripts run.
 local M={}
 local function size(def)local l=def and def.midLayout;if l then return l.width,l.height end end
-function M.entry(def,connections,maps,px,pz,reach)
+local directions={up='north',down='south',left='west',right='east'}
+function M.entry(def,connections,maps,px,pz,reach,heading)
  local w,h=size(def);if not w then return end
  local x,z=px/16,pz/16
- local best,distance
+ local best,distance,preferred
+ local toward=directions[heading] or heading
  for _,n in ipairs(connections)do
   local target=maps[n.map];local tw,th=size(target);local off=n.offset or 0
   if tw then
@@ -14,8 +16,9 @@ function M.entry(def,connections,maps,px,pz,reach)
    elseif n.dir=='south' and x>=off and x<off+tw then d,tx,tz=h-1-z,x-off,0
    elseif n.dir=='west' and z>=off and z<off+th then d,tx,tz=x,tw-1,z-off
    elseif n.dir=='east' and z>=off and z<off+th then d,tx,tz=w-1-x,0,z-off end
-   if d and d>=0 and d<=(reach or 24)and(not distance or d<distance)then
-    best={id=n.map,def=target,px=tx*16,pz=tz*16,distance=d};distance=d
+   local facing=n.dir==toward
+   if d and d>=0 and d<=(reach or 24)and(not distance or facing and not preferred or facing==preferred and d<distance)then
+    best={id=n.map,def=target,px=tx*16,pz=tz*16,distance=d};distance=d;preferred=facing
    end
   end
  end

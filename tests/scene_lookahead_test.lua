@@ -30,3 +30,11 @@ e=L.entry(a,{{dir='west',map='b',offset=5}},maps,0,7*16,5);assert(e.id=='b'and e
 local south={{dir='south',def=b,offset=5}};mid,pair=L.sample(a,south,{},7,20);assert(mid==2 and pair=='b')
 local west={{dir='west',def=b,offset=5}};mid,pair=L.sample(a,west,{},-1,7);assert(mid==2 and pair=='b')
 print('PASS south/west entry placement and sampling')
+
+-- At a junction, stage the approached seam rather than a closer side map.
+e=L.entry(a,direct,maps,12*16,4*16,24,'right');assert(e.id=='c' and e.distance==7)
+e=L.entry(a,direct,maps,12*16,4*16,24,'up');assert(e.id=='b' and e.distance==4)
+e=L.entry(a,direct,maps,12*16,4*16,24);assert(e.id=='b','missing direction keeps nearest policy')
+e=L.entry(a,direct,maps,12*16,4*16,5,'right');assert(e.id=='b','heading cannot expand prefetch radius')
+e=L.entry(a,direct,maps,18*16,8*16,24,'up');assert(e.id=='c','heading cannot ignore connection span')
+print('PASS direction-aware prediction preserves bounded range, span and nearest fallback')

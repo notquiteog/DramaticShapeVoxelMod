@@ -74,6 +74,46 @@ render(repeated['0:0']);check(builds==3,'UV provider replacement invalidates tem
 local fresh=cells(function()return 7 end);S.prepare(fresh);render(fresh['0:0'])
 check(builds==4,'fresh scene never inherits another build template')
 H.build=build
+-- GPU batches must reproduce every original vertex, UV and shade, including
+-- distinct terrain levels, and retain a complete non-instanced fallback.
+local available,failBatch=true,false
+cache.ModelInstances={available=function()return available end,new=function(mesh,positions)
+ if failBatch then return nil end
+ return {model=mesh,positions=positions,release=function(self)self.released=true end}
+end}
+local function makeMesh(v,i)return {v=v,i=i,release=function(self)self.released=true end}end
+local function quad(v,i,points,uv,shade)
+ local first=#v
+ for k,p in ipairs(points)do v[#v+1]={p[1],p[2],p[3],uv[k][1],uv[k][2],shade}end
+ for _,k in ipairs({1,2,3,1,3,4})do i[#i+1]=first+k end
+end
+local roots={repeated['0:0'],repeated['5:7']};roots[1].base=7;roots[2].base=19
+local groups={}
+for _,c in ipairs(roots)do check(S.queue(c,groups),'root queued')end
+check(S.queue(repeated['1:1'],groups),'non-root geometry omitted')
+local out={};S.buildInstances(groups,uvFor,makeMesh,quad,out)
+check(#out==1 and #out[1].mesh.positions==2,'one GPU model for two placements')
+for n,c in ipairs(roots)do
+ local v,i={},{};S.append(c,function(p,t,shade)quad(v,i,p,t,shade)end,uvFor)
+ local model,position=out[1].model,out[1].mesh.positions[n]
+ check(#model.v==#v,'same vertex count')
+ for k,p in ipairs(v)do for axis=1,6 do
+  local actual=model.v[k][axis]+(axis<=3 and position[axis] or 0)
+  local expected=p[axis]+(axis==2 and c.base or 0)
+  check(math.abs(actual-expected)<1e-9,'instanced position/UV/shade matches expanded geometry')
+ end end
+end
+S.releaseInstances(out);check(out[1].model.released and out[1].mesh.released,'owned mesh and offsets released')
+failBatch=true;out={};S.buildInstances(groups,uvFor,makeMesh,quad,out)
+local expected,indices={},{}
+for _,c in ipairs(roots)do S.append(c,function(p,t,shade)
+ for _,v in ipairs(p)do v[2]=v[2]+c.base end
+ quad(expected,indices,p,t,shade)
+end,uvFor)end
+check(not out[1].model and #out[1].mesh.v==#expected,'fallback keeps all placements')
+for k,p in ipairs(expected)do for axis=1,6 do check(p[axis]==out[1].mesh.v[k][axis],'fallback matches native geometry')end end
+S.releaseInstances(out);check(out[1].mesh.released,'fallback mesh released')
+available=false;check(not S.queue(roots[1],{}),'unavailable GPU uses ordinary path')
 version='firered'
 check(S.prepare(cells(function()return 7 end))==0,'Kanto IDs never claimed')
 print(('PASS %d Hoenn sea-rock checks'):format(checks))
