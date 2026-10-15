@@ -2109,8 +2109,8 @@
         "label": "INTERFACE SCALING",
         "module": "InterfaceSprites",
         "status": "partial",
-        "consumer": "lib/Gen2InterfaceArt.lua; lib/Gen2EvolutionArt.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
-        "detail": "Native Summary/Dex, Hall-of-Fame front/back slides and evolution consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Evolution preserves selected alpha silhouettes during BLACKOUT, native cancellation, timers and party writeback. Eggs/Unown keep native art and Crystal retains ownership. Animated trade and hatch screens still use native pictures outside the existing static-path hook; they need dedicated frame consumers.",
+        "consumer": "lib/Gen2InterfaceArt.lua; lib/Gen2EvolutionArt.lua; lib/Gen2TradeHatchArt.lua; lib/Gen2OakArt.lua; lib/Gen2PictureScope.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
+        "detail": "Native Summary/Dex, BoxMenu, Hall-of-Fame front/back slides, evolution, trade, revealed hatchlings and Oak Pokemon pictures consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Scoped draws preserve native animation timers, cancellation/skip, sounds and party ownership. Egg shells/Unown keep native art and Crystal retains ownership. Oak indexed palette-rotation reveals still draw native art until the effect completes. Gen2 cinematic title art has no equivalent Gen1 cycling-starter reader.",
         "verification": "source audit"
       },
       {
@@ -2119,8 +2119,8 @@
         "label": "INTERFACE SPRITES",
         "module": "InterfaceSprites",
         "status": "partial",
-        "consumer": "lib/Gen2InterfaceArt.lua; lib/Gen2EvolutionArt.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
-        "detail": "Native Summary/Dex, Hall-of-Fame front/back slides and evolution consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Evolution preserves selected alpha silhouettes during BLACKOUT, native cancellation, timers and party writeback. Eggs/Unown keep native art and Crystal retains ownership. Animated trade and hatch screens still use native pictures outside the existing static-path hook; they need dedicated frame consumers.",
+        "consumer": "lib/Gen2InterfaceArt.lua; lib/Gen2EvolutionArt.lua; lib/Gen2TradeHatchArt.lua; lib/Gen2OakArt.lua; lib/Gen2PictureScope.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
+        "detail": "Native Summary/Dex, BoxMenu, Hall-of-Fame front/back slides, evolution, trade, revealed hatchlings and Oak Pokemon pictures consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Scoped draws preserve native animation timers, cancellation/skip, sounds and party ownership. Egg shells/Unown keep native art and Crystal retains ownership. Oak indexed palette-rotation reveals still draw native art until the effect completes. Gen2 cinematic title art has no equivalent Gen1 cycling-starter reader.",
         "verification": "source audit"
       },
       {

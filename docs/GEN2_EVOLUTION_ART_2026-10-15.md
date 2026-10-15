@@ -43,9 +43,9 @@ upstream ITEM BALL control (123 catalog entries per generation).
 
 ## Remaining interfaces
 
-Gen2 trade and egg-hatch screens have public `drawPic` methods but still need
-animated frame adapters. Their existing `pokemon.sprite` hook can supply a
-static path; it cannot supply an animated frame union or FIT/FULL by itself.
+Follow-up on official0.3.89 adds trade, hatch, BoxMenu and Oak picture
+adapters; see `GEN2_INTERFACE_SCENES_2026-10-15.md` for current evidence.
+The earlier0.3.88 evolution evidence above retains its original runtime label.
 Gold/Silver/Crystal title graphics are their own cinematic art, without the
 Gen1 cycling-starter reader; they are not equivalent title replacements.
 

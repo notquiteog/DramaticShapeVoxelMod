@@ -1,3 +1,15 @@
+# Native Gen2 interface consumers — 2026-10-15
+
+Official0.3.89 verified; fresh G/S/C v16 imports. Trade/hatch, Bill's PC and
+Oak Pokemon pictures now consume selected animation frames and FIT/FULL
+through public readers/draw boundaries. Native timings, trade skip, hatch
+completion, original DVs/OTs and error cleanup pass. Indexed Oak rotation
+keeps native art during the effect. Actual G/S/C captures inspected; all11
+native menus119GB/121GBA rows,0missing, inversion change/restore pass.
+SDK1173 and focused checks pass. Details and remaining non-model gaps:
+`docs/GEN2_INTERFACE_SCENES_2026-10-15.md`. Full parity remains unfinished.
+No model edits, release, version bump or push for this batch.
+
 # Upstream merge and sprite-bound stalls — 2026-10-15
 
 Original upstream/master a07146b is merged (1b8d9b0). Its optional ITEM BALL

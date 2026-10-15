@@ -20,6 +20,7 @@ local original=Screen.drawPic
 package.loaded['src.ui.gen2.EvolutionAnim']=Screen
 local enabled=true;local requests={}
 local V={require=function(name)
+ if name=='Gen2PictureScope'then return dofile('lib/Gen2PictureScope.lua')end
  assert(name=='NativeInterfaceArt')
  return {picture=function(mon,size,side)
   requests[#requests+1]={mon=mon,size=size,side=side}

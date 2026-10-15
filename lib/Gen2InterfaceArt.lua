@@ -10,6 +10,8 @@ local function picture(mon,back)
 end
 function M.install()
  local undoEvolution=V.require('Gen2EvolutionArt').install()
+ local undoTradeHatch=V.require('Gen2TradeHatchArt').install()
+ local undoOak=V.require('Gen2OakArt').install()
  local Summary=require('src.ui.gen2.SummaryMenu')
  local Dex=require('src.ui.gen2.PokedexMenu')
  local summary,animation,dex=Summary.picFor,Summary.picAnimFrame,Dex.picFor
@@ -29,6 +31,15 @@ function M.install()
   if image then return image,true end
   return dex(self,species,...)
  end
+ local boxOK,Box=pcall(require,'src.ui.gen2.BoxMenu')
+ local boxPic=boxOK and Box.picFor
+ if type(boxPic)=='function'then
+  Box.picFor=function(self,mon,...)
+   local image=picture(mon)
+   if image then return image,true end
+   return boxPic(self,mon,...)
+  end
+ end
  -- Hall-of-Fame records retain the original DVs. Its two slide poses use
  -- different public readers; keep native scrolling, timing and record writes.
  local ok,Hall=pcall(require,'src.ui.gen2.HallOfFame')
@@ -47,8 +58,11 @@ function M.install()
   end
  end
  return function()
+  undoOak()
+  undoTradeHatch()
   undoEvolution()
   Summary.picFor,Summary.picAnimFrame,Dex.picFor=summary,animation,dex
+  if type(boxPic)=='function'then Box.picFor=boxPic end
   if hofPic then Hall.monPic,Hall.picAnimFrame=hofPic,hofAnim end
  end
 end
