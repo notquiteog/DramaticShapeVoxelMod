@@ -1629,7 +1629,7 @@ local function writeChunked(file, record, yieldFn, fields)
     return true
   end
   if not record.chunks then return false end
-  local pending, emitted = "", 0
+  local pending, pendingBytes, emitted = {}, 0, 0
   local function emit(raw)
     local count = #raw
     local packed = love.data.compress("string", "lz4", raw)
@@ -1640,14 +1640,21 @@ local function writeChunked(file, record, yieldFn, fields)
     Budget.check()
     if yieldFn then yieldFn() end
   end
+  -- Collect slices once instead of copying an ever-growing megabyte for
+  -- every small packed input chunk. Preserve the on-disk block boundaries.
   for _, chunk in ipairs(record.chunks) do
-    pending = pending .. chunk
-    while #pending >= RAW_CHUNK do
-      emit(pending:sub(1, RAW_CHUNK))
-      pending = pending:sub(RAW_CHUNK + 1)
+    local offset = 1
+    while offset <= #chunk do
+      local count = math.min(RAW_CHUNK - pendingBytes, #chunk - offset + 1)
+      pending[#pending + 1] = offset == 1 and count == #chunk
+        and chunk or chunk:sub(offset, offset + count - 1)
+      pendingBytes, offset = pendingBytes + count, offset + count
+      if pendingBytes == RAW_CHUNK then
+        emit(table.concat(pending)); pending, pendingBytes = {}, 0
+      end
     end
   end
-  if #pending > 0 then emit(pending) end
+  if pendingBytes > 0 then emit(table.concat(pending)) end
   if emitted ~= bytes then error("invalid voxel cache stream length", 0) end
   return true
 end

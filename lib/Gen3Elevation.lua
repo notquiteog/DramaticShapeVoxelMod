@@ -21,12 +21,22 @@ function M.field(def)
  local outdoor=Pairs.outdoor(def)
  local cave=def.mapType==4
  local deck=def.id=="FR_CERULEAN_CITY_GYM" or def.id=="FR_SSANNE_EXTERIOR" or def.id=="FR_THREE_ISLAND_PORT"
+ -- A field needs only the classification, not a fresh full model recipe
+ -- for each occurrence of a repeated native metatile/collision pair.
+ local kinds={}
+ local function kind(mid,beh,coll)
+  local byCollision=kinds[mid];if not byCollision then byCollision={};kinds[mid]=byCollision end
+  local k=coll==nil and false or coll
+  local value=byCollision[k]
+  if not value then value=shapes.of(spec.primary,spec.secondary,mid,beh,coll).kind;byCollision[k]=value end
+  return value
+ end
  local f=Levels.build(l.width,l.height,function(x,y)
   local raw=l:cellAt(x,y);local beh=behaviors[raw.mid]
-  local shape=shapes.of(spec.primary,spec.secondary,raw.mid,beh,raw.coll)
-  local step=shape.kind=='steps';local jump=beh and beh>=0x38 and beh<=0x3F
+  local shapeKind=kind(raw.mid,beh,raw.coll)
+  local step=shapeKind=='steps';local jump=beh and beh>=0x38 and beh<=0x3F
   return {floor=raw.coll~=7 and not step and not jump,step=step,drop=drop[beh],layer=raw.elev,behavior=beh,
-   mid=raw.mid,kind=shape.kind,stairUpper=def.id and def.id:sub(1,3)=='EM_' and beh==0xc,seed=spec.secondary=='fortree' and beh==0x170 and raw.elev==15 and 32 or shape.kind~='water' and (deck or (outdoor or cave)and raw.elev==4)and 6 or 0}
+   mid=raw.mid,kind=shapeKind,stairUpper=def.id and def.id:sub(1,3)=='EM_' and beh==0xc,seed=spec.secondary=='fortree' and beh==0x170 and raw.elev==15 and 32 or shapeKind~='water' and (deck or (outdoor or cave)and raw.elev==4)and 6 or 0}
  end,function(a,b,d)
   local layer=a.layer==b.layer or a.layer==0 or b.layer==0 or a.layer==15 or b.layer==15
   -- A variable-layer bridge is a deck, not a doorway joining both the

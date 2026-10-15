@@ -48,19 +48,24 @@ function M.build(w,h,read,compatible,rise,tick)
  end end
  -- Jump strips can join separate stair networks. They cannot override a
  -- staircase or impose contradictory levels on a loop you can walk around.
- local function network(root)
-  local seen={[root]=true};local todo={root};local head=1
-  while todo[head]do local g=todo[head];head=head+1
-   for _,e in ipairs(g.edges)do if not seen[e[1]]then seen[e[1]]=true;todo[#todo+1]=e[1]end end
-  end
-  return seen
+ -- Stair connectivity only grows in this pass. Union/find avoids walking
+ -- the entire stair network again for every repeated ledge strip.
+ local parents={}
+ local function root(g)
+  local r=g;while parents[r]do r=parents[r]end
+  while parents[g]do local next=parents[g];parents[g]=r;g=next end
+  return r
  end
+ local function join(a,b)
+  a,b=root(a),root(b);if a~=b then parents[a]=b end
+ end
+ for _,g in ipairs(f.groups)do for _,e in ipairs(g.edges)do join(g,e[1])end end
  for y=0,h-1 do for x=0,w-1 do if tick then tick()end;local c=at(x,y)
   if c.drop then local dx,dy=c.drop[1],c.drop[2]
    local a,b=at(x-dx,y-dy),at(x+dx,y+dy)
    local high,low=a and a.group,b and b.group
-   if high and low and high~=low and #high.edges>0 and #low.edges>0 and not network(high)[low]then
-    high.edges[#high.edges+1]={low,-(rise or 6)};low.edges[#low.edges+1]={high,rise or 6}
+   if high and low and high~=low and #high.edges>0 and #low.edges>0 and root(high)~=root(low)then
+    high.edges[#high.edges+1]={low,-(rise or 6)};low.edges[#low.edges+1]={high,rise or 6};join(high,low)
    end
   end
  end end

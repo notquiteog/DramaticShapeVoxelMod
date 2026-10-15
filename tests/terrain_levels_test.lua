@@ -58,3 +58,14 @@ assert(yielded.cells['19:19'].height==6 and yielded.cells['19:19'].distance==19,
 local edge=T.build(2,2,function(x,y)return{floor=x==1 and y==0,seed=6}end)
 assert(edge.cells['0:1'].distance==2,'dense indexing wrapped across a map edge')
 print('PASS resumable terrain topology/support and bounded dense neighbors')
+-- Several ledges between the same stair networks must add only one link,
+-- preserving the first source-row constraint without creating uphill cycles.
+local joined=T.build(7,5,function(x,y)
+ return {floor=x~=3 and y%2==0,step=(x==1 or x==5)and y%2==1,
+  drop=x==3 and y%2==0 and {1,0} or nil}
+end,nil,6)
+local edges=0;for _,g in ipairs(joined.groups)do edges=edges+#g.edges end
+assert(edges==10 and #joined.conflicts==0,'repeated ledges added contradictory stair links')
+assert(joined.cells['1:0'].height==18 and joined.cells['5:0'].height==12
+ and joined.cells['1:4'].height==0 and joined.cells['5:4'].height==0,'stair-network connectivity changed floor datums')
+print('PASS repeated ledges preserve one stable stair-network connection')

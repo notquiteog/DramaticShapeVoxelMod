@@ -35,3 +35,10 @@ assert(Shapes.of('building','lab',113).kind~='cliff','indoor metatile was raised
 assert(Shapes.of('general','town',0x87).kind=='ledge','small jump ledges became cliffs')
 for _,c in pairs(cells)do assert(c.mid==1 or c.mid==113,'native tile was modified')end
 print('PASS raised rock caps, shared boundary heights, tower contact, dome-ground exclusion and classifier isolation')
+
+local height,calls=T.height,0
+T.height=function(...)calls=calls+1;return height(...)end
+T.append(cells,cells['0:0'],function()end,function()return uv end)
+assert(calls==25,'cliff recomputed shared corner heights')
+T.height=height
+print('PASS cliff samples each of its 25 shared corners once')

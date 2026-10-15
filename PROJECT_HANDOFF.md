@@ -1,3 +1,22 @@
+# Cross-generation cold-load optimization — 2026-10-15
+
+Root batch: linear Gen1/2 packed cache assembly (unchanged persistent bytes),
+shared terrain network union/find, Gen3 field-local classification and cliff
+corner reuse, scene metadata reuse, Gen2 boundary GPU instances and edge-sample
+reuse. Models/materials/footprints/collision unchanged; non-instanced GPU and
+flat-card fallbacks retained. All11 edition smoke fixtures exercised; final
+G/S/C forest/lab/first-person passed and captures inspected.
+
+Official0.3.89 NVIDIA: Red encoding550→357ms total. Gen3 cold Route104829→694ms,
+Petalburg250→231ms. G/S/C forest startup peak1077/1184/710–1106ms before boundary
+instances →173/170/289ms after (single runs, not guaranteed FPS). Five native
+GBA Running Shoes boundaries1prefetch/1promotion/0failure,peak20–23ms,camera kept.
+Kanto fixture uses2-cell valid lane; Hoenn12. No claim of equal workloads.
+Broad299pass/0fail/58fixture skips; exact geometry/cache byte regressions pass.
+Initial main builds, unprepared warps and remaining boundary work can still hitch.
+Evidence/limits: `docs/LOAD_OPTIMIZATION_2026-10-15.md`. No release/version/push.
+Parity worker independently continues native tutorial capture after8b295d7.
+
 # Native Gen2 send-out audio — 2026-10-15
 
 Optional Ember audio/volume now consumes G/S/C's native normal send-out poof,

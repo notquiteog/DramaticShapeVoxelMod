@@ -52,10 +52,15 @@ function M.append(cells,c,emit,uvFor)
   local function p(xx,zz)return {l+(r-l)*xx/16,t+(d-t)*zz/16}end
   return {p(a,b),p(u,b),p(u,v),p(a,v)}
  end
+ -- Sixteen quads share twenty-five corners. Sample each exact corner
+ -- once; this cache cannot outlive changes to the surrounding cells.
+ local heights={}
+ for iz=0,4 do for ix=0,4 do heights[iz*5+ix+1]=M.height(cells,x+ix*4,z+iz*4,height)end end
  for iz=0,3 do for ix=0,3 do
   local a,b=ix*4,iz*4;local u,v=a+4,b+4
-  local h1,h2=M.height(cells,x+a,z+b,height),M.height(cells,x+u,z+b,height)
-  local h3,h4=M.height(cells,x+u,z+v,height),M.height(cells,x+a,z+v,height)
+  local k=iz*5+ix+1
+  local h1,h2=heights[k],heights[k+1]
+  local h3,h4=heights[k+6],heights[k+5]
   local flat=h1==h2 and h2==h3 and h3==h4 and h1~=0
   local tex
   if flat then tex=sub(cap,a,b,u,v)

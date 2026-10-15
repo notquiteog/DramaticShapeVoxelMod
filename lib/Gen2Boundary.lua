@@ -6,12 +6,14 @@ local Select=V.require('BoundaryScenery')
 local Distance=V.require('RenderDistance')
 local R=V.require('Voxel3D')
 local cache={}
+local quadIndices={1,2,3,1,3,4}
 function M.enabled(map)
  return V.require('Generation').isGen2() and map and map.def and
   (map.def.environment=='TOWN' or map.def.environment=='ROUTE' or map.def.environment=='FOREST' or map.tileset and map.tileset.id=='TILESET_FOREST')
 end
 function M.clear()
  for _,b in pairs(cache.batches or {})do if b.mesh then b.mesh:release()end end
+ for _,batch in ipairs(cache.instances or {})do batch:release()end
  for _,k in ipairs({'wood','leaves'})do if cache[k]then cache[k]:release()end end
  cache={}
 end
@@ -31,7 +33,7 @@ end
 local function quad(b,p,uv,shade)
  local base=#b.v
  for i,a in ipairs(p)do b.v[#b.v+1]={a[1],a[2],a[3],uv[i][1],uv[i][2],shade or 1}end
- for _,i in ipairs({1,2,3,1,3,4})do b.i[#b.i+1]=base+i end
+ for _,i in ipairs(quadIndices)do b.i[#b.i+1]=base+i end
 end
 local function tileUV(map,tile)
  local ts=map.tileset;local pr=ts.tilesPerRow or 16
@@ -78,11 +80,20 @@ function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
  if cache.key~=key then
   M.clear();M.builds=(M.builds or 0)+1;cache.key=key;cache.batches={};M.counts={forest=0,water=0,mountain=0,ground=0}
   local wood,wi,leaves,li={},{},{},{}
+  local native=V.require('NativeTreeArt')
+  local treeGroups={}
+  local samples={}
+  local function cachedSample(r,x,y)
+   local byMap=samples[r.map];if not byMap then byMap={};samples[r.map]=byMap end
+   local key=y*r.w+x
+   local c=byMap[key];if not c then c=sample(r,x,y);byMap[key]=c end
+   return c
+  end
   local Trees=V.require('Gen2Trees');local Leaves=V.require('Gen2DepthTrees')
   for y=y0,y1 do for x=x0,x1 do
    local _,_,_,real=Select.owner(rs,x,y)
    if not real then
-    local donor=Select.resolve(rs,x,y,sample)
+    local donor=Select.resolve(rs,x,y,cachedSample)
     if donor then
      local map=donor.map;local biome=donor.biome or 'ground'
      local b=cache.batches[map]
@@ -116,11 +127,11 @@ function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
       local _,_,_,occupied=Select.owner(rs,math.floor(tx/16),math.floor(tz/16))
       if not occupied then
        if V.require('TreePresentation').original() then
-        local native=V.require('NativeTreeArt')
         local card=native.gen2(map,donor.x,donor.y,lift,true)
         card=V.require('NativeLegendaryForest').card(card,{cx=donor.x,cy=donor.y},map.id)
         -- Donor artwork and palette are shared with the neighboring map.
-        if V.require('TreePresentation').voxel() then native.appendModel(card,leaves,li,0,tx,0,tz)
+        if V.require('TreePresentation').voxel() then
+         if not native.addInstance(card,treeGroups,tx,0,tz)then native.appendModel(card,leaves,li,0,tx,0,tz)end
         else native.append(card,leaves,li,0,tx,0,tz,flat) end
         if card and not V.require('TreePresentation').voxel() and not flat then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,seed)end
        else
@@ -134,6 +145,7 @@ function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
    end
   end end
   for _,b in pairs(cache.batches)do b.mesh=R.newMesh(b.v,b.i);b.v,b.i=nil,nil end
+  cache.instances=native.buildInstances(treeGroups,leaves,li)
   cache.wood=R.newMesh(wood,wi);cache.leaves=R.newMesh(leaves,li)
  end
  for map,b in pairs(cache.batches)do
@@ -143,6 +155,7 @@ function M.draw(state,cx,cz,vw,vh,atlasFor,drawMesh)
  local bark,leaf=V.require('CommunityFlora').crystalTreeMaterials()
  if cache.wood and bark then draw(cache.wood,bark,nil)end
  if cache.leaves and leaf then draw(cache.leaves,leaf,nil)end
+ if leaf then for _,batch in ipairs(cache.instances or {})do draw(batch,leaf,nil)end end
  return true
 end
 return M

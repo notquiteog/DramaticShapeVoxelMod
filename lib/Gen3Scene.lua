@@ -41,6 +41,7 @@ local M={builds=0}
 function M.context()return Map.currentDef()end
 local cache,foliage,bark,spriteMeshes={ },nil,nil,{}
 local savedCanvas,saved=false,false
+local quadIndices={1,2,3,1,3,4}
 local function quad(v,i,p,uv,shade,anchor)
  Budget.tick()
  local base=#v
@@ -49,7 +50,7 @@ local function quad(v,i,p,uv,shade,anchor)
   if anchor then vertex[7],vertex[8],vertex[9]=anchor[1],anchor[2],anchor[3]end
   v[#v+1]=vertex
  end
- for _,k in ipairs({1,2,3,1,3,4})do i[#i+1]=base+k end
+ for _,k in ipairs(quadIndices)do i[#i+1]=base+k end
 end
 local function uvFor(ts,mid)
  local slot=ts.midToSlot[mid];if not slot then return end
@@ -164,6 +165,8 @@ local function build(req,cache,previous)
  M.fadeExtent=req.budget or math.max(math.abs(x0*16-req.px),math.abs(x1*16-req.px),math.abs(z0*16-req.pz),math.abs(z1*16-req.pz))
  local cells,groups,signature={}, {}, {replay and replay.scene.map or req.mapId,x0,z0,x1,z1}
  M.fillCounts={forest=0,water=0,mountain=0,ground=0}
+ local pairInfo={}
+ local behaviors=require('src.core.game3.scripting.interaction_scripts').behaviors
  for cy=z0,z1 do for cx=x0,x1 do
   Budget.tick()
   local mid,pair,isVoid
@@ -187,15 +190,17 @@ local function build(req,cache,previous)
     ts=Tiles._pairs[pair] or Tiles.get(pair);groups[pair]=ts
    end
    if ts and ts.midToSlot[mid] then
-    local spec=Pairs.resolve(pair,Versions.TILESET_PAIRS)
+    local info=pairInfo[pair]
+    if not info then info={spec=Pairs.resolve(pair,Versions.TILESET_PAIRS),canonical=Pairs.canonical(pair),behaviors=behaviors[pair] or {}};pairInfo[pair]=info end
+    local spec=info.spec
     local collision
     for _,region in ipairs(regions)do
      local lx,ly=cx-region.x,cy-region.y
      if lx>=0 and ly>=0 and lx<region.w and ly<region.h then collision=region.def.midLayout:collAt(lx,ly);break end
     end
-    local c={mid=mid,behavior=(require('src.core.game3.scripting.interaction_scripts').behaviors[pair] or {})[mid],collision=collision,pair=Pairs.canonical(pair),nativePair=pair,cx=cx,cy=cy,ts=ts,primary=spec.primary,secondary=spec.secondary,
+    local c={mid=mid,behavior=info.behaviors[mid],collision=collision,pair=info.canonical,nativePair=pair,cx=cx,cy=cy,ts=ts,primary=spec.primary,secondary=spec.secondary,
      shape=fillShape or Shapes.of(spec.primary,spec.secondary,mid,
-      (require('src.core.game3.scripting.interaction_scripts').behaviors[pair] or {})[mid],collision),boundary=biome}
+      info.behaviors[mid],collision),boundary=biome}
     cells[cx..':'..cy]=c
     signature[#signature+1]=pair..'/'..mid..'/'..tostring(collision)..(biome or '')
    else signature[#signature+1]='?' end
@@ -627,7 +632,7 @@ local function build(req,cache,previous)
    if not group then group={v={},i={}};levels[h]=group end
    local base=#group.v
    for k=0,3 do group.v[#group.v+1]=b.wv[j+k]end
-   for _,k in ipairs({1,2,3,1,3,4})do group.i[#group.i+1]=base+k end
+   for _,k in ipairs(quadIndices)do group.i[#group.i+1]=base+k end
   end
   for h,g in pairs(levels)do
    local mesh=assert(R.newMesh(g.v,g.i));part.waters[#part.waters+1]={mesh=mesh,height=h};Budget.check()

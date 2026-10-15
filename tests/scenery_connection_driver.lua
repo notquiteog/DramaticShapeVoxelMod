@@ -15,7 +15,7 @@ return function(game)
  clear();C.setLevel(7,game);C.yaw=0;C.pitch=.25
  V.require('RenderDistance').setting:sync('auto');V.require('AntiAlias').setting:sync(0);V.require('SpatialUpscale').setting:sync(1);V.require('Shadows').setting:sync('high')
  local def=Map.currentDef();local w,h=Conn.sizeOf(def);local found
- local running=os.getenv('CONNECTION_RUN')=='1';local approach=running and 12 or 2
+ local running=os.getenv('CONNECTION_RUN')=='1';local approach=running and (tonumber(os.getenv('CONNECTION_APPROACH')) or 12) or 2
  local function walkable(d,x,y)return d.midLayout:collAt(x,y)==0 and not Coll.isSurfable(Coll.behaviorOn(d,x,y))end
  for _,n in ipairs(Conn.each(def))do
   local d=game.data.maps[n.map];Map.ensureMidLayout(game,n.map,d)
