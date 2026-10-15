@@ -4,9 +4,9 @@
 local V=...
 local M={}
 local Pictures=V.require('NativeInterfaceArt')
-local function picture(mon)
+local function picture(mon,back)
  if V.crystalSpritesActive or not mon or mon.isEgg or mon.species=='UNOWN' then return nil end
- return Pictures.picture(mon,56)
+ return Pictures.picture(mon,56,back and 'back' or 'front')
 end
 function M.install()
  local Summary=require('src.ui.gen2.SummaryMenu')
@@ -28,6 +28,26 @@ function M.install()
   if image then return image,true end
   return dex(self,species,...)
  end
- return function()Summary.picFor,Summary.picAnimFrame,Dex.picFor=summary,animation,dex end
+ -- Hall-of-Fame records retain the original DVs. Its two slide poses use
+ -- different public readers; keep native scrolling, timing and record writes.
+ local ok,Hall=pcall(require,'src.ui.gen2.HallOfFame')
+ local hofPic,hofAnim
+ if ok and type(Hall.monPic)=='function' and type(Hall.picAnimFrame)=='function'
+  and type(Hall.currentMon)=='function'then
+  hofPic,hofAnim=Hall.monPic,Hall.picAnimFrame
+  Hall.monPic=function(self,mon,back,...)
+   local image=picture(mon,back)
+   if image then return image,true end
+   return hofPic(self,mon,back,...)
+  end
+  Hall.picAnimFrame=function(self,...)
+   if picture(self:currentMon())then return nil end
+   return hofAnim(self,...)
+  end
+ end
+ return function()
+  Summary.picFor,Summary.picAnimFrame,Dex.picFor=summary,animation,dex
+  if hofPic then Hall.monPic,Hall.picAnimFrame=hofPic,hofAnim end
+ end
 end
 return M

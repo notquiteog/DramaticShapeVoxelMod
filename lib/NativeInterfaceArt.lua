@@ -1,4 +1,5 @@
--- Selected artwork in the native Summary and Pokedex. The underlying menu
+-- Selected artwork in native interfaces. The shared picture reader supports
+-- front/back poses; each installed screen retains its own pose rules. The menu
 -- retains its layout, controls and species/form rules; substitution is scoped
 -- to its draw and restored even when that draw raises an error.
 local V=...
@@ -8,12 +9,13 @@ local Art=V.require('BattleArt')
 local Animated=V.require('AnimatedBattleArt')
 local prepared=setmetatable({},{__mode='k'})
 M.settings={Interface.setting,Interface.scalingSetting}
-function M.picture(mon,size)
+function M.picture(mon,size,side)
  size=size or 64
+ side=side or 'front'
  if Interface.setting:get()~='battle_art' then return nil end
  local image,frames
- if M.crystal and M.crystal.active()then image,frames=M.crystal.image(mon,'front')
- else image,frames=Animated.picture(mon,'front')end
+ if M.crystal and M.crystal.active()then image,frames=M.crystal.image(mon,side)
+ else image,frames=Animated.picture(mon,side)end
  if not image then return nil end
  local full=Interface.scalingSetting:get()=='full'
  local owner=frames or image

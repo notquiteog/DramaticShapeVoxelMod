@@ -22,7 +22,8 @@ end
 
 function Gen6Backdrop.setFor(map, battle)
   local id = type(map) == "table" and map.id or map
-  local fishing = battle and battle.dramaticShapeFishing
+  local native = V.require('Gen2BattleBackdrop')
+  local fishing = battle and (battle.dramaticShapeFishing or native.fishing(battle))
   local surfing = battle and battle.dramaticShapeSurfing
   local encounter = id and battle and config.encounters
                     and config.encounters[id] or nil
@@ -53,7 +54,7 @@ function Gen6Backdrop.setFor(map, battle)
          and Map.isOutdoor(map.def) then
     setName = "shore"
   else
-    setName = encounter and battle and encounter[battle.oppClass]
+    setName = encounter and battle and encounter[battle.oppClass or native.trainer(battle)]
               or (id and config.maps[id] or nil)
   end
   if not setName and type(map) == "table" and map.def then

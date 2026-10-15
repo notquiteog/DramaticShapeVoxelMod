@@ -17,7 +17,8 @@ function BossBackdrop.fileFor(map, battle)
   local room = config.rooms[id]
   if room then return room end
 
-  local trainer = battle and config.trainers[battle.oppClass] or nil
+  local native = V.require('Gen2BattleBackdrop')
+  local trainer = battle and config.trainers[battle.oppClass or native.trainer(battle)] or nil
   if trainer then
     -- Most trainers have one canonical room. Repeating trainers such as
     -- Giovanni instead use a map-keyed table so each story encounter can
@@ -26,7 +27,7 @@ function BossBackdrop.fileFor(map, battle)
     if trainer[id] then return trainer[id] end
   end
 
-  local species = battle and BattleArt.speciesFor(battle.enemy) or nil
+  local species = battle and (native.species(battle) or BattleArt.speciesFor(battle.enemy)) or nil
   local encounter = species and config.species[species] or nil
   if encounter and encounter.map == id then return encounter.file end
   return nil
