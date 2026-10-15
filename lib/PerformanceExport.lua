@@ -65,6 +65,7 @@ function M.snapshot(hostVersion)
     mesher = copy(not native and call("ChunkMesher", "stats", {}) or {}),
     trees = copy(not native and call("CommunityFlora", "treeStats", {}) or {}),
     shadow = copy(call("ShadowMap", "stats", {})),
+    spriteBounds = copy(call("SpriteHeadBounds", "snapshot", {})),
     saplings = copy(not native and call("SaplingEdits", "stats", {}) or {}),
   }
   if native then

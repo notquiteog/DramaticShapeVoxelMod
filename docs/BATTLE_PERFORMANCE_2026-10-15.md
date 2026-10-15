@@ -50,8 +50,12 @@ The original720p fixture used an arbitrary abort result and did not complete
 its cleanup assertion; the final smoke fixture uses the native 'run' result.
 All test processes ended; live player game was not stopped.
 
-Remaining: hardware frame-time verification, Gen1/2 runtime battle coverage of
-this shared uniform change, further profiling of GPU shadow/fill cost, and the
+Yellow and Crystal native battles also passed stage/orbit and zero-gap actor
+footing assertions on the same runtime; captures were inspected. These are
+representative shared Gen1/2 consumer checks, not all six editions or an FPS
+benchmark (`.scratch/voxel-parity-20261015/battle/`).
+
+Remaining: hardware frame-time verification, further profiling of GPU shadow/fill cost, and the
 separate feature/consumer gaps in the live option-support inventory. This work
 is not a claim of complete optimization or full11-game feature parity.
 
@@ -65,9 +69,27 @@ avoid loading GB-only mesher/cache facades or enumerating storage. The native
 joining the existing FireRed/Emerald aliases. Public API/version remain backward
 compatible; no companion is required.
 
-Five current-engine native startup contract runs pass (each game's public API,
+All eleven current-engine startup contract runs pass (each game's public API,
 correct version/generation, alias identity, detached counters). The producer
 unit tests additionally verify unchanged Gen1/2 diagnostics and no GB/storage
 work on Gen3. Reusable fixture: `tools/qa/performance-provider.lua`; actual run
 logs under `.scratch/battle-perf-20261015/diagnostics-*/`. Existing legacy fields
 are not mislabeled as native work; see `docs/PERFORMANCE_API.md`.
+
+## Sprite bounds follow-up
+
+Shared SpriteHeadBounds now scans retained BattleArt ImageData instead of
+round-tripping owned images through a GPU canvas. Native fitted battle images
+also reuse CPU bounds when their nearest-neighbor sampling is unambiguous.
+Driver-sensitive texel-boundary fits and other providers retain GPU measurement;
+no artwork, transforms, foot anchoring or animation timing changes.
+
+The current-engine GPU comparison fixture checked 96 fitted images spanning
+four source sizes, three destinations, mirroring and four scales. All measured
+bounds matched; 56 used CPU bounds and 40 retained readbacks. This is a fixture
+coverage count, not an FPS claim. Unit checks assert owned-image queries do not
+access graphics and repeat queries reuse the cached bounds. SDK1173/1173 and
+world battle projection/grounding/error-restoration tests pass.
+
+Fixture: `tools/qa/sprite-bounds.lua`; log:
+`.scratch/battle-perf-20261015/sprite-bounds/run.log`.

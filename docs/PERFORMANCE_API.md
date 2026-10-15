@@ -69,3 +69,8 @@ modules or scan storage. `storageSnapshot()` currently returns an empty table
 for Gen3; CPU cache counters do not pretend to enumerate persistent bytes.
 Gen1/2 keep their existing detailed GB diagnostics. None of these reads changes
 render quality, cache policies or the world, and no monitor mod is required.
+
+`spriteBounds` reports cumulative `cpu` source scans, `fit` CPU fitted-image
+scans, and `gpu` fallback measurements. Cached repeat queries do not increment
+these counters. A GPU measurement is a bounds readback, not a frame time.
+All generations share this optional diagnostic table.

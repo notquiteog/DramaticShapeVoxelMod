@@ -30,6 +30,8 @@ function M.fit(image,size,mirror,pixelScale)
  g.push('all');g.setCanvas(c);g.origin();g.setShader();g.setScissor();g.setDepthMode();g.setBlendMode('alpha');g.clear(0,0,0,0);g.setColor(1,1,1,1)
  local w,h=image:getDimensions();local scale=math.min(size/w,size/h,pixelScale or math.huge)
  g.draw(image,(size-w*scale)/2+(mirror and w*scale or 0),size-h*scale,0,mirror and -scale or scale,scale);g.pop();c:setFilter('nearest','nearest');cache[key]=c
+ local data=Art.imageData and Art.imageData(image)
+ if data then V.require('SpriteHeadBounds').rememberFit(c,data,size,mirror,scale)end
  return c
 end
 -- Gen 3's native animation compositor uses two screen-space rows. Keep its
