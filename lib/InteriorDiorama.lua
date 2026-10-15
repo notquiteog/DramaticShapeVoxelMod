@@ -2,6 +2,11 @@
 -- collision remain authoritative. Camera-facing walls open outside the room;
 -- an eye inside the room sees all four walls and a ceiling.
 local V=...
+local Service
+local function services()
+ if not Service then Service=V and V.require and V.require('Gen3ServiceRooms')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3ServiceRooms.lua')end
+ return Service
+end
 local M={background={.022,.032,.046,1}}
 local cache=setmetatable({},{__mode='k'})
 local materials={}
@@ -34,7 +39,7 @@ function M.profile(def,gen)
   local rooms={facility=true,bike_shop=true,contest=true,inside_ship=true,
    battle_frontier=true,battle_palace=true,inside_of_truck=true,battle_tent=true}
   if not cave and spec.primary~='building' and spec.secondary~='rom_082d4d94'
-    and not rooms[spec.secondary] then return end
+    and not rooms[spec.secondary] and def.voxelFlatWalls~=true then return end
  elseif gen==2 then
   if id=='GOLDENROD_DEPT_STORE_ROOF' or id=='CELADON_DEPT_STORE_ROOF' then return end
   if def.environment~='INDOOR' and def.environment~='GATE' and not cave then return end
@@ -92,7 +97,18 @@ function M.profile(def,gen)
   local fronts={TILESET_PLAYERS_HOUSE=16,TILESET_PLAYERS_ROOM=16,TILESET_HOUSE=16,TILESET_LAB=16,TILESET_POKECENTER=16}
   if fronts[ts]then b[2]=fronts[ts]-.3 end
  end
- return {bounds=b,height=cave and 96 or gen==3 and (theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen,cave=cave}
+ local institutional=spec and(spec.secondary=='facility' or spec.secondary=='lilycove_museum' or spec.secondary=='oceanic_museum' or def.voxelFlatWalls==true)
+ local named=id:find('DEVON_CORP',1,true)or id:find('SPACE_CENTER',1,true)or id:find('LILYCOVE_MUSEUM',1,true)or id:find('OCEANIC_MUSEUM',1,true)
+ local flatInstitution=gen==3 and not cave and institutional and((named and(id:match('^RU_')~=nil or id:match('^SA_')~=nil))or def.voxelFlatWalls==true)
+ local service
+ if gen==3 and not cave then
+  local pairs=V.require('Gen3Tilesets');local pair=pairs.canonical and pairs.canonical(def.midLayout.pair)or def.midLayout.pair
+  if pair=='network'or pair=='building__pokemon_center'or pair=='building__shop'or pair=='building__rom_082d4bcc'then service=services().profile(def,pair)end
+ end
+ if service then b=service.bounds end
+ if flatInstitution then b[2]=3.8 end
+ return {bounds=b,height=cave and 96 or gen==3 and (flatInstitution or service or theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen,cave=cave,
+  nativeWallFinish=flatInstitution or service~=nil,noInteriorTrim=flatInstitution or service~=nil,serviceRoom=service}
 end
 local function texture(theme)
  if materials[theme]then return materials[theme]end
@@ -104,6 +120,7 @@ local function texture(theme)
  local image=love.graphics.newImage(data);image:setFilter('nearest','nearest');data:release();materials[theme]=image;return image
 end
 function M.geometry(p,side,opened)
+ if p.serviceRoom then return services().geometry(p,side,opened)end
  -- A reviewed irregular room can supply native boundary segments. Each
  -- uses the same closed wall construction/materials as rectangular rooms.
  if p.boundarySegments and side<=4 then
@@ -133,7 +150,12 @@ function M.geometry(p,side,opened)
   -- Geometry shading and the renderer's actual shadow pass remain active.
   local u=(swatch-.5)/8
   for _,a in ipairs(points)do
-   verts[#verts+1]={a[1],a[2],a[3],u,.5,shade or 1}
+   local tu,tv=u,.5
+   if p.wallpaper and side<=4 then
+    local along=side==1 and(a[1]-x0)or side==2 and(a[3]-z0)or side==3 and(x1-a[1])or(z1-a[3])
+    tu,tv=along/16,(h-a[2])/32
+   end
+   verts[#verts+1]={a[1],a[2],a[3],tu,tv,shade or 1}
   end
   for _,k in ipairs({1,2,3,1,3,4})do indices[#indices+1]=n+k end
  end
@@ -160,7 +182,8 @@ function M.geometry(p,side,opened)
    if not cut and d>a and f>c then box(a,-4,c,d,-.25,f,3)end
   end end
  elseif side==6 then
-  face({{x0,h,z0},{x1,h,z0},{x1,h,z1},{x0,h,z1}},1)
+  local ceiling=h+(p.nativeWallFinish and .05 or 0)
+  face({{x0,ceiling,z0},{x1,ceiling,z0},{x1,ceiling,z1},{x0,ceiling,z1}},1)
  else
   local horizontal=side==1 or side==3
   local start,finish=horizontal and x0 or z0,horizontal and x1 or z1
@@ -226,6 +249,11 @@ function M.geometry(p,side,opened)
      part(a,y,c,math.min(h,y+12),swatch,3+((math.floor(a/16)+band+side)%3)*.4)
     end
    end
+  elseif p.nativeWallFinish then
+   -- Native wallpaper owns the finished face and its original trim. A
+   -- plain backing stays behind it: synthetic cornices/baseboards used to
+   -- protrude through the painted plane and cause grey bleeding/flicker.
+   part(start,0,finish,h,1,3)
   else
    part(start,8,finish,h-3.5,1)
    part(start,0,finish,7,2,3.3)
@@ -364,7 +392,7 @@ end
 -- Recess north-wall backing behind corrected fixture footprints. Moving a
 -- desk into its real blocked row must not bury it in the synthetic shell.
 function M.setRecesses(p,fixtures)
- if not p or p.gen~=3 or p.cave then return end
+ if not p or p.gen~=3 or p.cave or p.serviceRoom then return end
  p.originalNorth=p.originalNorth or p.bounds[2]
  local cuts={};local keys={}
  for _,q in ipairs(fixtures or {})do
@@ -393,6 +421,11 @@ function M.setOpenings(p,openings)
  if signature==p.openingSignature then return end
  p.openingSignature=signature;p.openings=openings
  for key,mesh in pairs(p.meshes or {})do if key:match('^5:')then mesh:release();p.meshes[key]=nil end end
+end
+function M.setWallpaper(p,image)
+ if not p or p.wallpaper==image then return end
+ p.wallpaper=image
+ for key,mesh in pairs(p.meshes or{})do local side=tonumber(key:match('^(%d+):'));if side and side<=4 then mesh:release();p.meshes[key]=nil end end
 end
 function M.camera(p,angle,aspect)
  if not p or p.cave then return end
@@ -427,9 +460,12 @@ function M.draw(p)
  local ceiling=policy.ceiling:get()and (inside or not policy.cutaway:get())
  R.interiorClip(false)
  for side=1,ceiling and 6 or 5 do
-  local key=side..':'..tostring(opened[side] or false)
-  if not p.meshes[key]then local v,i=M.geometry(p,side,opened[side]);p.meshes[key]=R.newMesh(v,i)end
-  R.draw(p.meshes[key],texture(p.theme))
+  -- Authored north-wall veneers keep their closed backing in every view.
+  -- Other near walls retain the normal cutaway used by the play camera.
+  local cut=opened[side]and not(side==1 and p.nativeWallFinish and p.wallpaper)
+  local key=side..':'..tostring(cut or false)
+  if not p.meshes[key]then local v,i=M.geometry(p,side,cut);p.meshes[key]=R.newMesh(v,i)end
+  R.draw(p.meshes[key],side<=4 and p.wallpaper or texture(p.theme))
  end
  if policy.dressing:get()then V.require('KfpInteriorDecor').draw(p,opened,ceiling,texture(p.theme))end
  R.interiorClip(true)

@@ -1,124 +1,60 @@
-# Ruby/Sapphire indexed hatch interface art — 2026-10-15
+# Native Center/Mart polish — 2026-10-15
 
-Selected representable frames now reach the original RS hatch PPU, preserving
-native egg/shards, affine/reveal timing and party/naming ownership. Unsupported
-oversized, translucent, richer-color and special-form pictures remain native.
-A native nickname-frame RGB555/RGB5 mismatch reproduced with art OFF is adapted
-only during its draw; native records restore on success/error.
+1.43.0 addresses the user's service-room priority within the first-three-settlement
+pass. Thirty edition-map placements: both Center floors plus Marts in Viridian,
+Pewter, Oldale and Petalburg, independently reviewed across all five editions.
+Native corner drawings now select chamfered joined room shells with continuous
+wallpaper behind separate healing/staff/storage fixtures. Closed beveled healer
+arch retains the low ball tray; registers have drawers, displays, sloping keys.
+Kanto rear glazing/low case/racks and complete escalator footprints are bounded.
+Native entrance mats, descending wells, staff lanes and normal warps remain clear.
+Unknown source corner families stand down; existing tileset aliases permit reuse.
+Mesh99; HD-2D actors/Pokémon/flowers, native UI/gameplay/collision preserved.
 
-Official0.3.89 Ruby/Sapphire full normal/shiny hatch fixtures pass,1454 clean
-restored draws each; all20 shell/reveal/FIT/FULL/OFF captures inspected. Focused
-32, actual decoder/palette51, interface77 and inventory549 pass. Shared broad
-run311 pass/1 fail/58 skip: only the performance integration adapter fixture's
-missing Game3 dependency stub fails; its owner is correcting it separately.
-SDK1173 passes. Evidence: `docs/RS_INDEXED_HATCH_ART_2026-10-15.md`.
+Official0.3.89: broad307/0fail/58fixture skips; 560 component instances across
+30 rooms / zero ordinary-solid walking overlaps /118 explicit native seat pads
+plus four low Kanto counter patches. Exact archive150 orbit/eye renders inspected;
+native aisles,10 heals,20 escalators,20 exits and8 shops/2 Parcel branches.
+Native input fixture corrections (apron warp, clerk positions/IDs, Parcel branch)
+are documented separately from passes. All6 current optional partners clean and
+on published main; combined Sapphire service smoke has zero mod errors.
+11,394 archive files/487 Lua; tested runtime payload hashes retained during final
+evidence repackage. See `docs/GEN3_SERVICE_ROOMS_2026-10-15.md`.
 
-This is source-only after published1.41.1; no model/release metadata changed.
-Overall interface parity remains partial. Next public consumer found but not
-changed: native PC `pc_chrome.drawLeftDataPanel` hovered-mon picture. Additional
-feature work is frozen for the user's requested release checkpoint.
+Regional queue marks only these30/125 placements verified;95 remain queued:
+starting homes, labs/school/gyms, route buildings and outdoor/terrain review.
+All125 have initial private source/render captures; capture is not completion.
+RS starting homes still need separately reviewed native recipes, not a blanket
+Emerald-catalog enable. Petalburg Gym has detached native chambers to preserve.
+No complete regional, ORAS-equivalent or multiplayer validation is claimed.
 
-# Post-release parity source checkpoint and all11 startup check — 2026-10-15
+# Ruby/Sapphire institutions and continuous native wallpaper — 2026-10-15
 
-Six native interface batches after4bc557a are committed throughcb6e7ff; no changes
-to published1.41.1 archives. Final shared suite308/0fail/58skip includes SDK1173.
-Current-source official0.3.89 all11 native options startup sweep passes119 rows
-per GB edition/121 per GBA, zero missing, inversion changed/restored in all11.
-This proves registration and startup, not full feature/gameplay parity.
+1.42.0 adds 55 separately reviewed native component patterns to nine interiors
+per Ruby/Sapphire edition: both museum families, Devon and Space Center. Closed
+furniture, flat continuous walls, closed T-junctions and outward finish offsets
+address wall gaps and grey bleed-through. Native BG layers compose once and the
+back-wall wallpaper/trim repeat around all four outer walls, with native openings
+and north fixtures preserved. Oceanic Museum gains complete exact-permission
+stair assemblies in all three Hoenn editions. Mesh97; actors/Pokémon/flowers stay
+HD-2D, gameplay/UI/collision remain native, partner dependencies stay optional.
+Third-party map metadata supports additional flat native-papered rooms.
 
-Consolidated evidence and exact remaining renderer/asset/provider contracts:
-`docs/NATIVE_INTERFACE_PARITY_CHECKPOINT_2026-10-15.md`. All runtime processes
-ended; source/GPU clear. Models, release metadata and independent assets untouched.
+Includes newly published 1.41.1 main4bc557a; unrelated primary-checkout work was
+preserved. Official0.3.89 broad305/0fail/58missing-fixture skips. Exact archive:
+140 new native component placements per edition / zero ordinary-solid walking
+overlaps /32 explicit low seats each; all18 aisles and18 native stair warps;
+OFF/actual1ST,90 inspected orbit/eye captures, both Emerald museum stair warps,
+FireRed Oak lab/Emerald Devon neighbor inspection. Sapphire exterior terrace
+retains12-unit rise/both native stair lanes/door. All6 latest partner smoke passes
+with no mod errors. 11,391 archive files/485 compiled Lua; final evidence-only
+repackage must retain all tested runtime hashes. Evidence and caveats:
+`docs/GEN3_RS_INSTITUTIONS_2026-10-15.md`.
 
-# Native Hoenn starter selected-art adapter — 2026-10-15
-
-Starter previews now draw selected art at the public final-fade seam, retaining
-native affine policy, UI, timing and choice callbacks. FULL uses its true canvas
-instead of the fixed64 quad. Temporary mon/fade/graphics owners restore on errors.
-All3 official0.3.89 fixtures pass native missing-art fallback, decline/accept/reset
-and explicit ROM-derived test-provider FIT/FULL/OFF (66x94 FULL); all15 captures
-inspected. Bundled Crystal ends at251, so these are not shipped Hoenn pack images.
-
-Focused14/interface77/inventory549, broad308/0fail/58skip including SDK1173 pass.
-Evidence: `docs/GEN3_STARTER_ART_2026-10-15.md`. Source-only after4bc557a; no release
-metadata/asset changes. Remaining native interface limits: RS indexed hatch,
-FRLG dedicated credit poses, Dodrio action sheets and optional artwork coverage.
-Other capture/backdrop/scenery gaps remain explicit in the partial inventory.
-
-# Native Pokemon Jump participant portraits — 2026-10-15
-
-FR/LG/E participant pictures now consume selected art through a temporary
-per-player draw cache, preserving native PID/shiny identity, dimensions and
-original renderer ordering/movement. Native caches restore after success/error;
-no scores/protocol/game rules changed. Official0.3.89 three component fixtures
-pass FIT/FULL/OFF, changed remote identity and native bounce; all15 captures
-inspected. This is not a linked-match or matchmaking verification.
-
-Focused15/interface77/inventory549, broad307/0fail/58skip including SDK1173 pass.
-Evidence: `docs/GEN3_JUMP_ART_2026-10-15.md`. Source-only after4bc557a; no existing
-1.41.1 archive inclusion claim. Remaining native interface contracts: RS indexed
-hatch, starter fixed64 quad, FRLG dedicated credit poses and Dodrio pose sheets.
-FRLG exposes current mon state publicly, but its later stages are dedicated
-ROM pose art, not simple crops. Models and release metadata untouched.
-
-# Native Hoenn credits portraits after release checkpoint — 2026-10-15
-
-Ruby/Sapphire/Emerald original credit slides now consume selected portraits with
-native scale/fades/text. Shared frontPic scopes preserve explicit shiny/PID
-arguments when no source mon is supplied. All3 official0.3.89 original slideshow
-fixtures pass FIT/FULL/OFF, natural slide/fade, finish/reset lifecycle; all12
-captures inspected. Focused77/inventory549 and broad306/0fail/58skip (SDK1173)
-pass. Evidence: `docs/GEN3_CREDITS_ART_2026-10-15.md`.
-
-Separate source batch after4bc557a; no release metadata changes. Remaining:
-RS indexed hatch, FRLG cropped credit reveals, starter fixed64 quad and minigame
-cached/custom-pose pictures. Inventory remains partial; no complete ending,
-full parity or existing1.41.1 archive inclusion claim.
-
-# Native Hoenn Pokeblock portraits after release checkpoint — 2026-10-15
-
-Ruby/Sapphire/Emerald selection and feed screens now consume selected portraits
-through scoped cached-image substitution. Outgoing slides keep the source mon's
-identity after cursor changes; native affine animation, cancellation, callbacks,
-party ownership, inventory consumption and condition updates remain original.
-Official0.3.89 original-UI fixtures pass all3; all24 captures inspected. Exactly
-one original feed consumes one block and applies expected cool10/sheen20.
-
-Focused16/interface71/inventory549, broad306/0fail/58skip including SDK1173 pass.
-Evidence: `docs/GEN3_POKEBLOCK_ART_2026-10-15.md`. Separate source batch after
-4bc557a; no release metadata changes or claim of existing1.41.1 inclusion.
-Remaining interface consumers: RS indexed hatch, minigames, credits and starter
-selection. Inventory remains partial; models and independent assets untouched.
-
-# Native Emerald Factory portraits after release checkpoint — 2026-10-15
-
-Factory rental/swap draws now consume selected interface frames with native
-mon/PID/shiny context and FIT/FULL/OFF behavior. Original three-rental selection,
-confirmation, enemy-pool switch, accepted/cancelled swap callbacks and party
-ownership remain native. Official0.3.89 Emerald original-UI fixture passes;
-all8 final captures inspected. It observes callbacks, not tournament progression.
-
-Focused71, inventory549, broad305/0fail/58skip including SDK1173 pass. Evidence:
-`docs/GEN3_FACTORY_ART_2026-10-15.md`. Source-only follow-up to4bc557a; no release
-metadata changes or claim of inclusion in existing1.41.1 archives. Remaining
-interface consumers: RS indexed hatch, Pokeblock, minigames, credits, starter
-selection. Inventory remains partial; model art untouched.
-
-# Native scripted/contest pictures after release checkpoint — 2026-10-15
-
-Separate from release4bc557a: native MonPic windows now consume selected art
-only during their draw, restoring cached images/dimensions/animation transforms.
-Hoenn contest entries preserve packed OT/PID/shiny identity; show/hide/reset
-clear context. FULL compensates the native viewport clamp for oversized art.
-Native windows, timing, cries, special-species art and disabled fallback remain.
-
-Official0.3.89 all5 scripted fixtures and all3 Hoenn contest-picture components
-pass; all34 captures inspected. Focused20/interface65/inventory549, real native
-MonPic renderer contract, broad305/0fail/58skip including SDK1173 pass. Evidence:
-`docs/GEN3_SCRIPTED_ART_2026-10-15.md`. These are component fixtures, not full
-contest progression. Remaining interface consumers: RS indexed hatch, Pokeblock,
-Factory, minigames, credits and starter selection. No release metadata changes;
-this later source batch is not claimed included in existing1.41.1 archives.
+The requested first three settlements in both Kanto and Hoenn, connecting routes
+and interiors remain the next regional pass:125 native edition-map placements
+tracked in `docs/GEN3_STARTING_REGIONS_2026-10-15.md`. This batch does not claim
+complete all-five-game scenery or ORAS-equivalent visual coverage.
 
 # Coordinated streaming release — 2026-10-15
 

@@ -36,9 +36,12 @@ function M.append(p,source,box,sample,emit,uvFor)
  local r,x,z=p.recipe,p.cx*16,p.cy*16
  -- The generic furniture primitive predates orbit cameras and has five faces.
  -- Close only this adapter's solids; designed furniture closes its own boxes.
- local openBox=box
  box=function(a,b,c,d,e,f,t)
-  openBox(a,b,c,d,e,f,t)
+  emit({{a,e,c},{d,e,c},{d,e,f},{a,e,f}},t,.88)
+  emit({{a,e,f},{d,e,f},{d,b,f},{a,b,f}},t,.72)
+  emit({{d,e,c},{a,e,c},{a,b,c},{d,b,c}},t,.66)
+  emit({{a,e,c},{a,e,f},{a,b,f},{a,b,c}},t,.7)
+  emit({{d,e,f},{d,e,c},{d,b,c},{d,b,f}},t,.7)
   emit({{a,b,f},{d,b,f},{d,b,c},{a,b,c}},t,.6)
  end
  local function prism(points,bottom,top,material)
@@ -101,13 +104,18 @@ function M.append(p,source,box,sample,emit,uvFor)
    emit({{x+a,0,z+b},{x+c,0,z+b},{x+c,0,z+d},{x+a,0,z+d}},floor,1)
   end
   ground(0,0,32,16);ground(0,40,32,48);ground(24,16,32,40)
-  if r.family=='rse' then
-   -- Hoenn's lower drawing row is walking floor, not flight depth.
-   -- Keep the full native treads/rails inside the blocked/warp middle row.
-   local originalBox=box
-   local function depth(v)return z+16+(v-z-16)*2/3 end
-   box=function(a,b,n,c,e,f,t)return originalBox(a,b,depth(n),c,e,depth(f),t)end
-   ground(0,32,32,40)
+  -- All three source rows belong to the drawing, but only its middle row
+  -- contains the blocked flight/warp. Transform every solid/rail/source face,
+  -- not just boxes; the lower row remains unobstructed walking floor.
+  ground(0,32,32,40)
+  local originalEmit,originalSource=emit,source
+  local function fit(points)
+   local out={};for i,q in ipairs(points)do out[i]={q[1],q[2],z+16.2+(q[3]-z-16.7)*15.6/23.6}end
+   return out
+  end
+  emit=function(points,t,shade,anchor)return originalEmit(fit(points),t,shade,anchor)end
+  source=function(sx,sy,w,h,a,b,c,d)
+   local q=fit{a,b,c,d};return originalSource(sx,sy,w,h,q[1],q[2],q[3],q[4])
   end
   local function height(u)return (r.down and -1 or 1)*math.max(0,(24-u)*.5)end
   for u=0,22,2 do
@@ -176,6 +184,24 @@ function M.append(p,source,box,sample,emit,uvFor)
    {x+27,tray+.03,z+28},{x+5,tray+.03,z+28})
   source(5,26,22,5,{x+5,tray-.2,z+30.02},{x+27,tray-.2,z+30.02},
    {x+27,1.5,z+30.02},{x+5,1.5,z+30.02})
+  -- The native white arch is a three-dimensional housing behind the low
+  -- tray. Its separate side posts and beveled upper ring leave a real open
+  -- center; extending the room wall through this opening hid it completely.
+  box(x+2,tray,z+8,x+6,21,z+13,white)
+  box(x+26,tray,z+8,x+30,21,z+13,white)
+  local function arch(points)
+   local front,back={},{}
+   for i,q in ipairs(points)do front[i]={x+q[1],q[2],z+13};back[i]={x+q[1],q[2],z+8}end
+   emit(front,white,1);emit({back[4],back[3],back[2],back[1]},white,.75)
+   for i=1,4 do local j=i%4+1;emit({front[i],front[j],back[j],back[i]},white,.85)end
+  end
+  arch{{2,21},{6,25},{8,22},{5,19}}
+  arch{{6,25},{26,25},{25,22},{7,22}}
+  arch{{26,25},{30,21},{27,19},{25,22}}
+  source(1,10,5,16,{x+2,21,z+13.02},{x+6,21,z+13.02},{x+6,tray,z+13.02},{x+2,tray,z+13.02})
+  source(26,10,5,16,{x+26,21,z+13.02},{x+30,21,z+13.02},{x+30,tray,z+13.02},{x+26,tray,z+13.02})
+  source(8,1,16,4,{x+7,25,z+13.02},{x+25,25,z+13.02},{x+25,22,z+13.02},{x+7,22,z+13.02})
+
   return true
  elseif r.kind=='centerTable' then
   -- The glass tables have chamfered corners in both editions. Model the rim

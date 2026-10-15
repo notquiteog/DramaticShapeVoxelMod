@@ -34,7 +34,7 @@ assert(F.draw('em_truck_cargo',{sample=function()return{}end,source=function()en
  end}))
 local Pairs=dofile('lib/Gen3Tilesets.lua')
 package.loaded['src.import.gba.versions']={TILESET_PAIRS={network={primary='building',secondary='pokemon_center'}}}
-local D=assert(loadfile('lib/InteriorDiorama.lua'))({require=function(n)assert(n=='Gen3Tilesets');return Pairs end})
+local D=assert(loadfile('lib/InteriorDiorama.lua'))({require=function(n)if n=='Gen3ServiceRooms'then return dofile('lib/Gen3ServiceRooms.lua')end;assert(n=='Gen3Tilesets');return Pairs end})
 for gen=1,3 do
  local d={id='TEST_HOME',tileset='HOUSE',environment='INDOOR',mapType=8,width=gen==3 and 8 or 4,height=gen==3 and 8 or 4,
   warps={{x=2,y=7},{x=3,y=7},{x=5,y=2}},midLayout={pair='network',midAt=function()return 0x281 end}}

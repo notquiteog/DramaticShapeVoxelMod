@@ -20,7 +20,7 @@ for _,r in ipairs(list)do if r.pair=='network' then
   assert(minZ>=(r.kind=='centerCounter' and 9 or 25),'counter intersects rotating staff card')
  end
  if r.kind=='centerHealer'then
-  assert(r.h==7 and maxY==14 and minY==0,'healer tray/base exceeds native low housing proportions')
+  assert(r.h==7 and maxY==25 and minY==0,'healer arch or low tray scale drift')
  end
  if r.kind=='escalator'then assert(minY<0 and maxY<25,'unbounded escalator')
   if r.down then assert(maxY<8 and r.noGround,'down escalator is a raised staircase')end

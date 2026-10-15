@@ -1,3 +1,19 @@
+## 1.43.0
+
+- Match Center/Mart native chamfered corners with closed joined polygon walls and clipped floor/foundation/ceiling geometry.
+- Keep continuous native wallpaper behind separate healing, storage, computer and wall fixtures. Reconstruct the healer's white arch without changing its low animated ball tray; align the native healing monitor with its wall screen.
+- Model west-facing Mart tills with separate drawers, displays, sloping keypads and raised keys. Add Kanto rear glass cases and restore Hoenn's original clock.
+- Keep escalator rails inside the native blocked/warp row, maintain the descending well, and correct Kanto rack, display-table and counter-edge footprints.
+- Preserve native collision, scripts, UI, HD-2D actors/Pokémon/flowers and optional standalone partners. Mesh revision 99.
+
+## 1.42.0
+
+- Model the Ruby/Sapphire Lilycove and Oceanic Museum galleries, displays and reception desks, Devon research/office furniture and Space Center controls/workstations.
+- Keep wall faces continuous and flat, close native T-junctions and place furniture separately in front. Remove synthetic trim penetrating native wall finishes; offset decorative surfaces and ceiling caps to avoid z-fighting.
+- Wrap the native wallpaper and lower trim around the other outer room walls, composing native layers once to prevent paint bleed-through.
+- Add complete Oceanic Museum stair frames/flights using the native Hoenn floor materials, guarded by exact source permissions.
+- Preserve HD-2D actors/Pokémon/flowers, native gameplay/UI and optional standalone integrations. Mesh revision 97.
+
 ## 1.41.1 — 2026-10-15
 
 Consolidates the published source-specific tower/museum models with streaming optimizations, terrain caching, native interface-art parity and incremental Gen 2 boundary uploads. Reuses resolved native tree artwork during Gen 3 rebuilds. Preserves scene quality and optional companion integrations. Gen1Recomp 0.3.89: merged regression suite 303 passed, 0 failed, 58 prerequisite skips. Performance remains workload-dependent: initial loads and map crossings can exceed the 6.06 ms budget for 165 FPS; full coverage and parity are not claimed.

@@ -1,7 +1,7 @@
 local Shapes=assert(loadfile('lib/Gen3TileShape.lua'))()
 local Pairs=assert(loadfile('lib/Gen3Tilesets.lua'))()
 package.loaded['src.import.gba.versions']={TILESET_PAIRS={network={primary='building',secondary='pokemon_center'}}}
-local M=assert(loadfile('lib/InteriorDiorama.lua'))({require=function(name)assert(name=='Gen3Tilesets');return Pairs end})
+local M=assert(loadfile('lib/InteriorDiorama.lua'))({require=function(name)if name=='Gen3ServiceRooms'then return dofile('lib/Gen3ServiceRooms.lua')end;assert(name=='Gen3Tilesets');return Pairs end})
 assert(M.profile({tileset='CAVERN',width=5,height=5},1).cave)
 assert(M.profile({environment='CAVE',width=5,height=5},2).cave)
 assert(not M.profile({environment='TOWN',width=5,height=5},2))
@@ -101,3 +101,31 @@ for _,pair in ipairs({'harbor','general__rom_082d4b24','general__rustboro','gene
   midLayout={pair=pair,midAt=function()return 1 end}},3),'weather-suppressed outdoors acquired ceiling')
 end
 print('PASS ferry docks, event islands and ship exterior retain an open sky')
+-- Native painted walls must remain in front of a plain, untrimmed backing.
+-- This catches grey baseboards/cornices protruding through the finished face.
+for _,id in ipairs{'RU_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F','SA_MOSSDEEP_CITY_SPACE_CENTER_1F','CUSTOM_INSTITUTION'}do
+ local p=assert(M.profile({id=id,mapType=8,width=8,height=8,voxelFlatWalls=id=='CUSTOM_INSTITUTION',
+  midLayout={pair='building__lilycove_museum',midAt=function()return 0x20b end}},3))
+ assert(p.height==32 and p.noInteriorTrim and p.nativeWallFinish,'native finish acquired synthetic trim')
+ for side=1,4 do
+  for _,q in ipairs(M.geometry(p,side,false))do
+   assert(q[2]>=0 and q[2]<=32,'synthetic cornice extends above native wall')
+   if side==1 then assert(q[3]<=p.bounds[2],'backing bleeds through native north face')end
+   if side==2 then assert(q[1]>=p.bounds[3],'backing projects inside east face')end
+   if side==3 then assert(q[3]>=p.bounds[4],'backing projects inside south face')end
+   if side==4 then assert(q[1]<=p.bounds[1],'backing projects inside west face')end
+  end
+ end
+ for _,q in ipairs(M.geometry(p,6,false))do assert(q[2]>32,'ceiling is coplanar with wall cap')end
+end
+print('PASS flat native institution backing, closed room bounds and separated wall-cap/ceiling surfaces')
+
+local paper=assert(M.profile({id='RU_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F',mapType=8,width=8,height=8,
+ midLayout={pair='building__lilycove_museum',midAt=function()return 0x20b end}},3))
+paper.wallpaper={}
+for side=1,4 do
+ local lo,hi,top,bottom=1e9,-1e9,1e9,-1e9
+ for _,v in ipairs(M.geometry(paper,side,false))do lo=math.min(lo,v[4]);hi=math.max(hi,v[4]);top=math.min(top,v[5]);bottom=math.max(bottom,v[5])end
+ assert(hi-lo>=7 and top==0 and bottom==1,'native wallpaper does not repeat at its original scale on every wall')
+end
+print('PASS native wallpaper repeats across all four wall planes at source scale')
