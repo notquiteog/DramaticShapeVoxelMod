@@ -1,3 +1,7 @@
+## 1.41.1 — 2026-10-15
+
+Consolidates the published source-specific tower/museum models with streaming optimizations, terrain caching, native interface-art parity and incremental Gen 2 boundary uploads. Reuses resolved native tree artwork during Gen 3 rebuilds. Preserves scene quality and optional companion integrations. Gen1Recomp 0.3.89: merged regression suite 303 passed, 0 failed, 58 prerequisite skips. Performance remains workload-dependent: initial loads and map crossings can exceed the 6.06 ms budget for 165 FPS; full coverage and parity are not claimed.
+
 ## 1.41.0
 
 - Add native-art reception desks, closed terminals/screens and complete animated door frames across the five GBA tower lobbies.

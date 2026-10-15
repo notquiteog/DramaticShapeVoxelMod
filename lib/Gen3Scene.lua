@@ -343,10 +343,10 @@ local function build(req,cache,previous)
      local native=V.require('NativeTreeArt')
      local tx,tz=x+(shape.anchorX or 16),z+(shape.anchorZ or 12)
      if TreeStyle.voxel() then
-      local card=V.require('NativeLegendaryForest').card(native.gen3(c),c,def.id or req.mapId)
+      local card=V.require('NativeLegendaryForest').card(crown,c,def.id or req.mapId)
       if V.require('NativeLegendaryTrees').add(card,c,cells,legendaryTreeGroups,tx,c.base or 0,tz)then M.legendaryTreeCount=M.legendaryTreeCount+1
       elseif not native.addInstance(card,treeGroups,tx,c.base or 0,tz)then native.appendModel(card,leaf,li,0,tx,0,tz)end
-     else native.append(native.gen3(c),leaf,li,0,tx,0,tz,TreeStyle.flat()) end
+     else native.append(crown,leaf,li,0,tx,0,tz,TreeStyle.flat()) end
      if not TreeStyle.voxel() and not TreeStyle.flat() then Trees.appendTrunk(wood,wi,0,tx,0,tz,4,c.cx*73+c.cy*139) end
     else
     local seed=c.cx*73+c.cy*139

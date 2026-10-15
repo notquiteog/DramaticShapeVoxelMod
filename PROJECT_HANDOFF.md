@@ -1,3 +1,26 @@
+# Coordinated streaming release — 2026-10-15
+
+Merged published tower/museum models (origin 1.41.0) with existing streaming and
+native-art parity work at 5d9a773. Museum approach keeps floorLink/steps and local
+classification cache. Gen 3 tree rebuilds now reuse the already resolved crown
+instead of resolving source artwork twice (Route 104: 1648 -> 824 calls).
+
+Merged suite: 303 passed, 0 failed, 58 prerequisite skips, SDK1173 included.
+Official Gen1Recomp 0.3.89 / native NVIDIA RTX 5060 Ti, 2560x1440 benchmarks.
+A bounded Gen 3 mesh-upload experiment was rejected after inconsistent results;
+no MeshChunks module or renderer changes from that experiment are retained.
+Baseline five-game GBA crossing p95: 13.85–18.39 ms; Emerald battle p95 3.28 ms.
+Cold rebuild timings are variable; no stable 165 FPS or complete parity claim.
+Prior measured Gen 2 boundary slicing improvements remain; see
+`docs/BOUNDARY_FRAME_TIME_2026-10-15.md`.
+
+All seven mods receive coordinated releases; companions only receive packaging
+version bumps (no new runtime changes). Exact-package results and checksums are
+recorded in the release evidence directory. Parity drafts remain outside this
+release until independently verified. Source data, private packs, saves and ROMs
+are excluded. Follow-up: unprepared warps/cold builds and GBA lookahead preparation
+still exceed the 6.06 ms budget; do not reduce lookahead without checking readiness.
+
 # Native Hoenn PokeNav selected art — 2026-10-15
 
 Ruby/Sapphire condition/ribbons and Emerald condition/ribbon summary now
