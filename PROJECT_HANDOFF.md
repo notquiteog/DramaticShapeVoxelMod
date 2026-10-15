@@ -1,3 +1,19 @@
+# Native Pokemon Jump participant portraits — 2026-10-15
+
+FR/LG/E participant pictures now consume selected art through a temporary
+per-player draw cache, preserving native PID/shiny identity, dimensions and
+original renderer ordering/movement. Native caches restore after success/error;
+no scores/protocol/game rules changed. Official0.3.89 three component fixtures
+pass FIT/FULL/OFF, changed remote identity and native bounce; all15 captures
+inspected. This is not a linked-match or matchmaking verification.
+
+Focused15/interface77/inventory549, broad307/0fail/58skip including SDK1173 pass.
+Evidence: `docs/GEN3_JUMP_ART_2026-10-15.md`. Source-only after4bc557a; no existing
+1.41.1 archive inclusion claim. Remaining native interface contracts: RS indexed
+hatch, starter fixed64 quad, FRLG dedicated credit poses and Dodrio pose sheets.
+FRLG exposes current mon state publicly, but its later stages are dedicated
+ROM pose art, not simple crops. Models and release metadata untouched.
+
 # Native Hoenn credits portraits after release checkpoint — 2026-10-15
 
 Ruby/Sapphire/Emerald original credit slides now consume selected portraits with
