@@ -12,8 +12,11 @@ Official0.3.89 with copied disposable QA imports: source-specific terrace tests,
 three-edition stair walks and rendered site views, unrelated FireRed stairs,
 Route121 and LeafGreen Oak lab. Evidence and remaining work:
 `docs/GEN3_MUSEUM_GROUND_2026-10-15.md`. Tower WIP remains parked separately;
-other large buildings/interiors remain unfinished. Current uncommitted shared
-scene/cache/menu work is excluded and preserved.
+other large buildings/interiors remain unfinished. 292 suites pass/0fail/58 explicit fixture skips. Exact archive native stair
+walks pass in all three Hoenn editions; all-six-partner Sapphire smoke passes.
+Release runtime files remain identical after the evidence-only repackage.
+Later shared streaming/cache/capture and terrain/sea-rock work is preserved and
+excluded; this archive freezes the museum repair plus verified f6cd4c0.
 
 # Native original HUD options — 2026-10-15
 

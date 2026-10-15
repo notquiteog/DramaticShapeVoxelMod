@@ -65,7 +65,26 @@ Runtime shell: `/home/admin/Projects/.scratch/runtime-0.3.89/engine-museum-stair
   bounds, foundation datum, opened perimeter/flank vetoes and native-data
   immutability. Existing terrain, stairs and landmark contracts are retained.
 
-Final archive and current merged test results are recorded after verification.
+Final merged source:292 suites pass,0fail,58 explicit external-fixture skips
+(`tests-merged.log`). Source-only premerge suite:290/0/58. The three edition
+`package-<edition>-walk/` runs each pass both native stair lanes up/down with
+low12/high24/maxdelta1.5, actual1ST camera, followed by the original native
+museum1F warp. Their rendered captures were inspected. The exact standalone
+archive's `package-ground-view/` shows the whole repaired site; `package-allmods/`
+Sapphire views load all six optional partners without loader/driver errors.
+Partner versions: online0.11.1, spawns2.6.3, doubles0.14.2, wild_skies1.15.1,
+sky ride0.5.4 and modern-ui0.4.1. No dependency was added.
+
+All packaged476 Lua files compile, ZIP integrity passes,11367 files. Final
+runtime files are hash-compared against this inspected package after an
+evidence-only repackage; checksum accompanies the release. Native QA processes
+quit cleanly, only disposable QA options changed, and no player save was touched.
+
+Release source is frozen at the museum repair plus f6cd4c0. Later concurrently
+committed streaming/cache/capture work (including f97198c), and current terrain/
+sea-rock work in the shared primary checkout, are preserved and excluded from
+this verified archive. This avoids silently mixing later runtime changes into
+already inspected model/elevation evidence.
 Captures, source artwork, imported pixels, caches and saves are excluded from Git
 and release ZIPs. No new network-gameplay or all-map coverage claim is made.
 Other large buildings/interiors remain incomplete; tower work is parked separately.
