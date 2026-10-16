@@ -70,6 +70,8 @@ package.loaded['src.core.game3.field_view']=Field
 package.loaded['src.core.game3.display']=Display
 package.loaded['src.core.game3.player']=Player
 package.loaded['src.core.game3.battle']={isActive=function()return false end}
+package.loaded['src.core.Game3']={}
+package.loaded['src.core.Platform']={detect=function()return{}end}
 package.loaded['src.render.Tilt']=Tilt
 local fail,needsNative,canDraw=false,false,true
 local Scene={nativeRequired=function()return needsNative end,

@@ -1,3 +1,20 @@
+## 1.44.0 — Scene construction, desktop GC headroom and Gen 3 interface art
+
+Shares GPU hull instances for Hoenn sea rocks, caches up to eight compact
+occupancy masks across native tree families, prefers connected-map lookahead
+seams in the player's travel direction, and raises desktop Gen 3 public GC
+construction headroom from 256 MiB to 512 MiB while voxel mode is active
+(restoring on OFF/launcher and keeping handheld and external policies intact).
+
+Extends native Gen 3 selected interface art across scripted `MonPic` and Hoenn
+contest pictures, Emerald Battle Factory rental/swap previews, Hoenn Pokéblock
+case/feeding portraits, Hoenn credits slides, FR/LG/Emerald Pokémon Jump
+participants, Hoenn starter selection previews, and Ruby/Sapphire indexed
+egg-hatch PPU sheets. Characters, Pokémon and flowers stay HD-2D; native UI,
+gameplay and optional partner independence remain authoritative. Verified on
+official Gen1Recomp 0.3.89. [Scene construction evidence](docs/SCENE_CONSTRUCTION_PERF_2026-10-15.md)
+and [interface parity checkpoint](docs/NATIVE_INTERFACE_PARITY_CHECKPOINT_2026-10-15.md).
+
 ## 1.43.0 — Native Center and Mart polish
 
 Match the native angled corners in Kanto/Hoenn Centers and Marts. Continuous

@@ -1,3 +1,10 @@
+## 1.44.0
+
+- Extend native Gen 3 selected interface art across scripted `MonPic` windows and Hoenn contest entries, Emerald Battle Factory rental/swap previews, Hoenn Pokéblock selection and feeding screens, Hoenn credit slides, FR/LG/Emerald Pokémon Jump participant sprites, Hoenn starter preview bags, and Ruby/Sapphire indexed PPU egg-hatch sheets.
+- Instance Hoenn sea rocks across shared scene-owned GPU hulls (`Gen3SeaRocks`), cache up to eight compact occupancy masks across native tree families (`VoxelHull`), and prefer connected-map lookahead seams along the player's facing direction (`SceneLookahead`).
+- Raise desktop Gen 3 public GC construction headroom (`GC_CEILING_KB`) from 256 MiB to 512 MiB while voxel mode is active (`SceneGcHeadroom`), restoring on OFF/launcher and preserving handheld defaults, engine dynamic thresholds, and external policies.
+- Preserve native gameplay, collision, scripts, UI, HD-2D actors/Pokémon/flowers, and optional standalone integrations.
+
 ## 1.43.0
 
 - Match Center/Mart native chamfered corners with closed joined polygon walls and clipped floor/foundation/ceiling geometry.

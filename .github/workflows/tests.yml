@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: bryanthaboi/gen1recomp
-          ref: v0.3.51
+          ref: v0.3.89
           path: .test-engine
 
       - name: Run the Lua suite

@@ -1,3 +1,31 @@
+# Scene construction, desktop GC headroom and Gen3 interface art — 2026-10-15
+
+1.44.0 consolidates the scene-construction and desktop GC headroom pass with the
+seven native Gen 3 interface-art consumer batches merged after 1.43.0:
+- Hoenn sea rocks share scene-owned GPU hulls and XYZ instance placements
+  (`Gen3SeaRocks`), native tree families share up to eight compact occupancy
+  masks (`VoxelHull`), connected-map lookahead prefers seams in the player's
+  travel direction (`SceneLookahead`), and desktop Gen 3 raises public
+  `GC_CEILING_KB` construction headroom from 256 MiB to 512 MiB while voxel mode
+  is active (`SceneGcHeadroom`), restoring on OFF/launcher and respecting
+  handheld limits and external policies. Evidence:
+  `docs/SCENE_CONSTRUCTION_PERF_2026-10-15.md`.
+- Native Gen 3 selected interface art now covers scripted `MonPic` windows and
+  Hoenn contest entries (`NativeScriptedArt`), Emerald Battle Factory rental/swap
+  previews (`NativeInterfaceArt`), Hoenn Pokéblock selection/feeding portraits
+  (`NativePokeblockArt`), Hoenn credit slides (`NativeInterfaceArt`), FR/LG/Emerald
+  Pokémon Jump participant sprites (`NativeJumpArt`), Hoenn starter selection
+  previews (`NativeStarterArt`), and Ruby/Sapphire indexed PPU egg-hatch sheets
+  (`NativeIndexedHatchArt`). Evidence: `docs/RS_INDEXED_HATCH_ART_2026-10-15.md`
+  and `docs/NATIVE_INTERFACE_PARITY_CHECKPOINT_2026-10-15.md`.
+
+Official 0.3.89: full merged regression suite 316 passed, 0 failed, 58 external
+fixture skips (including SDK 1173 and `gen3_adapter_test.lua` headless Game3/Platform
+guards). Characters, Pokémon and flowers remain HD-2D; native UI, gameplay,
+collision and optional partner independence remain authoritative. 11,409 archive
+files / 493 compiled Lua modules. Full regional scenery coverage and complete
+interface parity remain in progress.
+
 # Native Center/Mart polish — 2026-10-15
 
 1.43.0 addresses the user's service-room priority within the first-three-settlement
@@ -55,6 +83,121 @@ The requested first three settlements in both Kanto and Hoenn, connecting routes
 and interiors remain the next regional pass:125 native edition-map placements
 tracked in `docs/GEN3_STARTING_REGIONS_2026-10-15.md`. This batch does not claim
 complete all-five-game scenery or ORAS-equivalent visual coverage.
+
+# Ruby/Sapphire indexed hatch interface art — 2026-10-15
+
+Selected representable frames now reach the original RS hatch PPU, preserving
+native egg/shards, affine/reveal timing and party/naming ownership. Unsupported
+oversized, translucent, richer-color and special-form pictures remain native.
+A native nickname-frame RGB555/RGB5 mismatch reproduced with art OFF is adapted
+only during its draw; native records restore on success/error.
+
+Official0.3.89 Ruby/Sapphire full normal/shiny hatch fixtures pass,1454 clean
+restored draws each; all20 shell/reveal/FIT/FULL/OFF captures inspected. Focused
+32, actual decoder/palette51, interface77 and inventory549 pass. SDK1173 passes.
+Evidence: `docs/RS_INDEXED_HATCH_ART_2026-10-15.md`.
+
+# Post-release parity source checkpoint and all11 startup check — 2026-10-15
+
+Six native interface batches after4bc557a are committed throughcb6e7ff; no changes
+to published1.41.1 archives. Final shared suite308/0fail/58skip includes SDK1173.
+Current-source official0.3.89 all11 native options startup sweep passes119 rows
+per GB edition/121 per GBA, zero missing, inversion changed/restored in all11.
+This proves registration and startup, not full feature/gameplay parity.
+
+Consolidated evidence and exact remaining renderer/asset/provider contracts:
+`docs/NATIVE_INTERFACE_PARITY_CHECKPOINT_2026-10-15.md`. All runtime processes
+ended; source/GPU clear. Models, release metadata and independent assets untouched.
+
+# Native Hoenn starter selected-art adapter — 2026-10-15
+
+Starter previews now draw selected art at the public final-fade seam, retaining
+native affine policy, UI, timing and choice callbacks. FULL uses its true canvas
+instead of the fixed64 quad. Temporary mon/fade/graphics owners restore on errors.
+All3 official0.3.89 fixtures pass native missing-art fallback, decline/accept/reset
+and explicit ROM-derived test-provider FIT/FULL/OFF (66x94 FULL); all15 captures
+inspected. Bundled Crystal ends at251, so these are not shipped Hoenn pack images.
+
+Focused14/interface77/inventory549, broad308/0fail/58skip including SDK1173 pass.
+Evidence: `docs/GEN3_STARTER_ART_2026-10-15.md`. Source-only after4bc557a; no release
+metadata/asset changes. Remaining native interface limits: RS indexed hatch,
+FRLG dedicated credit poses, Dodrio action sheets and optional artwork coverage.
+Other capture/backdrop/scenery gaps remain explicit in the partial inventory.
+
+# Native Pokemon Jump participant portraits — 2026-10-15
+
+FR/LG/E participant pictures now consume selected art through a temporary
+per-player draw cache, preserving native PID/shiny identity, dimensions and
+original renderer ordering/movement. Native caches restore after success/error;
+no scores/protocol/game rules changed. Official0.3.89 three component fixtures
+pass FIT/FULL/OFF, changed remote identity and native bounce; all15 captures
+inspected. This is not a linked-match or matchmaking verification.
+
+Focused15/interface77/inventory549, broad307/0fail/58skip including SDK1173 pass.
+Evidence: `docs/GEN3_JUMP_ART_2026-10-15.md`. Source-only after4bc557a; no existing
+1.41.1 archive inclusion claim. Remaining native interface contracts: RS indexed
+hatch, starter fixed64 quad, FRLG dedicated credit poses and Dodrio pose sheets.
+FRLG exposes current mon state publicly, but its later stages are dedicated
+ROM pose art, not simple crops. Models and release metadata untouched.
+
+# Native Hoenn credits portraits after release checkpoint — 2026-10-15
+
+Ruby/Sapphire/Emerald original credit slides now consume selected portraits with
+native scale/fades/text. Shared frontPic scopes preserve explicit shiny/PID
+arguments when no source mon is supplied. All3 official0.3.89 original slideshow
+fixtures pass FIT/FULL/OFF, natural slide/fade, finish/reset lifecycle; all12
+captures inspected. Focused77/inventory549 and broad306/0fail/58skip (SDK1173)
+pass. Evidence: `docs/GEN3_CREDITS_ART_2026-10-15.md`.
+
+Separate source batch after4bc557a; no release metadata changes. Remaining:
+RS indexed hatch, FRLG cropped credit reveals, starter fixed64 quad and minigame
+cached/custom-pose pictures. Inventory remains partial; no complete ending,
+full parity or existing1.41.1 archive inclusion claim.
+
+# Native Hoenn Pokeblock portraits after release checkpoint — 2026-10-15
+
+Ruby/Sapphire/Emerald selection and feed screens now consume selected portraits
+through scoped cached-image substitution. Outgoing slides keep the source mon's
+identity after cursor changes; native affine animation, cancellation, callbacks,
+party ownership, inventory consumption and condition updates remain original.
+Official0.3.89 original-UI fixtures pass all3; all24 captures inspected. Exactly
+one original feed consumes one block and applies expected cool10/sheen20.
+
+Focused16/interface71/inventory549, broad306/0fail/58skip including SDK1173 pass.
+Evidence: `docs/GEN3_POKEBLOCK_ART_2026-10-15.md`. Separate source batch after
+4bc557a; no release metadata changes or claim of existing1.41.1 inclusion.
+Remaining interface consumers: RS indexed hatch, minigames, credits and starter
+selection. Inventory remains partial; models and independent assets untouched.
+
+# Native Emerald Factory portraits after release checkpoint — 2026-10-15
+
+Factory rental/swap draws now consume selected interface frames with native
+mon/PID/shiny context and FIT/FULL/OFF behavior. Original three-rental selection,
+confirmation, enemy-pool switch, accepted/cancelled swap callbacks and party
+ownership remain native. Official0.3.89 Emerald original-UI fixture passes;
+all8 final captures inspected. It observes callbacks, not tournament progression.
+
+Focused71, inventory549, broad305/0fail/58skip including SDK1173 pass. Evidence:
+`docs/GEN3_FACTORY_ART_2026-10-15.md`. Source-only follow-up to4bc557a; no release
+metadata changes or claim of inclusion in existing1.41.1 archives. Remaining
+interface consumers: RS indexed hatch, Pokeblock, minigames, credits, starter
+selection. Inventory remains partial; model art untouched.
+
+# Native scripted/contest pictures after release checkpoint — 2026-10-15
+
+Separate from release4bc557a: native MonPic windows now consume selected art
+only during their draw, restoring cached images/dimensions/animation transforms.
+Hoenn contest entries preserve packed OT/PID/shiny identity; show/hide/reset
+clear context. FULL compensates the native viewport clamp for oversized art.
+Native windows, timing, cries, special-species art and disabled fallback remain.
+
+Official0.3.89 all5 scripted fixtures and all3 Hoenn contest-picture components
+pass; all34 captures inspected. Focused20/interface65/inventory549, real native
+MonPic renderer contract, broad305/0fail/58skip including SDK1173 pass. Evidence:
+`docs/GEN3_SCRIPTED_ART_2026-10-15.md`. These are component fixtures, not full
+contest progression. Remaining interface consumers: RS indexed hatch, Pokeblock,
+Factory, minigames, credits and starter selection. No release metadata changes;
+this later source batch is not claimed included in existing1.41.1 archives.
 
 # Coordinated streaming release — 2026-10-15
 
