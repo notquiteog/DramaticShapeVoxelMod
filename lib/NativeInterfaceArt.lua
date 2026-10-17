@@ -65,9 +65,10 @@ function M.install()
  local Summary=require('src.ui.game3.summary_menu')
  local Dex=require('src.ui.game3.pokedex')
  local undo={}
- local function wrap(menu,monFor)
-  local original=menu.draw
-  menu.draw=function(...)
+ local function wrap(menu,monFor,method)
+  method=method or 'draw'
+  local original=menu[method]
+  menu[method]=function(...)
    if Interface.setting:get()~='battle_art' then return original(...)end
    local pic=Pokemon.frontPic
    local monPic=Pokemon.monFrontPic;local supplied
@@ -114,10 +115,17 @@ function M.install()
    if not result[1]then error(result[2],0)end
    return unpack(result,2,result.n)
   end
-  undo[#undo+1]=function()menu.draw=original end
+  undo[#undo+1]=function()menu[method]=original end
  end
  wrap(Summary,function()return Summary._party and Summary._party[Summary._cursor or 1]end)
  wrap(Dex)
+ -- PC portraits use a dedicated public draw method; its original mosaic,
+ -- effect layers and metadata remain authoritative across all five editions.
+ local okPc,Pc=pcall(require,'src.ui.game3.pc_chrome')
+ if okPc and type(Pc.drawLeftDataPanel)=='function'then
+  undo[#undo+1]=V.require('NativePcAssets').install(Pc)
+  wrap(Pc,nil,'drawLeftDataPanel')
+ end
  -- These public draw seams resolve their pictures per frame; preserve all
  -- native scene sequencing, PokeNav navigation and layout. PokeNav class
  -- methods supply their own mon to monFrontPic during the scoped draw.

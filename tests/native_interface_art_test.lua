@@ -57,8 +57,16 @@ end
 local creditShiny,creditPid=true,1234
 local Credits={draw=function()seen=P.frontPic(1025,0,creditShiny,creditPid,'credits');return nil,'credits',false end}
 local initialCredits=Credits.draw
+local pcArgs
+local Pc={drawLeftDataPanel=function(mon,clock,mosaic)
+ pcArgs={mon,clock,mosaic};if mon then seen=P.monFrontPic(mon)end
+ if fail then error('native PC error')end
+ return nil,'pc',false
+end}
+local initialPc=Pc.drawLeftDataPanel
+package.loaded['src.ui.game3.pc_chrome']=Pc
 package.loaded['src.ui.game3.rse.credits']=Credits
-local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated,NativeIndexedHatchArt={install=function()return function()end end},NativeStarterArt={install=function()return function()end end},NativeJumpArt={install=function()return function()end end},NativePokeblockArt={install=function()return function()end end},NativeScriptedArt={install=function()return function()end end},NativeCrystalPortraits={install=function()return function()end end}})[name],name)end}
+local V={require=function(name)return assert(({InterfaceSprites=Interface,BattleArt=Art,AnimatedBattleArt=Animated,NativePcAssets={install=function()return function()end end},NativeIndexedHatchArt={install=function()return function()end end},NativeStarterArt={install=function()return function()end end},NativeJumpArt={install=function()return function()end end},NativePokeblockArt={install=function()return function()end end},NativeScriptedArt={install=function()return function()end end},NativeCrystalPortraits={install=function()return function()end end}})[name],name)end}
 local Native=assert(loadfile('lib/NativeInterfaceArt.lua'))(V)
 local initialSummary,initialDex=Summary.draw,Dex.draw
 local undo=Native.install()
@@ -96,6 +104,20 @@ local a,b,c=Credits.draw()
 check(a==nil and b=='credits'and c==false and lastMon.personality==1234 and lastMon.isShiny==true,'credits explicit PID/shiny and exact return tuple')
 creditShiny=false;Credits.draw();check(lastMon.isShiny==false,'explicit false shiny remains false')
 selected='off';Credits.draw();check(seen.image.id=='rom','credits OFF remains native');selected='battle_art'
+local hovered={species=1025,personality=444,otId=111,otSecretId=222,isShiny=true}
+scale='fit';local a,b,c=Pc.drawLeftDataPanel(hovered,73,4)
+check(a==nil and b=='pc'and c==false and seen.image==fitImages.fit[1],'PC fitted selected art and exact native tuple')
+check(pcArgs[1]==hovered and pcArgs[2]==73 and pcArgs[3]==4,'PC metadata/mosaic/timing arguments remain native')
+check(lastMon.personality==444 and lastMon.otId==111 and lastMon.otSecretId==222 and lastMon.isShiny,'PC hovered identity retained')
+scale='full';Pc.drawLeftDataPanel(hovered,74,0);check(seen.image==fitImages.full[1],'PC FULL canvas retained')
+hovered.personality=445;hovered.isShiny=false;Pc.drawLeftDataPanel(hovered)
+check(lastMon.personality==445 and lastMon.isShiny==false,'changed hovered PID and explicit nonshiny retained')
+selected='off';Pc.drawLeftDataPanel(hovered);check(seen.image.id=='rom','PC OFF native');selected='battle_art'
+hovered.isEgg=true;Pc.drawLeftDataPanel(hovered);check(seen.image.id=='rom','PC egg native');hovered.isEgg=nil
+hovered.species=P.SPECIES_SPINDA;Pc.drawLeftDataPanel(hovered);check(seen.image.id=='rom','PC PID spots native')
+Pc.drawLeftDataPanel(nil);check(pcArgs[1]==nil,'empty PC slot remains native')
+fail=true;local ok=pcall(Pc.drawLeftDataPanel,{species=1025});fail=false
+check(not ok and P.monFrontPic==monFront and P.frontPic==original and Anim.framePic==framePic,'PC errors restore all readers')
 local picture=Animated.picture
 Animated.picture=function(mon,side)if mon.personality==902 then error('missing selected image')end;return picture(mon,side)end
 local success=pcall(Trade.draw)
@@ -119,4 +141,5 @@ check(Native.picture({species=25})==nil,'missing CPU data retains native art')
 local before=reads;check(Native.picture({species=25})==nil and reads==before,'failed preparation avoids per-frame IO')
 undo();check(Summary.draw==initialSummary and Dex.draw==initialDex,'unload restores native owners')
 check(Credits.draw==initialCredits,'credits unload restores native draw')
+check(Pc.drawLeftDataPanel==initialPc,'PC unload restores original method')
 print('PASS '..checks..' native interface art checks')

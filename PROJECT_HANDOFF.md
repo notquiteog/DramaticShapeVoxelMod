@@ -1,3 +1,23 @@
+# Native PC portrait parity — 2026-10-17
+
+All five GBA storage monitors now consume selected interface art through the
+public portrait draw seam, preserving hovered PID/shiny identity, native mosaic,
+metadata, input, box/party ownership and FIT/FULL/OFF behavior. A narrow public
+asset-reader fallback resolves RS's already-rooted native bar texture after the
+engine incorrectly adds the storage prefix twice; supplied images still win.
+No private fields, engine edits, imported art copies or model changes.
+
+Official 0.3.89 five-edition fixtures pass: 214 restored draws each, native mosaic
+10, two original close callbacks, initial OFF and later selected/stock toggles.
+All 30 final captures inspected; no draw errors. Focused interface 92, path
+fallback 9 and inventory 549 pass. No duplicate broad suite during performance
+measurements. Evidence: `docs/NATIVE_PC_ART_2026-10-17.md`.
+
+Source-only after published 1.44.0; no release metadata changed. This verifies
+the portrait consumer, not all storage operations or optional UI providers.
+Dedicated credit/Dodrio poses, unrestricted indexed hatch art and broader
+capture/backdrop/provider coverage remain partial in the inventory.
+
 # Scene construction, desktop GC headroom and Gen3 interface art — 2026-10-15
 
 1.44.0 consolidates the scene-construction and desktop GC headroom pass with the

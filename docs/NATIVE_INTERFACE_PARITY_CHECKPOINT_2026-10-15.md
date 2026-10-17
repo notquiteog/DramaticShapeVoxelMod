@@ -49,6 +49,9 @@ The later bounded RS hatch adapter and current verification are documented in
 `RS_INDEXED_HATCH_ART_2026-10-15.md`; the all-edition sweep above remains evidence
 for its original source checkpoint.
 
+The later five-edition PC portrait consumer and native RS transition asset-path
+compatibility are verified in `NATIVE_PC_ART_2026-10-17.md` (30 captures inspected).
+
 ## Precise remaining non-model limits
 
 - **Ruby/Sapphire hatch:** the bounded adapter now accepts selected64x64,
