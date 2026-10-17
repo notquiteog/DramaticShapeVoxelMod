@@ -22,3 +22,10 @@ for y=0,31 do assert(single[y*16+1][2]==math.floor(y/2)/16,'single-row wallpaper
 a,b,col=M.sources('CUSTOM',{1,1,single=true});assert(a==1 and b==1 and col==nil)
 assert(not M.sources('UNRELATED_ROOM'),'unrelated source acquired institution paint')
 print('PASS native wallpaper BG composition, full rows, source isolation, window-free frame repeat and optional map metadata')
+
+assert(M.sources('custom',{1,2,single=true,singleHeight=0})==nil)
+assert(M.sources('custom',{1,2,singleHeight=12})==nil)
+local maxY=-1
+local t={cols=1,midToSlot={[1]=0},imageData={getPixel=function(_,x,y)maxY=math.max(maxY,y);return 1,1,1,1 end}}
+assert(M.pixels(t,1,1,nil,function()end,true,12));assert(maxY==11,'native black source padding entered the wall finish')
+print('PASS bounded single-row native wall crop')

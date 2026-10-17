@@ -100,6 +100,12 @@ function M.profile(def,gen)
  local institutional=spec and(spec.secondary=='facility' or spec.secondary=='lilycove_museum' or spec.secondary=='oceanic_museum' or def.voxelFlatWalls==true)
  local named=id:find('DEVON_CORP',1,true)or id:find('SPACE_CENTER',1,true)or id:find('LILYCOVE_MUSEUM',1,true)or id:find('OCEANIC_MUSEUM',1,true)
  local flatInstitution=gen==3 and not cave and institutional and((named and(id:match('^RU_')~=nil or id:match('^SA_')~=nil))or def.voxelFlatWalls==true)
+ local home
+ if gen==3 and not cave then
+  local pairs=V.require('Gen3Tilesets');local pair=pairs.canonical and pairs.canonical(def.midLayout.pair)or def.midLayout.pair
+  if pair=='building__generic_building'or pair=='building__brendans_mays_house'then home=V.require('Gen3HomeRooms').profile(def,pair)end
+ end
+ if home then b[2]=home.north end
  local service
  if gen==3 and not cave then
   local pairs=V.require('Gen3Tilesets');local pair=pairs.canonical and pairs.canonical(def.midLayout.pair)or def.midLayout.pair
@@ -107,8 +113,8 @@ function M.profile(def,gen)
  end
  if service then b=service.bounds end
  if flatInstitution then b[2]=3.8 end
- return {bounds=b,height=cave and 96 or gen==3 and (flatInstitution or service or theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen,cave=cave,
-  nativeWallFinish=flatInstitution or service~=nil,noInteriorTrim=flatInstitution or service~=nil,serviceRoom=service}
+ return {bounds=b,height=cave and 96 or gen==3 and (flatInstitution or service or home or theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen,cave=cave,
+  nativeWallFinish=flatInstitution or service~=nil or home~=nil,noInteriorTrim=flatInstitution or service~=nil or home~=nil,serviceRoom=service,homeFinish=home}
 end
 local function texture(theme)
  if materials[theme]then return materials[theme]end
@@ -266,7 +272,7 @@ function M.geometry(p,side,opened)
   end
   -- Open exits have a visible frame even when the near wall is cut away.
   -- Jambs sit OUTSIDE the warp opening; no slab blocks the walking lane.
-  for _,q in ipairs(doors)do
+  for _,q in ipairs(p.homeFinish and{}or doors)do
    rawPart(q[1]-1.5,0,q[1],doorHeight,2,4.2)
    rawPart(q[2],0,q[2]+1.5,doorHeight,2,4.2)
    rawPart(q[1]-1.5,doorHeight,q[2]+1.5,doorHeight+1.5,3,4.2)
@@ -367,13 +373,15 @@ function M.forMap(map,gen)
    local x,y=tonumber(warp.x),tonumber(warp.y)
    if x and y then
     local side
-    if y==0 then side=1
+    if p.homeFinish and p.homeFinish.stairs and y>0 and y<=2 then side=1
+    elseif y==0 then side=1
     elseif (y+1)*16>=b[4]-.01 then side=3
     elseif x*16<=b[1]+.01 then side=4
     elseif (x+1)*16>=b[3]-.01 then side=2 end
     if side then
      local a=(side==1 or side==3)and x*16 or y*16
-     p.doorways[side][#p.doorways[side]+1]={a,a+16}
+     if side==1 and p.homeFinish then p.doorways[side][#p.doorways[side]+1]={a-4,a+20}
+     else p.doorways[side][#p.doorways[side]+1]={a,a+16}end
     end
    end
   end
@@ -392,7 +400,7 @@ end
 -- Recess north-wall backing behind corrected fixture footprints. Moving a
 -- desk into its real blocked row must not bury it in the synthetic shell.
 function M.setRecesses(p,fixtures)
- if not p or p.gen~=3 or p.cave or p.serviceRoom then return end
+ if not p or p.gen~=3 or p.cave or p.serviceRoom or p.homeFinish then return end
  p.originalNorth=p.originalNorth or p.bounds[2]
  local cuts={};local keys={}
  for _,q in ipairs(fixtures or {})do

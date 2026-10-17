@@ -263,6 +263,14 @@ local function build(req,cache,previous)
    if V.require('Gen3ServiceRooms').replacesFloor(c,plan)then c.serviceRoomFloor=plan.floor end
   end
  end
+ if roomProfile and roomProfile.homeFinish then
+  local home=roomProfile.homeFinish
+  cache.flatNativeWalls=true;cache.northWallFront=home.north+.04;cache.furnitureRecesses={}
+  for _,p in ipairs(props)do p.homeWall=cache.northWallFront end
+  for _,c in pairs(cells)do if c.stairs then c.stairs.homeWall=cache.northWallFront end end
+  local origin=cells['0:0']
+  if origin then Interior.setWallpaper(roomProfile,V.require('Gen3RoomWallpaper').material({id=def.id,voxelWallpaper=home.wall},origin.ts))end
+ end
  if roomProfile and V.require('Gen3RSInstitutions').flatWalls(sourcePair,def.id or req.mapId,def.voxelFlatWalls)then
   cache.flatNativeWalls=true
   cache.northWallFront=4
@@ -592,7 +600,8 @@ local function build(req,cache,previous)
   local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout
   modelCache.append(def.id or req.mapId,p,function(item,emit)return Furniture.append(item,emit,uvFor)end,function(vertices,uv,shade,anchor)
-   if not p.serviceRoom and cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
+   if p.homeWall then V.require('Gen3HomeRooms').attach(p,vertices)end
+   if not p.serviceRoom and not p.homeWall and cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
     local shift=cache.northWallFront-31.92
     for _,v in ipairs(vertices)do v[3]=v[3]+shift end
    end

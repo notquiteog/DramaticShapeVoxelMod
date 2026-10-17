@@ -1,3 +1,17 @@
+## 1.45.0 — Forward flat house walls and native Hoenn furniture
+
+Bring the starting-home walls forward to the backs of their furniture and keep
+each run flat. Native wallpaper continues around the room; framed windows,
+pictures and clocks attach to the wall instead of lying on the floor. Complete
+native-art furniture now covers the Ruby/Sapphire starting homes, with mirrored
+kitchens, CRTs, beds, dining tables and Emerald's distinct May table. Native
+walking chairs stay low pads; source-permission guards protect modified maps.
+
+This batch covers nine home interiors per Hoenn edition (27 placements).
+Characters, Pokémon and flowers remain HD-2D. Gameplay, collision, scripts and
+native UI remain authoritative, and all companions stay optional. The remaining
+Kanto/Hoenn regional queue continues. [Evidence](docs/GEN3_HOMES_2026-10-17.md).
+
 ## 1.44.0 — Scene construction, desktop GC headroom and Gen 3 interface art
 
 Shares GPU hull instances for Hoenn sea rocks, caches up to eight compact

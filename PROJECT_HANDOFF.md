@@ -1,3 +1,34 @@
+# Forward flat home walls and flush stairs — 2026-10-17
+
+1.45.0 models nine homes per Hoenn edition (27 placements): both floors in both
+Littleroot homes, two Oldale houses and all three Petalburg houses. The user's
+wall feedback sets one forward wall plane behind furniture, native wallpaper
+around the room and separately attached framed windows/pictures/clocks. Stair
+jambs/lintels sit flush in real wall apertures; only treads project. Both mirrored
+up flights and both down flights match complete source and native permissions.
+No projecting doorway housing or synthetic front entry surround remains.
+
+RS opts in only reviewed complete furnishings;45 source-permission patterns
+protect changed third-party walking lanes. Emerald May's table/rug layout is
+separate. Low walkable seat pads stay native; all actors/Pokémon/flowers remain
+HD-2D. Native UI/gameplay/collision/scripts/warps and optional independence remain
+authoritative. Existing aliases support third-party reuse. Mesh102.
+
+Retains published1.44.1 fc51546 scene reuse/classification cache/PC-art changes.
+Official0.3.89: merged319/0fail/58fixture skips;248 furniture instances across27
+homes/zero ordinary-solid walking overlaps/66 native pads. Full merged native
+27 aisles/12 stair warps/21 exits; final mirrored-flight archive gets135 inspected
+orbit/eye renders and repeated May stair/exit/input in each edition. OFF/actual1ST
+retained. Kanto home/Center and previous museum neighbor views preserved. Final
+all6 optional partner native May smoke passes with no mod errors. Private source,
+saves, ROMs and captures excluded.11,415 files/496 Lua; tested runtime hashes
+retained during final evidence repackage. Details/caveats:
+`docs/GEN3_HOMES_2026-10-17.md`.
+
+Regional queue:57/125 placements verified,68 still queued. Kanto homes,
+labs/school/gyms, route buildings, outdoors/terrain remain; initial captures do
+not constitute completion. No complete scenery/ORAS-equivalent/network claim.
+
 # Connected scene reuse and native PC portraits — 2026-10-17
 
 Release1.44.1 combines these optimizations and native PC portraits.

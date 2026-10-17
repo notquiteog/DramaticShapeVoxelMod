@@ -333,6 +333,12 @@ function M.draw(id,A)
   top({4,6,8,6},3.5,3.5,12.5,12.5,6.02)
   local x=A.recipe.backEast and 12 or 2
   B(x,5,3,x+2,11,13,metal);B(x+.2,6,3.5,x+1.8,11.5,12.5,blue)
+ elseif id=='em_start_high_window' then
+  local frame=T(0,8)
+  B(0,20,15.9,15,30,16.05,frame)
+  B(0,20,16.05,1,30,16.3,frame);B(14,20,16.05,15,30,16.3,frame)
+  B(1,29,16.05,14,30,16.3,frame);B(0,19.5,16.05,15,20,16.6,frame)
+  front({1,8,13,8},1,21,14,29,16.22)
  elseif id=='em_start_window' then
   local frame,sill=T(0,8),T(2,19)
   -- Keep the window attached to the wall face, not hovering over the aisle.
@@ -383,6 +389,9 @@ function M.draw(id,A)
   B(17,7,33,31,8.3,36,T(20,21));top({15,19,18,5},17,33,31,36,8.32)
   B(16.2,3,32.2,31.8,11,33,wood);front({13,16,22,5},16.2,7,31.8,11,33.02)
   B(16.2,3,47,31.8,6,47.8,wood)
+ elseif id=='em_start_may_table' then
+  local wood=T(5,34)
+  desk(1,17,31,46,7,wood);top({1,16,30,29},1,17,31,46,7.02)
  elseif id=='em_start_table' then
   local wood=T(5,34)
   desk(1,1,31,30,7,wood);top({1,0,30,28},1,1,31,30,7.02)
@@ -429,8 +438,8 @@ function M.draw(id,A)
   B(7,9,14,8,14,15,metal);B(7,13,14,8,14,20,metal)
  elseif id=='em_start_cabinet' then
   local wood,dark=T(2,7),T(4,25)
-  B(1,0,14,25,27,28,wood)
-  front({1,13,23,17},1,1,25,24,28.02)
+  B(1,0,14,31,27,28,wood)
+  front({1,13,30,17},1,1,31,24,28.02)
   B(12,1,28,13,24,28.3,wood)
   B(3,5,28,10,6,28.6,dark);B(15,5,28,22,6,28.6,dark)
  elseif id=='em_start_tv' then
@@ -865,6 +874,29 @@ function M.draw(id,A)
    B(r[1],3.7,r[2],r[3],4.5,r[4],metal)
    B(r[1]+.4,4.5,r[2]+.4,r[3]-.4,5,r[4]-.4,seat)
   end
+ elseif id=='em_home_small_tv' then
+  local wood,case,dark=T(3,34),T(2,18),T(4,22)
+  B(1,0,17,15,6,30,wood);front({1,32,14,9},1,1,15,6,30.02)
+  crt(1,17,14,8,24,{2,18,12,11},case,dark)
+ elseif id=='em_home_wide_drawers' then
+  local wood=T(2,22)
+  B(1,0,1,31,10,15,wood);top({1,1,30,12},1,1,31,15,10.02)
+  front({1,18,30,11},1,1,31,10,15.02)
+  for _,x in ipairs{4,20}do B(x,4,15,x+7,4.5,15.5,wood)end
+ elseif id=='em_home_bed' then
+  local wood,cloth=T(1,18),T(9,9)
+  for _,x in ipairs{2,27}do for _,z in ipairs{2,27}do B(x,0,z,x+3,4,z+3,wood)end end
+  B(1,3,1,31,5,31,wood);B(2,5,2,30,7,30,cloth)
+  top({2,8,28,21},2,9,30,30,7.02)
+  B(3,7,3,29,8,9,T(10,6));top({3,3,26,5},3,3,29,9,8.02)
+  B(1,3,1,31,10,2,wood);B(1,3,30,31,6,31,wood)
+ elseif id=='em_home_window'or id=='em_home_picture'then
+  local frame=T(1,8)
+  local low=id=='em_home_window'and 8 or 16
+  B(1,low,15.9,15,29,16.05,frame)
+  B(1,low,16.05,2,29,16.5,frame);B(14,low,16.05,15,29,16.5,frame)
+  B(2,28,16.05,14,29,16.5,frame);B(2,low,16.05,14,low+1,16.5,frame)
+  front({1,id=='em_home_window'and 3 or 8,14,id=='em_home_window'and 24 or 12},1,low,15,29,16.32)
  elseif id=='em_home_tunnel_entrance' then
   -- Authored pixel steps follow the native broken plaster opening. Each
   -- strip has real jamb depth; the dark tunnel mouth is six pixels behind.
