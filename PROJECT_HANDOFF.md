@@ -1,3 +1,13 @@
+# Native Gen2 specialty capture audio — 2026-10-17
+
+Original specialty/Park/blocked throw runners now consume optional sound cues,
+with successful-playback-only suppression and exclusive 3D adapter ownership.
+Native clocks/RNG/UI remain unchanged. G/S/C original0.3.89 script fixtures pass
+36 cases;29 focused checks plus existing capture/send-out tests pass. Recordings
+are absent: playback sink verifies routing/fallback, not audible quality or full
+item/contest turns. Evidence and exact limits: `docs/NATIVE_CAPTURE_AUDIO_2026-10-17.md`.
+Source-only; no model/version/release changes. Other parity work continues.
+
 # Native Gen3 backdrop terrain routing — 2026-10-17
 
 Public native terrain now routes outdoor water/pond/mountain encounters to

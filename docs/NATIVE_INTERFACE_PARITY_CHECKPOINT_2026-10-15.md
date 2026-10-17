@@ -70,7 +70,7 @@ compatibility are verified in `NATIVE_PC_ART_2026-10-17.md` (30 captures inspect
 - **Gen2 interface effects:** Oak's indexed palette-rotation reveal remains
   native until the reveal completes. Its cinematic title has no Gen1-style
   cycling-starter picture reader. Special forms/eggs retain native ownership.
-- **Capture:** GSC specialty/contest/trainer-blocked/doubles paths remain native.
+- **Capture:** GSC specialty/contest/trainer-blocked/doubles visual paths remain native. Specialty/contest/trainer-blocked audio now has a separate native-runner consumer; see `NATIVE_CAPTURE_AUDIO_2026-10-17.md`.
   GBA specialty/ghost-dodge/doubles paths, full model-specific material effects
   and selected send-out geometry are incomplete. Existing supported Safari/
   tutorial and normal-single adapters do not establish those paths.

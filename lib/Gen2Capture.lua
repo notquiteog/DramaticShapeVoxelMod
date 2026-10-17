@@ -22,6 +22,9 @@ local function enabled(s)
   -- its native temporary pack, empty party and auto-input remain untouched.
   and not s.contest
 end
+function M.active(screen,animation)
+ return owner==screen and runner==animation and owner~=nil and enabled(owner)or false
+end
 function M.finish()
  if owner then call('finishNormalBattleBall')end
  owner,runner=nil,nil
