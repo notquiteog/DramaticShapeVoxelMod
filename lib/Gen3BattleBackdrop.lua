@@ -11,7 +11,7 @@ local M={settings={UI.arenaFill,UI.backdropOffset,UI.bossBg,UI.spriteLight}}
 local periods=setmetatable({},{__mode='k'})
 function M.mapKey(id)
  if type(id)~='string'then return nil end
- id=id:gsub('^FR_',''):gsub('_CITY_GYM$','_GYM'):gsub('^POKEMON_LEAGUE_','')
+ id=id:gsub('^FR_',''):gsub('^LG_',''):gsub('_CITY_GYM$','_GYM'):gsub('^POKEMON_LEAGUE_','')
  local special={CINNABAR_ISLAND_GYM='CINNABAR_GYM',SAFFRON_CITY_DOJO='FIGHTING_DOJO',INDIGO_PLATEAU_EXTERIOR='INDIGO_PLATEAU',ROUTE_21_NORTH='ROUTE_21',ROUTE_21_SOUTH='ROUTE_21'}
  return special[id] or id
 end
@@ -23,8 +23,35 @@ local function period(st)
  if st then periods[st]=name end
  return name
 end
+-- Native terrain is resolved once by Battle.start from the original encounter.
+-- Use its public names, not duplicated edition-specific numeric constants.
+function M.setFor(mapId,def,st)
+ local id=M.mapKey(mapId);local set=config.maps[id]
+ if not V.require('Gen3Tilesets').outdoor(def)then return set end
+ local terrain=st and tonumber(st.terrain)
+ if terrain~=nil then
+  local ok,Bg=pcall(require,'src.core.game3.battle.bg')
+  local t=ok and Bg.TERRAIN
+  if t then
+   -- Keep the authored island identity; Safari water has its own shared plate.
+   if id=='CINNABAR_ISLAND'then return set end
+   if terrain==t.WATER or terrain==t.POND then
+    if config.safariWaterMaps[id]then return 'safariwater'end
+    return terrain==t.WATER and 'ocean'or'shore'
+   end
+   if set then return set end
+   if terrain==t.MOUNTAIN then return 'rockypath'end
+   if terrain~=t.GRASS and terrain~=t.LONG_GRASS and terrain~=t.PLAIN then
+    -- No generic underwater/desert/interior illustration is supplied. Do not
+    -- put those native environments into a grassy illustration by default.
+    return nil
+   end
+  end
+ end
+ return set or'grassy'
+end
 function M.files(mapId,def,st)
- local id=M.mapKey(mapId);local boss=bosses.rooms[id]
+ local id=M.mapKey(mapId);local boss=not(st and st.link)and bosses.rooms[id]or nil
  local trainer=Trainers.key(st)
  local key=trainer and ('OPP_'..trainer:upper():gsub('-','_'))
  local tr=key and bosses.trainers[key]
@@ -39,8 +66,7 @@ function M.files(mapId,def,st)
   -- FireRed's Moltres encounter moved from Victory Road to Mt. Ember.
   if tostring(name):upper()=='MOLTRES' and id=='MT_EMBER_SUMMIT'then boss='moltres.jpg'end
  end
- local set=config.maps[id]
- if not set and V.require('Gen3Tilesets').outdoor(def)then set='grassy'end
+ local set=M.setFor(mapId,def,st)
  local files=set and config.sets[set]
  local ordinary=type(files)=='string' and files or type(files)=='table' and (files[period(st)]or files.day)
  return ordinary,boss

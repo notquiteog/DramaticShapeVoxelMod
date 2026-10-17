@@ -1,3 +1,17 @@
+# Native Gen3 backdrop terrain routing — 2026-10-17
+
+Public native terrain now routes outdoor water/pond/mountain encounters to
+existing neutral plates, preserves Cinnabar/Safari identity, and leaves missing
+underwater/desert/indoor art in the world. LG aliases normalize with FR names;
+official LeafGreen map definitions remain FR-canonical. No native battle edits.
+
+Focused59 and inventory549 pass. Official0.3.89 five-edition API fixtures pass
+27 native map/terrain cases plus missing-art/OFF/WHITE and state preservation.
+Illustration files are optional and absent here, so no rendered-art claim.
+Evidence: `docs/NATIVE_BACKDROP_ROUTING_2026-10-17.md`. Source-only after1.44.1.
+Parity work continues on supported consumers; provider/art constraints remain
+explicit. No model/release edits.
+
 # Connected scene reuse and native PC portraits — 2026-10-17
 
 Release1.44.1 combines these optimizations and native PC portraits.

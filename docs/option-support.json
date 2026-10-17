@@ -2852,7 +2852,7 @@
         "module": "UiBackplates",
         "status": "partial",
         "consumer": "lib/Gen3BattleBackdrop.lua; lib/Gen3Scene.lua",
-        "detail": "WHITE/GEN6/PNG and native location routing; missing image fails open. BLUE still needs a compatible Stadium provider.",
+        "detail": "WHITE/GEN6/PNG, FR/LG-compatible map identity and original resolved terrain routing. Existing neutral ocean/shore/rocky plates cover native outdoor water/pond/mountain encounters; explicit island/Safari identities remain. Unsupported desert/underwater and missing optional images retain the world. BLUE still needs a compatible Stadium provider.",
         "verification": "source audit"
       },
       {
