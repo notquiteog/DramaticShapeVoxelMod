@@ -38,3 +38,9 @@ e=L.entry(a,direct,maps,12*16,4*16,24);assert(e.id=='b','missing direction keeps
 e=L.entry(a,direct,maps,12*16,4*16,5,'right');assert(e.id=='b','heading cannot expand prefetch radius')
 e=L.entry(a,direct,maps,18*16,8*16,24,'up');assert(e.id=='c','heading cannot ignore connection span')
 print('PASS direction-aware prediction preserves bounded range, span and nearest fallback')
+
+assert(L.interpolating(a,-8,32)and L.interpolating(a,320,32))
+assert(L.interpolating(a,32,-8)and L.interpolating(a,32,320))
+assert(not L.interpolating(a,0,0)and not L.interpolating(a,-32,32))
+assert(not L.interpolating(a,-8,-8)and not L.interpolating({},0,0))
+print('PASS bounded outside-cell native transition interpolation')

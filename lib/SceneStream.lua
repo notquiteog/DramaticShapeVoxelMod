@@ -6,14 +6,15 @@ local Budget=V.require('BuildBudget')
 local clock=(love and love.timer and love.timer.getTime) or os.clock
 local M={}
 function M.new(release)
- local self={stats={started=0,completed=0,cancelled=0,hits=0,slices=0,maxSlice=0,maxStreamSlice=0,prefetched=0,promoted=0,prefetchFailed=0}}
+ local self={stats={started=0,completed=0,cancelled=0,hits=0,slices=0,maxSlice=0,maxStreamSlice=0,prefetched=0,promoted=0,prefetchFailed=0,retainedHits=0}}
  function self:cancel()
   if self.pending then
    release(self.pending.value);self.pending=nil
    self.stats.cancelled=self.stats.cancelled+1
   end
  end
- function self:discardPrefetch()
+ function self:discardPrefetch(keepRetained)
+  if keepRetained and self.warm and self.warm.retained then return end
   if self.warm then release(self.warm.value);self.warm=nil end
  end
  function self:clear()
@@ -24,9 +25,13 @@ function M.new(release)
  end
  -- Preload exactly one destination with the same cooperative budget. It
  -- never replaces the live scene until the native world actually enters it.
- function self:prefetch(key,context,build,seconds)
+ function self:prefetch(key,context,build,seconds,acceptWarm)
   if not key or not context then self:discardPrefetch();return end
   local p=self.warm
+  if p and p.ready and p.retained and p.context==context
+   and (p.key==key or acceptWarm and acceptWarm(p.value))then
+   self.stats.retainedHits=self.stats.retainedHits+1;return
+  end
   if p and(p.key~=key or p.context~=context)then self:discardPrefetch();p=nil end
   if not p then
    p={key=key,context=context,value={}}
@@ -61,7 +66,12 @@ function M.new(release)
     if ok and coroutine.status(warm.co)=='dead' then warm.value=result or warm.value;warm.ready=true end
    end
    if warm.ready and (not warm.value.terrainContext or warm.value.terrainContext==context)then
-    if self.active then release(self.active)end
+    -- Reuse the vacated destination slot for the scene just left. This keeps
+    -- the same resource bound and avoids rebuilding the reverse connection.
+    -- Context/key checks still reject changed tiles, providers and far windows.
+    if self.active and self.key and self.context then
+     self.warm={key=self.key,context=self.context,value=self.active,ready=true,retained=true}
+    elseif self.active then release(self.active)end
     self.active=warm.value;self.key=warm.value.terrainKey or warm.key;self.context=context
     self.stats.promoted=self.stats.promoted+1;self.stats.completed=self.stats.completed+1
    else release(warm.value)end

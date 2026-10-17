@@ -167,6 +167,7 @@ local function build(req,cache,previous)
  local cells,groups,signature={}, {}, {replay and replay.scene.map or req.mapId,x0,z0,x1,z1}
  M.fillCounts={forest=0,water=0,mountain=0,ground=0}
  local pairInfo={}
+ local classify=V.require('SceneShapeCache').new(Shapes.of)
  local behaviors=require('src.core.game3.scripting.interaction_scripts').behaviors
  for cy=z0,z1 do for cx=x0,x1 do
   Budget.tick()
@@ -200,7 +201,7 @@ local function build(req,cache,previous)
      if lx>=0 and ly>=0 and lx<region.w and ly<region.h then collision=region.def.midLayout:collAt(lx,ly);break end
     end
     local c={mid=mid,behavior=info.behaviors[mid],collision=collision,pair=info.canonical,nativePair=pair,cx=cx,cy=cy,ts=ts,primary=spec.primary,secondary=spec.secondary,
-     shape=fillShape or Shapes.of(spec.primary,spec.secondary,mid,
+     shape=fillShape or classify(spec.primary,spec.secondary,mid,
       info.behaviors[mid],collision),boundary=biome}
     cells[cx..':'..cy]=c
     signature[#signature+1]=pair..'/'..mid..'/'..tostring(collision)..(biome or '')
@@ -688,7 +689,9 @@ local function prefetch(req)
   future=nil;stream:discardPrefetch();return
  end
  local entry=Lookahead.entry(req.def,Connections.each(req.def),req.game.data.maps,req.px,req.pz,24,Player.moving and Player.moveDir or Player.facing)
- if not entry or not Pairs.outdoor(entry.def)then future=nil;stream:discardPrefetch();return end
+ if not entry or not Pairs.outdoor(entry.def)then
+  future=nil;stream:discardPrefetch(Lookahead.interpolating(req.def,req.px,req.pz));return
+ end
  local world=Map.world
  if not future or future.source~=req.def or future.world~=world or future.id~=entry.id or future.radius~=req.radius then
   local reach=req.radius*2+12
@@ -717,7 +720,7 @@ local function prefetch(req)
  -- Reserve more build time on the approach so running reaches a ready scene.
  -- Budgets are cooperative targets; an individual engine upload can overrun.
  -- Pending local-window work must not starve the destination while running.
- stream:prefetch(key,context,function(candidate)return build(target,candidate)end,entry.distance<=8 and .008 or .004)
+ stream:prefetch(key,context,function(candidate)return build(target,candidate)end,entry.distance<=8 and .008 or .004,function(candidate)return Lookahead.accept(candidate,target)end)
 end
 local function prepare(game,vw,vh,cam)
  local req=request(game,cam);if not req then return false end

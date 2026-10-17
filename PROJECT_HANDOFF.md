@@ -1,3 +1,20 @@
+# Connected scene reuse and native PC portraits — 2026-10-17
+
+Reuse complete prior scenes in the existing bounded destination slot across
+native map crossings; preserve them through the one-cell outside-edge interval.
+Keep current content/provider keys, nearby-window limits and explicit cleanup.
+Cache native tile classification within each build, copying recipes per cell.
+Evidence and full timing limits: `docs/SCENE_REUSE_PERF_2026-10-17.md`.
+318 suites passed /0 failed /58 external-fixture skips. All five GBA running
+connections and six reversals each passed.165FPS is not achieved consistently;
+LG still had a64.28ms reversal outlier, and initial loads remain synchronous.
+
+Parity worker a786fca completes selected native PC portraits across five GBA
+editions, preserving mosaic, stock UI, storage ownership and OFF behavior.
+A public asset-loader fallback repairs RS's duplicated native screen-bar path.
+Five native sequences and30 captures inspected; evidence and remaining parity
+limits: `docs/NATIVE_PC_ART_2026-10-17.md`. No model edits in this batch.
+
 # Native PC portrait parity — 2026-10-17
 
 All five GBA storage monitors now consume selected interface art through the

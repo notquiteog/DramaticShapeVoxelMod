@@ -54,11 +54,12 @@ assert(warm.active==home and warm.warm and not warm.warm.ready,'prefetch changed
 for i=1,20 do warm:prefetch('next','next',build('next'),.002)end
 assert(warm.warm.ready and warm.stats.prefetched==1)
 local start=now;local promoted=warm:update('next','next',function()error('warm scene rebuilt')end,.002)
-assert(promoted.name=='next'and now==start and releases[home]and warm.stats.promoted==1)
+assert(promoted.name=='next'and now==start and not releases[home]and warm.warm.value==home and warm.stats.promoted==1)
 warm:prefetch('third','third',build('third'),.002)
+assert(releases[home],'displaced retained scene leaked')
 local partial=warm.warm.value
 local third=warm:update('third','third',function()error('partial warm scene restarted')end,.002)
-assert(third==partial and third.ready and releases[promoted])
+assert(third==partial and third.ready and not releases[promoted] and warm.warm.value==promoted)
 warm:prefetch('bad','bad',build('bad',true),.002)
 for i=1,20 do warm:prefetch('bad','bad',build('bad',true),.002)end
 assert(warm.warm.failed and warm.stats.prefetchFailed==1 and warm.active==third)
@@ -82,3 +83,24 @@ local entered=partialNear:update('edge1','edge',build('edge1'),.002,function()re
 assert(entered==partialValue and entered.name=='edge0' and partialNear.stats.promoted==1,'partial adjacent entry discarded work')
 partialNear:clear()
 print('PASS partial adjacent-window entry finishes existing work before streaming corrected window')
+
+local swap=S.new(function(value)assert(not releases[value]);releases[value]=true end)
+local left=swap:update('left','l',build('left'),.002)
+for i=1,20 do swap:prefetch('right','r',build('right'),.002)end
+local right=swap:update('right','r',function()error('ready rebuilt')end,.002)
+swap:discardPrefetch(true);assert(swap.warm.value==left,'outside-cell interpolation dropped retained scene')
+local stamp=now
+for i=1,4 do
+ swap:prefetch('left','l',function()error('retained rebuilt')end,.002)
+ assert(swap:update('left','l',function()error('return rebuilt')end,.002)==left)
+ swap:prefetch('right','r',function()error('retained rebuilt')end,.002)
+ assert(swap:update('right','r',function()error('return rebuilt')end,.002)==right)
+end
+assert(now==stamp and swap.stats.retainedHits==8 and not releases[left]and not releases[right])
+swap:prefetch('left-new-atlas','l',build('fresh'),.002)
+assert(releases[left]and not releases[right],'provider key change reused retained scene')
+local stale=swap.warm.value
+swap:prefetch('left-new-atlas','edited-layout',build('edit'),.002)
+assert(releases[stale],'gameplay context change retained old scene')
+swap:clear();swap:clear();assert(releases[right])
+print('PASS repeated return crossings reuse bounded scenes; provider/edit invalidation and cleanup')

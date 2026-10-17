@@ -3,6 +3,14 @@
 local M={}
 local function size(def)local l=def and def.midLayout;if l then return l.width,l.height end end
 local directions={up='north',down='south',left='west',right='east'}
+-- Native crossings briefly leave the player one cell outside the new map.
+-- Keep an already-complete return scene through that interpolation only.
+function M.interpolating(def,px,pz)
+ local w,h=size(def);if not w then return false end
+ local x,z=px/16,pz/16
+ return (x>=-1 and x<0 or x>=w and x<w+1)and z>=0 and z<h
+  or (z>=-1 and z<0 or z>=h and z<h+1)and x>=0 and x<w
+end
 function M.entry(def,connections,maps,px,pz,reach,heading)
  local w,h=size(def);if not w then return end
  local x,z=px/16,pz/16
