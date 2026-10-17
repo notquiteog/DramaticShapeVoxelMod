@@ -1,3 +1,11 @@
+## 1.44.1
+
+- Reuse complete connected-map scenes in the existing bounded prefetch slot, including native outside-cell boundary interpolation; preserve map edits, atlas changes and cleanup.
+- Cache exact native tile classification within each build, with independent copies for each cell. Geometry, native collision and scenery remain unchanged.
+- Extend selected interface art to native PC portraits across FireRed, LeafGreen, Ruby, Sapphire and Emerald, preserving native mosaic, boxes, party data and OFF behavior.
+- Resolve Ruby/Sapphire's missing native PC screen-bar image through a narrowly scoped public asset-path fallback.
+- Verified on official Gen1Recomp 0.3.89: 318 suites passed, no failures, 58 external-fixture skips; five native connection/reversal fixtures and five native PC sequences. Some transitions and cold loads still exceed the 165 FPS frame budget; this is not a performance-target completion release.
+
 ## 1.44.0
 
 - Extend native Gen 3 selected interface art across scripted `MonPic` windows and Hoenn contest entries, Emerald Battle Factory rental/swap previews, Hoenn Pokéblock selection and feeding screens, Hoenn credit slides, FR/LG/Emerald Pokémon Jump participant sprites, Hoenn starter preview bags, and Ruby/Sapphire indexed PPU egg-hatch sheets.

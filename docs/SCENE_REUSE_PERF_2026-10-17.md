@@ -46,7 +46,8 @@ initial sample was609.13→646.98ms and155.30→147.49ms. Do not report only the
 favorable total-time samples.
 
 Final Emerald high-shadow battle:180 frames,mean3.11ms,p955.51ms,max8.14ms;
-no repeated scene builds during the stationary battle phase. Scene reuse does
+Baseline battle under the same current desktop conditions:mean3.54ms,
+p955.54ms,max8.29ms. Neither sample rebuilds scenes during the stationary phase. Scene reuse does
 not run during battles. Gen1/2 share tested stream update behavior; this batch
 does not claim a new native performance sweep for those six games.
 

@@ -1,5 +1,6 @@
 # Connected scene reuse and native PC portraits — 2026-10-17
 
+Release1.44.1 combines these optimizations and native PC portraits.
 Reuse complete prior scenes in the existing bounded destination slot across
 native map crossings; preserve them through the one-cell outside-edge interval.
 Keep current content/provider keys, nearby-window limits and explicit cleanup.
