@@ -119,3 +119,21 @@ first crossing25.12ms. Spikes still exceed the6.06ms target. Evidence:
 `stream-next-20261017/phases-firered` and `terrain-{firered,emerald,ruby,sapphire}`.
 Gen1/2 retain the shared scheduling/upload improvements above; this follow-up
 removes work specific to the Gen3 scene builder. No claim of stable165FPS.
+
+## Shared corner support profiles
+
+Each cell's5×5 terrain support profile is reused for its sixteen distinct corner
+positions; exact3×3 boundary distances remain position-dependent. The cache
+exists only in a completed-layout sampler and separates wall heights.
+5043 differential samples match the direct implementation over slopes, terrace
+supports, negative coordinates and boundaries. Terrain, museum elevation,
+outdoor and ground-effect suites pass.
+
+The synthetic benchmark is not a frame-rate claim. It samples66,049 positions over64×64cells, with equal checksums. Ten repeats took
+15.86ms before and9.11ms after on this host. A native FireRed running connection
+plus six reversals and4745 native map-sampler comparisons pass; its capture was
+inspected. Accumulated height cost fell111.06ms/91,983calls to53.19ms/94,684calls;
+terrain append185.68ms/5516calls to132.30ms/5716calls. Frame spikes persist:
+first crossing27.71ms, return maxima3.25–21.50ms. Scheduling/camera changes and
+CPU contention make these samples unsuitable as controlled end-to-end FPS proof.
+Evidence: `stream-next-20261017/terrain-profiles.lua` and `profiles-firered`.

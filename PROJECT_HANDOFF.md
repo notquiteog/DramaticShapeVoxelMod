@@ -18,7 +18,10 @@ Flat elevated caps, build-local shrub hulls and furniture recipe filtering reduc
 Gen3 construction work; four native connections pass. Evidence and remaining
 spikes: `docs/SCENE_LOAD_WORK_2026-10-17.md`. Camera owner is resolving the new
 Emerald canopy-obstruction view exposed by the GLES connection fixture.
-No release bump; parity and camera work remain separate.
+A further per-cell terrain support-profile cache passes5043 exact differential
+samples and a native FireRed connection/six reversals. Height CPU cost is roughly
+halved in that instrumented run; frame spikes remain. No release bump; parity
+and camera work remain separate.
 
 # Seven-mod platform/source audit — 2026-10-17
 

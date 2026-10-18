@@ -78,3 +78,16 @@ count=0
 T.append(cells,cells['0:0'],function()count=count+1 end,function()return uv end,function(_,x,z)return x+z end)
 assert(count==16,'nonflat cliff topology changed')
 print('PASS coplanar cap reduction, exact source UV extent, unchanged beveled topology')
+
+-- Compare cached support profiles with the direct sampler over sloping floors,
+-- museum terraces and multiple wall heights, including negative/boundary cells.
+cells['-1:0'].floor={high=12,low=4,reverse=true}
+cells['-1:0'].floorHigh=19
+cells['0:1'].museumTerrace={groundHeight=9}
+local optimized=T.sampler(cells)
+for _,h in ipairs({16,32,48})do
+ for z=-24,56,2 do for x=-24,56,2 do
+  assert(optimized(cells,x,z,h)==T.height(cells,x,z,h),'support-profile reuse changed terrain height')
+ end end
+end
+print('PASS 5043 exact support-profile samples across slopes, terraces and boundaries')
