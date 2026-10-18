@@ -1175,10 +1175,10 @@ function M.draw(game,vw,vh,cam)
   R.battleOcclusion({player=row(0),enemy=row(1)},p[0][2],
    cam.actors.st.double and {player={contentWidth=300},enemy={contentWidth=300}}or nil)
  elseif cam.level==7 and not cam.battle then
-  -- Native collision retracts the boom, but art can overhang its blocked
-  -- cells. Clear foreground scenery across the frame, not circular holes
-  -- through individual crowns. Supporting ground and actors remain intact.
-  R.battleOcclusion({player={cx,cz},enemy={cx,cz}},support)
+  -- The Gen 3 boom no longer retracts against blocked cells (Release 1.51.1),
+  -- so there is nothing to reveal: do not clear foreground buildings and
+  -- objects across the frame. Leave them to honest depth occlusion.
+  R.battleOcclusion(nil)
  else R.battleOcclusion(nil)end
  if plate then
   if plate.image then R.backdrop(plate.image,plate.offset)end
