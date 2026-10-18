@@ -88,7 +88,8 @@ local SHADER = [[
   varying vec3 vSun;          // this fragment's place in the sun's view
   varying vec3 vModelSun;     // optional Stadium model-shadow view
   varying LOVE_HIGHP_OR_MEDIUMP vec3 vFoliageRay;
-  uniform vec2 reflectionClip; // enabled, uncurved water plane relative to eye
+  // Shared uniforms need identical precision in both GLES shader stages.
+  uniform LOVE_HIGHP_OR_MEDIUMP vec2 reflectionClip; // enabled, uncurved water plane relative to eye
   varying float vFog;         // distance/height haze from Viridian Forest
 #ifdef VOXEL_GRID
   // model space, one unit per voxel -- see VoxelGrid. Precision matters
@@ -768,6 +769,12 @@ local DETAIL_SHADER=barkStart and (SHADER:sub(1,barkStart-1)..BARK_NEW..SHADER:s
 local function compileSceneShader(prefix)
  local ok,sh=pcall(love.graphics.newShader,prefix..DETAIL_SHADER)
  if not ok and DETAIL_SHADER~=SHADER then ok,sh=pcall(love.graphics.newShader,prefix..SHADER)end
+ if not ok then
+  -- Each variant compiles once. Preserve the real driver error instead of
+  -- silently hiding the 3D option when a mobile compiler rejects the source.
+  Voxel3D.lastShaderError=tostring(sh)
+  print('[Battle Art] 3D shader unavailable: '..Voxel3D.lastShaderError)
+ end
  return ok and sh or false
 end
 
