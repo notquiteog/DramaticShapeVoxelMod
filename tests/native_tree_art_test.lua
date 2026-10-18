@@ -115,7 +115,9 @@ print('PASS source-shared tree fits retain independent closed models inside bloc
 -- A cropped forest row's portrait is wider than its ground depth. Both
 -- original cards and illustrated cards/trunks must remain bounded at every
 -- camera yaw, without shortening the art or changing anchors/UVs/solid wood.
-for _,card in ipairs{fitted,deep}do for _,flat in ipairs{true,false}do
+local fittedForest=native.gen3({ts=ts,shape={ground=1,spacing=3,modelWidth=47.96,modelDepth=15.96}})
+assert(fittedForest.w==48 and fittedForest.h==80,'forest yaw fixture lost the full native portrait')
+for _,card in ipairs{fitted,deep,fittedForest}do for _,flat in ipairs{true,false}do
  local v,i={},{};native.append(card,v,i,0,20,3,30,flat)
  for degrees=0,355,5 do local a=math.rad(degrees)
   for _,p in ipairs(v)do local dx=p[1]-p[7];local dz=p[3]-p[8]
