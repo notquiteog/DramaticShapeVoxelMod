@@ -3,6 +3,7 @@
 local V=...
 local M={recipes={},exteriors={}}
 local BoundaryProps=V and V.require('Gen3BoundaryProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3BoundaryProps.lua')
+local EarlyProps=V and V.require('Gen3EarlyProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3EarlyProps.lua')
 local function version()
  local ok,GV=pcall(require,'src.core.GameVersion')
  return ok and GV.get() or nil
@@ -106,6 +107,7 @@ function M.shape(primary,secondary,mid,behavior,collision)
  return M.emeraldShape(primary,secondary,mid,behavior,collision)
 end
 function M.emeraldShape(primary,secondary,mid,behavior,collision)
+ local prop=EarlyProps.shape(primary,secondary,mid,collision,'emerald');if prop then return prop end
  local boundary=BoundaryProps.hoenn(primary,secondary,mid,collision);if boundary then return boundary end
  if primary=='building' and secondary=='shop' and collision==7 and (mid==0x222 or mid==0x244)then
   return {kind='roomWall',ground=0x201}

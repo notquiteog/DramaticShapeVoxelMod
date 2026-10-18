@@ -1,3 +1,27 @@
+# Bounded trees, original hedges and route gates — 2026-10-17
+
+1.49.0 / mesh106 fits recognized native tree crowns to blocked ground across
+FR/LG/EM/RU/SA, clears projected walking/grass crowns and fills cropped forest
+corners.30-map census:13,855 blocked treecells,zero walking face overlaps,
+zero empty/below25% cells; native mid/collision/elevation digests unchanged.
+Optional original/illustrated cards gain yaw-safe radii. Closed original
+Petalburg hedge meshes use a new restrained pixel material following the
+source palette (detailed-leaf candidate rejected); no stretched source bands.
+Kanto gains3 complete Route2 gate exteriors per edition and4 route interiors
+per edition: flat continuous walls, separate furnishings, open portals and
+native ground. Hoenn gains30 nativefield fixtures/24 shoreline corners.
+Source327pass/0fail/58 unavailable-fixture skips; targeted final material/gate
+checks pass. Candidate native inputs/views inspected; final archive verification
+is pending below. No gameplay/UI/VM/actor/collision replacement. Characters,
+Pokémon and flowers remain HD-2D; optional partners stay independent.
+
+Regional queue84/125 verified,41 queued. Outdoor maps remain partial, including
+unclassified Petalburg canopy composites, other distinct props, gyms and Pewter
+Museum interiors. Read docs/GEN3_TREES_GATES_2026-10-17.md and the regionalqueue.
+Primary-checkout concurrent GSC work is preserved. Partnerlocal unpublished
+Wilds70d2cfd and Doublesf4aad50 are preserved; published versions remain2.6.4
+and0.14.3. No unrelated partnercommit is published by this batch.
+
 # Early outdoor boundaries and bridge depth — 2026-10-17
 
 1.48.0 adds missing Kanto stake ends/Viridian shrubs, joined Petalburg hedges,

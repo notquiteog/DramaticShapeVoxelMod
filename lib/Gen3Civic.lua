@@ -170,6 +170,7 @@ function M.profile(g)
  local w=g.width*16
  if g.custom then
   local r=g.custom
+  if r.geometry=='route_gate'then return V.require('Gen3RouteGates').profile(g)end
   if r.geometry=='battle_tower' then return V.require('Gen3BattleTowers').profile(g)end
   if r.geometry=='landmark' then return V.require('Gen3LandmarkBuildings').profile(g)end
   if r.geometry=='department_store' then return V.require('Gen3DepartmentStores').profile(g)end
@@ -226,6 +227,7 @@ end
 -- returned here are shared with the fixed mesh, so animation never grows into
 -- a freestanding 32x48 card or floats in front of the entrance.
 function M.doorSurface(g,tx,ty)
+ if g.custom and g.custom.geometry=='route_gate'then return V.require('Gen3RouteGates').doorSurface(g,tx,ty)end
  if g.custom and g.custom.geometry=='battle_tower' then return V.require('Gen3BattleTowers').doorSurface(g,tx,ty)end
  if g.custom and g.custom.geometry=='landmark' then return V.require('Gen3LandmarkBuildings').doorSurface(g,tx,ty)end
  if g.custom and g.custom.geometry=='department_store' then return V.require('Gen3DepartmentStores').doorSurface(g,tx,ty)end
@@ -493,6 +495,7 @@ function M.window(g)
  return best
 end
 function M.append(g,emit)
+ if g.custom and g.custom.geometry=='route_gate'then return V.require('Gen3RouteGates').append(g,emit)end
  if g.custom and g.custom.geometry=='battle_tower' then return V.require('Gen3BattleTowers').append(g,emit)end
  if g.custom and g.custom.geometry=='landmark' then return V.require('Gen3LandmarkBuildings').append(g,emit)end
  if g.custom and g.custom.geometry=='department_store' then return V.require('Gen3DepartmentStores').append(g,emit)end

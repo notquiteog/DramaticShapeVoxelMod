@@ -111,3 +111,30 @@ for _,card in ipairs{fitted,deep}do
 end
 assert(c.modelWidth==nil and c.modelDepth==nil,'regional fit mutated existing native tree')
 print('PASS source-shared tree fits retain independent closed models inside blocked rectangles')
+
+-- A cropped forest row's portrait is wider than its ground depth. Both
+-- original cards and illustrated cards/trunks must remain bounded at every
+-- camera yaw, without shortening the art or changing anchors/UVs/solid wood.
+for _,card in ipairs{fitted,deep}do for _,flat in ipairs{true,false}do
+ local v,i={},{};native.append(card,v,i,0,20,3,30,flat)
+ for degrees=0,355,5 do local a=math.rad(degrees)
+  for _,p in ipairs(v)do local dx=p[1]-p[7];local dz=p[3]-p[8]
+   local x=math.cos(a)*dx+math.sin(a)*dz;local z=-math.sin(a)*dx+math.cos(a)*dz
+   assert(math.abs(x)<=card.modelWidth/2+.00001 and math.abs(z)<=card.modelDepth/2+.00001,'native card rotates across its walking boundary')
+   assert(p[7]==20 and p[8]==30 and p[9]==3.001,'card fit changed anchor')
+  end
+ end
+ assert(v[1][2]==3-card.bottom+(flat and 0 or math.min(card.h-1,card.bottom+4)))
+ assert(v[3][2]==3-card.bottom+card.h,'card fit shortened the portrait')
+end end
+local vertices={{99,1,99,0,0,1,20,30,1},{36,10,38,.2,.8,.9,20,30,4},{4,20,22,.4,.6,.8,20,30,.001},{33,20,38,0,0,1,20,30,0},{33,20,38,0,0,1,20,30,-4}}
+native.fitBillboards(vertices,1,{modelWidth=47.96,modelDepth=15.96})
+assert(vertices[1][1]==99 and vertices[1][3]==99,'fit modified an earlier object')
+for _,p in ipairs{vertices[2],vertices[3]}do
+ for degrees=0,355,5 do local a=math.rad(degrees);local dx,dz=p[1]-p[7],p[3]-p[8]
+  assert(math.abs(math.cos(a)*dx+math.sin(a)*dz)<=23.98001 and math.abs(-math.sin(a)*dx+math.cos(a)*dz)<=7.98001,'illustrated card or flat trunk escapes at rotated yaw')
+ end
+end
+assert(vertices[2][2]==10 and vertices[2][4]==.2 and vertices[2][5]==.8 and vertices[2][9]==4,'fit changed height, texture or anchor')
+assert(vertices[4][1]==33 and vertices[5][1]==33,'card fit changed physical wood')
+print('PASS native and illustrated billboard yaw stays inside both blocked axes with source height and solid wood preserved')

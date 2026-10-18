@@ -69,16 +69,32 @@ function M.foliageFloor(c)
  end
  c.foliageBottom=false
 end
+-- Cylindrical cards rotate their local horizontal offset around the anchor.
+-- Fit its radius to both native axes, including the flat trunk's small depth
+-- offsets. Restrict only this appended range; ordinary solids stay unchanged.
+function M.fitBillboards(vertices,start,shape)
+ local radius=math.min(shape.modelWidth or math.huge,shape.modelDepth or math.huge)/2
+ if radius==math.huge then return end
+ for j=start+1,#vertices do
+  local p=vertices[j]
+  if p[9]and p[9]>.0001 then
+   local dx,dz=p[1]-p[7],p[3]-p[8]
+   local r=math.sqrt(dx*dx+dz*dz)
+   if r>radius then local scale=radius/r;p[1],p[3]=p[7]+dx*scale,p[8]+dz*scale end
+  end
+ end
+end
 function M.append(c,v,i,q,x,y,z,flat)
  if not c then return q end
  -- Ground the lowest opaque pixel. Modeled stems replace the first four
  -- visible pixels; the flat default retains the whole native silhouette.
  local bottom=c.bottom or 0
  local cut=flat and 0 or math.min(c.h-1,bottom+4)
+ local width=math.min(c.w,c.modelWidth or c.w,c.modelDepth or c.w)
  local base=#v
  for _,p in ipairs({{-1,0},{1,0},{1,1},{-1,1}})do
   local t=p[2]
-  v[#v+1]={x+p[1]*c.w/2,y-bottom+cut+(c.h-cut)*t,z,
+  v[#v+1]={x+p[1]*width/2,y-bottom+cut+(c.h-cut)*t,z,
    p[1]<0 and c.u0 or c.u1,c.v1-(c.v1-c.v0)*(cut+(c.h-cut)*t)/c.h,1,x,z,y+.001}
  end
  for _,n in ipairs({1,2,3,1,3,4})do i[#i+1]=base+n end

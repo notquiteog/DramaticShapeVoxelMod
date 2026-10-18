@@ -1,3 +1,20 @@
+## 1.49.0 — Bounded trees, original hedges and route gates
+
+Replace Petalburg's stretched hedge tiles with an original leaf texture and
+closed rounded mesh, joined continuously inside the native blocked footprint.
+Fit recognized tree crowns to blocked ground rather than their sprite portrait
+height, clearing walking grass and filling cropped forest corners across all
+five games. Optional flat tree cards also stay within their fitted radius.
+
+Model three Route 2 gate exteriors and four route interiors per Kanto edition,
+with flat continuous walls, separate furnishings and clear native openings.
+Hoenn gains closed gym notices, timber garden troughs, shallow berry soil and
+normal-height shoreline corners. Characters, Pokémon and flowers remain HD-2D;
+native gameplay/UI stay authoritative and all companion mods remain optional.
+
+This verifies another eight interiors (84/125 regional placements). Other
+outdoor families and interiors remain queued. [Evidence and remaining work](docs/GEN3_TREES_GATES_2026-10-17.md).
+
 ## 1.48.0 — Early outdoor boundaries and bridge depth
 
 Add native brown fence ends in Kanto, bounded shrubs in Viridian, and joined

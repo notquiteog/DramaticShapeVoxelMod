@@ -1,4 +1,5 @@
 -- Reviewed native boundary drawings. No map IDs, gameplay or collision edits.
+local V=...
 local M={}
 local hedges={
  [0x23f]={0,4,16,16},[0x244]={0,0,16,16},[0x245]={0,0,16,16},
@@ -21,23 +22,28 @@ function M.prepare(cells)
     or(i==4 and b[4]==16 and q[2]==0 and b[1]==q[1]and b[3]==q[3]))or false
   end
  end end
-end
-function M.hedge(c,emit,uv)
- local s=c.shape;local b=s.bounds;local x,z=c.cx*16,c.cy*16
- local a,n,r,f=x+b[1],z+b[2],x+b[3],z+b[4];local h=s.height
- local j=c.hedgeJoin or{};local l,t,u,v=a+(j[1]and 0 or 2),n+(j[3]and 0 or 2),r-(j[2]and 0 or 2),f-(j[4]and 0 or 2)
- local function tex(l,t,u,v)
-  local function p(xx,yy)return {uv[1][1]+(uv[2][1]-uv[1][1])*xx/16,uv[1][2]+(uv[3][2]-uv[1][2])*yy/16}end
-  return {p(l,t),p(u,t),p(u,v),p(l,v)}
- end
- -- Separate clipped top and leafy skirt; never wrap source ground corners
- -- down the side. The two-pixel shoulder gives the hedge a closed volume.
- emit({{l,h,t},{u,h,t},{u,h,v},{l,h,v}},tex(4,4,12,8),1)
- local edges={{{a,n},{r,n},{l,t},{u,t},3},{{r,n},{r,f},{u,t},{u,v},2},
-  {{r,f},{a,f},{u,v},{l,v},4},{{a,f},{a,n},{l,v},{l,t},1}}
- for _,e in ipairs(edges)do if not j[e[5]]then
-  emit({{e[1][1],0,e[1][2]},{e[2][1],0,e[2][2]},{e[4][1],h-2,e[4][2]},{e[3][1],h-2,e[3][2]}},tex(2,15,14,10),.84)
-  emit({{e[3][1],h-2,e[3][2]},{e[4][1],h-2,e[4][2]},{e[4][1],h,e[4][2]},{e[3][1],h,e[3][2]}},tex(4,10,12,8),.95)
+ -- Share the actual exposed perimeter of each connected hedge. Rounded
+ -- shoulders are measured from that perimeter, so neighboring top grids
+ -- agree exactly and never leave a dark divider between source cells.
+ local seen={}
+ for _,root in pairs(cells)do if root.shape.kind=='hedge'and not seen[root]then
+  local group,edges={root},{};seen[root]=true;local index=1
+  while group[index]do
+   local c=group[index];index=index+1
+   local b=c.shape.bounds;local a,n,r,f=c.cx*16+b[1],c.cy*16+b[2],c.cx*16+b[3],c.cy*16+b[4]
+   local boundary={{a,n,a,f},{r,n,r,f},{a,n,r,n},{a,f,r,f}}
+   for i,d in ipairs{{-1,0},{1,0},{0,-1},{0,1}}do
+    if c.hedgeJoin[i]then
+     local nextCell=cells[(c.cx+d[1])..':'..(c.cy+d[2])]
+     if not seen[nextCell]then seen[nextCell]=true;group[#group+1]=nextCell end
+    else edges[#edges+1]=boundary[i]end
+   end
+  end
+  for _,c in ipairs(group)do c.hedgeEdges=edges end
  end end
+end
+function M.hedge(c,emit)
+ local model=V and V.require('Gen3Hedges')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3Hedges.lua')
+ return model.append(c,emit)
 end
 return M

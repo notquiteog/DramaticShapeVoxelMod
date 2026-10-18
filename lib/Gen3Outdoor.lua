@@ -159,7 +159,7 @@ function M.append(c,emit,uvFor)
    end
   end
  elseif s.kind=='hedge' then
-  V.require('Gen3BoundaryProps').hedge(c,emit,uv)
+  V.require('Gen3BoundaryProps').hedge(c,emit,uv,uvFor)
  elseif s.kind=='ledge' then
   -- A low turf mound with a thin exposed dirt edge, never a tall block.
   -- The sand/grass transition is painted into each native cap. C0/C1

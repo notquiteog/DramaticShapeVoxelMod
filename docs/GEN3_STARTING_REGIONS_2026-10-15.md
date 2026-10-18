@@ -16,11 +16,13 @@ The requested institutional batch is separate; see
 Service-room batch 1.43.0 verifies 30 of the 125 edition-map placements below.
 Home batch 1.45.0 adds 27 Hoenn placements. Kanto home/school batch 1.46.0
 adds 14 placements. Laboratory batch1.47.0 adds five placements
-(76 verified total);49 remain queued.
+(76 verified total). Gate/route-room batch1.49.0 adds eight placements
+(84 verified total);41 remain queued.
 See [the service-room evidence](GEN3_SERVICE_ROOMS_2026-10-15.md).
 See [the home evidence](GEN3_HOMES_2026-10-17.md) and
 [Kanto home/school evidence](GEN3_KANTO_HOMES_2026-10-17.md), plus
 [laboratory evidence](GEN3_LABS_2026-10-17.md).
+See [tree, hedge and route-gate evidence](GEN3_TREES_GATES_2026-10-17.md).
 A source/render capture alone does not complete a queued map.
 
 Boundary/bridge batch1.48.0 adds joined Petalburg hedges, missing Kanto stake ends
@@ -55,10 +57,10 @@ identifiers; Sapphire uses the corresponding `SA_` identifiers.
 | `FR_RIVALS_HOUSE` | `house` | Verified home/school polish 1.46.0 |
 | `FR_ROUTE_1` | `pallet_outdoor` | Queued for this regional pass |
 | `FR_ROUTE_2` | `viridian_outdoor` | Queued for this regional pass |
-| `FR_ROUTE_2_EAST_BUILDING` | `house` | Queued for this regional pass |
-| `FR_ROUTE_2_HOUSE` | `house` | Queued for this regional pass |
-| `FR_ROUTE_2_VIRIDIAN_FOREST_NORTH_ENTRANCE` | `house` | Queued for this regional pass |
-| `FR_ROUTE_2_VIRIDIAN_FOREST_SOUTH_ENTRANCE` | `house` | Queued for this regional pass |
+| `FR_ROUTE_2_EAST_BUILDING` | `house` | Verified route-room polish 1.49.0 |
+| `FR_ROUTE_2_HOUSE` | `house` | Verified route-room polish 1.49.0 |
+| `FR_ROUTE_2_VIRIDIAN_FOREST_NORTH_ENTRANCE` | `house` | Verified route-room polish 1.49.0 |
+| `FR_ROUTE_2_VIRIDIAN_FOREST_SOUTH_ENTRANCE` | `house` | Verified route-room polish 1.49.0 |
 | `FR_VIRIDIAN_CITY` | `viridian_outdoor` | Queued for this regional pass |
 | `FR_VIRIDIAN_CITY_GYM` | `building__rom_082d4cbc` | Queued for this regional pass |
 | `FR_VIRIDIAN_CITY_HOUSE` | `house` | Verified home/school polish 1.46.0 |

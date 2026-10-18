@@ -14,7 +14,7 @@ for _,ed in ipairs{'emerald','ruby','sapphire'}do version=ed
     assert(p[2]>=0 and p[2]<=7);top=math.max(top,p[2]);assert(t[i][1]>=0 and t[i][1]<=1 and t[i][2]>=0 and t[i][2]<=1)
    end
   end,function()return uv end)
-  assert(faces==9 and top==7,'hedge lacks a top and four closed shoulders/skirts')
+  assert(faces>100 and top>6.5 and top<=7,'hedge lacks a top and rounded closed shoulders/skirts')
  end
 end
 version='firered'
@@ -42,6 +42,20 @@ local P=V.require('Gen3BoundaryProps');local joined={}
 for x=0,1 do joined[x..':0']={cx=x,cy=0,shape={kind='hedge',height=7,bounds={0,0,16,16}}}end
 P.prepare(joined);assert(joined['0:0'].hedgeJoin[2]and joined['1:0'].hedgeJoin[1])
 local seam={}
-for _,c in pairs(joined)do P.hedge(c,function(v)for _,p in ipairs(v)do if p[1]==16 and p[2]==7 then seam[p[3]]=(seam[p[3]]or 0)+1 end end end,uv)end
-assert(seam[2]==4 and seam[14]==4,'joined hedge tops leave a two-pixel gap')
-print('PASS contiguous native hedge tops share exact end coordinates')
+for _,c in pairs(joined)do P.hedge(c,function(v)
+ for _,p in ipairs(v)do if p[1]==16 and p[2]>1 then
+  local key=string.format('%.6f:%.6f',p[2],p[3]);seam[key]=(seam[key]or 0)+1
+ end end
+end)end
+for _,n in pairs(seam)do assert(n>=2,'rounded joined hedge tops disagree at source-cell seam')end
+assert(next(seam),'joined hedge seam missing')
+print('PASS contiguous original hedge meshes share exact rounded seam coordinates')
+-- The new material uses continuous world-scaled leaf UVs, not any native
+-- metatile rectangle. All source variants have the same color distribution.
+local reference
+for _,mid in ipairs{0x23f,0x245,0x24c,0x254,0x264}do
+ local c={cx=0,cy=0,mid=mid,ts={},shape={kind='hedge',height=7,bounds={0,0,16,16}}};local top
+ P.hedge(c,function(v,t)if v[1][2]>6 and v[2][2]>6 and v[3][2]>6 then top=t end end)
+ assert(top);if reference then for i=1,4 do assert(top[i][1]==reference[i][1]and top[i][2]==reference[i][2],'source variant changed leaf material')end else reference=top end
+end
+print('PASS one original leaf material across all native hedge sections')

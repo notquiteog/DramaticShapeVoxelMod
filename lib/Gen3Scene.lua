@@ -129,7 +129,7 @@ local function releaseGeometry(cache)
  V.require('NativeLegendaryTrees').release(cache.legendaryTreeInstances)
  for _,batch in ipairs(cache.treeInstances or {})do batch:release()end
  V.require('Gen3SeaRocks').releaseInstances(cache.rockInstances)
- for _,name in ipairs({'wood','leaves'})do if cache[name] then cache[name]:release() end end
+ for _,name in ipairs({'wood','leaves','hedges'})do if cache[name] then cache[name]:release() end end
 end
 local stream=SceneStream.new(releaseGeometry)
 M.streaming=stream.stats
@@ -220,7 +220,7 @@ local function build(req,cache,previous)
  M.seaRockCount=V.require('Gen3SeaRocks').prepare(cells)
  M.forestTrees=Forest.prepare(cells)
  local gyms=Buildings.prepare(cells);M.gymCount=#gyms
- local recipes=V.data("gen3_exteriors")
+ local recipes={};for _,r in ipairs(V.require("Gen3RouteGates").recipes)do recipes[#recipes+1]=r end;for _,r in ipairs(V.data("gen3_exteriors"))do recipes[#recipes+1]=r end
  local optional=V.require('NativeLegendaryBuildings').recipes(def)
  if #optional>0 then local combined={};for _,r in ipairs(optional)do combined[#combined+1]=r end;for _,r in ipairs(recipes)do combined[#combined+1]=r end;recipes=combined end
  local civics=Civic.prepare(cells,gyms,recipes);M.civicCount=#civics
@@ -231,6 +231,7 @@ local function build(req,cache,previous)
  local props=Furniture.extract(cells)
  M.bridgeCount=V.require('Gen3Bridges').prepare(cells)
  V.require('Gen3BoundaryProps').prepare(cells)
+ M.treeFootprints=V.require('Gen3TreeFootprints').prepare(cells,require('src.core.GameVersion').get())
  for _,p in ipairs(towerFlights)do props[#props+1]=p end
  cache.healer,cache.healScreen=nil,nil
  for _,p in ipairs(props)do
@@ -345,7 +346,7 @@ local function build(req,cache,previous)
  cache.rocketWalls=V.require('NativeRocketWalls').build(cells,def.id or req.mapId)
  local masonry=V.require("NativeMasonry").new(def)
  M.cliffCount=0
- local batches={};local wood,wi,leaf,li={},{},{},{}
+ local batches={};local wood,wi,leaf,li,hedges,hi={},{},{},{},{},{}
  for _,c in pairs(cells)do
   Budget.tick()
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
@@ -353,7 +354,7 @@ local function build(req,cache,previous)
   if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
-  local starts={#b.v,#b.rv,#b.pv,#b.wv,#wood,#leaf}
+  local starts={#b.v,#b.rv,#b.pv,#b.wv,#wood,#leaf,#hedges}
   if c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
@@ -421,17 +422,20 @@ local function build(req,cache,previous)
      resize(wood,ws);resize(leaf,ls)
     end
     if shape.modelWidth or shape.modelDepth then
-     -- The procedural model option obeys the same native rectangle as the
-     -- source-art and optional replacement trees, including the full crown.
+     -- Keep the illustrated tree's physical wood inside its native rectangle.
      local rx,rz=0,0
      for _,part in ipairs{{wood,ws},{leaf,ls}}do for j=part[2]+1,#part[1]do
       local v=part[1][j];rx=math.max(rx,math.abs(v[1]-tx));rz=math.max(rz,math.abs(v[3]-tz))
      end end
-     local sx=math.min(1,(shape.modelWidth or rx*2)/math.max(.001,rx*2))
-     local sz=math.min(1,(shape.modelDepth or rz*2)/math.max(.001,rz*2))
+     local sx=(shape.modelWidth or rx*2)/math.max(.001,rx*2)
+     local sz=(shape.modelDepth or rz*2)/math.max(.001,rz*2)
      for _,part in ipairs{{wood,ws},{leaf,ls}}do for j=part[2]+1,#part[1]do
       local v=part[1][j];v[1]=tx+(v[1]-tx)*sx;v[3]=tz+(v[3]-tz)*sz
      end end
+     -- Positive anchors billboard in the shader. Bound their full yaw radius,
+     -- including flat trunks, rather than fitting only the unrotated XZ plane.
+     local native=V.require('NativeTreeArt')
+     native.fitBillboards(wood,ws,shape);native.fitBillboards(leaf,ls,shape)
     end
     end
    end
@@ -533,7 +537,10 @@ local function build(req,cache,previous)
     end
    end
    end
-  elseif shape.kind=='sign' or shape.kind=='fence' or shape.kind=='hedge' or shape.kind=='ledge' or shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass' then
+  elseif shape.kind=='hedge' then
+   plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+   if not c.stageHidden then V.require('Gen3Hedges').append(c,function(v,t,shade)quad(hedges,hi,v,t,shade)end)end
+  elseif shape.kind=='sign' or shape.kind=='fence' or shape.kind=='ledge' or shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    local plant=shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass'
    if not c.stageHidden then Outdoor.append(c,function(vertices,tex,shade,anchor)quad(plant and b.pv or b.v,plant and b.pi or b.i,vertices,tex,shade,anchor)end,uvFor)end
@@ -546,6 +553,7 @@ local function build(req,cache,previous)
   Elevation.lift(b.v,starts[1],base);Elevation.lift(b.rv,starts[2],base)
   Elevation.lift(b.pv,starts[3],base);Elevation.lift(b.wv,starts[4],base)
   Elevation.lift(wood,starts[5],base);Elevation.lift(leaf,starts[6],base)
+  Elevation.lift(hedges,starts[7],base)
   if c.bridge then V.require('Gen3Bridges').append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
   if c.floor and c.floor.underpass then
    local u=c.floor.underpass
@@ -708,6 +716,7 @@ local function build(req,cache,previous)
  cache.treeInstances={}
  V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li,cache.treeInstances)
  cache.wood=R.newMesh(wood,wi);Budget.check();cache.leaves=R.newMesh(leaf,li)
+ cache.hedges=R.newMesh(hedges,hi);Budget.check()
  -- Tiles loaded during this build now belong to the published context. Do
  -- not immediately rebuild the same scene on the next frame just because
  -- its formerly missing neighbor atlas is now ready.
@@ -762,7 +771,7 @@ local function prepare(game,vw,vh,cam)
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
  M.prepares=stream.stats.started;M.builds=stream.stats.completed;M.cacheHits=stream.stats.hits
- for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','bridgeCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
+ for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','treeFootprints','gymCount','civicCount','stairCount','chimneyCount','propCount','bridgeCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
  return true
 end
 local function terrain(draw)
@@ -813,6 +822,7 @@ local function terrain(draw)
   if part.ts.overImage then draw(part.mesh,part.ts.overImage)end
  end
  draw(cache.wood,bark);draw(cache.leaves,TreeStyle.original() and V.require('NativeTreeArt').image() or foliage)
+ if cache.hedges then draw(cache.hedges,V.require('Gen3Hedges').image())end
  V.require('NativeLegendaryTrees').draw(cache.legendaryTreeInstances,draw)
  for _,batch in ipairs(cache.treeInstances or {})do draw(batch,V.require('NativeTreeArt').image())end
 end
@@ -1256,6 +1266,7 @@ function M.performanceSnapshot()
 end
 function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();future=nil;stream:clear();cache={}end
 function M.release()
+ V.require('Gen3Hedges').release()
  V.require("NativeLegendaryTower").clear()
  V.require("NativeLegendarySapling").clear()
  if dustMesh then dustMesh:release();dustMesh=nil end

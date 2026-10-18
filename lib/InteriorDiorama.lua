@@ -105,7 +105,7 @@ function M.profile(def,gen)
   local pairs=V.require('Gen3Tilesets');local pair=pairs.canonical and pairs.canonical(def.midLayout.pair)or def.midLayout.pair
   if pair=='building__generic_building'or pair=='building__brendans_mays_house'or pair=='player_house'or pair=='house'or pair=='building__rom_082d4f5c'then home=V.require('Gen3HomeRooms').profile(def,pair)end
  end
- if home then b[2]=home.north end
+ if home then b[2]=home.north;if home.south then b[4]=home.south end end
  local research
  if gen==3 and not cave then
   local pairs=V.require('Gen3Tilesets');local pair=pairs.canonical and pairs.canonical(def.midLayout.pair)or def.midLayout.pair
@@ -379,7 +379,7 @@ function M.forMap(map,gen)
    local x,y=tonumber(warp.x),tonumber(warp.y)
    if x and y then
     local side
-    if p.homeFinish and p.homeFinish.stairs and y>0 and y<=2 then side=1
+    if p.homeFinish and(p.homeFinish.stairs or p.homeFinish.northDoorRows)and y>0 and y<=(p.homeFinish.northDoorRows or 2)then side=1
     elseif y==0 then side=1
     elseif (y+1)*16>=b[4]-.01 then side=3
     elseif x*16<=b[1]+.01 then side=4

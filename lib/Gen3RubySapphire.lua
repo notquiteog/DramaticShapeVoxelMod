@@ -3,6 +3,7 @@
 local V=...
 local M={recipes={}}
 local BoundaryProps=V and V.require('Gen3BoundaryProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3BoundaryProps.lua')
+local EarlyProps=V and V.require('Gen3EarlyProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3EarlyProps.lua')
 local exteriorNames={slateport_shipyard=true,slateport_oceanic_museum=true,oldale_house=true,oldale_mart=true,oldale_center=true,
  battle_frontier_tower=true,lilycove_department_store=true,lilycove_museum=true,rustboro_devon_corporation=true,mossdeep_space_center=true,
  petalburg_city_mart=true,petalburg_city_center=true,petalburg_city_gym=true,
@@ -180,6 +181,7 @@ function M.shape(primary,secondary,mid,behavior,collision,emerald)
  return own
 end
 function M.ownShape(primary,secondary,mid,behavior,collision)
+ local prop=EarlyProps.shape(primary,secondary,mid,collision,'ruby');if prop then return prop end
  local boundary=BoundaryProps.hoenn(primary,secondary,mid,collision);if boundary then return boundary end
  if primary=='general' then
   -- Independently inspected RS drawing: same brown field boulder, own pixels.

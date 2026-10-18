@@ -2,6 +2,7 @@
 -- headers keep their existing renderer; aliases can reuse the reviewed pair.
 local V=...
 local M={}
+local Route=V and V.require('Gen3RouteRooms')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3RouteRooms.lua')
 local Kanto
 local function kanto()
  if not Kanto then Kanto=V and V.require('Gen3KantoHomes')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3KantoHomes.lua')end
@@ -10,6 +11,7 @@ end
 local generic={};for _,m in ipairs{0x205,0x206,0x207,0x268,0x269,0x26e,0x26f,0x286,0x287,0x279,0x27a,0x230,0x278}do generic[m]=true end
 local starting={};for _,m in ipairs{0x26e,0x21e,0x21f,0x217,0x252,0x254,0x250,0x256,0x287,0x227,0x20b,0x20c,0x20d,0x208,0x20a,0x20f,0x251}do starting[m]=true end
 function M.profile(def,pair)
+ local route=Route.profile(def,pair);if route then return route end
  if pair=='player_house'or pair=='house'or pair=='building__rom_082d4f5c'then return kanto().profile(def,pair)end
  local layout=def and def.midLayout
  if not(layout and layout.midAt and layout.collAt and def.width and def.height)then return end
@@ -29,6 +31,7 @@ function M.profile(def,pair)
 end
 local attached={em_start_high_window=true,em_start_window=true,em_start_picture=true,em_start_clock=true,em_home_window=true,em_home_picture=true}
 function M.attach(p,vertices)
+ Route.attach(p,vertices)
  kanto().attach(p,vertices)
  if p.homeWall and p.cy==0 and attached[p.recipe.design]then
   local shift=p.homeWall-16+.12
