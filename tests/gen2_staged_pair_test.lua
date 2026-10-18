@@ -174,3 +174,17 @@ love.graphics.draw=function()error('combined doll failure')end
 assert(M.sideTexture(game,'player')==nil and M.drawn.player==nil,'failed combined doll restores native ownership')
 assert(scissor[1]==2 and bgp==0xe4,'failed combined doll restores state')
 print('PASS substitute LCD/lifted combination preserves native16px slide/palette and cleanup')
+first.volatile=nil;selected=false;pose={lifted={4,1},slide=8};screen.anim.bg={scx=4,bgp=0xe4}
+local faintPasses={};love.graphics.draw=function(img,x,y)faintPasses[#faintPasses+1]={x=x,y=y,clip={unpack(scissor)}}end
+sink=0;local base=assert(M.sideTexture(game,'player'));local baseY=faintPasses[1].y
+faintPasses={};sink=8;local faintMixed=assert(M.sideTexture(game,'player'))
+assert(M.drawn.player==first and #faintPasses>0,'combined faint/LCD lost native actor ownership')
+for _,p in ipairs(faintPasses)do
+ assert(p.y==baseY+8,'native faint progress lost inside picture band')
+ assert(p.clip[2]+p.clip[4]<=faintMixed.ay,'band crop escaped fixed source ground')
+end
+assert(scissor[1]==2 and bgp==0xe4 and target==nil and sink==8,'combined faint mutated clock or leaked graphics')
+love.graphics.draw=function()error('combined faint failure')end
+assert(M.sideTexture(game,'player')==nil and M.drawn.player==nil)
+assert(scissor[1]==2 and bgp==0xe4 and target==nil,'failed combined faint crop leaked state')
+print('PASS combined faint/LCD/lifted source progress, clip intersection and native/error fallback')

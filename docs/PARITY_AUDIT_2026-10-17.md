@@ -40,7 +40,7 @@ native interface/capture/send-out/GSC evidence documents for the actual limits.
 
 | Scope | Current consumer and precise remaining work |
 | --- | --- |
-| G/S/C world animations | `Gen2Staged`: ordinary lifted bands, native scroll and LCD/BGP scanlines now compose into world cards. Substitute dolls now combine with lifted/LCD effects at native16px size and coordinates. Combined faint with raster or lifted effects and animated doubles still return to the native painter; those combinations need further adapters. |
+| G/S/C world animations | `Gen2Staged`: ordinary lifted bands, native scroll and LCD/BGP scanlines now compose into world cards. Substitute dolls now combine with lifted/LCD effects at native16px size and coordinates. Faint cropping now also composes inside lifted/LCD clips (original-script combination fixture, not a gameplay KO). Animated doubles still return to the native painter and require per-actor composition. |
 | G/S/C Legendary send-out | `NativeGen2Sendout` now reads original single-actor events into shared Q57 shell/energy, with native reveal/cry/shiny clocks, cancellation and independent provider precedence. G/S/C original-script108/108-frame and B-cancellation checks pass; see `NATIVE_GSC_RELEASE_2026-10-17.md`. Multi-actor release remains unfinished; model-specific subject materials require the selected model provider. |
 | FR/LG/Ru/Sa/E Legendary release | `NativeGen3SendoutShell` renders five existing shells; `NativeGen3Release` now drives shared Q57 volume/subject material from original single-actor reveal scale, retaining native card transforms and clocks. All five original-script36/36-frame checks pass. Native ball particles remain: their public list lacks per-actor ownership; full provider-model deformation and multi-actor ownership are still incomplete. |
 | Native multi-actor effects | Capture/simultaneous release paths deliberately fall back for doubles or ambiguous ownership. Unique native battler IDs exist on GBA, but adapters still need per-actor event ownership and bounded cleanup. Native fallback is not full parity. |
@@ -84,6 +84,6 @@ families remain with the model worker. `NativeGeometryCache` compresses supporte
 building/furniture CPU records; general terrain/tree streams remain a separate
 performance-owner gap. No model/cache completion is inferred from this audit.
 
-Full feature parity is **not complete**. Combined GSC picture effects,
-release choreography and multi-actor ownership remain concrete
-adapters to complete. Do not relabel native fallbacks as parity.
+Full feature parity is **not complete**. Animated doubles, actor-owned native
+release particle replacement and multi-actor capture/release ownership remain
+concrete adapters to complete; model-provider deformation has a separate contract. Do not relabel native fallbacks as parity.

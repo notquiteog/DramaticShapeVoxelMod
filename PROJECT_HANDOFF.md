@@ -1,3 +1,13 @@
+# GSC combined faint/LCD cards — 2026-10-17
+
+Original faint progress now composes inside lifted-row/LCD clips, preserving
+fixed world grounding and graphics cleanup. G/S/C0.3.89 native overlap fixtures
+pass83/83 and118/118 original script frames on both invoked sides;264crop
+observations per edition,12captures inspected. Explicit presentation overlap,
+not a gameplay KO claim. Focused tests,549options,202SDK pass. Evidence:
+`docs/NATIVE_GSC_FAINT_BANDS_2026-10-17.md`. Animated doubles/per-actor effects
+remain. Prior shared332/0/58 evidence predates this final crop batch.
+
 # GBA native shared release material — 2026-10-17
 
 Original single-actor send-out scale now drives shared Q57 volume/subject

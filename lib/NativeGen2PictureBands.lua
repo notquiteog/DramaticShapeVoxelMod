@@ -2,6 +2,21 @@
 -- Convert the original UI band into the source-sized world card; no timer or
 -- battler state is changed. The caller retains all picture/palette ownership.
 local M={}
+-- Crop the sinking source inside a band's existing clip, before that band's
+-- LCD displacement. The caller supplies its displaced world ground line.
+function M.crop(g,w,h,bottom,paint)
+ local sx,sy,sw,sh=g.getScissor()
+ local left,top=math.max(0,sx or 0),math.max(0,sy or 0)
+ local right=math.min(w,sx and sx+sw or w)
+ local final=math.min(h,math.floor(bottom),sy and sy+sh or h)
+ local ok,err=pcall(function()
+  if right>left and final>top then
+   g.setScissor(left,top,right-left,final-top);paint()
+  end
+ end)
+ if sx then g.setScissor(sx,sy,sw,sh)else g.setScissor()end
+ if not ok then error(err,0)end
+end
 function M.range(back,nativeHeight,nativeScale,height,scale,ground,ay,rows)
  if not(type(rows)=='table'and type(rows[1])=='number'and type(rows[2])=='number'
   and rows[1]>=0 and rows[2]>0 and nativeHeight>0 and nativeScale>0)then return end

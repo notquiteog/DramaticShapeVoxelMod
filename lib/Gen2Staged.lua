@@ -145,7 +145,6 @@ local function poseFor(screen,side,mon,back)
   local substitute=mon.volatile and (tonumber(mon.volatile.substitute)or 0)>0
   if anim and anim.pic~=nil then substitute=anim.pic=='substitute'end
   local lifted=anim and anim.lifted
-  if(lifted or raster)and sink>0 and not substitute then return end
   local scale=anim and RESIZE_TILES[anim.size]
   scale=scale and scale/(back and 6 or 7)or 1
   local slide=anim and anim.slide or 0
@@ -239,7 +238,12 @@ function Gen2Staged.sideTexture(game, side)
     if doll then
       drawPic(love.graphics,doll,dollQuad,ax-dollWidth/2+slide+(dx or 0),ay-dollGround+(dy or 0))
     else
-      drawPic(love.graphics,image,quad,ax-iw*poseScale/2+slide+(dx or 0),ay-groundY*poseScale+(dy or 0),poseScale)
+      local function monBody()
+        drawPic(love.graphics,image,quad,ax-iw*poseScale/2+slide+(dx or 0),ay-groundY*poseScale+(dy or 0)+sinkPixels,poseScale)
+      end
+      if poseSink>0 then
+        V.require('NativeGen2PictureBands').crop(love.graphics,cw,ch,ay+(dy or 0),monBody)
+      else monBody()end
     end
   end
   local band

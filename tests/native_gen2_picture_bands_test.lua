@@ -30,3 +30,10 @@ assert(not pcall(M.drawRaster,G,160,144,runs,false,56,1,56,1,56,143,function()er
 print('PASS native public scanline grouping, lifted source exclusion, BGP rows, signed scroll and viewport clipping')
 local dollClip=M.viewport(false,16,1,16,1,80,8,112)
 assert(dollClip[1]==-40 and dollClip[2]==120,'native enemy doll112px origin retains viewport clipping')
+clip={10,20,30,40};local cropped=0
+M.crop(G,160,144,45,function()cropped=cropped+1;eq(clip[1],10);eq(clip[2],20);eq(clip[3],30);eq(clip[4],25)end)
+eq(cropped,1);eq(clip[4],40)
+M.crop(G,160,144,19,function()error('empty source crop drew')end);eq(clip[4],40)
+assert(not pcall(M.crop,G,160,144,45,function()error('crop fail')end));eq(clip[1],10);eq(clip[4],40)
+clip={};M.crop(G,160,144,150,function()eq(clip[2],0);eq(clip[4],144)end);assert(clip[1]==nil)
+print('PASS faint source crop intersects band/LCD clips and restores state after empty/error paths')
