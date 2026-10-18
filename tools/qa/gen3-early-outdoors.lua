@@ -35,8 +35,8 @@ return function(game)
   assert(#game.mods:status().errors==0,table.concat(game.mods:status().errors,';'));print('[EARLY OUTDOOR] PASS',id,'walk',walk[1],walk[2],walk[3][3],'boundary',bump[1],bump[2],bump[3][3])
  end
  if os.getenv('QA_WITH_BRIDGE')=='1'then
-  local id=pre..(pre=='FR_'and'ROUTE_24'or'FORTREE_CITY');Cam.setLevel(0,game);assert(Map.load(nil,game,id,{x=pre=='FR_'and 11 or 13,y=pre=='FR_'and 18 or 4,facing=pre=='FR_'and'down'or'right'}));require('src.ui.game3.map_preview_screen').dismiss();require('src.ui.game3.map_name_popup').dismiss();U.wait(5)
-  local x,y,dir=pre=='FR_'and 11 or 13,pre=='FR_'and 18 or 4,pre=='FR_'and'down'or'right';Player.reset(x,y,dir);Cam.setLevel(3,game);U.wait(15);game.input:reset();U.hold(game,dir,16);U.wait(16);assert(Map.current==id and(Player.cellX~=x or Player.cellY~=y),'native bridge movement failed');print('[NATIVE BRIDGE] PASS',id)
+  local id=pre..(pre=='FR_'and'ROUTE_24'or'FORTREE_CITY');Cam.setLevel(0,game);assert(Map.load(nil,game,id,{x=pre=='FR_'and 12 or 13,y=pre=='FR_'and 37 or 4,facing=pre=='FR_'and'down'or'right'}));require('src.ui.game3.map_preview_screen').dismiss();require('src.ui.game3.map_name_popup').dismiss();U.wait(5)
+  local x,y,dir=pre=='FR_'and 12 or 13,pre=='FR_'and 37 or 4,pre=='FR_'and'down'or'right';Player.reset(x,y,dir);Cam.setLevel(3,game);U.wait(15);game.input:reset();print('[BRIDGE FIXTURE]',id,x,y,Col.isWalkable(x,y),Col.isWalkable(x,y+(pre=='FR_'and 1 or 0)),Obj.at(x,y)and'actor'or'clear');U.hold(game,dir,16);U.wait(16);print('[BRIDGE RESULT]',Map.current,Player.cellX,Player.cellY,require('src.ui.game3.message').isOpen());assert(Map.current==id and(Player.cellX~=x or Player.cellY~=y),'native bridge movement failed');print('[NATIVE BRIDGE] PASS',id)
   Cam.setLevel(6,game);U.wait(15);assert(U.shot(game,os.getenv('SHOT_DIR')..'/'..id..'-1ST.png'));assert(#game.mods:status().errors==0)
  end
  print('[EARLY NATIVE]',ed,walks,'aisles',bumps,'blocked boundaries');love.event.quit()

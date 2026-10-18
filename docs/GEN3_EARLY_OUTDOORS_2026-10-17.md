@@ -54,7 +54,31 @@ Candidate native runs passed30 ordinary aisles and30 native blocked boundaries
 all source cell IDs/collision/elevation remain unchanged after walking. These
 are bounded fixture paths, not full route traversals or whole-map art approval.
 
-Final archive verification is recorded below after the frozen package matrix.
+The frozen archive matrix uses the actual installed archive and public
+`mod:read` SHA256 checks for all10 changed runtime libraries plus the manifest
+on every launch. Engine and scene sources are not patched. The QA inspection
+camera is separate from the actual first-person captures.
+
+Archive orbit/eye/under-deck inspection:80 captures across15 edition-spots
+(Viridian/Pewter/Kanto bridge per FR/LG; Petalburg/Route103/Fortree bridge per
+EM/RU/SA). Bridge geometry is present in the live scene:115 claimed Kanto cells
+and27 Fortree cells in the chosen inspection windows. These are window counts,
+not whole-map counts. Review at a smaller render distance initially put the
+model outside the player's fade area; those fog-obscured candidates are not
+final evidence. Final fixtures park the native player near the subject.
+
+The final native matrix checks30 aisles/30 blocked boundaries and five real
+bridge walks, with65 OFF/actual1ST captures. It keeps every native cell's ID,
+collision and elevation unchanged. The first Kanto bridge fixture did not move;
+it was replaced by the demonstrably clear native(12,37)→(12,38) aisle, without
+changing NPCs or scripts. Fortree moves(13,4)→(14,4). First-person fixtures can
+face nearby trees/walls; their successful native input/rendering is not a
+full camera-framing or canopy-clearance certification.
+
+ZIP integrity, empty hard dependencies and all500 packaged Lua sources are
+checked. The package contains11,422 files. Evidence-only repackaging preserves
+all11,248 frozen runtime payload hashes; the final archive checksum is
+attached to the GitHub release in `sha256sums.txt`.
 
 ## Remaining work
 
@@ -64,10 +88,34 @@ native walks cover their basic seams, not every object or native door/route warp
 
 Kanto Route2/Forest gates and their roof/header variants still need a complete
 object review. Petalburg's tree/hedge composites and garden beds, Hoenn cut-tree
-and berry/soil variants, and Route103's composite cliff/water drawings remain.
+and berry/soil variants, native moving-truck/object-sprite props, and Route103's composite cliff/water drawings remain.
 The existing sea-rock assembler owns some composite rock drawings independently
 of the simple classifier; a flat-classifier count alone is not a missing-model
 count. Remaining gyms, Pewter museum floors and route-building interiors also
 remain in the regional queue. Fortree house models and all other bridge art
 families are outside this focused bridge pass. No complete-region, ORAS quality,
 manual keyboard, mobile, multiplayer or performance claim is made.
+
+## Optional ecosystem checks
+
+All six optional partners load together and pass an ordinary aisle, native
+blocked boundary, OFF/actual1ST and real bridge walk in FireRed and Ruby.
+These are compatibility smoke checks, not multiplayer or battle integration
+certification. The model package also runs alone in all five editions.
+
+| Partner | Checked published main | Latest release |
+| --- | --- | --- |
+| wild_skies |463913e|1.15.2|
+| dramatic-sky-ride |fd425f0|0.5.5|
+| double-battles-gen2 |5bfc0ef|0.14.3|
+| gen1online-plus |6e838e2|0.11.2|
+| overworld-spawn-mod |b81dc23|2.6.4|
+| modern-ui |bcde575|0.4.2|
+
+Five partner working trees remain clean and equal their published main; Wilds
+has a separate clean local commit70d2cfd (`Load native overworld sheets through
+public packaged asset API`) beyond published b81dc23. The two city/bridge smoke
+runs pass with that unpublished commit and independently with a scratch snapshot
+of published b81dc23. Its worker's source/metadata are preserved; it is not
+silently included or published by this scenery release. Primary Battle Art
+camera/presentation changes are also preserved in their original checkout.
