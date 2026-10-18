@@ -14,10 +14,25 @@ local function call(name,...)
  end
  return result
 end
+function M.targetReady(s)
+ local b=s and s.battle
+ if not b then return false end
+ if not b.doubles then return true end
+ if not b.wild then return false end
+ -- The optional native doubles bridge promotes its last surviving opponent
+ -- before starting the original ball script. Require that exact shown target;
+ -- never select or rearrange the companion's combat slots ourselves.
+ local ok,ready=pcall(function()
+  local mon=s:activeMon('enemy');local other=s:activeMon('enemy2')
+  return mon~=nil and mon==b.enemy and (mon.hp or 0)>0
+   and (other==nil or (other.hp or 0)<=0)
+ end)
+ return ok and ready or false
+end
 local function enabled(s)
  local stage=V.require('Gen2Battle')
  return V.require('PokeballSettings').active() and stage.enabled() and stage.sceneOverrideEnabled~=false
-  and s and s.battle and s.battle.wild and not s.battle.doubles
+  and s and s.battle and s.battle.wild and M.targetReady(s)
   -- The DUDE's tutorial uses the same Poke Ball script and confirmed result;
   -- its native temporary pack, empty party and auto-input remain untouched.
   and not s.contest
@@ -83,7 +98,7 @@ function M.install()
   return result
  end
  S.update=function(self,...)
-  if owner==self and(not enabled(self)or self.phase=='done'or self.phase=='evolving')then M.finish()end
+  if owner==self and(self.anim~=runner or not enabled(self)or self.phase=='done'or self.phase=='evolving')then M.finish()end
   return update(self,...)
  end
  View.present=function(self,anim,drawBg,battle,...)

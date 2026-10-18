@@ -1,3 +1,14 @@
+# GSC native last-wild capture — 2026-10-17
+
+Verified native last-wild identity now enables the shared capture prop/audio
+without selecting or rearranging companion slots; replaced runners clean up.
+G/S/C NVIDIA0.3.89 original-script checks pass324/324 frames and1/1 RNG calls,
+plus real partner promotion, one Master Ball consumed and one partner stored.
+Six final intake captures inspected. Shared335/0/58,32 capture-audio and549
+option checks pass. Evidence: `docs/NATIVE_GSC_PAIR_CAPTURE_2026-10-17.md`.
+Actor-targeted GSC move/release and native ownerless particles remain separate;
+full parity is not complete.
+
 # GBA native last-wild capture — 2026-10-17
 
 Detached native catch views now bind to their exact live opponent ID1/3; the

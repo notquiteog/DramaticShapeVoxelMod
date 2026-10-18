@@ -62,12 +62,13 @@ function M.install()
      elseif key=='BALLPOOF'then event=opened and'breakout'or'open';opened=true
      elseif key=='BALLWOBBLE'then wobble=wobble+1;event,index='shake',wobble
      elseif key=='BALLBOUNCE'then event,index='land',1 end
-     if event and self.anim==runner and self.battle and not self.battle.doubles then
+     if event and self.anim==runner and self.battle then
       local ok,played=pcall(function()
        if not staged()then return false end
        -- The outer 3D adapter owns its supported sequence, including fallback.
        -- Do not retry/suppress its original sound after failed playback.
        local capture=V.require('Gen2Capture')
+       if self.battle.doubles and not(capture and capture.targetReady and capture.targetReady(self))then return false end
        if capture and capture.active and capture.active(self,runner)then return false end
        local a=V.require('EmberLegacyAudio')
        a.nativeMaster(self.battle,function()

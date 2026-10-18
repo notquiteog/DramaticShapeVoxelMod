@@ -1,7 +1,7 @@
 local checks=0;local function check(v,msg)checks=checks+1;assert(v,msg)end
 local native,events,begins,clears=0,{},0,0
 local enabled,hasStage,available,plays,raises,owned=true,true,true,true,false,false
-local master
+local master;local lastWild=false
 local S={animForId=function()return false end,update=function()return nil,'tick'end,finishBattle=function()return 'finish'end}
 S.startBallAnim=function(self,param,item)
  self.anim={hooks={sound=function(name,x)native=native+1;return nil,name,x end}}
@@ -14,7 +14,7 @@ local A={nativeMaster=function(_,fn)master=fn end,sync=function()return availabl
  clear=function()clears=clears+1 end}
 local V={require=function(n)return({Gen2Battle={enabled=function()return enabled end},
  PokeballSettings={active=function()return enabled end},OverworldBattle={shot=function()return hasStage and{canvas={}}end},
- EmberLegacyAudio=A,Gen2Capture={active=function()return owned end}})[n]end}
+ EmberLegacyAudio=A,Gen2Capture={active=function()return owned end,targetReady=function()return lastWild end}})[n]end}
 local M=assert(loadfile('lib/Gen2BallAudio.lua'))(V);check(M.install(),'installed')
 local s=setmetatable({battle={wild=true},game={options={sfxVol=4}},phase='menu'},{__index=S})
 local function start(item,param)
@@ -40,7 +40,9 @@ local old=sound;sound=start('PARK_BALL');fallback(old)
 s.contest=true;sound('Sfx_ThrowBall');check(events[#events][1]=='throw'and begins==2,'contest uses native throw audio')
 s.contest=nil;s.battle.wild=false;sound=start('POKE_BALL',0);sound('Sfx_ThrowBall');fallback(sound,'Sfx_Peck')
 check(begins==3 and events[#events][1]=='throw','trainer-blocked throw retains native impact')
-s.battle.doubles=true;fallback(sound);s.battle.doubles=nil
+s.battle.doubles=true;fallback(sound);s.battle.wild=true;lastWild=true
+sound=start('LOVE_BALL');local oldCount=#events;sound('Sfx_ThrowBall');check(#events==oldCount+1,'last-wild specialty cue')
+owned=true;fallback(sound);owned=false;lastWild=false;s.battle.doubles=nil
 local a,b=s:update();check(a==nil and b=='tick','update returns')
 s.phase='done';s:update();check(clears==1,'native-only voices clean up')
 check(s:finishBattle()=='finish','finish return')
