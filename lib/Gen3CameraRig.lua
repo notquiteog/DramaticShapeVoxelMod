@@ -18,32 +18,11 @@ function M.place(camera,x,z,ground,eyeHeight,lift,solid)
  -- Keep the orbit above the current support plane when looking upward.
  -- This does not alter the selected pitch or any native movement/collision.
  if ly>0 then distance=math.min(distance,math.max(0,(pivot-ground-5)/ly))end
- local wanted=distance
- if solid then
-  local function clear(t)
-   local wx,wy,wz=x-dx*flat*t,pivot-ly*t,z-dz*flat*t
-   local rx,rz=math.cos(yaw)*3,math.sin(yaw)*3
-   return not(solid(wx,wy,wz)or solid(wx+rx,wy,wz+rz)or solid(wx-rx,wy,wz-rz))
-  end
-  local low=0
-  for t=4,wanted+3,4 do
-   local high=math.min(wanted,t)
-   if not clear(high)then
-    for _=1,4 do local mid=(low+high)*.5;if clear(mid)then low=mid else high=mid end end
-    distance=math.max(math.min(wanted,48),low-5);break
-   end
-   low=high
-  end
-  -- Keep enough framing for a third-person actor; foreground scenery uses
-  -- the continuous cutaway when a wall/crown is closer than this.
-  -- Collision retracts immediately; a corner opening releases the boom at
-  -- the same controlled rate as the Gen 1/2 shoulder camera.
-  distance=math.min(distance,(camera.boomClearance or distance)+150*math.min(.1,camera.cameraDelta or 0))
-  camera.boomClearance=distance
- end
+ -- The boom always extends to its full length: it never culls against
+ -- walls, terrain or any other geometry. (The Gen 1/2 boom lives in
+ -- ThirdPerson.lua and was changed the same way in Release 1.51.0.)
  local shoulder=4*(camera.boomZoom or 1)*(distance/math.max(1,75*(camera.boomZoom or 1)))
  local sx,sz=math.cos(yaw)*shoulder,math.sin(yaw)*shoulder
- if solid and solid(x-dx*flat*distance+sx,pivot-ly*distance,z-dz*flat*distance+sz)then sx,sz=0,0 end
  return {eye={x-dx*flat*distance+sx,pivot-ly*distance,z-dz*flat*distance+sz},
   focus={x+dx*flat*24+sx,pivot+ly*24,z+dz*flat*24+sz},fov=math.rad(62)}
 end

@@ -20,12 +20,13 @@ assert(first.eye[1]==100 and first.eye[2]==52 and first.eye[3]==200 and first.fo
 assert(first.curve==0 and first.focus[3]==176,'first-person feet/eye anchor changed')
 local camera={level=7,yaw=0,pitch=0,boomZoom=1,cameraDelta=.01}
 local blocked=Rig.place(camera,100,200,0,14,0,function(x,y,z)return z>230 end)
-assert(blocked.eye[3]==248,'boom lost minimum third-person framing')
+-- the boom never culls against blocked cells: it extends to full length
+assert(blocked.eye[3]==275,'boom should extend to full length without culling')
 assert(Rig.showsPlayer(camera),'collision unexpectedly hid third-person actor')
 assert(Rig.showsPlayer({level=7,boomClearance=60})and Rig.showsPlayer({level=3}))
 assert(not Rig.showsPlayer({level=6}))
 local recovering=Rig.place(camera,100,200,0,14,0,function()return false end)
-assert(recovering.eye[3]>blocked.eye[3]and recovering.eye[3]-blocked.eye[3]<=1.51,'boom snapped on clearance')
+assert(recovering.eye[3]==blocked.eye[3],'boom length identical with or without obstacles')
 local function layout(block)return{width=4,height=4,collAt=function(_,x,y)return block and 1 or 0 end}end
 local primary={midLayout=layout(false)};local neighbor={midLayout=layout(true)}
 local collision={behaviorOn=function()return 'land'end,isSurfable=function(b)return b=='water'end}
