@@ -32,10 +32,11 @@ stage.balls={};absent();stage.balls={[0]=ball}
 frame.byId={};absent();frame.byId={[0]=card}
 frame.cards={sourceCard,sourceCard};absent();frame.cards={sourceCard}
 catching=true;absent();catching=false
-st.double=true;absent();st.double=nil
+st.double=true;M.prepare(frame);assert(frame.releasePose,'identified double actor lost release');st.double=nil
 st.legendaryModelRelease={};absent();st.legendaryModelRelease=nil
 enabled=false;absent();enabled=true
 M.prepare(frame);failure=true;assert(not M.draw(frame),'GPU allocation failure should retain native');failure=false
+assert(not M.subject(frame,card,{}),'failed volume left an isolated replacement subject')
 M.clear();assert(released==1,'failed allocation invented mesh')
 M.prepare(frame);M.draw(frame);M.clear();assert(released==2)
-print('PASS native release event/actor ownership, native scale clock, exact subject card, reusable GPU volume, failure/OFF/capture/provider/doubles and cleanup')
+print('PASS native release event/actor ownership, native scale clock, exact subject card, reusable GPU volume, failure/OFF/capture/provider and cleanup')

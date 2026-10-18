@@ -32,5 +32,13 @@ stage.balls={ball};check(not M.shell(st,c),'ambiguous coincident ball');stage.ba
 ball.x=73;check(not M.shell(st,c),'unrelated card');ball.x=72
 ball.visible=false;check(not M.shell(st,c),'hidden native ball');ball.visible=true
 local prior=M.shell(st,c);M.clear();check(M.shell(st,c)~=prior,'clear releases instance references')
+st.double=true;ball.battler=0;stage.ball=nil;stage.balls={[0]=ball}
+local b2={visible=true,x=102,y=104,ballId=1,frame=2,battler=2};stage.balls[2]=b2
+local c2={ball=true,ax=102,ay=104,radius=1.5,model=c.model}
+local s0,s2=M.shell(st,c),M.shell(st,c2)
+check(s0 and s2 and s0~=s2 and M.owner(c)==0 and M.owner(c2)==2,'separate native double identities')
+check(M.shell(st,c)==s0 and M.shell(st,c2)==s2,'interleaved draw recreated event shell')
+b2.x=72;check(not M.shell(st,c)and M.owner(c)==nil,'coincident doubles need native fallback');b2.x=102
+stage.balls[2]=nil;check(not M.shell(st,c2)and M.shell(st,c)==s0,'one completed event disturbed survivor')
 check(ball.frame==2 and ball.rot==.3 and c.ax==72 and c.radius==1.5,'native state untouched')
 print('PASS '..n..' native sendout shell contracts')

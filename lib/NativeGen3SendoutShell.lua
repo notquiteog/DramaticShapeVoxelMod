@@ -5,11 +5,8 @@ local M={}
 local names={[0]='POKE_BALL',[1]='GREAT_BALL',[2]='SAFARI_BALL',[3]='ULTRA_BALL',[4]='MASTER_BALL'}
 local entries=setmetatable({},{__mode='k'})
 function M.clear()entries=setmetatable({},{__mode='k'})end
-function M.shell(st,card)
- if not(st and not st.double and card and card.ball and card.model)
-  or not V.require('PokeballSettings').active()or not V.require('Gen3Battle').enabled()then return end
- local Catch=require('src.core.game3.battle.catch_seq')
- if Catch.busy()then return end
+function M.nativeBall(card)
+ if not(card and card.ball)then return end
  local Anim=require('src.core.game3.battle.anim')
  if Anim._headless then return end
  local stage=Anim.stage();local selected
@@ -22,12 +19,25 @@ function M.shell(st,card)
  end
  if not match(stage.ball)then return end
  for _,ball in pairs(stage.balls or{})do if not match(ball)then return end end
- local b=selected;local name=b and names[b.ballId or 0]
+ return selected
+end
+function M.owner(card)
+ local b=M.nativeBall(card);local id=b and b.battler
+ local balls=require('src.core.game3.battle.anim').stage().balls
+ if type(id)=='number'and id>=0 and id<=3 and id%1==0
+  and balls and balls[id]==b then return id end
+end
+function M.shell(st,card)
+ if not(st and card and card.ball and card.model)
+  or not V.require('PokeballSettings').active()or not V.require('Gen3Battle').enabled()then return end
+ if require('src.core.game3.battle.catch_seq').busy()then return end
+ local b=M.nativeBall(card);local name=b and names[b.ballId or 0]
+ if st.double and M.owner(card)==nil then return end
  if not name or (b.darken or 0)~=0 or (b.flash or 0)~=0
   or (b.alpha or 1)~=1 or b.blend then return end
- local entry=entries[st]
- if not entry or entry.native~=b or entry.name~=name then
-  entry={native=b,name=name,shell=V.require('Pokeball').new(name)};entries[st]=entry
+ local entry=entries[b]
+ if not entry or entry.owner~=st or entry.name~=name then
+  entry={owner=st,name=name,shell=V.require('Pokeball').new(name)};entries[b]=entry
  end
  local shell,m=entry.shell,card.model
  local u,v=(card.ax or 0)/240-.5,1-(card.ay or 0)/160

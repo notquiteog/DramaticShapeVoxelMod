@@ -1,3 +1,14 @@
+# GBA native simultaneous releases — 2026-10-17
+
+Native event IDs0–3 now own independent shells, Q57 volumes and exact-card subject
+materials, with owner-specific ball projection and independent cleanup/fallback.
+All5 GBA native NVIDIA0.3.89 runs pass36/36frames,4concurrent owners,44subject
+observations, unchanged identity/HP and OFF. Camera follow-up fixes HUD overlap;
+10final paired captures inspected with all four bodies clear. Shared335/0/58
+suite plus final failure-branch focused checks pass. Evidence:
+`docs/NATIVE_GBA_MULTI_RELEASE_2026-10-17.md`. Native particle-pool replacement,
+GSC move-owner mapping and multi-actor capture remain; no full parity claim.
+
 # GSC independent paired picture state — 2026-10-17
 
 Paired world cards now compose native slot-specific substitutes, hidden bodies

@@ -18,8 +18,11 @@ end
 function M.placement(camera,id,double,ground)
  local dx,dz=math.sin(camera.yaw),-math.cos(camera.yaw)
  local rx,rz=math.cos(camera.yaw),math.sin(camera.yaw)
- local back=id%2==0;local lateral=double and (id<2 and -32 or 32)or 0
- local depth=back and -24 or 24
+ local nativePair=camera.sceneLayout=='gen3-native-pair'
+ local span=nativePair and 12 or 32
+ local back=id%2==0;local lateral=double and (id<2 and -span or span)or 0
+ local row=nativePair and 40 or 24
+ local depth=back and -row or row
  if id>=4 then depth=depth+(back and -10 or 10)end
  return {camera.center[1]+dx*depth+rx*lateral,ground,camera.center[2]+dz*depth+rz*lateral}
 end
@@ -138,7 +141,16 @@ function M:prepare(camera,ground,eye)
  for id=0,3 do if not self.native[id]then self:anchor(id)end end
  local function positionCard(c)
   local point,ox,oy=self.points[c.id],0,0
-  if not c.id then point,ox,oy=self:effectPoint(c.ax,c.ay,c.ball,c.radius)end
+  if not c.id then
+   local owner=c.ball and self.st.double and V.require('NativeGen3SendoutShell').owner(c)
+   local anchor=owner and self.native[owner]
+   if anchor and self.points[owner]then
+    local p=self.points[owner]
+    local coord=require('src.core.game3.battle.anim_coords').coords(self.st,owner)
+    point={p[1],p[2]+(c.radius or 6*M.PIXEL)+math.max(0,(coord.y or anchor.y)+24-c.ay)*M.PIXEL,p[3]}
+    ox,oy=c.ax-anchor.x,0
+   else point,ox,oy=self:effectPoint(c.ax,c.ay,c.ball,c.radius)end
+  end
   local yaw=Billboard.yawToward(point[1],point[3],eye)
   local offset=Mat.translate((M.W/2-c.ax+ox)*M.PIXEL,(c.ay-M.H-oy)*M.PIXEL,0)
   c.model=Mat.mul(Mat.mul(Mat.mul(Mat.translate(unpack(point)),Mat.rotateY(yaw)),offset),Mat.scale(M.W*M.PIXEL,M.H*M.PIXEL,1))
