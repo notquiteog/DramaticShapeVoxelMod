@@ -144,6 +144,7 @@ function M:prepare(camera,ground,eye)
   c.model=Mat.mul(Mat.mul(Mat.mul(Mat.translate(unpack(point)),Mat.rotateY(yaw)),offset),Mat.scale(M.W*M.PIXEL,M.H*M.PIXEL,1))
  end
  for _,c in ipairs(self.cards)do positionCard(c)end
+ V.require('NativeGen3Release').prepare(self)
  -- Native target selection blinks the sprite, not its status card. Project
  -- the hidden actor's same native anchor without drawing a replacement sprite.
  self.hiddenHeads={}
@@ -168,6 +169,7 @@ function M:draw(shadow)
   groundY=self.ground,position=self.points and self.points[4],camera=self.camera,
   host={Voxel3D=R,Mat4=Mat,ShadowMap=V.require('ShadowMap')}},shadow~=nil)
  local mesh=Billboard.mesh()
+ if not shadow then V.require('NativeGen3Release').draw(self)end
  for _,c in ipairs(self.cards)do
   if not shadow or c.id or c.ball then
    -- Match the established Gen1/2 card caster: terrain acne slack must not
@@ -177,7 +179,9 @@ function M:draw(shadow)
    local replaced=c.ball and V.require('NativeGen3SendoutShell').draw(self.st,c,shadow and V.require('ShadowMap')or nil)
    if not replaced then
     if shadow then draw(mesh,c.tex,sun)
-    else V.require('NativeGen3CaptureTint').draw(self.st,c,mesh,sun)end
+    elseif not V.require('NativeGen3Release').subject(self,c,mesh)then
+     V.require('NativeGen3CaptureTint').draw(self.st,c,mesh,sun)
+    end
    end
   end
  end
@@ -191,6 +195,7 @@ function M:head(id,x,y)
  return M.project(self.vp or R.vp,m[1]*u+m[2]*v+m[4],m[5]*u+m[6]*v+m[8],m[9]*u+m[10]*v+m[12])
 end
 function M.release()
+ V.require('NativeGen3Release').clear()
  V.require('NativeGen3SendoutShell').clear()
  V.require("StandingTrainer").clear()
  for _,c in ipairs(pool)do c:release()end;pool={}

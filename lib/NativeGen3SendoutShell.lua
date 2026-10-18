@@ -38,7 +38,7 @@ function M.shell(st,card)
  shell.yaw=math.atan2(-m[9],m[1]);shell.rollAngle=-(tonumber(b.rot)or 0)
  shell.lid=math.max(0,math.min(2,tonumber(b.frame)or 0))/2
  shell.lidTarget=shell.lid;shell.visible=true
- return shell
+ return shell,b
 end
 function M.draw(st,card,shadow)
  local ok,shell=pcall(M.shell,st,card)

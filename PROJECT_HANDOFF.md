@@ -1,3 +1,14 @@
+# GBA native shared release material — 2026-10-17
+
+Original single-actor send-out scale now drives shared Q57 volume/subject
+material, preserving the native card transforms and reveal clock. All5 GBA
+NVIDIA0.3.89 fixtures pass36/36frames, actual volume/subject draws, identity,
+settled native fade and OFF cleanup;15captures inspected. Native ball particles
+remain because their public list has no actor/event ownership. Full provider
+model deformation and multi-actor effects remain. Evidence:
+`docs/NATIVE_GBA_RELEASE_2026-10-17.md`. One combined full suite passes332/0/58
+external-fixture skips, including current root and camera commits. No release/version change.
+
 # Camera polish — 2026-10-17
 
 Gen3 orbit now uses actor eye/support anchors, real pitch/boom geometry and
