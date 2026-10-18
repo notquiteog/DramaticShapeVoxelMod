@@ -1,3 +1,15 @@
+# Seven-mod platform/source audit — 2026-10-17
+
+All7 official manifests validate/all11 targets;650 Lua units plus assembled
+Sky Ride source parse. Focused platform/API/input checks found and fixed Wilds
+blocked image loading (separate repo70d2cfd7). Actual FireRed all7-loaded NVIDIA
+fixture verifies selected HGSS/swimmer sheets, native walking and2D fallback;
+5 captures inspected. Shared voxel suite:328pass/1camera failure/58skips, camera
+owner corrected graphics guard/menu stick ownership and targeted rerun passes;
+combined329pass/0unresolved/58skips, not a second full rerun. Evidence and device
+limits: `docs/SEVEN_MOD_PLATFORM_AUDIT_2026-10-17.md`. Android/iOS/Windows runtime
+remains unverified here; root owns renderer GLES work, camera worker owns touch.
+
 # Native art resource failure fallback — 2026-10-17
 
 Optional battle picture fitting and trainer sheets now restore graphics/release
