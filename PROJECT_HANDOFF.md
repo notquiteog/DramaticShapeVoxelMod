@@ -1,3 +1,18 @@
+# Early outdoor boundaries and bridge depth — 2026-10-17
+
+1.48.0 adds missing Kanto stake ends/Viridian shrubs, joined Petalburg hedges,
+normal-height General rock profiles with retaining support preserved, and closed
+Kanto/Fortree bridge decks. Clean native board sampling excludes green gaps;
+Fortree canonical behavior178 repairs the previous170 confusion. Mesh105.
+Native gameplay/UI/warps remain authoritative; HD-2D actors/Pokémon/flowers and
+optional partner independence remain intact. Source323/0fail/58fixture skips;
+focused plank regression follows. Native early-map30 aisles/30 boundary bumps
+pass on0.3.89. Final package matrix follows in the evidence document.
+
+This is partial outdoor coverage; regional76/125 complete,49 still queued.
+Read `docs/GEN3_EARLY_OUTDOORS_2026-10-17.md` for exact limits and next families.
+Preserves primary-checkout concurrent work and published cd345e4 (1.47.0).
+
 # Oak/Birch laboratories and Oak's black floor strip — 2026-10-17
 
 1.47.0 covers Oak's Lab in FR/LG and Birch's Lab in EM/RU/SA (five placements).

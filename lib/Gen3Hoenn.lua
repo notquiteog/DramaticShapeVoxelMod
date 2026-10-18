@@ -2,6 +2,7 @@
 -- were measured from the engine's composited Oldale maps; no ROM pixels ship.
 local V=...
 local M={recipes={},exteriors={}}
+local BoundaryProps=V and V.require('Gen3BoundaryProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3BoundaryProps.lua')
 local function version()
  local ok,GV=pcall(require,'src.core.GameVersion')
  return ok and GV.get() or nil
@@ -105,6 +106,7 @@ function M.shape(primary,secondary,mid,behavior,collision)
  return M.emeraldShape(primary,secondary,mid,behavior,collision)
 end
 function M.emeraldShape(primary,secondary,mid,behavior,collision)
+ local boundary=BoundaryProps.hoenn(primary,secondary,mid,collision);if boundary then return boundary end
  if primary=='building' and secondary=='shop' and collision==7 and (mid==0x222 or mid==0x244)then
   return {kind='roomWall',ground=0x201}
  end
@@ -180,7 +182,7 @@ function M.emeraldShape(primary,secondary,mid,behavior,collision)
   if collision==7 and (mid==0xa9 or (mid>=0x66 and mid<=0x6c) or
     (mid>=0x70 and mid<=0x7e) or (mid>=0x80 and mid<=0x8e) or
     (mid>=0x90 and mid<=0x9e)) then
-   return {kind='cliff',height=24,ground=1,cap=0x6c,side=0x71}
+   return {kind='cliff',height=16,ground=1,cap=0x6c,side=0x71}
   end
   -- Open-sea island rims: corner/side drawings around the same rock band,
   -- standing in deep water (identical primary art in RS and Emerald).
@@ -188,7 +190,7 @@ function M.emeraldShape(primary,secondary,mid,behavior,collision)
    return {kind='cliff',height=24,ground=0x170,cap=0x6c,side=0x71}
   end
   if collision==7 and behavior==0xc and mid<0x200 then
-   return {kind='cliff',height=24,ground=1,cap=0x6c,side=0x71}
+   return {kind='cliff',height=16,ground=1,cap=0x6c,side=0x71}
   end
   if mid==3 then return {kind='sign',height=12,ground=1,hoenn=true}end
   if mid==4 then return {kind='flowers',height=6,ground=1}end

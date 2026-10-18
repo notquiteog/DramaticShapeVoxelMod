@@ -1,3 +1,19 @@
+## 1.48.0 — Early outdoor boundaries and bridge depth
+
+Add native brown fence ends in Kanto, bounded shrubs in Viridian, and joined
+Petalburg hedges in Emerald/Ruby/Sapphire. General outdoor rock enclosures now
+use a character-height profile, while proven upper terraces keep their height.
+Cave walls and regional landmark rock profiles retain their separate treatment.
+
+Reviewed Kanto timber bridge rows and Hoenn Fortree bridge decks gain closed
+undersides and exposed fascia; native side rails stay in blocked cells. Correct
+the canonical Fortree behavior ID used for separate over/under support. Native
+walking surfaces, collision, scripts, UI and warps stay authoritative. Characters,
+Pokémon and flowers remain HD-2D and every companion is optional.
+
+This is a boundary/bridge batch. The first-three-settlement queue still includes
+unresolved outdoor families and interiors. [Evidence and remaining work](docs/GEN3_EARLY_OUTDOORS_2026-10-17.md).
+
 ## 1.47.0 — Oak and Birch laboratories
 
 Polish Oak's Lab in FireRed/LeafGreen and Birch's Lab in Emerald/Ruby/Sapphire.

@@ -149,15 +149,17 @@ function M.append(c,emit,uvFor)
    box(px-half-.1,h,pz-half-.1,px+half+.1,h+.6,pz+half+.1,cap)
   end
   if vertical then
-   for _,dz in ipairs(s.stop and {8} or {4,12})do stake(x+s.axis,z+dz)end
+   for _,dz in ipairs(s.postPositions or (s.stop and {8} or {4,12}))do stake(x+s.axis,z+dz)end
    for _,h in ipairs(s.rails or {h*.3,h*.7})do box(x+s.axis-.6,h,z+(s.stop=='south' and 8 or 0),x+s.axis+.6,h+1,z+(s.stop and s.stop~='south' and 8 or 16),rail)end
   else
-   for _,dx in ipairs({4,12})do stake(x+dx,z+8)end
+   for _,dx in ipairs(s.postPositions or {4,12})do stake(x+dx,z+8)end
    for _,h in ipairs(s.rails or {h*.3,h*.7})do
     box(x,h,z+7.4,x+16,h+1,z+8.6,rail)
     if s.turn then box(x+s.axis-.6,h,z+(s.turn=='north' and 0 or 8),x+s.axis+.6,h+1,z+(s.turn=='north' and 8 or 16),rail)end
    end
   end
+ elseif s.kind=='hedge' then
+  V.require('Gen3BoundaryProps').hedge(c,emit,uv)
  elseif s.kind=='ledge' then
   -- A low turf mound with a thin exposed dirt edge, never a tall block.
   -- The sand/grass transition is painted into each native cap. C0/C1

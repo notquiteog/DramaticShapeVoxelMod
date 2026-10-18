@@ -229,6 +229,8 @@ local function build(req,cache,previous)
  local towerFlights=Furniture.extract(cells,'towerStairs')
  M.stairCount=Stairs.prepare(cells)+#towerFlights
  local props=Furniture.extract(cells)
+ M.bridgeCount=V.require('Gen3Bridges').prepare(cells)
+ V.require('Gen3BoundaryProps').prepare(cells)
  for _,p in ipairs(towerFlights)do props[#props+1]=p end
  cache.healer,cache.healScreen=nil,nil
  for _,p in ipairs(props)do
@@ -367,6 +369,8 @@ local function build(req,cache,previous)
    plane(b.v,b.i,x,z,uvFor(ts,c.nativeLampGround or V.require('Gen3NativeLamps').ground) or uv)
   elseif c.civic then
    plane(b.v,b.i,x,z,uvFor(ts,Civic.ground(c)) or uv)
+  elseif c.bridge and c.bridge.edge then
+   plane(b.v,b.i,x,z,uvFor(ts,1)or uv)
   elseif shape.kind=='water' then
    plane(b.wv,b.wi,x,z,uvFor(ts,shape.ground) or uv,.05)
   elseif shape.kind=='interiorFloor' then
@@ -529,7 +533,7 @@ local function build(req,cache,previous)
     end
    end
    end
-  elseif shape.kind=='sign' or shape.kind=='fence' or shape.kind=='ledge' or shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass' then
+  elseif shape.kind=='sign' or shape.kind=='fence' or shape.kind=='hedge' or shape.kind=='ledge' or shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    local plant=shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass'
    if not c.stageHidden then Outdoor.append(c,function(vertices,tex,shade,anchor)quad(plant and b.pv or b.v,plant and b.pi or b.i,vertices,tex,shade,anchor)end,uvFor)end
@@ -542,11 +546,11 @@ local function build(req,cache,previous)
   Elevation.lift(b.v,starts[1],base);Elevation.lift(b.rv,starts[2],base)
   Elevation.lift(b.pv,starts[3],base);Elevation.lift(b.wv,starts[4],base)
   Elevation.lift(wood,starts[5],base);Elevation.lift(leaf,starts[6],base)
+  if c.bridge then V.require('Gen3Bridges').append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
   if c.floor and c.floor.underpass then
    local u=c.floor.underpass
    local water=u.kind=='water'
    plane(water and b.wv or b.v,water and b.wi or b.i,x,z,uvFor(ts,u.mid) or uv,u.height+base-c.floor.height)
-   quad(b.v,b.i,{{x,base-1.5,z+16},{x+16,base-1.5,z+16},{x+16,base-1.5,z},{x,base-1.5,z}},uv,.65)
   end
   if shape.kind~='cliff' and shape.kind~='caveWall' and shape.kind~='water' and not c.stairs and shape.kind~='steps' then
    for _,d in ipairs({{-1,0},{1,0},{0,-1},{0,1}})do
@@ -555,7 +559,7 @@ local function build(req,cache,previous)
      local low=n.base or 0
      -- Bridge fascia must not become a solid retaining wall across the path.
      if c.floor and c.floor.underpass then low=math.max(low,base-1.5)end
-     if low<base then
+     if low<base and not c.bridge then
       local ax,az=x+(d[1]>0 and 16 or 0),z+(d[2]>0 and 16 or 0)
       local bx,bz=ax+(d[1]==0 and 16 or 0),az+(d[2]==0 and 16 or 0)
       -- Claimed source cells contain roof/window art. Their raised
@@ -758,7 +762,7 @@ local function prepare(game,vw,vh,cam)
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
  M.prepares=stream.stats.started;M.builds=stream.stats.completed;M.cacheHits=stream.stats.hits
- for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
+ for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','bridgeCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
  return true
 end
 local function terrain(draw)

@@ -23,6 +23,11 @@ See [the home evidence](GEN3_HOMES_2026-10-17.md) and
 [laboratory evidence](GEN3_LABS_2026-10-17.md).
 A source/render capture alone does not complete a queued map.
 
+Boundary/bridge batch1.48.0 adds joined Petalburg hedges, missing Kanto stake ends
+and shrubs, shorter General rock profiles and closed bridge decks. Basic native
+walking/boundary fixtures cover all30 outdoor placements, but unresolved object
+families keep these maps queued. See [outdoor evidence and remaining families](GEN3_EARLY_OUTDOORS_2026-10-17.md).
+
 Walls must be flat and continuous, with no gaps or overlapping grey backing.
 Furniture is separate in front. Stairs follow original art and walking cells.
 Characters, Pokémon and flowers remain HD-2D; partners remain optional.

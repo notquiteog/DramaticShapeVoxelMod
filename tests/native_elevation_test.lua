@@ -34,7 +34,7 @@ assert(G.field(defs.out)~=old,'native edit did not invalidate floor field')
 local v={{0,1,0,0,0,1,0,0,2}};G.lift(v,0,6);assert(v[1][2]==7 and v[1][9]==8,'tree billboard anchor not raised with vertices')
 print('PASS Gen2 shelves, source floors, cache invalidation, Gen1 isolation, Gen3 collision-layer exclusions and native immutability')
 
-package.loaded['src.core.game3.scripting.interaction_scripts'].behaviors.bridge_fixture={[4]=0x170}
+package.loaded['src.core.game3.scripting.interaction_scripts'].behaviors.bridge_fixture={[4]=0x178}
 local bridge={width=3,height=3,pair='bridge_fixture',cells={},overrides={}}
 function bridge:cellAt(x,y)
  return{mid=(x==1 and y==1)and 4 or 1,coll=(x~=1 and y~=1)and 7 or 0,elev=y==1 and(x==1 and 15 or 4)or 3}

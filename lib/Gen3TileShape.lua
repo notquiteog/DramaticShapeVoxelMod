@@ -189,6 +189,10 @@ function M.of(primary,secondary,mid,behavior,collision)
  end
  if primary=='general' then
   if localProps[secondary] and localProps[secondary][mid] then return localProps[secondary][mid]end
+  if collision==7 and secondary=='viridian_city' and firlgMetatileIds()then
+   if mid==0x285 or mid==0x286 or mid==0x287 or mid==0x28d then return {kind='shrub',ground=1,height=10}end
+   if mid==0x1f2 or mid==0x2bc then return {kind='cliff',height=16,ground=1}end
+  end
   -- Mt. Ember / Kindle Road grey mountain band (sevii_islands_123, source
   -- region inspected 2026-10-14). Only native solid copies rise; the cave
   -- mouth 0x346 and loose boulders 0x344/0x356 stay native.
@@ -199,7 +203,11 @@ function M.of(primary,secondary,mid,behavior,collision)
   -- unrelated artwork, so on a non-FRLG cart the floor stays flat instead of
   -- being extruded into cliffs/trees/fences/ledges it never was.
   local firlg = firlgMetatileIds()
-  if firlg and cliffs[mid] then return {kind='cliff',height=32,ground=1}end
+  if firlg and cliffs[mid] then return {kind='cliff',height=16,ground=1}end
+  if firlg and collision==7 and (mid==0xEA or mid==0xF8 or mid==0xF9)then
+   return {kind='fence',ground=1,wood=true,material=0xE6,height=9,rails={},
+    axis=mid==0xEA and 12 or nil,postPositions=mid==0xEA and {4,12}or mid==0xF8 and {3,11}or{5,13}}
+  end
   if firlg and (fences[mid] or ledges[mid] or plants[mid]) then return fences[mid] or ledges[mid] or plants[mid] end
   if firlg and trees[mid] then return {kind='tree',root=roots[mid],ground=1} end
   if mid==2 then return {kind='sign',height=12,ground=1} end
