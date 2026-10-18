@@ -21,6 +21,24 @@ local clock = (love and love.timer and love.timer.getTime) or os.clock
 local deadline = math.huge
 local buildCo = nil
 local tickEvery = 32
+local owned = setmetatable({}, {__mode="k"})
+
+-- Partially uploaded meshes have no scene owner until their builder returns.
+function B.track(resource)
+  local co=coroutine.running()
+  if co and co==buildCo then
+    owned[co]=owned[co]or{};owned[co][resource]=true
+  end
+end
+function B.untrack(resource)
+  local co=coroutine.running();local row=co and owned[co]
+  if row then row[resource]=nil;if not next(row)then owned[co]=nil end end
+end
+function B.cancel(co)
+  local row=co and owned[co];if not row then return end
+  owned[co]=nil
+  for resource in pairs(row)do pcall(resource.release,resource)end
+end
 
 -- Enter/leave a pumped slice. `co` is the coroutine being resumed, so
 -- tick() can tell the build apart from any other coroutine the engine
@@ -52,6 +70,14 @@ function B.tick()
   if n % tickEvery ~= 0 then return end
   if buildCo and coroutine.running() == buildCo and clock() > deadline then
     coroutine.yield("budget")
+  end
+end
+
+-- Give a newly published scene one draw before optional persistence work.
+-- Direct/synchronous callers retain their existing no-yield contract.
+function B.pause()
+  if buildCo and coroutine.running() == buildCo then
+    coroutine.yield("published")
   end
 end
 

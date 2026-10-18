@@ -71,8 +71,10 @@ local function swatch(ts,u,v)
  return {{u,v},{u,v},{u,v},{u,v}}
 end
 local function materials()
- if not foliage then
+ if not TreeStyle.original() and not foliage then
   foliage=V.require('TreeIllustrations').image(V)
+ end
+ if not bark then
   local data=love.image.newImageData(2,2)
   for y=0,1 do for x=0,1 do data:setPixel(x,y,.29+x*.03,.18+y*.03,.10,1) end end
   bark=love.graphics.newImage(data);data:release()
@@ -122,7 +124,9 @@ local function releaseGeometry(cache)
  if cache.prizeWalls then cache.prizeWalls.mesh:release();cache.prizeWalls.image:release()end
  if cache.rocketWalls then cache.rocketWalls.mesh:release();cache.rocketWalls.image:release()end
  for _,part in ipairs(cache.civics or {})do
-  if part.mesh then part.mesh:release()end;if part.image then part.image:release()end;if part.glow then part.glow:release()end
+  if part.mesh then part.mesh:release()end
+  if part.material then V.require('Gen3CivicMaterials').release(part.material)
+  else if part.image then part.image:release()end;if part.glow then part.glow:release()end end
  end
  if cache.lightField then cache.lightField.image:release()end
  for _,part in ipairs(cache.lamps or{})do part.mesh:release()end
@@ -137,14 +141,13 @@ local function request(game,cam)
  local replay=cam and cam.replay
  local def=replay and replay.def or Map.currentDef();if not def or not def.midLayout then return false end
  local px,pz=replay and replay.frame.x or Player.px or 0,replay and replay.frame.y or Player.py or 0
- local bx,bz=math.floor(px/96)*6,math.floor(pz/96)*6
  local budget=Distance.radius()
  local radius=budget and math.ceil(budget/16)or 64
  -- FULL keeps at least FAR's connected-map frontier, then draws each
  -- loaded rectangle completely rather than shrinking back to two hops.
  if not replay then Map.refreshWorld(game,radius*2+12,radius*2+12,Map.current)end
  local regions=replay and {{def=def,x=0,y=0,w=def.midLayout.width,h=def.midLayout.height}} or Boundary.regions(def,Map.world)
- local x0,z0,x1,z1=bx-radius,bz-radius,bx+radius+6,bz+radius+6
+ local x0,z0,x1,z1=Lookahead.window(px,pz,radius)
  if not budget then x0,z0,x1,z1=BoundarySelect.bounds(regions,16)end
  local key,context=SceneCache.keys(regions,x0,z0,x1,z1,Tiles._pairs,cam)
  return {game=game,cam=cam,replay=replay,def=def,regions=regions,key=key,mapId=Map.current,
@@ -167,6 +170,7 @@ local function build(req,cache,previous)
  local cells,groups,signature={}, {}, {replay and replay.scene.map or req.mapId,x0,z0,x1,z1}
  M.fillCounts={forest=0,water=0,mountain=0,ground=0}
  local pairInfo={}
+ local boundarySample=Boundary.sampler()
  local classify=V.require('SceneShapeCache').new(Shapes.of)
  local behaviors=require('src.core.game3.scripting.interaction_scripts').behaviors
  for cy=z0,z1 do for cx=x0,x1 do
@@ -181,7 +185,7 @@ local function build(req,cache,previous)
   else mid,pair,isVoid=Map.worldMidAt(cx,cy,def)end
   local fillShape,biome
   if isVoid and Pairs.outdoor(def) then
-   local m,p,shape,kind=Boundary.resolve(regions,cx,cy)
+   local m,p,shape,kind=Boundary.resolve(regions,cx,cy,boundarySample)
    if m then mid,pair,fillShape,biome=m,p,shape,kind;M.fillCounts[kind]=M.fillCounts[kind]+1 end
   end
   if mid and pair and not (isVoid and not Pairs.outdoor(def)) then
@@ -610,7 +614,9 @@ local function build(req,cache,previous)
   Elevation.lift(vertices,0,g.groundHeight or 0)
   local part={placement=g};cache.civics[#cache.civics+1]=part
   part.mesh=assert(R.newMesh(vertices,indices))
-  local read;part.image,part.glow,read=Civic.material(g)
+  part.material=V.require('Gen3CivicMaterials').acquire(g)
+  part.image,part.glow=part.material.image,part.material.glow
+  local read=part.material.read
   part.lights=V.require('BuildingLights').collect(vertices,read,g.width*32+4,g.depth*16)
   if g.kind=='center' or g.kind=='mart' then
    part.lights={}
@@ -706,8 +712,7 @@ local function prefetch(req)
   future={source=req.def,world=world,id=entry.id,radius=req.radius,neighbors=neighbors,direct=direct,
    regions=Boundary.regions(entry.def,neighbors)}
  end
- local bx,bz=math.floor(entry.px/96)*6,math.floor(entry.pz/96)*6
- local x0,z0,x1,z1=bx-req.radius,bz-req.radius,bx+req.radius+6,bz+req.radius+6
+ local x0,z0,x1,z1=Lookahead.window(entry.px,entry.pz,req.radius)
  if not req.budget then x0,z0,x1,z1=BoundarySelect.bounds(future.regions,16)end
  local key,context=futureKeys.keys(future.regions,x0,z0,x1,z1,Tiles._pairs)
  -- A stable destination keeps its original coroutine snapshot. Nothing here
@@ -1222,8 +1227,9 @@ function M.performanceSnapshot()
   distance=M.distance,renderWidth=M.renderWidth,renderHeight=M.renderHeight,
   geometryCache=V.require('NativeGeometryCache').stats}
 end
-function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();future=nil;stream:clear();cache={}end
+function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
 function M.release()
+ V.require('Gen3SeaRocks').clearGeometry()
  V.require("NativeLegendaryTower").clear()
  V.require("NativeLegendarySapling").clear()
  if dustMesh then dustMesh:release();dustMesh=nil end

@@ -982,8 +982,15 @@ function Voxel3D.newMesh(verts, map, format)
   if format==Voxel3D.TREE_FORMAT then
     for _,v in ipairs(verts) do v[7],v[8],v[9]=v[7] or 0,v[8] or 0,v[9] or 0 end
   end
-  local ok, mesh = pcall(love.graphics.newMesh, format or Voxel3D.FORMAT, verts,
-                         "triangles", "static")
+  local ok, mesh
+  if #verts>=4096 then
+    local upload=V.require("MeshUpload")
+    mesh,ok=upload.new(format or Voxel3D.FORMAT,verts)
+    if not mesh then return nil,ok end
+    ok=true
+  else
+    ok,mesh=pcall(love.graphics.newMesh,format or Voxel3D.FORMAT,verts,"triangles","static")
+  end
   if not ok then return nil, tostring(mesh) end
   if map and #map > 0 then
     local indexed,err=pcall(mesh.setVertexMap,mesh,map)

@@ -156,14 +156,46 @@ local function geometry(c,uvFor)
  local depthScale=math.min(1,hh/math.max(1,hw))
  return {hull=hull,ox=ox,oz=oz,scaleY=scaleY,depthScale=depthScale}
 end
+-- A small CPU-only cache survives connected-scene construction. GPU batches
+-- remain scene-owned. Keep exact source identities and UV/layout dependencies;
+-- explicit renderer invalidation also clears this cache for in-place edits.
+local models,totalQuads,clock={},0,0
+local function sourceKey(c)
+ local ts,g=c.ts,c.shape.seaRock;local f=g.family
+ local key={ts.cols,ts.rows,g.ground,tostring(f.height),tostring(f.style),tostring(f.trimOutline)}
+ local function tile(mid)key[#key+1]=tostring(mid)..'/'..tostring(ts.midToSlot[mid])end
+ tile(g.ground)
+ for _,row in ipairs(f.rows)do key[#key+1]='row';for _,mid in ipairs(row)do tile(mid)end end
+ return table.concat(key,':')
+end
+function M.clearGeometry()models={};totalQuads=0 end
+local function sharedGeometry(c,uvFor,key)
+ local ts=c.ts;clock=clock+1
+ for _,r in ipairs(models)do
+  if r.image==ts.imageData and r.over==ts.overImageData and r.uvFor==uvFor and r.key==key then
+   r.used=clock;return r.model
+  end
+ end
+ local result=geometry(c,uvFor);local count=#(result.hull or {})
+ -- Oversized extension models retain the ordinary build-local fallback.
+ if count<=16384 then
+  while #models>=8 or totalQuads+count>16384 do
+   local oldest=1;for i=2,#models do if models[i].used<models[oldest].used then oldest=i end end
+   totalQuads=totalQuads-models[oldest].count;table.remove(models,oldest)
+  end
+  models[#models+1]={image=ts.imageData,over=ts.overImageData,uvFor=uvFor,key=key,model=result,count=count,used=clock}
+  totalQuads=totalQuads+count
+ end
+ return result
+end
 function M.append(c,emit,uvFor)
  local g=c.shape.seaRock;if not(g and c.shape.root)then return end
  local template=g.template or {}
- -- Build-local sharing permits identical rocks to reuse their carved volume.
+ -- Identical native art can reuse its carved volume between scene builds.
  -- Only emitted copies get world placement/elevation; templates stay immutable.
- local ts=c.ts
- if not template.quads or template.image~=ts.imageData or template.over~=ts.overImageData or template.uvFor~=uvFor then
-  template.quads=geometry(c,uvFor);template.image=ts.imageData;template.over=ts.overImageData;template.uvFor=uvFor
+ local ts=c.ts;local key=sourceKey(c)
+ if template.key~=key or not template.quads or template.image~=ts.imageData or template.over~=ts.overImageData or template.uvFor~=uvFor then
+  template.key=key;template.quads=sharedGeometry(c,uvFor,key);template.image=ts.imageData;template.over=ts.overImageData;template.uvFor=uvFor
  end
  local x,z=c.cx*16,c.cy*16
  local model=template.quads

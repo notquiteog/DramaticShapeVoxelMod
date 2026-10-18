@@ -32,8 +32,19 @@ local function sample(r,x,y)
  if Collision.isSurfable(Collision.behaviorOn(r.def,x,y))then biome='water'end
  return {mid=mid,pair=pair,biome=biome,primary=spec.primary,secondary=spec.secondary,shape=shape}
 end
-function M.resolve(rs,x,y)
- local donor,real=Select.resolve(rs,x,y,sample)
+-- Adjacent void cells inspect overlapping strips of the same native edge.
+-- Keep sampled classifications only for this build, including empty answers.
+function M.sampler()
+ local samples={}
+ return function(r,x,y)
+  local row=samples[r];if not row then row={};samples[r]=row end
+  local k=y*r.w+x;local value=row[k]
+  if value==nil then value=sample(r,x,y)or false;row[k]=value end
+  return value or nil
+ end
+end
+function M.resolve(rs,x,y,read)
+ local donor,real=Select.resolve(rs,x,y,read or sample)
  if real or not donor or donor.primary~='general' then return end
  if donor.biome=='forest' then
   local source=donor.shape;local spacing=source.spacing or 2

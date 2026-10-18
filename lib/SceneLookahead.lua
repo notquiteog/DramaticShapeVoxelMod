@@ -3,6 +3,14 @@
 local M={}
 local function size(def)local l=def and def.midLayout;if l then return l.width,l.height end end
 local directions={up='north',down='south',left='west',right='east'}
+-- A twelve-cell overlap amortizes a complete scene rebuild while running.
+-- The extra strip is behind the configured distance fade; the player's full
+-- requested radius stays inside the snapshot throughout its window.
+local windowStep=12
+function M.window(px,pz,radius)
+ local x,z=math.floor(px/(16*windowStep))*windowStep,math.floor(pz/(16*windowStep))*windowStep
+ return x-radius,z-radius,x+radius+windowStep,z+radius+windowStep
+end
 -- Native crossings briefly leave the player one cell outside the new map.
 -- Keep an already-complete return scene through that interpolation only.
 function M.interpolating(def,px,pz)
@@ -61,8 +69,9 @@ function M.accept(candidate,req)
  if candidate.sceneDef~=req.def or not candidate.distance then return false end
  local d=candidate.distance;local b=d.bounds
  if d.radius~=req.radius or d.full~=(not req.budget)then return false end
+ if b[3]-b[1]~=req.x1-req.x0 or b[4]-b[2]~=req.z1-req.z0 then return false end
  local want={req.x0,req.z0,req.x1,req.z1}
- for i=1,4 do if math.abs(b[i]-want[i])>6 then return false end end
+ for i=1,4 do if math.abs(b[i]-want[i])>windowStep then return false end end
  local function content(key)return key and key:match('^[^;]*;[^;]*;[^;]*;[^;]*;(.*)$')end
  local a=content(candidate.terrainKey)
  return a~=nil and a==content(req.key)

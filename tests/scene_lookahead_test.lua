@@ -44,3 +44,19 @@ assert(L.interpolating(a,32,-8)and L.interpolating(a,32,320))
 assert(not L.interpolating(a,0,0)and not L.interpolating(a,-32,32))
 assert(not L.interpolating(a,-8,-8)and not L.interpolating({},0,0))
 print('PASS bounded outside-cell native transition interpolation')
+
+-- At every sub-cell position, including negative native entry interpolation,
+-- the complete chosen distance fits inside the immutable build snapshot.
+local previous,windows=nil,0
+for x=-32,640 do
+ local x0,z0,x1,z1=L.window(x,x/2,32)
+ assert(x0<=x/16-32 and x1>=x/16+32)
+ assert(z0<=x/32-32 and z1>=x/32+32)
+ if x0~=previous then windows=windows+1;previous=x0 end
+end
+assert(windows==5,'running rebuild cadence changed unexpectedly')
+req.def=a;req.z0=12;req.z1=82
+assert(L.accept(candidate,req),'adjacent complete window was discarded')
+req.z0=24;req.z1=94
+assert(not L.accept(candidate,req),'two-window warp reused stale scenery')
+print('PASS running window cadence, full distance coverage and bounded adjacent reuse')

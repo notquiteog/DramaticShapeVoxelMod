@@ -9,13 +9,13 @@ function M.new(release)
  local self={stats={started=0,completed=0,cancelled=0,hits=0,slices=0,maxSlice=0,maxStreamSlice=0,prefetched=0,promoted=0,prefetchFailed=0,retainedHits=0}}
  function self:cancel()
   if self.pending then
-   release(self.pending.value);self.pending=nil
+   Budget.cancel(self.pending.co);release(self.pending.value);self.pending=nil
    self.stats.cancelled=self.stats.cancelled+1
   end
  end
  function self:discardPrefetch(keepRetained)
   if keepRetained and self.warm and self.warm.retained then return end
-  if self.warm then release(self.warm.value);self.warm=nil end
+  if self.warm then Budget.cancel(self.warm.co);release(self.warm.value);self.warm=nil end
  end
  function self:clear()
   self:discardPrefetch()
@@ -42,7 +42,7 @@ function M.new(release)
   local start=clock();local ok,result=coroutine.resume(p.co);Budget.finish()
   self.stats.maxStreamSlice=math.max(self.stats.maxStreamSlice,clock()-start)
   if not ok then
-   release(p.value);p.value={};p.failed=true
+   Budget.cancel(p.co);release(p.value);p.value={};p.failed=true
    self.stats.prefetchFailed=self.stats.prefetchFailed+1;return
   end
   if coroutine.status(p.co)=='dead'then
@@ -74,7 +74,7 @@ function M.new(release)
     elseif self.active then release(self.active)end
     self.active=warm.value;self.key=warm.value.terrainKey or warm.key;self.context=context
     self.stats.promoted=self.stats.promoted+1;self.stats.completed=self.stats.completed+1
-   else release(warm.value)end
+   else Budget.cancel(warm.co);release(warm.value)end
   elseif warm and self.context~=context then
    self:discardPrefetch()
   end

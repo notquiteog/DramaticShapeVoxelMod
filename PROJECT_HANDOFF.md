@@ -1,3 +1,17 @@
+# Loading/transition optimization checkpoint — 2026-10-17
+
+Shared large mesh uploads are cooperative/cancellation-safe; Gen 1/2 terrain
+publishes before optional cache encoding. Gen 3 lazily loads optional tree art,
+shares bounded sea-rock recipes and scene-owned civic materials, reuses boundary
+samples and amortizes terrain windows. Models, collision and native UI unchanged.
+324 suites pass, 0 fail, 58 external-fixture skips; eleven native NVIDIA 0.3.89
+checks pass. Exact GPU vertex readback verified. Evidence, timings and rejected
+experiments: `docs/SCENE_LOAD_WORK_2026-10-17.md`. Transition spikes remain; neither
+165 FPS across all games nor full feature parity is claimed. Other model tests
+contend for CPU, so final timings are samples rather than controlled guarantees.
+Root source-only checkpoint; no new release/version change yet. Parity worker
+continues its separate public-native effect adapter work.
+
 # Native GSC substitute/faint world presentation — 2026-10-17
 
 Original substitute dolls and fainting rows now stay in the world card with
