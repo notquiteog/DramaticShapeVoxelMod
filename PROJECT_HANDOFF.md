@@ -1,3 +1,13 @@
+# GBA native last-wild capture — 2026-10-17
+
+Detached native catch views now bind to their exact live opponent ID1/3; the
+prop, intake tint and cleanup follow that owner without changing native logic.
+All5 editions pass221/221 OFF/ON frames for both targets and a real public
+Master Ball command consuming one item/storing the partner once. NVIDIA0.3.89
+native captures inspected; shared335/0/58 and549 option checks pass. Evidence:
+`docs/NATIVE_GBA_PAIR_CAPTURE_2026-10-17.md`. GSC last-wild capture and actor-targeted
+animation/release remain; full parity is not complete.
+
 # GBA native simultaneous releases — 2026-10-17
 
 Native event IDs0–3 now own independent shells, Q57 volumes and exact-card subject

@@ -96,3 +96,36 @@ for _,case in ipairs({{wild=true,double=true},{wild=false}})do
 end
 restore();assert(cleared==8,'ghost audio cleaned')
 print('PASS seven native specialty balls and ghost-dodge audio, clocks/props untouched, exact failed/missing/error/OFF/unknown/doubles fallback and disposal')
+
+-- Independent companion catch views may select either last surviving foe.
+local live={wild=true,double=true,battlers={}}
+local foes={[1]={hp=10},[3]={hp=0}}
+package.loaded['src.core.game3.battle']={getState=function()return live end}
+package.loaded['src.core.game3.battle.state']={battler=function(_,id)return foes[id]end,isAlive=function(_,id)return foes[id].hp>0 end}
+V.require=requireBefore;restore=M.install()
+for _,id in ipairs({1,3})do
+ foes[id].hp=10;foes[id==1 and 3 or 1].hp=0
+ local view={wild=true,double=true,battlers=live.battlers,enemy=foes[id]}
+ local intake={active=true,color={1,0,0}};view.dramaticShape3DBallIntake=intake
+ local count=starts
+ assert(Seq.begin(view,4,false,0,{target=id})=='begin');Audio.playSe(1)
+ assert(starts==count+1 and M.active(live)and M.active(view)and M.target(live)==id)
+ assert(M.intake(live)==intake and live.dramaticShape3DBallIntake==nil)
+ local points={[0]={16,8,32},[1]={64,8,80},[3]={96,8,80}}
+ M.prepare({st=live,points=points},8)
+ local e=events[#events];assert(e[1]=='prepareNativeCapture'and e[3]==view and e[2].enemy[1]==points[id][1])
+ M.draw(live);assert(events[#events][3]==view,'live owner replaced detached native catch view')
+ M.prepare({st={},points=points},8);assert(not M.active(live)and not M.intake(live),'departed live owner retained capture')
+ Seq.reset();assert(not M.active(live)and not M.intake(live))
+ for _,bad in ipairs({
+  {view={wild=true,double=true,battlers={},enemy=foes[id]},target=id},
+  {view=view,target=0},{view=view,target=id==1 and 3 or 1},
+ })do
+  count=starts;Seq.begin(bad.view,4,false,0,{target=bad.target});Audio.playSe(1)
+  assert(starts==count and not M.active(live),'ambiguous view or target was intercepted')
+ end
+ foes[id==1 and 3 or 1].hp=10;count=starts
+ Seq.begin(view,4,false,0,{target=id});Audio.playSe(1);assert(starts==count,'two living foes accepted')
+end
+restore()
+print('PASS native last-foe capture views, both target IDs, public live identity, exact arena/intake owner, ambiguous/two-foe fallback and reset')

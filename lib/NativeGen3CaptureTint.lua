@@ -6,8 +6,9 @@ local M={}
 local WHITE={1,1,1}
 local function pack(...)return {n=select('#',...),...}end
 function M.intake(st,id)
- if id~=1 or not V.require('Gen3Capture').active(st)then return end
- local intake=st and st.dramaticShape3DBallIntake
+ local Capture=V.require('Gen3Capture')
+ if id~=Capture.target(st)then return end
+ local intake=Capture.intake(st)
  if type(intake)=='table'and intake.active and type(intake.color)=='table'then return intake end
 end
 function M.draw(st,card,mesh,sun)

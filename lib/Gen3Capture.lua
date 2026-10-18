@@ -24,10 +24,31 @@ function M.finish()
  pending,arena,ground=nil,nil,nil
 end
 function M.active(st)
- return pending and pending.started and pending.st==st
+ return pending and pending.started and (pending.owner==st or pending.st==st)
   and V.require('PokeballSettings').active()and V.require('Gen3Battle').enabled() or false
 end
-function M.status()return {pending=pending~=nil,started=pending and pending.started,item=pending and pending.item,error=M.lastError}end
+function M.target(st)return M.active(st)and pending.target or nil end
+function M.intake(st)return M.active(st)and pending.st.dramaticShape3DBallIntake or nil end
+function M.status()return {pending=pending~=nil,started=pending and pending.started,item=pending and pending.item,target=pending and pending.target,error=M.lastError}end
+local function ownerFor(st,opts)
+ local target=tonumber(opts.target)or 1
+ if not st.double then if target==1 then return st,target end;return end
+ if target~=1 and target~=3 then return end
+ -- A companion may pass a detached native catch view selecting the last
+ -- opponent. Associate it only through public live battlers and survival;
+ -- never read companion markers or replace either live combat slot.
+ local ok,owner,id=pcall(function()
+  local Battle=require('src.core.game3.battle')
+  local State=require('src.core.game3.battle.state')
+  local live=Battle.getState()
+  if not(live and live.double and live.wild and live.battlers
+   and (st==live or st.battlers==live.battlers))then return end
+  if st.enemy~=State.battler(live,target)or not State.isAlive(live,target)then return end
+  if State.isAlive(live,target==1 and 3 or 1)then return end
+  return live,target
+ end)
+ if ok then return owner,id end
+end
 function M.install()
  local Seq=require('src.core.game3.battle.catch_seq')
  local Audio=require('src.core.game3.audio')
@@ -49,14 +70,15 @@ function M.install()
  Seq.begin=function(st,item,caught,shakes,opts)
   local result=begin(st,item,caught,shakes,opts)
   opts=opts or{}
+  local owner,target
+  if st and st.wild and not opts.headless then owner,target=ownerFor(st,opts)end
   -- Native tutorials and Safari share this sequence, including their trainer
   -- wind-up. Specialty balls and ghost dodge retain native geometry but can
   -- consume the same optional audio cues without a substitute model.
   if type(item)=='number'and item>=1 and item<=12 and item%1==0
-    and st and st.wild and not(st.double or opts.headless)
-    and (opts.target==nil or tonumber(opts.target)==1)
+    and owner
     and V.require('PokeballSettings').active()and V.require('Gen3Battle').enabled()then
-   pending={st=st,item=ballNames[item],caught=caught,shakes=shakes,nativeOnly=not ballNames[item]or opts.ghostDodge==true}
+   pending={st=st,owner=owner,target=target,item=ballNames[item],caught=caught,shakes=shakes,nativeOnly=not ballNames[item]or opts.ghostDodge==true}
   end
   return result
  end
@@ -95,14 +117,14 @@ function M.prepare(actors,floor)
  -- Safari and the old-man/Wally tutorials throw from a visible trainer,
  -- whose world anchor sits behind the ordinary allied Pokemon slot.
  local trainer=actors.byId and actors.byId[4]
- local p,e=actors.points[trainer and 4 or 0],actors.points[1]
+ local p,e=actors.points[trainer and 4 or 0],actors.points[pending.target]
  if not(p and e)then return end
  ground=floor;arena={player={p[1],p[3]},enemy={e[1],e[3]},mid={(p[1]+e[1])/2,(p[3]+e[3])/2}}
- call('prepareNativeCapture',arena,actors.st,floor)
+ call('prepareNativeCapture',arena,pending.st,floor)
 end
 function M.draw(st,shadow)
  if not(M.active(st)and arena)then return end
  if shadow then call('castNativeCapture',shadow)
- else call('drawNativeCapture',arena,st,ground)end
+ else call('drawNativeCapture',arena,pending.st,ground)end
 end
 return M
