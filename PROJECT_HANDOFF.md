@@ -1,3 +1,14 @@
+# Camera polish — 2026-10-17
+
+Gen3 orbit now uses actor eye/support anchors, real pitch/boom geometry and
+continuous foreground scenery cutaway; the Route104→Petalburg canopy-collapse
+regression is visually resolved. Shared focus/disconnect guards, consistent
+Gen3 stick/mouse tuning and public touch drag/pinch preserve native menus and
+look during dialogue. Native0.3.89 checks cover all8 camera modes across11
+editions plus5 actual GBA connections and battle/menu/return. Ten focused suites
+pass; physical Android input and exhaustive map-angle review remain unverified.
+Evidence/limits: `docs/CAMERA_POLISH_2026-10-17.md`. No version/release changes.
+
 # GSC native Legendary release — 2026-10-17
 
 Single-actor original send-out events now drive shared Q57 shell/energy, with

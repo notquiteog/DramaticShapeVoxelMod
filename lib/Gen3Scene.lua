@@ -888,7 +888,7 @@ local function actors(game,cam,draw)
  if cam.replay then
   local frame=cam.replay.frame
   for _,a in ipairs(frame.actors or {})do
-   if a.graphicsId and not (a.id==255 and cam.level==6) then
+   if a.graphicsId and(a.id~=255 or draw==Shadow.draw or V.require('Gen3CameraRig').showsPlayer(cam))then
     local support,offset=Furniture.support(cache.cells,a.graphicsId,a.x,a.y,(a.walkPhase or 0)==0)
     local z=a.id==255 and frame.y or a.y
     actor(a.graphicsId,a.x,z,a.facing,a.walkPhase,a.stepFlip,
@@ -933,7 +933,7 @@ local function actors(game,cam,draw)
    end
   end
  end
- if cam.level~=6 and Player.isVisible() then
+ if (draw==Shadow.draw or V.require('Gen3CameraRig').showsPlayer(cam))and Player.isVisible() then
   actor(Sprites.playerGraphicsId(game),(Player.px or 0)+(Player.spriteXOffset or 0),Player.py or 0,
    Player.facing,Player.walkPhase(),Player.drawFlip(),
    {elevation=Player.currentElevation,fieldMove=(Player.fieldMoveAnim or 0)>0,lift=SpriteAnchor.playerLift(Player)},cam,draw)
@@ -1048,22 +1048,19 @@ function M.draw(game,vw,vh,cam)
  S.level=cam.level;S.angle=math.rad(S.ANGLES_DEG[cam.level+1] or 35)
  R.canopyFacing=cam.battle or cam.level>=6
  if cam.level>=6 then
-  local dist=cam.level==6 and 0 or 75*(cam.boomZoom or 1)
-  local dx,dz=math.sin(cam.yaw),-math.cos(cam.yaw)
   local ground=support
-  local ey=48+ground
-  if cam.level==6 then
-   ey=ground+SpriteAnchor.eyeHeight(Sprites.getDraw(Sprites.playerGraphicsId(game)))
-     +SpriteAnchor.playerLift(Player)
-  end
+  local eyeHeight=SpriteAnchor.eyeHeight(Sprites.getDraw(Sprites.playerGraphicsId(game)))
+  local lift=SpriteAnchor.playerLift(Player)
   local exports=game and game.mods and game.mods.exports
   local ride=exports and exports.DRAMATIC_SKY_RIDE
   if not cam.battle and not cam.replay and ride and type(ride.currentAltitude)=='function' then
    local ok,height=pcall(ride.currentAltitude)
-   if ok and type(height)=='number' then ey=ey+math.max(0,math.min(512,height))end
+   if ok and type(height)=='number' then lift=lift+math.max(0,math.min(512,height))end
   end
-  local focusDistance=cam.level==6 and 24 or 70
-  R.camera={eye={cx-dx*dist,ey,cz-dz*dist},focus={cx+dx*focusDistance,ey-focusDistance*math.tan(cam.pitch),cz+dz*focusDistance},fov=math.rad(62),curve=cam.level==6 and 0 or nil}
+  local cameraRig=V.require('Gen3CameraRig')
+  local solid=cam.level==7 and not cam.battle and cameraRig.obstacles(Map,def,M.groundAt,
+    require('src.core.game3.collision'),indoor)or nil
+  R.camera=cameraRig.place(cam,cx,cz,ground,eyeHeight,lift,solid)
   if cam.level==6 and not cam.battle and not cam.replay then
    local ox,oy,oz=V.require('KfpMotion').sample({px=cx,py=cz,
     lift=math.max(0,SpriteAnchor.playerLift(Player))},Map.current,math.pi-cam.yaw,love.timer.getTime())
@@ -1134,6 +1131,11 @@ function M.draw(game,vw,vh,cam)
   end
   R.battleOcclusion({player=row(0),enemy=row(1)},p[0][2],
    cam.actors.st.double and {player={contentWidth=300},enemy={contentWidth=300}}or nil)
+ elseif cam.level==7 and not cam.battle then
+  -- Native collision retracts the boom, but art can overhang its blocked
+  -- cells. Clear foreground scenery across the frame, not circular holes
+  -- through individual crowns. Supporting ground and actors remain intact.
+  R.battleOcclusion({player={cx,cz},enemy={cx,cz}},support)
  else R.battleOcclusion(nil)end
  if plate then
   if plate.image then R.backdrop(plate.image,plate.offset)end
@@ -1148,6 +1150,7 @@ function M.draw(game,vw,vh,cam)
   R.battleOcclusion(nil)
   if cam.actors then cam.actors:draw()end
  else
+  R.battleOcclusion(nil)
   local waterLevels={}
   for _,d in ipairs(water)do local h=d[4];waterLevels[h]=waterLevels[h]or{};local group=waterLevels[h];group[#group+1]=d end
   for h,group in pairs(waterLevels)do

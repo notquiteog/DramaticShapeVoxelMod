@@ -570,7 +570,9 @@ function FirstPerson.update(dt)
   -- part of the dive in from the orbit, which carries the eye anyway
   ThirdPerson.update(dt, FirstPerson.blend)
 
-  local looking = FirstPerson.looking()
+  local Look=V.require("CameraLook")
+  Look.resetLost(stick,love.window)
+  local looking = FirstPerson.looking() and Look.focused(love.window)
 
   -- Two questions about the same mouse, and they do NOT have the same
   -- answer: where the POINTER may go, and what the BUTTONS mean.
@@ -630,8 +632,8 @@ function FirstPerson.update(dt)
     local cy, cp = curve(rx), curve(ry)
     if cy ~= 0 or cp ~= 0 then
       -- negated yaw for the same reason as the mouse above
-      FirstPerson.lookInput(-cy * FirstPerson.STICK_YAW * dt,
-                            cp * FirstPerson.STICK_PITCH * dt)
+      FirstPerson.lookInput(-cy * FirstPerson.STICK_YAW * math.min(dt,.1),
+                            cp * FirstPerson.STICK_PITCH * math.min(dt,.1))
     end
   end
 end
@@ -823,6 +825,7 @@ function FirstPerson.install()
     -- Use the native input hooks, also while a world script holds movement.
     V.mod.hooks:wrap("input.gamepad", function(next, game, ev)
       if ev.phase == "axis" then
+        if ev.axis=="rightx" or ev.axis=="righty" then stick.controller=ev.joystick end
         if ev.axis == "rightx" then stick.x = ev.value
         elseif ev.axis == "righty" then stick.y = ev.value end
         -- camera-only while a camera claims the stick (0.3.73 twin-stick
@@ -840,6 +843,7 @@ function FirstPerson.install()
   do
     local inner = Game.gamepadaxis
     function Game:gamepadaxis(joystick, axis, value)
+      if axis=="rightx" or axis=="righty" then stick.controller=joystick end
       if axis == "rightx" then stick.x = value
       elseif axis == "righty" then stick.y = value end
       -- camera-only while a camera claims the stick (0.3.73 twin-stick
@@ -883,6 +887,7 @@ function FirstPerson.install()
          and not isAccelerometer(joystick) then
         if math.abs(value) < 0.3 then rawCentred[axis] = true end
         if rawCentred[axis] then
+          stick.controller=joystick
           if axis == 3 then stick.x = value else stick.y = value end
         end
       end

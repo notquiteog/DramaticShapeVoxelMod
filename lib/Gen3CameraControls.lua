@@ -1,6 +1,7 @@
 -- Native free-camera inputs share Gen1 boom tuning and input direction.
 local V=...
 local T=V.require('ThirdPerson')
+local Look=V.require('CameraLook')
 local M={}
 function M.new(camera)
  local state={zoom=1,goal=1}
@@ -8,6 +9,11 @@ function M.new(camera)
  function state:step(n)
   if camera.level~=7 or not n or n==0 then return false end
   self.goal=math.max(T.ZOOM_MIN,math.min(T.ZOOM_MAX,self.goal*T.ZOOM_STEP^n))
+  return true
+ end
+ function state:scale(factor)
+  if camera.level~=7 or not factor or factor<=0 then return false end
+  self.goal=math.max(T.ZOOM_MIN,math.min(T.ZOOM_MAX,self.goal*factor))
   return true
  end
  function state:pointer()pointerSeen=true end
@@ -20,7 +26,7 @@ function M.new(camera)
    if mouseAt and not pointerSeen then
     -- Ignore cursor warps, matching the bounded Gen1 pointer input.
     local dx,dy=math.max(-40,math.min(40,x-mouseAt[1])),math.max(-40,math.min(40,y-mouseAt[2]))
-    camera.look(dx*.005,dy*.004)
+    camera.look(dx*Look.MOUSE,dy*Look.MOUSE)
    end
    mouseAt={x,y}
   end
