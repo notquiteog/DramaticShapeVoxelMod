@@ -77,3 +77,24 @@ were inspected: Cyndaquil, Totodile, Sentret and Pidgey are all visible. Evidenc
 projection regression, staged pair suite and1173-check SDK suite pass. Companion
 public seam: Doubles f4aad50; voxel adapter653d4d1. This fixes the default native
 pair composition, not every possible user-directed orbit/HUD intersection.
+
+## Native GBA doubles follow-up
+
+Native FireRed/LeafGreen/Ruby/Sapphire/Emerald doubles also hid one actor per
+team under the original fixed HUD. The native-only camera now uses a solved
+240x160 composition with compact teammate spacing and five tiles between teams.
+Actor artwork, world scale, support height, native UI and gameplay remain
+unchanged. The paired placement adapter lives in Gen3BattleActors; modern HUDs,
+other claimed HUD providers, singles and hidden native HUDs keep their existing
+layout. No scene rebuild is introduced.
+
+All five editions passed native four-owner release timing36/36 frames, four
+concurrent owners,44 subject draws, identity/HP and OFF cleanup. Ten final/peak
+captures inspected, all four battlers clear of native UI. Evidence:
+`gba-pair-{firered,leafgreen,ruby,sapphire,emerald}` and `gba-pair-review.png` in
+the same scratch directory. FireRed's first frame-count-only fixture expired
+before its real-time intro completed; the QA driver now uses a30-second real-time
+deadline, without changing native timing. The rerun passed. Combined suite with
+the parity worker:335 pass/0 fail/58 explicit external-fixture skips; the new
+native-pair projection regression also passes. As with GSC, user orbit/zoom can
+move actors under a fixed native HUD; this fixes the default composition.

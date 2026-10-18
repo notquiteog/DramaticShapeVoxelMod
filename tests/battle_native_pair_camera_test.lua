@@ -18,3 +18,16 @@ for _,v in ipairs({{24,40,88,36},{-24,120,40,32}})do
  assert(math.abs(a-b-v[4])<.01,'native pair span escaped clear picture region')
 end
 print('PASS native-pair camera keeps source world scale and fits native HUD picture regions')
+
+local gba=Cam.rig(Cam.forLayout(arena,'gen3-native-pair'),0,true)
+vp=Mat.mul(Mat.perspective(gba.fov,240/160,1,4096),Mat.lookAt(gba.eye,gba.focus,{0,1,0}))
+local function pixel(x,y,z)
+ local w=vp[13]*x+vp[14]*y+vp[15]*z+vp[16]
+ return 120+120*(vp[1]*x+vp[2]*y+vp[3]*z+vp[4])/w,
+  80-80*(vp[5]*x+vp[6]*y+vp[7]*z+vp[8])/w
+end
+for _,p in ipairs({{-12,40,45,92},{12,40,100,104},{-12,-40,155,40},{12,-40,205,50}})do
+ local x,y=pixel(p[1],0,p[2]);assert(math.abs(x-p[3])<1 and math.abs(y-p[4])<1,'GBA pair feet escaped clear native picture region')
+ assert(y<112,'GBA command panel covered feet')
+end
+print('PASS GBA four source-scale feet fit native240x160 HUD regions')

@@ -1067,12 +1067,13 @@ function M.draw(game,vw,vh,cam)
    for _,p in ipairs({R.camera.eye,R.camera.focus})do p[1]=p[1]+ox;p[2]=p[2]+oy;p[3]=p[3]+oz end
   else V.require('KfpMotion').reset()end
   if cam.battle then
-   R.camera=V.require('BattleCam').rig(cam.arena,ground)
+   local battleCam=V.require('BattleCam')
+   R.camera=battleCam.rig(cam.sceneLayout and battleCam.forLayout(cam.arena,cam.sceneLayout)or cam.arena,ground)
    local c,s=math.cos(cam.yaw),math.sin(cam.yaw)
    for _,p in ipairs({R.camera.eye,R.camera.focus})do
     local x,z=p[1]-cx,p[3]-cz;p[1],p[3]=cx+x*c-z*s,cz+x*s+z*c
    end
-   if cam.actors and cam.actors.st.double then R.camera.fov=2*math.atan(math.tan(R.camera.fov/2)*2.3)end
+   if cam.actors and cam.actors.st.double and cam.sceneLayout~='gen3-native-pair'then R.camera.fov=2*math.atan(math.tan(R.camera.fov/2)*2.3)end
   end
  else
   V.require('KfpMotion').reset()
