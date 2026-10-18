@@ -22,6 +22,7 @@ love={graphics={
 }}
 local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
  if name=='BattleSpriteFooting'then return {bounds=function(image,quad)local w,h=image:getDimensions();if quad and quad.getViewport then local x,y;x,y,w,h=quad:getViewport()end;return {0,0,w,h-7}end}end
+ if name=='NativeGen2PictureBands'then return assert(loadfile('lib/NativeGen2PictureBands.lua'))()end
  if name=='Gen2Capture'then return {active=function()return captureOwned end}end
  if name=='Generation' then return {isGen2=function()return true end} end
  if name=='BattleScene' then return {GB_W=160,GB_H=144} end
@@ -129,3 +130,23 @@ assert(sub.contentWidth==56 and paletteCalls==before+1,'doll retains actor metri
 pose={pic='mon'};assert(M.sideTexture(game,'player')and usedImage~=doll,'native explicit mon restores selected body')
 pose=nil;screen.battle.doubles=true;assert(M.sideTexture(game,'player')==nil,'doubles substitute retains native ownership')
 print('PASS native faint crop/empty ownership/error restoration and substitute identity/size/palette')
+
+-- Original lifted rows compose inside the same world card without changing
+-- runner state, and the native BGP mapping restores even after an error.
+first.volatile=nil;screen.battle.doubles=nil;selected=false;pose={lifted={2,1},slide=8}
+package.loaded['src.ui.gen2.BattleAnimView']={scanlines=function()local t={};for row=0,143 do t[#t+1]={src=row,dest=row,dx=0}end;return t end}
+screen.anim={bg={bgp=0x1b}}
+local bgp=0xe4;Palette.setBgp=function(byte)local old=bgp;bgp=byte;return old end
+local passes={};love.graphics.draw=function(img,x,y)passes[#passes+1]={x,y,bgp}end
+local lifted=assert(M.sideTexture(game,'enemy'))
+assert(#passes==3 and passes[1][1]==passes[3][1]+8 and passes[3][3]==0x1b,'native split band and BGP')
+assert(bgp==0xe4 and scissor[1]==2,'native palette/scissor restored')
+love.graphics.draw=function()error('band fixture failure')end
+assert(M.sideTexture(game,'enemy')==nil and bgp==0xe4 and scissor[1]==2,'failed band restores palette and native ownership')
+print('PASS native lifted rows and scoped BGP in staged pictures')
+
+local available=Palette.available;Palette.available=function()return false end
+screen.anim.bg.lcdc='BGP'
+assert(M.sideTexture(game,'enemy')==nil and M.drawn.enemy==nil,'shaderless BGP keeps native veil ownership')
+Palette.available=available
+print('PASS shaderless native BGP fallback')

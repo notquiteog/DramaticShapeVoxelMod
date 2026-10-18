@@ -1,3 +1,16 @@
+# Native GSC lifted rows and LCD effects — 2026-10-17
+
+Native one/two-row bands, SCX/SCY, LCD scanlines and BGP palettes now compose
+into world actor cards using public engine readers. Native timing, ownership
+and OFF behavior are retained; shaderless BGP keeps native fallback. G/S/C
+0.3.89 NVIDIA fixtures pass both sides of ACID_ARMOR/AGILITY with unchanged
+83/118-frame scripts;24 captures inspected. Focused checks,549 option consumers
+and202/202 engine Gen2 SDK pass. Prior broad324/0/58 predates this batch.
+Evidence/limits: `docs/NATIVE_GSC_PICTURE_EFFECTS_2026-10-17.md`; current remaining
+consumer audit: `docs/PARITY_AUDIT_2026-10-17.md`. Combined substitute/faint plus
+raster/lifted effects, animated doubles and full Legendary release remain.
+Linux verification is not Android/iOS/Windows certification. No version bump.
+
 # Loading/transition optimization checkpoint — 2026-10-17
 
 Shared large mesh uploads are cooperative/cancellation-safe; Gen 1/2 terrain

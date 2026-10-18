@@ -127,7 +127,7 @@ local function drawPic(g,image,quad,x,y,scale)
 end
 local RESIZE_TILES={[0]=6,[1]=4,[2]=2,[3]=7,[4]=5,[5]=3}
 -- Read native picture state; never leave a full-size world body behind a
--- hidden/withdrawn mon. Composite native effects keep their original painter.
+-- hidden/withdrawn mon. Unsupported combinations keep their native painter.
 local function poseFor(screen,side,mon,back)
   -- Supported Legendary intake already owns hiding/shrinking this enemy.
   -- Its world card must survive the native box-clear until the 3D beat ends.
@@ -136,15 +136,21 @@ local function poseFor(screen,side,mon,back)
   if screen.isUnderground and screen:isUnderground(side,mon)
     and not(screen.vanishAnim and screen.vanishAnim==screen.anim)then return end
   local sink=screen.faintSink and screen:faintSink(side)or 0
+  local bg=screen.anim and screen.anim.bg
+  -- The native shaderless BGP veil is a whole-panel approximation; let its
+  -- original painter own that path rather than silently drop it on a card.
+  if bg and bg.lcdc=='BGP'and not Palette.available()then return end
+  local raster=V.require('NativeGen2PictureBands').raster(bg)
   local anim=screen.animPicState and screen:animPicState(side)
   local substitute=mon.volatile and (tonumber(mon.volatile.substitute)or 0)>0
   if anim and anim.pic~=nil then substitute=anim.pic=='substitute'end
-  if anim and anim.lifted then return end
+  local lifted=anim and anim.lifted
+  if(lifted or raster)and(sink>0 or substitute)then return end
   local scale=anim and RESIZE_TILES[anim.size]
   scale=scale and scale/(back and 6 or 7)or 1
   local slide=anim and anim.slide or 0
-  if screen.battle and screen.battle.doubles and(scale~=1 or slide~=0 or sink>0 or substitute)then return end
-  return scale,slide,anim and anim.shade,sink,substitute
+  if screen.battle and screen.battle.doubles and(scale~=1 or slide~=0 or sink>0 or substitute or lifted or raster)then return end
+  return scale,slide,anim and anim.shade,sink,substitute,lifted
 end
 
 function Gen2Staged.sideTexture(game, side)
@@ -158,7 +164,7 @@ function Gen2Staged.sideTexture(game, side)
   if back and V.require('BattleArt').backPlacementSetting:get()=='ui' then return nil end
   local okMon, mon = pcall(screen.activeMon, screen, side)
   if not (okMon and mon) then return nil end
-  local poseScale,poseSlide,poseShade,poseSink,dollUp=poseFor(screen,side,mon,back)
+  local poseScale,poseSlide,poseShade,poseSink,dollUp,lifted=poseFor(screen,side,mon,back)
   if not poseScale then return nil end
   local image,iw,ih,quad,selectedArt,groundY,trueColor=picFor(game,screen,mon,back,poseSink>0)
   if not image then return nil end
@@ -191,17 +197,24 @@ function Gen2Staged.sideTexture(game, side)
   local pm=pimage and Art.metrics and Art.metrics(pimage)
   groundY=groundY or (metric and metric.y1+1) or box[4]
   pground=pground or (pm and pm.y1+1) or (pbox and pbox[4])
+  local bg=screen.anim and screen.anim.bg
+  local raster=bg and(V.require('NativeGen2PictureBands').raster(bg)or poseSlide~=0)
   local sinkPixels=poseSink
-  if poseSink>0 then
+  local nativeWidth,nativeHeight,nativeScale
+  if poseSink>0 or lifted or raster then
     -- Selected world frames may be larger than the original fitted UI slot.
     -- Convert the native pixel clock through that public slot's actual scale.
     local ok,native,_,path=pcall(screen.pic,screen,mon,back)
     if ok and native then
-      local _,nh=native:getDimensions()
+      local nw,nh=native:getDimensions()
       local scale=screen.picScale and screen:picScale(path,mon,back)or 1
-      if nh>0 and scale>0 then sinkPixels=poseSink*ih/(nh*scale)end
+      if nh>0 and scale>0 then
+        nativeWidth,nativeHeight,nativeScale=nw,nh,scale
+        sinkPixels=poseSink*ih/(nh*scale)
+      end
     end
   end
+  local slidePixels=nativeWidth and poseSlide*iw/(nativeWidth*nativeScale)or poseSlide
   local doll,dollQuad,dollWidth,dollGround
   if dollUp then
     if not screen.substituteDoll then return nil end
@@ -218,11 +231,26 @@ function Gen2Staged.sideTexture(game, side)
   local canvas = canvasFor(side, cw, ch)
   if not canvas then return nil end
 
-  local function paint(mon,colored,fn)
+  local band
+  if lifted or raster then
+    if not(nativeHeight and love.graphics.getScissor and love.graphics.setScissor)then return nil end
+    if lifted then
+      band=V.require('NativeGen2PictureBands').range(back,nativeHeight,nativeScale,ih,poseScale,groundY,ay,lifted)
+      if not band then return nil end
+    end
+  end
+  local function paint(mon,colored,fn,byte)
     local colors=screen.palettes and screen.cachedMonColors and screen:cachedMonColors(mon.species,mon.shiny)
     if screen.introGrayscale and screen:introGrayscale()then colors=require('src.world.gen2.Palettes').BLACKOUT end
     if colors and poseShade then colors=Palette.remap(colors,poseShade)end
-    if colors and not(colored and Palette.mode=='gbc')and Palette.available()then return Palette.with(colors,fn)end
+    if colors and not(colored and Palette.mode=='gbc')and Palette.available()then
+      local bg=screen.anim and screen.anim.bg
+      local old=Palette.setBgp and Palette.setBgp(byte or(bg and bg.bgp))
+      local ok,err=pcall(Palette.with,colors,fn)
+      if Palette.setBgp then Palette.setBgp(old)end
+      if not ok then error(err,0)end
+      return
+    end
     return fn()
   end
   local g = love.graphics
@@ -244,15 +272,40 @@ function Gen2Staged.sideTexture(game, side)
     if pimage then
       paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw,ay-groundY)end)
       paint(partner,ptrueColor,function()drawPic(g,pimage,pquad,ax,ay-pground)end)
+    elseif raster then
+      local Bands=V.require('NativeGen2PictureBands')
+      local View=require('src.ui.gen2.BattleAnimView')
+      local runs=Bands.runs(View,bg,back,lifted)
+      local clipX=Bands.viewport(back,nativeWidth,nativeScale,iw,poseScale,ax,poseSlide)
+      Bands.drawRaster(g,cw,ch,runs,back,nativeHeight,nativeScale,ih,poseScale,groundY,ay,function(dx,dy,byte)
+        paint(mon,trueColor,function()
+          drawPic(g,image,quad,ax-iw*poseScale/2+slidePixels+dx,ay-groundY*poseScale+dy,poseScale)
+        end,byte)
+      end,clipX)
+      if band then
+        paint(mon,trueColor,function()
+          Bands.draw(g,cw,ch,band,slidePixels,function(slide,isLifted)
+            -- The original final lifted pass bypasses all LCD shifts. Only
+            -- draw that band's callback; the base rows were handled above.
+            if isLifted then drawPic(g,image,quad,ax-iw*poseScale/2,ay-groundY*poseScale,poseScale)end
+          end)
+        end)
+      end
+    elseif band then
+      paint(mon,trueColor,function()
+        V.require('NativeGen2PictureBands').draw(g,cw,ch,band,slidePixels,function(slide)
+          drawPic(g,image,quad,ax-iw*poseScale/2+slide,ay-groundY*poseScale,poseScale)
+        end)
+      end)
     elseif doll then
       -- The native 16px doll keeps its own facing and indexed species colors;
       -- the actor card retains the mon's bounds, so it is not inflated to a mon.
-      paint(mon,false,function()drawPic(g,doll,dollQuad,ax-dollWidth/2+poseSlide,ay-dollGround)end)
+      paint(mon,false,function()drawPic(g,doll,dollQuad,ax-dollWidth/2+slidePixels,ay-dollGround)end)
     else
       -- Match native sinking rows while clipping at the world's fixed ground
       -- line. A fully sunk transparent card still owns the native flat slot.
       if poseSink>0 then g.setScissor(0,0,cw,ay)end
-      paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw*poseScale/2+poseSlide,ay-groundY*poseScale+sinkPixels,poseScale)end)
+      paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw*poseScale/2+slidePixels,ay-groundY*poseScale+sinkPixels,poseScale)end)
     end
   end)
   g.setCanvas(prev)

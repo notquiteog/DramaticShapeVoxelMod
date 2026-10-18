@@ -28,7 +28,9 @@ specialty/blocked/ghost audio have native event adapters. Native send-out and
 withdraw audio preserve native timing. Supported GBA send-out shells now render
 in world space. GSC world cards now consume native hidden/airborne/resize/slide,
 indexed palettes/shades and original Crystal animation frames. Native substitutes
-and fainting rows now remain on the world stage as well.
+and fainting rows now remain on the world stage as well. Native lifted bands,
+global scroll and LCD/BGP scanline effects now compose into the world card; see
+`NATIVE_GSC_PICTURE_EFFECTS_2026-10-17.md`.
 
 These are not reasons to erase every associated partial row: each row covers
 additional behaviors or asset families. See `OptionSupport.lua` and linked
@@ -38,7 +40,7 @@ native interface/capture/send-out/GSC evidence documents for the actual limits.
 
 | Scope | Current consumer and precise remaining work |
 | --- | --- |
-| G/S/C world animations | `Gen2Staged`: native lifted-row composites and animated doubles still return to the original flat painter. Hidden/resize/palette/frame behavior, native substitute dolls and faint cropping are fixed. Lifted-row world-space compositing remains unfinished. |
+| G/S/C world animations | `Gen2Staged`: ordinary lifted bands, native scroll and LCD/BGP scanlines now compose into world cards. Combined substitute/faint with raster or lifted effects and animated doubles still return to the native painter; those combinations need further adapters. |
 | G/S/C Legendary send-out | `BattleScene.updateSendout` reads Gen1 grow-in/provider cues; the GSC native send-out reader does not yet drive the full shared Legendary shell/energy choreography. Native resize/effects/audio are retained. |
 | FR/LG/Ru/Sa/E Legendary release | `NativeGen3SendoutShell` renders five existing shell models; native release particles remain original. Full shared Q57 release energy and model-specific subject materials are unfinished. |
 | Native multi-actor effects | Capture/simultaneous release paths deliberately fall back for doubles or ambiguous ownership. Unique native battler IDs exist on GBA, but adapters still need per-actor event ownership and bounded cleanup. Native fallback is not full parity. |
@@ -82,6 +84,6 @@ families remain with the model worker. `NativeGeometryCache` compresses supporte
 building/furniture CPU records; general terrain/tree streams remain a separate
 performance-owner gap. No model/cache completion is inferred from this audit.
 
-Full feature parity is **not complete**. Native GSC lifted-row
-compositing, release choreography and multi-actor ownership remain concrete
+Full feature parity is **not complete**. Combined GSC picture effects,
+release choreography and multi-actor ownership remain concrete
 adapters to complete. Do not relabel native fallbacks as parity.
