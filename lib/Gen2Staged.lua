@@ -128,13 +128,19 @@ end
 local RESIZE_TILES={[0]=6,[1]=4,[2]=2,[3]=7,[4]=5,[5]=3}
 -- Read native picture state; never leave a full-size world body behind a
 -- hidden/withdrawn mon. Unsupported combinations keep their native painter.
-local function poseFor(screen,side,mon,back)
+local function poseFor(screen,side,mon,back,actorOnly)
   -- Supported Legendary intake already owns hiding/shrinking this enemy.
   -- Its world card must survive the native box-clear until the 3D beat ends.
   if side=='enemy'and V.require('Gen2Capture').active(screen,screen.anim)then return 1,0,nil,0,false end
-  if screen.picBoxCleared and screen:picBoxCleared(side)then return end
+  if screen.picBoxCleared and screen:picBoxCleared(side)then
+    if actorOnly then return 1,0,nil,0,false,nil,true end
+    return
+  end
   if screen.isUnderground and screen:isUnderground(side,mon)
-    and not(screen.vanishAnim and screen.vanishAnim==screen.anim)then return end
+    and not(screen.vanishAnim and screen.vanishAnim==screen.anim)then
+    if actorOnly then return 1,0,nil,0,false,nil,true end
+    return
+  end
   local sink=screen.faintSink and screen:faintSink(side)or 0
   local bg=screen.anim and screen.anim.bg
   -- The native shaderless BGP veil is a whole-panel approximation; let its
@@ -148,14 +154,17 @@ local function poseFor(screen,side,mon,back)
   local scale=anim and RESIZE_TILES[anim.size]
   scale=scale and scale/(back and 6 or 7)or 1
   local slide=anim and anim.slide or 0
-  if screen.battle and screen.battle.doubles and(scale~=1 or slide~=0 or sink>0 or substitute or lifted or raster)then return end
+  if not actorOnly and screen.battle and screen.battle.doubles and(scale~=1 or slide~=0 or sink>0 or substitute or lifted or raster)then return end
   return scale,slide,anim and anim.shade,sink,substitute,lifted
 end
 
-function Gen2Staged.sideTexture(game, side)
+local function sideTexture(game, side, actorOnly)
   Gen2Staged.drawn[side],Gen2Staged.drawn[side.."2"]=nil,nil
   local screen = screenFor(game)
   if not screen then return nil end
+  if not actorOnly and screen.battle and screen.battle.doubles and not screen.anim then
+    return V.require('NativeGen2PairPicture').texture(game,side,screen,sideTexture,canvasFor,Gen2Staged.drawn)
+  end
   local back = (side == "player" or side == "player2")
   if (back and screen.showPlayerTrainer) or (not back and screen.showEnemyTrainer)then return nil end
   -- The native back slot remains the owner in OG UI mode. Leaving this side
@@ -163,7 +172,7 @@ function Gen2Staged.sideTexture(game, side)
   if back and V.require('BattleArt').backPlacementSetting:get()=='ui' then return nil end
   local okMon, mon = pcall(screen.activeMon, screen, side)
   if not (okMon and mon) then return nil end
-  local poseScale,poseSlide,poseShade,poseSink,dollUp,lifted=poseFor(screen,side,mon,back)
+  local poseScale,poseSlide,poseShade,poseSink,dollUp,lifted,hidden=poseFor(screen,side,mon,back,actorOnly)
   if not poseScale then return nil end
   local image,iw,ih,quad,selectedArt,groundY,trueColor=picFor(game,screen,mon,back,poseSink>0)
   if not image then return nil end
@@ -175,12 +184,13 @@ function Gen2Staged.sideTexture(game, side)
   -- both mons through the drawn table.
   local partner = nil
   local battle = screen.battle
-  if battle and battle.doubles then
+  if not actorOnly and battle and battle.doubles then
     -- The queue may still SHOW an outgoing partner after the core has already
     -- switched it. Use the same public identity reader as the native painter.
     local okPartner,p2=pcall(screen.activeMon,screen,side..'2')
     if not okPartner then return nil end
     if p2 and p2 ~= mon and (p2.hp or 0) > 0 then partner = p2 end
+    if partner and not poseFor(screen,side..'2',partner,back)then return nil end
   end
   local pimage, pquad,pground,ptrueColor = nil,nil,nil,nil
   local iw2,ih2=0,0
@@ -233,7 +243,7 @@ function Gen2Staged.sideTexture(game, side)
   local ch = math.max(BattleScene.GB_H or 144, math.max(ih, ih2) + 2)
   local ax = cw / 2
   local ay = ch - FOOT_PAD
-  local canvas = canvasFor(side, cw, ch)
+  local canvas = canvasFor(actorOnly and side..':actor' or side, cw, ch)
   if not canvas then return nil end
 
   local pictureHeight,pictureScale,pictureGround,colored=ih,poseScale,groundY,trueColor
@@ -288,7 +298,9 @@ function Gen2Staged.sideTexture(game, side)
     -- BattleScene.billboard reads (tw / 2 - ax, th - ay).  With a partner,
     -- the lead sits left of centre and the partner right of it, feet on
     -- the same ground line.
-    if pimage then
+    if hidden then
+      -- A hidden actor retains its place in the pair without painting pixels.
+    elseif pimage then
       paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw,ay-groundY)end)
       paint(partner,ptrueColor,function()drawPic(g,pimage,pquad,ax,ay-pground)end)
     elseif raster then
@@ -348,6 +360,7 @@ end
 
 -- The same shape OverworldBattle.textures returns, so BattleScene cannot tell
 -- which generation built it.
+Gen2Staged.sideTexture=sideTexture
 function Gen2Staged.textures(game)
   if not Generation.isGen2() then return nil end
   Gen2Staged.drawn = {}

@@ -30,6 +30,38 @@ return function(game)
  assert(U.shot(game,dir..'/shown-partner.png'))
  s.shownMon.enemy2=shown;b.enemy2=outgoing;U.wait(3)
  assert(Staged.drawn.enemy2==s:activeMon('enemy2'))
+ if os.getenv('QA_PAIR_STATES')=='1'then
+  local Stage=V.require('OverworldBattle');local mons={};local hp={}
+  for _,slot in ipairs({'player','player2','enemy','enemy2'})do mons[slot]=s:activeMon(slot);hp[slot]=mons[slot].hp end
+  for _,slot in ipairs({'player2','enemy2'})do
+   local mon=mons[slot];local volatile=mon.volatile
+   mon.volatile={substitute=10};U.wait(3)
+   assert(Staged.drawn[slot]==mon and Staged.drawn[slot:gsub('2$','')]==mons[slot:gsub('2$','')])
+   assert(U.shot(game,dir..'/doll-'..slot..'.png'));mon.volatile=volatile
+   local hidden=s.picHidden[slot];s.picHidden[slot]=true;U.wait(3)
+   assert(Staged.drawn[slot]==mon,'hidden partner lost its owned transparent slot')
+   assert(U.shot(game,dir..'/hidden-'..slot..'.png'));s.picHidden[slot]=hidden
+   local clocks={};local playerHud,enemyHud=s.showPlayerHud,s.showEnemyHud
+   for pass=1,2 do
+    Stage.setting:sync(pass==2);s.picHidden[slot]=false
+    s.faintSlide={side=slot,frames=0} -- explicit presentation overlap; no gameplay KO
+    local frames=0;local captured=false
+    while s.faintSlide do
+     U.wait(1);frames=frames+1;assert(frames<80,'native faint did not finish')
+     if pass==2 and s:faintSink(slot)>0 and not captured then
+      assert(Staged.drawn[slot]==mon,'faint crop lost partner identity')
+      game.capturePath=dir..'/faint-'..slot..'.png';captured=true
+     end
+    end
+    clocks[pass]=frames;if pass==2 then assert(captured)end
+    s.picHidden[slot]=hidden;s.showPlayerHud=playerHud;s.showEnemyHud=enemyHud;s.phase='menu';U.wait(2)
+   end
+   assert(clocks[1]==clocks[2],'native paired faint clock changed')
+   print('[pair faint frames]',slot,clocks[1],clocks[2])
+  end
+  for slot,mon in pairs(mons)do assert(s:activeMon(slot)==mon and mon.hp==hp[slot],'pair fixture changed identity/HP')end
+  U.wait(3);assert(U.shot(game,dir..'/states-restored.png'))
+ end
  D.unregisterPartnerSource('qa-native-pair');game.update=update;love.window.hasFocus=focus
  print('[PASS native GSC pair identity]',version,'four actors/public provider/queued partner preserved')
  love.event.quit()

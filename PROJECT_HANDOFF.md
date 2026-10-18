@@ -1,3 +1,13 @@
+# GSC independent paired picture state — 2026-10-17
+
+Paired world cards now compose native slot-specific substitutes, hidden bodies
+and faint crops outside move scripts. G/S/C NVIDIA0.3.89 fixtures pass14/14
+native faint frames for both partners, identity/HP preservation and restored
+HUDs;21 captures inspected. Shared suite334pass/0fail/58explicit fixture skips,
+549options and202Gen2SDK checks pass. Evidence:
+`docs/NATIVE_GSC_PAIR_STATES_2026-10-17.md`. Actor-targeted move scripts and
+multi-actor capture/release remain; no full parity claim.
+
 # Native doubles camera framing — 2026-10-17
 
 GSC native pair framing now uses the optional public layout descriptor from

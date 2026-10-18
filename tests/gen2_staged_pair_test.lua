@@ -19,14 +19,15 @@ local selected=false
 local front=false
 local flip=true
 love={graphics={
- newCanvas=function(w,h)return {getWidth=function()return w end,getHeight=function()return h end,setFilter=function()end} end,
+ newCanvas=function(w,h)return {canvas=true,getWidth=function()return w end,getHeight=function()return h end,setFilter=function()end} end,
  getCanvas=function()return target end,setCanvas=function(v)target=v end,
  getColor=function()return 1,1,1,1 end,setColor=function()end,clear=function()end,
- draw=function(img,x,y)local w,h=img:getDimensions();draws[#draws+1]={x=x,y=y,w=w,h=h} end,
+ draw=function(img,x,y)if img.canvas then return end;local w,h=img:getDimensions();draws[#draws+1]={x=x,y=y,w=w,h=h} end,
 }}
 local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
  if name=='BattleSpriteFooting'then return {bounds=function(image,quad)local w,h=image:getDimensions();if quad and quad.getViewport then local x,y;x,y,w,h=quad:getViewport()end;return {0,0,w,h-7}end}end
  if name=='NativeGen2PictureBands'then return assert(loadfile('lib/NativeGen2PictureBands.lua'))()end
+ if name=='NativeGen2PairPicture'then return assert(loadfile('lib/NativeGen2PairPicture.lua'))()end
  if name=='Gen2Capture'then return {active=function()return captureOwned end}end
  if name=='Generation' then return {isGen2=function()return true end} end
  if name=='BattleScene' then return {GB_W=160,GB_H=144} end
@@ -46,7 +47,7 @@ assert(M.textures(game).sceneLayout==nil,'invalid layout metadata accepted')
 screen.nativeSceneLayout=nil;draws={}
 local texture=assert(M.sideTexture(game,'enemy'))
 assert(#draws==2,'both complete partner images must draw')
-assert(draws[1].x+draws[1].w<=draws[2].x,'partner sprites overlap')
+assert(texture.contentWidth==draws[1].w+draws[2].w,'pair composition lost separate source widths')
 assert(draws[1].y+draws[1].h==draws[2].y+draws[2].h,'feet not aligned')
 assert(M.drawn.enemy==first and M.drawn.enemy2==second,'flat replay must skip both rendered bodies')
 assert(draws[1].y+draws[1].h-7==texture.ay,'transparent image padding raised visible feet')
@@ -152,7 +153,20 @@ local before=paletteCalls;local sub=assert(M.sideTexture(game,'player'))
 assert(usedImage==doll and usedQuad==dq and scaled[1]==sub.ax-8 and scaled[2]==sub.ay-9,'original doll art/facing/16px width')
 assert(sub.contentWidth==56 and paletteCalls==before+1,'doll retains actor metrics and indexed palette')
 pose={pic='mon'};assert(M.sideTexture(game,'player')and usedImage~=doll,'native explicit mon restores selected body')
-pose=nil;screen.battle.doubles=true;assert(M.sideTexture(game,'player')==nil,'doubles substitute retains native ownership')
+pose=nil;screen.battle.doubles=true;assert(M.sideTexture(game,'player'),'idle doubles substitute uses the original doll')
+first.volatile=nil;second.volatile={substitute=10};second.species='SENTRET';second.shiny=true;screen.battle.player2=second
+local bodies={};love.graphics.draw=function(img,...)if not img.canvas then bodies[#bodies+1]=img end end
+local pairedDoll=assert(M.sideTexture(game,'player'))
+assert(#bodies==2 and bodies[1]~=doll and bodies[2]==doll,'partner doll replaced wrong actor')
+assert(M.drawn.player==first and M.drawn.player2==second and pairedDoll.hudAnchors.player2,'independent partner ownership')
+second.volatile=nil
+local nativeFaint=screen.faintSink;screen.faintSink=function(_,slot)return slot=='player2'and 8 or 0 end
+screen.faintSlide={side='player2',frames=2};second.hp=0
+assert(M.sideTexture(game,'player')and M.drawn.player2==second,'fainting zero-HP partner vanished before its native crop')
+screen.faintSink=nativeFaint;screen.faintSlide=nil;second.hp=10
+local visibility=screen.picBoxCleared;screen.picBoxCleared=function(_,slot)return slot=='player2'end
+bodies={};assert(M.sideTexture(game,'player')and #bodies==1 and M.drawn.player2==second,'hidden partner painted or released native identity')
+screen.picBoxCleared=visibility;screen.battle.player2=nil
 print('PASS native faint crop/empty ownership/error restoration and substitute identity/size/palette')
 
 -- Original lifted rows compose inside the same world card without changing
