@@ -94,3 +94,28 @@ Public packed-buffer conversion was also tested with exact GPU readback, but
 was slower than table upload and was removed. No FFI/private engine workaround
 is used. Native timings still include construction, uploads
 and GC spikes; a stable 6.06 ms frame budget across all 11 games is **not verified**.
+
+## Follow-up terrain and shrub construction
+
+Flat elevated caps emit one quad instead of sixteen when all25 sampled heights
+are identical; bevels retain their original subdivisions. Repeated modeled
+shrubs share immutable build-local hull recipes, with independent translated
+vertices and fresh recipes on the next scene build. Furniture cutout queries
+reject unrelated recipes before the expensive active-edition lookup.
+
+Focused tests verify unchanged UVs/shading/translated hulls, build invalidation,
+and beveled surfaces. Shared broad run:328 passes, one unrelated camera fixture
+fixed and passing targeted rerun (329 combined passes),58 resource skips.
+Four native running-connection fixtures pass (FR/Emerald/Ruby/Sapphire), each
+with six reversals, native sampler equality and camera/GC restoration. Their
+post-crossing captures were inspected for missing geometry/materials.
+
+FireRed instrumented totals before/after: terrain314.31ms/4860calls versus
+185.68ms/5516calls; shrubs96.86ms/1188calls versus43.46ms/1347calls;
+cutouts40.20ms versus0.97ms,32calls each. These are accumulated function CPU
+costs, not frame times; call counts differ because streaming schedules differ.
+Return-crossing maxima in this sample were11.53/3.54/16.10/4.02/8.36/3.62ms;
+first crossing25.12ms. Spikes still exceed the6.06ms target. Evidence:
+`stream-next-20261017/phases-firered` and `terrain-{firered,emerald,ruby,sapphire}`.
+Gen1/2 retain the shared scheduling/upload improvements above; this follow-up
+removes work specific to the Gen3 scene builder. No claim of stable165FPS.

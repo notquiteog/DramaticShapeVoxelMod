@@ -1,3 +1,15 @@
+# GLES renderer and construction follow-up — 2026-10-17
+
+Fixed two reproduced GLES scene failures: integer/float occlusion expression and
+shared uniform precision mismatch. Real desktop/GLES shader probes pass; native
+Red/Crystal/Emerald 3D scenes and Emerald connections pass on GLES. This is not
+physical Android certification. Details: `docs/GLES_SCENE_FIX_2026-10-17.md`.
+Flat elevated caps, build-local shrub hulls and furniture recipe filtering reduce
+Gen3 construction work; four native connections pass. Evidence and remaining
+spikes: `docs/SCENE_LOAD_WORK_2026-10-17.md`. Camera owner is resolving the new
+Emerald canopy-obstruction view exposed by the GLES connection fixture.
+No release bump; parity and camera work remain separate.
+
 # Seven-mod platform/source audit — 2026-10-17
 
 All7 official manifests validate/all11 targets;650 Lua units plus assembled

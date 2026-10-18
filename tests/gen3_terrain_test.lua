@@ -67,3 +67,14 @@ cells['-1:0'].base=7
 assert(mesh(cells['0:0'],T.sampler(cells))==mesh(cells['0:0']),'new build retained stale heights')
 T.height=height
 print('PASS numeric terrain neighborhoods, shared scene corners, wall profiles and fresh edit sampling')
+
+-- Flat caps have identical affine UVs and height everywhere with 1/16 the
+-- triangles. Nonflat bevels retain the original topology and shading.
+local count=0;local corners
+T.append(cells,cells['0:0'],function(v,t,shade)count=count+1;corners=v;assert(t==uv and shade==1)end,function()return uv end,function()return 32 end)
+assert(count==1 and corners[1][1]==0 and corners[3][1]==16 and corners[3][3]==16)
+for _,p in ipairs(corners)do assert(p[2]==32)end
+count=0
+T.append(cells,cells['0:0'],function()count=count+1 end,function()return uv end,function(_,x,z)return x+z end)
+assert(count==16,'nonflat cliff topology changed')
+print('PASS coplanar cap reduction, exact source UV extent, unchanged beveled topology')

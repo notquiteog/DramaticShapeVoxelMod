@@ -74,6 +74,14 @@ function M.append(cells,c,emit,uvFor,heightAt)
  local heights={}
  heightAt=heightAt or M.height
  for iz=0,4 do for ix=0,4 do heights[iz*5+ix+1]=heightAt(cells,x+ix*4,z+iz*4,height)end end
+ -- A flat cap has affine UVs and uniform shading: its sixteen cells are
+ -- exactly the same surface as one quad. Keep every bevel cell unchanged.
+ local level=heights[1];local flatCap=level~=0
+ for i=2,25 do if heights[i]~=level then flatCap=false;break end end
+ if flatCap then
+  emit({{x,level,z},{x+16,level,z},{x+16,level,z+16},{x,level,z+16}},cap,1)
+  return
+ end
  for iz=0,3 do for ix=0,3 do
   local a,b=ix*4,iz*4;local u,v=a+4,b+4
   local k=iz*5+ix+1

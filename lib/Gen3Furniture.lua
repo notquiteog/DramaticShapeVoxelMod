@@ -474,7 +474,7 @@ function M.groundAt(c)
 end
 function M.cutouts(pair)
  local out={}
- for _,r in ipairs(recipes)do if recipeActive(r) and r.kind=='plant' and r.pair==pair then
+ for _,r in ipairs(recipes)do if r.kind=='plant' and r.pair==pair and recipeActive(r) then
   for _,row in ipairs(r.rows)do for _,mid in ipairs(row)do out[mid]=r.ground end end
  end end
  return out
