@@ -92,6 +92,19 @@ BattleCam.RIGS = {
   },
 }
 
+-- Native GSC doubles reserves upper-left and middle-right for stacked HUDs.
+-- Solved in160x144: paired foot centres(40,88)/(120,40), one16px
+-- actor spans36/32px. A higher seat keeps all four cards in the remaining
+-- picture regions without moving native UI or changing world proportions.
+BattleCam.RIGS.nativePair = {
+ side=79.093518493,back=63.936933996,height=117.599536793,
+ lookX=-1.838600250,lookY=-8.807614700,frameH=71.171176915,
+}
+function BattleCam.forLayout(arena,layout)
+ if layout~='gen2-native-pair' then return arena end
+ return setmetatable({cam='nativePair'},{__index=arena})
+end
+
 BattleCam.DEFAULT_RIG = "tele"
 
 -- The rig an arena asks for, falling back to the default for anything that

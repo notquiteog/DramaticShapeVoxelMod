@@ -1307,6 +1307,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
   normalBallTick(arena, groundY)
   local cam
   local externalEye = externalCamera and externalCamera.eye
+  local cameraArena=arena
   local externalFocus = externalCamera and externalCamera.focus
   local externalProjection = externalCamera and externalCamera.projection
   local externalF = type(externalProjection) == "table"
@@ -1328,9 +1329,11 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
       curve = 0,
     }
   else
-    cam = BattleCam.rig(arena, groundY)
+    local nativePair=textures and textures.sceneLayout=='gen2-native-pair'
+    cameraArena=nativePair and BattleCam.forLayout(arena,textures.sceneLayout)or arena
+    cam = BattleCam.rig(cameraArena, groundY)
     cam.fov = BattleScene.letterboxFov(cam.fov, ph, s)
-    if textures and textures.player and textures.player.modernFraming then
+    if not nativePair and textures and textures.player and textures.player.modernFraming then
       -- Crystal's back cards no longer need to fill the old handheld slots.
       -- Expand the world view for widescreen without making higher resolution
       -- alone change perspective. External cinematic cameras keep ownership.
@@ -1344,13 +1347,13 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
       local heads = type(tex)=="table" and tex.hudAnchors
       if heads and (heads.player2 or heads.enemy2) then paired = true end
     end
-    if paired then cam.fov=2*math.atan(math.tan(cam.fov/2)*1.4) end
+    if paired and not nativePair then cam.fov=2*math.atan(math.tan(cam.fov/2)*1.4) end
   end
 
   local cx, cy = arena.mid[1], arena.mid[2]
   -- the world extents the sun frustum is fitted to; the camera itself is
   -- framed by cam.fov, so these only have to describe the ground in shot
-  local vh = BattleCam.frameH(arena) * ph / (BattleScene.GB_H * s)
+  local vh = BattleCam.frameH(cameraArena) * ph / (BattleScene.GB_H * s)
   local vw = vh * pw / ph
 
   -- the cards need the camera's eye to face it, so the rig has to be live

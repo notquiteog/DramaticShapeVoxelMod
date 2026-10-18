@@ -1,3 +1,12 @@
+# Native doubles camera framing — 2026-10-17
+
+GSC native pair framing now uses the optional public layout descriptor from
+Doubles instead of generic modern lens widening. All four actors remain visible
+around the unchanged native HUD/command panel. Gold/Silver/Crystal all-seven-mod
+native0.3.89 captures inspected; pair projection, staged suite and1173 SDK checks
+pass. Other providers/external cameras retain their framing. Evidence and user
+orbit limits: `docs/CAMERA_POLISH_2026-10-17.md`.
+
 # GSC queued partner identity — 2026-10-17
 
 Paired cards now use native activeMon(slot2) identity and return the whole side

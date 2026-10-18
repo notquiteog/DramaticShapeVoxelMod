@@ -57,3 +57,23 @@ certification or an exhaustive visual audit of every camera angle in every map.
 Native HUDs can still overlap large battle sprites during some orbits; this
 batch preserves native UI ownership. Source models and their map placement are
 unchanged. Performance timing was not benchmarked during these camera checks.
+
+## Native GSC doubles follow-up
+
+The generic modern/pair lens widening compressed both teams into the middle,
+behind the stacked native doubles HUD. Doubles now optionally advertises its
+native scene layout through a public method; the staged texture descriptor carries
+that identifier. A camera preset solved for that layout places the pair foot
+centres at(40,88)/(120,40) in the native160x144 frame, with36/32px per-actor
+spans. The nearer cards stay above the native command panel at y96. Source
+world scale and native UI are unchanged. Modern/other provider layouts and
+external cinematic cameras retain their existing framing; user orbit/zoom remain
+available and can intentionally move cards beneath the fixed native HUD.
+
+Native0.3.89 all-seven-mod Gold/Silver/Crystal fixtures each pass four actor
+identities and queued replacement identity. The six native/shown-partner captures
+were inspected: Cyndaquil, Totodile, Sentret and Pidgey are all visible. Evidence:
+`native-pair-{gold,silver,crystal}` under the scratch directory above. The exact
+projection regression, staged pair suite and1173-check SDK suite pass. Companion
+public seam: Doubles f4aad50; voxel adapter653d4d1. This fixes the default native
+pair composition, not every possible user-directed orbit/HUD intersection.
