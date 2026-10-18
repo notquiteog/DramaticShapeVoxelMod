@@ -68,7 +68,46 @@ Driver fixture teleports position the player; movement and warps use normal
 engine input. This is automated native-input/render evidence, not manual CUA
 or Android evidence.
 
-The final archive verification record is completed after packaging.
+Final archive freezes runtime commit `2c9ec41` after correcting the open-book
+crop to the native white pages, red bookmark and checked tabletop. All497
+packaged Lua files compile under native LuaJIT; ZIP integrity and empty hard
+dependencies pass. The archive contains11,417 files. Evidence-only final
+repackaging must preserve every tested `data/`, `lib/`, `vendor/`, `assets/`,
+entry/manifest/card hash.
+
+Archive scene checks inspect115 orbit/low-eye renders:70 for this batch's14
+rooms,30 for Oak's Lab, Viridian Center and the shared Celadon roof room across
+FR/LG, and15 for Brendan's downstairs home in EM/RU/SA. The latter maps are
+regression checks, not additional regional completion claims. Final archive
+native input repeats14 aisles,4 stair transitions and12 exits;28 OFF/actual1ST
+views are inspected. Final archive census repeats148 fixtures/zero ordinary
+solid walking overlaps/44 native pads. Each launch verifies version1.46.0 and
+nine installed runtime-file hashes before executing its driver.
+
+All six optional partners load together and pass native FireRed home walking,
+stair warp, exit, OFF and1ST with no mod errors. Repository/release audit finds
+all six clean, with local HEAD, published main and latest release commit equal:
+
+| Partner | Release | Commit |
+| --- | --- | --- |
+| wild_skies |1.15.2|`463913e6`|
+| dramatic-sky-ride |0.5.5|`fd425f0b`|
+| double-battles-gen2 |0.14.3|`5bfc0ef5`|
+| gen1online-plus |0.11.2|`6e838e2c`|
+| overworld-spawn-mod |2.6.4|`b81dc23b`|
+| modern-ui |0.4.2|`bcde5759`|
+
+Private scratch run groups: `verified-views-{firered,leafgreen}`,
+`verified-input-{firered,leafgreen}`, `verified-census-{firered,leafgreen}`,
+`verified-neighbors-{emerald,ruby,sapphire}` and `verified-all-six`.
+`scene-review.lua` uses `QA_SPOTS` with the seven maps above plus neighbor maps;
+`tools/qa/gen3-home-walks.lua` and `tools/qa/gen3-home-census.lua` consume the
+seven-line `QA_MAP_LIST`. The shell launches with `--developer --no-sync`, an
+edition-specific QA identity and the frozen extracted mod as its only mod (or
+all six companions for the named smoke). Tests use `tools/run_tests.sh` with the
+approved official engine root. ROMs, native pixels, copied saves, caches and
+captures are excluded from Git and the release. Test processes exit; player
+progress and concurrent primary-checkout edits remain untouched.
 
 ## Remaining coverage
 

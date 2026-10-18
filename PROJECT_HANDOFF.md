@@ -13,7 +13,11 @@ HD-2D actors/Pokémon/flowers remain; every partner stays optional.
 Source:320 suites/0 failures/58 unavailable-fixture skips;148 fixtures across14
 rooms,0 ordinary-solid walking overlaps,44 low pads.70 candidate orbit/eye
 renders inspected; native14 aisles/4 stair transitions/12 south exits pass,
-with OFF and actual1ST captures. Final archive evidence pending completion in
+with OFF and actual1ST captures. Final archive repeats all native checks,
+148-fixture census and70 room renders, plus45 neighbor renders across all5
+editions. All6 optional partners pass native home/warp/exit smoke; their clean
+HEAD/main/latest-release commits match.11,417 files/497 Lua compile; empty hard
+dependencies, ZIP integrity and runtime payload hashes verified. Details in
 `docs/GEN3_KANTO_HOMES_2026-10-17.md`. Preserves published c42854d1.45.0 and
 all primary-checkout concurrent work. Regional queue71/125 verified,54 queued.
 No whole-region or ORAS-equivalent claim.
