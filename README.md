@@ -1,3 +1,7 @@
+## 1.50.0 — 2026-10-17
+
+Android GLES 3D fixes, scene streaming optimizations, camera controls across eleven games, native battle presentation parity, and all published model improvements through 1.49.0. GLES rendering verified on desktop; physical Android hardware remains unverified. Full feature parity and sustained 165 FPS are not claimed.
+
 ## 1.49.0 — Bounded trees, original hedges and route gates
 
 Replace Petalburg's stretched hedge tiles with an original leaf texture and
