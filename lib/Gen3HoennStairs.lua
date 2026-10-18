@@ -22,6 +22,27 @@ function M.append(g,emit,uvFor)
   face({{r,b,s},{r,b,n},{r,h,n},{r,h,s}},uv,.8)
   face({{l,b,s},{l,b,n},{r,b,n},{r,b,s}},uv,.6)
  end
+ -- A reviewed home has one flat wall plane. Only the tread flight projects
+ -- into the room: the jambs/lintel sit flush in its actual wall opening.
+ if g.homeWall then
+  local n=g.homeWall-oz;local bottom=g.r.down and -16 or 0
+  local trim,wood,dark=color(16,11),color(24,g.r.down and 29 or 31),color(17,14)
+  local floor=assert(uvFor(g.ts,g.r.floor or 0x201))
+  for _,a in ipairs{{0,12},{36,48}}do face({{a[1],0,0},{a[2],0,0},{a[2],0,32},{a[1],0,32}},floor)end
+  box(12,0,n-2,14,26,n+.10,trim);box(34,0,n-2,36,26,n+.10,trim)
+  box(12,26,n-2,36,28,n+.10,trim)
+  box(14,bottom,n-7,34,26,n-6,dark)
+  box(14,bottom,n-6,15,26,n+.08,dark);box(33,bottom,n-6,34,26,n+.08,dark)
+  box(15,bottom-1,n-6,33,bottom,31.8,wood)
+  local start=n-6;local run=(31.8-start)/5
+  for i=0,4 do
+   local z=start+i*run;local h=g.r.down and(-15+i*3)or(15-i*3)
+   box(15,bottom,z,33,h,z+run,wood)
+   box(15,h-.5,z+run-.6,33,h+.05,z+run,trim)
+  end
+  if g.r.down then box(15,-.5,31.6,33,0,31.8,wood)end
+  return
+ end
  -- The native drawing is a framed opening in the wall, not an exposed
  -- staircase with full-height solid banisters. Sample the gold trim, wood
  -- and dark recess separately; the old samples both hit the purple outline.

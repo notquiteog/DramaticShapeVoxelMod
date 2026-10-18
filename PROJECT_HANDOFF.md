@@ -241,6 +241,132 @@ Illustration files are optional and absent here, so no rendered-art claim.
 Evidence: `docs/NATIVE_BACKDROP_ROUTING_2026-10-17.md`. Source-only after1.44.1.
 Parity work continues on supported consumers; provider/art constraints remain
 explicit. No model/release edits.
+# Bounded trees, original hedges and route gates — 2026-10-17
+
+1.49.0 / mesh106 fits recognized native tree crowns to blocked ground across
+FR/LG/EM/RU/SA, clears projected walking/grass crowns and fills cropped forest
+corners.30-map census:13,855 blocked treecells,zero walking face overlaps,
+zero empty/below25% cells; native mid/collision/elevation digests unchanged.
+Optional original/illustrated cards gain yaw-safe radii. Closed original
+Petalburg hedge meshes use a new restrained pixel material following the
+source palette (detailed-leaf candidate rejected); no stretched source bands.
+Kanto gains3 complete Route2 gate exteriors per edition and4 route interiors
+per edition: flat continuous walls, separate furnishings, open portals and
+native ground. Hoenn gains30 nativefield fixtures/24 shoreline corners.
+Source327pass/0fail/58 unavailable-fixture skips; targeted final material/gate
+checks pass. Exact archive:30 tree-map census/zero walking overlaps or emptytreecells;
+10 tree walks/10 bumps,16 gate-room walks/8 bumps/14 exits,9 Hoennprop bumps/
+6 dialogs and6 hedge walks/6 bumps.302 standaloneimages+32 partnerimages
+inspected.18 actual publicloadedhashes perlaunch;all final runners exit0.
+11,431 archivefiles/505 Lua compile;11,254 runtimehashes retained through
+evidence repackage. Every partnerpassesFR/RU smoke atpublishedandlocalHEAD. No gameplay/UI/VM/actor/collision replacement. Characters,
+Pokémon and flowers remain HD-2D; optional partners stay independent.
+
+Regional queue84/125 verified,41 queued. Outdoor maps remain partial, including
+unclassified Petalburg canopy composites, other distinct props, gyms and Pewter
+Museum interiors. Read docs/GEN3_TREES_GATES_2026-10-17.md and the regionalqueue.
+Primary-checkout concurrent GSC work is preserved. Partnerlocal unpublished
+Wilds70d2cfd and Doublesf4aad50 are preserved; published versions remain2.6.4
+and0.14.3. No unrelated partnercommit is published by this batch.
+
+# Early outdoor boundaries and bridge depth — 2026-10-17
+
+1.48.0 adds missing Kanto stake ends/Viridian shrubs, joined Petalburg hedges,
+normal-height General rock profiles with retaining support preserved, and closed
+Kanto/Fortree bridge decks. Clean native board sampling excludes green gaps;
+Fortree canonical behavior178 repairs the previous170 confusion. Mesh105.
+Native gameplay/UI/warps remain authoritative; HD-2D actors/Pokémon/flowers and
+optional partner independence remain intact. Source323/0fail/58fixture skips;
+focused plank regression follows. Native early-map30 aisles/30 boundary bumps
+pass on0.3.89. Exact archive repeats30 aisles/30 blocked boundaries/5 bridge
+walks,65 OFF/actual1ST captures and80 orbit/eye/under-deck renders. All inspected.
+All6 optional partners pass Kanto/Hoenn city+bridge smoke both with Wilds70d2cfd
+and publishedb81dc23; its unpublished source is preserved.11 actual loaded-source
+hashes checked per launch;11,422 archive files/500 Lua compile, empty hard
+dependencies and11,248 runtime hashes retained through evidence repackage.
+
+This is partial outdoor coverage; regional76/125 complete,49 still queued.
+Read `docs/GEN3_EARLY_OUTDOORS_2026-10-17.md` for exact limits and next families.
+Preserves primary-checkout concurrent work and published cd345e4 (1.47.0).
+
+# Oak/Birch laboratories and Oak's black floor strip — 2026-10-17
+
+1.47.0 covers Oak's Lab in FR/LG and Birch's Lab in EM/RU/SA (five placements).
+One flat native wallpaper plane behind separate fixtures; no recess zigzags or
+projecting entry housing. Native blocked-row Pokédex/starter desks and closed
+aquarium preserve approaches. Oak's black front strip was a padded drawing row
+included in room bounds; the corrected boundary and complete bounded mat remove
+it while keeping custom walking extensions and native exit behavior intact.
+Birch gains separate wall notices, closed archive cases/shelves, corrected north
+research desks and low native seat pads.36 existing permission patterns/six new
+recipes guard source ownership.42 focused drawing tests; mesh104.
+
+321 suites/0 fail/58 unavailable-fixture skips; final paper-crop focused checks
+repeat after the last UV-only change. Exact archive:60 orbit/eye views(25 labs,
+35 neighbors),15 OFF/actual1ST/desk views,18 native approach walks,5 exits,
+2 Oak notice dialogues.111 fixtures/zero ordinary walking overlaps/11 low pads.
+Both lab families pass all6-partner native smoke. Loaded version/eight public
+source hashes checked per launch.11,419 files/498 Lua compile; runtime payload
+hashes retained through evidence repackage. Details:
+`docs/GEN3_LABS_2026-10-17.md`. All actors/Pokémon/flowers stay HD-2D; native UI,
+VM/collision/scripts/warps stay authoritative, partners optional. Preserves
+published cc888dd1.46.0 and primary-checkout concurrent work. Regional76/125
+verified,49 remain queued; no whole-region/ORAS-equivalence claim.
+
+# Kanto homes and school: flat native walls — 2026-10-17
+
+1.46.0 covers six home interiors plus Viridian School per FR/LG edition
+(14 placements). One forward wallpapered wall stays flat behind separate framed
+windows, notes/maps and furniture; native floor replaces old wall drawing quads.
+Horizontal stair flights project without a doorway housing, with rails/stairwell
+frames within native depth. School gains closed shelves, framed board/windows,
+a desk and separate open textbook. Walkable chairs remain low native pads.
+18 complete recipes plus existing-furnishing permissions guard walking lanes;
+unknown headers keep their renderer. Mesh103. Native UI/gameplay/warps and
+HD-2D actors/Pokémon/flowers remain; every partner stays optional.
+
+Source:320 suites/0 failures/58 unavailable-fixture skips;148 fixtures across14
+rooms,0 ordinary-solid walking overlaps,44 low pads.70 candidate orbit/eye
+renders inspected; native14 aisles/4 stair transitions/12 south exits pass,
+with OFF and actual1ST captures. Final archive repeats all native checks,
+148-fixture census and70 room renders, plus45 neighbor renders across all5
+editions. All6 optional partners pass native home/warp/exit smoke; their clean
+HEAD/main/latest-release commits match.11,417 files/497 Lua compile; empty hard
+dependencies, ZIP integrity and runtime payload hashes verified. Details in
+`docs/GEN3_KANTO_HOMES_2026-10-17.md`. Preserves published c42854d1.45.0 and
+all primary-checkout concurrent work. Regional queue71/125 verified,54 queued.
+No whole-region or ORAS-equivalent claim.
+
+# Forward flat home walls and flush stairs — 2026-10-17
+
+1.45.0 models nine homes per Hoenn edition (27 placements): both floors in both
+Littleroot homes, two Oldale houses and all three Petalburg houses. The user's
+wall feedback sets one forward wall plane behind furniture, native wallpaper
+around the room and separately attached framed windows/pictures/clocks. Stair
+jambs/lintels sit flush in real wall apertures; only treads project. Both mirrored
+up flights and both down flights match complete source and native permissions.
+No projecting doorway housing or synthetic front entry surround remains.
+
+RS opts in only reviewed complete furnishings;45 source-permission patterns
+protect changed third-party walking lanes. Emerald May's table/rug layout is
+separate. Low walkable seat pads stay native; all actors/Pokémon/flowers remain
+HD-2D. Native UI/gameplay/collision/scripts/warps and optional independence remain
+authoritative. Existing aliases support third-party reuse. Mesh102.
+
+Retains published1.44.1 fc51546 scene reuse/classification cache/PC-art changes.
+Official0.3.89: merged319/0fail/58fixture skips;248 furniture instances across27
+homes/zero ordinary-solid walking overlaps/66 native pads. Full merged native
+27 aisles/12 stair warps/21 exits; final mirrored-flight archive gets135 inspected
+orbit/eye renders and repeated May stair/exit/input in each edition. OFF/actual1ST
+retained. Kanto home/Center and previous museum neighbor views preserved. Final
+all6 optional partner native May smoke passes with no mod errors. Private source,
+saves, ROMs and captures excluded.11,415 files/496 Lua; tested runtime hashes
+retained during final evidence repackage. Details/caveats:
+`docs/GEN3_HOMES_2026-10-17.md`.
+
+Regional queue:57/125 placements verified,68 still queued. Kanto homes,
+labs/school/gyms, route buildings, outdoors/terrain remain; initial captures do
+not constitute completion. No complete scenery/ORAS-equivalent/network claim.
 
 # Connected scene reuse and native PC portraits — 2026-10-17
 

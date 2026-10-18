@@ -1,3 +1,77 @@
+## 1.49.0 — Bounded trees, original hedges and route gates
+
+Replace Petalburg's stretched hedge tiles with an original leaf texture and
+closed rounded mesh, joined continuously inside the native blocked footprint.
+Fit recognized tree crowns to blocked ground rather than their sprite portrait
+height, clearing walking grass and filling cropped forest corners across all
+five games. Optional flat tree cards also stay within their fitted radius.
+
+Model three Route 2 gate exteriors and four route interiors per Kanto edition,
+with flat continuous walls, separate furnishings and clear native openings.
+Hoenn gains closed gym notices, timber garden troughs, shallow berry soil and
+normal-height shoreline corners. Characters, Pokémon and flowers remain HD-2D;
+native gameplay/UI stay authoritative and all companion mods remain optional.
+
+This verifies another eight interiors (84/125 regional placements). Other
+outdoor families and interiors remain queued. [Evidence and remaining work](docs/GEN3_TREES_GATES_2026-10-17.md).
+
+## 1.48.0 — Early outdoor boundaries and bridge depth
+
+Add native brown fence ends in Kanto, bounded shrubs in Viridian, and joined
+Petalburg hedges in Emerald/Ruby/Sapphire. General outdoor rock enclosures now
+use a character-height profile, while proven upper terraces keep their height.
+Cave walls and regional landmark rock profiles retain their separate treatment.
+
+Reviewed Kanto timber bridge rows and Hoenn Fortree bridge decks gain closed
+undersides and exposed fascia; native side rails stay in blocked cells. Correct
+the canonical Fortree behavior ID used for separate over/under support. Native
+walking surfaces, collision, scripts, UI and warps stay authoritative. Characters,
+Pokémon and flowers remain HD-2D and every companion is optional.
+
+This is a boundary/bridge batch. The first-three-settlement queue still includes
+unresolved outdoor families and interiors. [Evidence and remaining work](docs/GEN3_EARLY_OUTDOORS_2026-10-17.md).
+
+## 1.47.0 — Oak and Birch laboratories
+
+Polish Oak's Lab in FireRed/LeafGreen and Birch's Lab in Emerald/Ruby/Sapphire.
+Flat, continuous native wallpaper sits behind separate notices and furniture.
+Oak's Pokédex desk, starter table and aquarium respect the native blocked
+footprint; the source padding row no longer creates a black floor strip at the
+entrance. The complete native exit mat sits inside the actual room boundary.
+Birch gains framed notices, separate shelf archive boxes, corrected research
+desks and low pads for native walkable seats, retaining Emerald/RS differences.
+
+Characters, Pokémon and flowers remain HD-2D. Native UI, collision, scripts,
+interaction cells and warps stay authoritative; all companions remain optional.
+[Evidence](docs/GEN3_LABS_2026-10-17.md). The remaining regional queue continues.
+
+## 1.46.0 — Flat Kanto home walls and native school furniture
+
+Polish six homes and Viridian School in each of FireRed and LeafGreen (14
+placements). Continuous native wallpaper stays on a single forward wall plane;
+windows, notices and maps have separate closed frames. House stairs project
+without a doorway housing, with rails inside their native footprint. School
+furniture gains closed shelving, a framed chalkboard, window bank and a desk
+with a modeled open book. Native walkable chairs remain low pads.
+
+Characters, Pokémon and flowers stay HD-2D. Native collision, scripts, warps and
+UI remain authoritative; every companion stays optional. The rest of the
+regional queue continues. [Evidence](docs/GEN3_KANTO_HOMES_2026-10-17.md).
+
+## 1.45.0 — Forward flat house walls and native Hoenn furniture
+
+Bring the starting-home walls forward to the backs of their furniture and keep
+each run flat. Native wallpaper continues around the room; framed windows,
+pictures and clocks attach to the wall instead of lying on the floor. Complete
+native-art furniture now covers the Ruby/Sapphire starting homes, with mirrored
+kitchens, CRTs, beds, dining tables and Emerald's distinct May table. Native
+walking chairs stay low pads; source-permission guards protect modified maps.
+
+This batch covers nine home interiors per Hoenn edition (27 placements).
+Characters, Pokémon and flowers remain HD-2D. Gameplay, collision, scripts and
+native UI remain authoritative, and all companions stay optional. The remaining
+Kanto/Hoenn regional queue continues. [Evidence](docs/GEN3_HOMES_2026-10-17.md).
+
 ## 1.44.1
 
 - Reuse complete connected-map scenes in the existing bounded prefetch slot, including native outside-cell boundary interpolation; preserve map edits, atlas changes and cleanup.

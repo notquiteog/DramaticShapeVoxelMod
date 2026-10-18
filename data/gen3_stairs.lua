@@ -17,9 +17,10 @@ return {
  {pair='building__facility',rows={{0x2c3,0x2c4,0x2c5},{0x2cb,0x2cc,0x2cd}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',floor=0x2f0,down=true},
  {pair='building__facility',rows={{0x38a,0x38b,0x38c},{0x392,0x393,0x394}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',floor=0x380,down=true},
  {pair='building__facility',rows={{0x38a,0x38b,0x38c},{0x395,0x396,0x397}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',floor=0x380,down=false},
- {pair='building__brendans_mays_house',rows={{0x208,0x209,0x20d},{0x210,0x211,0x215}},landing={1,1},expectedBehavior=0x60,design='hoenn_house'},
- {pair='building__brendans_mays_house',rows={{0x20b,0x20c,0x20d},{0x213,0x214,0x215}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',down=true},
- {pair='building__brendans_mays_house',rows={{0x208,0x20c,0x20a},{0x210,0x214,0x212}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',down=true},
+ {pair='building__brendans_mays_house',rows={{0x26f,0x209,0x26d},{0x277,0x211,0x275}},permissions={{7,7,7},{7,114,7}},landing={1,1},expectedBehavior=0x60,design='hoenn_house'},
+ {pair='building__brendans_mays_house',rows={{0x208,0x209,0x20d},{0x210,0x211,0x215}},permissions={{7,7,7},{7,114,7}},landing={1,1},expectedBehavior=0x60,design='hoenn_house'},
+ {pair='building__brendans_mays_house',rows={{0x20b,0x20c,0x20d},{0x213,0x214,0x215}},permissions={{7,7,7},{7,114,7}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',down=true},
+ {pair='building__brendans_mays_house',rows={{0x208,0x20c,0x20a},{0x210,0x214,0x212}},permissions={{7,7,7},{7,114,7}},landing={1,1},expectedBehavior=0x60,design='hoenn_house',down=true},
  -- Player-house stairs are three cells wide and tall. The older four-cell
  -- crop left the front stringer and the rug painted on the floor beside it.
  {pair='player_house',rows={{0x28,0x16,0x17},{0x1D,0x1E,0x1F},{0x25,0x26,0x27}},east=true,down=false,landing={0,1},design='house'},

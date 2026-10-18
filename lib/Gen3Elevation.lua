@@ -38,7 +38,7 @@ function M.field(def)
   local shapeKind=kind(raw.mid,beh,raw.coll)
   local step=shapeKind=='steps'or museumSteps[x..':'..y];local jump=beh and beh>=0x38 and beh<=0x3F
   return {floorLink=museumLinks[x..':'..y],floor=raw.coll~=7 and not step and not jump,step=step,drop=drop[beh],layer=raw.elev,behavior=beh,
-   mid=raw.mid,kind=step and 'steps'or shapeKind,stairUpper=def.id and def.id:sub(1,3)=='EM_' and beh==0xc,seed=spec.secondary=='fortree' and beh==0x170 and raw.elev==15 and 32 or shapeKind~='water' and (deck or (outdoor or cave)and raw.elev==4)and 6 or 0}
+   mid=raw.mid,kind=step and 'steps'or shapeKind,stairUpper=def.id and def.id:sub(1,3)=='EM_' and beh==0xc,seed=spec.secondary=='fortree' and beh==0x178 and raw.elev==15 and 32 or shapeKind~='water' and (deck or (outdoor or cave)and raw.elev==4)and 6 or 0}
  end,function(a,b,d)
   local layer=a.layer==b.layer or a.layer==0 or b.layer==0 or a.layer==15 or b.layer==15
   -- A variable-layer bridge is a deck, not a doorway joining both the
@@ -55,7 +55,7 @@ function M.field(def)
  -- Require matching landings on both sides; never invent an underpass from
  -- a collision-layer number alone. Store native floor art for the lower plane.
  if spec.secondary=='fortree' then
-  for _,c in pairs(f.cells)do if c.layer==15 and c.behavior==0x170 then
+  for _,c in pairs(f.cells)do if c.layer==15 and c.behavior==0x178 then
    local function bank(dy)
     local y=c.y+dy
     while y>=0 and y<f.height do

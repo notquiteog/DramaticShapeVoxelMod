@@ -133,7 +133,7 @@ local function releaseGeometry(cache)
  V.require('NativeLegendaryTrees').release(cache.legendaryTreeInstances)
  for _,batch in ipairs(cache.treeInstances or {})do batch:release()end
  V.require('Gen3SeaRocks').releaseInstances(cache.rockInstances)
- for _,name in ipairs({'wood','leaves'})do if cache[name] then cache[name]:release() end end
+ for _,name in ipairs({'wood','leaves','hedges'})do if cache[name] then cache[name]:release() end end
 end
 local stream=SceneStream.new(releaseGeometry)
 M.streaming=stream.stats
@@ -225,7 +225,7 @@ local function build(req,cache,previous)
  M.seaRockCount=V.require('Gen3SeaRocks').prepare(cells)
  M.forestTrees=Forest.prepare(cells)
  local gyms=Buildings.prepare(cells);M.gymCount=#gyms
- local recipes=V.data("gen3_exteriors")
+ local recipes={};for _,r in ipairs(V.require("Gen3RouteGates").recipes)do recipes[#recipes+1]=r end;for _,r in ipairs(V.data("gen3_exteriors"))do recipes[#recipes+1]=r end
  local optional=V.require('NativeLegendaryBuildings').recipes(def)
  if #optional>0 then local combined={};for _,r in ipairs(optional)do combined[#combined+1]=r end;for _,r in ipairs(recipes)do combined[#combined+1]=r end;recipes=combined end
  local civics=Civic.prepare(cells,gyms,recipes);M.civicCount=#civics
@@ -234,6 +234,9 @@ local function build(req,cache,previous)
  local towerFlights=Furniture.extract(cells,'towerStairs')
  M.stairCount=Stairs.prepare(cells)+#towerFlights
  local props=Furniture.extract(cells)
+ M.bridgeCount=V.require('Gen3Bridges').prepare(cells)
+ V.require('Gen3BoundaryProps').prepare(cells)
+ M.treeFootprints=V.require('Gen3TreeFootprints').prepare(cells,require('src.core.GameVersion').get())
  for _,p in ipairs(towerFlights)do props[#props+1]=p end
  cache.healer,cache.healScreen=nil,nil
  for _,p in ipairs(props)do
@@ -268,6 +271,28 @@ local function build(req,cache,previous)
    if V.require('Gen3ServiceRooms').replacesFloor(c,plan)then c.serviceRoomFloor=plan.floor end
   end
  end
+ if roomProfile and roomProfile.homeFinish then
+  local home=roomProfile.homeFinish
+  cache.flatNativeWalls=true;cache.northWallFront=home.north+.04;cache.furnitureRecesses={}
+  for _,p in ipairs(props)do p.homeWall=cache.northWallFront end
+  if home.kanto then
+   cache.kantoHome=home;local b=roomProfile.bounds
+   home.outline={{b[1],b[2]},{b[3],b[2]},{b[3],b[4]},{b[1],b[4]}}
+   for _,c in pairs(cells)do if c.cy<=1 and c.cy>=0 and c.cx*16>=b[1]and c.cx*16<b[3]then c.kantoHomeFloor=home.floor end end
+  end
+  for _,c in pairs(cells)do if c.stairs then c.stairs.homeWall=cache.northWallFront end end
+  local origin=cells['0:0']
+  if origin then Interior.setWallpaper(roomProfile,V.require('Gen3RoomWallpaper').material({id=def.id,voxelWallpaper=home.wall},origin.ts))end
+ end
+ if roomProfile and roomProfile.researchRoom then
+  local plan=roomProfile.researchRoom;local b=roomProfile.bounds
+  cache.researchRoom=plan;cache.flatNativeWalls=true;cache.northWallFront=plan.north+.04;cache.furnitureRecesses={}
+  plan.outline={{b[1],b[2]},{b[3],b[2]},{b[3],b[4]},{b[1],b[4]}}
+  for _,p in ipairs(props)do p.researchWall=cache.northWallFront end
+  for _,c in pairs(cells)do if c.cy>=0 and(c.cy<=1 or c.cy*16>=plan.south)and c.cx>=0 and c.cx<def.width then c.researchFloor=plan.floor end end
+  local origin=cells['0:0']
+  if origin then Interior.setWallpaper(roomProfile,V.require('Gen3RoomWallpaper').material({id=def.id,voxelWallpaper=plan.wall},origin.ts))end
+ end
  if roomProfile and V.require('Gen3RSInstitutions').flatWalls(sourcePair,def.id or req.mapId,def.voxelFlatWalls)then
   cache.flatNativeWalls=true
   cache.northWallFront=4
@@ -277,7 +302,7 @@ local function build(req,cache,previous)
   local floor=tonumber(def.voxelWallFloor)or((def.id or req.mapId or''):find('DEVON',1,true)and 0x380 or sourcePair:find('facility',1,true)and 0x2f0 or sourcePair:find('oceanic',1,true)and 0x201 or(def.id or req.mapId or''):find('_2F',1,true)and 0x270 or 0x203)
   for _,c in pairs(cells)do if c.cy>=0 and c.cy<=1 and c.cx>=0 and c.cx<def.width then c.institutionWallFloor=floor end end
  end
- if roomProfile and not roomProfile.serviceRoom and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='player_house' or sourcePair=='house' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
+ if roomProfile and not roomProfile.serviceRoom and not roomProfile.homeFinish and not roomProfile.researchRoom and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='player_house' or sourcePair=='house' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
   local north=roomProfile.originalNorth or roomProfile.bounds[2]
   for _,q in ipairs(cache.furnitureRecesses)do north=math.min(north,q[3])end
   cache.northWallFront=north+.04
@@ -326,7 +351,7 @@ local function build(req,cache,previous)
  cache.rocketWalls=V.require('NativeRocketWalls').build(cells,def.id or req.mapId)
  local masonry=V.require("NativeMasonry").new(def)
  M.cliffCount=0
- local batches={};local wood,wi,leaf,li={},{},{},{}
+ local batches={};local wood,wi,leaf,li,hedges,hi={},{},{},{},{},{}
  for _,c in pairs(cells)do
   Budget.tick()
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
@@ -334,10 +359,14 @@ local function build(req,cache,previous)
   if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
-  local starts={#b.v,#b.rv,#b.pv,#b.wv,#wood,#leaf}
+  local starts={#b.v,#b.rv,#b.pv,#b.wv,#wood,#leaf,#hedges}
   if c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
+  elseif c.researchFloor then
+   V.require('Gen3ServiceRooms').floor(c,cache.researchRoom,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.researchFloor)or uv)
+  elseif c.kantoHomeFloor then
+   V.require('Gen3ServiceRooms').floor(c,cache.kantoHome,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.kantoHomeFloor)or uv)
   elseif c.serviceRoomFloor then
    V.require('Gen3ServiceRooms').floor(c,cache.serviceRoom,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.serviceRoomFloor)or uv)
   elseif c.institutionWallFloor then
@@ -346,6 +375,8 @@ local function build(req,cache,previous)
    plane(b.v,b.i,x,z,uvFor(ts,c.nativeLampGround or V.require('Gen3NativeLamps').ground) or uv)
   elseif c.civic then
    plane(b.v,b.i,x,z,uvFor(ts,Civic.ground(c)) or uv)
+  elseif c.bridge and c.bridge.edge then
+   plane(b.v,b.i,x,z,uvFor(ts,1)or uv)
   elseif shape.kind=='water' then
    plane(b.wv,b.wi,x,z,uvFor(ts,shape.ground) or uv,.05)
   elseif shape.kind=='interiorFloor' then
@@ -396,17 +427,20 @@ local function build(req,cache,previous)
      resize(wood,ws);resize(leaf,ls)
     end
     if shape.modelWidth or shape.modelDepth then
-     -- The procedural model option obeys the same native rectangle as the
-     -- source-art and optional replacement trees, including the full crown.
+     -- Keep the illustrated tree's physical wood inside its native rectangle.
      local rx,rz=0,0
      for _,part in ipairs{{wood,ws},{leaf,ls}}do for j=part[2]+1,#part[1]do
       local v=part[1][j];rx=math.max(rx,math.abs(v[1]-tx));rz=math.max(rz,math.abs(v[3]-tz))
      end end
-     local sx=math.min(1,(shape.modelWidth or rx*2)/math.max(.001,rx*2))
-     local sz=math.min(1,(shape.modelDepth or rz*2)/math.max(.001,rz*2))
+     local sx=(shape.modelWidth or rx*2)/math.max(.001,rx*2)
+     local sz=(shape.modelDepth or rz*2)/math.max(.001,rz*2)
      for _,part in ipairs{{wood,ws},{leaf,ls}}do for j=part[2]+1,#part[1]do
       local v=part[1][j];v[1]=tx+(v[1]-tx)*sx;v[3]=tz+(v[3]-tz)*sz
      end end
+     -- Positive anchors billboard in the shader. Bound their full yaw radius,
+     -- including flat trunks, rather than fitting only the unrotated XZ plane.
+     local native=V.require('NativeTreeArt')
+     native.fitBillboards(wood,ws,shape);native.fitBillboards(leaf,ls,shape)
     end
     end
    end
@@ -508,6 +542,9 @@ local function build(req,cache,previous)
     end
    end
    end
+  elseif shape.kind=='hedge' then
+   plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+   if not c.stageHidden then V.require('Gen3Hedges').append(c,function(v,t,shade)quad(hedges,hi,v,t,shade)end)end
   elseif shape.kind=='sign' or shape.kind=='fence' or shape.kind=='ledge' or shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    local plant=shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass'
@@ -521,11 +558,12 @@ local function build(req,cache,previous)
   Elevation.lift(b.v,starts[1],base);Elevation.lift(b.rv,starts[2],base)
   Elevation.lift(b.pv,starts[3],base);Elevation.lift(b.wv,starts[4],base)
   Elevation.lift(wood,starts[5],base);Elevation.lift(leaf,starts[6],base)
+  Elevation.lift(hedges,starts[7],base)
+  if c.bridge then V.require('Gen3Bridges').append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
   if c.floor and c.floor.underpass then
    local u=c.floor.underpass
    local water=u.kind=='water'
    plane(water and b.wv or b.v,water and b.wi or b.i,x,z,uvFor(ts,u.mid) or uv,u.height+base-c.floor.height)
-   quad(b.v,b.i,{{x,base-1.5,z+16},{x+16,base-1.5,z+16},{x+16,base-1.5,z},{x,base-1.5,z}},uv,.65)
   end
   if shape.kind~='cliff' and shape.kind~='caveWall' and shape.kind~='water' and not c.stairs and shape.kind~='steps' then
    for _,d in ipairs({{-1,0},{1,0},{0,-1},{0,1}})do
@@ -534,7 +572,7 @@ local function build(req,cache,previous)
      local low=n.base or 0
      -- Bridge fascia must not become a solid retaining wall across the path.
      if c.floor and c.floor.underpass then low=math.max(low,base-1.5)end
-     if low<base then
+     if low<base and not c.bridge then
       local ax,az=x+(d[1]>0 and 16 or 0),z+(d[2]>0 and 16 or 0)
       local bx,bz=ax+(d[1]==0 and 16 or 0),az+(d[2]==0 and 16 or 0)
       -- Claimed source cells contain roof/window art. Their raised
@@ -560,7 +598,7 @@ local function build(req,cache,previous)
   return front
  end
  local labWall={}
- for _,c in pairs(cells)do if c.secondary=='lab' and c.cy==0 and c.mid~=0 then
+ for _,c in pairs(cells)do if not cache.researchRoom and c.secondary=='lab' and c.cy==0 and c.mid~=0 then
   local b=batches[c.pair];local uv=uvFor(c.ts,0x69)
   if uv and not labWall[c.cx] then
    labWall[c.cx]=true;local x=c.cx*16;local f=wallFront(c.cx,32)
@@ -573,7 +611,7 @@ local function build(req,cache,previous)
  -- window/poster faces remain just in front; object claims must not leave
  -- rectangular holes in the wall finish.
  for _,c in pairs(cells)do if c.cy==0 and c.mid~=0 and c.mid~=8 then
-  local house=c.pair=='player_house' or c.pair=='house'
+  local house=not cache.kantoHome and(c.pair=='player_house' or c.pair=='house')
   local shop=c.pair=='building__rom_082d4bcc'
   local institution=cache.flatNativeWalls and c.pair==sourcePair and c.cx>=0 and c.cx<def.width
   local below=cells[c.cx..':1']
@@ -597,7 +635,9 @@ local function build(req,cache,previous)
   local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout
   modelCache.append(def.id or req.mapId,p,function(item,emit)return Furniture.append(item,emit,uvFor)end,function(vertices,uv,shade,anchor)
-   if not p.serviceRoom and cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
+   if p.homeWall then V.require('Gen3HomeRooms').attach(p,vertices)end
+   if p.researchWall then V.require('Gen3ResearchRooms').attach(p,vertices)end
+   if not p.serviceRoom and not p.homeWall and not p.researchWall and cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
     local shift=cache.northWallFront-31.92
     for _,v in ipairs(vertices)do v[3]=v[3]+shift end
    end
@@ -683,6 +723,7 @@ local function build(req,cache,previous)
  cache.treeInstances={}
  V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li,cache.treeInstances)
  cache.wood=R.newMesh(wood,wi);Budget.check();cache.leaves=R.newMesh(leaf,li)
+ cache.hedges=R.newMesh(hedges,hi);Budget.check()
  -- Tiles loaded during this build now belong to the published context. Do
  -- not immediately rebuild the same scene on the next frame just because
  -- its formerly missing neighbor atlas is now ready.
@@ -736,7 +777,7 @@ local function prepare(game,vw,vh,cam)
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
  M.prepares=stream.stats.started;M.builds=stream.stats.completed;M.cacheHits=stream.stats.hits
- for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','gymCount','civicCount','stairCount','chimneyCount','propCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
+ for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','treeFootprints','gymCount','civicCount','stairCount','chimneyCount','propCount','bridgeCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
  return true
 end
 local function terrain(draw)
@@ -787,6 +828,7 @@ local function terrain(draw)
   if part.ts.overImage then draw(part.mesh,part.ts.overImage)end
  end
  draw(cache.wood,bark);draw(cache.leaves,TreeStyle.original() and V.require('NativeTreeArt').image() or foliage)
+ if cache.hedges then draw(cache.hedges,V.require('Gen3Hedges').image())end
  V.require('NativeLegendaryTrees').draw(cache.legendaryTreeInstances,draw)
  for _,batch in ipairs(cache.treeInstances or {})do draw(batch,V.require('NativeTreeArt').image())end
 end
@@ -1235,6 +1277,7 @@ end
 function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
 function M.release()
  V.require('Gen3SeaRocks').clearGeometry()
+ V.require('Gen3Hedges').release()
  V.require("NativeLegendaryTower").clear()
  V.require("NativeLegendarySapling").clear()
  if dustMesh then dustMesh:release();dustMesh=nil end

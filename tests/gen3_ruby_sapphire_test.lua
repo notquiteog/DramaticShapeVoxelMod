@@ -20,7 +20,7 @@ for _,game in ipairs({'ruby','sapphire'})do
  assert(S.of('general','meteor_falls',0x202,0,0).kind~='steps','rejected RS treads became Emerald steps')
  assert(S.of('general','mauville',0x1dc,0,7).root==true,'RS-owned round tree shape replaced')
  assert(S.of('general','fortree',0xe,0,7).root==true and S.of('general','fortree',0xe,0,0).root==false,'walkable crown cell planted a trapping tree')
- local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop' or r.pair=='building__lab')end end;assert(approved==44)
+ local approved=0;for _,r in ipairs(H.recipes)do if H.recipeActive(r)then approved=approved+1;assert(r.pair=='building__pokemon_center' or r.pair=='building__shop' or r.pair=='building__lab' or r.pair=='building__generic_building' or r.pair=='building__brendans_mays_house')end end;assert(approved==86)
  assert(not H.recipeActive({family='frlg'}),'Kanto furniture leaked')
  for _,r in ipairs(recipes)do
   assert(r.header==#r.rows)

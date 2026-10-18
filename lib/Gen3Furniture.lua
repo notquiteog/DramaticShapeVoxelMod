@@ -88,11 +88,20 @@ for _,r in ipairs(Tower.recipes)do recipes[#recipes+1]=r end
 Designed.install(recipes)
 local Hoenn=V and V.require('Gen3Hoenn') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3Hoenn.lua')
 for _,r in ipairs(Hoenn.recipes)do recipes[#recipes+1]=r end
+local Kanto=V and V.require('Gen3KantoHomes')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3KantoHomes.lua')
+Kanto.install(recipes)
 local RS=V and V.require('Gen3RubySapphire') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3RubySapphire.lua')
 for _,r in ipairs(RS.recipes)do recipes[#recipes+1]=r end
 local RSInstitutions=V and V.require('Gen3RSInstitutions') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3RSInstitutions.lua')
 for _,r in ipairs(RSInstitutions.recipes)do recipes[#recipes+1]=r end
+local Research=V and V.require('Gen3ResearchRooms')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3ResearchRooms.lua')
+Research.install(recipes)
+local Route=V and V.require('Gen3RouteRooms')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3RouteRooms.lua')
+Route.install(recipes)
+local Early=V and V.require('Gen3EarlyProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3EarlyProps.lua')
+for _,r in ipairs(Early.recipes)do recipes[#recipes+1]=r end
 local function recipeActive(r)
+ if r.earlyHoenn then local ok,GV=pcall(require,'src.core.GameVersion');return Early.active(r,ok and GV.get and GV.get())end
  if Hoenn.recipeActive then return Hoenn.recipeActive(r)end
  return Hoenn.active()==(r.family=='rse')
 end
@@ -130,13 +139,13 @@ function M.extract(cells,onlyKind)
  for _,c in ipairs(ordered)do Budget.tick();if not c.prop and not c.stairs or contextRoots[c.mid]then
   for _,r in ipairs(choices(c.mid))do
    if (not onlyKind or r.kind==onlyKind)and recipeActive(r) and c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
-    local match=true;local parts={}
+    local match=true;local parts={};local collisionRows=Research.permissions(r,c.pair)or Kanto.permissions(r,c.pair)
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
      local owned=not r.claimCells or r.claimCells[dx..':'..dy]
-     if not n or n.prop and owned or n.stairs and owned or n.pair~=c.pair or not matched(n.mid,mid,r)
+     if not n or (r.earlyHoenn and n.collision==nil) or n.prop and owned or n.stairs and owned or n.pair~=c.pair or not matched(n.mid,mid,r)
       or (r.blockedRows and r.blockedRows[dy] and n.collision~=nil and n.collision~=7)
-      or (r.collisionRows and r.collisionRows[dy] and r.collisionRows[dy][dx]~=nil and n.collision~=nil and n.collision~=r.collisionRows[dy][dx]) then match=false else parts[#parts+1]=n end
+      or (collisionRows and collisionRows[dy] and collisionRows[dy][dx]~=nil and n.collision~=nil and n.collision~=collisionRows[dy][dx]) then match=false else parts[#parts+1]=n end
     end end
     if match then
      local p={recipe=r,cx=c.cx,cy=c.cy,pair=c.pair,ts=c.ts,w=#r.rows[1]*16,d=#r.rows*16}
@@ -222,6 +231,8 @@ function M.append(p,emit,uvFor)
  if r.kind=='labWorkstation' or r.kind=='labStacks' or r.kind=='labSideCabinet' or r.kind=='labSideDesk' then V.require('Gen3LabWorkstation').append(p,source,box,sample,emit);return end
  if r.kind:match('^tower')then Tower.append(p,source,box,sample,emit,uvFor);return end
  if r.kind=='rsInstitution'then RSInstitutions.append(p,source,box,sample,emit);return end
+ if Route.append(p,source,box,sample,emit)then return end
+ if Early.append(p,source,box,sample,emit,uvFor)then return end
  if Designed.append(p,source,box,sample,emit)then return end
  if Center.append(p,source,box,sample,emit,uvFor)then return end
  if r.kind=='relief' or r.kind=='bin' or r.kind=='plaque' then

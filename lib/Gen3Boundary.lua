@@ -51,7 +51,7 @@ function M.resolve(rs,x,y,read)
   return donor.mid,donor.pair,{kind='tree',ground=source.ground or 1,root=x%spacing==0 and y%spacing==0,
    treeRows=source.treeRows,treeFamily=source.treeFamily,treeTrim=source.treeTrim,spacing=source.spacing,anchorX=source.anchorX,anchorZ=source.anchorZ,treeScale=source.treeScale},'forest'
  elseif donor.biome=='mountain' then
-  return 113,donor.pair,{kind='cliff',height=32,ground=1},'mountain'
+  return 113,donor.pair,{kind='cliff',height=donor.shape.height or 16,ground=donor.shape.ground or 1,cap=donor.shape.cap,side=donor.shape.side},'mountain'
  elseif donor.biome=='water' then
   return donor.mid,donor.pair,{kind='water',reviewedSurface=true},'water'
  end

@@ -33,8 +33,11 @@ for _,r in ipairs(H.recipes)do
   local exact={};for key,c in pairs(cells)do local q={};for k,v in pairs(c)do if k~='prop'then q[k]=v end end;q.collision=r.collisionRows[q.cy+1][q.cx+1];exact[key]=q end
   assert(#F.extract(exact)==1,r.name..' native footprint rejected')
   for _,c in pairs(exact)do c.prop=nil end
-  local changed=false;for _,c in pairs(exact)do if c.collision~=0 then c.collision=0;changed=true;break end end;assert(changed)
-  assert(#F.extract(exact)==0,r.name..' placed over walking lane')
+  local changed=false;for _,c in pairs(exact)do if c.collision~=0 then c.collision=0;changed=true;break end end
+  if not changed then assert(r.walkablePad,'solid has no blocked native cell');exact['0:0'].collision=7 end
+  local rejected=F.extract(exact)
+  for _,p in ipairs(rejected)do assert(p.recipe~=r,r.name..' ignored changed native permissions')end
+  if not r.name:match('^hoenn_home_')and not r.name:match('^hoenn_start_')then assert(#rejected==0,r.name..' placed over walking lane')end
  end
  if r.design=='em_lilycove_gallery' then
   local blocked={};for key,c in pairs(cells)do local q={};for k,v in pairs(c)do if k~='prop'then q[k]=v end end;q.collision=q.cy==2 and 7 or 0;blocked[key]=q end

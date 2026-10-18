@@ -2,6 +2,8 @@
 -- were measured from the engine's composited Oldale maps; no ROM pixels ship.
 local V=...
 local M={recipes={},exteriors={}}
+local BoundaryProps=V and V.require('Gen3BoundaryProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3BoundaryProps.lua')
+local EarlyProps=V and V.require('Gen3EarlyProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3EarlyProps.lua')
 local function version()
  local ok,GV=pcall(require,'src.core.GameVersion')
  return ok and GV.get() or nil
@@ -105,6 +107,8 @@ function M.shape(primary,secondary,mid,behavior,collision)
  return M.emeraldShape(primary,secondary,mid,behavior,collision)
 end
 function M.emeraldShape(primary,secondary,mid,behavior,collision)
+ local prop=EarlyProps.shape(primary,secondary,mid,collision,'emerald');if prop then return prop end
+ local boundary=BoundaryProps.hoenn(primary,secondary,mid,collision);if boundary then return boundary end
  if primary=='building' and secondary=='shop' and collision==7 and (mid==0x222 or mid==0x244)then
   return {kind='roomWall',ground=0x201}
  end
@@ -180,7 +184,7 @@ function M.emeraldShape(primary,secondary,mid,behavior,collision)
   if collision==7 and (mid==0xa9 or (mid>=0x66 and mid<=0x6c) or
     (mid>=0x70 and mid<=0x7e) or (mid>=0x80 and mid<=0x8e) or
     (mid>=0x90 and mid<=0x9e)) then
-   return {kind='cliff',height=24,ground=1,cap=0x6c,side=0x71}
+   return {kind='cliff',height=16,ground=1,cap=0x6c,side=0x71}
   end
   -- Open-sea island rims: corner/side drawings around the same rock band,
   -- standing in deep water (identical primary art in RS and Emerald).
@@ -188,7 +192,7 @@ function M.emeraldShape(primary,secondary,mid,behavior,collision)
    return {kind='cliff',height=24,ground=0x170,cap=0x6c,side=0x71}
   end
   if collision==7 and behavior==0xc and mid<0x200 then
-   return {kind='cliff',height=24,ground=1,cap=0x6c,side=0x71}
+   return {kind='cliff',height=16,ground=1,cap=0x6c,side=0x71}
   end
   if mid==3 then return {kind='sign',height=12,ground=1,hoenn=true}end
   if mid==4 then return {kind='flowers',height=6,ground=1}end
@@ -402,6 +406,76 @@ starting('dining_table',{{0x21a,0x21b},{0x222,0x223},{0x22a,0x22b}},'em_start_ta
 for _,a in ipairs{{0x219,'left'},{0x221,'left'},{0x21c,'right'},{0x224,'right'}}do
  starting('dining_chair_'..a[1],{{a[1]}},'em_start_seat_pad',{ground=0x2a1})
 end
+-- Additional complete drawings in the starting settlements, independently
+-- compared in all three editions. Native walking seats stay low floor pads.
+starting('high_window',{{0x21e}},'em_start_high_window',{blockedRows={[1]=true}})
+starting('kitchen_cabinet_right',{{0x243,0x244},{0x24b,0x24c}},'em_start_cabinet')
+starting('console_rs_right',{{0x265},{0x267}},'em_start_console')
+starting('may_table',{{0x2b3,0x2b1},{0x2b9,0x2ba},{0x2c1,0x2c2}},'em_start_may_table',
+ {ground=0x2c0,groundRows={{0x2b8,0x2b8},{0x2c0,0x2c0},{0x2c0,0x2c0}}})
+for _,mid in ipairs{0x2c0,0x2c3}do starting('may_seat_'..mid,{{mid}},'em_start_seat_pad',{ground=0x2c0,walkablePad=true})end
+home('small_tv',{{0x230},{0x21e},{0x238}},'em_home_small_tv')
+home('window',{{0x206},{0x20e}},'em_home_window')
+home('picture',{{0x207},{0x20f}},'em_home_picture')
+home('wide_drawers',{{0x268,0x269},{0x270,0x271}},'em_home_wide_drawers')
+home('small_books',{{0x26e,0x26f},{0x276,0x277},{0x27e,0x27f}},'em_home_books')
+home('bed',{{0x25a,0x25b},{0x262,0x263}},'em_home_bed')
+home('table_orange',{{0x24c,0x24d},{0x254,0x255}},'em_home_table')
+for _,r in ipairs(M.recipes)do
+ if r.design=='em_home_chair_left'or r.design=='em_home_chair_right'then r.design='em_start_seat_pad';r.walkablePad=true end
+ if r.design=='em_start_seat_pad'then r.walkablePad=true end
+end
+-- Exact native permissions from the 27 reviewed starting homes. A changed
+-- third-party walking cell invalidates the whole component instead of trapping
+-- an actor in furniture. Unreviewed regional patterns are left untouched.
+local homePermissions={
+ hoenn_home_tv={{7,7},{7,7},{0,0}},
+ hoenn_home_books={{7,7},{7,7},{0,0}},
+ hoenn_home_fridge={{7},{7},{0}},
+ hoenn_home_kitchen_drawers={{7},{0}},
+ hoenn_home_sink={{7,7},{0,0}},
+ hoenn_home_table_yellow={{7,7},{7,7}},
+ hoenn_home_table_plain={{7,7},{7,7}},
+ hoenn_home_chair_555={{0}},
+ hoenn_home_chair_556={{0}},
+ hoenn_home_chair_738={{0}},
+ hoenn_home_plant={{0},{7}},
+ hoenn_start_fridge={{7},{7}},
+ hoenn_start_sink_hob={{7,7},{7,7}},
+ hoenn_start_kitchen_cabinet={{7,7},{7,7}},
+ hoenn_start_living_tv={{7,7},{0,0}},
+ hoenn_start_living_drawers={{0},{7},{0}},
+ hoenn_start_bedroom_drawers={{7},{7},{0}},
+ hoenn_start_computer_left={{7,7},{7,7},{0,0}},
+ hoenn_start_computer_right={{7,7},{7,7},{0,0}},
+ hoenn_start_console_left={{7},{0}},
+ hoenn_start_console_right={{7},{0}},
+ hoenn_start_wall_picture={{7},{7}},
+ hoenn_start_wall_clock_left={{7},{7}},
+ hoenn_start_wall_clock_right={{7},{7}},
+ hoenn_start_wall_window={{7},{7},{0}},
+ hoenn_start_bed_left={{0,0,0},{0,0,0},{0,7,0}},
+ hoenn_start_bed_right={{0,0,0},{0,0,0},{0,7,0}},
+ hoenn_start_dining_table={{7,7},{7,7},{0,0}},
+ hoenn_start_dining_chair_537={{0}},
+ hoenn_start_dining_chair_545={{0}},
+ hoenn_start_dining_chair_540={{0}},
+ hoenn_start_dining_chair_548={{0}},
+ hoenn_start_high_window={{7}},
+ hoenn_start_kitchen_cabinet_right={{7,7},{7,7}},
+ hoenn_start_console_rs_right={{7},{0}},
+ hoenn_start_may_table={{0,0},{7,7},{7,7}},
+ hoenn_start_may_seat_704={{0}},
+ hoenn_start_may_seat_707={{0}},
+ hoenn_home_small_tv={{7},{7},{0}},
+ hoenn_home_window={{7},{7}},
+ hoenn_home_picture={{7},{7}},
+ hoenn_home_wide_drawers={{7,7},{0,0}},
+ hoenn_home_small_books={{7,7},{7,7},{0,0}},
+ hoenn_home_bed={{7,7},{7,7}},
+ hoenn_home_table_orange={{7,7},{7,7}},
+}
+for _,r in ipairs(M.recipes)do if homePermissions[r.name]then r.collisionRows=homePermissions[r.name]end end
 local center='building__pokemon_center'
 local lab='building__lab'
 add('birch_south_book_stacks',lab,{{0x248},{0x248}},'labStacks')

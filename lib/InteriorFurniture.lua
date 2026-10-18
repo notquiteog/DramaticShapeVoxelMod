@@ -12,7 +12,7 @@ M.placement={
  em_museum_glass={z=2,back=16},
  em_home_appliance={z=-16,back=1},em_fortree_drawers={z=-15,back=0},
  em_lab_books={z=-8,back=18},em_lab_computer={z=-11,back=15},
- em_lab_desk={z=-11,back=0},em_lab_server={z=-9,back=18},
+ em_lab_desk={z=0,back=1},em_lab_server={z=-9,back=18},
  fr_mart_cooler={z=-13,back=19},
  fr_lab_pc={z=-9,back=1},fr_lab_terminal={z=-10,back=17},
  fr_lab_server={z=-10,back=21},fr_lab_books={z=-8,back=5},
@@ -25,6 +25,7 @@ M.placement={
  fr_center_pc={z=-11,back=15},fr_upper_pc={z=-11,back=15},
  fr_cupboard={z=-8,back=20},
  fr_living_tv={z=-8,back=19},fr_kitchen={z=-15,back=3},
+ fr_lab_pokedex_desk={z=0,back=1},fr_lab_aquarium={z=0,back=16.2},
 }
 function M.draw(id,A)
  local B,S,T=A.box,A.source,A.sample
@@ -333,6 +334,12 @@ function M.draw(id,A)
   top({4,6,8,6},3.5,3.5,12.5,12.5,6.02)
   local x=A.recipe.backEast and 12 or 2
   B(x,5,3,x+2,11,13,metal);B(x+.2,6,3.5,x+1.8,11.5,12.5,blue)
+ elseif id=='em_start_high_window' then
+  local frame=T(0,8)
+  B(0,20,15.9,15,30,16.05,frame)
+  B(0,20,16.05,1,30,16.3,frame);B(14,20,16.05,15,30,16.3,frame)
+  B(1,29,16.05,14,30,16.3,frame);B(0,19.5,16.05,15,20,16.6,frame)
+  front({1,8,13,8},1,21,14,29,16.22)
  elseif id=='em_start_window' then
   local frame,sill=T(0,8),T(2,19)
   -- Keep the window attached to the wall face, not hovering over the aisle.
@@ -383,6 +390,9 @@ function M.draw(id,A)
   B(17,7,33,31,8.3,36,T(20,21));top({15,19,18,5},17,33,31,36,8.32)
   B(16.2,3,32.2,31.8,11,33,wood);front({13,16,22,5},16.2,7,31.8,11,33.02)
   B(16.2,3,47,31.8,6,47.8,wood)
+ elseif id=='em_start_may_table' then
+  local wood=T(5,34)
+  desk(1,17,31,46,7,wood);top({1,16,30,29},1,17,31,46,7.02)
  elseif id=='em_start_table' then
   local wood=T(5,34)
   desk(1,1,31,30,7,wood);top({1,0,30,28},1,1,31,30,7.02)
@@ -429,8 +439,8 @@ function M.draw(id,A)
   B(7,9,14,8,14,15,metal);B(7,13,14,8,14,20,metal)
  elseif id=='em_start_cabinet' then
   local wood,dark=T(2,7),T(4,25)
-  B(1,0,14,25,27,28,wood)
-  front({1,13,23,17},1,1,25,24,28.02)
+  B(1,0,14,31,27,28,wood)
+  front({1,13,30,17},1,1,31,24,28.02)
   B(12,1,28,13,24,28.3,wood)
   B(3,5,28,10,6,28.6,dark);B(15,5,28,22,6,28.6,dark)
  elseif id=='em_start_tv' then
@@ -865,6 +875,29 @@ function M.draw(id,A)
    B(r[1],3.7,r[2],r[3],4.5,r[4],metal)
    B(r[1]+.4,4.5,r[2]+.4,r[3]-.4,5,r[4]-.4,seat)
   end
+ elseif id=='em_home_small_tv' then
+  local wood,case,dark=T(3,34),T(2,18),T(4,22)
+  B(1,0,17,15,6,30,wood);front({1,32,14,9},1,1,15,6,30.02)
+  crt(1,17,14,8,24,{2,18,12,11},case,dark)
+ elseif id=='em_home_wide_drawers' then
+  local wood=T(2,22)
+  B(1,0,1,31,10,15,wood);top({1,1,30,12},1,1,31,15,10.02)
+  front({1,18,30,11},1,1,31,10,15.02)
+  for _,x in ipairs{4,20}do B(x,4,15,x+7,4.5,15.5,wood)end
+ elseif id=='em_home_bed' then
+  local wood,cloth=T(1,18),T(9,9)
+  for _,x in ipairs{2,27}do for _,z in ipairs{2,27}do B(x,0,z,x+3,4,z+3,wood)end end
+  B(1,3,1,31,5,31,wood);B(2,5,2,30,7,30,cloth)
+  top({2,8,28,21},2,9,30,30,7.02)
+  B(3,7,3,29,8,9,T(10,6));top({3,3,26,5},3,3,29,9,8.02)
+  B(1,3,1,31,10,2,wood);B(1,3,30,31,6,31,wood)
+ elseif id=='em_home_window'or id=='em_home_picture'then
+  local frame=T(1,8)
+  local low=id=='em_home_window'and 8 or 16
+  B(1,low,15.9,15,29,16.05,frame)
+  B(1,low,16.05,2,29,16.5,frame);B(14,low,16.05,15,29,16.5,frame)
+  B(2,28,16.05,14,29,16.5,frame);B(2,low,16.05,14,low+1,16.5,frame)
+  front({1,id=='em_home_window'and 3 or 8,14,id=='em_home_window'and 24 or 12},1,low,15,29,16.32)
  elseif id=='em_home_tunnel_entrance' then
   -- Authored pixel steps follow the native broken plaster opening. Each
   -- strip has real jamb depth; the dark tunnel mouth is six pixels behind.
@@ -1014,6 +1047,23 @@ function M.draw(id,A)
   B(x,7,3,x+2,10,14,wood)
  elseif id=='em_home_cushion' then
   cushion(2,2,12,12,{2,2,12,12},T(5,5),T(2,2))
+ elseif id=='em_lab_wall_note' then
+  local paper=T(4,10)
+  B(2,12,31.92,9,27,32.25,paper);front({2,9,7,7},2,12,9,27,32.27)
+  B(10,19,31.92,14,29,32.25,paper);front({10,8,4,6},10,19,14,29,32.27)
+ elseif id=='em_lab_seat_pad' then
+  local mat=T(5,7)
+  B(2,0,3,14,.6,14,mat);top({2,4,11,9},2,3,14,14,.62)
+ elseif id=='em_lab_free_books' then
+  local frame,dark=T(1,22),T(3,29)
+  shelves(1,17,30,30,25,{{3,10,{2,34,28,7}},{13,21,{2,24,28,7}}},frame,dark,true)
+  B(1,25,17,31,26.5,47,frame)
+  -- The original yellow archive box on each freestanding shelf is a
+  -- separate closed object, with a lid and recessed drawer handle.
+  local gold=T(10,8)
+  B(5,26.5,20,15,34,32,gold);B(4.5,34,19.5,15.5,35,32.5,gold)
+  front({6,4,9,10},5,26.5,15,34,32.02)
+  B(8,29,32,12,29.6,32.4,T(10,13))
  elseif id=='em_lab_books' then
   -- A freestanding double shelf: solid back and end panels, individually
   -- raised books and readable native spines on both open tiers.
@@ -1026,12 +1076,20 @@ function M.draw(id,A)
   keyboard({9,23,13,5},9,34,13,6,8.1,case)
   B(2,8,28,7,22,37,case);front({2,9,5,16},2,8,7,22,37.02)
  elseif id=='em_lab_desk' then
-  local wood=T(4,16)
-  desk(0,11,64,26,8,wood);top({0,8,64,11},0,11,64,26,8.02)
-  -- Separate research books/papers above the continuous desk surface.
-  for _,q in ipairs({{18,2,11,10},{34,2,10,10},{49,3,10,9}})do
-   local x,y,w,d=unpack(q);B(x,8.05,12,x+w,9.4,12+d,T(x+3,y+3))
-   top(q,x,12,x+w,12+d,9.42)
+  local wood,edge=T(27,22),T(23,17)
+  for _,l in ipairs{0,32}do
+   desk(l+.5,1,l+31.5,15,8,wood)
+   -- Repeat only the clean native checked surface around raised research
+   -- papers/books; never fold their perspective faces onto the furniture.
+   for x=l+1,l+25,8 do top({1,8,8,7},x,1,math.min(l+31,x+8),15,8.02)end
+   B(l+21,1,2,l+30,7,14,wood)
+   front({21,18,9,9},l+21,1,l+30,7,14.02)
+   B(l+24,4,14,l+27,4.6,14.4,edge)
+  end
+  B(9,8.05,3,18,8.3,13,T(10,10));top({9,7,9,8},9,3,18,13,8.32)
+  for _,q in ipairs{{20,3,10,10},{35,3,12,10},{53,1,9,12}}do
+   local x,y,w,d=unpack(q);B(x,8.05,2,x+w,9.4,13,T(x+2,y+2))
+   top(q,x,2,x+w,13,9.42)
   end
  elseif id=='em_lab_starter' then
   local wood,dark=T(3,17),T(17,25)
@@ -1838,6 +1896,46 @@ function M.draw(id,A)
   local case,dark=T(1,19),T(9,33)
   shelves(2,27,28,10,10,{{2,8,{3,34,26,6}}},case,dark)
   crt(2,26,28,12,29,{3,13,26,16},case,dark)
+ elseif id=='fr_home_window' or id=='fr_school_windows' then
+  local w=id=='fr_home_window'and 32 or 64;local mat=T(2,10)
+  local b,h=id=='fr_home_window'and 10 or 14,30
+  B(1,b,31.92,w-1,h,32.3,mat)
+  front(id=='fr_home_window'and{1,10,30,20}or{6,7,52,16},1,b,w-1,h,32.32)
+  B(1,b,32.3,w-1,b+1,33,mat);B(1,h-1,32.3,w-1,h,32.8,mat)
+  B(1,b,32.3,2,h,32.8,mat);B(w-2,b,32.3,w-1,h,32.8,mat)
+  for x=16,w-2,16 do B(x-.4,b+1,32.3,x+.4,h-1,32.7,mat)end
+ elseif id=='fr_home_note' or id=='fr_home_map' or id=='fr_school_map' or id=='fr_school_board' then
+  local note=id=='fr_home_note';local board=id=='fr_school_board'
+  local w=note and 16 or 32;local b,h=board and 6 or 11,board and 29 or 28
+  local mat=T(1,11)
+  B(1,b,31.92,w-1,h,32.35,mat)
+  B(1,b,32.35,2,h,32.8,mat);B(w-2,b,32.35,w-1,h,32.8,mat)
+  B(2,b,32.35,w-2,b+1,32.8,mat);B(2,h-1,32.35,w-2,h,32.8,mat)
+  local crop=board and{1,16,30,20}or id=='fr_school_map'and{7,16,21,11}or{2,10,w-4,17}
+  front(crop,2,b+1,w-2,h-1,32.37)
+  if board then B(2,b,32.35,w-2,b+.7,34,T(3,30))end
+ elseif id=='fr_home_seat' or id=='fr_school_seat' then
+  -- Native walking permissions win over the perspective drawing of a chair.
+  -- Keep its upholstery as a closed, low floor pad without a blocking back.
+  local n=id=='fr_home_seat'and 3 or 17
+  B(2,0,n,14,.6,n+12,T(3,8));top({2,2,12,12},2,n,14,n+12,.62)
+ elseif id=='fr_school_books' then
+  local frame,dark=T(1,21),T(3,29)
+  shelves(1,17,30,30,27,{{3,10,{2,34,28,8}},{13,20,{2,22,28,8}}},frame,dark,true)
+  B(2,21,18,30,26,46,frame);front({2,16,28,6},2,21,30,26,46.02)
+ elseif id=='fr_school_desk' then
+  local wood=T(27,27);desk(1,17,31,31,8,wood)
+  top({1,13,30,12},1,17,31,31,8.02)
+  -- The open textbook is separate from the desk, with closed covers and
+  -- two inclined pages retaining the native drawing and its red bookmark.
+  B(2,8,18,17,8.5,29,T(1,22))
+  B(16,8.5,19,17,8.65,27,T(16,19))
+  S(2,17,6,6,{2,8.55,18},{9,9.3,18},{9,9.3,29},{2,8.55,29})
+  S(8,17,6,6,{9,9.3,18},{16,8.55,18},{16,8.55,29},{9,9.3,29})
+  for _,z in ipairs{18,29}do
+   A.face({{2,8.5,z},{9,8.5,z},{9,9.3,z},{2,8.55,z}},T(4,18))
+   A.face({{9,8.5,z},{16,8.5,z},{16,8.55,z},{9,9.3,z}},T(12,18))
+  end
  elseif id=='fr_wall_picture' then
   B(1,9,31.92,15,23,32.6,T(1,9))
   local rim=T(2,10)
@@ -1849,7 +1947,8 @@ function M.draw(id,A)
   B(1,0,27,15,6,39,case);front({1,34,14,7},1,0,15,6,39.02)
   crt(1,27,14,7.5,20,{1,26,14,8},case,dark)
   -- Native wall note stays flat against the backing, above the television.
-  front({8,9,7,8},8,23,15,31,31.85)
+  B(8,23,31.7,15,31,31.85,T(8,9))
+  front({8,9,7,8},8,23,15,31,31.87)
  elseif id=='fr_cupboard' then
   local wood,dark=T(2,14),T(4,37)
   shelves(1,28,22,11,25,{{3,9,{2,34,19,6}},{10,18,{2,25,19,8}}},wood,dark)
@@ -1870,6 +1969,28 @@ function M.draw(id,A)
   B(1,8,27,15,9.5,41,case)
   crt(1,26,14,11,24,{2,17,12,10},case,dark)
   keyboard({2,29,12,6},2,34,12,6,9.6,case)
+ elseif id=='fr_lab_exit_mat' then
+  B(11,0,.2,37,.1,15.8,T(11,4));top({11,4,26,16},11,.2,37,15.8,.12)
+ elseif id=='fr_lab_starter_table' then
+  local frame=T(1,20)
+  desk(1,1,47,15,9,frame)
+  B(1,9,1,47,9.6,15,frame);top({1,3,46,12},2,2,46,14,9.62)
+ elseif id=='fr_lab_pokedex_desk' then
+  local wood,edge=T(28,20),T(1,16)
+  desk(.5,1,31.5,15,12,wood);top({0,6,32,10},.5,1,31.5,15,12.02)
+  B(21,1,2,30,10,14,wood);front({21,18,9,8},21,1,30,10,14.02)
+  B(24,5,14,27,5.7,14.5,edge)
+ elseif id=='fr_lab_aquarium' then
+  local frame,water=T(1,26),T(5,12)
+  B(1,0,16.2,15,6,31.5,frame);front({1,26,14,6},1,0,15,6,31.52)
+  B(1,6,16.2,15,27,17.2,frame)
+  B(1,6,17.2,2,27,31.5,frame);B(14,6,17.2,15,27,31.5,frame)
+  B(1,26,16.2,15,28,31.5,frame)
+  B(2,6,17.2,14,7,31.5,frame)
+  B(2,7,17.4,14,24,31.3,water)
+  front({2,9,12,15},2,7,14,24,31.32)
+  -- Raised sash and closed lid keep the native two-pane cabinet readable.
+  B(2,15,31.3,14,16,31.6,frame)
  elseif id=='fr_lab_pc' then
   local case,dark,wood=T(1,3),T(6,8),T(2,20)
   desk(1,10,31,24,7,wood)

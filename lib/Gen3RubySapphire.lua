@@ -2,6 +2,8 @@
 -- entire Emerald catalogue: several identical IDs draw different objects.
 local V=...
 local M={recipes={}}
+local BoundaryProps=V and V.require('Gen3BoundaryProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3BoundaryProps.lua')
+local EarlyProps=V and V.require('Gen3EarlyProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3EarlyProps.lua')
 local exteriorNames={slateport_shipyard=true,slateport_oceanic_museum=true,oldale_house=true,oldale_mart=true,oldale_center=true,
  battle_frontier_tower=true,lilycove_department_store=true,lilycove_museum=true,rustboro_devon_corporation=true,mossdeep_space_center=true,
  petalburg_city_mart=true,petalburg_city_center=true,petalburg_city_gym=true,
@@ -35,7 +37,15 @@ local furnitureNames={center_healer=true,center_screen=true,hoenn_center_front_d
  hoenn_center_plant=true,hoenn_link_plant=true,hoenn_center_wall_528=true,hoenn_center_wall_535=true}
 local martNames={hoenn_mart_clock=true,hoenn_mart_register=true,hoenn_mart_plant=true,hoenn_mart_island=true,hoenn_mart_sidecase=true,hoenn_mart_stock_560=true,hoenn_mart_stock_545=true,hoenn_mart_glass=true}
 local labNames={birch_floor_plant=true,birch_side_cupboard=true,birch_southeast_workstation=true,birch_south_book_stacks=true,birch_south_workstation=true,birch_machine=true,birch_books=true,birch_free_books=true,birch_free_books_end=true,birch_computer=true,birch_research_desk=true,birch_starter_desk=true,birch_server=true,birch_plant=true}
-function M.recipeActive(r)if r.edition=='rs' then return true end;if r.family=='rse' and r.pair=='building__lab' then return labNames[r.name]==true end;if r.family=='rse' and r.pair=='building__shop' then return martNames[r.name]==true end;return r.family=='rse' and r.pair=='building__pokemon_center' and (furnitureNames[r.name]==true or (r.name or ''):match('^hoenn_escalator_up_[012]$')~=nil or (r.name or ''):match('^hoenn_escalator_down_[012]$')~=nil) end
+-- These complete native drawings were checked independently against RS
+-- starting homes. Do not activate unrelated Emerald rustic/regional fixtures.
+for _,mid in ipairs{0x20c,0x20d}do labNames['birch_wall_note_'..mid]=true end
+for _,mid in ipairs{0x241,0x239,0x249}do labNames['birch_native_seat_'..mid]=true end
+local homeNames={}
+for _,n in ipairs{'tv','books','fridge','kitchen_drawers','sink','table_yellow','table_plain','chair_555','chair_556','chair_738','plant','small_tv','window','picture','wide_drawers','small_books','bed','table_orange'}do homeNames['hoenn_home_'..n]=true end
+local startNames={}
+for _,n in ipairs{'high_window','fridge','sink_hob','kitchen_cabinet','kitchen_cabinet_right','living_tv','living_drawers','living_drawers_variant','bedroom_drawers','computer_left','computer_right','console_left','console_rs_right','wall_picture','wall_clock_left','wall_clock_right','wall_window','bed_left','bed_right','dining_table','dining_chair_537','dining_chair_545','dining_chair_540','dining_chair_548'}do startNames['hoenn_start_'..n]=true end
+function M.recipeActive(r)if r.edition=='rs' then return true end;if r.family=='rse'and r.pair=='building__generic_building'then return homeNames[r.name]==true end;if r.family=='rse'and r.pair=='building__brendans_mays_house'then return startNames[r.name]==true end;if r.family=='rse' and r.pair=='building__lab' then return labNames[r.name]==true end;if r.family=='rse' and r.pair=='building__shop' then return martNames[r.name]==true end;return r.family=='rse' and r.pair=='building__pokemon_center' and (furnitureNames[r.name]==true or (r.name or ''):match('^hoenn_escalator_up_[012]$')~=nil or (r.name or ''):match('^hoenn_escalator_down_[012]$')~=nil) end
 -- Ruby/Sapphire link rooms have individual booths, unlike Emerald's long desk.
 for i,q in ipairs({{0x24c,0x254,0x265},{0x24d,0x255,0x25f},{0x24e,0x256,0x25f}})do
  M.recipes[#M.recipes+1]={name='rs_link_booth_'..i,edition='rs',family='rse',primary='building',pair='building__pokemon_center',kind='rsLinkBooth',ground=0x202,recessBack=15,
@@ -171,6 +181,8 @@ function M.shape(primary,secondary,mid,behavior,collision,emerald)
  return own
 end
 function M.ownShape(primary,secondary,mid,behavior,collision)
+ local prop=EarlyProps.shape(primary,secondary,mid,collision,'ruby');if prop then return prop end
+ local boundary=BoundaryProps.hoenn(primary,secondary,mid,collision);if boundary then return boundary end
  if primary=='general' then
   -- Independently inspected RS drawing: same brown field boulder, own pixels.
   if mid==0xe0 and collision==7 then return {kind='rock',ground=1,height=14}end
