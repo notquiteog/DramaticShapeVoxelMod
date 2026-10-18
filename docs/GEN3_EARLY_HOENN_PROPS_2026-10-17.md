@@ -65,3 +65,11 @@ restricted shell and status 0 with the approved escalated shell. Candidate
 assertions and captures are retained, without claiming clean native process
 exit. The final package rerun uses the approved native shell and records its
 own exact status in the release evidence.
+
+Final1.49.0 archive verification supersedes the candidate wrapper limitation:
+all6 escalated native runs exit0 (three inputs,three scene surveys). Every run
+passes18 actual public loaded-source/asset hashes.9 blocked approaches and6
+stock dialogues pass;all24 input and60 orbit/eye captures are inspected,using
+final timber swatches and the final restrained pixel hedge material. No native
+geometry/input failures or mod-loader errors. Final batch totals and limits are
+in `GEN3_TREES_GATES_2026-10-17.md`.

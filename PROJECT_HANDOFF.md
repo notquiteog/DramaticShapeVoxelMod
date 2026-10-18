@@ -11,8 +11,12 @@ Kanto gains3 complete Route2 gate exteriors per edition and4 route interiors
 per edition: flat continuous walls, separate furnishings, open portals and
 native ground. Hoenn gains30 nativefield fixtures/24 shoreline corners.
 Source327pass/0fail/58 unavailable-fixture skips; targeted final material/gate
-checks pass. Candidate native inputs/views inspected; final archive verification
-is pending below. No gameplay/UI/VM/actor/collision replacement. Characters,
+checks pass. Exact archive:30 tree-map census/zero walking overlaps or emptytreecells;
+10 tree walks/10 bumps,16 gate-room walks/8 bumps/14 exits,9 Hoennprop bumps/
+6 dialogs and6 hedge walks/6 bumps.302 standaloneimages+32 partnerimages
+inspected.18 actual publicloadedhashes perlaunch;all final runners exit0.
+11,431 archivefiles/505 Lua compile;11,254 runtimehashes retained through
+evidence repackage. Every partnerpassesFR/RU smoke atpublishedandlocalHEAD. No gameplay/UI/VM/actor/collision replacement. Characters,
 Pokémon and flowers remain HD-2D; optional partners stay independent.
 
 Regional queue84/125 verified,41 queued. Outdoor maps remain partial, including

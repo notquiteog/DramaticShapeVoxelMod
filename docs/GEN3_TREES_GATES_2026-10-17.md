@@ -89,3 +89,41 @@ composite canopy drawings1F2/1F3/1FC/1FD/24D/24E/255/256 are not included in the
 recognized-tree census; other distinct outdoor families, gyms and Pewter Museum
 interiors remain to be polished. No whole-region, ORAS-equivalence, Android,
 networking or every berry-growth-state claim is made.
+
+## Final archive verification
+
+The committed1.49.0 archive was installed into isolated official0.3.89 shells.
+Every launch checks the actual loaded manifest,16 changed/new Lua modules and
+new hedge PNG through public mod reads (18 SHA256 checks). The source-style
+hedge material replaces the rejected detailed-leaf candidate; its median RGB
+is131/194/96, close to the original top panel132/197/99. Native foreground
+source/render comparisons retain the smooth clipped-green design.
+
+Final standalone package results, all runners exit0:
+
+- Tree census:30 maps,3,539 modeled roots,13,855 recognized blocked cells;
+  zero walking overlaps,uncovered or below25% cells;30 native source digests
+  match the1.48 baseline. Ten native walks/ten bumps and90 inspected images.
+- Kanto gates/rooms:126 fixtures,38 low pads,zero ordinary-solid walking
+  overlaps;16 aisles,eight table bumps,14 actual native exits.70 inspected
+  orbit/eye renders and16 OFF/actual1ST captures across both editions.
+- Hoenn props:9 native blocked approaches,6 stock dialogues;60 orbit/eye
+  renders and24 OFF/actual1ST/dialogue captures inspected across all3 editions.
+- New hedges:6 native side walks/6 blocked approaches,30 orbit/eye renders
+  and12 OFF/actual1ST captures inspected across EM/RU/SA. The camera follows
+  the dynamically selected native hedge direction; it never changes collision.
+
+The main exact archive review totals302 unique images. All6 optional partners
+also pass native FR route-room/exits and RU prop/dialogue smoke in both commit
+sets,with32 further inspected captures and no mod errors. Published partner
+versions:Wild Skies1.15.2,Sky Ride0.5.5,Doubles0.14.3,Online Plus0.11.2,
+Wilds2.6.4,Modern UI0.4.2. The alternate snapshot preserves and tests local
+Wilds70d2cfd(public asset loader) and Doublesf4aad50(optional scene-layout hint).
+The published comparison uses Wildsb81dc23/Doubles5bfc0ef. Neither unrelated
+local commit is published by this model release. These are local native smoke
+checks,not multiplayer networking or a modern-UI visual approval.
+
+Archive integrity,empty hard dependencies,11,431 packaged files and505 LuaJIT
+compiles pass. The11,254 runtime-file hashes are retained through the final
+QA/evidence-only commit and repackage. User saves and primary-checkout GSC work
+remain untouched. Captures,profiles,ROM data and imported art are not committed.
