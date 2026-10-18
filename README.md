@@ -1,3 +1,17 @@
+## 1.47.0 — Oak and Birch laboratories
+
+Polish Oak's Lab in FireRed/LeafGreen and Birch's Lab in Emerald/Ruby/Sapphire.
+Flat, continuous native wallpaper sits behind separate notices and furniture.
+Oak's Pokédex desk, starter table and aquarium respect the native blocked
+footprint; the source padding row no longer creates a black floor strip at the
+entrance. The complete native exit mat sits inside the actual room boundary.
+Birch gains framed notices, separate shelf archive boxes, corrected research
+desks and low pads for native walkable seats, retaining Emerald/RS differences.
+
+Characters, Pokémon and flowers remain HD-2D. Native UI, collision, scripts,
+interaction cells and warps stay authoritative; all companions remain optional.
+[Evidence](docs/GEN3_LABS_2026-10-17.md). The remaining regional queue continues.
+
 ## 1.46.0 — Flat Kanto home walls and native school furniture
 
 Polish six homes and Viridian School in each of FireRed and LeafGreen (14

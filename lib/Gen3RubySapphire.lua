@@ -37,6 +37,8 @@ local martNames={hoenn_mart_clock=true,hoenn_mart_register=true,hoenn_mart_plant
 local labNames={birch_floor_plant=true,birch_side_cupboard=true,birch_southeast_workstation=true,birch_south_book_stacks=true,birch_south_workstation=true,birch_machine=true,birch_books=true,birch_free_books=true,birch_free_books_end=true,birch_computer=true,birch_research_desk=true,birch_starter_desk=true,birch_server=true,birch_plant=true}
 -- These complete native drawings were checked independently against RS
 -- starting homes. Do not activate unrelated Emerald rustic/regional fixtures.
+for _,mid in ipairs{0x20c,0x20d}do labNames['birch_wall_note_'..mid]=true end
+for _,mid in ipairs{0x241,0x239,0x249}do labNames['birch_native_seat_'..mid]=true end
 local homeNames={}
 for _,n in ipairs{'tv','books','fridge','kitchen_drawers','sink','table_yellow','table_plain','chair_555','chair_556','chair_738','plant','small_tv','window','picture','wide_drawers','small_books','bed','table_orange'}do homeNames['hoenn_home_'..n]=true end
 local startNames={}

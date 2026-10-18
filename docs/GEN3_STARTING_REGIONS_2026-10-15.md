@@ -15,10 +15,12 @@ The requested institutional batch is separate; see
 
 Service-room batch 1.43.0 verifies 30 of the 125 edition-map placements below.
 Home batch 1.45.0 adds 27 Hoenn placements. Kanto home/school batch 1.46.0
-adds 14 placements (71 verified total);54 remain queued.
+adds 14 placements. Laboratory batch1.47.0 adds five placements
+(76 verified total);49 remain queued.
 See [the service-room evidence](GEN3_SERVICE_ROOMS_2026-10-15.md).
 See [the home evidence](GEN3_HOMES_2026-10-17.md) and
-[Kanto home/school evidence](GEN3_KANTO_HOMES_2026-10-17.md).
+[Kanto home/school evidence](GEN3_KANTO_HOMES_2026-10-17.md), plus
+[laboratory evidence](GEN3_LABS_2026-10-17.md).
 A source/render capture alone does not complete a queued map.
 
 Walls must be flat and continuous, with no gaps or overlapping grey backing.
@@ -32,7 +34,7 @@ identifiers; Sapphire uses the corresponding `SA_` identifiers.
 
 | Native map | Room/art family | Current pass |
 | --- | --- | --- |
-| `FR_OAKS_LAB` | `oak_lab` | Queued for this regional pass |
+| `FR_OAKS_LAB` | `oak_lab` | Verified laboratory polish 1.47.0 |
 | `FR_PALLET_TOWN` | `pallet_outdoor` | Queued for this regional pass |
 | `FR_PEWTER_CITY` | `pewter_outdoor` | Queued for this regional pass |
 | `FR_PEWTER_CITY_GYM` | `pewter_gym` | Queued for this regional pass |
@@ -73,7 +75,7 @@ identifiers; Sapphire uses the corresponding `SA_` identifiers.
 | `EM_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F` | `building__brendans_mays_house` | Verified home polish 1.45.0 |
 | `EM_LITTLEROOT_TOWN_MAYS_HOUSE_1F` | `building__brendans_mays_house` | Verified home polish 1.45.0 |
 | `EM_LITTLEROOT_TOWN_MAYS_HOUSE_2F` | `building__brendans_mays_house` | Verified home polish 1.45.0 |
-| `EM_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB` | `building__lab` | Queued for this regional pass |
+| `EM_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB` | `building__lab` | Verified laboratory polish 1.47.0 |
 | `EM_OLDALE_TOWN` | `general__petalburg` | Queued for this regional pass |
 | `EM_OLDALE_TOWN_HOUSE1` | `building__generic_building` | Verified home polish 1.45.0 |
 | `EM_OLDALE_TOWN_HOUSE2` | `building__generic_building` | Verified home polish 1.45.0 |
@@ -104,7 +106,7 @@ identifiers; Sapphire uses the corresponding `SA_` identifiers.
 | `RU_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F` | `building__brendans_mays_house` | Verified home polish 1.45.0 |
 | `RU_LITTLEROOT_TOWN_MAYS_HOUSE_1F` | `building__brendans_mays_house` | Verified home polish 1.45.0 |
 | `RU_LITTLEROOT_TOWN_MAYS_HOUSE_2F` | `building__brendans_mays_house` | Verified home polish 1.45.0 |
-| `RU_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB` | `building__lab` | Queued for this regional pass |
+| `RU_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB` | `building__lab` | Verified laboratory polish 1.47.0 |
 | `RU_OLDALE_TOWN` | `general__petalburg` | Queued for this regional pass |
 | `RU_OLDALE_TOWN_HOUSE1` | `building__generic_building` | Verified home polish 1.45.0 |
 | `RU_OLDALE_TOWN_HOUSE2` | `building__generic_building` | Verified home polish 1.45.0 |

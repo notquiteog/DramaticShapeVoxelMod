@@ -12,7 +12,7 @@ M.placement={
  em_museum_glass={z=2,back=16},
  em_home_appliance={z=-16,back=1},em_fortree_drawers={z=-15,back=0},
  em_lab_books={z=-8,back=18},em_lab_computer={z=-11,back=15},
- em_lab_desk={z=-11,back=0},em_lab_server={z=-9,back=18},
+ em_lab_desk={z=0,back=1},em_lab_server={z=-9,back=18},
  fr_mart_cooler={z=-13,back=19},
  fr_lab_pc={z=-9,back=1},fr_lab_terminal={z=-10,back=17},
  fr_lab_server={z=-10,back=21},fr_lab_books={z=-8,back=5},
@@ -25,6 +25,7 @@ M.placement={
  fr_center_pc={z=-11,back=15},fr_upper_pc={z=-11,back=15},
  fr_cupboard={z=-8,back=20},
  fr_living_tv={z=-8,back=19},fr_kitchen={z=-15,back=3},
+ fr_lab_pokedex_desk={z=0,back=1},fr_lab_aquarium={z=0,back=16.2},
 }
 function M.draw(id,A)
  local B,S,T=A.box,A.source,A.sample
@@ -1046,6 +1047,23 @@ function M.draw(id,A)
   B(x,7,3,x+2,10,14,wood)
  elseif id=='em_home_cushion' then
   cushion(2,2,12,12,{2,2,12,12},T(5,5),T(2,2))
+ elseif id=='em_lab_wall_note' then
+  local paper=T(4,10)
+  B(2,12,31.92,9,27,32.25,paper);front({2,8,7,12},2,12,9,27,32.27)
+  B(10,19,31.92,14,29,32.25,paper);front({10,7,4,9},10,19,14,29,32.27)
+ elseif id=='em_lab_seat_pad' then
+  local mat=T(5,7)
+  B(2,0,3,14,.6,14,mat);top({2,4,11,9},2,3,14,14,.62)
+ elseif id=='em_lab_free_books' then
+  local frame,dark=T(1,22),T(3,29)
+  shelves(1,17,30,30,25,{{3,10,{2,34,28,7}},{13,21,{2,24,28,7}}},frame,dark,true)
+  B(1,25,17,31,26.5,47,frame)
+  -- The original yellow archive box on each freestanding shelf is a
+  -- separate closed object, with a lid and recessed drawer handle.
+  local gold=T(10,8)
+  B(5,26.5,20,15,34,32,gold);B(4.5,34,19.5,15.5,35,32.5,gold)
+  front({6,4,9,10},5,26.5,15,34,32.02)
+  B(8,29,32,12,29.6,32.4,T(10,13))
  elseif id=='em_lab_books' then
   -- A freestanding double shelf: solid back and end panels, individually
   -- raised books and readable native spines on both open tiers.
@@ -1058,12 +1076,20 @@ function M.draw(id,A)
   keyboard({9,23,13,5},9,34,13,6,8.1,case)
   B(2,8,28,7,22,37,case);front({2,9,5,16},2,8,7,22,37.02)
  elseif id=='em_lab_desk' then
-  local wood=T(4,16)
-  desk(0,11,64,26,8,wood);top({0,8,64,11},0,11,64,26,8.02)
-  -- Separate research books/papers above the continuous desk surface.
-  for _,q in ipairs({{18,2,11,10},{34,2,10,10},{49,3,10,9}})do
-   local x,y,w,d=unpack(q);B(x,8.05,12,x+w,9.4,12+d,T(x+3,y+3))
-   top(q,x,12,x+w,12+d,9.42)
+  local wood,edge=T(27,22),T(23,17)
+  for _,l in ipairs{0,32}do
+   desk(l+.5,1,l+31.5,15,8,wood)
+   -- Repeat only the clean native checked surface around raised research
+   -- papers/books; never fold their perspective faces onto the furniture.
+   for x=l+1,l+25,8 do top({1,8,8,7},x,1,math.min(l+31,x+8),15,8.02)end
+   B(l+21,1,2,l+30,7,14,wood)
+   front({21,18,9,9},l+21,1,l+30,7,14.02)
+   B(l+24,4,14,l+27,4.6,14.4,edge)
+  end
+  B(9,8.05,3,18,8.3,13,T(10,10));top({9,7,9,8},9,3,18,13,8.32)
+  for _,q in ipairs{{20,3,10,10},{35,3,12,10},{53,1,9,12}}do
+   local x,y,w,d=unpack(q);B(x,8.05,2,x+w,9.4,13,T(x+2,y+2))
+   top(q,x,2,x+w,13,9.42)
   end
  elseif id=='em_lab_starter' then
   local wood,dark=T(3,17),T(17,25)
@@ -1943,6 +1969,28 @@ function M.draw(id,A)
   B(1,8,27,15,9.5,41,case)
   crt(1,26,14,11,24,{2,17,12,10},case,dark)
   keyboard({2,29,12,6},2,34,12,6,9.6,case)
+ elseif id=='fr_lab_exit_mat' then
+  B(11,0,.2,37,.1,15.8,T(11,4));top({11,4,26,16},11,.2,37,15.8,.12)
+ elseif id=='fr_lab_starter_table' then
+  local frame=T(1,20)
+  desk(1,1,47,15,9,frame)
+  B(1,9,1,47,9.6,15,frame);top({1,3,46,12},2,2,46,14,9.62)
+ elseif id=='fr_lab_pokedex_desk' then
+  local wood,edge=T(28,20),T(1,16)
+  desk(.5,1,31.5,15,12,wood);top({0,6,32,10},.5,1,31.5,15,12.02)
+  B(21,1,2,30,10,14,wood);front({21,18,9,8},21,1,30,10,14.02)
+  B(24,5,14,27,5.7,14.5,edge)
+ elseif id=='fr_lab_aquarium' then
+  local frame,water=T(1,26),T(5,12)
+  B(1,0,16.2,15,6,31.5,frame);front({1,26,14,6},1,0,15,6,31.52)
+  B(1,6,16.2,15,27,17.2,frame)
+  B(1,6,17.2,2,27,31.5,frame);B(14,6,17.2,15,27,31.5,frame)
+  B(1,26,16.2,15,28,31.5,frame)
+  B(2,6,17.2,14,7,31.5,frame)
+  B(2,7,17.4,14,24,31.3,water)
+  front({2,9,12,15},2,7,14,24,31.32)
+  -- Raised sash and closed lid keep the native two-pane cabinet readable.
+  B(2,15,31.3,14,16,31.6,frame)
  elseif id=='fr_lab_pc' then
   local case,dark,wood=T(1,3),T(6,8),T(2,20)
   desk(1,10,31,24,7,wood)

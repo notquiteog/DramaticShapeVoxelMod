@@ -94,6 +94,8 @@ local RS=V and V.require('Gen3RubySapphire') or dofile((os.getenv('DS_MOD_PATH')
 for _,r in ipairs(RS.recipes)do recipes[#recipes+1]=r end
 local RSInstitutions=V and V.require('Gen3RSInstitutions') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3RSInstitutions.lua')
 for _,r in ipairs(RSInstitutions.recipes)do recipes[#recipes+1]=r end
+local Research=V and V.require('Gen3ResearchRooms')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3ResearchRooms.lua')
+Research.install(recipes)
 local function recipeActive(r)
  if Hoenn.recipeActive then return Hoenn.recipeActive(r)end
  return Hoenn.active()==(r.family=='rse')
@@ -132,7 +134,7 @@ function M.extract(cells,onlyKind)
  for _,c in ipairs(ordered)do Budget.tick();if not c.prop and not c.stairs or contextRoots[c.mid]then
   for _,r in ipairs(choices(c.mid))do
    if (not onlyKind or r.kind==onlyKind)and recipeActive(r) and c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
-    local match=true;local parts={};local collisionRows=Kanto.permissions(r,c.pair)
+    local match=true;local parts={};local collisionRows=Research.permissions(r,c.pair)or Kanto.permissions(r,c.pair)
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
      local owned=not r.claimCells or r.claimCells[dx..':'..dy]

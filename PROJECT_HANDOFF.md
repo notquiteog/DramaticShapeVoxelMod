@@ -1,3 +1,21 @@
+# Oak/Birch laboratories and Oak's black floor strip — 2026-10-17
+
+1.47.0 covers Oak's Lab in FR/LG and Birch's Lab in EM/RU/SA (five placements).
+One flat native wallpaper plane behind separate fixtures; no recess zigzags or
+projecting entry housing. Native blocked-row Pokédex/starter desks and closed
+aquarium preserve approaches. Oak's black front strip was a padded drawing row
+included in room bounds; the corrected boundary and complete bounded mat remove
+it while keeping custom walking extensions and native exit behavior intact.
+Birch gains separate wall notices, closed archive cases/shelves, corrected north
+research desks and low native seat pads.36 existing permission patterns/six new
+recipes guard source ownership.42 focused drawing tests; mesh104.
+
+321 suites/0 fail/58 unavailable-fixture skips. Final archive evidence pending in
+`docs/GEN3_LABS_2026-10-17.md`. All actors/Pokémon/flowers stay HD-2D; native UI,
+VM/collision/scripts/warps stay authoritative, partners optional. Preserves
+published cc888dd1.46.0 and primary-checkout concurrent work. Regional76/125
+verified,49 remain queued; no whole-region/ORAS-equivalence claim.
+
 # Kanto homes and school: flat native walls — 2026-10-17
 
 1.46.0 covers six home interiors plus Viridian School per FR/LG edition

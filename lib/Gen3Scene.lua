@@ -276,6 +276,15 @@ local function build(req,cache,previous)
   local origin=cells['0:0']
   if origin then Interior.setWallpaper(roomProfile,V.require('Gen3RoomWallpaper').material({id=def.id,voxelWallpaper=home.wall},origin.ts))end
  end
+ if roomProfile and roomProfile.researchRoom then
+  local plan=roomProfile.researchRoom;local b=roomProfile.bounds
+  cache.researchRoom=plan;cache.flatNativeWalls=true;cache.northWallFront=plan.north+.04;cache.furnitureRecesses={}
+  plan.outline={{b[1],b[2]},{b[3],b[2]},{b[3],b[4]},{b[1],b[4]}}
+  for _,p in ipairs(props)do p.researchWall=cache.northWallFront end
+  for _,c in pairs(cells)do if c.cy>=0 and(c.cy<=1 or c.cy*16>=plan.south)and c.cx>=0 and c.cx<def.width then c.researchFloor=plan.floor end end
+  local origin=cells['0:0']
+  if origin then Interior.setWallpaper(roomProfile,V.require('Gen3RoomWallpaper').material({id=def.id,voxelWallpaper=plan.wall},origin.ts))end
+ end
  if roomProfile and V.require('Gen3RSInstitutions').flatWalls(sourcePair,def.id or req.mapId,def.voxelFlatWalls)then
   cache.flatNativeWalls=true
   cache.northWallFront=4
@@ -285,7 +294,7 @@ local function build(req,cache,previous)
   local floor=tonumber(def.voxelWallFloor)or((def.id or req.mapId or''):find('DEVON',1,true)and 0x380 or sourcePair:find('facility',1,true)and 0x2f0 or sourcePair:find('oceanic',1,true)and 0x201 or(def.id or req.mapId or''):find('_2F',1,true)and 0x270 or 0x203)
   for _,c in pairs(cells)do if c.cy>=0 and c.cy<=1 and c.cx>=0 and c.cx<def.width then c.institutionWallFloor=floor end end
  end
- if roomProfile and not roomProfile.serviceRoom and not roomProfile.homeFinish and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='player_house' or sourcePair=='house' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
+ if roomProfile and not roomProfile.serviceRoom and not roomProfile.homeFinish and not roomProfile.researchRoom and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='player_house' or sourcePair=='house' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
   local north=roomProfile.originalNorth or roomProfile.bounds[2]
   for _,q in ipairs(cache.furnitureRecesses)do north=math.min(north,q[3])end
   cache.northWallFront=north+.04
@@ -346,6 +355,8 @@ local function build(req,cache,previous)
   if c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
+  elseif c.researchFloor then
+   V.require('Gen3ServiceRooms').floor(c,cache.researchRoom,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.researchFloor)or uv)
   elseif c.kantoHomeFloor then
    V.require('Gen3ServiceRooms').floor(c,cache.kantoHome,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.kantoHomeFloor)or uv)
   elseif c.serviceRoomFloor then
@@ -570,7 +581,7 @@ local function build(req,cache,previous)
   return front
  end
  local labWall={}
- for _,c in pairs(cells)do if c.secondary=='lab' and c.cy==0 and c.mid~=0 then
+ for _,c in pairs(cells)do if not cache.researchRoom and c.secondary=='lab' and c.cy==0 and c.mid~=0 then
   local b=batches[c.pair];local uv=uvFor(c.ts,0x69)
   if uv and not labWall[c.cx] then
    labWall[c.cx]=true;local x=c.cx*16;local f=wallFront(c.cx,32)
@@ -608,7 +619,8 @@ local function build(req,cache,previous)
   local cutout=p.recipe.cutout
   modelCache.append(def.id or req.mapId,p,function(item,emit)return Furniture.append(item,emit,uvFor)end,function(vertices,uv,shade,anchor)
    if p.homeWall then V.require('Gen3HomeRooms').attach(p,vertices)end
-   if not p.serviceRoom and not p.homeWall and cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
+   if p.researchWall then V.require('Gen3ResearchRooms').attach(p,vertices)end
+   if not p.serviceRoom and not p.homeWall and not p.researchWall and cache.northWallFront and p.cy==0 and ((p.recipe.frontOffset and (p.recipe.depth or 99)<=2) or p.recipe.design=='fr_wall_picture') then
     local shift=cache.northWallFront-31.92
     for _,v in ipairs(vertices)do v[3]=v[3]+shift end
    end

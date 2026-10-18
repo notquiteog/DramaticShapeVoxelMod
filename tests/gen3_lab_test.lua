@@ -15,7 +15,7 @@ for _,x in ipairs({8,9,10})do assert(Furniture.support(cells,92,x*16,4*16)>9,'st
 assert(Furniture.support(cells,94,64,16)>12,'Pokedex clipped into counter')
 assert(Furniture.support(cells,72,128,64)==0,'human actor raised by prop rule')
 assert(Furniture.support(cells,92,160,160)==0,'ground item raised')
-local _,deskZ=Furniture.support(cells,94,64,16);assert(deskZ==5,'Pokedex intersects back wall')
+local _,deskZ=Furniture.support(cells,94,64,16);assert(deskZ==0,'Pokedex must sit at the desk center')
 local count,bounds=0,{math.huge,-math.huge}
 local function uv(_,mid)return {{0,0},{1,0},{1,1},{0,1}}end
 for _,p in ipairs(props)do if p.recipe.kind=='labMachine'then
@@ -30,8 +30,8 @@ assert(count>100 and bounds[1]==0 and bounds[2]>24,'missing round machine body o
 print('PASS full lab machine, supported starter/Pokedex props and grounded NPCs')
 
 -- Native Oak layout: x8..10/y4 is blocked; y5 contains the perspective
--- apron and is used by starter scripts. Restore the top's depth without
--- reaching upright actors' feet at the SOUTH edge of that approach row.
+-- apron and is used by starter scripts. Keep the closed table inside row4
+-- and center the HD-2D/native item drawing on that top without moving its event.
 local minZ,maxZ=math.huge,-math.huge
 for _,p in ipairs(props)do if p.recipe.name=='lab_work_table'then
  Furniture.append(p,function(vertices)
@@ -41,10 +41,10 @@ for _,p in ipairs(props)do if p.recipe.name=='lab_work_table'then
  end,uv)
 end end
 local _,ballZ=Furniture.support(cells,92,8*16,4*16)
-local ballCenter=5*16+ballZ
-assert(maxZ-minZ>=23,'starter table compressed to a narrow bench')
+local ballCenter=4*16+8+ballZ
+assert(maxZ-minZ>=13 and maxZ<=5*16,'starter table must fill its blocked row and keep the approach clear')
 assert(math.abs((minZ+maxZ)/2-ballCenter)<.1,'starters sit at the edge instead of the center')
 assert(ballCenter-6>minZ and ballCenter+6<maxZ,'rotating starter sprite overhangs the top')
 assert(Furniture.support(cells,92,8*16,5*16)==0,'walkable apron incorrectly raises a ground item')
 assert(6*16-6>maxZ,'table reaches upright actors in the approach row')
-print('PASS full-depth lab table, centered starter sprites and clear native approach row')
+print('PASS blocked-row lab table, centered native starter drawings and clear approach row')

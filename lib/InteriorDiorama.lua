@@ -106,6 +106,12 @@ function M.profile(def,gen)
   if pair=='building__generic_building'or pair=='building__brendans_mays_house'or pair=='player_house'or pair=='house'or pair=='building__rom_082d4f5c'then home=V.require('Gen3HomeRooms').profile(def,pair)end
  end
  if home then b[2]=home.north end
+ local research
+ if gen==3 and not cave then
+  local pairs=V.require('Gen3Tilesets');local pair=pairs.canonical and pairs.canonical(def.midLayout.pair)or def.midLayout.pair
+  if pair=='oak_lab'or pair=='building__lab'then research=V.require('Gen3ResearchRooms').profile(def,pair)end
+ end
+ if research then b[2]=research.north;b[4]=research.south end
  local service
  if gen==3 and not cave then
   local pairs=V.require('Gen3Tilesets');local pair=pairs.canonical and pairs.canonical(def.midLayout.pair)or def.midLayout.pair
@@ -113,8 +119,8 @@ function M.profile(def,gen)
  end
  if service then b=service.bounds end
  if flatInstitution then b[2]=3.8 end
- return {bounds=b,height=cave and 96 or gen==3 and (flatInstitution or service or home or theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen,cave=cave,
-  nativeWallFinish=flatInstitution or service~=nil or home~=nil,noInteriorTrim=flatInstitution or service~=nil or home~=nil,serviceRoom=service,homeFinish=home}
+ return {bounds=b,height=cave and 96 or gen==3 and (flatInstitution or service or home or research or theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen,cave=cave,
+  nativeWallFinish=flatInstitution or service~=nil or home~=nil or research~=nil,noInteriorTrim=flatInstitution or service~=nil or home~=nil or research~=nil,serviceRoom=service,homeFinish=home,researchRoom=research}
 end
 local function texture(theme)
  if materials[theme]then return materials[theme]end
@@ -272,7 +278,7 @@ function M.geometry(p,side,opened)
   end
   -- Open exits have a visible frame even when the near wall is cut away.
   -- Jambs sit OUTSIDE the warp opening; no slab blocks the walking lane.
-  for _,q in ipairs(p.homeFinish and{}or doors)do
+  for _,q in ipairs((p.homeFinish or p.researchRoom)and{}or doors)do
    rawPart(q[1]-1.5,0,q[1],doorHeight,2,4.2)
    rawPart(q[2],0,q[2]+1.5,doorHeight,2,4.2)
    rawPart(q[1]-1.5,doorHeight,q[2]+1.5,doorHeight+1.5,3,4.2)
@@ -400,7 +406,7 @@ end
 -- Recess north-wall backing behind corrected fixture footprints. Moving a
 -- desk into its real blocked row must not bury it in the synthetic shell.
 function M.setRecesses(p,fixtures)
- if not p or p.gen~=3 or p.cave or p.serviceRoom or p.homeFinish then return end
+ if not p or p.gen~=3 or p.cave or p.serviceRoom or p.homeFinish or p.researchRoom then return end
  p.originalNorth=p.originalNorth or p.bounds[2]
  local cuts={};local keys={}
  for _,q in ipairs(fixtures or {})do
