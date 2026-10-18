@@ -10,7 +10,13 @@ Birch gains separate wall notices, closed archive cases/shelves, corrected north
 research desks and low native seat pads.36 existing permission patterns/six new
 recipes guard source ownership.42 focused drawing tests; mesh104.
 
-321 suites/0 fail/58 unavailable-fixture skips. Final archive evidence pending in
+321 suites/0 fail/58 unavailable-fixture skips; final paper-crop focused checks
+repeat after the last UV-only change. Exact archive:60 orbit/eye views(25 labs,
+35 neighbors),15 OFF/actual1ST/desk views,18 native approach walks,5 exits,
+2 Oak notice dialogues.111 fixtures/zero ordinary walking overlaps/11 low pads.
+Both lab families pass all6-partner native smoke. Loaded version/eight public
+source hashes checked per launch.11,419 files/498 Lua compile; runtime payload
+hashes retained through evidence repackage. Details:
 `docs/GEN3_LABS_2026-10-17.md`. All actors/Pokémon/flowers stay HD-2D; native UI,
 VM/collision/scripts/warps stay authoritative, partners optional. Preserves
 published cc888dd1.46.0 and primary-checkout concurrent work. Regional76/125

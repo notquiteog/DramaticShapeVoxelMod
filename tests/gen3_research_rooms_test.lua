@@ -76,3 +76,7 @@ walkableFooter=true;assert(Research.profile(d,'oak_lab').south==224,'custom walk
 print('PASS Oak black-padding exclusion, full south floor, native exit opening and walkable extension fallback')
 
 V.require('InteriorFurniture').draw('fr_lab_exit_mat',{sample=function()return{}end,box=function()end,source=function(x,y,w,h)assert(x>=11 and x+w<=37 and y>=4 and y+h<=20,'exit mat includes black source padding')end})
+V.require('InteriorFurniture').draw('em_lab_wall_note',{sample=function()return{}end,box=function()end,source=function(x,y,w,h)
+ assert(y>=7 and y+h<=16,'wall paper crop includes research desk pixels below it')
+end})
+print('PASS wall-note paper UVs exclude the separate desk drawing')
