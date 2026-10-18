@@ -28,3 +28,5 @@ assert(#rasterDraws>0);eq(rasterDraws[1][1],4);eq(rasterDraws[1][3],0);eq(raster
 eq(clip[1],2)
 assert(not pcall(M.drawRaster,G,160,144,runs,false,56,1,56,1,56,143,function()error('raster fail')end));eq(clip[1],2)
 print('PASS native public scanline grouping, lifted source exclusion, BGP rows, signed scroll and viewport clipping')
+local dollClip=M.viewport(false,16,1,16,1,80,8,112)
+assert(dollClip[1]==-40 and dollClip[2]==120,'native enemy doll112px origin retains viewport clipping')

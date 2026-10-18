@@ -40,7 +40,7 @@ native interface/capture/send-out/GSC evidence documents for the actual limits.
 
 | Scope | Current consumer and precise remaining work |
 | --- | --- |
-| G/S/C world animations | `Gen2Staged`: ordinary lifted bands, native scroll and LCD/BGP scanlines now compose into world cards. Combined substitute/faint with raster or lifted effects and animated doubles still return to the native painter; those combinations need further adapters. |
+| G/S/C world animations | `Gen2Staged`: ordinary lifted bands, native scroll and LCD/BGP scanlines now compose into world cards. Substitute dolls now combine with lifted/LCD effects at native16px size and coordinates. Combined faint with raster or lifted effects and animated doubles still return to the native painter; those combinations need further adapters. |
 | G/S/C Legendary send-out | `BattleScene.updateSendout` reads Gen1 grow-in/provider cues; the GSC native send-out reader does not yet drive the full shared Legendary shell/energy choreography. Native resize/effects/audio are retained. |
 | FR/LG/Ru/Sa/E Legendary release | `NativeGen3SendoutShell` renders five existing shell models; native release particles remain original. Full shared Q57 release energy and model-specific subject materials are unfinished. |
 | Native multi-actor effects | Capture/simultaneous release paths deliberately fall back for doubles or ambiguous ownership. Unique native battler IDs exist on GBA, but adapters still need per-actor event ownership and bounded cleanup. Native fallback is not full parity. |

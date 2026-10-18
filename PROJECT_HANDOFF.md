@@ -1,3 +1,13 @@
+# GSC substitute/LCD combinations — 2026-10-17
+
+Native16px substitute dolls now compose with lifted rows/LCD scroll, retaining
+their fixed source coordinates and distinct lifted-pass slide. G/S/C NVIDIA
+0.3.89 original-script checks pass unchanged83/118-frame timing and identity;
+12 captures inspected. Focused tests,549 option checks and202 SDK checks pass.
+Evidence and native HUD obstruction limit:
+`docs/NATIVE_GSC_SUBSTITUTE_EFFECTS_2026-10-17.md`. Faint/raster combinations,
+animated doubles and full Legendary release remain; no full parity claim.
+
 # GLES renderer and construction follow-up — 2026-10-17
 
 Fixed two reproduced GLES scene failures: integer/float occlusion expression and

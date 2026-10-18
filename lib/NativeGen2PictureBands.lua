@@ -52,10 +52,10 @@ function M.runs(view,bg,back,lifted)
  end
  return out
 end
-function M.viewport(back,nativeWidth,nativeScale,width,scale,ax,slide)
+function M.viewport(back,nativeWidth,nativeScale,width,scale,ax,slide,nativeLeft)
  local box=back and 48 or 56
- local nativeX=(back and 16 or 96)+(back and math.floor((box-nativeWidth)/2)or math.max(0,math.floor((box-nativeWidth)/2)))
-  +math.floor(nativeWidth*(1-nativeScale*scale)/2)+slide
+ local nativeX=(nativeLeft or((back and 16 or 96)+(back and math.floor((box-nativeWidth)/2)or math.max(0,math.floor((box-nativeWidth)/2)))
+  +math.floor(nativeWidth*(1-nativeScale*scale)/2)))+slide
  local ratio=width/(nativeWidth*nativeScale)
  local x=ax-width*scale/2+slide*ratio-nativeX*ratio
  return {x,x+160*ratio}

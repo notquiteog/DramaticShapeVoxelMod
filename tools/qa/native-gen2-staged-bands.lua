@@ -40,6 +40,9 @@ return function(game)
  end
  assert(screen and screen.phase=='menu');assert(U.shot(game,dir..'/native-color.png'))
  local party,enemy=game.save.party,screen.battle.enemy
+ if os.getenv('QA_SUBSTITUTE')=='1'then
+  for _,mon in ipairs({screen.battle.player,enemy})do mon.volatile=mon.volatile or{};mon.volatile.substitute=10 end
+ end
  local function finishAnimation()
   local runner=screen.anim
   for i=1,1000 do

@@ -145,7 +145,7 @@ local function poseFor(screen,side,mon,back)
   local substitute=mon.volatile and (tonumber(mon.volatile.substitute)or 0)>0
   if anim and anim.pic~=nil then substitute=anim.pic=='substitute'end
   local lifted=anim and anim.lifted
-  if(lifted or raster)and(sink>0 or substitute)then return end
+  if(lifted or raster)and sink>0 and not substitute then return end
   local scale=anim and RESIZE_TILES[anim.size]
   scale=scale and scale/(back and 6 or 7)or 1
   local slide=anim and anim.slide or 0
@@ -215,12 +215,14 @@ function Gen2Staged.sideTexture(game, side)
     end
   end
   local slidePixels=nativeWidth and poseSlide*iw/(nativeWidth*nativeScale)or poseSlide
-  local doll,dollQuad,dollWidth,dollGround
+  local doll,dollQuad,dollWidth,dollHeight,dollGround
   if dollUp then
     if not screen.substituteDoll then return nil end
     doll,dollQuad=screen:substituteDoll(back)
     if not(doll and dollQuad and dollQuad.getViewport)then return nil end
-    local _,_,w=dollQuad:getViewport();dollWidth=w
+    local _,_,w,h=dollQuad:getViewport();dollWidth,dollHeight=w,h
+    nativeWidth,nativeHeight,nativeScale=w,h,1
+    slidePixels=poseSlide
     dollGround=Foot.bounds(doll,dollQuad)[4]
   end
   local BattleScene = V.require("BattleScene")
@@ -231,11 +233,20 @@ function Gen2Staged.sideTexture(game, side)
   local canvas = canvasFor(side, cw, ch)
   if not canvas then return nil end
 
+  local pictureHeight,pictureScale,pictureGround,colored=ih,poseScale,groundY,trueColor
+  if doll then pictureHeight,pictureScale,pictureGround,colored=dollHeight,1,dollGround,false end
+  local function body(slide,dx,dy)
+    if doll then
+      drawPic(love.graphics,doll,dollQuad,ax-dollWidth/2+slide+(dx or 0),ay-dollGround+(dy or 0))
+    else
+      drawPic(love.graphics,image,quad,ax-iw*poseScale/2+slide+(dx or 0),ay-groundY*poseScale+(dy or 0),poseScale)
+    end
+  end
   local band
   if lifted or raster then
     if not(nativeHeight and love.graphics.getScissor and love.graphics.setScissor)then return nil end
     if lifted then
-      band=V.require('NativeGen2PictureBands').range(back,nativeHeight,nativeScale,ih,poseScale,groundY,ay,lifted)
+      band=V.require('NativeGen2PictureBands').range(back,nativeHeight,nativeScale,pictureHeight,pictureScale,pictureGround,ay,lifted)
       if not band then return nil end
     end
   end
@@ -276,25 +287,23 @@ function Gen2Staged.sideTexture(game, side)
       local Bands=V.require('NativeGen2PictureBands')
       local View=require('src.ui.gen2.BattleAnimView')
       local runs=Bands.runs(View,bg,back,lifted)
-      local clipX=Bands.viewport(back,nativeWidth,nativeScale,iw,poseScale,ax,poseSlide)
-      Bands.drawRaster(g,cw,ch,runs,back,nativeHeight,nativeScale,ih,poseScale,groundY,ay,function(dx,dy,byte)
-        paint(mon,trueColor,function()
-          drawPic(g,image,quad,ax-iw*poseScale/2+slidePixels+dx,ay-groundY*poseScale+dy,poseScale)
-        end,byte)
+      local clipX=Bands.viewport(back,nativeWidth,nativeScale,dollWidth or iw,pictureScale,ax,poseSlide,doll and(back and 32 or 112))
+      Bands.drawRaster(g,cw,ch,runs,back,nativeHeight,nativeScale,pictureHeight,pictureScale,pictureGround,ay,function(dx,dy,byte)
+        paint(mon,colored,function()body(slidePixels,dx,dy)end,byte)
       end,clipX)
       if band then
-        paint(mon,trueColor,function()
+        paint(mon,colored,function()
           Bands.draw(g,cw,ch,band,slidePixels,function(slide,isLifted)
             -- The original final lifted pass bypasses all LCD shifts. Only
             -- draw that band's callback; the base rows were handled above.
-            if isLifted then drawPic(g,image,quad,ax-iw*poseScale/2,ay-groundY*poseScale,poseScale)end
+            if isLifted then body(doll and slidePixels or 0)end
           end)
         end)
       end
     elseif band then
-      paint(mon,trueColor,function()
+      paint(mon,colored,function()
         V.require('NativeGen2PictureBands').draw(g,cw,ch,band,slidePixels,function(slide)
-          drawPic(g,image,quad,ax-iw*poseScale/2+slide,ay-groundY*poseScale,poseScale)
+          body(doll and slidePixels or slide)
         end)
       end)
     elseif doll then

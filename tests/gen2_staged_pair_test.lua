@@ -150,3 +150,27 @@ screen.anim.bg.lcdc='BGP'
 assert(M.sideTexture(game,'enemy')==nil and M.drawn.enemy==nil,'shaderless BGP keeps native veil ownership')
 Palette.available=available
 print('PASS shaderless native BGP fallback')
+
+-- Substitute pictures ignore mon resize, stay16px, and keep their slide even
+-- in the final lifted pass (the native doll placement overrides that X).
+screen.anim.bg={scx=4,bgp=0xe4};pose={size=2,lifted={4,1},slide=8}
+first.volatile={substitute=10};selected=true
+local dollPasses={};love.graphics.draw=function(img,q,x,y,rotation,sx)
+ assert(img==doll and q==dq,'combined effect retains native doll image')
+ dollPasses[#dollPasses+1]={x=x,y=y,scale=sx}
+end
+local mixed=assert(M.sideTexture(game,'player'))
+assert(M.drawn.player==first and mixed.contentWidth==56,'doll LCD retains original actor metrics')
+assert(#dollPasses>=2,'both raster base and lifted doll band drawn')
+local shifted,fixed=false,false
+for _,p in ipairs(dollPasses)do
+ assert((p.scale or 1)==1,'native doll ignores Pokemon resize')
+ shifted=shifted or p.x==mixed.ax-8+8-4
+ fixed=fixed or p.x==mixed.ax-8+8
+end
+assert(shifted and fixed,'doll raster scroll and original lifted slide compose')
+assert(scissor[1]==2 and bgp==0xe4,'combined doll restores render state')
+love.graphics.draw=function()error('combined doll failure')end
+assert(M.sideTexture(game,'player')==nil and M.drawn.player==nil,'failed combined doll restores native ownership')
+assert(scissor[1]==2 and bgp==0xe4,'failed combined doll restores state')
+print('PASS substitute LCD/lifted combination preserves native16px slide/palette and cleanup')
