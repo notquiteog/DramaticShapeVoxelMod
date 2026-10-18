@@ -103,7 +103,7 @@ function M.profile(def,gen)
  local home
  if gen==3 and not cave then
   local pairs=V.require('Gen3Tilesets');local pair=pairs.canonical and pairs.canonical(def.midLayout.pair)or def.midLayout.pair
-  if pair=='building__generic_building'or pair=='building__brendans_mays_house'then home=V.require('Gen3HomeRooms').profile(def,pair)end
+  if pair=='building__generic_building'or pair=='building__brendans_mays_house'or pair=='player_house'or pair=='house'or pair=='building__rom_082d4f5c'then home=V.require('Gen3HomeRooms').profile(def,pair)end
  end
  if home then b[2]=home.north end
  local service

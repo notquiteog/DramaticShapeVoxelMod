@@ -1,3 +1,16 @@
+## 1.46.0 — Flat Kanto home walls and native school furniture
+
+Polish six homes and Viridian School in each of FireRed and LeafGreen (14
+placements). Continuous native wallpaper stays on a single forward wall plane;
+windows, notices and maps have separate closed frames. House stairs project
+without a doorway housing, with rails inside their native footprint. School
+furniture gains closed shelving, a framed chalkboard, window bank and a desk
+with a modeled open book. Native walkable chairs remain low pads.
+
+Characters, Pokémon and flowers stay HD-2D. Native collision, scripts, warps and
+UI remain authoritative; every companion stays optional. The rest of the
+regional queue continues. [Evidence](docs/GEN3_KANTO_HOMES_2026-10-17.md).
+
 ## 1.45.0 — Forward flat house walls and native Hoenn furniture
 
 Bring the starting-home walls forward to the backs of their furniture and keep

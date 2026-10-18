@@ -19,6 +19,7 @@ return function(game)
    if p.recipe.kind=='plant'then -- Decorative foliage/card is not a furniture solid.
    elseif p.recipe.walkablePad then seats=seats+1
    else F.append(p,function(v)
+    V.require('Gen3HomeRooms').attach(p,v)
     local l,r,n,f,b,h=1e9,-1e9,1e9,-1e9,1e9,-1e9
     for _,q in ipairs(v)do l=math.min(l,q[1]);r=math.max(r,q[1]);n=math.min(n,q[3]);f=math.max(f,q[3]);b=math.min(b,q[2]);h=math.max(h,q[2])end
     if h>1.3 then

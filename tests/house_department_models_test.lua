@@ -17,6 +17,7 @@ for _,q in ipairs{{'building__rom_082d4fa4',0x14f},{'building__rom_082d4e24',0x1
  assert(#F.extract({['0:0']={cx=0,cy=0,mid=q[2],pair=q[1],primary='building',ts={}}})==0,'floor/wall became furniture')
 end
 local recipes={};V.require('Gen3DesignedFurniture').install(recipes)
+V.require('Gen3KantoHomes').install(recipes)
 local chosen={}
 for _,r in ipairs(recipes)do if r.design and (r.name:find('department_',1,true)==1 or r.name:find('sevii_',1,true)==1 or r.name:find('corner_',1,true)==1 or r.name:find('vermilion_',1,true)==1 or r.name:find('saffron_',1,true)==1 or r.name:find('cinnabar_',1,true)==1 or r.name:find('condo_',1,true)==1 or r.name:find('lorelei_',1,true)==1 or r.name:find('hotel_lobby_',1,true)==1 or r.name:find('tanoby_masonry_',1,true)==1 or r.name:find('roof_room_',1,true)==1)then chosen[#chosen+1]=r end end
 for _,r in ipairs(V.require('Gen3Hoenn').recipes)do if (r.name:find('hoenn_home_',1,true)==1 or r.name:find('hoenn_start_',1,true)==1) and r.design then chosen[#chosen+1]=r end end

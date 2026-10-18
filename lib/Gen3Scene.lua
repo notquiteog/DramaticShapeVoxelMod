@@ -267,6 +267,11 @@ local function build(req,cache,previous)
   local home=roomProfile.homeFinish
   cache.flatNativeWalls=true;cache.northWallFront=home.north+.04;cache.furnitureRecesses={}
   for _,p in ipairs(props)do p.homeWall=cache.northWallFront end
+  if home.kanto then
+   cache.kantoHome=home;local b=roomProfile.bounds
+   home.outline={{b[1],b[2]},{b[3],b[2]},{b[3],b[4]},{b[1],b[4]}}
+   for _,c in pairs(cells)do if c.cy<=1 and c.cy>=0 and c.cx*16>=b[1]and c.cx*16<b[3]then c.kantoHomeFloor=home.floor end end
+  end
   for _,c in pairs(cells)do if c.stairs then c.stairs.homeWall=cache.northWallFront end end
   local origin=cells['0:0']
   if origin then Interior.setWallpaper(roomProfile,V.require('Gen3RoomWallpaper').material({id=def.id,voxelWallpaper=home.wall},origin.ts))end
@@ -280,7 +285,7 @@ local function build(req,cache,previous)
   local floor=tonumber(def.voxelWallFloor)or((def.id or req.mapId or''):find('DEVON',1,true)and 0x380 or sourcePair:find('facility',1,true)and 0x2f0 or sourcePair:find('oceanic',1,true)and 0x201 or(def.id or req.mapId or''):find('_2F',1,true)and 0x270 or 0x203)
   for _,c in pairs(cells)do if c.cy>=0 and c.cy<=1 and c.cx>=0 and c.cx<def.width then c.institutionWallFloor=floor end end
  end
- if roomProfile and not roomProfile.serviceRoom and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='player_house' or sourcePair=='house' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
+ if roomProfile and not roomProfile.serviceRoom and not roomProfile.homeFinish and (sourcePair=='building__shop' or sourcePair=='building__lab' or sourcePair=='oak_lab' or sourcePair=='player_house' or sourcePair=='house' or sourcePair=='network' or sourcePair=='building__rom_082d4c2c' or sourcePair=='building__rom_082d4bcc')then
   local north=roomProfile.originalNorth or roomProfile.bounds[2]
   for _,q in ipairs(cache.furnitureRecesses)do north=math.min(north,q[3])end
   cache.northWallFront=north+.04
@@ -341,6 +346,8 @@ local function build(req,cache,previous)
   if c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
+  elseif c.kantoHomeFloor then
+   V.require('Gen3ServiceRooms').floor(c,cache.kantoHome,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.kantoHomeFloor)or uv)
   elseif c.serviceRoomFloor then
    V.require('Gen3ServiceRooms').floor(c,cache.serviceRoom,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.serviceRoomFloor)or uv)
   elseif c.institutionWallFloor then
@@ -576,7 +583,7 @@ local function build(req,cache,previous)
  -- window/poster faces remain just in front; object claims must not leave
  -- rectangular holes in the wall finish.
  for _,c in pairs(cells)do if c.cy==0 and c.mid~=0 and c.mid~=8 then
-  local house=c.pair=='player_house' or c.pair=='house'
+  local house=not cache.kantoHome and(c.pair=='player_house' or c.pair=='house')
   local shop=c.pair=='building__rom_082d4bcc'
   local institution=cache.flatNativeWalls and c.pair==sourcePair and c.cx>=0 and c.cx<def.width
   local below=cells[c.cx..':1']

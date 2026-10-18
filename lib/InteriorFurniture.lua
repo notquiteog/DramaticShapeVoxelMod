@@ -1870,6 +1870,45 @@ function M.draw(id,A)
   local case,dark=T(1,19),T(9,33)
   shelves(2,27,28,10,10,{{2,8,{3,34,26,6}}},case,dark)
   crt(2,26,28,12,29,{3,13,26,16},case,dark)
+ elseif id=='fr_home_window' or id=='fr_school_windows' then
+  local w=id=='fr_home_window'and 32 or 64;local mat=T(2,10)
+  local b,h=id=='fr_home_window'and 10 or 14,30
+  B(1,b,31.92,w-1,h,32.3,mat)
+  front(id=='fr_home_window'and{1,10,30,20}or{6,7,52,16},1,b,w-1,h,32.32)
+  B(1,b,32.3,w-1,b+1,33,mat);B(1,h-1,32.3,w-1,h,32.8,mat)
+  B(1,b,32.3,2,h,32.8,mat);B(w-2,b,32.3,w-1,h,32.8,mat)
+  for x=16,w-2,16 do B(x-.4,b+1,32.3,x+.4,h-1,32.7,mat)end
+ elseif id=='fr_home_note' or id=='fr_home_map' or id=='fr_school_map' or id=='fr_school_board' then
+  local note=id=='fr_home_note';local board=id=='fr_school_board'
+  local w=note and 16 or 32;local b,h=board and 6 or 11,board and 29 or 28
+  local mat=T(1,11)
+  B(1,b,31.92,w-1,h,32.35,mat)
+  B(1,b,32.35,2,h,32.8,mat);B(w-2,b,32.35,w-1,h,32.8,mat)
+  B(2,b,32.35,w-2,b+1,32.8,mat);B(2,h-1,32.35,w-2,h,32.8,mat)
+  local crop=board and{1,16,30,20}or id=='fr_school_map'and{7,16,21,11}or{2,10,w-4,17}
+  front(crop,2,b+1,w-2,h-1,32.37)
+  if board then B(2,b,32.35,w-2,b+.7,34,T(3,30))end
+ elseif id=='fr_home_seat' or id=='fr_school_seat' then
+  -- Native walking permissions win over the perspective drawing of a chair.
+  -- Keep its upholstery as a closed, low floor pad without a blocking back.
+  local n=id=='fr_home_seat'and 3 or 17
+  B(2,0,n,14,.6,n+12,T(3,8));top({2,2,12,12},2,n,14,n+12,.62)
+ elseif id=='fr_school_books' then
+  local frame,dark=T(1,21),T(3,29)
+  shelves(1,17,30,30,27,{{3,10,{2,34,28,8}},{13,20,{2,22,28,8}}},frame,dark,true)
+  B(2,21,18,30,26,46,frame);front({2,16,28,6},2,21,30,26,46.02)
+ elseif id=='fr_school_desk' then
+  local wood=T(27,10);desk(1,17,31,31,8,wood)
+  top({1,1,30,14},1,17,31,31,8.02)
+  -- The open textbook is separate from the desk, with closed covers and
+  -- two inclined pages retaining the native drawing and its red bookmark.
+  B(2,8,18,17,8.5,29,T(4,4))
+  S(2,2,7,11,{2,8.55,18},{9,9.3,18},{9,9.3,29},{2,8.55,29})
+  S(9,2,7,11,{9,9.3,18},{16,8.55,18},{16,8.55,29},{9,9.3,29})
+  for _,z in ipairs{18,29}do
+   A.face({{2,8.5,z},{9,8.5,z},{9,9.3,z},{2,8.55,z}},T(4,4))
+   A.face({{9,8.5,z},{16,8.5,z},{16,8.55,z},{9,9.3,z}},T(12,4))
+  end
  elseif id=='fr_wall_picture' then
   B(1,9,31.92,15,23,32.6,T(1,9))
   local rim=T(2,10)
@@ -1881,7 +1920,8 @@ function M.draw(id,A)
   B(1,0,27,15,6,39,case);front({1,34,14,7},1,0,15,6,39.02)
   crt(1,27,14,7.5,20,{1,26,14,8},case,dark)
   -- Native wall note stays flat against the backing, above the television.
-  front({8,9,7,8},8,23,15,31,31.85)
+  B(8,23,31.7,15,31,31.85,T(8,9))
+  front({8,9,7,8},8,23,15,31,31.87)
  elseif id=='fr_cupboard' then
   local wood,dark=T(2,14),T(4,37)
   shelves(1,28,22,11,25,{{3,9,{2,34,19,6}},{10,18,{2,25,19,8}}},wood,dark)

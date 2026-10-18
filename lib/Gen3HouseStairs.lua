@@ -49,7 +49,7 @@ function M.append(g,emit,uvFor)
   local x=x0+i*4;local h=down and (-24+i*3)or (i+1)*3
   box(x,h-1.2,17,x+4,h,31,tread)
   box(x,h-3,17,x+.7,h-1.2,31,wood)
-  box(x-.2,h-.65,16.7,x+.7,h+.02,31.3,trim)
+  box(g.homeWall and math.max(x0+.05,x-.2)or x-.2,h-.65,16.7,x+.7,h+.02,31.3,trim)
  end
  -- Closed sloped rectangular beams: no gaps at stair corners or exposed
  -- underside. Handrails use the same slope as the supporting stringers.
@@ -63,12 +63,13 @@ function M.append(g,emit,uvFor)
   face({{x1,b-thickness,z+width},{x1,b-thickness,z},{x1,b,z},{x1,b,z+width}},trim,.8)
   face({{x0,a-thickness,z+width},{x0,a-thickness,z},{x1,b-thickness,z},{x1,b-thickness,z+width}},wood,.6)
  end
- for _,z in ipairs({15.5,31.5})do
+ for _,z in ipairs(g.homeWall and{16.5,30.3}or{15.5,31.5})do
   beam(z,1,-1,4)
   if not down then
    beam(z-.3,1.6,7,1.4)
    for i=0,4 do
     local x=x0+i*8;local h=low+i*6
+    if g.homeWall then x=math.max(x0+.6,math.min(x1-.6,x))end
     box(x-.55,h-1,z,x+.55,h+7,z+1,wood)
    end
   end
@@ -76,9 +77,11 @@ function M.append(g,emit,uvFor)
  if down then
   -- Enclose the cut-out on three sides and at its bottom. Leave its
   -- landing edge open so the descending flight reads as a stairwell.
-  box(0,-27,15,32,0,16,wood);box(0,-27,32,32,0,34,wood)
+  local back,front=g.homeWall and 16.05 or 15,g.homeWall and 31 or 32
+  local backEnd,frontEnd=g.homeWall and 16.8 or 16,g.homeWall and 31.95 or 34
+  box(0,-27,back,32,0,backEnd,wood);box(0,-27,front,32,0,frontEnd,wood)
   box(0,-27,16,1,0,32,wood);box(0,-28,16,32,-27,32,wood)
-  box(0,0,15,32,1,16,trim);box(0,0,32,32,1,34,trim)
+  box(0,0,back,32,1,backEnd,trim);box(0,0,front,32,1,frontEnd,trim)
   box(31.3,-3,16,32,0,32,wood)
  end
 end

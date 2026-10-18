@@ -1,3 +1,23 @@
+# Kanto homes and school: flat native walls — 2026-10-17
+
+1.46.0 covers six home interiors plus Viridian School per FR/LG edition
+(14 placements). One forward wallpapered wall stays flat behind separate framed
+windows, notes/maps and furniture; native floor replaces old wall drawing quads.
+Horizontal stair flights project without a doorway housing, with rails/stairwell
+frames within native depth. School gains closed shelves, framed board/windows,
+a desk and separate open textbook. Walkable chairs remain low native pads.
+18 complete recipes plus existing-furnishing permissions guard walking lanes;
+unknown headers keep their renderer. Mesh103. Native UI/gameplay/warps and
+HD-2D actors/Pokémon/flowers remain; every partner stays optional.
+
+Source:320 suites/0 failures/58 unavailable-fixture skips;148 fixtures across14
+rooms,0 ordinary-solid walking overlaps,44 low pads.70 candidate orbit/eye
+renders inspected; native14 aisles/4 stair transitions/12 south exits pass,
+with OFF and actual1ST captures. Final archive evidence pending completion in
+`docs/GEN3_KANTO_HOMES_2026-10-17.md`. Preserves published c42854d1.45.0 and
+all primary-checkout concurrent work. Regional queue71/125 verified,54 queued.
+No whole-region or ORAS-equivalent claim.
+
 # Forward flat home walls and flush stairs — 2026-10-17
 
 1.45.0 models nine homes per Hoenn edition (27 placements): both floors in both
