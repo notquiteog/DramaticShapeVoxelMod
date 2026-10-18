@@ -176,8 +176,10 @@ function Gen2Staged.sideTexture(game, side)
   local partner = nil
   local battle = screen.battle
   if battle and battle.doubles then
-    local p2 = (side == "player" and battle.player2)
-      or (side == "enemy" and battle.enemy2) or nil
+    -- The queue may still SHOW an outgoing partner after the core has already
+    -- switched it. Use the same public identity reader as the native painter.
+    local okPartner,p2=pcall(screen.activeMon,screen,side..'2')
+    if not okPartner then return nil end
     if p2 and p2 ~= mon and (p2.hp or 0) > 0 then partner = p2 end
   end
   local pimage, pquad,pground,ptrueColor = nil,nil,nil,nil
@@ -185,7 +187,9 @@ function Gen2Staged.sideTexture(game, side)
   if partner then
     local selected
     pimage,iw2,ih2,pquad,selected,pground,ptrueColor=picFor(game,screen,partner,back)
-    if not pimage then iw2,ih2=0,0 end
+    -- Keep the whole native side when its pair cannot be composed. Depending
+    -- on mod load order, the native drawPic wrapper owns both actors together.
+    if not pimage then return nil end
   end
 
   local Foot=V.require('BattleSpriteFooting')

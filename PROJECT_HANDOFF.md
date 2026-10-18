@@ -1,3 +1,12 @@
+# GSC queued partner identity — 2026-10-17
+
+Paired cards now use native activeMon(slot2) identity and return the whole side
+to native drawing if either partner cannot be read/rendered. Focused tests and
+actual G/S/C all-seven-mod fixtures pass;6captures inspected. Native HUD obscures
+much of the opposing pair at this framing, handed to camera worker; no visual
+full-parity claim. Evidence: `docs/NATIVE_GSC_PAIR_IDENTITY_2026-10-17.md`.
+Animated doubles and multi-actor capture/release remain.
+
 # GSC combined faint/LCD cards — 2026-10-17
 
 Original faint progress now composes inside lifted-row/LCD clips, preserving

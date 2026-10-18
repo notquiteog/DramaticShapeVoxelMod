@@ -6,7 +6,11 @@ local draws={}
 local function pic(w,h)return {getDimensions=function()return w,h end} end
 local first,second={hp=10},{hp=10}
 local screen={battle={doubles={},enemy2=second}}
-function screen:activeMon()return first end
+local shownPartner
+function screen:activeMon(side)
+ if side=='player2'or side=='enemy2'then return shownPartner or self.battle[side]end
+ return first
+end
 function screen:pic(mon)return mon==first and pic(56,56) or pic(64,48) end
 local target
 local captureOwned=false
@@ -39,6 +43,18 @@ assert(draws[1].y+draws[1].h==draws[2].y+draws[2].h,'feet not aligned')
 assert(M.drawn.enemy==first and M.drawn.enemy2==second,'flat replay must skip both rendered bodies')
 assert(draws[1].y+draws[1].h-7==texture.ay,'transparent image padding raised visible feet')
 assert(target==nil,'previous render target not restored')
+-- Queue-owned shown partners can differ from the already-advanced core slot.
+local nextPartner={hp=10};screen.battle.enemy2=nextPartner;shownPartner=second
+assert(M.sideTexture(game,'enemy')and M.drawn.enemy2==second,'core replacement stole the outgoing native picture')
+shownPartner=nil;screen.battle.enemy2=second
+local pairPic=screen.pic;screen.pic=function(self,mon,back)if mon~=second then return pairPic(self,mon,back)end end
+assert(M.sideTexture(game,'enemy')==nil and M.drawn.enemy==nil and M.drawn.enemy2==nil,'missing partner art must release the whole native side')
+screen.pic=pairPic
+local pairIdentity=screen.activeMon;screen.activeMon=function(self,side)if side=='enemy2'then error('provider unavailable')end;return pairIdentity(self,side)end
+assert(M.sideTexture(game,'enemy')==nil and M.drawn.enemy==nil,'failed partner reader claimed native side')
+screen.activeMon=pairIdentity
+print('PASS public shown-partner identity and unavailable-pair native ownership')
+
 local back=assert(M.sideTexture(game,'player'))
 assert(back.noMirror==true,'native back sprites must not receive the Gen 1 front-pic mirror')
 assert(back.modernFraming,'Crystal enables wider scene framing')
