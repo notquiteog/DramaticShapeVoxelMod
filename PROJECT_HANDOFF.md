@@ -1,3 +1,13 @@
+# Native GSC substitute/faint world presentation — 2026-10-17
+
+Original substitute dolls and fainting rows now stay in the world card with
+native identity, size/palette, timing and original OFF fallback. G/S/C actual
+attack/KO fixtures pass12 faint frames and72 doll reads each;12 captures inspected.
+Focused tests plus202/202 Gen2 engine SDK checks pass. Evidence and remaining
+lifted-row/doubles/release limits: `docs/NATIVE_GSC_WORLD_COMPOSITES_2026-10-17.md`.
+The current parity audit is updated; no full-completion claim. Source-only after
+91ef44f, no model/release/version changes.
+
 # Native GSC picture state and current parity audit — 2026-10-17
 
 World cards now follow native hidden/airborne/resize/slide state, species/shiny

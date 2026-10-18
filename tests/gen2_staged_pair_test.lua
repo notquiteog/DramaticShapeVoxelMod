@@ -21,7 +21,7 @@ love={graphics={
  draw=function(img,x,y)local w,h=img:getDimensions();draws[#draws+1]={x=x,y=y,w=w,h=h} end,
 }}
 local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
- if name=='BattleSpriteFooting'then return {bounds=function(image)local w,h=image:getDimensions();return {0,0,w,h-7}end}end
+ if name=='BattleSpriteFooting'then return {bounds=function(image,quad)local w,h=image:getDimensions();if quad and quad.getViewport then local x,y;x,y,w,h=quad:getViewport()end;return {0,0,w,h-7}end}end
  if name=='Gen2Capture'then return {active=function()return captureOwned end}end
  if name=='Generation' then return {isGen2=function()return true end} end
  if name=='BattleScene' then return {GB_W=160,GB_H=144} end
@@ -98,3 +98,34 @@ screen.frontAnimFrame=function(mon)return sheet,quad,56 end
 local img,w,h,q=M.picFor(game,screen,first,false)
 assert(img==sheet and w==56 and h==56 and q==quad,'native Crystal front animation frame')
 print('PASS native indexed/shiny palette ownership and original Crystal frame reader')
+
+-- Native faint rows remain on the world card, with full graphics restoration.
+screen.frontAnimFrame=nil;pose=nil;screen.anim=nil
+local scissor={2,3,40,50};local seenClip;local failDraw=false
+love.graphics.getScissor=function()return unpack(scissor)end
+love.graphics.setScissor=function(...)scissor={...}end
+love.graphics.draw=function(img,...)if failDraw then error('fixture draw failed')end;seenClip={unpack(scissor)};scaled={...}end
+sink=8;local faint=assert(M.sideTexture(game,'enemy'))
+assert(scaled[2]==faint.ay-49+8 and seenClip[4]==faint.ay,'native sink clipped at fixed world ground')
+assert(scissor[1]==2 and scissor[4]==50 and target==nil,'scissor/canvas restored')
+local originalPic=screen.pic
+screen.pic=function()return pic(48,48),true end;selected=true
+local fitted=assert(M.sideTexture(game,'player'))
+assert(math.abs(scaled[2]-(fitted.ay-49+8*56/48))<1e-9,'larger selected frame follows native fitted-slot faint progress')
+screen.pic=originalPic;selected=false
+sink=64;assert(M.sideTexture(game,'enemy')and M.drawn.enemy==first,'fully sunk card keeps flat slot suppressed')
+failDraw=true;assert(M.sideTexture(game,'enemy')==nil and M.drawn.enemy==nil,'failed crop returns native ownership')
+assert(scissor[1]==2 and scissor[4]==50 and target==nil,'failed crop restores graphics');failDraw=false;sink=0
+
+-- The native doll stays small and uses native facing/mon palette even with
+-- selected RGBA Pokemon art; no species-sized substitute is invented.
+local doll=pic(16,32);local dq={getViewport=function()return 0,16,16,16 end}
+screen.substituteDoll=function(_,back)assert(back==true);return doll,dq end
+first.volatile={substitute=10};selected=true
+local usedImage,usedQuad;love.graphics.draw=function(img,q,x,y)usedImage,usedQuad=img,q;scaled={x,y}end
+local before=paletteCalls;local sub=assert(M.sideTexture(game,'player'))
+assert(usedImage==doll and usedQuad==dq and scaled[1]==sub.ax-8 and scaled[2]==sub.ay-9,'original doll art/facing/16px width')
+assert(sub.contentWidth==56 and paletteCalls==before+1,'doll retains actor metrics and indexed palette')
+pose={pic='mon'};assert(M.sideTexture(game,'player')and usedImage~=doll,'native explicit mon restores selected body')
+pose=nil;screen.battle.doubles=true;assert(M.sideTexture(game,'player')==nil,'doubles substitute retains native ownership')
+print('PASS native faint crop/empty ownership/error restoration and substitute identity/size/palette')

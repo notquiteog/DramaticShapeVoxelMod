@@ -94,7 +94,7 @@ local FOOT_PAD = 1
 
 -- Companions own art. A staged provider may supply full-body animation
 -- without replacing the original engine screen or reaching into its files.
-local function picFor(game,screen,mon,back)
+local function picFor(game,screen,mon,back,static)
   local owned=V.require('NativeBattleArt').image(mon,back)
   if owned then local w,h=owned:getDimensions();return owned,w,h,nil,true,nil,true end
   local providers=game and game.mods and game.mods.exports
@@ -109,7 +109,7 @@ local function picFor(game,screen,mon,back)
   end
   local ok,image,trueColor=pcall(screen.pic,screen,mon,back)
   if not (ok and image) then return nil end
-  if not back and screen.frontAnimFrame then
+  if not static and not back and screen.frontAnimFrame then
     local sheet,quad,size=screen:frontAnimFrame(mon)
     if sheet and quad and type(size)=='number'and size>0 then
       local _,h=image:getDimensions()
@@ -131,20 +131,20 @@ local RESIZE_TILES={[0]=6,[1]=4,[2]=2,[3]=7,[4]=5,[5]=3}
 local function poseFor(screen,side,mon,back)
   -- Supported Legendary intake already owns hiding/shrinking this enemy.
   -- Its world card must survive the native box-clear until the 3D beat ends.
-  if side=='enemy'and V.require('Gen2Capture').active(screen,screen.anim)then return 1,0 end
+  if side=='enemy'and V.require('Gen2Capture').active(screen,screen.anim)then return 1,0,nil,0,false end
   if screen.picBoxCleared and screen:picBoxCleared(side)then return end
   if screen.isUnderground and screen:isUnderground(side,mon)
     and not(screen.vanishAnim and screen.vanishAnim==screen.anim)then return end
-  if screen.faintSink and screen:faintSink(side)>0 then return end
+  local sink=screen.faintSink and screen:faintSink(side)or 0
   local anim=screen.animPicState and screen:animPicState(side)
   local substitute=mon.volatile and (tonumber(mon.volatile.substitute)or 0)>0
   if anim and anim.pic~=nil then substitute=anim.pic=='substitute'end
-  if substitute or(anim and anim.lifted)then return end
+  if anim and anim.lifted then return end
   local scale=anim and RESIZE_TILES[anim.size]
   scale=scale and scale/(back and 6 or 7)or 1
   local slide=anim and anim.slide or 0
-  if screen.battle and screen.battle.doubles and(scale~=1 or slide~=0)then return end
-  return scale,slide,anim and anim.shade
+  if screen.battle and screen.battle.doubles and(scale~=1 or slide~=0 or sink>0 or substitute)then return end
+  return scale,slide,anim and anim.shade,sink,substitute
 end
 
 function Gen2Staged.sideTexture(game, side)
@@ -158,9 +158,9 @@ function Gen2Staged.sideTexture(game, side)
   if back and V.require('BattleArt').backPlacementSetting:get()=='ui' then return nil end
   local okMon, mon = pcall(screen.activeMon, screen, side)
   if not (okMon and mon) then return nil end
-  local poseScale,poseSlide,poseShade=poseFor(screen,side,mon,back)
+  local poseScale,poseSlide,poseShade,poseSink,dollUp=poseFor(screen,side,mon,back)
   if not poseScale then return nil end
-  local image,iw,ih,quad,selectedArt,groundY,trueColor=picFor(game,screen,mon,back)
+  local image,iw,ih,quad,selectedArt,groundY,trueColor=picFor(game,screen,mon,back,poseSink>0)
   if not image then return nil end
 
   -- A 2v2 round fields a partner beside the lead (the doubles layer keeps
@@ -191,6 +191,25 @@ function Gen2Staged.sideTexture(game, side)
   local pm=pimage and Art.metrics and Art.metrics(pimage)
   groundY=groundY or (metric and metric.y1+1) or box[4]
   pground=pground or (pm and pm.y1+1) or (pbox and pbox[4])
+  local sinkPixels=poseSink
+  if poseSink>0 then
+    -- Selected world frames may be larger than the original fitted UI slot.
+    -- Convert the native pixel clock through that public slot's actual scale.
+    local ok,native,_,path=pcall(screen.pic,screen,mon,back)
+    if ok and native then
+      local _,nh=native:getDimensions()
+      local scale=screen.picScale and screen:picScale(path,mon,back)or 1
+      if nh>0 and scale>0 then sinkPixels=poseSink*ih/(nh*scale)end
+    end
+  end
+  local doll,dollQuad,dollWidth,dollGround
+  if dollUp then
+    if not screen.substituteDoll then return nil end
+    doll,dollQuad=screen:substituteDoll(back)
+    if not(doll and dollQuad and dollQuad.getViewport)then return nil end
+    local _,_,w=dollQuad:getViewport();dollWidth=w
+    dollGround=Foot.bounds(doll,dollQuad)[4]
+  end
   local BattleScene = V.require("BattleScene")
   local cw = math.max(BattleScene.GB_W or 160, iw + iw2 + 2)
   local ch = math.max(BattleScene.GB_H or 144, math.max(ih, ih2) + 2)
@@ -209,6 +228,11 @@ function Gen2Staged.sideTexture(game, side)
   local g = love.graphics
   local prev = g.getCanvas()
   local pr, pg, pb, pa = g.getColor()
+  local sx,sy,sw,sh
+  if poseSink>0 then
+    if not(g.getScissor and g.setScissor)then return nil end
+    sx,sy,sw,sh=g.getScissor()
+  end
   local okDraw = pcall(function()
     g.setCanvas(canvas)
     g.clear(0, 0, 0, 0)
@@ -220,11 +244,21 @@ function Gen2Staged.sideTexture(game, side)
     if pimage then
       paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw,ay-groundY)end)
       paint(partner,ptrueColor,function()drawPic(g,pimage,pquad,ax,ay-pground)end)
+    elseif doll then
+      -- The native 16px doll keeps its own facing and indexed species colors;
+      -- the actor card retains the mon's bounds, so it is not inflated to a mon.
+      paint(mon,false,function()drawPic(g,doll,dollQuad,ax-dollWidth/2+poseSlide,ay-dollGround)end)
     else
-      paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw*poseScale/2+poseSlide,ay-groundY*poseScale,poseScale)end)
+      -- Match native sinking rows while clipping at the world's fixed ground
+      -- line. A fully sunk transparent card still owns the native flat slot.
+      if poseSink>0 then g.setScissor(0,0,cw,ay)end
+      paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw*poseScale/2+poseSlide,ay-groundY*poseScale+sinkPixels,poseScale)end)
     end
   end)
   g.setCanvas(prev)
+  if poseSink>0 then
+    if sx then g.setScissor(sx,sy,sw,sh)else g.setScissor()end
+  end
   g.setColor(pr, pg, pb, pa)
   if not okDraw then return nil end
 
