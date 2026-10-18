@@ -2139,8 +2139,8 @@
         "label": "EMBER LEGACY",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
+        "consumer": "lib/Gen2Capture.lua; lib/NativeGen2Sendout.lua; lib/BattleScene.lua; lib/Pokeball.lua",
+        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Normal single-actor send-outs now read the native event into the shared Q57 release shell/energy; shiny stars and native reveal/cry clocks stay native. Only successfully drawn shared release replaces normal particles, and native completion/cancellation clears it. Independent provider cues retain precedence. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {
@@ -2199,8 +2199,8 @@
         "label": "CAPTURE FX PRESET",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
+        "consumer": "lib/Gen2Capture.lua; lib/NativeGen2Sendout.lua; lib/BattleScene.lua; lib/Pokeball.lua",
+        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Normal single-actor send-outs now read the native event into the shared Q57 release shell/energy; shiny stars and native reveal/cry clocks stay native. Only successfully drawn shared release replaces normal particles, and native completion/cancellation clears it. Independent provider cues retain precedence. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {
@@ -2209,8 +2209,8 @@
         "label": "CAPTURE SPEED",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
+        "consumer": "lib/Gen2Capture.lua; lib/NativeGen2Sendout.lua; lib/BattleScene.lua; lib/Pokeball.lua",
+        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Normal single-actor send-outs now read the native event into the shared Q57 release shell/energy; shiny stars and native reveal/cry clocks stay native. Only successfully drawn shared release replaces normal particles, and native completion/cancellation clears it. Independent provider cues retain precedence. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {
@@ -2229,8 +2229,8 @@
         "label": "BALL OPEN TIME",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
+        "consumer": "lib/Gen2Capture.lua; lib/NativeGen2Sendout.lua; lib/BattleScene.lua; lib/Pokeball.lua",
+        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Normal single-actor send-outs now read the native event into the shared Q57 release shell/energy; shiny stars and native reveal/cry clocks stay native. Only successfully drawn shared release replaces normal particles, and native completion/cancellation clears it. Independent provider cues retain precedence. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {
@@ -2249,8 +2249,8 @@
         "label": "BALL SIZE",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
+        "consumer": "lib/Gen2Capture.lua; lib/NativeGen2Sendout.lua; lib/BattleScene.lua; lib/Pokeball.lua",
+        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Normal single-actor send-outs now read the native event into the shared Q57 release shell/energy; shiny stars and native reveal/cry clocks stay native. Only successfully drawn shared release replaces normal particles, and native completion/cancellation clears it. Independent provider cues retain precedence. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {
@@ -2259,8 +2259,8 @@
         "label": "STREAMERS",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen2Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua",
-        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
+        "consumer": "lib/Gen2Capture.lua; lib/NativeGen2Sendout.lua; lib/BattleScene.lua; lib/Pokeball.lua",
+        "detail": "Native wild-single Poke/Great/Ultra/Master and DUDE tutorial Poke Ball throw/wobble/result events drive the shared 3D prop and capture effects; OFF or an unavailable stage retains native animation. Native RNG, inventory and timing remain authoritative. Specialty balls, trainer-blocked throws, contest and doubles retain native presentation. Tutorial auto-input, temporary pack and no-catch-storage rules remain native. Normal single-actor send-outs now read the native event into the shared Q57 release shell/energy; shiny stars and native reveal/cry clocks stay native. Only successfully drawn shared release replaces normal particles, and native completion/cancellation clears it. Independent provider cues retain precedence. Capture and normal send-out audio have separate partial adapters; native recall has no dedicated sound/animation cue.",
         "verification": "source audit"
       },
       {

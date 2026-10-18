@@ -1,3 +1,13 @@
+# GSC native Legendary release — 2026-10-17
+
+Single-actor original send-out events now drive shared Q57 shell/energy, with
+native reveal/cry/shiny clocks and B cancellation retained. Original particles
+fall back until geometry succeeds; shiny stars and provider precedence remain.
+G/S/C NVIDIA0.3.89 scripts pass108/108frames, cancellation, OFF and identity;
+9 captures inspected. Focused tests,549 option checks,202 SDK checks pass.
+Evidence/limits: `docs/NATIVE_GSC_RELEASE_2026-10-17.md`. GBA full release,
+multi-actor effects and combined faint/LCD remain; no full parity claim.
+
 # GSC substitute/LCD combinations — 2026-10-17
 
 Native16px substitute dolls now compose with lifted rows/LCD scroll, retaining

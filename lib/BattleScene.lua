@@ -984,12 +984,22 @@ local function updateSendout(battle)
   end
   battle.legendaryReleasePose = {}
   if not PokeballSettings.active() then sendoutSides={}; return end
+  local nativeReader, nativeScreen
+  if generationOK and generation.isGen2 and generation.isGen2() then
+    nativeReader=V.require('NativeGen2Sendout')
+    nativeReader.install()
+    nativeScreen=nativeReader.screen(V.mod.world.game,battle)
+    if not nativeScreen then sendoutSides={}; return end
+  end
   local now = love.timer.getTime()
   for _,side in ipairs({"player","enemy"}) do
     local battler = battle[side]
     local entry = sendoutSides[side]
     if not entry or entry.battler~=battler then
       entry={battler=battler}; sendoutSides[side]=entry
+    end
+    if nativeScreen and entry.nativeCue and nativeScreen.afterSendOut~=entry.nativeCue then
+      entry.shell=nil
     end
     local grow
     if battler and type(battle.growInScale)=="function" then
@@ -998,18 +1008,22 @@ local function updateSendout(battle)
     end
     local growing=type(grow)=="number" and grow<1
     local capturing=battle._legendaryBallSequence or battle._dsBallSequenceActive
-    local eligible=side=="player" or battle.kind~="wild"
+    local eligible=side=="player" or (nativeScreen and not nativeScreen.battle.wild)
+      or (not nativeScreen and battle.kind~="wild")
     local provider=battle.legendaryModelRelease
     local cue=provider and provider[side]
     local start=cue and cue.battler==battler and cue.started or nil
+    local nativeCue=not provider and nativeReader and nativeReader.cue(nativeScreen,side,battler)
     local fresh=provider and start and start~=entry.cueStarted
-      or not provider and growing and not entry.wasGrowing
+      or nativeCue and nativeCue~=entry.nativeCue
+      or not provider and not nativeReader and growing and not entry.wasGrowing
     if eligible and battler and fresh and not capturing then
       entry.emberClosed=nil
       entry.shell=Pokeball.new("POKE_BALL")
       entry.shell.scale=math.max(0.85,entry.shell.scale)
       entry.started=start or now
       entry.cueStarted=start
+      entry.nativeCue=nativeCue
       entry.age,entry.last=math.max(0,now-entry.started),now
     end
     entry.wasGrowing=growing
