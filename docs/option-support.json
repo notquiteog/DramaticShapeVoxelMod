@@ -2110,7 +2110,7 @@
         "module": "InterfaceSprites",
         "status": "partial",
         "consumer": "lib/Gen2InterfaceArt.lua; lib/Gen2EvolutionArt.lua; lib/Gen2TradeHatchArt.lua; lib/Gen2OakArt.lua; lib/Gen2PictureScope.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
-        "detail": "Native Summary/Dex, BoxMenu, Hall-of-Fame front/back slides, evolution, trade, revealed hatchlings and Oak Pokemon pictures consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Scoped draws preserve native animation timers, cancellation/skip, sounds and party ownership. Egg shells/Unown keep native art and Crystal retains ownership. Oak indexed palette-rotation reveals still draw native art until the effect completes. Gen2 cinematic title art has no equivalent Gen1 cycling-starter reader.",
+        "detail": "Native Summary/Dex, BoxMenu, Hall-of-Fame front/back slides, evolution, trade, revealed hatchlings and Oak Pokemon pictures consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Scoped draws preserve native animation timers, cancellation/skip, sounds and party ownership. Egg shells/Unown keep native art and Crystal retains ownership. Vanilla Oak Pokemon reveals use the supported wipe; indexed rotation belongs to native trainer portraits. A custom Pokemon rotation step retains native art until complete. Gen2 cinematic title art has no equivalent Gen1 cycling-starter reader.",
         "verification": "source audit"
       },
       {
@@ -2120,7 +2120,7 @@
         "module": "InterfaceSprites",
         "status": "partial",
         "consumer": "lib/Gen2InterfaceArt.lua; lib/Gen2EvolutionArt.lua; lib/Gen2TradeHatchArt.lua; lib/Gen2OakArt.lua; lib/Gen2PictureScope.lua; lib/NativeInterfaceArt.lua; lib/Crystal/main.lua",
-        "detail": "Native Summary/Dex, BoxMenu, Hall-of-Fame front/back slides, evolution, trade, revealed hatchlings and Oak Pokemon pictures consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Scoped draws preserve native animation timers, cancellation/skip, sounds and party ownership. Egg shells/Unown keep native art and Crystal retains ownership. Oak indexed palette-rotation reveals still draw native art until the effect completes. Gen2 cinematic title art has no equivalent Gen1 cycling-starter reader.",
+        "detail": "Native Summary/Dex, BoxMenu, Hall-of-Fame front/back slides, evolution, trade, revealed hatchlings and Oak Pokemon pictures consume selected frames and animation-wide FIT/FULL with original mon/DV identity. Scoped draws preserve native animation timers, cancellation/skip, sounds and party ownership. Egg shells/Unown keep native art and Crystal retains ownership. Vanilla Oak Pokemon reveals use the supported wipe; indexed rotation belongs to native trainer portraits. A custom Pokemon rotation step retains native art until complete. Gen2 cinematic title art has no equivalent Gen1 cycling-starter reader.",
         "verification": "source audit"
       },
       {
@@ -3232,7 +3232,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen3Capture.lua; lib/NativeGen3BallAudio.lua; lib/EmberLegacyAudio.lua",
-        "detail": "Supported capture, visible native send-out and sequenced withdraw cues use optional Ember sounds only after successful playback, with live native SFX master and selected volume. Send-outs preserve the actual battler shiny variant. Missing/failed assets, explicit mixer options, ambiguous simultaneous opens and unrelated cues retain native sound. Safari/tutorial capture events are included. Optional audio files are not bundled; full audible asset coverage and other native sound paths remain unverified.",
+        "detail": "Supported capture, visible native send-out and sequenced withdraw cues use optional Ember sounds only after successful playback, with live native SFX master and selected volume. Send-outs preserve the actual battler shiny variant. Missing/failed assets, explicit mixer options, ambiguous simultaneous opens and unrelated cues retain native sound. Safari/tutorial, all seven native specialty-ball capture sequences and ghost-dodge throw audio are included; native-only paths retain original props and clocks. Optional audio files are not bundled; doubles/ambiguous simultaneous cues, full audible asset coverage and other native sound paths remain unverified.",
         "verification": "source audit"
       },
       {
@@ -3242,7 +3242,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen3Capture.lua; lib/NativeGen3BallAudio.lua; lib/EmberLegacyAudio.lua",
-        "detail": "Supported capture, visible native send-out and sequenced withdraw cues use optional Ember sounds only after successful playback, with live native SFX master and selected volume. Send-outs preserve the actual battler shiny variant. Missing/failed assets, explicit mixer options, ambiguous simultaneous opens and unrelated cues retain native sound. Safari/tutorial capture events are included. Optional audio files are not bundled; full audible asset coverage and other native sound paths remain unverified.",
+        "detail": "Supported capture, visible native send-out and sequenced withdraw cues use optional Ember sounds only after successful playback, with live native SFX master and selected volume. Send-outs preserve the actual battler shiny variant. Missing/failed assets, explicit mixer options, ambiguous simultaneous opens and unrelated cues retain native sound. Safari/tutorial, all seven native specialty-ball capture sequences and ghost-dodge throw audio are included; native-only paths retain original props and clocks. Optional audio files are not bundled; doubles/ambiguous simultaneous cues, full audible asset coverage and other native sound paths remain unverified.",
         "verification": "source audit"
       },
       {

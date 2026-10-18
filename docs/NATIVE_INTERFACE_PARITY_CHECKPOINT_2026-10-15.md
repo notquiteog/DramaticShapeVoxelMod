@@ -67,14 +67,15 @@ compatibility are verified in `NATIVE_PC_ART_2026-10-17.md` (30 captures inspect
 - **Dodrio berry picking:** dedicated normal/shiny sheets carry head/neck action
   poses through `Draw.dodrios` and `sim:dodrioPose`. Ordinary front pictures are
   not substitutes for those gameplay cues; selected equivalents are absent.
-- **Gen2 interface effects:** Oak's indexed palette-rotation reveal remains
-  native until the reveal completes. Its cinematic title has no Gen1-style
+- **Gen2 interface effects:** Vanilla Oak rotation reveals show only Oak/player trainer art; its Pokemon
+  wipe is supported. A custom Pokemon rotation step retains native art until complete. Its cinematic title has no Gen1-style
   cycling-starter picture reader. Special forms/eggs retain native ownership.
 - **Capture:** GSC specialty/contest/trainer-blocked/doubles visual paths remain native. Specialty/contest/trainer-blocked audio now has a separate native-runner consumer; see `NATIVE_CAPTURE_AUDIO_2026-10-17.md`.
-  GBA specialty/ghost-dodge/doubles paths, full model-specific material effects
+  GBA specialty/ghost-dodge/doubles visual paths, full model-specific material effects
   and selected send-out geometry are incomplete. Existing supported Safari/
   tutorial and normal-single adapters do not establish those paths.
-- **Audio:** GSC recall has no dedicated native withdrawal animation/sound cue
+- **Audio:** GBA specialty/ghost-dodge optional cues now have a native-only
+  adapter; see `NATIVE_CAPTURE_AUDIO_2026-10-17.md`. GSC recall has no dedicated native withdrawal animation/sound cue
   to replace. Optional Ember/cave recordings are absent; event routing tests do
   not establish shipped audible coverage.
 - **Backdrops/providers:** Johto location/boss art and full map-family routing

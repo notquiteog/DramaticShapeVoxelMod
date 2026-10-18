@@ -1,3 +1,14 @@
+# Native GBA specialty/ghost capture audio — 2026-10-17
+
+All seven specialty balls and ghost-dodge throws consume optional native capture
+audio without claiming their native geometry. Five0.3.89 editions pass120 original
+sequencer runs with unchanged clocks, exact failed/OFF fallback and reset cleanup.
+Focused capture/audio suites and inventory549 pass. Explicit playback sink only:
+no audible-asset/full-turn/visual acceptance claim. Evidence:
+`docs/NATIVE_CAPTURE_AUDIO_2026-10-17.md`. Oak source audit also distinguishes its
+supported Pokemon wipe from native trainer rotation; custom rotation is a fallback.
+Source-only after d537a44; parity work continues on native send-out presentation.
+
 # Native Gen2 specialty capture audio — 2026-10-17
 
 Original specialty/Park/blocked throw runners now consume optional sound cues,

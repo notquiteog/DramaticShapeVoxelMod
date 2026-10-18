@@ -16,7 +16,11 @@ local function call(name,...)
  return result
 end
 function M.finish()
- if pending then call('finishNormalBattleBall')end
+ if pending then
+  if pending.nativeOnly then
+   if pending.audioStarted then pcall(function()V.require('EmberLegacyAudio').clear()end)end
+  else call('finishNormalBattleBall')end
+ end
  pending,arena,ground=nil,nil,nil
 end
 function M.active(st)
@@ -34,7 +38,9 @@ function M.install()
   if not ok or not a then return false end
   local good,played=pcall(function()
    a.nativeMaster(p.st,function()return Audio._sfxVolume or 1 end)
+   if p.nativeOnly and not a.sync(p.st)then return false end
    if not a.ready(event,index)then return false end
+   if p.nativeOnly and not p.audioStarted then a.beginCapture(p.st);p.audioStarted=true end
    return a.capture(event,index)
   end)
   return good and played==true
@@ -44,18 +50,27 @@ function M.install()
   local result=begin(st,item,caught,shakes,opts)
   opts=opts or{}
   -- Native tutorials and Safari share this sequence, including their trainer
-  -- wind-up. Ghost dodge never opens a ball and needs its native trajectory.
-  if ballNames[item]and st and st.wild and not(st.double or opts.headless or opts.ghostDodge)
+  -- wind-up. Specialty balls and ghost dodge retain native geometry but can
+  -- consume the same optional audio cues without a substitute model.
+  if type(item)=='number'and item>=1 and item<=12 and item%1==0
+    and st and st.wild and not(st.double or opts.headless)
     and (opts.target==nil or tonumber(opts.target)==1)
     and V.require('PokeballSettings').active()and V.require('Gen3Battle').enabled()then
-   pending={st=st,item=ballNames[item],caught=caught,shakes=shakes}
+   pending={st=st,item=ballNames[item],caught=caught,shakes=shakes,nativeOnly=not ballNames[item]or opts.ghostDodge==true}
   end
   return result
  end
  Audio.playSe=function(id,...)
   local p=pending;local replaced=false
   if p and V.require('PokeballSettings').active()and V.require('Gen3Battle').enabled()then
-   if id==SE.SE_BALL_THROW and not p.started then
+   if p.nativeOnly then
+    local event,index
+    if id==SE.SE_BALL_THROW then event='throw'
+    elseif id==SE.SE_BALL_OPEN then event=p.opened and not p.caught and'breakout'or'open';p.opened=true
+    elseif id==SE.SE_BALL then p.audioShakes=(p.audioShakes or 0)+1;event,index='shake',p.audioShakes
+    elseif id==SE.SE_BALL_CLICK then event='success'end
+    if event then replaced=audioEvent(p,event,index)end
+   elseif id==SE.SE_BALL_THROW and not p.started then
     p.started=call('startNormalBall',p.item,p.caught,p.shakes,p.st)==true
     if p.started then replaced=audioEvent(p,'throw')end
    elseif p.started then

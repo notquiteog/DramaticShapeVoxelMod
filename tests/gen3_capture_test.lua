@@ -62,3 +62,37 @@ assert(sounds==prior and captured[#captured][1]=='success')
 available=false;Audio.playSe(3);assert(sounds==prior+1,'missing audio muted native sound')
 available=true;played=false;Audio.playSe(3);assert(sounds==prior+2,'failed replacement muted native sound')
 restore();print('PASS optional native capture audio ownership, master volume, absent/failed asset fallback')
+-- Native-only props still share audio without claiming geometry ownership.
+local sessions,cleared=0,0;local broken=false
+V.require=function(k)
+ if k=='EmberLegacyAudio'then return {
+  nativeMaster=function(_,read)volume=read()end,sync=function()return active end,
+  ready=function()return available end,beginCapture=function()sessions=sessions+1 end,
+  capture=function(event,index)if broken then error('audio')end;captured[#captured+1]={event,index};return played end,
+  clear=function()cleared=cleared+1 end,
+ }end
+ return requireBefore(k)
+end
+restore=M.install();active=true;available=true;played=true
+for item=6,12 do
+ local count=starts;local native=sounds;local n=#events;local captures=#captured
+ Seq.begin(st,item,false,2,{});Audio.playSe(1);Audio.playSe(2);Audio.playSe(3);Audio.playSe(3);Audio.playSe(2)
+ assert(starts==count and #events==n and not M.active(st),'native specialty geometry was claimed')
+ assert(sounds==native and #captured==captures+5 and captured[#captured][1]=='breakout','native specialty audio route')
+ assert(captured[#captured-1][2]==2,'shake index')
+ Seq.reset()
+end
+assert(sessions==7 and cleared==7,'native-only audio lifecycle')
+local prior=sounds;Seq.begin(st,4,false,0,{ghostDodge=true});Audio.playSe(1)
+assert(sounds==prior and not M.active(st)and captured[#captured][1]=='throw','ghost throw audio/native pose')
+played=false;Audio.playSe(2);assert(sounds==prior+1)
+available=false;Audio.playSe(3);assert(sounds==prior+2)
+available=true;played=true;broken=true;Audio.playSe(3);assert(sounds==prior+3)
+broken=false;Audio.playSe(999,{pan=.2});assert(sounds==prior+4,'unrelated sound')
+active=false;Audio.playSe(1);assert(sounds==prior+5 and not M.status().pending,'OFF cleanup')
+active=true
+for _,case in ipairs({{wild=true,double=true},{wild=false}})do
+ Seq.begin(case,6,false,0,{});prior=sounds;Audio.playSe(1);assert(sounds==prior+1)
+end
+restore();assert(cleared==8,'ghost audio cleaned')
+print('PASS seven native specialty balls and ghost-dodge audio, clocks/props untouched, exact failed/missing/error/OFF/unknown/doubles fallback and disposal')
