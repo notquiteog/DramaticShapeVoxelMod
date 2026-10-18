@@ -25,11 +25,21 @@ end
 function M.fit(image,size,mirror,pixelScale)
  local cache=fitted[image];if not cache then cache={};fitted[image]=cache end
  local key=tostring(size)..':'..tostring(mirror==true)..':'..tostring(pixelScale)
- if cache[key]then return cache[key]end
- local g=love.graphics;local c=g.newCanvas(size,size,{dpiscale=1})
- g.push('all');g.setCanvas(c);g.origin();g.setShader();g.setScissor();g.setDepthMode();g.setBlendMode('alpha');g.clear(0,0,0,0);g.setColor(1,1,1,1)
- local w,h=image:getDimensions();local scale=math.min(size/w,size/h,pixelScale or math.huge)
- g.draw(image,(size-w*scale)/2+(mirror and w*scale or 0),size-h*scale,0,mirror and -scale or scale,scale);g.pop();c:setFilter('nearest','nearest');cache[key]=c
+ if cache[key]~=nil then return cache[key]or nil end
+ local g=love.graphics
+ local allocated,c=pcall(g.newCanvas,size,size,{dpiscale=1})
+ if not allocated or not c then cache[key]=false;return end
+ g.push('all')
+ local scale
+ local ok=pcall(function()
+  g.setCanvas(c);g.origin();g.setShader();g.setScissor();g.setDepthMode();g.setBlendMode('alpha');g.clear(0,0,0,0);g.setColor(1,1,1,1)
+  local w,h=image:getDimensions();scale=math.min(size/w,size/h,pixelScale or math.huge)
+  g.draw(image,(size-w*scale)/2+(mirror and w*scale or 0),size-h*scale,0,mirror and -scale or scale,scale)
+  c:setFilter('nearest','nearest')
+ end)
+ g.pop()
+ if not ok then c:release();cache[key]=false;return end
+ cache[key]=c
  local data=Art.imageData and Art.imageData(image)
  if data then V.require('SpriteHeadBounds').rememberFit(c,data,size,mirror,scale)end
  return c
@@ -103,12 +113,15 @@ function M.install()
       mon.otSecretId=source.otSecretId;mon.isShiny=source.isShiny
      end
      local image,fullBody,referenceSize=M.image(mon,side=='back')
-     if image then return Light.tag({image=M.fit(image,64,side=='back' and M.playerSide()=='front' and Art.flipsPlayerFront(),M.stagePixelScale(side=='back',fullBody,referenceSize)),w=64,h=64},artId)end
+     if image then
+      local fitted=M.fit(image,64,side=='back' and M.playerSide()=='front' and Art.flipsPlayerFront(),M.stagePixelScale(side=='back',fullBody,referenceSize))
+      if fitted then return Light.tag({image=fitted,w=64,h=64},artId)end
+     end
     end
     local entry=original(species,form,...)
     if active and M.staged and not M.world and entry and entry.image and side=='front' then
      local copy={};for k,v in pairs(entry)do copy[k]=v end
-     copy.image=M.fit(entry.image,64,false,.68);entry=copy
+     copy.image=M.fit(entry.image,64,false,.68);if copy.image then entry=copy end
     end
     return active and Light.tag(entry,artId)or entry
    end
@@ -135,7 +148,10 @@ function M.install()
      local mon={species=P.national(species),isShiny=shiny}
      if source then for _,k in ipairs({'personality','otId','otSecretId','isShiny'})do mon[k]=source[k]end end
      local image,fullBody,referenceSize=M.image(mon,false)
-     if image then return Light.tag({image=M.fit(image,64,false,M.stagePixelScale(false,fullBody,referenceSize)),w=64,h=64},artId)end
+     if image then
+      local fitted=M.fit(image,64,false,M.stagePixelScale(false,fullBody,referenceSize))
+      if fitted then return Light.tag({image=fitted,w=64,h=64},artId)end
+     end
     end
     local entry=original(species,frame,shiny)
     return active and Light.tag(entry,artId)or entry
@@ -146,7 +162,10 @@ function M.install()
   local State=require('src.ui.gen2.BattleState');local pic=State.pic
   State.pic=function(self,mon,back,...)
    local image=M.image(mon,back)
-   if image then return M.fit(image,back and 48 or 56),true,nil end
+   if image then
+    local fitted=M.fit(image,back and 48 or 56)
+    if fitted then return fitted,true,nil end
+   end
    return pic(self,mon,back,...)
   end
   undo[#undo+1]=function()State.pic=pic end
@@ -180,7 +199,7 @@ function M.install()
 
  V.mod.hooks:wrap('core.quit_to_launcher',function(next,...)
   for i=#undo,1,-1 do undo[i]()end
-  for _,sizes in pairs(fitted)do for _,c in pairs(sizes)do c:release()end end;fitted=setmetatable({},{__mode='k'})
+  for _,sizes in pairs(fitted)do for _,c in pairs(sizes)do if c then c:release()end end end;fitted=setmetatable({},{__mode='k'})
   return next(...)
  end)
 end

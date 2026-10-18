@@ -1,3 +1,12 @@
+# Native art resource failure fallback — 2026-10-17
+
+Optional battle picture fitting and trainer sheets now restore graphics/release
+partial resources and use native readers if canvas allocation/drawing fails.
+Failure keys are cached until unload to avoid retry storms. Focused resource,
+24 identity and existing scale checks pass. Evidence/platform limits:
+`docs/NATIVE_ART_RESOURCE_FALLBACK_2026-10-17.md`. This is not Android runtime
+verification or a claim to fix the reported loaded-but-2D renderer symptom.
+
 # Native GSC lifted rows and LCD effects — 2026-10-17
 
 Native one/two-row bands, SCX/SCY, LCD scanlines and BGP palettes now compose
