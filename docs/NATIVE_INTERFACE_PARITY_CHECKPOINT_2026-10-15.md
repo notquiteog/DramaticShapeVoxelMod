@@ -72,7 +72,7 @@ compatibility are verified in `NATIVE_PC_ART_2026-10-17.md` (30 captures inspect
   cycling-starter picture reader. Special forms/eggs retain native ownership.
 - **Capture:** GSC specialty/contest/trainer-blocked/doubles visual paths remain native. Specialty/contest/trainer-blocked audio now has a separate native-runner consumer; see `NATIVE_CAPTURE_AUDIO_2026-10-17.md`.
   GBA specialty/ghost-dodge/doubles visual paths, full model-specific material effects
-  and selected send-out geometry are incomplete. Existing supported Safari/
+  and full send-out release effects remain incomplete. Supported native send-out shells now have a verified adapter (`NATIVE_SENDOUT_SHELLS_2026-10-17.md`). Existing supported Safari/
   tutorial and normal-single adapters do not establish those paths.
 - **Audio:** GBA specialty/ghost-dodge optional cues now have a native-only
   adapter; see `NATIVE_CAPTURE_AUDIO_2026-10-17.md`. GSC recall has no dedicated native withdrawal animation/sound cue

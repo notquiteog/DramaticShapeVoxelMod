@@ -3371,8 +3371,8 @@
         "label": "EMBER LEGACY",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Model-specific material effects and send-out geometry remain incomplete; optional audio has separate native event adapters.",
+        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua; lib/NativeGen3SendoutShell.lua",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Supported Poke/Great/Ultra/Master/Safari native send-out shells now consume the shared model and live size in lit/shadow passes, following original trajectory/rotation/lid frames; native effects and unsupported types retain cards. Full send-out release energy and model-specific subject materials remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3432,7 +3432,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen3Capture.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
-        "detail": "Native shared capture balls consume the preset streamer profile and CUSTOM streamer intensity during their throw trail. Shared Q57 intake also consumes the selected beam profile. The native enemy card uses shared intake color/full brightness while retaining its native transform; model-specific material effects and send-out geometry remain incomplete.",
+        "detail": "Native shared capture balls consume the preset streamer profile and CUSTOM streamer intensity during their throw trail. Shared Q57 intake also consumes the selected beam profile. The native enemy card uses shared intake color/full brightness while retaining its native transform; model-specific subject materials and full send-out release effects remain incomplete; supported native send-out shells have a separate adapter.",
         "verification": "source audit"
       },
       {
@@ -3441,8 +3441,8 @@
         "label": "CAPTURE SPEED",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Model-specific material effects and send-out geometry remain incomplete; optional audio has separate native event adapters.",
+        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua; lib/NativeGen3SendoutShell.lua",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Supported Poke/Great/Ultra/Master/Safari native send-out shells now consume the shared model and live size in lit/shadow passes, following original trajectory/rotation/lid frames; native effects and unsupported types retain cards. Full send-out release energy and model-specific subject materials remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3461,8 +3461,8 @@
         "label": "BALL OPEN TIME",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Model-specific material effects and send-out geometry remain incomplete; optional audio has separate native event adapters.",
+        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua; lib/NativeGen3SendoutShell.lua",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Supported Poke/Great/Ultra/Master/Safari native send-out shells now consume the shared model and live size in lit/shadow passes, following original trajectory/rotation/lid frames; native effects and unsupported types retain cards. Full send-out release energy and model-specific subject materials remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3481,8 +3481,8 @@
         "label": "BALL SIZE",
         "module": "PokeballSettings",
         "status": "partial",
-        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
-        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Model-specific material effects and send-out geometry remain incomplete; optional audio has separate native event adapters.",
+        "consumer": "lib/Gen3Capture.lua; lib/BattleScene.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua; lib/NativeGen3SendoutShell.lua",
+        "detail": "Native single Poke/Great/Ultra/Master/Safari events drive the shared world-space prop, size, visual intake speed and lid-hold controls, including Safari and old-man/Pokedude/Wally tutorial throws. Visible trainers supply their world anchor; native wind-up, RNG, inventory, Safari counters, actor transforms and result timing remain authoritative. OFF, unmodeled specialty balls, ghost dodge and doubles retain native presentation. Shared intake color/full brightness now reaches the native enemy card; native shrink/masks/timing remain authoritative. Supported Poke/Great/Ultra/Master/Safari native send-out shells now consume the shared model and live size in lit/shadow passes, following original trajectory/rotation/lid frames; native effects and unsupported types retain cards. Full send-out release energy and model-specific subject materials remain incomplete; optional audio has separate native event adapters.",
         "verification": "source audit"
       },
       {
@@ -3492,7 +3492,7 @@
         "module": "PokeballSettings",
         "status": "partial",
         "consumer": "lib/Gen3Capture.lua; lib/Pokeball.lua; lib/NativeGen3CaptureTint.lua",
-        "detail": "Native shared capture balls consume the preset streamer profile and CUSTOM streamer intensity during their throw trail. Shared Q57 intake also consumes the selected beam profile. The native enemy card uses shared intake color/full brightness while retaining its native transform; model-specific material effects and send-out geometry remain incomplete.",
+        "detail": "Native shared capture balls consume the preset streamer profile and CUSTOM streamer intensity during their throw trail. Shared Q57 intake also consumes the selected beam profile. The native enemy card uses shared intake color/full brightness while retaining its native transform; model-specific subject materials and full send-out release effects remain incomplete; supported native send-out shells have a separate adapter.",
         "verification": "source audit"
       },
       {

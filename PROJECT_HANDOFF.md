@@ -1,3 +1,13 @@
+# Native GBA send-out shells — 2026-10-17
+
+Existing five supported ball models follow native projected throws/lid frames in
+lit/shadow passes, with live size and unchanged native clocks/particles. All five
+NVIDIA0.3.89 fixtures pass actual switches/OFF;15 captures inspected. Focused27
+and world-battle tests pass. Full release energy/subject materials, doubles and
+unsupported ball models remain incomplete. Evidence:
+`docs/NATIVE_SENDOUT_SHELLS_2026-10-17.md`. Source-only after ef357de.
+GSC native palette/animation-state parity is being handled in a separate batch.
+
 # Native GBA specialty/ghost capture audio — 2026-10-17
 
 All seven specialty balls and ghost-dodge throws consume optional native capture
