@@ -36,6 +36,14 @@ local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
  error(name)
 end})
 local game={stack={states={screen}}}
+assert(M.textures(game).sceneLayout==nil,'standalone acquired a companion layout')
+screen.nativeSceneLayout=function()return 'gen2-native-pair'end
+assert(M.textures(game).sceneLayout=='gen2-native-pair','public native layout hint lost')
+screen.nativeSceneLayout=function()error('layout unavailable')end
+assert(M.textures(game).sceneLayout==nil,'failed layout reader retained stale metadata')
+screen.nativeSceneLayout=function()return {}end
+assert(M.textures(game).sceneLayout==nil,'invalid layout metadata accepted')
+screen.nativeSceneLayout=nil;draws={}
 local texture=assert(M.sideTexture(game,'enemy'))
 assert(#draws==2,'both complete partner images must draw')
 assert(draws[1].x+draws[1].w<=draws[2].x,'partner sprites overlap')

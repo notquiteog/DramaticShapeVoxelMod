@@ -355,6 +355,11 @@ function Gen2Staged.textures(game)
   out.enemy = Gen2Staged.sideTexture(game, "enemy")
   out.player = Gen2Staged.sideTexture(game, "player")
   if not (out.enemy or out.player) then return nil end
+  local screen=screenFor(game)
+  if screen and type(screen.nativeSceneLayout)=='function' then
+    local ok,layout=pcall(screen.nativeSceneLayout,screen)
+    if ok and type(layout)=='string' then out.sceneLayout=layout end
+  end
   return out
 end
 

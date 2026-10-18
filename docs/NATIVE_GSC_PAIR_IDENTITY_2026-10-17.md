@@ -28,3 +28,9 @@ rendered identities are **not** a claim of four unobstructed visible actors.
 That concrete framing issue was handed to the camera worker. Animated doubles
 and multi-actor capture/release remain separate unfinished presentation work.
 No engine/user saves/models/release metadata changed.
+
+The optional public Doubles `nativeSceneLayout()` reader now forwards a
+`sceneLayout` hint from `Gen2Staged.textures` for the camera worker's framing
+fix. Standalone, invalid and failing readers leave metadata absent. Focused
+tests pass in both repositories; this seam alone does not establish corrected
+framing or animated-pair parity. Modern HUD ownership remains with its provider.
