@@ -226,3 +226,14 @@ love.graphics.draw=function()error('combined faint failure')end
 assert(M.sideTexture(game,'player')==nil and M.drawn.player==nil)
 assert(scissor[1]==2 and bgp==0xe4 and target==nil,'failed combined faint crop leaked state')
 print('PASS combined faint/LCD/lifted source progress, clip intersection and native/error fallback')
+
+-- The independent native companion may identify one original sendout owner.
+screen.battle.doubles=true;screen.battle.player2=second;screen.anim={bg={}}
+screen.nativeAnimationSlot=function()return 'player2'end
+local oldPose=screen.animPicState;screen.animPicState=function(_,slot)return slot=='player2'and{size=2}or nil end
+hidden=false;pose=nil;sink=0;second.hp=10;love.graphics.draw=function()end
+assert(M.sideTexture(game,'player')and M.drawn.player==first and M.drawn.player2==second,'declared partner sendout did not compose independent cards')
+screen.nativeAnimationSlot=function()error('provider failed')end
+assert(not M.sideTexture(game,'player'),'failed slot provider claimed paired animation')
+screen.nativeAnimationSlot=nil;screen.animPicState=oldPose
+print('PASS public native sendout slot enables paired composition and preserves provider-error fallback')

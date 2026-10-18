@@ -162,7 +162,12 @@ local function sideTexture(game, side, actorOnly)
   Gen2Staged.drawn[side],Gen2Staged.drawn[side.."2"]=nil,nil
   local screen = screenFor(game)
   if not screen then return nil end
-  if not actorOnly and screen.battle and screen.battle.doubles and not screen.anim then
+  local pairedAnimation=false
+  if not actorOnly and screen.anim and type(screen.nativeAnimationSlot)=='function'then
+    local ok,slot=pcall(screen.nativeAnimationSlot,screen)
+    pairedAnimation=ok and(slot=='player'or slot=='player2'or slot=='enemy'or slot=='enemy2')
+  end
+  if not actorOnly and screen.battle and screen.battle.doubles and(not screen.anim or pairedAnimation)then
     return V.require('NativeGen2PairPicture').texture(game,side,screen,sideTexture,canvasFor,Gen2Staged.drawn)
   end
   local back = (side == "player" or side == "player2")
