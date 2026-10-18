@@ -171,6 +171,7 @@ local function build(req,cache,previous)
  M.fillCounts={forest=0,water=0,mountain=0,ground=0}
  local pairInfo={}
  local boundarySample=Boundary.sampler()
+ local shrubHulls={} -- build-local immutable recipes; each placement owns vertices
  local classify=V.require('SceneShapeCache').new(Shapes.of)
  local behaviors=require('src.core.game3.scripting.interaction_scripts').behaviors
  for cy=z0,z1 do for cx=x0,x1 do
@@ -510,7 +511,7 @@ local function build(req,cache,previous)
   elseif shape.kind=='sign' or shape.kind=='fence' or shape.kind=='ledge' or shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    local plant=shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass'
-   if not c.stageHidden then Outdoor.append(c,function(vertices,tex,shade,anchor)quad(plant and b.pv or b.v,plant and b.pi or b.i,vertices,tex,shade,anchor)end,uvFor)end
+   if not c.stageHidden then Outdoor.append(c,function(vertices,tex,shade,anchor)quad(plant and b.pv or b.v,plant and b.pi or b.i,vertices,tex,shade,anchor)end,uvFor,shrubHulls)end
   else
    plane(b.v,b.i,x,z,uv)
   end
