@@ -1,3 +1,17 @@
+# Native GSC picture state and current parity audit — 2026-10-17
+
+World cards now follow native hidden/airborne/resize/slide state, species/shiny
+palettes/shades and original Crystal frame timing. Supported 3D capture and
+independent providers retain ownership. G/S/C native NVIDIA fixtures pass;
+15 captures inspected. Focused staged/capture/audio tests pass. Remaining
+composite effects and full release choreography stay explicit:
+`docs/NATIVE_GSC_STAGED_EFFECTS_2026-10-17.md`.
+
+`docs/PARITY_AUDIT_2026-10-17.md` reconciles all123 keys across11 editions,
+separates obsolete historical gaps, real remaining adapters, external assets
+and model/cache ownership. No blanket full-parity or performance claim.
+Source-only after0afc074; no release/version/model changes.
+
 # Native GBA send-out shells — 2026-10-17
 
 Existing five supported ball models follow native projected throws/lid frames in

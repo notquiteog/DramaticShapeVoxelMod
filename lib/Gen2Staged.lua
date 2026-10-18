@@ -32,6 +32,7 @@
 
 local V = ...
 local Generation = V.require("Generation")
+local Palette = require("src.render.GbcPalette")
 
 local Gen2Staged = {}
 
@@ -95,7 +96,7 @@ local FOOT_PAD = 1
 -- without replacing the original engine screen or reaching into its files.
 local function picFor(game,screen,mon,back)
   local owned=V.require('NativeBattleArt').image(mon,back)
-  if owned then local w,h=owned:getDimensions();return owned,w,h,nil,true end
+  if owned then local w,h=owned:getDimensions();return owned,w,h,nil,true,nil,true end
   local providers=game and game.mods and game.mods.exports
   local provider=V.crystalSpritesActive and V.mod.exports.crystalSprites
     or (providers and providers.crystal_animated_sprites_with_shiny_visuals)
@@ -103,20 +104,51 @@ local function picFor(game,screen,mon,back)
     local ok,pic=pcall(provider.stagedPokemonSprite,mon,back)
     if ok and pic and pic.image and type(pic.width)=="number"
        and type(pic.height)=="number" and pic.width>0 and pic.height>0 then
-      return pic.image,pic.width,pic.height,pic.quad,nil,pic.groundY
+      return pic.image,pic.width,pic.height,pic.quad,nil,pic.groundY,pic.trueColor~=false
     end
   end
-  local ok,image=pcall(screen.pic,screen,mon,back)
+  local ok,image,trueColor=pcall(screen.pic,screen,mon,back)
   if not (ok and image) then return nil end
+  if not back and screen.frontAnimFrame then
+    local sheet,quad,size=screen:frontAnimFrame(mon)
+    if sheet and quad and type(size)=='number'and size>0 then
+      local _,h=image:getDimensions()
+      local feet=V.require('BattleSpriteFooting').bounds(image)[4]+size-h
+      return sheet,size,size,quad,nil,feet,trueColor
+    end
+  end
   local sized,w,h=pcall(image.getDimensions,image)
-  if sized and w and h and w>0 and h>0 then return image,w,h end
+  if sized and w and h and w>0 and h>0 then return image,w,h,nil,nil,nil,trueColor end
 end
 Gen2Staged.picFor=picFor
-local function drawPic(g,image,quad,x,y)
-  if quad then g.draw(image,quad,x,y) else g.draw(image,x,y) end
+local function drawPic(g,image,quad,x,y,scale)
+  scale=scale or 1
+  if quad then g.draw(image,quad,x,y,0,scale,scale) else g.draw(image,x,y,0,scale,scale) end
+end
+local RESIZE_TILES={[0]=6,[1]=4,[2]=2,[3]=7,[4]=5,[5]=3}
+-- Read native picture state; never leave a full-size world body behind a
+-- hidden/withdrawn mon. Composite native effects keep their original painter.
+local function poseFor(screen,side,mon,back)
+  -- Supported Legendary intake already owns hiding/shrinking this enemy.
+  -- Its world card must survive the native box-clear until the 3D beat ends.
+  if side=='enemy'and V.require('Gen2Capture').active(screen,screen.anim)then return 1,0 end
+  if screen.picBoxCleared and screen:picBoxCleared(side)then return end
+  if screen.isUnderground and screen:isUnderground(side,mon)
+    and not(screen.vanishAnim and screen.vanishAnim==screen.anim)then return end
+  if screen.faintSink and screen:faintSink(side)>0 then return end
+  local anim=screen.animPicState and screen:animPicState(side)
+  local substitute=mon.volatile and (tonumber(mon.volatile.substitute)or 0)>0
+  if anim and anim.pic~=nil then substitute=anim.pic=='substitute'end
+  if substitute or(anim and anim.lifted)then return end
+  local scale=anim and RESIZE_TILES[anim.size]
+  scale=scale and scale/(back and 6 or 7)or 1
+  local slide=anim and anim.slide or 0
+  if screen.battle and screen.battle.doubles and(scale~=1 or slide~=0)then return end
+  return scale,slide,anim and anim.shade
 end
 
 function Gen2Staged.sideTexture(game, side)
+  Gen2Staged.drawn[side],Gen2Staged.drawn[side.."2"]=nil,nil
   local screen = screenFor(game)
   if not screen then return nil end
   local back = (side == "player" or side == "player2")
@@ -126,7 +158,9 @@ function Gen2Staged.sideTexture(game, side)
   if back and V.require('BattleArt').backPlacementSetting:get()=='ui' then return nil end
   local okMon, mon = pcall(screen.activeMon, screen, side)
   if not (okMon and mon) then return nil end
-  local image,iw,ih,quad,selectedArt,groundY=picFor(game,screen,mon,back)
+  local poseScale,poseSlide,poseShade=poseFor(screen,side,mon,back)
+  if not poseScale then return nil end
+  local image,iw,ih,quad,selectedArt,groundY,trueColor=picFor(game,screen,mon,back)
   if not image then return nil end
 
   -- A 2v2 round fields a partner beside the lead (the doubles layer keeps
@@ -141,11 +175,11 @@ function Gen2Staged.sideTexture(game, side)
       or (side == "enemy" and battle.enemy2) or nil
     if p2 and p2 ~= mon and (p2.hp or 0) > 0 then partner = p2 end
   end
-  local pimage, pquad,pground = nil,nil,nil
+  local pimage, pquad,pground,ptrueColor = nil,nil,nil,nil
   local iw2,ih2=0,0
   if partner then
     local selected
-    pimage,iw2,ih2,pquad,selected,pground=picFor(game,screen,partner,back)
+    pimage,iw2,ih2,pquad,selected,pground,ptrueColor=picFor(game,screen,partner,back)
     if not pimage then iw2,ih2=0,0 end
   end
 
@@ -165,6 +199,13 @@ function Gen2Staged.sideTexture(game, side)
   local canvas = canvasFor(side, cw, ch)
   if not canvas then return nil end
 
+  local function paint(mon,colored,fn)
+    local colors=screen.palettes and screen.cachedMonColors and screen:cachedMonColors(mon.species,mon.shiny)
+    if screen.introGrayscale and screen:introGrayscale()then colors=require('src.world.gen2.Palettes').BLACKOUT end
+    if colors and poseShade then colors=Palette.remap(colors,poseShade)end
+    if colors and not(colored and Palette.mode=='gbc')and Palette.available()then return Palette.with(colors,fn)end
+    return fn()
+  end
   local g = love.graphics
   local prev = g.getCanvas()
   local pr, pg, pb, pa = g.getColor()
@@ -177,10 +218,10 @@ function Gen2Staged.sideTexture(game, side)
     -- the lead sits left of centre and the partner right of it, feet on
     -- the same ground line.
     if pimage then
-      drawPic(g,image,quad,ax-iw,ay-groundY)
-      drawPic(g,pimage,pquad,ax,ay-pground)
+      paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw,ay-groundY)end)
+      paint(partner,ptrueColor,function()drawPic(g,pimage,pquad,ax,ay-pground)end)
     else
-      drawPic(g,image,quad,ax-iw/2,ay-groundY)
+      paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw*poseScale/2+poseSlide,ay-groundY*poseScale,poseScale)end)
     end
   end)
   g.setCanvas(prev)

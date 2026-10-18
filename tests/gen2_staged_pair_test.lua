@@ -1,3 +1,7 @@
+local shadeCalls=0
+local paletteCalls=0;local Palette={mode='gbc',available=function()return true end,with=function(colors,fn)paletteCalls=paletteCalls+1;assert(colors[1]==1);return fn()end}
+Palette.remap=function(colors,byte)assert(byte==0xe4);shadeCalls=shadeCalls+1;return colors end
+package.loaded['src.render.GbcPalette']=Palette
 local draws={}
 local function pic(w,h)return {getDimensions=function()return w,h end} end
 local first,second={hp=10},{hp=10}
@@ -5,6 +9,7 @@ local screen={battle={doubles={},enemy2=second}}
 function screen:activeMon()return first end
 function screen:pic(mon)return mon==first and pic(56,56) or pic(64,48) end
 local target
+local captureOwned=false
 local placement='world'
 local selected=false
 local front=false
@@ -17,6 +22,7 @@ love={graphics={
 }}
 local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
  if name=='BattleSpriteFooting'then return {bounds=function(image)local w,h=image:getDimensions();return {0,0,w,h-7}end}end
+ if name=='Gen2Capture'then return {active=function()return captureOwned end}end
  if name=='Generation' then return {isGen2=function()return true end} end
  if name=='BattleScene' then return {GB_W=160,GB_H=144} end
  if name=='NativeBattleArt'then return {image=function()return selected and pic(56,56) or nil end}end
@@ -51,3 +57,44 @@ local moving=assert(M.sideTexture(game,'player'))
 local last=draws[#draws]
 assert(last.y+49==moving.ay-3,'authored three-pixel hop was flattened')
 print('PASS provider animation foot row retains raised poses')
+
+-- Public native visibility/resize state must also govern the world card.
+screen.battle.doubles=nil;screen.battle.enemy2=nil;game.mods=nil
+local hidden,underground,sink=false,false,0;local pose
+screen.picBoxCleared=function()return hidden end
+screen.isUnderground=function()return underground end
+screen.faintSink=function()return sink end
+screen.animPicState=function()return pose end
+hidden=true;assert(M.sideTexture(game,'enemy')==nil and M.drawn.enemy==nil)
+hidden=false;underground=true;assert(M.sideTexture(game,'enemy')==nil)
+screen.anim={};screen.vanishAnim=screen.anim;assert(M.sideTexture(game,'enemy'),'native reveal owns underground reappearance')
+underground=false;screen.vanishAnim=nil
+for _,p in ipairs({{lifted={1,2}},{pic='substitute'}})do
+ pose=p;assert(M.sideTexture(game,'enemy')==nil and M.drawn.enemy==nil,'native composite owns its fallback')
+end
+pose=nil;first.volatile={substitute=10};assert(M.sideTexture(game,'enemy')==nil)
+pose={pic='mon'};assert(M.sideTexture(game,'enemy'),'native explicit mon overrides substitute')
+first.volatile=nil;sink=8;assert(M.sideTexture(game,'enemy')==nil);sink=0
+local scaled;love.graphics.draw=function(img,x,y,angle,sx,sy)scaled={x=x,y=y,sx=sx,sy=sy}end
+pose={size=2,slide=8};local small=assert(M.sideTexture(game,'enemy'))
+assert(scaled.sx==2/7 and scaled.sy==2/7,'native resize square')
+assert(math.abs(scaled.x-(small.ax-8+8))<1e-9 and math.abs(scaled.y-(small.ay-49*2/7))<1e-9,'native slide and fixed foot')
+screen.battle.doubles=true;assert(M.sideTexture(game,'enemy')==nil,'paired animation keeps native identity')
+print('PASS native GSC hidden/underground/reveal/resize/slide and composite/faint/substitute fallback ownership')
+
+screen.battle.doubles=nil;hidden=true;captureOwned=true
+assert(M.sideTexture(game,'enemy'),'supported 3D capture keeps its own intake card')
+captureOwned=false;assert(M.sideTexture(game,'enemy')==nil,'native hidden state resumes after capture')
+print('PASS supported capture keeps exclusive enemy-card visibility ownership')
+
+hidden=false;pose=nil;screen.palettes={};first.species='SENTRET'
+first.shiny=true
+screen.cachedMonColors=function(_,species,shiny)assert(species=='SENTRET'and shiny==true);return{1,2,3,4}end
+assert(M.sideTexture(game,'enemy')and paletteCalls==1,'native indexed species palette')
+selected=true;assert(M.sideTexture(game,'enemy')and paletteCalls==1,'selected RGBA retains provider colors');selected=false
+pose={size=2,shade=0xe4};assert(M.sideTexture(game,'enemy')and shadeCalls==1,'native shade remap preserves resized world actor');pose=nil
+local sheet,quad=pic(112,56),{}
+screen.frontAnimFrame=function(mon)return sheet,quad,56 end
+local img,w,h,q=M.picFor(game,screen,first,false)
+assert(img==sheet and w==56 and h==56 and q==quad,'native Crystal front animation frame')
+print('PASS native indexed/shiny palette ownership and original Crystal frame reader')
