@@ -1620,7 +1620,7 @@
         "module": "UiBackplates",
         "status": "partial",
         "consumer": "lib/BattleScene.lua; lib/Gen6Backdrop.lua; lib/BossBackdrop.lua; lib/Gen2BattleBackdrop.lua",
-        "detail": "Shared stage/crop and frozen battle clock consume the controls. Native fishing type and string trainer class IDs select existing Kanto plates without mutating battle state. Johto-specific location/boss artwork and complete native map-family routing remain incomplete; missing images retain the world arena.",
+        "detail": "Shared stage/crop and frozen battle clock consume the controls. Native fishing type, authoritative GSC playerState surfing provenance and string trainer class IDs select existing Kanto plates. Surf state is frozen at staging and stale companion player.surfing markers cannot override it; gameplay state is untouched. Johto-specific location/boss artwork and complete native map-family routing remain incomplete; missing images retain the world arena.",
         "verification": "source audit"
       },
       {
@@ -1660,7 +1660,7 @@
         "module": "UiBackplates",
         "status": "partial",
         "consumer": "lib/BattleScene.lua; lib/Gen6Backdrop.lua; lib/BossBackdrop.lua; lib/Gen2BattleBackdrop.lua",
-        "detail": "Shared stage/crop and frozen battle clock consume the controls. Native fishing type and string trainer class IDs select existing Kanto plates without mutating battle state. Johto-specific location/boss artwork and complete native map-family routing remain incomplete; missing images retain the world arena.",
+        "detail": "Shared stage/crop and frozen battle clock consume the controls. Native fishing type, authoritative GSC playerState surfing provenance and string trainer class IDs select existing Kanto plates. Surf state is frozen at staging and stale companion player.surfing markers cannot override it; gameplay state is untouched. Johto-specific location/boss artwork and complete native map-family routing remain incomplete; missing images retain the world arena.",
         "verification": "source audit"
       },
       {
@@ -1700,7 +1700,7 @@
         "module": "UiBackplates",
         "status": "partial",
         "consumer": "lib/BattleScene.lua; lib/Gen6Backdrop.lua; lib/BossBackdrop.lua; lib/Gen2BattleBackdrop.lua",
-        "detail": "Shared stage/crop and frozen battle clock consume the controls. Native fishing type and string trainer class IDs select existing Kanto plates without mutating battle state. Johto-specific location/boss artwork and complete native map-family routing remain incomplete; missing images retain the world arena.",
+        "detail": "Shared stage/crop and frozen battle clock consume the controls. Native fishing type, authoritative GSC playerState surfing provenance and string trainer class IDs select existing Kanto plates. Surf state is frozen at staging and stale companion player.surfing markers cannot override it; gameplay state is untouched. Johto-specific location/boss artwork and complete native map-family routing remain incomplete; missing images retain the world arena.",
         "verification": "source audit"
       },
       {

@@ -1,3 +1,12 @@
+# GSC water encounter provenance — 2026-10-20
+
+Native world.playerState now drives water-arena eligibility and frozen surfing
+backdrop identity. The Gen1 player.surfing field is absent in standalone GSC
+and may be a stale optional-companion marker; native GSC state takes precedence.
+Official0.3.91 NVIDIA Gold/Silver/Crystal original water battles pass, including
+later land reset;3captures inspected.80 routing assertions and16 affected
+suites pass. Evidence: `docs/NATIVE_GSC_SURF_2026-10-20.md`.
+
 # GSC paired Q57 subjects — 2026-10-20
 
 All four native slots now own independent release subjects with exactly the old

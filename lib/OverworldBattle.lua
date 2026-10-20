@@ -631,16 +631,17 @@ function OverworldBattle.begin(state, battle)
   if not (state and state.map and state.player) then return false end
   if not Voxel3D.available() then return false end
 
+  local surfing = state.player.surfing
+  if Generation.isGen2() then surfing = V.require('Gen2BattleBackdrop').surfing(state) end
   local ok, arena = pcall(BattleArena.find, state.map,
-                          state.player.cellX, state.player.cellY,
-                          state.player.surfing)
+                          state.player.cellX, state.player.cellY, surfing)
   if not (ok and arena) then return false end
 
   -- Preserve encounter provenance while the overworld still owns it. Fishing
   -- clears its pose before pushBattle(), so newWild's hooked option is stamped
   -- by the constructor hook below; surfing is still live on the player here.
   if battle then
-    battle.dramaticShapeSurfing = state.player.surfing and true or false
+    battle.dramaticShapeSurfing = surfing and true or false
     Gen6Backdrop.snapshot(battle)
   end
 

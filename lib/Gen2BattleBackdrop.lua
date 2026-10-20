@@ -7,6 +7,15 @@ function M.core(battle)
   return type(battle.battle) == 'table' and battle.battle or battle
 end
 
+-- Native World keeps locomotion in playerState; Player has no surfing field.
+-- Read while the overworld still owns the encounter, then freeze it with the
+-- existing battle provenance rather than querying a later player's state.
+function M.surfing(world)
+  if not V.require('Generation').isGen2() or type(world)~='table' then return false end
+  local FieldMoves=require('src.world.gen2.FieldMoves')
+  return FieldMoves.isSurfing(world.playerState) and true or false
+end
+
 function M.trainer(battle)
   local core = M.core(battle)
   if not core or core.wild or core.link or battle.link then return nil end
