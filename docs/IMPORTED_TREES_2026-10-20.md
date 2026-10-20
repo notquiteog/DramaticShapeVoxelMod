@@ -1,7 +1,7 @@
 # Imported trees and preserved native ownership — 2026-10-20
 
-Source integration and a bounded paired timing run are verified; exact
-release-archive verification is recorded separately when complete.
+Source integration, bounded paired timing and frozen 1.53.0 runtime archive
+verification are complete for the fixtures below.
 
 ## Source and matching policy
 
@@ -146,3 +146,36 @@ change was needed for this batch. The QA script sampled graphics draw-call
 statistics after their presentation reset, producing zero; those values are
 excluded. The older tree-cache vertex diagnostic omits instanced sidecars and
 is also not used as evidence of total vertex reduction.
+
+## Frozen 1.53.0 runtime archive
+
+The installed release candidate repeated the native tree cases in all three
+Hoenn and all three GSC editions on official 0.3.91 / NVIDIA RTX 5060 Ti. All six
+processes exited 0. Each independently asserted all **529 public runtime/scenery
+file hashes**, requested the eight water shader variants, checked solid-tree
+defaults and the actual catalog canopy anchor, and recorded thirteen additional
+tree/module/unchanged-PNG readback hashes. The QA control script stays external
+when the package excludes developer tools; all exercised implementation and
+assets came from the installed package.
+
+All **78 frozen screenshots** were inspected: 48 across RSE and 30 across GSC.
+The RSE set contains clear native Littleroot `(1,19)` front, side, rear and low
+eye views, native source references, the Petalburg low eye view and all card,
+missing-asset, merged and boundary-input cases. Four Petalburg orbit angles at
+the auto-selected northern target were obscured by the existing distance fade;
+they are recorded limitations, not accepted close-model evidence. The clear
+Littleroot angles and Petalburg ground-level/fallback views provide that evidence.
+
+All three RSE builds again blocked the move up from Petalburg `(20,2)` and
+completed an adjacent native dry walking step. Actual GPU vertex readback
+retained source XYZ/UV/shade/RGBA in both instance and deliberately merged paths;
+native mids, collision and floor/layer values stayed unchanged through rebuilds.
+All three GSC builds again preserved the Ilex digest, honored explicit cards,
+restored closed native solids when textures were deliberately unavailable and
+rendered the non-instanced fallback. New Bark remains a pipeline control.
+
+The engine release was rechecked during this frozen verification and remained
+0.3.91. Runtime hashes are retained independently of later evidence-only
+documentation packaging; the original checked ZIP digest and per-run reports
+are saved with the external frozen QA results. This verification does not add
+unreviewed building, interior, conifer-family or whole-region coverage.

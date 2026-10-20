@@ -51,8 +51,58 @@ and actual surf avatar are used; this is a presentation fix, not a gameplay edit
 
 ## Final archive checks
 
-Pending the final source freeze and exact archive run. Do not treat this section
-as completed verification until the checked package record is entered here.
+The fresh source archive at commit `9de17d44d435d268868fdc777925e2f18b703127`
+was extracted into an empty installed folder and used by every final native run.
+Its tested ZIP SHA-256 is
+`64909ad6ce6fa15d16de2c78ce00926aa85a726ee85b9d208fdec2b013dbf6e0`.
+The ZIP contains11,518 files and529 Lua files, all syntax-compiled. Raw source
+archives/DAE/OBJ files, ROMs, saves, caches, tools and tests are excluded. Two
+pre-existing `unused.zip` asset archives are excluded too; no runtime references
+use them. Selected processed Lua models, original selected PNGs and provenance
+are included.
+
+Every runner verifies version1.53.0/cache108,529 actual mounted library/scenery/
+entry-file hashes, realistic-water and solid-tree schema defaults, NVIDIA and all
+eight water shader requests (four shared programs). Thirty standalone native
+runners and two all-six-partner runners pass with no mod errors. All404 final
+captures were inspected:
+
+| Native final archive check | Runners | Inspected captures |
+| --- | ---: | ---: |
+| All-eleven water/material/native support | 11 | 156 |
+| Six GB grass/native masks/fallback/cleanup | 6 | 84 |
+| GSC +five GBA tree/source/fallback/boundaries | 8 | 110 |
+| Five GBA native Cut/Surf and cleanup | 5 | 30 |
+| FireRed +Ruby with all six published partners | 2 | 24 |
+
+Water and GB grass captures also received independent review. Tree checks retain
+complete native owner footprints, colors, protected projected/walkable cells,
+saved cards, missing-asset closed-model fallback and ordinary merged uploads.
+Some Petalburg orbit views are distance-haze controls; clear Littleroot views,
+Petalburg low-eye/cases and actual source/GPU/native-input checks establish the
+reviewed RSE tree behavior, as the tree report records.
+
+Five actual GBA field-move callbacks remove imported grass on native Cut:
+FR/LG120→116 placements and R/S/E37→34, then retain the expected source edit.
+Native Surf hops succeed at Pallet `(7,16)` and Route103 `(49,7)` in R/S or
+`(44,7)` in Emerald. Their land0/water−8 Kanto or−4 Hoenn support is consistent
+in third/first person, with unchanged native source/collision/elevation digests.
+These field callbacks use QA-supplied party data and do not test badge/menu/HM
+eligibility. GB checks exercise a presentation Cut rectangle, not its HM menu.
+All eleven grass/unload runners verify six unique cached grass/bank/tree PNG
+images are released after scene owners at the public launcher-quit boundary.
+
+Optional partner smoke versions: Wilds1.15.2, Sky Ride0.5.5, Doubles0.14.4,
+Online0.11.2, Overworld Spawn2.6.5 and Modern UI0.4.2. Native shore/lab scenes in
+FULL/SKY/OFF and35°/first-person pass. The existing spawn crowding and indoor
+capture HUD remain documented limits; smoke checks do not establish complete
+multiplayer parity or every paired battle feature. Unpublished Doubles changes
+are not included.
+
+Final evidence amendments change documentation only. The package is rebuilt
+from the final commit and the complete runtime-file SHA-256 map is compared with
+the tested archive, preserving every tested library/data/asset/vendor/entry byte.
+The published ZIP checksum is supplied separately with the GitHub release.
 
 ## References and limits
 

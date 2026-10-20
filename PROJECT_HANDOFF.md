@@ -7,8 +7,11 @@ providers retain fallback and priority. Original source foliage UV/RGBA/PNG data
 is retained; authored360completion is separately credited. Native water battle
 cameras/HD-2D actors use the recessed sheet, fixing an observed land-datum gap.
 
-Source/native GPU review and paired shader/tree fixtures are complete; exact
-archive verification is next. Earlier captures below are not relabeled as proof
+Exact archive verification is complete:364/0/58 tests,11,518 packaged files,
+529 Lua compiled;30 standalone+2 all6-partner native runners pass,404 final
+captures inspected.529 mounted file hashes and all shader/default gates pass
+per runner. Final evidence repackage retains the full tested runtime SHA map.
+See docs/SCENERY_RELEASE_2026-10-20.md. Earlier captures below are not relabeled as proof
 of the new shader/tree code. Shader GB batch cost drops35–57%; GBA FULL remains
 within control variation. No general FPS/AAA/all-map completion claim is made.
 Details: docs/REALISTIC_WATER_2026-10-20.md and tree source/verification docs.

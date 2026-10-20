@@ -7,9 +7,9 @@ queue. Complete coverage has not been established. This inventory records the
 current adapters, reviewed source evidence and concrete gaps; a catalog entry,
 a recipe match or a reusable art family is not a native placement signoff.
 
-The current 1.53 batch must finish its exact-archive checks before a new import
-batch. Source verification below does not imply that this pending archive has
-passed. Existing native-art 3D models remain the fallback and may already model
+The1.53 batch has passed its exact-archive checks; see the
+[release verification](SCENERY_RELEASE_2026-10-20.md). Source family eligibility
+below still does not establish all-map visual coverage. Existing native-art 3D models remain the fallback and may already model
 many of the buildings listed for future source comparison.
 
 ## Actual imported adapters, per game
