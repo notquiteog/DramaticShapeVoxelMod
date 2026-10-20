@@ -1,3 +1,15 @@
+# Independent Modern UI menu/mobile follow-up — 2026-10-20
+
+Modern UI e2dc4da fits its custom GB party/summary/storage and GBA summary
+screens into public safe areas, retaining native fallback when too small.
+All11 editions pass native inset checks;46initial captures inspected. The
+captures exposed pre-existing small glyph loss and pale-on-pale party/PC text;
+subpixel font coverage and custom panel/selection ink now correct those cases.
+Final Yellow/Crystal menus plus Emerald summary/paired battle pass both sizes,
+all16final captures inspected;15 Modern UI suites pass. Native UI/gameplay,
+glyph assets and independent installation remain unchanged. Physical phones
+remain unverified. Companion evidence: modern-ui/docs/SAFE_AREA_MENUS_2026-10-20.md.
+
 # Portrait GBA battle framing — 2026-10-20
 
 Gen3 battle lenses now preserve their native3:2 horizontal span on narrow
