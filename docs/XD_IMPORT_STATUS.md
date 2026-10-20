@@ -45,7 +45,16 @@ Five intake tests cover malformed bounds, truncation, overlapping compression,
 archive ambiguity and path traversal. These are source-intake tests, not GPU,
 animation or eleven-game runtime verification.
 
-Still required: geometry/material/skeleton/animation conversion, shiny filters,
+Experimental offline conversion (`tools/convert_xd_models.py`) and a dormant
+mesh/pose consumer (`lib/XDModelInstance.lua`) are now present. They are not
+connected to gameplay, providers or settings. Conversion uses an external parser
+and mathutils; its recorded parser revision is not enforced against the checkout.
+Only the first texture layer is rendered; missing named textures can become
+white. Material/UV animation, animated lighting and parallel conversion are
+prototype code, without native-game or mobile acceptance. Failed converted
+records can leave diagnostic folders; output still declares `renderReady:false`.
+
+Still required: validated geometry/material/skeleton/animation conversion, shiny filters,
 particle Pokémon, game-neutral renderer and battle/overworld ownership,
 all-eleven species/form mapping, import/settings UI, mobile pack installation,
 runtime tests and physical-device checks. Do not expose an import-success option

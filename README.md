@@ -1,3 +1,12 @@
+## 1.54.0 — Consolidated camera, native battle audio and HUD work
+
+Combine the released realistic water/source scenery with pending camera continuity,
+native GSC paired battle animation/audio, guarded GBA release audio and safe-area
+HUD layouts. Companion integrations remain optional. Preserve experimental XD
+source tools without exposing an unfinished playable feature.
+[Snapshot scope and verification](docs/CONSOLIDATED_RELEASE_2026-10-20.md).
+The new three-mode scenery categories and remaining model placements are queued.
+
 ## 1.53.0 — Realistic water and imported scenery
 
 Smooth realistic water is the default across all eleven games. Continuous

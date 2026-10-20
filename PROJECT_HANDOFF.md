@@ -1,3 +1,12 @@
+# Consolidation snapshot — 2026-10-20
+
+1.54.0 merges published scenery with captured primary camera/native paired battle,
+audio, safe-area HUD and dormant XD prototype work. Fixed primary snapshot053d534
+(11:21:24UTC) preserves concurrent later edits separately. Source370/0/58 tests;
+archive/native verification pending. Historical own-project branches reconciled;
+release workflow now uses bounded portable packaging and consistent vtags.
+See docs/CONSOLIDATED_RELEASE_2026-10-20.md. Three-mode scenery request remains queued.
+
 # Realistic water and source-model trees — 2026-10-20
 
 Current1.53.0 adds smooth analytic water as the default across11games, solid tree
