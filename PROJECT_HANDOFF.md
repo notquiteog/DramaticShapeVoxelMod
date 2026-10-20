@@ -1,3 +1,14 @@
+# Modern battle safe areas across eleven editions — 2026-10-20
+
+Optional modern cards/commands use the original public SafeArea viewport and
+correct projected-anchor offsets across all generations, standalone Modern UI
+commands and GSC Doubles. All11 editions plus Crystal paired HUD pass two
+landscape/portrait inset fixtures;24captures inspected. Six staging-OFF native
+command captures also inspected. Shared350/0/58, Modern UI15 and Doubles Gen2 six
+suites pass. Original native UI and older-provider fallback remain unchanged.
+Physical phones remain unverified; portrait GBA paired actor clipping is a
+separate camera follow-up. Evidence: `docs/NATIVE_SAFE_AREA_HUD_2026-10-20.md`.
+
 # Mixed native GBA release audio — 2026-10-20
 
 Shared native send-out cues now retain both verified normal/shiny variants.

@@ -15,8 +15,10 @@ local function commands(b)
 end
 local function paint(b)
   local G=love.graphics
-  local width,height=G.getDimensions();local scale=Theme.scale(width,height)
-  G.origin();G.scale(scale);width,height=width/scale,height/scale
+  local width,height=G.getDimensions();local ox,oy=0,0
+  if Theme.viewport then ox,oy,width,height=Theme.viewport(width,height)end
+  local scale=Theme.scale(width,height)
+  G.origin();G.translate(ox,oy);G.scale(scale);width,height=width/scale,height/scale
   local shot=Stage.shot();local r=require('src.render.Renderer'):frameRects()
   local items,mons={},{}
   M.cards={}
@@ -31,8 +33,8 @@ local function paint(b)
         and not b:growInScale(mon) end
       if visible then
         local id=i-1
-        items[#items+1]={id=id,x=(r.vux+p[1]*r.vuw)/scale,
-          y=(r.vuy+p[2]*r.vuh)/scale,w=select(1,Theme.combatCardSize(ally))or 76,h=select(2,Theme.combatCardSize(ally))or(ally and 27 or 22)}
+        items[#items+1]={id=id,x=(r.vux+p[1]*r.vuw-ox)/scale,
+          y=(r.vuy+p[2]*r.vuh-oy)/scale,w=select(1,Theme.combatCardSize(ally))or 76,h=select(2,Theme.combatCardSize(ally))or(ally and 27 or 22)}
         mons[id]=mon;M.cards[slot]=mon
       end
     end

@@ -48,6 +48,19 @@ function M.hpColor(fraction)
  if fraction>.2 then return .93,.65,.23,1 end
  return .87,.29,.28,1
 end
+-- Public engine safe area already normalizes mobile DPI and viewport offsets.
+-- Older engines and headless callers retain the complete drawable window.
+function M.viewport(w,h)
+ local ok,area=pcall(require,'src.core.SafeArea')
+ if ok and type(area.rect)=='function'then
+  local read,x,y,sw,sh=pcall(area.rect)
+  if read and type(x)=='number'and type(y)=='number'and type(sw)=='number'and type(sh)=='number'
+   and x>=0 and y>=0 and sw>0 and sh>0 and x+sw<=w+.5 and y+sh<=h+.5 then
+   return x,y,sw,sh
+  end
+ end
+ return 0,0,w,h
+end
 function M.scale(w,h)return math.max(1,math.min(4,w/320,h/240))end
 function M.aboveHead(x,y,w,h,viewW,viewH)
  return math.max(3,math.min(viewW-w-3,x-w/2)),math.max(3,math.min(viewH-h-9,y-h-10))

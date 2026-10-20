@@ -138,7 +138,9 @@ function M.install(stage)
    ox=((hb and hb.ox)or 0)+((opts and opts.ox)or 0),oy=((hb and hb.oy)or 0)+((opts and opts.oy)or 0)}
  end
  local function paint()
-  local G=love.graphics;local w,h=G.getDimensions();local k=Options.hudScale(w,h)
+  local G=love.graphics;local w,h=G.getDimensions();local ox,oy=0,0
+  if Theme.viewport then ox,oy,w,h=Theme.viewport(w,h)end
+  local k=Options.hudScale(w,h)
   if stage.frame then
    local r=require('src.render.Renderer'):frameRects()
    for id,c in pairs(M.cards)do
@@ -146,11 +148,11 @@ function M.install(stage)
     if p then c.anchor={r.vux+p[1]*r.vuw,r.vuy+p[2]*r.vuh}end
    end
   end
-  G.origin();G.scale(k);w,h=w/k,h/k
+  G.origin();G.translate(ox,oy);G.scale(k);w,h=w/k,h/k
   local function label(value,x,y,width)return Theme.text(value,x,y,width,Options.ink())end
   local items={}
   for id=0,3 do local c=M.cards[id];if c then
-   items[#items+1]={id=id,x=c.anchor[1]/k,y=c.anchor[2]/k,w=select(1,Theme.combatCardSize(id%2==0))or 76,h=select(2,Theme.combatCardSize(id%2==0))or(id%2==0 and 29 or 26)}
+   items[#items+1]={id=id,x=(c.anchor[1]-ox)/k,y=(c.anchor[2]-oy)/k,w=select(1,Theme.combatCardSize(id%2==0))or 76,h=select(2,Theme.combatCardSize(id%2==0))or(id%2==0 and 29 or 26)}
   end end
   local layout=Theme.layoutStatusCards(items,w,h)
   for id=0,3 do local c=M.cards[id];if c then
@@ -159,8 +161,8 @@ function M.install(stage)
    local x,y=layout[id].x,layout[id].y
    local cw,ch=Theme.combatCardSize(ally)
    local selected=Ui._mode=='target' and Ui.targetCursor()==id
-   if not Theme.combatCard(x,y,cw or 76,ch or cardH,c.anchor[1]/k,selected,{ally=ally,name=c.name,level=c.level,gender=c.gender,caught=c.caught,status=c.status,hp=c.hp,maximum=c.maximum,exp=c.exp})then
-   Options.card(x,y,76,cardH,c.anchor[1]/k,Ui._mode=='target' and Ui.targetCursor()==id)
+   if not Theme.combatCard(x,y,cw or 76,ch or cardH,(c.anchor[1]-ox)/k,selected,{ally=ally,name=c.name,level=c.level,gender=c.gender,caught=c.caught,status=c.status,hp=c.hp,maximum=c.maximum,exp=c.exp})then
+   Options.card(x,y,76,cardH,(c.anchor[1]-ox)/k,Ui._mode=='target' and Ui.targetCursor()==id)
    label(c.name,x+3,y+2,49);label('Lv.'..c.level,x+53,y+2,21)
    Theme.gender(c.gender,x+4,y+17);if c.caught then Theme.caught(x+15,y+18)end
    label(c.status or 'HP',x+3,y+11,19)
