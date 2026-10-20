@@ -513,7 +513,9 @@ uniform vec3 dayTint;
 // nothing to land on. The frame copy is honest 8-bit colour and can stay.
 #ifndef SKY_ONLY
 uniform Image reflectTex;
+#ifndef NATIVE_WATER
 uniform Image underColor;
+#endif
 uniform LOVE_HIGHP_OR_MEDIUMP Image underDepth;
 uniform mat4 inverseVP;
 uniform float underOn;
@@ -544,6 +546,12 @@ uniform float waveT;
 uniform float rippleT; // continuous, independent of paused engine tile ticks
 uniform vec4 faceShade;      // the mesh's own direction shading: E, W, S, N
 uniform float gardenWater;
+#ifdef NATIVE_WATER
+#define nativeWater 1.0
+uniform vec4 nativePalette;
+#else
+uniform float nativeWater;
+#endif
 uniform float reserveWater;
 uniform float atlasTileScale;
 uniform vec2 atlasSize;      // the tileset atlas, in texels
@@ -663,6 +671,10 @@ float columnSeam(vec3 p, vec3 base, float axis) {
 
 // ------- the sky, by direction
 
+#ifdef NATIVE_WATER
+//@CLOUDS
+#endif
+
 vec3 bandAt(float i) {
   return Texel(skyRamp,
                vec2((clamp(i, 0.0, skyCount - 1.0) + 0.5) / skyCount, 0.5)).rgb;
@@ -683,7 +695,7 @@ float skyPos(vec3 d) {
   // Custom water samples the existing palette by reflected elevation. A wave
   // can point behind the camera; projecting that direction to screen space
   // abruptly wrapped it to the darkest band, producing large oval patches.
-  if (gardenWater > .5) {
+  if (gardenWater > .5 || nativeWater > .5) {
     float elevation=asin(clamp(d.y,0.0,1.0));
     return (1.0-elevation/1.570796327)*max(skyCount-1.0,0.0);
   }
@@ -701,7 +713,7 @@ vec3 skyAt(vec3 d, float parity) {
   float pos = skyPos(d);
   // Custom water interpolates the same sky palette; discrete sky bands must
   // not become large, hard-edged blue patches sliding across small ripples.
-  if (gardenWater > .5) {
+  if (gardenWater > .5 || nativeWater > .5) {
     return mix(bandAt(floor(pos)), bandAt(floor(pos) + 1.0), fract(pos));
   }
   float base = min(floor(pos), skyCount - 1.0);
@@ -869,6 +881,8 @@ float gardenRipple(vec2 q, float t) {
        + .30*fade.y*sin(dot(bent,vec2(-.08,.37))-t*1.25+flow*5.0)
        + .20*fade.z*fine;
 }
+
+//@NATIVE_SURFACE
 
 float waveRaw(vec2 q) {
   if (gardenWater > .5) {
@@ -1125,7 +1139,12 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
   vec2 col;
   float face;
   float axis;
-  relief(sheet, view, hit, col, face, axis);
+  vec3 nativeWave=vec3(.5,0.0,0.0);
+  if (nativeWater > .5) {
+    nativeWave=nativeSurface(sheet.xz,rippleT,abs(fwidth(sheet.xz)));
+    hit=vec3(sheet.x,sheet.y+(nativeWave.x-.5)*waveHeight,sheet.z);
+    col=sheet.xz-vec2(.5);face=1.0;axis=0.0;
+  } else relief(sheet, view, hit, col, face, axis);
   // and the bar's centre, so a column is sampled and reflected from one
   // place rather than from wherever inside it the fragment happened to land
   vec3 surf = vec3(col.x + 0.5, hit.y, col.y + 0.5);
@@ -1133,7 +1152,7 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
   // Continuous custom ripples do not live on the source tile's pixel grid.
   // waveUV's centre offset can cross an 8px tile edge at fractional columns.
   // Use the mesher's inset UV only for coverage; its RGB is not water color.
-  vec4 p = gardenWater > .5 ? Texel(tex,tc) : Texel(tex,waveUV(tc,col));
+  vec4 p = (gardenWater > .5 || nativeWater > .5) ? Texel(tex,tc) : Texel(tex,waveUV(tc,col));
   if (p.a < 0.5) discard;
   // `face` is the column's own side shading, which is what makes a crest
   // read as a solid thing with a lit flank rather than as a bright patch
@@ -1143,6 +1162,14 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
                    + .25*cos(surf.z*.033 - surf.x*.009);
   vec3 calm = mix(vec3(.13,.25,.34),vec3(.22,.37,.45),broad);
   vec3 material = mix(p.rgb,calm,gardenWater);
+#ifdef NATIVE_WATER
+  // Retain the source palette without projecting its repeated diagonal wave
+  // drawing over the continuous surface. Similar body colors are softened;
+  // distant bank/foam colors and the original alpha remain intact.
+  vec3 paletteDelta=p.rgb-nativePalette.rgb;
+  float bodyWeight=1.0-smoothstep(.008,.080,dot(paletteDelta,paletteDelta));
+  material=mix(material,nativePalette.rgb,nativePalette.a*bodyWeight);
+#endif
   float reliefShade = mix(face,mix(1.0,face,.40),gardenWater);
   vec3 base = material * vShade * reliefShade * sunlight(vSun) * dayTint;
 
@@ -1150,7 +1177,9 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
   // takes from the neighbours it stands beside -- rather than an invented
   // wobble, so the sky and the sun break along the bars instead of across
   // them. Opened up by the lean, which is about to squash it (see below).
-  vec3 n = waveNormal(col, waveSlope * (1.0 + lean * waveSlopeLean) * mix(1.0,.38,gardenWater));
+  vec3 n;
+  if (nativeWater > .5) n=normalize(vec3(-nativeWave.y*waveSlope,1.0,-nativeWave.z*waveSlope));
+  else n=waveNormal(col, waveSlope * (1.0 + lean * waveSlopeLean) * mix(1.0,.38,gardenWater));
   vec3 r = reflect(view, n);
   // the same reflection off a LEVEL surface, which is what the lean below
   // moves: the difference between the two is this column's own contribution
@@ -1191,9 +1220,13 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
   vec3 refl = base;
   if (skyOn > 0.5) {
     refl = bodyAt(r, skyAt(r, parity), parity);
+#ifdef NATIVE_WATER
+    vec4 reflectedCloud=cloudAt(r);
+    refl=mix(refl,reflectedCloud.rgb,reflectedCloud.a);
+#endif
   }
 #ifndef SKY_ONLY
-  if (rays > 0.5) {
+  if (rays > 0.5 && (nativeWater < .5 || r.y > .01)) {
     vec4 hit = march(surf, r);
     refl = mix(refl, hit.rgb, hit.a);
   }
@@ -1208,7 +1241,7 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
   // TEST7: reconstruct the opaque scene below this surface, before any
   // water prepass or characters. Reject foreground/sky samples explicitly.
 #ifndef SKY_ONLY
-  if (underOn > .5 && gardenWater > .5) {
+  if (underOn > .5 && (gardenWater > .5 || nativeWater > .5)) {
     vec2 tuv = sc / love_ScreenSize.xy;
     vec3 packedDepth = floor(Texel(underDepth,tuv).rgb*255.0+.5);
     float bd=dot(packedDepth,vec3(65536.0,256.0,1.0))/16777215.0;
@@ -1218,7 +1251,11 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
       vec3 bed=vec3(bentBed.x,bentBed.y+bendDrop(bentBed.xz),bentBed.z);
       float waterDepth=sheet.y-bed.y;
       if (waterDepth>.10 && waterDepth<40.0) {
+#ifdef NATIVE_WATER
+        vec3 bedColor=Texel(reflectTex,tuv).rgb;
+#else
         vec3 bedColor=Texel(underColor,tuv).rgb;
+#endif
         float transmission=exp(-waterDepth*.065);
         vec3 tinted=bedColor*vec3(.78,.94,1.0);
         base=mix(base,tinted,transmission*.58);
@@ -1227,13 +1264,20 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
     }
   }
 #endif
+  if (nativeWater > .5) f=.18+.60*pow(1.0-ct,3.0);
   vec3 rgb = mix(base, refl, clamp(f * mix(1.0,.78,gardenWater), 0.0, 1.0));
   // Surface detail belongs above transmitted bed color. Small broken crests
   // remain readable at night even when the reflected sky is nearly uniform.
-  float ripple=waveRaw(surf.xz);
+  float ripple=nativeWater > .5 ? nativeWave.x : waveRaw(surf.xz);
   float crest=smoothstep(.68,.94,ripple);
   rgb += gardenWater * (vec3(.024,.046,.065)*(ripple-.5)
          + vec3(.030,.058,.076)*crest) * max(dayTint,vec3(.38));
+
+  if (nativeWater > .5) {
+    // Restrained world-space highlights keep native color without tile-sized
+    // shimmering staircases; filtering fades fine waves toward the horizon.
+    rgb += vec3(.014,.022,.028)*(nativeWave.x-.5)*max(dayTint,vec3(.30));
+  }
 
   // THE CAST, mirrored in this plane (see CAST_ALPHA). Read at this
   // fragment's own place on the screen, because that is where the mirrored
@@ -1255,7 +1299,7 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
   }
 
 #ifdef VOXEL_GRID
-  rgb *= 1.0 - gridDark * (1.0-gardenWater) * (1.0-reserveWater) * columnSeam(hit, sheet, axis);
+  rgb *= 1.0 - gridDark * (1.0-gardenWater) * (1.0-reserveWater) * (1.0-nativeWater) * columnSeam(hit, sheet, axis);
 #endif
   if (fogInfo.x > 0.0) {
     float distance = fogInfo.w > 0.5 ? length(hit.xz - fogOrigin.xz) : length(hit - eye);
@@ -1321,15 +1365,20 @@ end
 
 Water._trainSource = trainSource       -- named for the suite
 
-local function source(grid, skyOnly, bare)
+local function source(grid, skyOnly, bare, native)
   local src = (bare and "#define EFFECT_PREC\n" or "#define EFFECT_PREC mediump\n") .. SHADER_SRC
   src = src:gsub("//@CRATERS", (craterSource():gsub("%%", "%%%%")))
   src = src:gsub("//@CELESTIAL", function()return Celestial.surface end)
+  src = src:gsub("//@NATIVE_SURFACE",function()return V.require("NativeWaterSurface").glsl end)
+  local clouds
+  if native then local ok,result=pcall(V.require,'Clouds');if ok then clouds=result end end
+  src=src:gsub("//@CLOUDS",function()return clouds and clouds.glsl or 'vec4 cloudAt(vec3 d){return vec4(0.0);}'end)
   src = src:gsub("//@TRAINS", (trainSource():gsub("%%", "%%%%")))
   local head = ("#define RAY_STEPS %d\n#define RAY_REFINE %d\n"
                 .. "#define WAVE_STEPS %d\n#define WAVE_STRIDE %.1f\n")
     :format(Water.RAY_STEPS, Water.RAY_REFINE, Water.WAVE_STEPS,
             Water.WAVE_STRIDE)
+  if native then head=head.."#define NATIVE_WATER 1\n" end
   if grid then head = head .. "#define VOXEL_GRID 1\n" end
   if skyOnly then head = head .. "#define SKY_ONLY 1\n" end
   return head .. src
@@ -1344,17 +1393,19 @@ Water._source = source                 -- named for the suite
 local shaders = {
   full = { [false] = nil, [true] = nil },
   sky = { [false] = nil, [true] = nil },
+  nativeFull = { [false] = nil, [true] = nil },
+  nativeSky = { [false] = nil, [true] = nil },
 }
 
-function Water.shader(grid, skyOnly)
+function Water.shader(grid, skyOnly, native)
   grid = grid and true or false
-  local family = skyOnly and shaders.sky or shaders.full
+  local family = native and (skyOnly and shaders.nativeSky or shaders.nativeFull) or (skyOnly and shaders.sky or shaders.full)
   if family[grid] == nil then
     if not (love.graphics and love.graphics.newShader) then
       family[grid] = false
     else
-      local ok, sh = pcall(love.graphics.newShader, source(grid, skyOnly))
-      if not ok then ok, sh = pcall(love.graphics.newShader, source(grid, skyOnly, true)) end
+      local ok, sh = pcall(love.graphics.newShader, source(grid, skyOnly, false, native))
+      if not ok then ok, sh = pcall(love.graphics.newShader, source(grid, skyOnly, true, native)) end
       if not ok and V and V.mod and V.mod.log then
         -- once, where it can be read: the fallback is flat water, which is
         -- easy to look at and impossible to diagnose without this line
@@ -1370,6 +1421,7 @@ end
 -- ------- the pass
 
 local active = nil        -- the shader this pass bound, or nil
+local activeNative = false
 
 -- The ripple phase. Driven by the ENGINE's tile-animation clock, the same
 -- 60Hz counter the water tiles rotate on, so the ripple and the art it
@@ -1419,8 +1471,9 @@ function Water.begin(ctx, skyOnly)
   end
   local level = Water.level()
   if level <= 0 then return false end
-  local sh = ctx.grid and Water.shader(true, skyOnly) or nil
-  if not sh then sh = Water.shader(false, skyOnly) end
+  local native=ctx.nativeWater==true
+  local sh = ctx.grid and Water.shader(true, skyOnly, native) or nil
+  if not sh then sh = Water.shader(false, skyOnly, native) end
   if not sh then return false end
 
   love.graphics.setShader(sh)
@@ -1429,6 +1482,8 @@ function Water.begin(ctx, skyOnly)
     pcall(sh.send, sh, name, ...)
   end
 
+  activeNative=native
+  if not native then send("nativeWater",0)end
   send("gardenWater", 0)
   send("reserveWater", 0)
   send("vp", "row", ctx.vp)
@@ -1442,7 +1497,7 @@ function Water.begin(ctx, skyOnly)
   if not skyOnly then
     send("reflectTex", ctx.reflect)
     send("depthTex", ctx.depth)
-    local inverse=ctx.underColor and ctx.underDepth and V.require('WaterBackdrop').inverse(ctx.vp)
+    local inverse=ctx.underDepth and (ctx.nativeWater or ctx.underColor) and V.require('WaterBackdrop').inverse(ctx.vp)
     send('underOn',inverse and 1 or 0)
     send('underColor',ctx.underColor or ctx.reflect)
     send('underDepth',ctx.underDepth or ctx.reflect)
@@ -1512,6 +1567,17 @@ function Water.begin(ctx, skyOnly)
     send("gridWidth", VoxelGrid.width())
   end
 
+  if native then
+    local ok,clouds=pcall(V.require,'Clouds')
+    local reflected=ok and clouds.reflection and clouds.reflection()
+    send('cloudAtlas',reflected and reflected.image or ctx.reflect or Sky.ramp())
+    send('cloudOpacity',reflected and reflected.opacity or 0)
+    if reflected then
+      send('cloudSunlight',reflected.sunlight);send('cloudAmbient',reflected.ambient)
+      send('cloudDirection',reflected.direction);send('cloudOvercast',reflected.overcast)
+      send('cloudDrift',reflected.drift)
+    end
+  end
   Water.sendSky(sh, ctx)
   active = sh
   return true
@@ -1587,9 +1653,10 @@ end
 -- Draw one water mesh with `model` applied. Mirrors Voxel3D.draw, minus the
 -- camera-ward pull (a flat sheet has nothing to lean over) and the separate
 -- sun transform (water is terrain: the sun saw the same matrix).
-function Water.draw(mesh, texture, model)
+function Water.draw(mesh, texture, model, nativePalette)
   if not (active and mesh) then return end
   if texture then mesh:setTexture(texture) end
+  if activeNative then pcall(active.send,active,'nativePalette',nativePalette or {0,0,0,0})end
   local safariScale=V.require("SafariMaterials").texelScale(texture)
   local atlasScale=safariScale or V.require("DecorAtlas").texelScale(texture)
   local garden = atlasScale>1 and V.require("CommunityVisuals").customRoads()
@@ -1597,7 +1664,8 @@ function Water.draw(mesh, texture, model)
   -- Existing town pads start at +.14; keep the crest below them. Moving
   -- normals/reflections remain full strength. Safari's taller plants retain
   -- their accepted .22 profile; unmodified atlases retain the voxel waves.
-  pcall(active.send,active,"waveHeight",safariScale and .22 or garden and .12 or Water.WAVE_HEIGHT)
+  pcall(active.send,active,"waveHeight",activeNative and V.require("NativeWaterSurface").HEIGHT or safariScale and .22 or garden and .12 or Water.WAVE_HEIGHT)
+  if activeNative then pcall(active.send,active,"waveSlope",V.require("NativeWaterSurface").SLOPE)end
   pcall(active.send,active,"atlasTileScale",atlasScale)
   pcall(active.send,active,"gardenWater",(safariScale or garden) and 1 or 0)
   pcall(active.send, active, "model", "row", model or Mat4.identity())
@@ -1615,6 +1683,7 @@ function Water.draw(mesh, texture, model)
 end
 
 function Water.finish()
+  activeNative=false
   active = nil
 end
 
@@ -1627,6 +1696,7 @@ function Water.invalidate()
       family[k] = nil
     end
   end
+  activeNative=false
   active = nil
 end
 

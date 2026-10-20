@@ -1687,11 +1687,11 @@ end
 --
 -- MUST be paired with endWater, which puts the frame back together.
 -- TEST7 capture must precede curved water's depth prepass and all cast copies.
-function Voxel3D.captureUnderwater()
+function Voxel3D.captureUnderwater(depthOnly)
   if not (active and canvas and held and held.depth) then return nil end
   -- The caller selects planted water (town or Safari atlas). Safari's native
   -- ponds own this independently of the unrelated road option.
-  return V.require('WaterBackdrop').capture(held,canvas,depthTarget())
+  return V.require('WaterBackdrop').capture(held,canvas,depthTarget(),depthOnly)
 end
 
 function Voxel3D.beginWater(paint)

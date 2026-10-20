@@ -1,3 +1,23 @@
+# Half-submerged rocks and water/cloud finish — 2026-10-17
+
+1.52.0 / mesh107 moves reviewed Hoenn sea stacks, boulders and small wet rocks
+halfway through their actual neighboring water sheet, preserving closed hulls,
+source footprints, instancing fallback and native permissions/elevations. Shared
+animated underlays replace static square rock patches. Native GBA water uses
+shallow analytic ripples, a cached live native palette and the sky's cloud field.
+Soft lit cumulus use1 draw/1152 vertices rather than15/5616. SKY skips full mirror
+copies; FULL reuses reflection color plus one packed opaque-depth snapshot for
+submerged rocks. Actor reflection clipping receives the actual water plane.
+
+Source333pass/0fail/58 unavailable-fixture skips. Source all5 cloud review,
+Hoenn matched rock tours/native shore checks and final water palette captures
+are inspected. Archive/timing evidence follows in
+`docs/GEN3_WATER_CLOUDS_2026-10-17.md`; companion docs detail rock/cloud scope.
+Native gameplay/UI/VM/collision and HD-2D actors/Pokémon/flowers remain intact;
+all partners optional. No whole-region or generic FPS claim. Regional queue
+still84/125 complete,41 queued. Primary concurrent GSC and partner unpublished
+changes are preserved. No unrelated partner production edits are included.
+
 # Bounded trees, original hedges and route gates — 2026-10-17
 
 1.49.0 / mesh106 fits recognized native tree crowns to blocked ground across

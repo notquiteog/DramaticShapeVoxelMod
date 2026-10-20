@@ -16,6 +16,7 @@ local Civic=V.require('Gen3Civic')
 local Outdoor=V.require('Gen3Outdoor')
 local Terrain=V.require('Gen3Terrain')
 local Elevation=V.require('Gen3Elevation')
+local NativeWater=V.require('Gen3Water')
 local BattleClear=V.require('Gen3BattleClear')
 local Distance=V.require('RenderDistance')
 local Boundary=V.require('Gen3Boundary')
@@ -169,7 +170,7 @@ local function build(req,cache,previous)
  local pairInfo={}
  local classify=V.require('SceneShapeCache').new(Shapes.of)
  local behaviors=require('src.core.game3.scripting.interaction_scripts').behaviors
- for cy=z0,z1 do for cx=x0,x1 do
+ local function addCell(cx,cy,nativeOnly)
   Budget.tick()
   local mid,pair,isVoid
   if replay then
@@ -179,6 +180,7 @@ local function build(req,cache,previous)
    elseif not isVoid then mid,pair=def.midLayout:midAt(cx,cy),def.midLayout.pair end
   elseif req.sample then mid,pair,isVoid=req.sample(cx,cy)
   else mid,pair,isVoid=Map.worldMidAt(cx,cy,def)end
+  if nativeOnly and isVoid then return end
   local fillShape,biome
   if isVoid and Pairs.outdoor(def) then
    local m,p,shape,kind=Boundary.resolve(regions,cx,cy)
@@ -207,7 +209,11 @@ local function build(req,cache,previous)
     signature[#signature+1]=pair..'/'..mid..'/'..tostring(collision)..(biome or '')
    else signature[#signature+1]='?' end
   else signature[#signature+1]='-' end
- end end
+ end
+ for cy=z0,z1 do for cx=x0,x1 do addCell(cx,cy)end end
+ if V.require('Gen3Hoenn').active()then
+  NativeWater.complete(cells,V.require('Gen3SeaRocks').member,function(x,y)addCell(x,y,true)end)
+ end
  Tiles.get(def.midLayout.pair)
  -- Provider replacement (palette reload) invalidates meshes even if IDs match.
  for pair,ts in pairs(groups)do signature[#signature+1]=pair..tostring(ts) end
@@ -321,6 +327,8 @@ local function build(req,cache,previous)
  end
  for _,c in pairs(cells)do if c.gym then c.column=Buildings.column(c.gym)end end
  Elevation.bind(cells,regions)
+ cache.wetRockCells=NativeWater.bind(cells)
+ cache.waterOptions={nativeWater=true}
  cache.floorRegions=regions
  local terrainHeight=Terrain.sampler(cells,Budget.tick)
  local chimneys=Roof.prepare(cells)
@@ -373,6 +381,7 @@ local function build(req,cache,previous)
   elseif c.bridge and c.bridge.edge then
    plane(b.v,b.i,x,z,uvFor(ts,1)or uv)
   elseif shape.kind=='water' then
+   NativeWater.note(b,shape.ground or c.mid)
    plane(b.wv,b.wi,x,z,uvFor(ts,shape.ground) or uv,.05)
   elseif shape.kind=='interiorFloor' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
@@ -380,7 +389,9 @@ local function build(req,cache,previous)
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    if not c.stageHidden then V.require('Gen3Cave').wall(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
   elseif shape.kind=='rock' then
-   plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+   local ground,line=NativeWater.underlay(c)
+   if ground then plane(b.wv,b.wi,x,z,uvFor(ts,ground)or uv,line)
+   else plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    if not c.stageHidden and not V.require('Gen3SeaRocks').queue(c,rockGroups)then V.require('Gen3Cave').rock(c,function(v,t,shade,anchor)quad(anchor and b.pv or b.v,anchor and b.pi or b.i,v,t,shade,anchor)end,uvFor)end
   elseif shape.kind=='cliff' then
    M.cliffCount=M.cliffCount+1
@@ -698,6 +709,7 @@ local function build(req,cache,previous)
   end
   upload('under',b.v,b.i);upload('roof',b.rv,b.ri)
   upload('plants',b.pv,b.pi,R.TREE_FORMAT)
+  part.waterMid=NativeWater.dominant(b.waterMids)
   part.waters={};local levels={}
   for j=1,#b.wv,4 do
    local h=b.wv[j][2];local group=levels[h]
@@ -717,6 +729,7 @@ local function build(req,cache,previous)
  V.require('NativeTreeArt').buildInstances(treeGroups,leaf,li,cache.treeInstances)
  cache.wood=R.newMesh(wood,wi);Budget.check();cache.leaves=R.newMesh(leaf,li)
  cache.hedges=R.newMesh(hedges,hi);Budget.check()
+ cache.waterDraws,cache.waterLevels=NativeWater.draws(cache.parts)
  -- Tiles loaded during this build now belong to the published context. Do
  -- not immediately rebuild the same scene on the next frame just because
  -- its formerly missing neighbor atlas is now ready.
@@ -827,12 +840,7 @@ local function terrain(draw)
  for _,batch in ipairs(cache.treeInstances or {})do draw(batch,V.require('NativeTreeArt').image())end
 end
 local function waterMeshes()
- local out={}
- for _,p in ipairs(cache.parts)do
-  local ts=Tiles._pairs[p.pair]
-  if ts then for _,water in ipairs(p.waters or {})do out[#out+1]={water.mesh,ts.image,nil,water.height}end end
- end
- return out
+ return NativeWater.sync(cache.waterDraws or{},Tiles._pairs)
 end
 local reflectPlane
 local dustMesh,dustImage
@@ -1184,15 +1192,20 @@ function M.draw(game,vw,vh,cam)
   R.battleOcclusion(nil)
   if cam.actors then cam.actors:draw()end
  else
-  local waterLevels={}
-  for _,d in ipairs(water)do local h=d[4];waterLevels[h]=waterLevels[h]or{};local group=waterLevels[h];group[#group+1]=d end
-  for h,group in pairs(waterLevels)do
+  local options=cache.waterOptions
+  options.underColor,options.underDepth=nil,nil
+  if #water>0 and cache.wetRockCells>0 and V.require('Water').level()>=2 then
+   options.underColor,options.underDepth=R.captureUnderwater(true)
+  end
+  for _,group in ipairs(cache.waterLevels or{})do
+   local h=group.height
+   options.plane=h
    V.require('WaterSurfacePass').draw(group,function()actors(game,cam,R.draw)end,function()
     reflectPlane=h
     local ok,err=pcall(actors,game,cam,R.draw)
     reflectPlane=nil
     if not ok then error(err,0)end
-   end)
+   end,options)
   end
   if not cam.replay then V.require('Gen3ScreenEffects').background(require('src.core.game3.field_effects'),renderWidth,renderHeight)end
   actors(game,cam,R.draw)
@@ -1262,6 +1275,7 @@ function M.performanceSnapshot()
  return {stream=stream.stats,prepares=M.prepares or 0,builds=M.builds or 0,
   cacheHits=M.cacheHits or 0,map=M.sceneDef and M.sceneDef.id,
   distance=M.distance,renderWidth=M.renderWidth,renderHeight=M.renderHeight,
+  water={wetRockCells=cache.wetRockCells or 0,draws=#(cache.waterDraws or{}),levels=#(cache.waterLevels or{})},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
 function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();future=nil;stream:clear();cache={}end

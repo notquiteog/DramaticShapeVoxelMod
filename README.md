@@ -1,3 +1,18 @@
+## 1.52.0 — Half-submerged rocks, continuous water and soft clouds
+
+Hoenn sea rocks now sit halfway through the surrounding water. Their bases use
+that same animated sheet, removing the static square patches. Closed hulls,
+original footprints and native walking boundaries are preserved.
+
+Across all five GBA games, water gains shallow moving ripples, smoother native
+palette colors and matching cloud reflections. Soft, lit cumulus replace the
+stippled cloud decks with one cached draw. SKY skips the full reflection copies;
+FULL retains scenery and actor reflections plus submerged rock color.
+
+Characters, Pokémon and flowers remain HD-2D. All partner mods remain optional.
+This is an effects correction; regional model coverage remains 84/125 placements.
+[Verification and timing limits](docs/GEN3_WATER_CLOUDS_2026-10-17.md).
+
 ## 1.49.0 — Bounded trees, original hedges and route gates
 
 Replace Petalburg's stretched hedge tiles with an original leaf texture and
