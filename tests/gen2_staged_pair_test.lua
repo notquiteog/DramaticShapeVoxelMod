@@ -25,6 +25,7 @@ love={graphics={
  draw=function(img,x,y)if img.canvas then return end;local w,h=img:getDimensions();draws[#draws+1]={x=x,y=y,w=w,h=h} end,
 }}
 local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
+ if name=='NativeGen2ActorEffects'then return{owner=function()return false end,begin=function()end}end
  if name=='BattleSpriteFooting'then return {bounds=function(image,quad)local w,h=image:getDimensions();if quad and quad.getViewport then local x,y;x,y,w,h=quad:getViewport()end;return {0,0,w,h-7}end}end
  if name=='NativeGen2PictureBands'then return assert(loadfile('lib/NativeGen2PictureBands.lua'))()end
  if name=='NativeGen2PairPicture'then return assert(loadfile('lib/NativeGen2PairPicture.lua'))()end

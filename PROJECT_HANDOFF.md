@@ -1,3 +1,12 @@
+# GSC paired release particles — 2026-10-20
+
+Original smoke/shiny stars now follow the exact public release slot on its world
+card, with native clocks, palette ownership and failed/OFF fallback preserved.
+Official0.3.91 Linux NVIDIA G/S/C checks pass39/39 normal and108/108 shiny frames;
+30final captures reviewed. Four focused suites and inventory check pass.
+Evidence: `docs/NATIVE_GSC_PAIR_PARTICLES_2026-10-20.md`.
+GSC actor-targeted move mapping and paired Q57 remain; no full parity claim.
+
 # GSC native last-wild capture — 2026-10-17
 
 Verified native last-wild identity now enables the shared capture prop/audio

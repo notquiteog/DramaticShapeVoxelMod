@@ -18,10 +18,11 @@ function M.texture(game,side,screen,render,canvasFor,drawn)
  if not(lead and pair and leadMon and pairMon)then return nil end
  if leadMon==pairMon then return render(game,side,true)end
  local w,h=lead.contentWidth+pair.contentWidth,math.max(lead.contentHeight,pair.contentHeight)
- local cw,ch=math.max(160,w+2),math.max(144,h+2)
+ local padding=math.max(lead.bottomPadding or 1,pair.bottomPadding or 1)
+ local cw,ch=math.max(160,w+2),math.max(144,h+padding+1)
  local canvas=canvasFor(side,cw,ch)
  if not canvas then return nil end
- local ax,ay=cw/2,ch-1
+ local ax,ay=cw/2,ch-padding
  local lx,rx=ax-lead.contentWidth/2,ax+pair.contentWidth/2
  local g=love.graphics
  local prev=g.getCanvas();local r,green,b,a=g.getColor()

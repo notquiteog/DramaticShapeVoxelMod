@@ -244,10 +244,13 @@ local function sideTexture(game, side, actorOnly)
     dollGround=Foot.bounds(doll,dollQuad)[4]
   end
   local BattleScene = V.require("BattleScene")
+  local Effects=actorOnly and V.require('NativeGen2ActorEffects')
+  local effects=Effects and Effects.owner(screen,side,mon)
+  local bottomPadding=effects and 64 or FOOT_PAD
   local cw = math.max(BattleScene.GB_W or 160, iw + iw2 + 2)
-  local ch = math.max(BattleScene.GB_H or 144, math.max(ih, ih2) + 2)
+  local ch = math.max(BattleScene.GB_H or 144, math.max(ih, ih2) + bottomPadding + 1)
   local ax = cw / 2
-  local ay = ch - FOOT_PAD
+  local ay = ch - bottomPadding
   local canvas = canvasFor(actorOnly and side..':actor' or side, cw, ch)
   if not canvas then return nil end
 
@@ -341,6 +344,7 @@ local function sideTexture(game, side, actorOnly)
       if poseSink>0 then g.setScissor(0,0,cw,ay)end
       paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw*poseScale/2+slidePixels,ay-groundY*poseScale+sinkPixels,poseScale)end)
     end
+    if effects then Effects.paint(screen,side,mon,ax,ay)end
   end)
   g.setCanvas(prev)
   if poseSink>0 then
@@ -360,7 +364,8 @@ local function sideTexture(game, side, actorOnly)
     },
     noMirror=back and not (selectedArt and V.require('BattleArt').playerSide()=='front'
       and V.require('BattleArt').flipsPlayerFront()),
-    modernFraming=true,contentWidth=iw+iw2,contentHeight=math.max(ih,ih2) }
+    modernFraming=true,contentWidth=iw+iw2,contentHeight=math.max(ih,ih2),
+    bottomPadding=bottomPadding }
 end
 
 -- The same shape OverworldBattle.textures returns, so BattleScene cannot tell
@@ -369,6 +374,7 @@ Gen2Staged.sideTexture=sideTexture
 function Gen2Staged.textures(game)
   if not Generation.isGen2() then return nil end
   Gen2Staged.drawn = {}
+  V.require('NativeGen2ActorEffects').begin()
   local out = {}
   out.enemy = Gen2Staged.sideTexture(game, "enemy")
   out.player = Gen2Staged.sideTexture(game, "player")
