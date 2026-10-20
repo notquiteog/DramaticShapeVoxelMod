@@ -1044,7 +1044,9 @@ local function updateSendout(battle)
         battle.legendaryReleasePose[side]={scale=0.08+0.92*q*q*(3-2*q),
           amount=math.max(0,1-math.max(0,entry.age-0.28)/0.16)}
       end
-      if entry.age>=1.15 and not entry.emberClosed then
+      -- Native runners own their sound clock; a visual size step must not
+      -- synthesize an extra close cue alongside the original send-out poof.
+      if not nativeReader and entry.age>=1.15 and not entry.emberClosed then
         entry.emberClosed=true;EmberAudio.play("close")
       end
       if entry.age>=Q57.releaseDuration then entry.shell=nil end

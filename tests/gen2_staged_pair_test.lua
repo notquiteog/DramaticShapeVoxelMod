@@ -1,3 +1,5 @@
+local releaseStaged
+package.loaded['src.render.Assets']={register=function(owner)releaseStaged=owner.release end}
 local shadeCalls=0
 local paletteCalls=0;local Palette={mode='gbc',available=function()return true end,with=function(colors,fn)paletteCalls=paletteCalls+1;assert(colors[1]==1);return fn()end}
 Palette.remap=function(colors,byte)assert(byte==0xe4);shadeCalls=shadeCalls+1;return colors end
@@ -274,3 +276,27 @@ assert(not fallback.actors[1].card.releaseCanvas and fallback.actors[2].card.rel
 assert(effectPaints==2 and target==nil and blend=='alpha'and alpha=='alphamultiply',
  'failed release copy lost native effects or graphics restoration')
 print('PASS separate release body and failed-copy native particle/state fallback')
+
+-- Mobile-sized render targets remain logical pixels and release replaced GPU
+-- storage promptly; a failed size must not allocate again on every frame.
+assert(type(releaseStaged)=='function','native assets cleanup not registered')
+releaseStaged();screen.battle.doubles=nil;screen.battle.player2=nil
+screen.nativeAnimationSlot=nil;screen.anim=nil;actorEffects=false
+local spriteWidth=56;screen.pic=function()return pic(spriteWidth,56),true end
+local allocations,releases=0,0;local unavailable=false
+love.graphics.newCanvas=function(w,h,options)
+ allocations=allocations+1;assert(options and options.dpiscale==1,'canvas scaled with display DPI')
+ if unavailable then error('GPU allocation unavailable')end
+ return{canvas=true,getWidth=function()return w end,getHeight=function()return h end,setFilter=function()end,
+ release=function()releases=releases+1 end}
+end
+assert(M.sideTexture(game,'enemy'));spriteWidth=200;assert(M.sideTexture(game,'enemy'))
+assert(allocations==2 and releases==1,'grown actor canvas retained old GPU allocation')
+spriteWidth=400;unavailable=true
+assert(not M.sideTexture(game,'enemy')and not M.sideTexture(game,'enemy'))
+assert(allocations==3 and not M.drawn.enemy,'failed size retried or claimed native actor')
+spriteWidth=56;assert(M.sideTexture(game,'enemy')and allocations==3,'smaller viable art lost held canvas')
+M.release();assert(releases==2);spriteWidth=400;unavailable=false
+assert(M.sideTexture(game,'enemy')and allocations==4,'cleanup did not permit resource retry')
+M.release();assert(releases==3)
+print('PASS DPI1 native canvases, prompt resize release, bounded failed allocation and cleanup retry')

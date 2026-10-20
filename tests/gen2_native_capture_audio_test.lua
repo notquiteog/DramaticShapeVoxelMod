@@ -46,6 +46,11 @@ owned=true;fallback(sound);owned=false;lastWild=false;s.battle.doubles=nil
 local a,b=s:update();check(a==nil and b=='tick','update returns')
 s.phase='done';s:update();check(clears==1,'native-only voices clean up')
 check(s:finishBattle()=='finish','finish return')
+s.phase='menu';sound=start('LOVE_BALL');sound('Sfx_ThrowBall')
+local originalBattle=s.battle;s.battle={wild=true};fallback(sound)
+local oldClears=clears;s:update();check(clears==oldClears+1,'replaced capture battle clears voices')
+s.battle=originalBattle;sound=start('LOVE_BALL');s.phase='done';fallback(sound)
+s.phase='fadeout';fallback(sound);s.phase='evolving';fallback(sound)
 -- Exercise production install order with the real outer capture adapter.
 local modules={Gen2Battle={enabled=function()return enabled end,stagedMon=function()return true end},
  PokeballSettings={active=function()return enabled end},OverworldBattle={shot=function()return{canvas={}}end},EmberLegacyAudio=A,

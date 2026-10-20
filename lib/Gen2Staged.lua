@@ -60,7 +60,7 @@ function Gen2Staged.holdsScene(game,battle)
 end
 
 -- One canvas per side, kept and resized rather than reallocated per frame.
-local canvases = {}
+local canvases, failedCanvases = {}, {}
 
 local function canvasFor(side, w, h)
   local g = love.graphics
@@ -69,10 +69,14 @@ local function canvasFor(side, w, h)
   if held and held:getWidth() >= w and held:getHeight() >= h then
     return held
   end
-  local ok, canvas = pcall(g.newCanvas, w, h)
-  if not ok or not canvas then return nil end
+  local failed=failedCanvases[side]
+  if failed and failed.w==w and failed.h==h then return nil end
+  local ok, canvas = pcall(g.newCanvas, w, h, {dpiscale=1})
+  if not ok or not canvas then failedCanvases[side]={w=w,h=h};return nil end
+  failedCanvases[side]=nil
   if canvas.setFilter then pcall(canvas.setFilter, canvas, "nearest", "nearest") end
   canvases[side] = canvas
+  if held and held.release then pcall(held.release,held)end
   return canvas
 end
 
@@ -81,6 +85,7 @@ function Gen2Staged.release()
     if canvas and canvas.release then pcall(canvas.release, canvas) end
     canvases[side] = nil
   end
+  failedCanvases={}
 end
 
 -- Which sides a billboard was actually drawn for this frame, so the flat
@@ -412,5 +417,8 @@ function Gen2Staged.textures(game)
   end
   return out
 end
+
+local assetsOK,Assets=pcall(require,'src.render.Assets')
+if assetsOK and type(Assets.register)=='function'then Assets.register({release=Gen2Staged.release})end
 
 return Gen2Staged

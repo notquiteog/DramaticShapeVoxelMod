@@ -1,3 +1,14 @@
+# GSC paired audio and mobile resources — 2026-10-20
+
+Original native runners now exclusively own release sound timing; removed the
+extra synthetic Q57 close cue and bound audio cleanup to the originating battle.
+G/S/C official0.3.91 native checks pass all four slots × played/failed/OFF.
+Staged canvases use DPI1, release replaced GPU resources and memoize allocation
+failure until cleanup. Desktop GL/GLES Q57 draw/readback passes;349/0/58 shared
+suite. Six small-window captures inspected: framing fits, native paired HUD
+lettering still loses pixels and needs follow-up. No phone certification.
+Evidence: `docs/NATIVE_GSC_AUDIO_MOBILE_2026-10-20.md`.
+
 # GSC water encounter provenance — 2026-10-20
 
 Native world.playerState now drives water-arena eligibility and frozen surfing
