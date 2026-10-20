@@ -112,10 +112,11 @@ function M.install()
   return scopedText(original,true,UI.textboxFillStyle() or false,self,...)
  end)
  local function paint(state)
-  local g=love.graphics;local w,h=g.getDimensions()
+  local g=love.graphics;local w,h=g.getDimensions();local ox,oy=0,0
+  if Theme.viewport then ox,oy,w,h=Theme.viewport(w,h)end
   local k=Theme.scale(w,h)
   if Stage.hudScaleSetting:get()=='og'then k=math.min(w/320,h/288)end
-  g.origin();g.scale(k);w,h=w/k,h/k
+  g.origin();g.translate(ox,oy);g.scale(k);w,h=w/k,h/k
   local shot=Stage.shot();local rect=require('src.render.Renderer'):frameRects()
   local items,mons={},{}
   if not UI.uiHidden('hud') and state:statusHUDVisible()then
@@ -124,7 +125,7 @@ function M.install()
     local head=shot.heads and shot.heads[side]
     local visible=side=='player' and state.showPlayerHud or side=='enemy' and state.showEnemyHud
     if mon and head and visible and not state:hudCleared(side)then
-     items[#items+1]={id=i,x=(rect.vux+head[1]*rect.vuw)/k,y=(rect.vuy+head[2]*rect.vuh)/k,w=select(1,Theme.combatCardSize(side=='player'))or 76,h=select(2,Theme.combatCardSize(side=='player'))or(side=='player' and 29 or 26)}
+     items[#items+1]={id=i,x=(rect.vux+head[1]*rect.vuw-ox)/k,y=(rect.vuy+head[2]*rect.vuh-oy)/k,w=select(1,Theme.combatCardSize(side=='player'))or 76,h=select(2,Theme.combatCardSize(side=='player'))or(side=='player' and 29 or 26)}
      mons[i]={mon=mon,side=side}
     end
    end
