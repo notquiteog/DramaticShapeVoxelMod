@@ -3,7 +3,8 @@
 1.54.0 merges published scenery with captured primary camera/native paired battle,
 audio, safe-area HUD and dormant XD prototype work. Fixed primary snapshot053d534
 (11:21:24UTC) preserves concurrent later edits separately. Source370/0/58 tests;
-archive/native verification pending. Historical own-project branches reconciled;
+exact ZIP all11native/183 inspected water/camera captures, Crystalpaired6 and
+FireRedmixedaudio6 pass. 533publichashes/game; runtimepreservedthroughdocsrepack. Historical own-project branches reconciled;
 release workflow now uses bounded portable packaging and consistent vtags.
 See docs/CONSOLIDATED_RELEASE_2026-10-20.md. Three-mode scenery request remains queued.
 
