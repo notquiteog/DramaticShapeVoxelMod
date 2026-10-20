@@ -41,24 +41,27 @@ function M.install()
   end
   consider(stage.ball)
   for key,ball in pairs(stage.balls or{})do consider(ball,key)end
-  -- A simultaneous native cue is shared. Replace it only when every known
-  -- participant requires the same variant, never by picking the first actor.
+  -- A simultaneous native cue is shared; retain every known variant rather
+  -- than choosing the first actor when normal and shiny battlers overlap.
   if #ids>0 and not ids.invalid then return 'sendout',ids end
  end
  local function replace(st,event,id)
-  local ids=type(id)=='table'and id or{id};local shiny
+  local ids=type(id)=='table'and id or{id};local variants,seen={},{}
   if #ids==0 then return false end
   for _,key in ipairs(ids)do
    local b=Coords.battler(st,key);if not b then return false end
    local variant=event=='sendout'and V.require('BattleArt').isShiny(b)==true or false
-   if shiny~=nil and shiny~=variant then return false end
-   shiny=variant
+   if not seen[variant]then variants[#variants+1]=variant;seen[variant]=true end
   end
   local a=V.require('EmberLegacyAudio')
   a.nativeMaster(st,function()return Audio._sfxVolume or 1 end)
   if not a.sync(st)then return false end
   serial=serial+1
-  if a.play(event,serial,shiny)~=true then return false end
+  local played
+  if #variants>1 then
+   played=type(a.playSendoutGroup)=='function'and a.playSendoutGroup(serial,variants)
+  else played=a.play(event,serial,variants[1])end
+  if played~=true then return false end
   owner,audio=st,a;return true
  end
  Audio.playSe=function(id,...)

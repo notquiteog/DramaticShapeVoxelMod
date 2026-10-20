@@ -1,3 +1,13 @@
+# Mixed native GBA release audio — 2026-10-20
+
+Shared native send-out cues now retain both verified normal/shiny variants.
+Grouped playback prepares all sources, rolls back only the group on failure,
+and keeps native fallback, volume and bounded cleanup. All five official0.3.91
+native paired intros pass normal/shiny/mixed/mixed-failed/failed/OFF cue counts;
+five final captures inspected. Focused source rollback, volume, unknown identity
+and cleanup checks pass. Optional audio assets/timbre and real-device playback
+remain unverified. Evidence: `docs/NATIVE_MIXED_AUDIO_2026-10-20.md`.
+
 # Camera continuity across editions — 2026-10-20
 
 Gen1/2 upward orbit stays above its support plane; zoom smoothing is frame-rate

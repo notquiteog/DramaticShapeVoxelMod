@@ -91,12 +91,44 @@ function A.play(event,index,shiny,critical,gain)
   local ok,s=pcall(original.clone,original);if not ok then A.errors[name]=tostring(s);return false end
   local master=masterVolume()
   local played,err=pcall(function()
-    s:setVolume((tonumber(Settings.audioVolume:get()) or .75)*master*(gain or 1));s:play()
+    s:setVolume((tonumber(Settings.audioVolume:get()) or .75)*master*(gain or 1));return s:play()
   end)
-  if not played then release(s);A.errors[name]=tostring(err);return false end
+  if not played or err==false then stop(s);release(s);A.errors[name]=tostring(err);return false end
   -- Bound overlapping voices even during fast-forward or repeated switches.
   if #voices>=12 then stop(voices[1].source);release(voices[1].source);table.remove(voices,1)end
   voices[#voices+1]={source=s,event=event,gain=gain or 1}
+  return true
+end
+-- One native cue can release both normal and shiny actors. Prepare every
+-- variant before playback, and roll back only this group if any source fails.
+-- Missing one file must not leave a partial replacement over native fallback.
+function A.playSendoutGroup(index,variants)
+  if type(variants)~='table'or#variants<1 or#variants>2 or not A.sync()then return false end
+  local prepared,seen={},{}
+  local function discard()
+    for _,v in ipairs(prepared)do stop(v.source);release(v.source)end
+    return false
+  end
+  for _,shiny in ipairs(variants)do
+    if type(shiny)~='boolean'or seen[shiny]then return discard()end
+    seen[shiny]=true
+    local name=filename('sendout',index,shiny)
+    local original=source(name);if not original then return discard()end
+    local ok,s=pcall(original.clone,original)
+    if not ok or not s then A.errors[name]=tostring(s);return discard()end
+    local v={source=s,event='sendout',gain=1};prepared[#prepared+1]=v
+    local configured,err=pcall(s.setVolume,s,(tonumber(Settings.audioVolume:get())or .75)*masterVolume())
+    if not configured then A.errors[name]=tostring(err);return discard()end
+  end
+  for _,v in ipairs(prepared)do
+    local ok,err=pcall(v.source.play,v.source)
+    if not ok or err==false then A.errors.sendoutGroup=tostring(err);return discard()end
+  end
+  A.stopEvent('recall')
+  for _,v in ipairs(prepared)do
+    if #voices>=12 then stop(voices[1].source);release(voices[1].source);table.remove(voices,1)end
+    voices[#voices+1]=v
+  end
   return true
 end
 function A.stopEvent(event)
