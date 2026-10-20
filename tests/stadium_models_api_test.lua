@@ -65,6 +65,7 @@ local V = {mod={
   log=logger,
 }}
 function V.require(name)
+  if name == 'XDModels' then return {active=function()return false end}end
   if name == 'SafariFooting' then return assert(loadfile('lib/SafariFooting.lua'))(V)end
   if name == 'WaterFooting' then return assert(loadfile('lib/WaterFooting.lua'))(V)end
   if name == 'BattleRaft' then return assert(loadfile('lib/BattleRaft.lua'))(V)end

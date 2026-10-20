@@ -45,20 +45,31 @@ Five intake tests cover malformed bounds, truncation, overlapping compression,
 archive ambiguity and path traversal. These are source-intake tests, not GPU,
 animation or eleven-game runtime verification.
 
-Experimental offline conversion (`tools/convert_xd_models.py`) and a dormant
-mesh/pose consumer (`lib/XDModelInstance.lua`) are now present. They are not
-connected to gameplay, providers or settings. Conversion uses an external parser
-and mathutils; its recorded parser revision is not enforced against the checkout.
-Only the first texture layer is rendered; missing named textures can become
-white. Material/UV animation, animated lighting and parallel conversion are
-prototype code, without native-game or mobile acceptance. Failed converted
-records can leave diagnostic folders; output still declares `renderReady:false`.
+The portable converter now bakes 454 unique models (457 records), with 4,019
+animation clips. All records in the USA source pack convert without errors.
+Five path-driven records required a spline sampler; its basis tests pass, but
+authored path timing/parent motion still needs visual comparison. Nine Python
+intake/conversion tests pass. Conversion uses the pinned external parser and
+standalone mathutils, not Blender. `--resume` retries failed records transactionally.
 
-Still required: validated geometry/material/skeleton/animation conversion, shiny filters,
-particle Pokémon, game-neutral renderer and battle/overworld ownership,
-all-eleven species/form mapping, import/settings UI, mobile pack installation,
-runtime tests and physical-device checks. Do not expose an import-success option
-in-game until these are ready. The manifest deliberately says `renderReady:false`.
+`XDModelInstance` renders CPU-skinned meshes at the source 30 Hz pose rate,
+with cached GPU geometry, smooth normals, material color/UV animation and
+temporary texture wrapping. An isolated Pikachu idle orbit was rendered and
+inspected on desktop; this is not an in-game or mobile acceptance test.
+SDK-owned textures are never released by instances.
+
+The optional pack consumer is connected to the Gen1/2 provider adapter and a
+persistent four-slot GBA battle consumer. GBA move/faint hooks preserve native
+sequencing and missing models retain sprites. Focused actor lifecycle,
+native-card fallback and Stadium bridge tests pass. The shared setting is OFF
+by default, and the manifest deliberately remains `renderReady:false`.
+
+Still required before enabling packs: multi-layer material composition (477
+meshes), shiny filters, particles (15 models), shape/sub-animation composition,
+source-accurate spline timing, forms and Gen1/2 paired actor ownership, full native
+animation effects, simple import/portable installation UI, all-eleven in-game
+tests and physical Android/iOS checks. The generated assets are kept outside
+the repository and are not a distributable mod release.
 
 Format references:
 

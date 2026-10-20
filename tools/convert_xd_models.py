@@ -15,13 +15,46 @@ import importlib
 import json
 import math
 import re
+import shutil
 from pathlib import Path
 import struct
+import subprocess
 import sys
+import tempfile
 import types
 import zlib
 
 PARSER_REVISION = "dc71de837978a6a2fe8c5082f2840cfafb135235"
+
+def spline_point(path, parameter):
+    """Evaluate a decoded path in its own coordinate system."""
+    points, kind = path.control_points, path.curve_type
+    segments = path.num_control_points - 1
+    if segments < 1 or kind not in (0, 1, 2, 3):
+        raise ValueError("Invalid XD spline")
+    t = max(0., min(1., parameter)) * segments
+    segment = min(segments - 1, int(t))
+    t -= segment
+    if kind == 0:
+        p = points[segment:segment+2]
+        weights = (1-t, t)
+    elif kind == 1:
+        p = points[3*segment:3*segment+4]
+        weights = ((1-t)**3, 3*(1-t)**2*t, 3*(1-t)*t*t, t**3)
+    elif kind == 2:
+        p = points[segment:segment+4]
+        weights = ((1-t)**3/6, (3*t**3-6*t*t+4)/6,
+                   (-3*t**3+3*t*t+3*t+1)/6, t**3/6)
+    else:
+        p = points[segment:segment+4]
+        s = path.tension
+        h1, h2 = t**3-2*t*t+t, t**3-t*t
+        weights = (-s*h1, 2*t**3-3*t*t+1-s*h2,
+                   -2*t**3+3*t*t+s*h1, s*h2)
+    if len(p) != len(weights):
+        raise ValueError("Truncated XD spline")
+    return tuple(sum(point[axis]*weight for point, weight in zip(p, weights))
+                 for axis in range(3))
 
 
 def sample(keys, frame, default):
@@ -77,6 +110,10 @@ def png_rgba(width, height, pixels):
 
 def parser_modules(root):
     root = Path(root).resolve()
+    revision = subprocess.check_output(
+        ["git", "-C", str(root), "rev-parse", "HEAD"], text=True).strip()
+    if revision != PARSER_REVISION:
+        raise ValueError("Use the documented XD parser revision")
     import mathutils  # fail early; do not use parser's incomplete test math shim
     sys.path.insert(0, str(root))
     # Import pure pipeline phases without importer/__init__ importing bpy.
@@ -104,12 +141,22 @@ def convert_job(source, output, digest):
     source = Path(source)
     if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
         raise ValueError("Source hash mismatch")
-    return convert_record(source, Path(output), _worker_pipeline)
+    output = Path(output)
+    with tempfile.TemporaryDirectory(prefix=".xd-", dir=output.parent) as staging:
+        staged = Path(staging) / digest
+        result = convert_record(source, staged, _worker_pipeline)
+        if output.exists():
+            # Only the exact content-addressed record may be replaced on resume.
+            if output.name != digest or output.is_symlink():
+                raise ValueError("Unsafe XD output record")
+            shutil.rmtree(output)
+        staged.rename(output)
+        return result
 
 
 def convert_record(source, output, pipeline):
     extract, route, parse, describe, animation = pipeline
-    from mathutils import Matrix
+    from mathutils import Matrix, Vector
     blob = source.read_bytes()
     entries = extract(blob, source.name, {"include_shiny": True})
     if len(entries) != 1:
@@ -163,13 +210,20 @@ def convert_record(source, output, pipeline):
         for frame in range(count):
             srts = {}
             for track in clip.tracks:
-                if track.spline_path:
-                    raise ValueError("Spline-driven Pokemon needs a dedicated bake")
                 values = []
                 for channels, rest in ((track.scale, track.rest_scale),
                                        (track.rotation, track.rest_rotation),
                                        (track.location, track.rest_position)):
                     values.append(tuple(sample(channels[i], frame, rest[i]) for i in range(3)))
+                if track.spline_path:
+                    path = track.spline_path
+                    p = Vector(spline_point(path, sample(path.parameter_keyframes, frame, 0)))
+                    if path.world_matrix:
+                        p = Matrix(path.world_matrix) @ p
+                    parent = model.bones[track.bone_index].parent_index
+                    if parent is not None:
+                        p = Matrix(model.bones[parent].world_matrix).inverted_safe() @ p
+                    values[2] = tuple(p)
                 srts[track.bone_index] = tuple(values)
             targets = animation.bake_frame(skeleton, srts, range(len(model.bones)))
             for bone in range(len(model.bones)):
@@ -226,12 +280,20 @@ def main():
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--dex", type=int, help="Diagnostic subset only, not a full pack")
     parser.add_argument("--workers", type=int, default=2)
+    parser.add_argument("--resume", action="store_true",
+                        help="Reuse successful records from a matching interrupted conversion")
     args = parser.parse_args()
-    if args.output.exists():
+    if args.output.exists() and not args.resume:
         parser.error("Output exists; choose a new directory")
     manifest = json.loads((args.source / "manifest.json").read_text())
-    args.output.mkdir(parents=True)
+    args.output.mkdir(parents=True, exist_ok=args.resume)
     converted, failures = {}, {}
+    previous = args.output / "manifest.json"
+    if args.resume and previous.exists():
+        old = json.loads(previous.read_text())
+        if old.get("parserRevision") != PARSER_REVISION or old.get("format") != "xd-converted-pack":
+            parser.error("Resume requires a matching converter manifest")
+        converted = old.get("converted", {})
     records = [r for r in manifest["models"] if args.dex is None or r["dex"] == args.dex]
     unique = {}
     for row in records:
@@ -241,10 +303,15 @@ def main():
         if row["path"] != "pkx/" + digest + ".pkx":
             raise ValueError("Invalid source record path")
         unique[digest] = row
+    for digest in list(converted):
+        if digest not in unique or not (args.output / digest / "model.json.z").is_file():
+            del converted[digest]
+    # Failed records live in a separate temporary directory until complete.
     with ProcessPoolExecutor(max_workers=max(1, min(8, args.workers)),
                              initializer=start_worker, initargs=(args.parser,)) as pool:
         pending = {pool.submit(convert_job, args.source / row["path"], args.output / digest,
-                               digest): digest for digest, row in unique.items()}
+                               digest): digest for digest, row in unique.items()
+                   if digest not in converted}
         for future in as_completed(pending):
             digest = pending[future]
             row = unique[digest]

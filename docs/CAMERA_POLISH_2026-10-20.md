@@ -80,3 +80,21 @@ This is not exhaustive certification of every cutscene, ride, ledge, puddle or
 map. Recorded-scene state preservation is unit-tested, not a complete native
 quest replay. Actual Android/iOS devices and physical controllers were not
 available. These camera checks are not performance benchmarks or model review.
+
+## Portrait battle follow-up
+
+The companion safe-area review exposed clipped allied actors in GBA modern
+doubles at360×640. Gen3's lens kept a fixed vertical field of view as aspect
+narrowed, losing the sides of the battlefield. It now preserves the native3:2
+horizontal span on narrower displays. Landscape, actor placement/world scale,
+native HUD ownership and user orbit/zoom remain unchanged. Gen1/2 already use
+their existing letterbox-aware lens and need no additional correction.
+
+Official0.3.91 native modern doubles pass in all five GBA editions at640×360
+and360×640 with simulated safe-area insets. All ten captures inspected: all
+four actors fit in portrait, and landscape retains its composition.
+Evidence: `paired-phone-*` and `paired-*-review.jpg` under the same scratch root.
+The new projection regression checks modern and native paired layouts across
+five aspect ratios; existing native paired projection and1171 SDK checks pass.
+This follow-up is after the349-suite checkpoint above. It does not certify
+every manually zoomed/orbited view or physical mobile rendering.

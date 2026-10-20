@@ -1200,6 +1200,7 @@ function M.draw(game,vw,vh,cam)
     local x,z=p[1]-cx,p[3]-cz;p[1],p[3]=cx+x*c-z*s,cz+x*s+z*c
    end
    if cam.actors and cam.actors.st.double and cam.sceneLayout~='gen3-native-pair'then R.camera.fov=2*math.atan(math.tan(R.camera.fov/2)*2.3)end
+   R.camera.fov=battleCam.fitAspect(R.camera.fov,vw/vh,240/160)
   end
  else
   V.require('KfpMotion').reset()

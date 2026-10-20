@@ -24,6 +24,7 @@ local modules={NativeGen3SendoutShell={draw=function()return false end,clear=fun
  BattleBillboard={mesh=function()return {}end,yawToward=function()return 0 end},
  UiBackplates={spritesUnlit=function()return false end}}
 local V={require=function(k)return assert(modules[k],k)end}
+modules.Gen3XDActors={prepare=function()end,draw=function()return false end,clear=function()end}
 modules.Gen3Battle={enabled=function()return false end}
 modules.NativeGen3SendoutShell.owner=function(c)return c.owner end
 modules.NativeGen3Release=assert(loadfile('lib/NativeGen3Release.lua'))(V)

@@ -31,6 +31,8 @@ local function findMod(id)
 end
 
 local function connect()
+  local xd = V.require("XDModels")
+  if xd.active() then return xd, xd.exports end
   if models and type(models.newInstance) == "function" then
     return models, providerExports
   end
@@ -77,8 +79,9 @@ local function releaseActor(actor)
 end
 
 local function failActor(actor)
-  local battler, dex, variant = actor.battler, actor.dex, actor.variant
+  local battler, dex, variant, provider = actor.battler, actor.dex, actor.variant, actor.provider
   releaseActor(actor)
+  actor.provider=provider
   actor.failedBattler, actor.failedDex, actor.failedVariant =
     battler, dex, variant
 end
@@ -130,6 +133,8 @@ end
 
 local function syncSide(battle, side)
   local actor = actors[side]
+  local api = connect()
+  if actor.provider ~= api then releaseActor(actor);actor.provider=api end
   local battler = battle and battle[side]
   local dex = dexFor(battle, battler)
   local variant = BattleArt.isShiny(battler) and "shiny" or "normal"
@@ -139,10 +144,10 @@ local function syncSide(battle, side)
       and actor.failedVariant == variant then return actor end
 
   releaseActor(actor)
+  actor.provider=api
   actor.battler, actor.dex, actor.variant = battler, dex, variant
   if not (battler and dex) then return actor end
 
-  local api = connect()
   if not api then return actor end
   local called, instance, err = pcall(api.newInstance, dex, variant, {
     textureFilter = "nearest",
@@ -298,7 +303,7 @@ local function modelMatrix(arena, groundY, battle, side, actor, metrics)
 
   groundY=V.require("SafariFooting").ground(battle,arena,side,groundY)
   local worldHeight = math.max(5, math.min(18,
-    14 * math.sqrt(metrics.height / 52.25)))
+    14 * math.sqrt(metrics.height / (metrics.units == 'meters' and 1 or 52.25))))
   local battler = battle and battle[side]
   local grow = battler and safeCall(battle, "growInScale", battler) or 1
   grow = tonumber(grow) or 1

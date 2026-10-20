@@ -504,6 +504,15 @@ local function phase(t, period)
   return math.sin(2 * math.pi * t / period)
 end
 
+-- Preserve the native composition's horizontal span on narrow/portrait
+-- displays. Landscape keeps its existing lens; actors and their world scale
+-- never move to accommodate a screen shape.
+function BattleCam.fitAspect(fov, aspect, reference)
+  reference = reference or 1.5
+  return 2 * math.atan(math.tan(fov / 2)
+    * math.max(1, reference / math.max(.1, aspect)))
+end
+
 -- The camera for `arena` this instant: the record Voxel3D.camera takes, plus
 -- the pitch the pull and the sun frustum want (measured from straight down,
 -- the same convention Voxel.angle uses).

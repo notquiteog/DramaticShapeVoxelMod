@@ -107,7 +107,7 @@ function M.new(data,assets)
      assert(entry.texture,'Missing XD texture')
      if layer then
       local wraps={CLAMP='clamp',REPEAT='repeat',MIRROR='mirroredrepeat'}
-      entry.texture:setWrap(wraps[layer.wrap_s]or'clamp',wraps[layer.wrap_t]or'clamp')
+      entry.wrapS,entry.wrapT=wraps[layer.wrap_s]or'clamp',wraps[layer.wrap_t]or'clamp'
      end
     end
    end
@@ -118,12 +118,15 @@ function M.new(data,assets)
   self:release();return nil,'Empty XD geometry'
  end
  self.bounds=bounds
- self:playContext('idle',true)
+ local ready,reason=pcall(self.playContext,self,'idle',true)
+ if not ready or not reason then
+  self:release();return nil,'XD idle animation unavailable'
+ end
  return self
 end
 function Instance:metrics()
  local b=self.bounds
- return {height=b[5]-b[2],floor=b[2],width=b[4]-b[1],depth=b[6]-b[3]}
+ return {height=b[5]-b[2],floor=b[2],width=b[4]-b[1],depth=b[6]-b[3],units='meters'}
 end
 function Instance:playContext(name,loop)
  local index=chooseClip(self.data.clips,name)
@@ -210,7 +213,13 @@ function Instance:update(dt)
 end
 function Instance:drawWith(draw,matrix)
  if self.released then return false end
- for _,entry in ipairs(self.meshes)do draw(entry.mesh,entry.texture,matrix)end
+ for _,entry in ipairs(self.meshes)do
+  local s,t=entry.texture:getWrap()
+  if entry.wrapS then entry.texture:setWrap(entry.wrapS,entry.wrapT)end
+  local ok,err=pcall(draw,entry.mesh,entry.texture,matrix)
+  entry.texture:setWrap(s,t)
+  if not ok then error(err,0)end
+ end
  return true
 end
 function Instance:draw(options)

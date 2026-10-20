@@ -86,6 +86,52 @@ all partners optional. No whole-region or generic FPS claim. Regional queue
 still84/125 complete,41 queued. Primary concurrent GSC and partner unpublished
 changes are preserved. No unrelated partner production edits are included.
 
+# XD conversion and guarded battle consumers — 2026-10-20
+
+Local USA pack now converts all457 records/454 unique models,4019 clips; all
+386 species represented. Five spline-driven records now bake, with source timing
+still needing visual comparison. Pikachu idle orbit rendered/inspected in isolated
+native LÖVE preview; not an in-game or phone certification. Portable mesh consumer
+and optional Gen1/2 provider plus four-slot GBA consumer added, source30Hz skinning,
+SDK texture ownership protected. Shared setting OFF; generated pack remains
+renderReady:false. Nine Python tests, GBA model lifecycle/native-card isolation,
+Stadium18checks pass. No imported data committed. Multi-layer materials, particles,
+shiny/forms, paired GB actors, remaining animations, simple install and all11 runtime
+acceptance are unfinished. See docs/XD_IMPORT_STATUS.md. Camera/parity workers
+continued independently; this entry makes no full-parity claim.
+
+# Independent Modern UI menu/mobile follow-up — 2026-10-20
+
+Modern UI e2dc4da fits its custom GB party/summary/storage and GBA summary
+screens into public safe areas, retaining native fallback when too small.
+All11 editions pass native inset checks;46initial captures inspected. The
+captures exposed pre-existing small glyph loss and pale-on-pale party/PC text;
+subpixel font coverage and custom panel/selection ink now correct those cases.
+Final Yellow/Crystal menus plus Emerald summary/paired battle pass both sizes,
+all16final captures inspected;15 Modern UI suites pass. Native UI/gameplay,
+glyph assets and independent installation remain unchanged. Physical phones
+remain unverified. Companion evidence: modern-ui/docs/SAFE_AREA_MENUS_2026-10-20.md.
+
+# Portrait GBA battle framing — 2026-10-20
+
+Gen3 battle lenses now preserve their native3:2 horizontal span on narrow
+screens, fixing cropped allied actors in modern doubles. No actor positions,
+world scales, native UI or landscape lens changed. Official0.3.91 native
+FR/LG/R/S/E portrait+landscape fixtures pass;10 captures reviewed, all four
+actors visible. New modern/native paired projection test and1171 SDK checks
+pass. See `docs/CAMERA_POLISH_2026-10-20.md` follow-up; physical phones untested.
+
+# Modern battle safe areas across eleven editions — 2026-10-20
+
+Optional modern cards/commands use the original public SafeArea viewport and
+correct projected-anchor offsets across all generations, standalone Modern UI
+commands and GSC Doubles. All11 editions plus Crystal paired HUD pass two
+landscape/portrait inset fixtures;24captures inspected. Six staging-OFF native
+command captures also inspected. Shared350/0/58, Modern UI15 and Doubles Gen2 six
+suites pass. Original native UI and older-provider fallback remain unchanged.
+Physical phones remain unverified; portrait GBA paired actor clipping is a
+separate camera follow-up. Evidence: `docs/NATIVE_SAFE_AREA_HUD_2026-10-20.md`.
+
 # Mixed native GBA release audio — 2026-10-20
 
 Shared native send-out cues now retain both verified normal/shiny variants.
