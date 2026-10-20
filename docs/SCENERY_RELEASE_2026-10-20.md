@@ -23,9 +23,9 @@ must be read separately; no earlier image is relabeled as final code.
 
 ## Source checks
 
-The full coherent tree integration passed 364 Lua suites, zero failures, with58
-explicit unavailable-external-fixture skips. Later shader changes require their
-focused tests and a final coherent suite before packaging. Six supplied-archive
+The final coherent source, including the curvature guard and connected-map
+identity checks, passed364 Lua suites, zero failures, with58 explicit unavailable
+external-fixture skips. Focused shader tests and actual GPU checks also pass. Six supplied-archive
 scenery tests pass; original grass binding, 168 original bind-pose vertices,
 sampler wrap, deterministic conversion and PNG bytes pass. Bank asset checks
 cover3 unchanged PNG hashes and7744 opaque texels, including bare-cliff faces.
@@ -56,6 +56,8 @@ as completed verification until the checked package record is entered here.
 
 ## References and limits
 
+- [Continuous water and bounded performance evidence](REALISTIC_WATER_2026-10-20.md)
+- [All eleven games: explicit remaining model inventory](ALL_ELEVEN_MODEL_COVERAGE_2026-10-20.md)
 - [Real source grass and masks](IMPORTED_GRASS_2026-10-20.md)
 - [Native banks and source water-depth measurements](GEN3_WATER_BANK_REFERENCES_2026-10-20.md)
 - [GB bank/grass source verification](GB_IMPORTED_GRASS_WATER_2026-10-20.md)

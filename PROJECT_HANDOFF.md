@@ -7,10 +7,20 @@ providers retain fallback and priority. Original source foliage UV/RGBA/PNG data
 is retained; authored360completion is separately credited. Native water battle
 cameras/HD-2D actors use the recessed sheet, fixing an observed land-datum gap.
 
-Final source/native GPU review and exact-archive verification are in progress;
-do not treat the older captures below as evidence for the new shader/tree code.
-No generic FPS/AAA/all-map completion claim is made. Runtime/source docs will
-record paired timing and remaining model-family limits before publication.
+Source/native GPU review and paired shader/tree fixtures are complete; exact
+archive verification is next. Earlier captures below are not relabeled as proof
+of the new shader/tree code. Shader GB batch cost drops35–57%; GBA FULL remains
+within control variation. No general FPS/AAA/all-map completion claim is made.
+Details: docs/REALISTIC_WATER_2026-10-20.md and tree source/verification docs.
+
+The latest user directive expands imported-model placement to every supported
+edition (R/B/Y, G/S/C, FR/LG, R/S/E), choosing the newest appropriate model per
+building/location. The older84/125 regional-polish queue is not the expanded
+coverage denominator. docs/ALL_ELEVEN_MODEL_COVERAGE_2026-10-20.md is the explicit
+per-game gap inventory. Grass has eleven-game native adapters; imported whole
+buildings currently have zero native placements (Center/Oak are prepared assets).
+Continue region/family-specific native adapters and verification; do not count
+prepared catalog entries as completed map replacements.
 
 # Recessed banks and imported source scenery — 2026-10-20
 

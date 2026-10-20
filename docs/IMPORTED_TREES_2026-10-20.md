@@ -1,7 +1,7 @@
 # Imported trees and preserved native ownership — 2026-10-20
 
-Source integration is verified; exact release-archive verification and paired
-performance measurements are recorded separately when complete.
+Source integration and a bounded paired timing run are verified; exact
+release-archive verification is recorded separately when complete.
 
 ## Source and matching policy
 
@@ -113,3 +113,36 @@ Passed: `tree_presentation_defaults_test.lua`, `imported_trees_test.lua`,
 saved card/flat optouts, mature-fit limits, hidden corners, neighbor map identity,
 native source immutability, actual source UV/RGBA preservation, instanced/merged
 formats, upload failure, late image retry and cancellation ownership.
+
+## Bounded paired timing
+
+Four processes ran strictly serially on official 0.3.91 / NVIDIA RTX 5060 Ti,
+driver 615.71.09. The before snapshot keeps the old native solid trees; after
+uses the imported-tree integration. All eight captured timing views were
+inspected. Both variants loaded identical final `Water.lua`,
+`NativeWaterSurface.lua`, `Voxel3D.lua` and `WaterSurfacePass.lua` hashes, avoiding
+an unrelated shader change in the tree comparison. Relevant shader hashes:
+
+- Water: `9733cdad6ecdde234d5889c8cf17f18aeb972731c1ff10a29e4a40d3f97cdacf`
+- Native surface: `03621aa9d8d68517df7805b3a5161214813698d1a364900f625e0d36aa6a75eb`
+
+Each view used 90 warmup and 360 sampled frames, 1280×720, distance 16, AA off,
+spatial upscale 1, high shadows, day, no world curve, SKY water, balanced tree
+detail, vsync off and the engine's unpaced QA-driver mode. GBA samples asserted
+that no scene rebuild began during measurement. These are single paired native
+fixture observations, not a universal FPS or platform performance claim.
+
+| Native fixture | Camera | Old mean / p95 ms | Imported mean / p95 ms |
+| --- | --- | ---: | ---: |
+| Emerald Petalburg `(29,19)` | 35° | 13.887 / 17.046 | 12.818 / 15.640 |
+| Emerald Petalburg `(29,19)` | 1ST | 13.473 / 16.918 | 12.213 / 14.969 |
+| Crystal Ilex `(10,20)` | 35° | 16.333 / 28.886 | 11.699 / 13.265 |
+| Crystal Ilex `(10,20)` | 1ST | 14.236 / 22.905 | 11.554 / 12.943 |
+
+The Emerald mean draw CPU cost rose modestly, 1.435→1.624ms at 35° and
+1.329→1.438ms in 1ST, while the measured whole-frame interval fell. Crystal mean
+draw CPU was 1.276→1.025ms and 1.011→1.015ms respectively. No prototype-merging
+change was needed for this batch. The QA script sampled graphics draw-call
+statistics after their presentation reset, producing zero; those values are
+excluded. The older tree-cache vertex diagnostic omits instanced sidecars and
+is also not used as evidence of total vertex reduction.

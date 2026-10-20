@@ -24,9 +24,12 @@ An extensible scenery catalog also includes closed Center and Oak's Lab models;
 these two buildings await individual native placement and material review.
 
 Characters, Pokémon and flowers remain HD-2D. Every partner mod stays optional.
-This is an incremental scenery batch; the regional queue remains 84/125 complete.
+This is an incremental scenery batch. The older regional queue remains 84/125
+complete; the expanded [all-eleven-game model inventory](docs/ALL_ELEVEN_MODEL_COVERAGE_2026-10-20.md)
+tracks remaining source-model replacements separately.
 [Grass and source credits](docs/IMPORTED_GRASS_2026-10-20.md),
 [tree sources and supported families](docs/IMPORTED_TREES_2026-10-20.md),
+[water material and bounded timing](docs/REALISTIC_WATER_2026-10-20.md),
 [water reference measurements](docs/GEN3_WATER_BANK_REFERENCES_2026-10-20.md),
 [catalog scope](docs/STATIC_SCENERY_CATALOG_2026-10-20.md),
 [release verification](docs/SCENERY_RELEASE_2026-10-20.md).
