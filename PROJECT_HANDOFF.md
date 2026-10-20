@@ -1,3 +1,16 @@
+# Camera continuity across editions — 2026-10-20
+
+Gen1/2 upward orbit stays above its support plane; zoom smoothing is frame-rate
+independent. Gen3 fixed angles and 1ST/3RD boom changes ease continuously, and
+recorded scenes retain zoom/angle. Native official0.3.91 checks pass all11 modes,
+all6 GB/GBC walking connections and house exits, all5 GBA running connections,
+dust/exclamation effects and battle input/return. Six Yellow/Crystal/Emerald
+portrait/landscape touch simulations pass; native overlay captures inspected.
+Shared349/0/58 suite and focused checks pass. Existing deliberate no-obstruction
+policy preserved: third-person scenery can still cover the view. No physical
+phone certification or exhaustive cutscene claim. Evidence and limits:
+`docs/CAMERA_POLISH_2026-10-20.md`.
+
 # Updated parity boundaries and native HUD companion — 2026-10-20
 
 Doubles c09db78 composes static GSC native HUD cards at window resolution,
