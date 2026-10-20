@@ -1,3 +1,15 @@
+# Updated parity boundaries and native HUD companion — 2026-10-20
+
+Doubles c09db78 composes static GSC native HUD cards at window resolution,
+retaining original positions, ROM glyphs and state readers. G/S/C pass four
+window sizes,12captures inspected;640×480/360×640 names and HP are readable.
+Tiny1× card text still loses pixels; animation/fade/modern fallbacks stay native.
+Six companion Gen2 suites pass. The live inventory now records verified paired
+audio ownership; historical move/Q57 gaps are superseded in
+`docs/PARITY_AUDIT_2026-10-20.md`. Ownerless GBA particles, indexed RS hatch limits,
+GSC recall cues, optional assets/providers, model scope and physical-device QA
+remain explicit. Full parity is not claimed.
+
 # GSC paired audio and mobile resources — 2026-10-20
 
 Original native runners now exclusively own release sound timing; removed the
