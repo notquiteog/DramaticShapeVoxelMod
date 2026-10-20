@@ -23,6 +23,7 @@ M.setting=setting
 function M.enabled()return setting:get()==true end
 function M.update()
  if not require('src.core.game3.battle').isActive() or not M.enabled()then
+  V.require('Gen3XDActors').clear()
   if M.active or M.frame then V.require('Gen3BattleActors').release()end
   M.active=false;M.frame=nil
   if M.hud then M.hud.reset()end
@@ -62,6 +63,7 @@ function M.install()
  local Renderer=require('src.render.Renderer')
  local Scene=V.require('Gen3Scene')
  local Actors=V.require('Gen3BattleActors')
+ local uninstallXD=V.require('Gen3XDActors').install()
  local original,bg=Battle.draw,Bg.draw
  local Hud=V.require('Gen3BattleHud')
  local uninstallHud=Hud.install(M)
@@ -78,7 +80,10 @@ function M.install()
   M.active=false;M.frame=nil;Hud.reset()
   recovery:update(love.timer.getDelta())
   if not M.enabled() or not Battle.isActive() or not recovery:ready(Battle._st) or Display.planesBroken
-     or Scene.nativeRequired(game) then return original(game,w,h)end
+     or Scene.nativeRequired(game) then
+   V.require('Gen3XDActors').clear()
+   return original(game,w,h)
+  end
   if battleState~=Battle._st then
    local Player=require('src.core.game3.player')
    local Collision=require('src.core.game3.collision')
@@ -130,6 +135,7 @@ function M.install()
   M.active=true;M.rendered=M.rendered+1
  end
  return function()
+  uninstallXD()
   uninstallHud();Battle.draw=original;Bg.draw=bg;M.active=false;M.frame=nil;Actors.release()
  end
 end

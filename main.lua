@@ -732,6 +732,7 @@ end
 
 local TreePresentation=V.require("TreePresentation")
 local SETTINGS = {
+  { V.require('XDModels').setting, 'Use a locally converted Pokemon XD model pack. Missing or unvalidated packs keep the selected sprite art.', full=true },
   { V.require('KfpSurfaceLife').setting, 'Optional grass seed motes when walking through native grass.', full=true },
   { V.require('KfpSurfaceLife').rustle, 'Occasional small seed bursts in distant native grass.', full=true },
   { V.require('KfpAmbientDetails').foam, 'Small foam sprays at native level shorelines.', full=true },

@@ -1,3 +1,17 @@
+# XD conversion and guarded battle consumers — 2026-10-20
+
+Local USA pack now converts all457 records/454 unique models,4019 clips; all
+386 species represented. Five spline-driven records now bake, with source timing
+still needing visual comparison. Pikachu idle orbit rendered/inspected in isolated
+native LÖVE preview; not an in-game or phone certification. Portable mesh consumer
+and optional Gen1/2 provider plus four-slot GBA consumer added, source30Hz skinning,
+SDK texture ownership protected. Shared setting OFF; generated pack remains
+renderReady:false. Nine Python tests, GBA model lifecycle/native-card isolation,
+Stadium18checks pass. No imported data committed. Multi-layer materials, particles,
+shiny/forms, paired GB actors, remaining animations, simple install and all11 runtime
+acceptance are unfinished. See docs/XD_IMPORT_STATUS.md. Camera/parity workers
+continued independently; this entry makes no full-parity claim.
+
 # Independent Modern UI menu/mobile follow-up — 2026-10-20
 
 Modern UI e2dc4da fits its custom GB party/summary/storage and GBA summary

@@ -156,6 +156,7 @@ function M:prepare(camera,ground,eye)
   c.model=Mat.mul(Mat.mul(Mat.mul(Mat.translate(unpack(point)),Mat.rotateY(yaw)),offset),Mat.scale(M.W*M.PIXEL,M.H*M.PIXEL,1))
  end
  for _,c in ipairs(self.cards)do positionCard(c)end
+ V.require('Gen3XDActors').prepare(self)
  V.require('NativeGen3Release').prepare(self)
  -- Native target selection blinks the sprite, not its status card. Project
  -- the hidden actor's same native anchor without drawing a replacement sprite.
@@ -188,7 +189,8 @@ function M:draw(shadow)
    -- erase contact shadows under thin sprites. Sample the same transform
    -- in the lit pass so this does not add self-shadow striping.
    local sun=V.require('ShadowMap').snug(c.model)
-   local replaced=c.ball and V.require('NativeGen3SendoutShell').draw(self.st,c,shadow and V.require('ShadowMap')or nil)
+   local replaced=V.require('Gen3XDActors').draw(self,c,shadow)
+    or(c.ball and V.require('NativeGen3SendoutShell').draw(self.st,c,shadow and V.require('ShadowMap')or nil))
    if not replaced then
     if shadow then draw(mesh,c.tex,sun)
     elseif not V.require('NativeGen3Release').subject(self,c,mesh)then
@@ -202,11 +204,19 @@ function M:draw(shadow)
  if not shadow then R.lighting(true);R.seams(true)end
 end
 function M:head(id,x,y)
+ local e=self.xdActors and self.xdActors[id]
+ if e then
+  local m=e.matrix
+  local metrics=e.instance:metrics()
+  local top=metrics.floor+metrics.height
+  return M.project(self.vp or R.vp,m[2]*top+m[4],m[6]*top+m[8],m[10]*top+m[12])
+ end
  local c=self.byId[id]or(self.hiddenHeads and self.hiddenHeads[id]);if not(c and c.model)then return end
  local m=c.model;local u,v=x/M.W-.5,1-y/M.H
  return M.project(self.vp or R.vp,m[1]*u+m[2]*v+m[4],m[5]*u+m[6]*v+m[8],m[9]*u+m[10]*v+m[12])
 end
 function M.release()
+ V.require('Gen3XDActors').clear()
  V.require('NativeGen3Release').clear()
  V.require('NativeGen3SendoutShell').clear()
  V.require("StandingTrainer").clear()
