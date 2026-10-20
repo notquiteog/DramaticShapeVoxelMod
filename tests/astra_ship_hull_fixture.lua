@@ -4,7 +4,7 @@ T.H=dofile(root..'/tests/astra_fixture.lua')
 T.F=dofile(root..'/tests/astra_scene_fixture.lua')
 function T.runtime(path)
  local r={spec=dofile(path..'/data/voxel_heights.lua'),draws={},shadows={},ticks=0}
- local modules={BuildBudget={tick=function()r.ticks=r.ticks+1 end},
+ local modules={BuildBudget={tick=function()r.ticks=r.ticks+1 end,pause=function()end},
   ModSetting={new=function()return{get=function()return true end}end},
   Mat4=assert(loadfile(path..'/lib/Mat4.lua'))(),
   Voxel3D={

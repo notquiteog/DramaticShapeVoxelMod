@@ -49,13 +49,14 @@ local d=cells(function(x,y)return (x==1 and y==0) and 0x18 or 7 end)
 check(S.prepare(d)==0 and d['0:0'].shape.kind=='flat','walkable cell rejects the whole group')
 local e=cells(function()return 7 end);e['1:1'].mid=0x170
 check(S.prepare(e)==0,'partial drawing rejected')
--- Repeated native art shares carving only within this prepared scene. Emitted
+-- Repeated native art shares carving across prepared scenes. Emitted
 -- geometry remains independently writable by terrain elevation consumers.
 local repeated=cells(function()return 7 end)
 local second=cells(function()return 7 end)
 for _,v in pairs(second)do v.cx=v.cx+5;v.cy=v.cy+7;repeated[v.cx..':'..v.cy]=v end
 check(S.prepare(repeated)==2,'both separated rocks prepared')
-local H=V.require('VoxelHull');local build=H.build;local builds=0
+local H=V.require('VoxelHull');local build=H.build;S.clearGeometry()
+local builds=0
 H.build=function(...)builds=builds+1;return build(...)end
 local function render(root)
  local out={};S.append(root,function(points,uv,shade)out[#out+1]={points=points,uv=uv,shade=shade}end,uvFor);return out
@@ -74,7 +75,23 @@ check(builds==2,'atlas replacement invalidates template')
 uvFor=function(t,m)local s=t.midToSlot[m];local l=s/8;return {{l,0},{l+1/8,0},{l+1/8,1},{l,1}}end
 render(repeated['0:0']);check(builds==3,'UV provider replacement invalidates template')
 local fresh=cells(function()return 7 end);S.prepare(fresh);render(fresh['0:0'])
-check(builds==4,'fresh scene never inherits another build template')
+check(builds==3,'unchanged native source should reuse its carved volume across scenes')
+S.clearGeometry();local cleared=cells(function()return 7 end);S.prepare(cleared);render(cleared['0:0'])
+check(builds==4,'explicit invalidation drops source cache')
+local oldHeight=S.families[2].height;S.families[2].height=oldHeight+1
+local resized=cells(function()return 7 end);S.prepare(resized);render(resized['0:0'])
+check(builds==5,'changed family dimensions invalidate source hull');S.families[2].height=oldHeight
+local before=builds;local functions={}
+for k=1,9 do
+ local fn=function(t,m)return uvFor(t,m)end;functions[k]=fn
+ local one=cells(function()return 7 end);S.prepare(one)
+ S.append(one['0:0'],function()end,fn)
+end
+check(builds==before+9,'new UV providers require exact source models')
+local evicted=cells(function()return 7 end);S.prepare(evicted)
+S.append(evicted['0:0'],function()end,functions[1])
+check(builds==before+10,'source model cache is bounded and evicts least recent entry')
+S.clearGeometry()
 H.build=build
 -- GPU batches must reproduce every original vertex, UV and shade, including
 -- distinct terrain levels, and retain a complete non-instanced fallback.

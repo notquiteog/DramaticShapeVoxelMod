@@ -7,25 +7,33 @@ local function solid(c)
  local g=c.civic
  return g and g.custom and g.custom.geometry=='tower' and c.cy>=g.cy+(g.northRows or 0)
 end
-function M.height(cells,x,z,height,rows)
+function M.height(cells,x,z,height,rows,tops)
  local cx,cy=math.floor(x/16),math.floor(z/16)
  local distance,boundary=4,0
- local low,high=math.huge,-math.huge
- for y=cy-2,cy+2 do for xx=cx-2,cx+2 do
-  local c;if rows then c=rows[y] and rows[y][xx]else c=cells[xx..':'..y]end
-  if c and not solid(c) then
-   local h=c.floorHigh or c.base or 0
-   low,high=math.min(low,h),math.max(high,h)
+ local topRow=tops and tops[cy]
+ local top=topRow and topRow[cx]
+ if top==nil then
+  local low,high=math.huge,-math.huge
+  for y=cy-2,cy+2 do for xx=cx-2,cx+2 do
+   local c;if rows then c=rows[y] and rows[y][xx]else c=cells[xx..':'..y]end
+   if c and not solid(c) then
+    local h=c.floorHigh or c.base or 0
+    low,high=math.min(low,h),math.max(high,h)
+   end
+  end end
+  top=height or 32
+  local support;if rows then support=rows[cy] and rows[cy][cx]else support=cells[cx..':'..cy]end
+  local terrace=support and support.museumTerrace
+  if terrace then top=terrace.groundHeight or support.base or 0
+  elseif high>-math.huge then
+   -- A retaining face meets the upper terrace. An outer enclosure above a
+   -- single floor keeps its full wall height relative to that floor.
+   top=high>low and high or high+top
   end
- end end
- local top=height or 32
- local support;if rows then support=rows[cy] and rows[cy][cx]else support=cells[cx..':'..cy]end
- local terrace=support and support.museumTerrace
- if terrace then top=terrace.groundHeight or support.base or 0
- elseif high>-math.huge then
-  -- A retaining face meets the upper terrace. An outer enclosure above a
-  -- single floor keeps its full wall height relative to that floor.
-  top=high>low and high or high+top
+  if tops then
+   if not topRow then topRow={};tops[cy]=topRow end
+   topRow[cx]=top
+  end
  end
  for y=cy-1,cy+1 do for xx=cx-1,cx+1 do
   local c;if rows then c=rows[y] and rows[y][xx]else c=cells[xx..':'..y]end
@@ -49,15 +57,18 @@ end
 -- Adjacent cliff cells share corners and numeric rows avoid temporary string
 -- keys in both neighborhood scans. Heights remain separated by wall profile.
 function M.sampler(cells,tick)
- local rows,heights={},{}
+ local rows,heights,profiles={},{},{}
  for _,c in pairs(cells)do
   local row=rows[c.cy];if not row then row={};rows[c.cy]=row end
   row[c.cx]=c;if tick then tick()end
  end
  return function(_,x,z,height)
   local layer=heights[height];if not layer then layer={};heights[height]=layer end
+  local tops=profiles[height];if not tops then tops={};profiles[height]=tops end
   local row=layer[z];if not row then row={};layer[z]=row end
-  if row[x]==nil then row[x]=M.height(cells,x,z,height,rows)end
+  -- Every corner within a cell shares its 5x5 support profile. Only the
+  -- distance to the 3x3 boundary depends on the exact sample position.
+  if row[x]==nil then row[x]=M.height(cells,x,z,height,rows,tops)end
   return row[x]
  end
 end
@@ -74,6 +85,14 @@ function M.append(cells,c,emit,uvFor,heightAt)
  local heights={}
  heightAt=heightAt or M.height
  for iz=0,4 do for ix=0,4 do heights[iz*5+ix+1]=heightAt(cells,x+ix*4,z+iz*4,height)end end
+ -- A flat cap has affine UVs and uniform shading: its sixteen cells are
+ -- exactly the same surface as one quad. Keep every bevel cell unchanged.
+ local level=heights[1];local flatCap=level~=0
+ for i=2,25 do if heights[i]~=level then flatCap=false;break end end
+ if flatCap then
+  emit({{x,level,z},{x+16,level,z},{x+16,level,z+16},{x,level,z+16}},cap,1)
+  return
+ end
  for iz=0,3 do for ix=0,3 do
   local a,b=ix*4,iz*4;local u,v=a+4,b+4
   local k=iz*5+ix+1

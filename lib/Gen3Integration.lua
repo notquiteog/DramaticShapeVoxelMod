@@ -2,7 +2,8 @@
 -- method, leaving the engine's world/UI passes, battle renderer and callbacks
 -- in charge. This file is deliberately loaded before any Gen1/2 patches.
 local V=...
-local M={yaw=0,pitch=.16,level=3,rendered=0,active=false}
+local M={yaw=0,pitch=math.rad(10),level=3,rendered=0,active=false}
+local Look=V.require('CameraLook')
 local recovery=V.require('RenderRecovery').new()
 M.recovery=recovery
 local ModSetting=V.require('ModSetting')
@@ -19,7 +20,7 @@ function M.worldDirection(dir,yaw)
 end
 function M.look(dx,dy)
  if V.require('CameraSettings').invertY:get() then dy=-dy end
- M.yaw=(M.yaw+dx)%(math.pi*2);M.pitch=math.max(-.6,math.min(.65,M.pitch+dy))
+ M.yaw=(M.yaw+dx)%(math.pi*2);M.pitch=math.max(Look.UP,math.min(Look.DOWN,M.pitch+dy))
 end
 function M.isActive()return M.active and free()end
 function M.moveVector(forward,right)
@@ -47,6 +48,7 @@ function M.install()
  local SceneOptions=V.require('Gen3SceneOptions')
  local BattleStage=V.require('Gen3Battle')
  local controls=V.require('Gen3CameraControls').new(M)
+ local touch=V.require('CameraTouch').new()
  local game3Ok,game3=pcall(require,'src.core.Game3')
  local platOk,platMod=pcall(require,'src.core.Platform')
  local gcHeadroom=V.require('SceneGcHeadroom').new(game3Ok and type(game3)=='table' and game3 or {},platOk and type(platMod)=='table' and platMod.detect and platMod.detect()or nil)
@@ -63,7 +65,7 @@ function M.install()
  local walkPhase=Player.walkPhase
  Player.walkPhase=function()return nativeWalk.phase(Player)or walkPhase()end
  local function ready(game)return recovery:ready(Scene.context and Scene.context()or game.session)end
- mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original battle background.'),Trees.art:schema('Solid voxel trees carved from the original game art (default), original flat cards, or illustrated cards.'),Trees.setting:schema('For card trees: flat trunks follow the crown, or use modeled trunks. Original model trees are fully solid.'),mode:schema('Gen 3 2.5D camera. Press 3 to cycle; drag with the right mouse button to look in 1ST/rotating 3RD. Special field effects retain their original presentation.')})
+ mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original battle background.'),Trees.art:schema('Solid voxel trees carved from the original game art (default), original flat cards, or illustrated cards.'),Trees.setting:schema('For card trees: flat trunks follow the crown, or use modeled trunks. Original model trees are fully solid.'),mode:schema('Gen 3 2.5D camera. Press 3 to cycle; Look with the right stick, a right-mouse drag or a touch drag in 1ST/rotating 3RD. Pinch to zoom 3RD; native field effects retain their original presentation.')})
  local fullPreset=V.require('Gen3FullPreset').new(M.level)
  local nativeArt=V.require('NativeBattleArt');nativeArt.install()
  local interfaceArt=V.require('NativeInterfaceArt')
@@ -93,21 +95,26 @@ function M.install()
  mod.exports.optionSupport=Support.inventory(3)
  local function field(game)return game and game.phase=='field' and game.session and not Battle.isActive() end
  local stackOk,nativeStack=pcall(require,'src.ui.game3.stack')
- local function looking(game)
-  if not(field(game) or game and game.phase=='quest_log')then return false end
+ local function menuOpen()
   -- Public native stack also covers Ruby/Sapphire and extension menus; engine
   -- modules are not guaranteed to appear in the mod sandbox package cache.
   if stackOk and nativeStack.top then
    local top=nativeStack.top()
-   if top and top.isMenu then return false end
+   if top and top.isMenu then return true end
   end
   for _,name in ipairs({'start_menu','option_menu','controls_menu','bag_menu','party_menu','summary_menu','pokedex','pc_menu','shop_menu'})do
    for _,prefix in ipairs({'src.ui.game3.','src.ui.game3.rse.','src.ui.game3.rs.'})do
     local menu=package.loaded[prefix..name]
-    if menu and menu.isOpen and menu.isOpen()then return false end
+    if menu and menu.isOpen and menu.isOpen()then return true end
    end
   end
-  return true
+  return false
+ end
+ local function looking(game)
+  return Look.focused(love.window) and not menuOpen() and(field(game) or game and game.phase=='quest_log')
+ end
+ local function battleLooking()
+  return BattleStage.active and Battle.isActive() and Look.focused(love.window) and not menuOpen()
  end
  mod.hooks:wrap('core.quit_to_launcher',function(next,...)V.require('KantoLifeAudio').dispose();V.require('KantoLife').invalidate();return next(...)end)
  local uninstallRecap=V.require('Gen3Recap').install(M)
@@ -179,11 +186,12 @@ function M.install()
  -- is camera-only; with the rungs off and no staged lens the engine's new
  -- twin-stick walk is preserved untouched.
  local function stickClaimed(game)
-  if free() and looking(game) then return true end
+  if free() and looking(game)then return true end
   return BattleStage.active and Battle.isActive()
  end
  mod.hooks:wrap('input.gamepad',function(next,game,ev)
   if ev.phase=='axis' then
+   if ev.axis=='rightx' or ev.axis=='righty'then stick.controller=ev.joystick end
    if ev.axis=='rightx'then stick.x=tonumber(ev.value)or 0 elseif ev.axis=='righty'then stick.y=tonumber(ev.value)or 0 end
    if (ev.axis=='rightx' or ev.axis=='righty') and stickClaimed(game) then
     return true
@@ -194,6 +202,7 @@ function M.install()
   return next(game,ev)
  end)
  mod.hooks:wrap('core.update',function(next,game,dt,...)
+  M.cameraDelta=math.max(0,math.min(.1,tonumber(dt)or 0))
   gcHeadroom:update(M.level~=0)
   recovery:update(dt)
   BattleStage.update()
@@ -204,23 +213,38 @@ function M.install()
   -- Native fly/teleport/flash presentations temporarily own drawing, not the
   -- chosen look direction. Continue mouse/boom input so returning to the
   -- voxel field resumes exactly where the player aimed. Menus still own input.
-  controls:update(dt,looking(game) and free(),love.mouse)
-  if BattleStage.active and Battle.isActive()then
+  Look.resetLost(stick,love.window)
+  local canLook=looking(game) and free()
+  controls:update(dt,canLook,love.mouse)
+  local battleLook=battleLooking()
+  local touchMode=battleLook and 'battle' or canLook and M.level or nil
+  local width,height=1280,720
+  if love.graphics and love.graphics.getDimensions then width,height=love.graphics.getDimensions()end
+  local battleCam=battleLook and V.require('BattleCam')
+  touch:update(love.touch,game.touchControls,touchMode,width,height,
+   function(x,y)
+    if battleCam then battleCam.dragOrbit(x);battleCam.dragPitch(-y)
+    else M.look(x*Look.TOUCH,y*height/math.max(320,width)*Look.TOUCH)end
+   end,
+   (battleLook or canLook and M.level==7) and function(factor)
+    if battleCam then battleCam.stepZoom(math.log(1/factor)/math.log(battleCam.ZOOM_STEP))
+    else controls:scale(1/factor)end
+   end or nil)
+  if battleLook then
    local camera=V.require('BattleCam')
-   camera.stickOrbit(stick.x,math.min(dt,.1));camera.stickPitch(stick.y,math.min(dt,.1))
+   camera.stickOrbit(stick.x,math.min(dt,.1));camera.stickPitch(-stick.y,math.min(dt,.1))
    -- Game3 0.3.51 does not dispatch input.pointer. Read the secondary
    -- button without replacing any engine callback or consuming menu input.
    local mouse=love.mouse
-   if mouse and mouse.isDown(2)then
+   if Look.focused(love.window) and mouse and mouse.isDown(2)then
     local x,y=mouse.getPosition()
-    if battleMouse then camera.mouseOrbit(x-battleMouse[1]);camera.mousePitch(y-battleMouse[2])end
+    if battleMouse then camera.mouseOrbit(math.max(-40,math.min(40,x-battleMouse[1])));camera.mousePitch(math.max(-40,math.min(40,y-battleMouse[2])))end
     battleMouse={x,y}
    else battleMouse=nil end
   else battleMouse=nil end
   if looking(game) and free() then
-   local function axis(v)return math.abs(v)>.18 and (v-(v>0 and .18 or -.18))/.82 or 0 end
    local elapsed=math.min(tonumber(dt)or 0,.1)
-   M.look(axis(stick.x)*elapsed*2.2,axis(stick.y)*elapsed*1.5)
+   M.look(Look.axis(stick.x)*elapsed*Look.YAW,Look.axis(stick.y)*elapsed*Look.PITCH)
   end
   return next(game,dt,...)
  end)
@@ -231,7 +255,7 @@ function M.install()
  local dragging=false
  mod.hooks:wrap('input.wheel',function(next,game,dy)
   if not dy or dy==0 then return next(game,dy)end
-  if BattleStage.active and Battle.isActive()then V.require('BattleCam').stepZoom(dy>0 and -1 or 1);return true end
+  if battleLooking()then V.require('BattleCam').stepZoom(dy>0 and -1 or 1);return true end
   if looking(game) and free() and controls:step(dy>0 and -1 or dy<0 and 1 or 0)then return true end
   return next(game,dy)
  end)
@@ -240,7 +264,7 @@ function M.install()
    if ev.button==2 then
     dragging=ev.phase=='pressed';return true
    end
-   if ev.phase=='moved' and dragging then controls:pointer();M.look((ev.dx or 0)*.005,(ev.dy or 0)*.004);return true end
+   if ev.phase=='moved' and dragging then controls:pointer();M.look(math.max(-40,math.min(40,ev.dx or 0))*Look.MOUSE,math.max(-40,math.min(40,ev.dy or 0))*Look.MOUSE);return true end
   else dragging=false end
   return next(game,ev)
  end)

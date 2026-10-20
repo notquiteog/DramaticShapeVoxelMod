@@ -50,3 +50,16 @@ s.result=1;s:pokeballWobble();assert(events[#events]=='caught')
 M.finish();s.contest=true;prior=#events;s:startBallAnim(0,'PARK_BALL')
 View:drawObjects(s.anim);assert(#events==prior+1 and events[#events]=='nativeObjects')
 print('PASS native tutorial events with empty player party and native contest fallback')
+
+M.finish();s.contest=nil;s.tutorial=nil
+local lead,partner={hp=15},{hp=0};s.battle={wild=true,doubles={},enemy=lead,enemy2=partner}
+s.activeMon=function(_,side)return side=='enemy'and lead or partner end
+assert(M.targetReady(s));s:startBallAnim(0,'POKE_BALL');assert(M.active(s,s.anim))
+s.anim=nil;s:update();assert(events[#events-1]=='finish','departed runner retained capture')
+M.finish();partner.hp=10;assert(not M.targetReady(s));s:startBallAnim(0,'POKE_BALL');assert(not M.active(s,s.anim))
+partner.hp=0;s.battle.enemy={hp=15};assert(not M.targetReady(s),'core identity replaced queued shown target')
+s.battle.enemy=lead;s.activeMon=function()error('unavailable native slot')end;assert(not M.targetReady(s))
+s.activeMon=function(_,side)return side=='enemy'and lead or partner end;s.battle.wild=false;assert(not M.targetReady(s))
+s.battle.wild=true;lead.hp=0;assert(not M.targetReady(s))
+lead.hp=15;enabled=false;s:startBallAnim(0,'POKE_BALL');assert(not M.active(s,s.anim));enabled=true
+print('PASS native promoted last-wild target, two-foe/queued identity/reader failure/dead/OFF safeguards')

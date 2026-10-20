@@ -4336,7 +4336,7 @@ end
 
 local function finishJob(job, ok, err)
   CacheTrace.log(ok and "job-done" or "job-failed", job.id, "slot=" .. job.slot .. " error=" .. tostring(err))
-  if not ok and job.cancel then job.cancel() end
+  if not ok then Budget.cancel(job.co);if job.cancel then job.cancel() end end
   local key = jobKey(job.id, job.slot)
   jobIndex[key] = nil
   for i, j in ipairs(jobs) do
@@ -4416,7 +4416,7 @@ local function runJob(job)
     if c.stale then c.stale.aux = nil end
   end
 
-  local mesh, water, visualMeshes, spans
+  local mesh, water, visualMeshes, spans, saveBuiltTerrain
   -- The moving vessel is a session mesh, also needed after disk restoration.
   local sessionVessel = map.id == "VERMILION_DOCK" and V.require("ShipHull").enabled(map)
   -- TEST96: ask for the complete cached answer before invoking Structures.
@@ -4468,12 +4468,15 @@ local function runJob(job)
       return
     end
     if terrainRaw and waterRaw and not job.bypassCache then
-      local savedTerrain, terrainError =
-        MeshDisk.saveTerrain(map, job.slot, job.masks, terrainRaw, waterRaw,
-          visualRaw, registrySnapshot(map))
-      if not savedTerrain then
-        print("[warn] voxel terrain cache write failed for " .. tostring(job.id)
-              .. " " .. tostring(job.slot) .. ": " .. tostring(terrainError))
+      local registry = registrySnapshot(map)
+      saveBuiltTerrain = function()
+        local savedTerrain, terrainError =
+          MeshDisk.saveTerrain(map, job.slot, job.masks, terrainRaw, waterRaw,
+            visualRaw, registry)
+        if not savedTerrain then
+          print("[warn] voxel terrain cache write failed for " .. tostring(job.id)
+                .. " " .. tostring(job.slot) .. ": " .. tostring(terrainError))
+        end
       end
     end
   end
@@ -4498,6 +4501,15 @@ local function runJob(job)
     end
   end
   trees("requestCommunityTrees", map, job.masks, job.priority, job.slot == "body")
+  if saveBuiltTerrain then
+    -- A complete GPU scene is useful before its optional compressed cache.
+    -- Publish it first, then let current terrain/trees run before encoding.
+    -- Stay ahead of connected/speculative jobs so raw buffers cannot collect
+    -- for an entire region. Keep the same pending/cancellation lifecycle.
+    job.priority, job.published = 1.99, true
+    Budget.pause()
+    if current() then saveBuiltTerrain() end
+  end
 end
 
 -- Queue a build unless the slot is already cached or queued. Returns the
@@ -4552,7 +4564,7 @@ function ChunkMesher.request(map, bodyOnly, masks, priority)
   -- and recreates the Android flowers-without-terrain delay at the seam.
   if slot == "full" and requested == 2 then
     local body = jobIndex[jobKey(map.id, "body")]
-    if body then body.priority = math.max(body.priority or 0, 3) end
+    if body and not body.published then body.priority = math.max(body.priority or 0, 3) end
   end
   return (c and c[slot]) or nil
 end
@@ -4567,6 +4579,7 @@ function ChunkMesher.requestWork(map, name, signature, priority, work, cancel)
     return false
   end
   if prior then
+    Budget.cancel(prior.co)
     if prior.cancel then prior.cancel() end
     for i = #jobs, 1, -1 do if jobs[i] == prior then table.remove(jobs, i) end end
   end
@@ -4582,6 +4595,7 @@ function ChunkMesher.cancelWork(mapId, name)
   local key = jobKey(mapId, "work-" .. name)
   local job = jobIndex[key]
   if not job then return end
+  Budget.cancel(job.co)
   if job.cancel then job.cancel() end
   jobIndex[key] = nil
   for i = #jobs, 1, -1 do if jobs[i] == job then table.remove(jobs, i) end end
@@ -4647,6 +4661,7 @@ function ChunkMesher.cancelSpeculative(mapId, bodyOnly)
   local key = jobKey(mapId, bodyOnly and "body" or "full")
   local job = jobIndex[key]
   if not job or (job.priority or 0) > 0 then return false end
+  Budget.cancel(job.co)
   jobIndex[key] = nil
   for i = #jobs, 1, -1 do
     if jobs[i] == job then table.remove(jobs, i); break end
@@ -5025,6 +5040,7 @@ function ChunkMesher.refresh(mapId, bx, by, map, before)
   for i = #jobs, 1, -1 do
     local job = jobs[i]
     if job.id == mapId then
+      Budget.cancel(job.co)
       if job.cancel then job.cancel() end
       jobIndex[jobKey(job.id, job.slot)] = nil
       table.remove(jobs, i)
@@ -5065,6 +5081,7 @@ function ChunkMesher.setLive(live)
   for i = #jobs, 1, -1 do
     local job = jobs[i]
     if not live[job.id] and not prevLive[job.id] then
+      Budget.cancel(job.co)
       if job.cancel then job.cancel() end
       jobIndex[jobKey(job.id, job.slot)] = nil
       table.remove(jobs, i)
@@ -5099,6 +5116,7 @@ function ChunkMesher.evictRuntime(mapId)
   for i = #jobs, 1, -1 do
     local job = jobs[i]
     if mapId == nil or job.id == mapId then
+      Budget.cancel(job.co)
       if job.cancel then job.cancel() end
       jobIndex[jobKey(job.id, job.slot)] = nil
       table.remove(jobs, i)
@@ -5127,6 +5145,7 @@ function ChunkMesher.invalidate(mapId, reason)
   for i = #jobs, 1, -1 do
     local job = jobs[i]
     if mapId == nil or job.id == mapId then
+      Budget.cancel(job.co)
       if job.cancel then job.cancel() end
       jobIndex[jobKey(job.id, job.slot)] = nil
       table.remove(jobs, i)
@@ -5153,6 +5172,7 @@ function ChunkMesher.invalidateVoidRings()
     for i = #jobs, 1, -1 do
       local job = jobs[i]
       if job.id == id and not job.bodyOnly then
+        Budget.cancel(job.co)
         jobIndex[jobKey(job.id, job.slot)] = nil
         table.remove(jobs, i)
       end

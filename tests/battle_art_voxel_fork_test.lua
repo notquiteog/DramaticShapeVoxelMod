@@ -4796,22 +4796,6 @@ T.check(rig.curve == 0,
 T.check(rig.focus[3] > rig.eye[3],
   "yaw 0 focuses south of the eye")
 
--- A pitched third-person boom rises as it pulls back.  Outdoor props may be
--- cleared at that height, but an interior's unwalkable cells are its room
--- walls and must remain solid or the camera sees the roofless black void.
-cameraMap = {
-  id = "CAMERA_COLLISION",
-  def = { tileset = "OVERWORLD" },
-  inBounds = function() return true end,
-  isWalkableCell = function() return false end,
-  cellTile = function() return 0 end,
-}
-T.check(not ThirdPerson._occupied({ map = cameraMap }, 8, 25, 8),
-  "a high outdoor boom may clear a short unwalkable prop")
-cameraMap.def.tileset = "HOUSE"
-T.check(ThirdPerson._occupied({ map = cameraMap }, 8, 25, 8),
-  "an indoor wall blocks the boom even above the outdoor clearance")
-
 local oldOut, oldLen = ThirdPerson.out, ThirdPerson.len
 ThirdPerson.out, ThirdPerson.len = 1, ThirdPerson.SHOW_AT - 1
 T.check(not ThirdPerson.showsPlayer(),

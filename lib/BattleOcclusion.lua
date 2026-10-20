@@ -69,7 +69,7 @@ M.shader=[[
     float mine = 3.0 + w*t;
     float x = clamp((t - ]]..M.CORRIDOR_END..[[)/]]..(1-M.CORRIDOR_END)..[[, 0.0, 1.0);
     float ease = x*x*(3.0 - 2.0*x);
-    float near = (w + ]]..M.FRAME_MARGIN..[[)*t*(1.0 - ease);
+    float near = (w + float(]]..M.FRAME_MARGIN..[[))*t*(1.0 - ease);
     return max(mine, near);
   }
   bool battleBlocked(vec3 ray, vec4 target) {

@@ -55,3 +55,6 @@ local overhead=B.build({16,80,64},arena,0)
 assert(B.foreground({0,-30,0},overhead),'overhead camera leaves foreground canopy opaque')
 assert(not B.foreground({0,-80,0},overhead),'overhead floor clipped')
 print('Battle overhead cutaway PASS')
+
+-- GLSL ES does not implicitly promote an injected Lua integer to float.
+assert(B.shader:find('w + float(20)',1,true),'battle margin became an integer shader operand')

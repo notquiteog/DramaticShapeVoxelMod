@@ -30,19 +30,25 @@ function M.mask(ts,mid,ground)
   return a==0 or floor[colorKey(r,g,b)]
  end)
 end
-function M.plant(c,emit,uv)
+function M.plant(c,emit,uv,hulls)
  -- One complete, flat native drawing. Shared canopy anchors preserve the
  -- authored angle in static views and face free/battle cameras without
  -- bending, inflating, or duplicating the artwork.
  local x,z=c.cx*16,c.cy*16
  if c.shape.kind=='shrub' and V.require('TreePresentation').props:get()=='modeled' then
-  local mask=M.mask(c.ts,c.mid,c.shape.ground);local slot=c.ts.midToSlot[c.mid]
-  if mask and slot then
-   local faces=V.require('VoxelHull').build(16,16,function(px,py)
+  local byTile,key,faces
+  if hulls then
+   byTile=hulls[c.ts];if not byTile then byTile={};hulls[c.ts]=byTile end
+   key=c.mid..':'..tostring(c.shape.ground);faces=byTile[key]
+  end
+  local mask=not faces and M.mask(c.ts,c.mid,c.shape.ground);local slot=c.ts.midToSlot[c.mid]
+  if faces or mask and slot then
+   faces=faces or V.require('VoxelHull').build(16,16,function(px,py)
     local r,g,b,a=pixel(c.ts,slot%c.ts.cols*16+px,math.floor(slot/c.ts.cols)*16+py)
     local t=sub(uv,px+.5,py+.5,px+.5,py+.5)[1]
     return r,g,b,mask[py*16+px] and a or 0,t[1],t[2]
    end,1,0,nil,'bush')
+   if byTile then byTile[key]=faces end
    for _,q in ipairs(faces)do
     local p={};for _,v in ipairs(q)do p[#p+1]={x+8+v[1],v[2],z+8+v[3]}end
     local t={q.u,q.v};emit(p,{t,t,t,t},q.shade)
@@ -65,7 +71,7 @@ function M.plant(c,emit,uv)
  emit(points,uv,1,anchor)
  return true
 end
-function M.append(c,emit,uvFor)
+function M.append(c,emit,uvFor,hulls)
  local s,x,z=c.shape,c.cx*16,c.cy*16
  local uv=assert(uvFor(c.ts,c.mid))
  if s.kind=='ledge' and s.direction and s.direction~='south' then
@@ -181,7 +187,7 @@ function M.append(c,emit,uvFor)
    emit({{x+u,0,z+9},{x+u,height(u,16),z+16},{x+u,0,z+16},{x+u,0,z+9}},sub(uv,2,10,5,16),.8)
   end
  elseif s.kind=='flowers' or s.kind=='grass' or s.kind=='shrub' then
-  M.plant(c,emit,uv)
+  M.plant(c,emit,uv,hulls)
  end
 end
 -- Derive cutouts from the provider's composited art, removing exact colours

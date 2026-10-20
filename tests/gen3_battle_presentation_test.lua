@@ -30,6 +30,23 @@ mode='GEN6';local f=Backdrop.frame(map,def,st)
 check(f.image=='pewtergym.jpg' and f.offset==140 and loaded[#loaded]=='bosses/pewtergym.jpg','native leader boss plate/crop')
 boss=false;f=Backdrop.frame(map,def,st)
 check(loaded[#loaded]=='gen6/pewtergym.jpg','boss off returns ordinary collection')
+local terrain={GRASS=0,LONG_GRASS=1,SAND=2,UNDERWATER=3,WATER=4,POND=5,MOUNTAIN=6,CAVE=7,BUILDING=8,PLAIN=9}
+package.loaded['src.core.game3.battle.bg']={TERRAIN=terrain}
+for _,prefix in ipairs({'FR','LG'})do
+ check(Backdrop.mapKey(prefix..'_PEWTER_CITY_GYM')=='PEWTER_GYM','edition gym map alias')
+ check(Backdrop.files(prefix..'_PEWTER_CITY_GYM',def,st)=='pewtergym.jpg','edition ordinary gym plate')
+ check(Backdrop.setFor(prefix..'_ROUTE_1',{mapType=1},{terrain=terrain.WATER})=='ocean','native water overrides ordinary grass plate')
+ check(Backdrop.setFor(prefix..'_SAFARI_ZONE_CENTER',{mapType=1},{terrain=terrain.WATER})=='safariwater','native Safari water identity')
+ check(Backdrop.setFor(prefix..'_CINNABAR_ISLAND',{mapType=1},{terrain=terrain.WATER})=='cinnabarisland','explicit island priority')
+end
+for _,prefix in ipairs({'RU','SA','EM'})do
+ check(Backdrop.setFor(prefix..'_ROUTE_124',{mapType=1},{terrain=terrain.WATER})=='ocean','Hoenn ocean native terrain')
+ check(Backdrop.setFor(prefix..'_ROUTE_102',{mapType=1},{terrain=terrain.POND})=='shore','Hoenn pond native terrain')
+ check(Backdrop.setFor(prefix..'_MT_CHIMNEY',{mapType=1},{terrain=terrain.MOUNTAIN})=='rockypath','Hoenn mountain neutral plate')
+ check(Backdrop.setFor(prefix..'_ROUTE_111',{mapType=1},{terrain=terrain.SAND})==nil,'unavailable desert art retains world')
+ check(Backdrop.setFor(prefix..'_UNDERWATER_ROUTE124',{mapType=1},{terrain=terrain.UNDERWATER})==nil,'underwater never borrows surface art')
+ check(Backdrop.setFor(prefix..'_VICTORY_ROAD_1F',{mapType=8},{terrain=terrain.CAVE})==nil,'Hoenn does not borrow Kanto location artwork')
+end
 local battle={wild=true};phase='night';f=Backdrop.frame('FR_ROUTE_1',{mapType=1},battle)
 check(f.image=='grassynight.jpg','native location and day phase')
 phase='day';check(Backdrop.frame('FR_ROUTE_1',{mapType=1},battle).image=='grassynight.jpg','battle hour does not jump mid-fight')

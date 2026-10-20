@@ -19,11 +19,14 @@ love={graphics=g}
 local light,art={},{}
 local placement="auto"
 local R={vp=Mat.identity(),draw=function()end,seams=function()end,lighting=function()end}
-local modules={StandingTrainer={prepare=function()end,draw=function()end,clear=function()end},ShadowMap={snug=function(m)return Mat.mul(Mat.translate(0,.45,0),m)end},Gen3Capture={active=function()return false end,prepare=function()end,draw=function()end},BattleArt={backPlacementSetting={get=function()return placement end}},Mat4=Mat,Voxel3D=R,Gen3SpriteLight=light,NativeBattleArt=art,
+local modules={NativeGen3SendoutShell={draw=function()return false end,clear=function()end},StandingTrainer={prepare=function()end,draw=function()end,clear=function()end},ShadowMap={snug=function(m)return Mat.mul(Mat.translate(0,.45,0),m)end},Gen3Capture={active=function()return false end,target=function()end,intake=function()end,prepare=function()end,draw=function()end},BattleArt={backPlacementSetting={get=function()return placement end}},Mat4=Mat,Voxel3D=R,Gen3SpriteLight=light,NativeBattleArt=art,
  SpriteHeadBounds={get=function()return {0,0,64,64}end},
  BattleBillboard={mesh=function()return {}end,yawToward=function()return 0 end},
  UiBackplates={spritesUnlit=function()return false end}}
 local V={require=function(k)return assert(modules[k],k)end}
+modules.Gen3Battle={enabled=function()return false end}
+modules.NativeGen3SendoutShell.owner=function(c)return c.owner end
+modules.NativeGen3Release=assert(loadfile('lib/NativeGen3Release.lua'))(V)
 modules.NativeGen3CaptureTint=assert(loadfile('lib/NativeGen3CaptureTint.lua'))(V)
 package.loaded['src.core.game3.battle.ui']={battlerSpriteCenter=function(id)return id%2==0 and 72 or 176,id%2==0 and 80 or 40 end}
 package.loaded['src.core.game3.battle.anim_coords']={battler=function()return {species=6}end,coords=function(_,id)return {y=id%2==0 and 80 or 40}end}
@@ -84,6 +87,19 @@ hidden:prepare({center={100,100},yaw=0},3,{100,30,200})
 assert(hidden:head(1,176,8)==nil,'do not fabricate cards for unrelated absent actors')
 local p=M.placement({center={0,0},yaw=math.pi/2},0,false,0)
 assert(math.abs(p[1]+24)<1e-6 and math.abs(p[3])<1e-6,'arena orientation is shared by every actor')
+for id=0,3 do
+ local ordinary=M.placement({center={0,0},yaw=0},id,true,0)
+ local nativePair=M.placement({center={0,0},yaw=0,sceneLayout='gen3-native-pair'},id,true,0)
+ assert(ordinary[1]==(id<2 and -32 or 32)and nativePair[1]==(id<2 and -12 or 12),'layout-specific pair span')
+ assert(ordinary[2]==nativePair[2]and ordinary[3]==(id%2==0 and 24 or -24)
+  and nativePair[3]==(id%2==0 and 40 or -40),'pair arena floor/row distance')
+end
+local pairBall={ball=true,owner=2,ax=72,ay=104,radius=1.5}
+local pairFrame=M.new({double=true});pairFrame.cards={pairBall}
+pairFrame:prepare({center={100,100},yaw=0},3,{100,30,200})
+local bm=pairBall.model;local u,v=72/240-.5,1-104/160
+assert(math.abs(bm[1]*u+bm[2]*v+bm[4]-pairFrame.points[2][1])<1e-6,'partner ball projected onto leading actor')
+assert(math.abs(bm[5]*u+bm[6]*v+bm[8]-4.5)<1e-6,'partner ball lost floor/radius')
 -- Changing the live option must affect both allied slots, without moving
 -- enemies or the trainer and without producing duplicate world cards.
 for _,mode in ipairs({'ui','world','auto'})do

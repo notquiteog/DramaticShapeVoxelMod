@@ -94,6 +94,8 @@ function M.install()
    camera.arena={mid=camera.center,cameraSafe=true}
    V.require('BattleCam').reset(camera.arena)
   end
+  camera.sceneLayout=Battle._st.double and not V.require('ModernBattleUI').enabled()
+   and not V.require('BattlePresentation').suppressed('hud',Battle._st)and'gen3-native-pair'or nil
   local Map=require('src.core.game3.map')
   camera.plate=V.require('Gen3BattleBackdrop').frame(Map.current,Map.currentDef(),Battle._st)
   local G=love.graphics

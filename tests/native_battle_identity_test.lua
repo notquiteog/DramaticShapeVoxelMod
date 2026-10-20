@@ -39,6 +39,9 @@ check(mirrored[1] and not mirrored[2],'selected player fronts use FLIP FRONT onl
 local pic=UI.battlerPic(2,mons[3],25)
 check(pic.image.mon.personality==3,'HUD head bounds use explicit displayed battler')
 check(P.frontPic(25,0)=='native','field/interface calls retain native owner')
+local fit=Adapter.fit;Adapter.fit=function()return nil end
+check(UI.battlerPic(2,mons[3],25)=='native','failed selected canvas retains original native picture')
+Adapter.fit=fit
 failure=true;check(not pcall(UI.draw),'native failure is propagated')
 check(P.frontPic(25,0)=='native','active scope restored after native error')
 hooks['core.quit_to_launcher'](function()end)
@@ -64,7 +67,10 @@ check(portraitState[1]=='selected player' and portraitState[2]=='selected enemy'
 check(portraitState[3] and portraitState[4] and progress==32 and slug=='bug-catcher','native slide and trainer key feed shared art')
 check(screen.playerBackImage=='native player' and screen.enemyTrainerTrueColor==false,'native fields restored after trainer draw')
 failure=true;check(not pcall(screen.drawScene,screen) and screen.enemyTrainerImage=='native enemy','portrait failure restores native owner')
-failure=false;V2.crystalSpritesActive=true;screen:drawScene()
+failure=false
+Adapter2.image=function()return 'selected picture'end;Adapter2.fit=function()return nil end
+check(screen:pic({},false)=='native species','Gen2 failed selected fit keeps original image flags/path')
+V2.crystalSpritesActive=true;screen:drawScene()
 check(portraitState[1]=='native player','Crystal trainer ownership retained')
 hooks['core.quit_to_launcher'](function()end)
 print('PASS '..checks..' native battle identity checks')

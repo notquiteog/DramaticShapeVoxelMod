@@ -32,6 +32,7 @@
 
 local V = ...
 local Generation = V.require("Generation")
+local Palette = require("src.render.GbcPalette")
 
 local Gen2Staged = {}
 
@@ -93,9 +94,9 @@ local FOOT_PAD = 1
 
 -- Companions own art. A staged provider may supply full-body animation
 -- without replacing the original engine screen or reaching into its files.
-local function picFor(game,screen,mon,back)
+local function picFor(game,screen,mon,back,static)
   local owned=V.require('NativeBattleArt').image(mon,back)
-  if owned then local w,h=owned:getDimensions();return owned,w,h,nil,true end
+  if owned then local w,h=owned:getDimensions();return owned,w,h,nil,true,nil,true end
   local providers=game and game.mods and game.mods.exports
   local provider=V.crystalSpritesActive and V.mod.exports.crystalSprites
     or (providers and providers.crystal_animated_sprites_with_shiny_visuals)
@@ -103,22 +104,72 @@ local function picFor(game,screen,mon,back)
     local ok,pic=pcall(provider.stagedPokemonSprite,mon,back)
     if ok and pic and pic.image and type(pic.width)=="number"
        and type(pic.height)=="number" and pic.width>0 and pic.height>0 then
-      return pic.image,pic.width,pic.height,pic.quad,nil,pic.groundY
+      return pic.image,pic.width,pic.height,pic.quad,nil,pic.groundY,pic.trueColor~=false
     end
   end
-  local ok,image=pcall(screen.pic,screen,mon,back)
+  local ok,image,trueColor=pcall(screen.pic,screen,mon,back)
   if not (ok and image) then return nil end
+  if not static and not back and screen.frontAnimFrame then
+    local sheet,quad,size=screen:frontAnimFrame(mon)
+    if sheet and quad and type(size)=='number'and size>0 then
+      local _,h=image:getDimensions()
+      local feet=V.require('BattleSpriteFooting').bounds(image)[4]+size-h
+      return sheet,size,size,quad,nil,feet,trueColor
+    end
+  end
   local sized,w,h=pcall(image.getDimensions,image)
-  if sized and w and h and w>0 and h>0 then return image,w,h end
+  if sized and w and h and w>0 and h>0 then return image,w,h,nil,nil,nil,trueColor end
 end
 Gen2Staged.picFor=picFor
-local function drawPic(g,image,quad,x,y)
-  if quad then g.draw(image,quad,x,y) else g.draw(image,x,y) end
+local function drawPic(g,image,quad,x,y,scale)
+  scale=scale or 1
+  if quad then g.draw(image,quad,x,y,0,scale,scale) else g.draw(image,x,y,0,scale,scale) end
+end
+local RESIZE_TILES={[0]=6,[1]=4,[2]=2,[3]=7,[4]=5,[5]=3}
+-- Read native picture state; never leave a full-size world body behind a
+-- hidden/withdrawn mon. Unsupported combinations keep their native painter.
+local function poseFor(screen,side,mon,back,actorOnly)
+  -- Supported Legendary intake already owns hiding/shrinking this enemy.
+  -- Its world card must survive the native box-clear until the 3D beat ends.
+  if side=='enemy'and V.require('Gen2Capture').active(screen,screen.anim)then return 1,0,nil,0,false end
+  if screen.picBoxCleared and screen:picBoxCleared(side)then
+    if actorOnly then return 1,0,nil,0,false,nil,true end
+    return
+  end
+  if screen.isUnderground and screen:isUnderground(side,mon)
+    and not(screen.vanishAnim and screen.vanishAnim==screen.anim)then
+    if actorOnly then return 1,0,nil,0,false,nil,true end
+    return
+  end
+  local sink=screen.faintSink and screen:faintSink(side)or 0
+  local bg=screen.anim and screen.anim.bg
+  -- The native shaderless BGP veil is a whole-panel approximation; let its
+  -- original painter own that path rather than silently drop it on a card.
+  if bg and bg.lcdc=='BGP'and not Palette.available()then return end
+  local raster=V.require('NativeGen2PictureBands').raster(bg)
+  local anim=screen.animPicState and screen:animPicState(side)
+  local substitute=mon.volatile and (tonumber(mon.volatile.substitute)or 0)>0
+  if anim and anim.pic~=nil then substitute=anim.pic=='substitute'end
+  local lifted=anim and anim.lifted
+  local scale=anim and RESIZE_TILES[anim.size]
+  scale=scale and scale/(back and 6 or 7)or 1
+  local slide=anim and anim.slide or 0
+  if not actorOnly and screen.battle and screen.battle.doubles and(scale~=1 or slide~=0 or sink>0 or substitute or lifted or raster)then return end
+  return scale,slide,anim and anim.shade,sink,substitute,lifted
 end
 
-function Gen2Staged.sideTexture(game, side)
+local function sideTexture(game, side, actorOnly)
+  Gen2Staged.drawn[side],Gen2Staged.drawn[side.."2"]=nil,nil
   local screen = screenFor(game)
   if not screen then return nil end
+  local pairedAnimation=false
+  if not actorOnly and screen.anim and type(screen.nativeAnimationSlot)=='function'then
+    local ok,slot=pcall(screen.nativeAnimationSlot,screen)
+    pairedAnimation=ok and(slot=='player'or slot=='player2'or slot=='enemy'or slot=='enemy2')
+  end
+  if not actorOnly and screen.battle and screen.battle.doubles and(not screen.anim or pairedAnimation)then
+    return V.require('NativeGen2PairPicture').texture(game,side,screen,sideTexture,canvasFor,Gen2Staged.drawn)
+  end
   local back = (side == "player" or side == "player2")
   if (back and screen.showPlayerTrainer) or (not back and screen.showEnemyTrainer)then return nil end
   -- The native back slot remains the owner in OG UI mode. Leaving this side
@@ -126,7 +177,9 @@ function Gen2Staged.sideTexture(game, side)
   if back and V.require('BattleArt').backPlacementSetting:get()=='ui' then return nil end
   local okMon, mon = pcall(screen.activeMon, screen, side)
   if not (okMon and mon) then return nil end
-  local image,iw,ih,quad,selectedArt,groundY=picFor(game,screen,mon,back)
+  local poseScale,poseSlide,poseShade,poseSink,dollUp,lifted,hidden=poseFor(screen,side,mon,back,actorOnly)
+  if not poseScale then return nil end
+  local image,iw,ih,quad,selectedArt,groundY,trueColor=picFor(game,screen,mon,back,poseSink>0)
   if not image then return nil end
 
   -- A 2v2 round fields a partner beside the lead (the doubles layer keeps
@@ -136,17 +189,22 @@ function Gen2Staged.sideTexture(game, side)
   -- both mons through the drawn table.
   local partner = nil
   local battle = screen.battle
-  if battle and battle.doubles then
-    local p2 = (side == "player" and battle.player2)
-      or (side == "enemy" and battle.enemy2) or nil
+  if not actorOnly and battle and battle.doubles then
+    -- The queue may still SHOW an outgoing partner after the core has already
+    -- switched it. Use the same public identity reader as the native painter.
+    local okPartner,p2=pcall(screen.activeMon,screen,side..'2')
+    if not okPartner then return nil end
     if p2 and p2 ~= mon and (p2.hp or 0) > 0 then partner = p2 end
+    if partner and not poseFor(screen,side..'2',partner,back)then return nil end
   end
-  local pimage, pquad,pground = nil,nil,nil
+  local pimage, pquad,pground,ptrueColor = nil,nil,nil,nil
   local iw2,ih2=0,0
   if partner then
     local selected
-    pimage,iw2,ih2,pquad,selected,pground=picFor(game,screen,partner,back)
-    if not pimage then iw2,ih2=0,0 end
+    pimage,iw2,ih2,pquad,selected,pground,ptrueColor=picFor(game,screen,partner,back)
+    -- Keep the whole native side when its pair cannot be composed. Depending
+    -- on mod load order, the native drawPic wrapper owns both actors together.
+    if not pimage then return nil end
   end
 
   local Foot=V.require('BattleSpriteFooting')
@@ -157,17 +215,86 @@ function Gen2Staged.sideTexture(game, side)
   local pm=pimage and Art.metrics and Art.metrics(pimage)
   groundY=groundY or (metric and metric.y1+1) or box[4]
   pground=pground or (pm and pm.y1+1) or (pbox and pbox[4])
+  local bg=screen.anim and screen.anim.bg
+  local raster=bg and(V.require('NativeGen2PictureBands').raster(bg)or poseSlide~=0)
+  local sinkPixels=poseSink
+  local nativeWidth,nativeHeight,nativeScale
+  if poseSink>0 or lifted or raster then
+    -- Selected world frames may be larger than the original fitted UI slot.
+    -- Convert the native pixel clock through that public slot's actual scale.
+    local ok,native,_,path=pcall(screen.pic,screen,mon,back)
+    if ok and native then
+      local nw,nh=native:getDimensions()
+      local scale=screen.picScale and screen:picScale(path,mon,back)or 1
+      if nh>0 and scale>0 then
+        nativeWidth,nativeHeight,nativeScale=nw,nh,scale
+        sinkPixels=poseSink*ih/(nh*scale)
+      end
+    end
+  end
+  local slidePixels=nativeWidth and poseSlide*iw/(nativeWidth*nativeScale)or poseSlide
+  local doll,dollQuad,dollWidth,dollHeight,dollGround
+  if dollUp then
+    if not screen.substituteDoll then return nil end
+    doll,dollQuad=screen:substituteDoll(back)
+    if not(doll and dollQuad and dollQuad.getViewport)then return nil end
+    local _,_,w,h=dollQuad:getViewport();dollWidth,dollHeight=w,h
+    nativeWidth,nativeHeight,nativeScale=w,h,1
+    slidePixels=poseSlide
+    dollGround=Foot.bounds(doll,dollQuad)[4]
+  end
   local BattleScene = V.require("BattleScene")
   local cw = math.max(BattleScene.GB_W or 160, iw + iw2 + 2)
   local ch = math.max(BattleScene.GB_H or 144, math.max(ih, ih2) + 2)
   local ax = cw / 2
   local ay = ch - FOOT_PAD
-  local canvas = canvasFor(side, cw, ch)
+  local canvas = canvasFor(actorOnly and side..':actor' or side, cw, ch)
   if not canvas then return nil end
 
+  local pictureHeight,pictureScale,pictureGround,colored=ih,poseScale,groundY,trueColor
+  if doll then pictureHeight,pictureScale,pictureGround,colored=dollHeight,1,dollGround,false end
+  local function body(slide,dx,dy)
+    if doll then
+      drawPic(love.graphics,doll,dollQuad,ax-dollWidth/2+slide+(dx or 0),ay-dollGround+(dy or 0))
+    else
+      local function monBody()
+        drawPic(love.graphics,image,quad,ax-iw*poseScale/2+slide+(dx or 0),ay-groundY*poseScale+(dy or 0)+sinkPixels,poseScale)
+      end
+      if poseSink>0 then
+        V.require('NativeGen2PictureBands').crop(love.graphics,cw,ch,ay+(dy or 0),monBody)
+      else monBody()end
+    end
+  end
+  local band
+  if lifted or raster then
+    if not(nativeHeight and love.graphics.getScissor and love.graphics.setScissor)then return nil end
+    if lifted then
+      band=V.require('NativeGen2PictureBands').range(back,nativeHeight,nativeScale,pictureHeight,pictureScale,pictureGround,ay,lifted)
+      if not band then return nil end
+    end
+  end
+  local function paint(mon,colored,fn,byte)
+    local colors=screen.palettes and screen.cachedMonColors and screen:cachedMonColors(mon.species,mon.shiny)
+    if screen.introGrayscale and screen:introGrayscale()then colors=require('src.world.gen2.Palettes').BLACKOUT end
+    if colors and poseShade then colors=Palette.remap(colors,poseShade)end
+    if colors and not(colored and Palette.mode=='gbc')and Palette.available()then
+      local bg=screen.anim and screen.anim.bg
+      local old=Palette.setBgp and Palette.setBgp(byte or(bg and bg.bgp))
+      local ok,err=pcall(Palette.with,colors,fn)
+      if Palette.setBgp then Palette.setBgp(old)end
+      if not ok then error(err,0)end
+      return
+    end
+    return fn()
+  end
   local g = love.graphics
   local prev = g.getCanvas()
   local pr, pg, pb, pa = g.getColor()
+  local sx,sy,sw,sh
+  if poseSink>0 then
+    if not(g.getScissor and g.setScissor)then return nil end
+    sx,sy,sw,sh=g.getScissor()
+  end
   local okDraw = pcall(function()
     g.setCanvas(canvas)
     g.clear(0, 0, 0, 0)
@@ -176,14 +303,49 @@ function Gen2Staged.sideTexture(game, side)
     -- BattleScene.billboard reads (tw / 2 - ax, th - ay).  With a partner,
     -- the lead sits left of centre and the partner right of it, feet on
     -- the same ground line.
-    if pimage then
-      drawPic(g,image,quad,ax-iw,ay-groundY)
-      drawPic(g,pimage,pquad,ax,ay-pground)
+    if hidden then
+      -- A hidden actor retains its place in the pair without painting pixels.
+    elseif pimage then
+      paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw,ay-groundY)end)
+      paint(partner,ptrueColor,function()drawPic(g,pimage,pquad,ax,ay-pground)end)
+    elseif raster then
+      local Bands=V.require('NativeGen2PictureBands')
+      local View=require('src.ui.gen2.BattleAnimView')
+      local runs=Bands.runs(View,bg,back,lifted)
+      local clipX=Bands.viewport(back,nativeWidth,nativeScale,dollWidth or iw,pictureScale,ax,poseSlide,doll and(back and 32 or 112))
+      Bands.drawRaster(g,cw,ch,runs,back,nativeHeight,nativeScale,pictureHeight,pictureScale,pictureGround,ay,function(dx,dy,byte)
+        paint(mon,colored,function()body(slidePixels,dx,dy)end,byte)
+      end,clipX)
+      if band then
+        paint(mon,colored,function()
+          Bands.draw(g,cw,ch,band,slidePixels,function(slide,isLifted)
+            -- The original final lifted pass bypasses all LCD shifts. Only
+            -- draw that band's callback; the base rows were handled above.
+            if isLifted then body(doll and slidePixels or 0)end
+          end)
+        end)
+      end
+    elseif band then
+      paint(mon,colored,function()
+        V.require('NativeGen2PictureBands').draw(g,cw,ch,band,slidePixels,function(slide)
+          body(doll and slidePixels or slide)
+        end)
+      end)
+    elseif doll then
+      -- The native 16px doll keeps its own facing and indexed species colors;
+      -- the actor card retains the mon's bounds, so it is not inflated to a mon.
+      paint(mon,false,function()drawPic(g,doll,dollQuad,ax-dollWidth/2+slidePixels,ay-dollGround)end)
     else
-      drawPic(g,image,quad,ax-iw/2,ay-groundY)
+      -- Match native sinking rows while clipping at the world's fixed ground
+      -- line. A fully sunk transparent card still owns the native flat slot.
+      if poseSink>0 then g.setScissor(0,0,cw,ay)end
+      paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw*poseScale/2+slidePixels,ay-groundY*poseScale+sinkPixels,poseScale)end)
     end
   end)
   g.setCanvas(prev)
+  if poseSink>0 then
+    if sx then g.setScissor(sx,sy,sw,sh)else g.setScissor()end
+  end
   g.setColor(pr, pg, pb, pa)
   if not okDraw then return nil end
 
@@ -203,6 +365,7 @@ end
 
 -- The same shape OverworldBattle.textures returns, so BattleScene cannot tell
 -- which generation built it.
+Gen2Staged.sideTexture=sideTexture
 function Gen2Staged.textures(game)
   if not Generation.isGen2() then return nil end
   Gen2Staged.drawn = {}
@@ -210,6 +373,11 @@ function Gen2Staged.textures(game)
   out.enemy = Gen2Staged.sideTexture(game, "enemy")
   out.player = Gen2Staged.sideTexture(game, "player")
   if not (out.enemy or out.player) then return nil end
+  local screen=screenFor(game)
+  if screen and type(screen.nativeSceneLayout)=='function' then
+    local ok,layout=pcall(screen.nativeSceneLayout,screen)
+    if ok and type(layout)=='string' then out.sceneLayout=layout end
+  end
   return out
 end
 

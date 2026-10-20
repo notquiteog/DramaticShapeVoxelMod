@@ -9,7 +9,7 @@ local def={midLayout=layout};local ts={outdoor={imageData={}}}
 local regions={{def=def,x=0,y=0,w=20,h=20}}
 local env=setmetatable({Map={currentDef=function()return def end,refreshWorld=function()end},
  Player={px=80,py=80},Distance={radius=function()return 128 end},
- Boundary={regions=function()return regions end},SceneCache=K,Tiles={_pairs=ts}}, {__index=_G})
+ Boundary={regions=function()return regions end},SceneCache=K,Lookahead=dofile('lib/SceneLookahead.lua'),Tiles={_pairs=ts}}, {__index=_G})
 local request=setfenv(assert(loadstring(requestSource..'\nreturn request')),env)()
 local B=dofile('lib/BuildBudget.lua')
 local Stream=assert(loadfile('lib/SceneStream.lua'))({require=function()return B end})

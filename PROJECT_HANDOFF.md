@@ -18,6 +18,250 @@ all partners optional. No whole-region or generic FPS claim. Regional queue
 still84/125 complete,41 queued. Primary concurrent GSC and partner unpublished
 changes are preserved. No unrelated partner production edits are included.
 
+
+# GSC native last-wild capture — 2026-10-17
+
+Verified native last-wild identity now enables the shared capture prop/audio
+without selecting or rearranging companion slots; replaced runners clean up.
+G/S/C NVIDIA0.3.89 original-script checks pass324/324 frames and1/1 RNG calls,
+plus real partner promotion, one Master Ball consumed and one partner stored.
+Six final intake captures inspected. Shared335/0/58,32 capture-audio and549
+option checks pass. Evidence: `docs/NATIVE_GSC_PAIR_CAPTURE_2026-10-17.md`.
+Actor-targeted GSC move/release and native ownerless particles remain separate;
+full parity is not complete.
+
+# GBA native last-wild capture — 2026-10-17
+
+Detached native catch views now bind to their exact live opponent ID1/3; the
+prop, intake tint and cleanup follow that owner without changing native logic.
+All5 editions pass221/221 OFF/ON frames for both targets and a real public
+Master Ball command consuming one item/storing the partner once. NVIDIA0.3.89
+native captures inspected; shared335/0/58 and549 option checks pass. Evidence:
+`docs/NATIVE_GBA_PAIR_CAPTURE_2026-10-17.md`. GSC last-wild capture and actor-targeted
+animation/release remain; full parity is not complete.
+
+# GBA native simultaneous releases — 2026-10-17
+
+Native event IDs0–3 now own independent shells, Q57 volumes and exact-card subject
+materials, with owner-specific ball projection and independent cleanup/fallback.
+All5 GBA native NVIDIA0.3.89 runs pass36/36frames,4concurrent owners,44subject
+observations, unchanged identity/HP and OFF. Camera follow-up fixes HUD overlap;
+10final paired captures inspected with all four bodies clear. Shared335/0/58
+suite plus final failure-branch focused checks pass. Evidence:
+`docs/NATIVE_GBA_MULTI_RELEASE_2026-10-17.md`. Native particle-pool replacement,
+GSC move-owner mapping and multi-actor capture remain; no full parity claim.
+
+# GSC independent paired picture state — 2026-10-17
+
+Paired world cards now compose native slot-specific substitutes, hidden bodies
+and faint crops outside move scripts. G/S/C NVIDIA0.3.89 fixtures pass14/14
+native faint frames for both partners, identity/HP preservation and restored
+HUDs;21 captures inspected. Shared suite334pass/0fail/58explicit fixture skips,
+549options and202Gen2SDK checks pass. Evidence:
+`docs/NATIVE_GSC_PAIR_STATES_2026-10-17.md`. Actor-targeted move scripts and
+multi-actor capture/release remain; no full parity claim.
+
+# Native doubles camera framing — 2026-10-17
+
+GSC native pair framing now uses the optional public layout descriptor from
+Doubles instead of generic modern lens widening. All four actors remain visible
+around the unchanged native HUD/command panel. Gold/Silver/Crystal all-seven-mod
+native0.3.89 captures inspected; pair projection, staged suite and1173 SDK checks
+pass. Other providers/external cameras retain their framing. Evidence and user
+orbit limits: `docs/CAMERA_POLISH_2026-10-17.md`.
+
+# GSC queued partner identity — 2026-10-17
+
+Paired cards now use native activeMon(slot2) identity and return the whole side
+to native drawing if either partner cannot be read/rendered. Focused tests and
+actual G/S/C all-seven-mod fixtures pass;6captures inspected. Native HUD obscures
+much of the opposing pair at this framing, handed to camera worker; no visual
+full-parity claim. Evidence: `docs/NATIVE_GSC_PAIR_IDENTITY_2026-10-17.md`.
+Animated doubles and multi-actor capture/release remain.
+
+# GSC combined faint/LCD cards — 2026-10-17
+
+Original faint progress now composes inside lifted-row/LCD clips, preserving
+fixed world grounding and graphics cleanup. G/S/C0.3.89 native overlap fixtures
+pass83/83 and118/118 original script frames on both invoked sides;264crop
+observations per edition,12captures inspected. Explicit presentation overlap,
+not a gameplay KO claim. Focused tests,549options,202SDK pass. Evidence:
+`docs/NATIVE_GSC_FAINT_BANDS_2026-10-17.md`. Animated doubles/per-actor effects
+remain. Prior shared332/0/58 evidence predates this final crop batch.
+
+# GBA native shared release material — 2026-10-17
+
+Original single-actor send-out scale now drives shared Q57 volume/subject
+material, preserving the native card transforms and reveal clock. All5 GBA
+NVIDIA0.3.89 fixtures pass36/36frames, actual volume/subject draws, identity,
+settled native fade and OFF cleanup;15captures inspected. Native ball particles
+remain because their public list has no actor/event ownership. Full provider
+model deformation and multi-actor effects remain. Evidence:
+`docs/NATIVE_GBA_RELEASE_2026-10-17.md`. One combined full suite passes332/0/58
+external-fixture skips, including current root and camera commits. No release/version change.
+
+# Camera polish — 2026-10-17
+
+Gen3 orbit now uses actor eye/support anchors, real pitch/boom geometry and
+continuous foreground scenery cutaway; the Route104→Petalburg canopy-collapse
+regression is visually resolved. Shared focus/disconnect guards, consistent
+Gen3 stick/mouse tuning and public touch drag/pinch preserve native menus and
+look during dialogue. Native0.3.89 checks cover all8 camera modes across11
+editions plus5 actual GBA connections and battle/menu/return. Ten focused suites
+pass; physical Android input and exhaustive map-angle review remain unverified.
+Evidence/limits: `docs/CAMERA_POLISH_2026-10-17.md`. No version/release changes.
+
+# GSC native Legendary release — 2026-10-17
+
+Single-actor original send-out events now drive shared Q57 shell/energy, with
+native reveal/cry/shiny clocks and B cancellation retained. Original particles
+fall back until geometry succeeds; shiny stars and provider precedence remain.
+G/S/C NVIDIA0.3.89 scripts pass108/108frames, cancellation, OFF and identity;
+9 captures inspected. Focused tests,549 option checks,202 SDK checks pass.
+Evidence/limits: `docs/NATIVE_GSC_RELEASE_2026-10-17.md`. GBA full release,
+multi-actor effects and combined faint/LCD remain; no full parity claim.
+
+# GSC substitute/LCD combinations — 2026-10-17
+
+Native16px substitute dolls now compose with lifted rows/LCD scroll, retaining
+their fixed source coordinates and distinct lifted-pass slide. G/S/C NVIDIA
+0.3.89 original-script checks pass unchanged83/118-frame timing and identity;
+12 captures inspected. Focused tests,549 option checks and202 SDK checks pass.
+Evidence and native HUD obstruction limit:
+`docs/NATIVE_GSC_SUBSTITUTE_EFFECTS_2026-10-17.md`. Faint/raster combinations,
+animated doubles and full Legendary release remain; no full parity claim.
+
+# GLES renderer and construction follow-up — 2026-10-17
+
+Fixed two reproduced GLES scene failures: integer/float occlusion expression and
+shared uniform precision mismatch. Real desktop/GLES shader probes pass; native
+Red/Crystal/Emerald 3D scenes and Emerald connections pass on GLES. This is not
+physical Android certification. Details: `docs/GLES_SCENE_FIX_2026-10-17.md`.
+Flat elevated caps, build-local shrub hulls and furniture recipe filtering reduce
+Gen3 construction work; four native connections pass. Evidence and remaining
+spikes: `docs/SCENE_LOAD_WORK_2026-10-17.md`. Camera owner is resolving the new
+Emerald canopy-obstruction view exposed by the GLES connection fixture.
+A further per-cell terrain support-profile cache passes5043 exact differential
+samples and a native FireRed connection/six reversals. Height CPU cost is roughly
+halved in that instrumented run; frame spikes remain. No release bump; parity
+and camera work remain separate.
+
+# Seven-mod platform/source audit — 2026-10-17
+
+All7 official manifests validate/all11 targets;650 Lua units plus assembled
+Sky Ride source parse. Focused platform/API/input checks found and fixed Wilds
+blocked image loading (separate repo70d2cfd7). Actual FireRed all7-loaded NVIDIA
+fixture verifies selected HGSS/swimmer sheets, native walking and2D fallback;
+5 captures inspected. Shared voxel suite:328pass/1camera failure/58skips, camera
+owner corrected graphics guard/menu stick ownership and targeted rerun passes;
+combined329pass/0unresolved/58skips, not a second full rerun. Evidence and device
+limits: `docs/SEVEN_MOD_PLATFORM_AUDIT_2026-10-17.md`. Android/iOS/Windows runtime
+remains unverified here; root owns renderer GLES work, camera worker owns touch.
+
+# Native art resource failure fallback — 2026-10-17
+
+Optional battle picture fitting and trainer sheets now restore graphics/release
+partial resources and use native readers if canvas allocation/drawing fails.
+Failure keys are cached until unload to avoid retry storms. Focused resource,
+24 identity and existing scale checks pass. Evidence/platform limits:
+`docs/NATIVE_ART_RESOURCE_FALLBACK_2026-10-17.md`. This is not Android runtime
+verification or a claim to fix the reported loaded-but-2D renderer symptom.
+
+# Native GSC lifted rows and LCD effects — 2026-10-17
+
+Native one/two-row bands, SCX/SCY, LCD scanlines and BGP palettes now compose
+into world actor cards using public engine readers. Native timing, ownership
+and OFF behavior are retained; shaderless BGP keeps native fallback. G/S/C
+0.3.89 NVIDIA fixtures pass both sides of ACID_ARMOR/AGILITY with unchanged
+83/118-frame scripts;24 captures inspected. Focused checks,549 option consumers
+and202/202 engine Gen2 SDK pass. Prior broad324/0/58 predates this batch.
+Evidence/limits: `docs/NATIVE_GSC_PICTURE_EFFECTS_2026-10-17.md`; current remaining
+consumer audit: `docs/PARITY_AUDIT_2026-10-17.md`. Combined substitute/faint plus
+raster/lifted effects, animated doubles and full Legendary release remain.
+Linux verification is not Android/iOS/Windows certification. No version bump.
+
+# Loading/transition optimization checkpoint — 2026-10-17
+
+Shared large mesh uploads are cooperative/cancellation-safe; Gen 1/2 terrain
+publishes before optional cache encoding. Gen 3 lazily loads optional tree art,
+shares bounded sea-rock recipes and scene-owned civic materials, reuses boundary
+samples and amortizes terrain windows. Models, collision and native UI unchanged.
+324 suites pass, 0 fail, 58 external-fixture skips; eleven native NVIDIA 0.3.89
+checks pass. Exact GPU vertex readback verified. Evidence, timings and rejected
+experiments: `docs/SCENE_LOAD_WORK_2026-10-17.md`. Transition spikes remain; neither
+165 FPS across all games nor full feature parity is claimed. Other model tests
+contend for CPU, so final timings are samples rather than controlled guarantees.
+Root source-only checkpoint; no new release/version change yet. Parity worker
+continues its separate public-native effect adapter work.
+
+# Native GSC substitute/faint world presentation — 2026-10-17
+
+Original substitute dolls and fainting rows now stay in the world card with
+native identity, size/palette, timing and original OFF fallback. G/S/C actual
+attack/KO fixtures pass12 faint frames and72 doll reads each;12 captures inspected.
+Focused tests plus202/202 Gen2 engine SDK checks pass. Evidence and remaining
+lifted-row/doubles/release limits: `docs/NATIVE_GSC_WORLD_COMPOSITES_2026-10-17.md`.
+The current parity audit is updated; no full-completion claim. Source-only after
+91ef44f, no model/release/version changes.
+
+# Native GSC picture state and current parity audit — 2026-10-17
+
+World cards now follow native hidden/airborne/resize/slide state, species/shiny
+palettes/shades and original Crystal frame timing. Supported 3D capture and
+independent providers retain ownership. G/S/C native NVIDIA fixtures pass;
+15 captures inspected. Focused staged/capture/audio tests pass. Remaining
+composite effects and full release choreography stay explicit:
+`docs/NATIVE_GSC_STAGED_EFFECTS_2026-10-17.md`.
+
+`docs/PARITY_AUDIT_2026-10-17.md` reconciles all123 keys across11 editions,
+separates obsolete historical gaps, real remaining adapters, external assets
+and model/cache ownership. No blanket full-parity or performance claim.
+Source-only after0afc074; no release/version/model changes.
+
+# Native GBA send-out shells — 2026-10-17
+
+Existing five supported ball models follow native projected throws/lid frames in
+lit/shadow passes, with live size and unchanged native clocks/particles. All five
+NVIDIA0.3.89 fixtures pass actual switches/OFF;15 captures inspected. Focused27
+and world-battle tests pass. Full release energy/subject materials, doubles and
+unsupported ball models remain incomplete. Evidence:
+`docs/NATIVE_SENDOUT_SHELLS_2026-10-17.md`. Source-only after ef357de.
+GSC native palette/animation-state parity is being handled in a separate batch.
+
+# Native GBA specialty/ghost capture audio — 2026-10-17
+
+All seven specialty balls and ghost-dodge throws consume optional native capture
+audio without claiming their native geometry. Five0.3.89 editions pass120 original
+sequencer runs with unchanged clocks, exact failed/OFF fallback and reset cleanup.
+Focused capture/audio suites and inventory549 pass. Explicit playback sink only:
+no audible-asset/full-turn/visual acceptance claim. Evidence:
+`docs/NATIVE_CAPTURE_AUDIO_2026-10-17.md`. Oak source audit also distinguishes its
+supported Pokemon wipe from native trainer rotation; custom rotation is a fallback.
+Source-only after d537a44; parity work continues on native send-out presentation.
+
+# Native Gen2 specialty capture audio — 2026-10-17
+
+Original specialty/Park/blocked throw runners now consume optional sound cues,
+with successful-playback-only suppression and exclusive 3D adapter ownership.
+Native clocks/RNG/UI remain unchanged. G/S/C original0.3.89 script fixtures pass
+36 cases;29 focused checks plus existing capture/send-out tests pass. Recordings
+are absent: playback sink verifies routing/fallback, not audible quality or full
+item/contest turns. Evidence and exact limits: `docs/NATIVE_CAPTURE_AUDIO_2026-10-17.md`.
+Source-only; no model/version/release changes. Other parity work continues.
+
+# Native Gen3 backdrop terrain routing — 2026-10-17
+
+Public native terrain now routes outdoor water/pond/mountain encounters to
+existing neutral plates, preserves Cinnabar/Safari identity, and leaves missing
+underwater/desert/indoor art in the world. LG aliases normalize with FR names;
+official LeafGreen map definitions remain FR-canonical. No native battle edits.
+
+Focused59 and inventory549 pass. Official0.3.89 five-edition API fixtures pass
+27 native map/terrain cases plus missing-art/OFF/WHITE and state preservation.
+Illustration files are optional and absent here, so no rendered-art claim.
+Evidence: `docs/NATIVE_BACKDROP_ROUTING_2026-10-17.md`. Source-only after1.44.1.
+Parity work continues on supported consumers; provider/art constraints remain
+explicit. No model/release edits.
 # Bounded trees, original hedges and route gates — 2026-10-17
 
 1.49.0 / mesh106 fits recognized native tree crowns to blocked ground across

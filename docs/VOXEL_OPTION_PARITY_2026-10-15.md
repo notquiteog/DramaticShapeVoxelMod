@@ -1,3 +1,6 @@
+> Historical checkpoint: current consumer gaps and resolved items are reconciled in
+> [the2026-10-17 audit](PARITY_AUDIT_2026-10-17.md). Counts below describe this older batch.
+
 # Voxel-only native options and interface follow-up — 2026-10-15
 
 This audit covers Battle Art across Red/Blue/Yellow, Gold/Silver/Crystal and

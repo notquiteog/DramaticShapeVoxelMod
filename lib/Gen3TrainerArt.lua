@@ -43,7 +43,10 @@ function M.install(active,fit)
     local info=st.trainerId and Trainers.info(st.trainerId)
     local key=M.key(st,info);local C=crystal();local image
     if C and C.active()then image=C.opponent(key)else image=key and Art.trainerImage(key)end
-    if image then return tagged({image=fit(image,64),w=64,h=64},5)end
+    if image then
+     local fitted=fit(image,64)
+     if fitted then return tagged({image=fitted,w=64,h=64},5)end
+    end
    end
   end
   return tagged(front(id,...),5)
@@ -62,21 +65,24 @@ function M.install(active,fit)
      frames[i]=image;key=key..tostring(image)..':'
      local w,h=image:getDimensions();width=math.max(width,w);height=math.max(height,h)
     end
-    if not sheets[key]then
-     local g=love.graphics;local c=g.newCanvas(64,320)
+    if sheets[key]==nil then
+     local g=love.graphics;local allocated,c=pcall(g.newCanvas,64,320)
+     if not allocated or not c then sheets[key]=false;return tagged(back(gender,...),4)end
      g.push('all')
-     local ok,err=pcall(function()
+     local ok=pcall(function()
       g.setCanvas(c);g.origin();g.setShader();g.setScissor();g.setDepthMode();g.setBlendMode('alpha')
       g.clear(0,0,0,0);g.setColor(1,1,1,1)
       local scale=math.min(64/width,64/height)
       for i,image in ipairs(frames)do local w,h=image:getDimensions()
        g.draw(image,(64-w*scale)/2,i*64-h*scale,0,scale,scale)
       end
+      c:setFilter('nearest','nearest')
      end)
      g.pop()
-     if not ok then c:release();error(err,0)end
-     c:setFilter('nearest','nearest');sheets[key]=c
+     if not ok then c:release();sheets[key]=false;return tagged(back(gender,...),4)end
+     sheets[key]=c
     end
+    if not sheets[key]then return tagged(back(gender,...),4)end
     return tagged({image=sheets[key],w=64,h=320},4)
    end
   end
@@ -84,7 +90,7 @@ function M.install(active,fit)
  end
  return function()
   Trainer.front,Trainer.back=front,back
-  for _,image in pairs(sheets)do image:release()end
+  for _,image in pairs(sheets)do if image then image:release()end end
  end
 end
 return M

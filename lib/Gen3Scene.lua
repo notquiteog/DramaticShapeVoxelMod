@@ -72,8 +72,10 @@ local function swatch(ts,u,v)
  return {{u,v},{u,v},{u,v},{u,v}}
 end
 local function materials()
- if not foliage then
+ if not TreeStyle.original() and not foliage then
   foliage=V.require('TreeIllustrations').image(V)
+ end
+ if not bark then
   local data=love.image.newImageData(2,2)
   for y=0,1 do for x=0,1 do data:setPixel(x,y,.29+x*.03,.18+y*.03,.10,1) end end
   bark=love.graphics.newImage(data);data:release()
@@ -123,7 +125,9 @@ local function releaseGeometry(cache)
  if cache.prizeWalls then cache.prizeWalls.mesh:release();cache.prizeWalls.image:release()end
  if cache.rocketWalls then cache.rocketWalls.mesh:release();cache.rocketWalls.image:release()end
  for _,part in ipairs(cache.civics or {})do
-  if part.mesh then part.mesh:release()end;if part.image then part.image:release()end;if part.glow then part.glow:release()end
+  if part.mesh then part.mesh:release()end
+  if part.material then V.require('Gen3CivicMaterials').release(part.material)
+  else if part.image then part.image:release()end;if part.glow then part.glow:release()end end
  end
  if cache.lightField then cache.lightField.image:release()end
  for _,part in ipairs(cache.lamps or{})do part.mesh:release()end
@@ -138,14 +142,13 @@ local function request(game,cam)
  local replay=cam and cam.replay
  local def=replay and replay.def or Map.currentDef();if not def or not def.midLayout then return false end
  local px,pz=replay and replay.frame.x or Player.px or 0,replay and replay.frame.y or Player.py or 0
- local bx,bz=math.floor(px/96)*6,math.floor(pz/96)*6
  local budget=Distance.radius()
  local radius=budget and math.ceil(budget/16)or 64
  -- FULL keeps at least FAR's connected-map frontier, then draws each
  -- loaded rectangle completely rather than shrinking back to two hops.
  if not replay then Map.refreshWorld(game,radius*2+12,radius*2+12,Map.current)end
  local regions=replay and {{def=def,x=0,y=0,w=def.midLayout.width,h=def.midLayout.height}} or Boundary.regions(def,Map.world)
- local x0,z0,x1,z1=bx-radius,bz-radius,bx+radius+6,bz+radius+6
+ local x0,z0,x1,z1=Lookahead.window(px,pz,radius)
  if not budget then x0,z0,x1,z1=BoundarySelect.bounds(regions,16)end
  local key,context=SceneCache.keys(regions,x0,z0,x1,z1,Tiles._pairs,cam)
  return {game=game,cam=cam,replay=replay,def=def,regions=regions,key=key,mapId=Map.current,
@@ -168,6 +171,8 @@ local function build(req,cache,previous)
  local cells,groups,signature={}, {}, {replay and replay.scene.map or req.mapId,x0,z0,x1,z1}
  M.fillCounts={forest=0,water=0,mountain=0,ground=0}
  local pairInfo={}
+ local boundarySample=Boundary.sampler()
+ local shrubHulls={} -- build-local immutable recipes; each placement owns vertices
  local classify=V.require('SceneShapeCache').new(Shapes.of)
  local behaviors=require('src.core.game3.scripting.interaction_scripts').behaviors
  local function addCell(cx,cy,nativeOnly)
@@ -183,7 +188,7 @@ local function build(req,cache,previous)
   if nativeOnly and isVoid then return end
   local fillShape,biome
   if isVoid and Pairs.outdoor(def) then
-   local m,p,shape,kind=Boundary.resolve(regions,cx,cy)
+   local m,p,shape,kind=Boundary.resolve(regions,cx,cy,boundarySample)
    if m then mid,pair,fillShape,biome=m,p,shape,kind;M.fillCounts[kind]=M.fillCounts[kind]+1 end
   end
   if mid and pair and not (isVoid and not Pairs.outdoor(def)) then
@@ -554,7 +559,7 @@ local function build(req,cache,previous)
   elseif shape.kind=='sign' or shape.kind=='fence' or shape.kind=='ledge' or shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    local plant=shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass'
-   if not c.stageHidden then Outdoor.append(c,function(vertices,tex,shade,anchor)quad(plant and b.pv or b.v,plant and b.pi or b.i,vertices,tex,shade,anchor)end,uvFor)end
+   if not c.stageHidden then Outdoor.append(c,function(vertices,tex,shade,anchor)quad(plant and b.pv or b.v,plant and b.pi or b.i,vertices,tex,shade,anchor)end,uvFor,shrubHulls)end
   else
    plane(b.v,b.i,x,z,uv)
   end
@@ -661,7 +666,9 @@ local function build(req,cache,previous)
   Elevation.lift(vertices,0,g.groundHeight or 0)
   local part={placement=g};cache.civics[#cache.civics+1]=part
   part.mesh=assert(R.newMesh(vertices,indices))
-  local read;part.image,part.glow,read=Civic.material(g)
+  part.material=V.require('Gen3CivicMaterials').acquire(g)
+  part.image,part.glow=part.material.image,part.material.glow
+  local read=part.material.read
   part.lights=V.require('BuildingLights').collect(vertices,read,g.width*32+4,g.depth*16)
   if g.kind=='center' or g.kind=='mart' then
    part.lights={}
@@ -760,8 +767,7 @@ local function prefetch(req)
   future={source=req.def,world=world,id=entry.id,radius=req.radius,neighbors=neighbors,direct=direct,
    regions=Boundary.regions(entry.def,neighbors)}
  end
- local bx,bz=math.floor(entry.px/96)*6,math.floor(entry.pz/96)*6
- local x0,z0,x1,z1=bx-req.radius,bz-req.radius,bx+req.radius+6,bz+req.radius+6
+ local x0,z0,x1,z1=Lookahead.window(entry.px,entry.pz,req.radius)
  if not req.budget then x0,z0,x1,z1=BoundarySelect.bounds(future.regions,16)end
  local key,context=futureKeys.keys(future.regions,x0,z0,x1,z1,Tiles._pairs)
  -- A stable destination keeps its original coroutine snapshot. Nothing here
@@ -932,7 +938,7 @@ local function actors(game,cam,draw)
  if cam.replay then
   local frame=cam.replay.frame
   for _,a in ipairs(frame.actors or {})do
-   if a.graphicsId and not (a.id==255 and cam.level==6) then
+   if a.graphicsId and(a.id~=255 or draw==Shadow.draw or V.require('Gen3CameraRig').showsPlayer(cam))then
     local support,offset=Furniture.support(cache.cells,a.graphicsId,a.x,a.y,(a.walkPhase or 0)==0)
     local z=a.id==255 and frame.y or a.y
     actor(a.graphicsId,a.x,z,a.facing,a.walkPhase,a.stepFlip,
@@ -977,7 +983,7 @@ local function actors(game,cam,draw)
    end
   end
  end
- if cam.level~=6 and Player.isVisible() then
+ if (draw==Shadow.draw or V.require('Gen3CameraRig').showsPlayer(cam))and Player.isVisible() then
   actor(Sprites.playerGraphicsId(game),(Player.px or 0)+(Player.spriteXOffset or 0),Player.py or 0,
    Player.facing,Player.walkPhase(),Player.drawFlip(),
    {elevation=Player.currentElevation,fieldMove=(Player.fieldMoveAnim or 0)>0,lift=SpriteAnchor.playerLift(Player)},cam,draw)
@@ -1092,34 +1098,32 @@ function M.draw(game,vw,vh,cam)
  S.level=cam.level;S.angle=math.rad(S.ANGLES_DEG[cam.level+1] or 35)
  R.canopyFacing=cam.battle or cam.level>=6
  if cam.level>=6 then
-  local dist=cam.level==6 and 0 or 75*(cam.boomZoom or 1)
-  local dx,dz=math.sin(cam.yaw),-math.cos(cam.yaw)
   local ground=support
-  local ey=48+ground
-  if cam.level==6 then
-   ey=ground+SpriteAnchor.eyeHeight(Sprites.getDraw(Sprites.playerGraphicsId(game)))
-     +SpriteAnchor.playerLift(Player)
-  end
+  local eyeHeight=SpriteAnchor.eyeHeight(Sprites.getDraw(Sprites.playerGraphicsId(game)))
+  local lift=SpriteAnchor.playerLift(Player)
   local exports=game and game.mods and game.mods.exports
   local ride=exports and exports.DRAMATIC_SKY_RIDE
   if not cam.battle and not cam.replay and ride and type(ride.currentAltitude)=='function' then
    local ok,height=pcall(ride.currentAltitude)
-   if ok and type(height)=='number' then ey=ey+math.max(0,math.min(512,height))end
+   if ok and type(height)=='number' then lift=lift+math.max(0,math.min(512,height))end
   end
-  local focusDistance=cam.level==6 and 24 or 70
-  R.camera={eye={cx-dx*dist,ey,cz-dz*dist},focus={cx+dx*focusDistance,ey-focusDistance*math.tan(cam.pitch),cz+dz*focusDistance},fov=math.rad(62),curve=cam.level==6 and 0 or nil}
+  local cameraRig=V.require('Gen3CameraRig')
+  local solid=cam.level==7 and not cam.battle and cameraRig.obstacles(Map,def,M.groundAt,
+    require('src.core.game3.collision'),indoor)or nil
+  R.camera=cameraRig.place(cam,cx,cz,ground,eyeHeight,lift,solid)
   if cam.level==6 and not cam.battle and not cam.replay then
    local ox,oy,oz=V.require('KfpMotion').sample({px=cx,py=cz,
     lift=math.max(0,SpriteAnchor.playerLift(Player))},Map.current,math.pi-cam.yaw,love.timer.getTime())
    for _,p in ipairs({R.camera.eye,R.camera.focus})do p[1]=p[1]+ox;p[2]=p[2]+oy;p[3]=p[3]+oz end
   else V.require('KfpMotion').reset()end
   if cam.battle then
-   R.camera=V.require('BattleCam').rig(cam.arena,ground)
+   local battleCam=V.require('BattleCam')
+   R.camera=battleCam.rig(cam.sceneLayout and battleCam.forLayout(cam.arena,cam.sceneLayout)or cam.arena,ground)
    local c,s=math.cos(cam.yaw),math.sin(cam.yaw)
    for _,p in ipairs({R.camera.eye,R.camera.focus})do
     local x,z=p[1]-cx,p[3]-cz;p[1],p[3]=cx+x*c-z*s,cz+x*s+z*c
    end
-   if cam.actors and cam.actors.st.double then R.camera.fov=2*math.atan(math.tan(R.camera.fov/2)*2.3)end
+   if cam.actors and cam.actors.st.double and cam.sceneLayout~='gen3-native-pair'then R.camera.fov=2*math.atan(math.tan(R.camera.fov/2)*2.3)end
   end
  else
   V.require('KfpMotion').reset()
@@ -1178,6 +1182,11 @@ function M.draw(game,vw,vh,cam)
   end
   R.battleOcclusion({player=row(0),enemy=row(1)},p[0][2],
    cam.actors.st.double and {player={contentWidth=300},enemy={contentWidth=300}}or nil)
+ elseif cam.level==7 and not cam.battle then
+  -- The Gen 3 boom no longer retracts against blocked cells (Release 1.51.1),
+  -- so there is nothing to reveal: do not clear foreground buildings and
+  -- objects across the frame. Leave them to honest depth occlusion.
+  R.battleOcclusion(nil)
  else R.battleOcclusion(nil)end
  if plate then
   if plate.image then R.backdrop(plate.image,plate.offset)end
@@ -1192,6 +1201,7 @@ function M.draw(game,vw,vh,cam)
   R.battleOcclusion(nil)
   if cam.actors then cam.actors:draw()end
  else
+  R.battleOcclusion(nil)
   local options=cache.waterOptions
   options.underColor,options.underDepth=nil,nil
   if #water>0 and cache.wetRockCells>0 and V.require('Water').level()>=2 then
@@ -1278,8 +1288,9 @@ function M.performanceSnapshot()
   water={wetRockCells=cache.wetRockCells or 0,draws=#(cache.waterDraws or{}),levels=#(cache.waterLevels or{})},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
-function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();future=nil;stream:clear();cache={}end
+function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
 function M.release()
+ V.require('Gen3SeaRocks').clearGeometry()
  V.require('Gen3Hedges').release()
  V.require("NativeLegendaryTower").clear()
  V.require("NativeLegendarySapling").clear()
