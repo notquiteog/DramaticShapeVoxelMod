@@ -55,7 +55,30 @@ projection/failure, paired picture and native layout suites pass.
 
 This covers ordinary queued moves and their chained after-animation, including
 both friendly-target directions. It is not exhaustive coverage of every move.
-Standalone secondary damage-event naming still needs an exact target audit.
-Native identity/form proxies that cannot prove the original queued mon retain
-fallback. Optional model deformation, paired Legendary Q57 release and GBA's
+Standalone secondary damage-event naming and proven native display copies are
+covered by the follow-up checks below. Unproven identity proxies retain fallback. Optional model deformation, paired Legendary Q57 release and GBA's
 anonymous native particle pool remain separate work. No full parity claim.
+
+
+## Secondary damage and Transform follow-up
+
+The companion now gives standalone damage events an explicit logical hit script
+and actual source slot while preserving the real HP target. Explicit `animSide`
+is rewritten alongside the event side. Native custom effects, disabled animation
+and the duplicate-hit latch remain authoritative. G/S/C original damage-event
+replays pass OFF/ON 49/49 frames toward the enemy partner, 42/42 toward the player
+partner, and 49/49 toward a friendly lead. All four cards, exact ownership,
+identity and restoration pass; 21 final captures were inspected (`damage-0391`).
+
+For Transform and identity events, the companion records the display copy created
+by the original public `push(event)` method. That establishes exact provenance
+without inspecting metatables/upvalues or matching species. The queued old form
+keeps its native script; the actual mon resumes after the original identity event.
+Arbitrary lookalikes and replacements retain fallback. G/S/C original Transform
+replays pass 116/116 OFF/ON frames with all four cards, the old form during its
+script, the new form afterward and unchanged mon identity. Nine final captures
+were inspected (`transform-0391`). These remain bounded presentation checks.
+
+The companion core now passes 89 contracts; move/release/native-layout focused
+suites pass. The earlier 346/0/58 combined suite precedes these companion-only
+follow-ups; it is not relabeled as a fresh broad run.

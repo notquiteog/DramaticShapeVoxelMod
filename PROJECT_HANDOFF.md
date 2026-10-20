@@ -1,3 +1,15 @@
+# GSC secondary damage and form ownership — 2026-10-20
+
+Doubles now maps standalone damage scripts to their actual target/source slots
+and tracks display copies created by native Transform/identity queue events.
+Battle Art consumes the existing public owner descriptor, retaining four cards,
+native clocks and HUD ownership. G/S/C official 0.3.91 NVIDIA damage replays pass
+49/49, 42/42 and 49/49 OFF/ON frames; Transform passes 116/116. Thirty final
+captures inspected, 89 core contracts and focused companion tests pass.
+Evidence: `docs/NATIVE_GSC_MOVE_OWNERS_2026-10-20.md`.
+Paired Legendary Q57, unproven external identity proxies, optional model deformation
+and ownerless GBA particle replacement remain separate; no full parity claim.
+
 # GSC paired moves — 2026-10-20
 
 Exact public move/after-animation ownership now drives all four world cards,
