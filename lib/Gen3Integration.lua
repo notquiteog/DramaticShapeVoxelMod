@@ -58,6 +58,7 @@ function M.install()
  local uninstallCapture=V.require("Gen3Capture").install()
  local ballAudio=V.require("NativeGen3BallAudio")
  local uninstallBallAudio=ballAudio.install()
+ local uninstallReleaseParticles=V.require('NativeGen3ReleaseParticles').install()
  V.require('KantoLifeAudio').install(mod)
  V.require('NativeCaveAudio').install(3,function()return M.level~=0 end)
  local draw,present,update=FieldView.draw,Display.present,Player.update
@@ -285,7 +286,7 @@ function M.install()
  mod.hooks:wrap('core.quit_to_launcher',function(next,...)
   nativeWalk.drop(Player,true)
   FieldView.draw,Display.present,Player.update,Player.walkPhase=draw,present,update,walkPhase
-  uninstallShiny();uninstallInterface();uninstallBallAudio();uninstallCapture();uninstallBattle();uninstallRecap();Scene.release();return next(...)
+  uninstallShiny();uninstallInterface();uninstallReleaseParticles();uninstallBallAudio();uninstallCapture();uninstallBattle();uninstallRecap();Scene.release();return next(...)
  end)
  mod.exports.version=mod.version;mod.exports.lib=V
  mod.exports.performance=V.require("PerformanceExport").export(mod.exports.version)

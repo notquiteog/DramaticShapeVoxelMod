@@ -24,6 +24,9 @@ local modules={NativeGen3SendoutShell={draw=function()return false end,clear=fun
  BattleBillboard={mesh=function()return {}end,yawToward=function()return 0 end},
  UiBackplates={spritesUnlit=function()return false end}}
 local V={require=function(k)return assert(modules[k],k)end}
+modules.XDModels={active=function()return false end}
+modules.NativeGen3ReleaseParticles=assert(loadfile('lib/NativeGen3ReleaseParticles.lua'))(V)
+modules.Gen3XDActors={prepare=function()end,draw=function()return false end,clear=function()end}
 modules.Gen3Battle={enabled=function()return false end}
 modules.NativeGen3SendoutShell.owner=function(c)return c.owner end
 modules.NativeGen3Release=assert(loadfile('lib/NativeGen3Release.lua'))(V)
@@ -116,5 +119,20 @@ for _,mode in ipairs({'ui','world','auto'})do
   if native then assert(nextFrame.native[id],'native ally lost attack anchor')end
  end
 end
+placement='auto'
+local particles=modules.NativeGen3ReleaseParticles;local ownerRead=particles.owner
+particles.owner=function()return 3 end
+local releaseFrame=M.new({double=true})
+releaseFrame:capture(function()releaseFrame.inWorld=true;g.draw({},180,40)end)
+particles.owner=ownerRead
+assert(#releaseFrame.cards==1 and releaseFrame.cards[1].releaseOwner==3 and not releaseFrame.byId[3],'particle confused with actor body')
+releaseFrame:prepare({center={100,100},yaw=0},3,{100,30,200})
+local card=releaseFrame.cards[1];local anchor=releaseFrame.native[3];local m=card.model
+local u,v=anchor.x/240-.5,1-anchor.foot/160
+assert(math.abs(m[1]*u+m[2]*v+m[4]-releaseFrame.points[3][1])<1e-6,'release particles lost exact native owner')
+assert(math.abs(m[5]*u+m[6]*v+m[8]-3)<1e-6,'release particles lost native actor ground')
+modules.XDModels.active=function()return true end
+releaseFrame:prepare({center={100,100},yaw=0},3,{100,30,200})
+assert(releaseFrame.cards[1].model[4]~=m[4],'model provider ownership was bypassed')
 M.release()
 print('PASS world battle capture, UI isolation, error unwind, grounded upright cards and retained HUD projection')

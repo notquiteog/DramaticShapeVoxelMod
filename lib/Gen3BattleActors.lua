@@ -67,7 +67,8 @@ function M:record(draw,image,args,primitive)
  if not id and V.require("Gen3Capture").active(self.st)then return end
  local card=id and self.byId[id]
  if not card then
-  card={id=id,tex=self:canvas(),ball=not primitive and image==self.ballImage}
+  card={id=id,tex=self:canvas(),ball=not primitive and image==self.ballImage,
+   releaseOwner=not id and not primitive and V.require('NativeGen3ReleaseParticles').owner(self.st)or nil}
   if card.ball then card.radius=V.require('NativeBattleBallBounds').radius(image,args[1])*M.PIXEL end
   if id then card.ax,card.ay=self:anchor(id,image);self.byId[id]=card
   else card.ax,card.ay=drawOrigin(args)end
@@ -144,7 +145,14 @@ function M:prepare(camera,ground,eye)
   if not c.id then
    local owner=c.ball and self.st.double and V.require('NativeGen3SendoutShell').owner(c)
    local anchor=owner and self.native[owner]
-   if anchor and self.points[owner]then
+   local releasePoint,rx,ry
+   if c.releaseOwner~=nil then
+    local providerOwns=V.require('XDModels').active()or self.st.legendaryModelRelease
+     or(c.releaseOwner%2==0 and V.require('BattleArt').backPlacementSetting:get()=='ui')
+    releasePoint,rx,ry=V.require('NativeGen3ReleaseParticles').point(self,c,providerOwns)
+   end
+   if releasePoint then point,ox,oy=releasePoint,rx,ry
+   elseif anchor and self.points[owner]then
     local p=self.points[owner]
     local coord=require('src.core.game3.battle.anim_coords').coords(self.st,owner)
     point={p[1],p[2]+(c.radius or 6*M.PIXEL)+math.max(0,(coord.y or anchor.y)+24-c.ay)*M.PIXEL,p[3]}
@@ -156,6 +164,7 @@ function M:prepare(camera,ground,eye)
   c.model=Mat.mul(Mat.mul(Mat.mul(Mat.translate(unpack(point)),Mat.rotateY(yaw)),offset),Mat.scale(M.W*M.PIXEL,M.H*M.PIXEL,1))
  end
  for _,c in ipairs(self.cards)do positionCard(c)end
+ V.require('Gen3XDActors').prepare(self)
  V.require('NativeGen3Release').prepare(self)
  -- Native target selection blinks the sprite, not its status card. Project
  -- the hidden actor's same native anchor without drawing a replacement sprite.
@@ -188,7 +197,8 @@ function M:draw(shadow)
    -- erase contact shadows under thin sprites. Sample the same transform
    -- in the lit pass so this does not add self-shadow striping.
    local sun=V.require('ShadowMap').snug(c.model)
-   local replaced=c.ball and V.require('NativeGen3SendoutShell').draw(self.st,c,shadow and V.require('ShadowMap')or nil)
+   local replaced=V.require('Gen3XDActors').draw(self,c,shadow)
+    or(c.ball and V.require('NativeGen3SendoutShell').draw(self.st,c,shadow and V.require('ShadowMap')or nil))
    if not replaced then
     if shadow then draw(mesh,c.tex,sun)
     elseif not V.require('NativeGen3Release').subject(self,c,mesh)then
@@ -202,11 +212,19 @@ function M:draw(shadow)
  if not shadow then R.lighting(true);R.seams(true)end
 end
 function M:head(id,x,y)
+ local e=self.xdActors and self.xdActors[id]
+ if e then
+  local m=e.matrix
+  local metrics=e.instance:metrics()
+  local top=metrics.floor+metrics.height
+  return M.project(self.vp or R.vp,m[2]*top+m[4],m[6]*top+m[8],m[10]*top+m[12])
+ end
  local c=self.byId[id]or(self.hiddenHeads and self.hiddenHeads[id]);if not(c and c.model)then return end
  local m=c.model;local u,v=x/M.W-.5,1-y/M.H
  return M.project(self.vp or R.vp,m[1]*u+m[2]*v+m[4],m[5]*u+m[6]*v+m[8],m[9]*u+m[10]*v+m[12])
 end
 function M.release()
+ V.require('Gen3XDActors').clear()
  V.require('NativeGen3Release').clear()
  V.require('NativeGen3SendoutShell').clear()
  V.require("StandingTrainer").clear()
