@@ -19,6 +19,7 @@ local selected=false
 local front=false
 local flip=true
 local mapped,anchorFailure=false,false
+local actorEffects,releaseCue=false,nil;local effectPaints=0
 love={graphics={
  newCanvas=function(w,h)return {canvas=true,getWidth=function()return w end,getHeight=function()return h end,setFilter=function()end} end,
  getCanvas=function()return target end,setCanvas=function(v)target=v end,
@@ -31,7 +32,8 @@ local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
   back=function(s,slot,fallback)return fallback end,
   anchor=function()if anchorFailure=='error'then error('native pic unavailable')end;return not anchorFailure and{80,100}or nil end,
   begin=function()end}end
- if name=='NativeGen2ActorEffects'then return{owner=function()return false end,begin=function()end}end
+ if name=='NativeGen2ActorEffects'then return{owner=function()return actorEffects end,begin=function()end,paint=function()effectPaints=effectPaints+1 end}end
+ if name=='NativeGen2Sendout'then return{paired=function()return releaseCue end}end
  if name=='BattleSpriteFooting'then return {bounds=function(image,quad)local w,h=image:getDimensions();if quad and quad.getViewport then local x,y;x,y,w,h=quad:getViewport()end;return {0,0,w,h-7}end}end
  if name=='NativeGen2PictureBands'then return assert(loadfile('lib/NativeGen2PictureBands.lua'))()end
  if name=='NativeGen2PairPicture'then return assert(loadfile('lib/NativeGen2PairPicture.lua'))()end
@@ -252,3 +254,23 @@ screen.nativeAnimationSlot=function()error('provider failed')end
 assert(not M.sideTexture(game,'player'),'failed slot provider claimed paired animation')
 screen.nativeAnimationSlot=nil;screen.animPicState=oldPose
 print('PASS public native sendout slot enables paired composition and preserves provider-error fallback')
+
+-- A failed body-only copy must keep the native particle canvas and graphics state.
+actorEffects=true;releaseCue={};screen.nativeAnimationSlot=function()return 'player2'end
+screen.animPicState=function()return nil end
+local blend,alpha='alpha','alphamultiply'
+love.graphics.getBlendMode=function()return blend,alpha end
+love.graphics.setBlendMode=function(b,a)blend,alpha=b,a end
+local failCopy=false
+love.graphics.draw=function(image)
+ if failCopy and image.canvas and alpha=='premultiplied'then failCopy=false;error('copy unavailable')end
+end
+local separate=assert(M.sideTexture(game,'player'))
+assert(separate.actors[1].card.releaseCanvas and separate.actors[2].card.releaseCanvas)
+assert(effectPaints==2 and target==nil and blend=='alpha'and alpha=='alphamultiply')
+failCopy=true;effectPaints=0
+local fallback=assert(M.sideTexture(game,'player'))
+assert(not fallback.actors[1].card.releaseCanvas and fallback.actors[2].card.releaseCanvas)
+assert(effectPaints==2 and target==nil and blend=='alpha'and alpha=='alphamultiply',
+ 'failed release copy lost native effects or graphics restoration')
+print('PASS separate release body and failed-copy native particle/state fallback')

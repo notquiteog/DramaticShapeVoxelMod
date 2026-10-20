@@ -45,11 +45,9 @@ The nine other imports remained valid. Earlier 0.3.89 evidence is unchanged.
 
 ## Remaining scope
 
-GSC paired Legendary Q57 release still needs separate per-actor world subjects:
-`BattleScene.updateSendout` only iterates lead sides, and `q57/Adapter` uses
-`arena[side]` while paired pictures are composed into shared side cards. Merely
-allowing partner events in the reader would deform both teammates and is not a
-valid fix. The separate native smoke/star and move adapters are implemented.
+The GSC paired Q57 gap identified during this audio audit is now closed by
+separate native actor subjects; see `NATIVE_GSC_PAIR_Q57_2026-10-20.md`.
+The separate native smoke/star and move adapters are implemented.
 GBA ball particles still expose no exact actor owner through their public pool;
 mixed simultaneous audio variants deliberately retain native sound. Optional
 model deformation/poses remain provider-owned. Full feature parity and physical

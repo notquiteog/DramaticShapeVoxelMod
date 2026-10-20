@@ -16,7 +16,20 @@ core.enemy={};assert(not M.cue(s,'enemy',enemy));core.enemy=enemy
 s.anim=nil;assert(not M.cue(s,'enemy',enemy));s.anim={animId='ANIM_SEND_OUT_MON'}
 s.afterSendOut=nil;assert(not M.cue(s,'enemy',enemy))
 for _,phase in ipairs({'done','fadeout','evolving'})do s.phase=phase;assert(not M.screen(game,s))end
-s.phase='anim';core.doubles=true;assert(not M.screen(game,s));core.doubles=false
+s.phase='anim';core.doubles=true;assert(not M.screen(game,s))
+local provider=false;local oldRequire=V.require
+V.require=function(k)if k=='StadiumModels'then return{active=function()return provider end}end;return oldRequire(k)end
+s.nativeAnimationSlot=function()return s.afterSendOut and s.afterSendOut.side end
+s.afterSendOut={side='enemy2',mon=enemy};core.enemy2=enemy
+assert(M.screen(game,s)==s and M.cue(s,'enemy2',enemy)==s.afterSendOut,'partner release not recognized')
+provider=true;assert(not M.screen(game,s));provider=false
+s.legendaryModelRelease={};assert(not M.screen(game,s));s.legendaryModelRelease=nil
+s.animPicState=function()return{size=5}end
+assert(M.progress(s,'enemy2')==3/7,'partner uses wrong native size denominator')
+s.animPicState=function()return{size=2}end
+assert(M.progress(s,'player2')==1/3)
+core.wild=true;assert(not M.cue(s,'enemy2',enemy),'wild partner ball invented');core.wild=false
+core.doubles=false
 capturing=true;assert(not M.screen(game,s));capturing=false
 stage.sceneOverrideEnabled=false;assert(not M.screen(game,s));stage.sceneOverrideEnabled=nil
 enabled=false;assert(not M.screen(game,s));enabled=true

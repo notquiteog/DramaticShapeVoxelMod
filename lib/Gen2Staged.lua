@@ -250,6 +250,7 @@ local function sideTexture(game, side, actorOnly)
   local BattleScene = V.require("BattleScene")
   local Effects=actorOnly and V.require('NativeGen2ActorEffects')
   local effects=Effects and Effects.owner(screen,side,mon)
+  local releaseCue=effects and V.require('NativeGen2Sendout').paired(screen,side,mon)
   local bottomPadding=effects and 64 or FOOT_PAD
   local cw = math.max(BattleScene.GB_W or 160, iw + iw2 + 2)
   local ch = math.max(BattleScene.GB_H or 144, math.max(ih, ih2) + bottomPadding + 1)
@@ -257,6 +258,8 @@ local function sideTexture(game, side, actorOnly)
   local ay = ch - bottomPadding
   local canvas = canvasFor(actorOnly and side..':actor' or side, cw, ch)
   if not canvas then return nil end
+  local releaseCanvas=releaseCue and love.graphics.getBlendMode and love.graphics.setBlendMode
+    and canvasFor(side..':release',cw,ch)or nil
   local effectAnchor
   if Projection.actors(screen)then
     local ok,value=pcall(Projection.anchor,screen,side,mon,ax,ay,iw)
@@ -354,6 +357,17 @@ local function sideTexture(game, side, actorOnly)
       if poseSink>0 then g.setScissor(0,0,cw,ay)end
       paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw*poseScale/2+slidePixels,ay-groundY*poseScale+sinkPixels,poseScale)end)
     end
+    if releaseCanvas then
+      -- Save this exact native body before adding its original OBJ particles.
+      -- Both versions survive until the scene knows whether Q57 actually drew.
+      local blend,alpha=g.getBlendMode()
+      local copied=pcall(function()
+        g.setCanvas(releaseCanvas);g.clear(0,0,0,0);g.setColor(1,1,1,1)
+        g.setBlendMode('alpha','premultiplied');g.draw(canvas,0,0)
+      end)
+      g.setBlendMode(blend,alpha);g.setCanvas(canvas)
+      if not copied then releaseCanvas=nil end
+    end
     if effects then Effects.paint(screen,side,mon,ax,ay)end
   end)
   g.setCanvas(prev)
@@ -376,7 +390,7 @@ local function sideTexture(game, side, actorOnly)
     noMirror=back and not (selectedArt and V.require('BattleArt').playerSide()=='front'
       and V.require('BattleArt').flipsPlayerFront()),
     modernFraming=true,contentWidth=iw+iw2,contentHeight=math.max(ih,ih2),
-    bottomPadding=bottomPadding }
+    bottomPadding=bottomPadding,actorMon=mon,releaseCanvas=releaseCanvas,releaseCue=releaseCue }
 end
 
 -- The same shape OverworldBattle.textures returns, so BattleScene cannot tell

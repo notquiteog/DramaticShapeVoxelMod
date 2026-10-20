@@ -49,6 +49,8 @@ function M.texture(game,side,screen,render,canvasFor,drawn)
  end
  return{canvas=canvas,ax=ax,ay=ay,trainer=false,noMirror=lead.noMirror,
   modernFraming=true,contentWidth=w,contentHeight=h,
+  actors={{slot=side,card=lead,x=lx-lead.ax,y=ay-lead.ay},
+   {slot=other,card=pair,x=rx-pair.ax,y=ay-pair.ay}},
   hudAnchors={[side]=anchor(lead,side,lx),[other]=anchor(pair,other,rx),
    [side..':effect']=anchor(lead,side..':effect',lx),
    [other..':effect']=anchor(pair,other..':effect',rx)}}

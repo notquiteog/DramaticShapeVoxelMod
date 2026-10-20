@@ -1,3 +1,14 @@
+# GSC paired Q57 subjects — 2026-10-20
+
+All four native slots now own independent release subjects with exactly the old
+composite card projection. Native size/reveal/shiny clocks stay authoritative;
+teammates, HUD and gameplay are unchanged. Missing material/body-copy, OFF and
+provider paths retain original particles/art. Official0.3.91 NVIDIA G/S/C pass
+39/39 normal and108/108 shiny frames, identity/HP and failure/OFF checks;
+18final captures inspected. Shared348/0/58 includes the current camera batch.
+Evidence: `docs/NATIVE_GSC_PAIR_Q57_2026-10-20.md`. Ownerless GBA particles,
+optional provider/art assets and remaining scenery families remain separate.
+
 # Native paired audio and all-eleven settings — 2026-10-20
 
 GBA shared release cues now consume optional Ember playback when every known
