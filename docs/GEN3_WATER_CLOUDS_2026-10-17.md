@@ -84,3 +84,57 @@ The release archive receives its own loaded-source hash checks and native
 reruns before publication. Exact archive evidence is recorded below after those
 checks complete. Regional coverage remains84/125 verified placements,41 queued;
 this effects batch does not mark additional cities/interiors complete.
+
+## Final merged archive — 2026-10-20
+
+Published main had advanced to1.51.2 while this isolated batch was underway.
+The final1.52.0 archive merges that history, retaining its camera/foreground,
+GLES shader, scene upload/cache and native battle presentation fixes. The older
+1.49-versus-unreleased-candidate0.3.89 timings above do not measure this merged
+release. The final archive does not claim a general FPS increase.
+
+Official latest Gen1Recomp0.3.91 (release2026-10-19, source tag3806bf3df53f650e235b09f8d76feb731c30a076)
+was used for final compatibility. Official AppImage and LOVE checksums match
+published SHA256 sums. Full350 suites pass with0 failures/58 explicit unavailable
+external-dataset skips, using the matching public source-tag test harness and
+release source. The packaged LOVE contains driver helpers but omits tests.modkit;
+its initial missing-harness failures were corrected by that matched harness,
+then every previously missing case executed and passed.
+
+The exact archive contains11,469 files/518 Lua files; all Lua compile. Twenty
+isolated native NVIDIA/OpenGL3.3 runners exit0 with no mod errors. Each launch
+checks the actual public-read bytes of15 changed/critical loaded files and
+compiles all8 native/legacy, FULL/SKY and grid water shader variants.
+
+- All5 GBA editions:90 inspected water captures across three maps,35-degree and
+  actual first person, FULL/SKY/OFF. Native layout digests remain unchanged;
+  streaming stays settled. With layered sky enabled,2812/2812 successful native
+  water contexts obtain the current matching cloud reflection; zero missing.
+- Hoenn:45 inspected rock orbit/eye views, including complete brown/gray and
+  small wet boulders;6 inspected OFF/actual-first-person captures.3 native dry
+  shore walks and3 no-surf boundary bumps pass. Actual uploaded geometry across
+  repeated builds checks3492 wet-cell water planes,867 complete hulls and24 small
+  hulls. These counts include repeated scene builds, not unique placements.
+- All5 GBA clouds plus Yellow/Crystal legacy:80 inspected images. Day/night,
+  dusk/storm, +/-pi turn seam, sky OFF and Oak/Birch/Mart indoor suppression pass.
+  Legacy water remains outside the native GBA material. No legacy clock change.
+- All6 current published partners:24 additional inspected FR/Ruby outdoor/lab
+  FULL/SKY/OFF images, strict loaded versions and zero mod errors. Versions:
+  WildSkies1.15.2,SkyRide0.5.5,Doubles0.14.4,Gen1Online0.11.2,Overworld2.6.5,
+  ModernUI0.4.2. Partner spawn density can still obscure first-person views and
+  their existing capture HUD remains visible indoors; these smoke checks do not
+  establish polished spawn placement or every cross-mod gameplay interaction.
+
+Total221 standalone and24 optional-partner captures were inspected. Some orbit
+views intersect nearby buildings; the other orbit/eye views establish target
+visibility. Retained native white wave/foam bands are still visible in some
+Hoenn waters, especially Route104 first person. This batch removes raised relief
+ridges and mismatched rock underlays but does not claim every water map has a
+new authored shoreline material. Android/GLES hardware, manual desktop keyboard
+interaction, surfing and live multiplayer were not exercised by this batch.
+
+Final evidence-only packaging retains all tested runtime file hashes. Saves,
+ROMs, engine caches, screenshots and unrelated local edits are excluded. The
+primary checkout's ongoing GSC work is preserved. The subsequent user-requested
+ORAS/HGSS/BW2 model-import work is isolated in another checkout and is not part
+of this water/cloud archive. Regional coverage remains84/125,41 queued.

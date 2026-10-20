@@ -1,4 +1,4 @@
-# Half-submerged rocks and water/cloud finish — 2026-10-17
+# Half-submerged rocks and water/cloud finish — 2026-10-20
 
 1.52.0 / mesh107 moves reviewed Hoenn sea stacks, boulders and small wet rocks
 halfway through their actual neighboring water sheet, preserving closed hulls,
@@ -9,9 +9,16 @@ Soft lit cumulus use1 draw/1152 vertices rather than15/5616. SKY skips full mirr
 copies; FULL reuses reflection color plus one packed opaque-depth snapshot for
 submerged rocks. Actor reflection clipping receives the actual water plane.
 
-Source333pass/0fail/58 unavailable-fixture skips. Source all5 cloud review,
-Hoenn matched rock tours/native shore checks and final water palette captures
-are inspected. Archive/timing evidence follows in
+Merged with published1.51.2, retaining its camera/GLES/native presentation work.
+Latest official0.3.91:350pass/0fail/58 unavailable-fixture skips. Exact archive:
+221 standalone+24 all6-partner captures inspected;3 shore walks/3 no-surf bumps;
+15 actual loaded hashes/8 shader variants per20 clean native runners.11,469
+files/518 Lua compile. All5 GBA water/clouds and Yellow/Crystal legacy pass.
+Current published partner versions include Doubles0.14.4 andWilds2.6.5; no
+companion source modified. Runtime hashes retained through evidence repackage.
+Pre-merge0.3.89 timing is labeled historical; no general FPS gain is claimed.
+Retained native foam bands and existing partner spawn occlusion remain limits.
+Full archive/timing evidence:
 `docs/GEN3_WATER_CLOUDS_2026-10-17.md`; companion docs detail rock/cloud scope.
 Native gameplay/UI/VM/collision and HD-2D actors/Pokémon/flowers remain intact;
 all partners optional. No whole-region or generic FPS claim. Regional queue
