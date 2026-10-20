@@ -1,3 +1,13 @@
+# GSC paired moves — 2026-10-20
+
+Exact public move/after-animation ownership now drives all four world cards,
+including friendly targets. Original OBJ pixels project between actor centers;
+native HUD/text retain foreground ownership. Model/missing/stale paths fall back.
+Official0.3.91 NVIDIA G/S/C pass81/81,212/212,81/81,74/74 native frame checks;
+27final captures reviewed. Combined346/0/58 and88Doubles core contracts pass.
+Evidence: `docs/NATIVE_GSC_MOVE_OWNERS_2026-10-20.md`.
+Secondary damage-event and form-identity audit remain; no full parity claim.
+
 # GSC paired release particles — 2026-10-20
 
 Original smoke/shiny stars now follow the exact public release slot on its world

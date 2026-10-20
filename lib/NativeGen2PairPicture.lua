@@ -1,6 +1,6 @@
--- Compose independently rendered native slots. The caller only enters this
--- path outside move scripts, whose public BG state still has side-wide keys.
--- Persistent dolls, faint clocks and visibility belong to each original slot.
+-- Compose independently rendered native slots. Animated pairs require the
+-- caller's verified public release slot or move-context map. Dolls, faint
+-- clocks and visibility remain owned by each original slot.
 local M={}
 function M.texture(game,side,screen,render,canvasFor,drawn)
  local other=side..'2'
@@ -49,6 +49,8 @@ function M.texture(game,side,screen,render,canvasFor,drawn)
  end
  return{canvas=canvas,ax=ax,ay=ay,trainer=false,noMirror=lead.noMirror,
   modernFraming=true,contentWidth=w,contentHeight=h,
-  hudAnchors={[side]=anchor(lead,side,lx),[other]=anchor(pair,other,rx)}}
+  hudAnchors={[side]=anchor(lead,side,lx),[other]=anchor(pair,other,rx),
+   [side..':effect']=anchor(lead,side..':effect',lx),
+   [other..':effect']=anchor(pair,other..':effect',rx)}}
 end
 return M

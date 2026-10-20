@@ -18,6 +18,7 @@ local placement='world'
 local selected=false
 local front=false
 local flip=true
+local mapped,anchorFailure=false,false
 love={graphics={
  newCanvas=function(w,h)return {canvas=true,getWidth=function()return w end,getHeight=function()return h end,setFilter=function()end} end,
  getCanvas=function()return target end,setCanvas=function(v)target=v end,
@@ -25,6 +26,11 @@ love={graphics={
  draw=function(img,x,y)if img.canvas then return end;local w,h=img:getDimensions();draws[#draws+1]={x=x,y=y,w=w,h=h} end,
 }}
 local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
+ if name=='NativeGen2MoveProjection'then return{
+  background=function(s)return s.anim and s.anim.bg end,actors=function()return mapped and{}or nil end,
+  back=function(s,slot,fallback)return fallback end,
+  anchor=function()if anchorFailure=='error'then error('native pic unavailable')end;return not anchorFailure and{80,100}or nil end,
+  begin=function()end}end
  if name=='NativeGen2ActorEffects'then return{owner=function()return false end,begin=function()end}end
  if name=='BattleSpriteFooting'then return {bounds=function(image,quad)local w,h=image:getDimensions();if quad and quad.getViewport then local x,y;x,y,w,h=quad:getViewport()end;return {0,0,w,h-7}end}end
  if name=='NativeGen2PictureBands'then return assert(loadfile('lib/NativeGen2PictureBands.lua'))()end
@@ -38,6 +44,14 @@ local M=assert(loadfile('lib/Gen2Staged.lua'))({require=function(name)
  error(name)
 end})
 local game={stack={states={screen}}}
+mapped=true
+for _,failure in ipairs({true,'error'})do
+ anchorFailure=failure
+ assert(not M.sideTexture(game,'enemy')and not M.drawn.enemy and not M.drawn.enemy2,
+  'missing native projection claimed a paired body')
+end
+anchorFailure=false;assert(M.sideTexture(game,'enemy').hudAnchors['enemy2:effect'])
+mapped=false
 assert(M.textures(game).sceneLayout==nil,'standalone acquired a companion layout')
 screen.nativeSceneLayout=function()return 'gen2-native-pair'end
 assert(M.textures(game).sceneLayout=='gen2-native-pair','public native layout hint lost')

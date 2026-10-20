@@ -11,6 +11,11 @@ function M.owner(screen,slot,mon)
   and type(screen.nativeAnimationSlot)=='function')then return false end
  local cue=screen.afterSendOut
  if not(cue and cue.side==slot and cue.mon==mon)then return false end
+ -- A model provider may replace the complete side card. Without a public
+ -- separate particle-card pass, leave its original native particles intact.
+ local models=V.require('StadiumModels')
+ local ready,modelOwned=pcall(models.active)
+ if not ready or modelOwned then return false end
  local ok,owns=pcall(function()
   return screen:nativeAnimationSlot()==slot and screen:activeMon(slot)==mon
  end)

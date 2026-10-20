@@ -8,6 +8,7 @@ function screen:pic()return image,false,'native.png'end
 function screen:picScale()return 1 end
 local staged={drawn={player2=partner}}
 local enabled=true
+local models=false
 local moved,depth,native,battles={},0,0,{}
 local fail=false
 local View={drawObjects=function(_,runner,battle,extra)
@@ -21,6 +22,7 @@ love={graphics={push=function(kind)assert(kind=='all');depth=depth+1 end,
  pop=function()depth=depth-1 end,translate=function(x,y)moved={x,y}end}}
 local M=assert(loadfile('lib/NativeGen2ActorEffects.lua'))({require=function(name)
  if name=='Gen2Staged'then return staged end
+ if name=='StadiumModels'then return{active=function()return models end}end
  if name=='Gen2Battle'then return{stagedMon=function(m)return enabled and m==partner end}end
  if name=='BattleSpriteFooting'then return{bounds=function()return{0,0,48,43}end}end
  error(name)
@@ -50,5 +52,8 @@ screen.anim.param=1;assert(M.paint(screen,'player2',partner,80,80),'original shi
 M.begin();screen.battle.doubles=nil;assert(not M.paint(screen,'player2',partner,80,80))
 screen.battle.doubles=true;screen.nativeAnimationSlot=function()error('provider missing')end
 assert(not M.paint(screen,'player2',partner,80,80))
+screen.nativeAnimationSlot=function()return'player2'end
+models=true;assert(not M.paint(screen,'player2',partner,80,80),'unused model-replaced card claimed particles')
+models=false;assert(M.owner(screen,'player2',partner))
 assert(depth==0 and mon~=partner)
 print('PASS original paired particles: exact slot/palette, visible footing, native shiny/OFF, failed composition, stale publication/runner and graphics cleanup')
