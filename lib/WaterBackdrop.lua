@@ -26,11 +26,11 @@ function M.inverse(m)
  end
  local out={};for r=1,4 do for c=1,4 do out[#out+1]=a[r][c+4]end end;return out
 end
-function M.capture(slot,canvas,restore)
+function M.capture(slot,canvas,restore,depthOnly)
  local g=love.graphics
  if shader==nil then local ok,s=pcall(g.newShader,M.PACK_SOURCE);shader=ok and s or false end
  if not shader then return nil end
- for _,name in ipairs({'underColor','underDepth'})do
+ for _,name in ipairs(depthOnly and {'underDepth'}or{'underColor','underDepth'})do
   if not slot[name] then
    local ok,c=V.require('PixelCanvas').new(name=='underColor' and math.max(1,math.ceil(slot.w/2)) or slot.w,
      name=='underColor' and math.max(1,math.ceil(slot.h/2)) or slot.h)
@@ -41,11 +41,12 @@ function M.capture(slot,canvas,restore)
  g.push('all')
  local ok=pcall(function()
   g.origin();g.setScissor();g.setStencilTest();g.setDepthMode();g.setShader();g.setColor(1,1,1,1)
-  g.setBlendMode('replace','premultiplied');g.setCanvas(slot.underColor);g.clear(0,0,0,0);g.draw(canvas,0,0,0,math.max(1,math.ceil(slot.w/2))/slot.w,math.max(1,math.ceil(slot.h/2))/slot.h)
+  g.setBlendMode('replace','premultiplied')
+  if not depthOnly then g.setCanvas(slot.underColor);g.clear(0,0,0,0);g.draw(canvas,0,0,0,math.max(1,math.ceil(slot.w/2))/slot.w,math.max(1,math.ceil(slot.h/2))/slot.h)end
   g.setCanvas(slot.underDepth);g.clear(1,1,1,1);g.setShader(shader);shader:send('sourceDepth',slot.depth);g.draw(canvas)
  end)
  g.pop();local restored=pcall(g.setCanvas,restore)
  if not ok or not restored then return nil end
- return slot.underColor,slot.underDepth
+ return not depthOnly and slot.underColor or nil,slot.underDepth
 end
 return M

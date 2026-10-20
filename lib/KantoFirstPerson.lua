@@ -11,6 +11,7 @@ M.rainbows=Setting.new('kfpRainbows','RAINBOWS',{false,true},{'OFF','ON'})
 M.birds=Setting.new('kfpBirds','DISTANT BIRDS',{false,true},{'OFF','ON'})
 M.settings={M.horizon,M.sky,M.aircraft,M.rainbows,M.birds}
 local modules,env={},nil
+local clouds
 local game,gameData,gameVersion
 function M.currentGame()return game end
 function M.refreshBirds()
@@ -61,7 +62,7 @@ local function environment()
   env.love.filesystem[name]=function()return nil,'KFP embedded assets are read-only'end
  end
  env._G.__ds_ceiling_config=function()
-  return {backdrop=M.horizon:get()~='off',clouds=M.sky:get(),stars=M.sky:get(),
+  return {backdrop=M.horizon:get()~='off',clouds=false,stars=M.sky:get(),
    aircraft=M.aircraft:get(),birds=M.birds:get() and game~=nil,groundflock=false,rainbows=M.rainbows:get()}
  end
  return env
@@ -105,6 +106,7 @@ function M.outdoor(map)
 end
 function M.enabled()return M.horizon:get()~='off' or M.sky:get() or M.aircraft:get() or M.rainbows:get() or M.birds:get()end
 function M.draw(state)
+ if clouds then clouds.clear()end
  if not M.enabled() or not state or not M.outdoor(state.map) then return false end
  -- The background needs positions and outdoor eligibility, never Gen1 tile
  -- numbers. Normalize just those facts for all eleven editions.
@@ -124,6 +126,9 @@ function M.draw(state)
   love.graphics.pop();R.tint=tint;R.fog=fog
   if not ok then M.errors[name]=tostring(err)else M.errors[name]=nil end
  end
+ -- Cumulus sits behind the panorama and leaves terrain/actor depth empty.
+ -- The embedded stars, birds and other opt-ins keep their original path.
+ if M.sky:get()then clouds=clouds or V.require('Clouds');clouds.draw(state)end
  if choice~='off'then
   if M.lastHorizon~=choice and modules.backdrop then
    -- Upstream invalidate preserves its loaded panorama. Reload the payload
@@ -139,9 +144,11 @@ function M.status()
  local result={};for k,v in pairs((env and env._G)or{})do
   if k:match('_status$')then result[k]=v end
  end
+ if clouds then result.__ds_cloud_status=clouds.status end
  return result
 end
 function M.invalidate()
+ if clouds then clouds.invalidate()end
  for _,p in pairs(modules)do if p.invalidate then p.invalidate()end end
 end
 return M

@@ -66,6 +66,16 @@ function V.require(name)
   return value
 end
 
+-- The entry point chooses one native generation per mod instance. Its scene
+-- owner must release all active, retained and pending batches before this
+-- shared asset reset; do not invalidate a texture during an ordinary rebuild.
+function V.releaseSceneryResources()
+  for _, name in ipairs({"GrassModels", "BankMaterials", "SceneryModels"}) do
+    local resource = modules[name]
+    if resource then resource.release() end
+  end
+end
+
 local dataFiles = {}
 function V.data(name)
   local hit = dataFiles[name]
@@ -164,6 +174,8 @@ mod.hooks:wrap("core.quit_to_launcher", function(next)
   V.require("KantoLife").invalidate()
   V.require("ForestLife").invalidate()
   uninstallCompanion()
+  ChunkMesher.invalidate()
+  V.releaseSceneryResources()
   return next()
 end)
 
@@ -763,10 +775,10 @@ local SETTINGS = {
   { V.require('ModernBattleUI').setting, "With optional Modern Pokemon UI enabled: compact overhead status cards and window-resolution commands. Without that provider, native menus remain unchanged.", full=true },
   { V.require("CrystalSprites").setting, "Crystal animation, shiny effects and portraits in Gen 1/2. SELECTED ART uses the existing Battle Art collections. Restart the game after changing this pack.", full=true },
   { V.require("CrystalSprites").fullBody, "Animated Gen 5 full-body backs on 2.5D battle stages with the Crystal pack. Normal menus retain Crystal art.", full=true },
-  { TreePresentation.props, "Native rocks and bushes as solid models (default) or original cutout sprites. People, Pokemon, grass and flowers keep their sprite art.", full=true, when=function()return Generation.isGen2()end },
+  { TreePresentation.props, "Model rocks, bushes and supported grass, or use native foliage. People, Pokemon and flowers keep their sprite art.", full=true, when=function()return Generation.isGen2()end },
   { TreePresentation.surfaces, "Original game scenery textures, or optional detailed materials. Geometry is preserved.", full=true, when=function()return Generation.isGen2()end },
-  { TreePresentation.art, "Solid voxel trees use the original game art. ORIGINAL CARD and ILLUSTRATED CARD retain flat alternatives. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
-  { TreePresentation.setting, "Flat illustrated trunks follow their leaf billboards. SOLID restores the physical trunk and boughs. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
+  { TreePresentation.art, "Use 3D trees, or choose original or illustrated tree cards. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
+  { TreePresentation.setting, "Modeled trunks and boughs are the default. Flat trunks remain available for tree cards. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
   { LegendaryVisualsPreset.setting,
     "One master profile for Legendary world visuals. OFF preserves Battle Art, "
     .. "CUSTOM restores the exact individual choices you last made, AUTO enables "
@@ -952,10 +964,9 @@ local SETTINGS = {
     .. "LIVE CACHE explicitly keeps generated records in RAM without preloading.",
     full = true },
   { Water.setting,
-    "Reflections on water. FULL adds screen-space reflections of the "
-    .. "shoreline, the trees and the buildings behind it; SKY is the sky, "
-    .. "the sun and the moon alone, which is most of the look for a "
-    .. "fraction of the cost." },
+    "Smooth realistic water is the default. FULL reflects the sky and "
+    .. "nearby scenery; SKY keeps the same moving surface with sky reflections "
+    .. "and skips the scenery reflection pass. OFF uses the native water art." },
   { Shadows.setting,
     "Enable shadows. OFF removes both the real cast-shadow map and its flat "
     .. "fallback from free roam and staged battles; UNLIT battle cards also "

@@ -1,0 +1,381 @@
+{
+  "asset": 294796,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/294796/",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "title": "Oak's Lab",
+  "author": "CheesyMac nCheese",
+  "submitted": "2015-11-07",
+  "file": "Oak Pokemon Research Lab.obj",
+  "mtl": "Oak Pokemon Research Lab.mtl",
+  "sourceBounds": [
+    -54.0,
+    1.0,
+    -34.0,
+    62.0,
+    81.0,
+    36.0
+  ],
+  "sourceOrigin": [
+    4.0,
+    1.0,
+    1.0
+  ],
+  "sourceUnitSpan": 116.0,
+  "bounds": [
+    -0.5,
+    0.0,
+    -0.3017241379310345,
+    0.5,
+    0.6896551724137931,
+    0.3017241379310345
+  ],
+  "originalSourceBounds": [
+    -54.0,
+    1.0,
+    -34.0,
+    62.0,
+    81.0,
+    36.0
+  ],
+  "archiveSha256": "a6a968a0f74be43405275bd13deb124dfc778d8d2f7919296c77217d642691ae",
+  "sourceModelSha256": "3edd0b28acf10d832eea88a1f7886bd7d94989dbf78a5ac9ed013c4e91abbb50",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "textureBindings": {},
+  "repairs": [
+    "Missing lambert1.png: retained source Kd as solid material; invalid UVs not used."
+  ],
+  "authoredClosure": {
+    "door": [
+      0.0,
+      2.0,
+      23.0
+    ],
+    "description": "Authored rear wall/roof return/skylight cap where present, plus closed foundation. Original front portal remains open. Existing source wall/roof UV islands only.",
+    "parts": [
+      "authored_rear_brick",
+      "authored_rear_foundation",
+      "authored_rear_roof_trim",
+      "authored_closed_underside"
+    ],
+    "triangles": 36,
+    "foundationBottom": 1.0,
+    "foundationTop": 2.0
+  },
+  "textures": {
+    "mt_okl01.png": {
+      "sha256": "58d60926034f276b732d2279ccd8b2d28810ccea9326f793afdd4d2a71ced0de",
+      "bytes": 170
+    },
+    "h_mado.png": {
+      "sha256": "73b84ad93c87f299f936cda9f274bc8d7f2e0ffc446067bc7d7b63c3ea303826",
+      "bytes": 229
+    },
+    "mt_okl02.png": {
+      "sha256": "647c77751105273cc80799a2fdffbee06c79618b40b915f1a449b63e6fad6082",
+      "bytes": 252
+    },
+    "mt_okl06.png": {
+      "sha256": "81040be7c74d1cebb98b85cb7a6a596997cf8b84b4d752d0660c3f26c6888992",
+      "bytes": 163
+    },
+    "h_kage.png": {
+      "sha256": "67db103a7b625b50c0ba0c424fd76a6ddeac3b76590b07aa37521a1a9dfde45f",
+      "bytes": 164
+    },
+    "mt_okl07.png": {
+      "sha256": "9d7b19561e6a95dcb67e9d35825e9e286ed91b06e2f5bf6f4855b8c9e56a65d3",
+      "bytes": 180
+    },
+    "mt_okl03.png": {
+      "sha256": "06bf6be27519ccf22cd54905e8921e9ddca75002be53d0581ca410dcf7929068",
+      "bytes": 183
+    },
+    "h_in.png": {
+      "sha256": "b6fc889b9553618f537084195deb4fd7086f2ce567ef51263500f3f5baceb899",
+      "bytes": 135
+    },
+    "mt_okl05.png": {
+      "sha256": "27ffa4643d7a475f8ba092429d16060dd9f540bebe204399d7769c59ee491941",
+      "bytes": 242
+    },
+    "mt_okl04.png": {
+      "sha256": "e7d676be6b42f0d5f921c1b3b827b9e0e1231eda20940493bac550407f05a3c1",
+      "bytes": 265
+    }
+  },
+  "generatedMaterials": {
+    "lambert1-source-kd.png": {
+      "derivedFrom": "source material Kd",
+      "diffuse": [
+        0.3764706,
+        0.3764706,
+        0.3764706
+      ],
+      "rgba": [
+        96,
+        96,
+        96,
+        255
+      ],
+      "sha256": "adfc59e76a1a902955e67b7aaed427201f5853fd5281148c361467a28e74ab4b"
+    }
+  },
+  "parts": [
+    {
+      "name": "polygon0",
+      "authored": false,
+      "material": "lambert1",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/lambert1-source-kd.png",
+      "triangles": 2,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.4482758620689655,
+        0.47413793103448276,
+        0.1724137931034483,
+        0.3793103448275862,
+        0.5431034482758621,
+        0.1724137931034483
+      ]
+    },
+    {
+      "name": "polygon1",
+      "authored": false,
+      "material": "mt_okl01",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/mt_okl01.png",
+      "triangles": 2,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.4482758620689655,
+        0.47413793103448276,
+        -0.23275862068965517,
+        0.3793103448275862,
+        0.47413793103448276,
+        0.1724137931034483
+      ]
+    },
+    {
+      "name": "polygon2",
+      "authored": false,
+      "material": "h_mado",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/h_mado.png",
+      "triangles": 8,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.35344827586206895,
+        0.11755793103448277,
+        0.2025862068965517,
+        0.28448275862068967,
+        0.22962689655172414,
+        0.2025862068965517
+      ]
+    },
+    {
+      "name": "polygon3",
+      "authored": false,
+      "material": "mt_okl02",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/mt_okl02.png",
+      "triangles": 8,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.39655172413793105,
+        0.27586206896551724,
+        0.20689655172413793,
+        0.3275862068965517,
+        0.41379310344827586,
+        0.20689655172413793
+      ]
+    },
+    {
+      "name": "polygon4",
+      "authored": false,
+      "material": "mt_okl06",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/mt_okl06.png",
+      "triangles": 10,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.4827586206896552,
+        0.0603448275862069,
+        -0.1810344827586207,
+        0.41379310344827586,
+        0.47413793103448276,
+        0.1896551724137931
+      ]
+    },
+    {
+      "name": "polygon5",
+      "authored": false,
+      "material": "h_kage",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/h_kage.png",
+      "triangles": 16,
+      "opacity": 0.2903226,
+      "role": "source_shading",
+      "bounds": [
+        -0.5,
+        0.0,
+        -0.3017241379310345,
+        0.5,
+        0.49137931034482757,
+        0.3017241379310345
+      ]
+    },
+    {
+      "name": "polygon6",
+      "authored": false,
+      "material": "mt_okl07",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/mt_okl07.png",
+      "triangles": 14,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.4827586206896552,
+        0.0603448275862069,
+        -0.25,
+        0.41379310344827586,
+        0.47413793103448276,
+        0.1896551724137931
+      ]
+    },
+    {
+      "name": "polygon7",
+      "authored": false,
+      "material": "mt_okl03",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/mt_okl03.png",
+      "triangles": 12,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.41379310344827586,
+        0.0603448275862069,
+        0.1896551724137931,
+        0.3448275862068966,
+        0.33620689655172414,
+        0.1896551724137931
+      ]
+    },
+    {
+      "name": "polygon8",
+      "authored": false,
+      "material": "h_in",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/h_in.png",
+      "triangles": 16,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.1206896551724138,
+        0.008620689655172414,
+        -0.02586206896551724,
+        0.05172413793103448,
+        0.23275862068965517,
+        0.1896551724137931
+      ]
+    },
+    {
+      "name": "polygon9",
+      "authored": false,
+      "material": "mt_okl05",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/mt_okl05.png",
+      "triangles": 58,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.3879310344827586,
+        0.22100620689655173,
+        -0.1336206896551724,
+        0.33620689655172414,
+        0.6896551724137931,
+        0.22413793103448276
+      ]
+    },
+    {
+      "name": "polygon10",
+      "authored": false,
+      "material": "mt_okl04",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/mt_okl04.png",
+      "triangles": 84,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.5,
+        0.008620689655172414,
+        -0.28448275862068967,
+        0.43103448275862066,
+        0.5431034482758621,
+        0.22413793103448276
+      ]
+    },
+    {
+      "name": "authored_rear_brick",
+      "authored": true,
+      "material": "mt_okl07",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/mt_okl07.png",
+      "triangles": 2,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.4827586206896552,
+        0.0603448275862069,
+        -0.25,
+        0.41379310344827586,
+        0.47413793103448276,
+        -0.25
+      ]
+    },
+    {
+      "name": "authored_rear_foundation",
+      "authored": true,
+      "material": "mt_okl04",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/mt_okl04.png",
+      "triangles": 2,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.4827586206896552,
+        0.008620689655172414,
+        -0.25,
+        0.41379310344827586,
+        0.0603448275862069,
+        -0.25
+      ]
+    },
+    {
+      "name": "authored_rear_roof_trim",
+      "authored": true,
+      "material": "lambert1",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/lambert1-source-kd.png",
+      "triangles": 22,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.5,
+        0.4396551724137931,
+        -0.28448275862068967,
+        0.43103448275862066,
+        0.5431034482758621,
+        -0.23275862068965517
+      ]
+    },
+    {
+      "name": "authored_closed_underside",
+      "authored": true,
+      "material": "lambert1",
+      "texture": "assets/scenery/catalog/hgss_oaks_lab/lambert1-source-kd.png",
+      "triangles": 10,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.4827586206896552,
+        0.0,
+        -0.25,
+        0.41379310344827586,
+        0.008620689655172414,
+        0.1896551724137931
+      ]
+    }
+  ],
+  "placement": "Catalog only. No generation/map/footprint compatibility is implied; native adapter review required."
+}

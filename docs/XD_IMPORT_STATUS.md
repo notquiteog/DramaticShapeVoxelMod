@@ -64,12 +64,22 @@ sequencing and missing models retain sprites. Focused actor lifecycle,
 native-card fallback and Stadium bridge tests pass. The shared setting is OFF
 by default, and the manifest deliberately remains `renderReady:false`.
 
+Experimental offline conversion (`tools/convert_xd_models.py`) and a dormant
+mesh/pose consumer (`lib/XDModelInstance.lua`) are also present. Conversion uses
+an external parser and mathutils; its recorded parser revision is not enforced
+against the checkout. Only the first texture layer is rendered; missing named
+textures can become white. Material/UV animation, animated lighting and parallel
+conversion are prototype code, without native-game or mobile acceptance. Failed
+converted records can leave diagnostic folders; output still declares
+`renderReady:false`.
+
 Still required before enabling packs: multi-layer material composition (477
 meshes), shiny filters, particles (15 models), shape/sub-animation composition,
 source-accurate spline timing, forms and Gen1/2 paired actor ownership, full native
 animation effects, simple import/portable installation UI, all-eleven in-game
-tests and physical Android/iOS checks. The generated assets are kept outside
-the repository and are not a distributable mod release.
+tests and physical Android/iOS checks. Do not expose an import-success option
+in-game until these are ready. The generated assets are kept outside the
+repository and are not a distributable mod release.
 
 Format references:
 

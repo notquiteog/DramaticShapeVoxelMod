@@ -89,7 +89,7 @@ local STATIC_PLAYTHROUGH = "bavc_static_mesh_v2"
 -- bed and the open bin. Old geometry must not mask these visual corrections.
 -- Flat foliage cards replace crown shells; metadata now stores anchor X/Z/Y.
 -- Authored interior components, floor borders and native wall backing.
-Disk.CACHE_REVISION = 106
+Disk.CACHE_REVISION = 108
 -- Patch releases which do not change emitted vertices must keep the existing
 -- world cache usable. This token matches the first static-mesh-cache-v2 build;
 -- CACHE_REVISION, not the public mod version, owns geometry compatibility.
@@ -518,6 +518,7 @@ function Disk.staticEligible(map)
 end
 
 function Disk.fingerprint(map, slot, masks, kind)
+  local presentationMap=map
   map = StaticGeometry.source(map) or map
   -- BODY emits only the map's playable rectangle. Connection masks suppress
   -- the border ring of FULL meshes and cannot alter BODY vertices, so letting
@@ -537,6 +538,12 @@ function Disk.fingerprint(map, slot, masks, kind)
     "row", tostring(tileset.tilesPerRow),
     "trueColor", tileset.trueColor and "1" or "0",
   }
+  if kind=='terrain' then
+    local ok,W=pcall(V.require,'GBWater')
+    if ok and type(W.relative)=='function' then
+      parts[#parts+1]=type(W.policyKey)=='function'and W.policyKey(presentationMap)or 'gb-water-bank-1:'..tostring(W.relative(presentationMap,-2))
+    end
+  end
   if type(map.cellCollision) == "function" then
     parts[#parts + 1] = "gen2-crystal-hd2d-3:" .. V.require("TreePresentation").setting:get() .. ":" .. V.require("TreePresentation").art:get() .. ":" .. V.require("TreePresentation").props:get()
   end

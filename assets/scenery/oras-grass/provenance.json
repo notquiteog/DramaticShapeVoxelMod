@@ -1,0 +1,120 @@
+{
+  "title": "Tall Grass",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire (3DS)",
+  "section": "Map Objects",
+  "asset_id": 353363,
+  "source_page": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/353363/",
+  "download_url": "https://models.spriters-resource.com/media/assets/350/353363.zip?updated=1755515450",
+  "uploaded_by": "MasterPengo",
+  "uploader_page": "https://models.spriters-resource.com/profile/masterpengo/",
+  "submitted": "2024-06-24",
+  "original_game_art": "Nintendo / Creatures / GAME FREAK",
+  "archive_sha256": "480a1df4a248e1956b9f4583d00eda9737acc5409f0a20e501a090b9ff75a645",
+  "models": {
+    "oras_green": {
+      "dae": "grass.dae",
+      "dae_sha256": "c451cd86daa8fb201e0f6ee526c394aa9befcde8e8364498041c00670bd2b1ab",
+      "geometry": "grass_3_1_0-mesh",
+      "texture": "hureai_grass.png",
+      "texture_sha256": "03b0e861833dbdd7d5772938dc7e9d8dd6c5f56ef9a2f95dfb1c545d6dd493d1",
+      "triangles": 16,
+      "source_bind_pose_bounds": {
+        "min": [
+          -16.3434,
+          -0.0010116276221798137,
+          -18.02229904935047
+        ],
+        "max": [
+          19.7441,
+          17.549504107205824,
+          18.06530095064792
+        ]
+      },
+      "source_to_unit_scale": 0.02660193529079359,
+      "source_unit_center_xz": [
+        1.7003500000000003,
+        0.021500950648725592
+      ],
+      "grounding_offset_source_y": -0.0010116276221798137,
+      "excluded_parts": [
+        {
+          "geometry": "grass_2_0_0-mesh",
+          "texture": "grass_tiru.png",
+          "triangles": 40
+        }
+      ]
+    },
+    "oras_dry": {
+      "dae": "grass02.dae",
+      "dae_sha256": "74143b515ee58b104b41a44fcb006deccbccdc358913850ece70340a02d60bdb",
+      "geometry": "_1_0-mesh",
+      "texture": "hureai_grass2.png",
+      "texture_sha256": "7486d688f0595778e59c846d68aa94063854fca780052bf028f717b4a67bb998",
+      "triangles": 16,
+      "source_bind_pose_bounds": {
+        "min": [
+          -16.3434,
+          -0.0010116276213652088,
+          -18.02230904935371
+        ],
+        "max": [
+          19.7441,
+          17.549514107209085,
+          18.065260950646298
+        ]
+      },
+      "source_to_unit_scale": 0.02660195740527832,
+      "source_unit_center_xz": [
+        1.7003500000000003,
+        0.021475950646294706
+      ],
+      "grounding_offset_source_y": -0.0010116276213652088,
+      "excluded_parts": [
+        {
+          "geometry": "_0_0-mesh",
+          "texture": "grass_tiru2.png",
+          "triangles": 40
+        }
+      ]
+    },
+    "oras_tall": {
+      "dae": "grass04.dae",
+      "dae_sha256": "13a5a1d1140afdaa509244a418165e3f5b0e71606c8de6e865645a2468f62602",
+      "geometry": "_1_0-mesh",
+      "texture": "hureai_grass04.png",
+      "texture_sha256": "18a15b71295c4ea992c271d5f886b48eae4e0cd53c79ea83c377e2c60fa29b9e",
+      "triangles": 24,
+      "source_bind_pose_bounds": {
+        "min": [
+          -19.5074,
+          -0.05141644552132662,
+          -19.58150000000052
+        ],
+        "max": [
+          23.597,
+          59.57967044381961,
+          12.38250000000033
+        ]
+      },
+      "source_to_unit_scale": 0.022271508245097948,
+      "source_unit_center_xz": [
+        2.0448000000000004,
+        -3.599500000000095
+      ],
+      "grounding_offset_source_y": -0.05141644552132662,
+      "excluded_parts": [
+        {
+          "geometry": "_0_0-mesh",
+          "texture": "grass_tiru04.png",
+          "triangles": 40
+        }
+      ]
+    }
+  },
+  "processing": [
+    "Evaluated complete scene hierarchy and weighted bind-pose matrices; applied declared asset units/up-axis.",
+    "Selected standing hureai material only; scattered grass_tiru cut-leaf geometry stays out of ordinary grass fields.",
+    "Original PNG bytes unchanged. UV V converted from COLLADA to LÖVE convention. Original out-of-range U retained with source sampler wrap.",
+    "Uniformly normalized X/Y/Z to 96% square extent; centered X/Z and grounded actual mesh minimum Y. No invented blades or texture pixels."
+  ]
+}

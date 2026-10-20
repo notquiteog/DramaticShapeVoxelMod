@@ -4875,6 +4875,38 @@ local function grassTemplate(map, data, tileId)
   return quads
 end
 
+local function nativeGrassTile(map, shape, tx, ty)
+  return shape and shape.art == "grass"
+    and map:isGrassCell(math.floor(tx / 2), math.floor(ty / 2))
+end
+
+-- Keep imported foliage independent of the old six-float AUX disk stream.
+-- A cache hit needs only this inexpensive native mask scan, not a second
+-- Structures analysis or reconstruction of the old cards' lost anchors.
+function Structures.grassPlacements(map)
+  local style=V.require('TreePresentation')
+  if style.props and style.props:get()~='modeled' then return nil end
+  if V.require('SafariReserve').enabled(map) then return nil end
+  local def, placements = map.def, {}
+  if not (def and def.width and def.height and type(map.isGrassCell) == 'function') then return placements end
+  local shapes = TileShape.forMap(map)
+  local elevation = shapes.gen2Classes and V.require('Gen2Elevation')
+  for ty = 0, def.height * 4 - 1 do
+    for tx = 0, def.width * 4 - 1 do
+      Budget.tick()
+      local tile = map:tileAt(tx, ty)
+      local shape = tile and TileShape.at(map, shapes, tile, tx, ty)
+      if nativeGrassTile(map, shape, tx, ty) then
+        local x, z = tx * 8, ty * 8
+        local y = elevation and elevation.at(map, x + 4, z + 4) or 0
+        placements[#placements + 1] = {model='oras_green', extent=8,
+          rotation=(tx + ty * 3) % 4, x=x, y=y + .025, z=z}
+      end
+    end
+  end
+  return placements
+end
+
 function Structures.buildGrass(S, map, x0, x1, y0, y1, data)
   if V.require('SafariReserve').enabled(map) then
     return V.require('SafariLandscape').grass(S,map,x0,x1,y0,y1)
@@ -4883,8 +4915,7 @@ function Structures.buildGrass(S, map, x0, x1, y0, y1, data)
   local quads = S.grassQuads
   local function isStandingGrassTile(tx, ty)
     local s = S.shapeAt[keyOf(tx, ty)]
-    return s and s.art == "grass"
-      and map:isGrassCell(math.floor(tx / 2), math.floor(ty / 2))
+    return nativeGrassTile(map, s, tx, ty)
   end
   for ty = y0, y1 do
     for tx = x0, x1 do
@@ -4895,8 +4926,7 @@ function Structures.buildGrass(S, map, x0, x1, y0, y1, data)
       -- (isGrassCell: the cell's collision tile). The grass GRAPHIC also
       -- appears as decorative filler inside ordinary ground blocks, and a
       -- tile-level test sprouted tufts all over town plazas.
-      if s and s.art == "grass"
-         and map:isGrassCell(math.floor(tx / 2), math.floor(ty / 2)) then
+      if nativeGrassTile(map, s, tx, ty) then
         local layered=CommunityVisuals.crystalDepth(map)
           and V.require("Gen2DepthGrass").append(quads,map,tx,ty,data,S.tileAt[k],templates)
         if layered then

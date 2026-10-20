@@ -154,7 +154,19 @@ local function geometry(c,uvFor)
  local ox,oz=minX+hw/2,minY+hh/2
  local scaleY=f.height/math.max(1,hh)
  local depthScale=math.min(1,hh/math.max(1,hw))
- return {hull=hull,ox=ox,oz=oz,scaleY=scaleY,depthScale=depthScale}
+ local low,high=math.huge,-math.huge
+ for _,q in ipairs(hull)do for _,p in ipairs(q)do
+  local y=p[2]*scaleY;low=math.min(low,y);high=math.max(high,y)
+ end end
+ -- Keep the complete closed hull. Its actual vertical midpoint, rather than
+ -- a guessed source-padding row, belongs on the surrounding water plane.
+ local centerY=high>=low and(low+high)*.5 or 0
+ return {hull=hull,ox=ox,oz=oz,scaleY=scaleY,depthScale=depthScale,centerY=centerY}
+end
+-- Local to the native terrain elevation; the scene adds c.base separately.
+function M.waterline(c)
+ local y=c.shape.waterline
+ return type(y)=='number'and y==y and math.abs(y)<math.huge and y or .05
 end
 -- A small CPU-only cache survives connected-scene construction. GPU batches
 -- remain scene-owned. Keep exact source identities and UV/layout dependencies;
@@ -198,10 +210,10 @@ function M.append(c,emit,uvFor)
   template.key=key;template.quads=sharedGeometry(c,uvFor,key);template.image=ts.imageData;template.over=ts.overImageData;template.uvFor=uvFor
  end
  local x,z=c.cx*16,c.cy*16
- local model=template.quads
+ local model=template.quads;local waterline=M.waterline(c)
  for _,q in ipairs(model.hull or {})do
   local points={}
-  for _,p in ipairs(q)do points[#points+1]={x+model.ox+p[1],p[2]*model.scaleY,z+model.oz+p[3]*model.depthScale}end
+  for _,p in ipairs(q)do points[#points+1]={x+model.ox+p[1],p[2]*model.scaleY-model.centerY+waterline,z+model.oz+p[3]*model.depthScale}end
   local t={q.u,q.v}
   emit(points,{t,t,t,t},q.shade)
  end
@@ -222,14 +234,14 @@ function M.buildInstances(groups,uvFor,newMesh,quad,out)
  local Instances=V.require('ModelInstances');local Budget=V.require('BuildBudget')
  for _,group in pairs(groups)do
   local v,i={},{};local c=group.cells[1]
-  local localCell={shape=c.shape,ts=c.ts,cx=0,cy=0}
+  local localCell={shape={seaRock=c.shape.seaRock,root=true,waterline=0},ts=c.ts,cx=0,cy=0}
   M.append(localCell,function(p,t,s)quad(v,i,p,t,s)end,uvFor)
   if #v>0 then
    -- Transfer ownership before any yielding work, including fallback assembly.
    local part={ts=group.ts,pair=c.nativePair};out[#out+1]=part
    part.model=assert(newMesh(v,i));Budget.check()
    local positions={}
-   for _,cell in ipairs(group.cells)do positions[#positions+1]={cell.cx*16,cell.base or 0,cell.cy*16}end
+   for _,cell in ipairs(group.cells)do positions[#positions+1]={cell.cx*16,(cell.base or 0)+M.waterline(cell),cell.cy*16}end
    part.mesh=Instances.new(part.model,positions)
    if not part.mesh then
     -- Drivers without attribute instancing retain the identical merged hull.

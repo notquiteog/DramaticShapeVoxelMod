@@ -1,6 +1,12 @@
 -- Fingerprint immutable native layouts plus sparse gameplay edits. Keep the
 -- world context separate from provider readiness: loading a neighbor atlas
 -- must not discard an in-flight scene or force another synchronous cold build.
+local waterFields={'bankDepth','waterLevel','waterline','preserveWaterLevel','bankMaterial'}
+local emptyWater={}
+local function waterPolicy(def)
+ local p=def.voxelWater
+ return type(p)=='table'and p or emptyWater,p==false
+end
 local function fingerprint(regions,x0,z0,x1,z1,tiles,cam)
  if cam and cam.replay then return nil end
  local parts,providers={},{}
@@ -8,9 +14,13 @@ local function fingerprint(regions,x0,z0,x1,z1,tiles,cam)
   local l=r.def.midLayout
   if not(l and type(l.cells)=='table' and type(l.overrides)=='table')then return nil end
   local ts=tiles[l.pair]
-  parts[#parts+1]=table.concat({tostring(l),tostring(l.cells),l.pair,r.x,r.y,r.w,r.h},':')
+  parts[#parts+1]=table.concat({tostring(l),tostring(l.cells),l.pair,r.x,r.y,r.w,r.h,r.mapId or ''},':')
   providers[#providers+1]=table.concat({l.pair,tostring(ts),tostring(ts and ts.imageData),tostring(ts and ts.overImageData)},':')
   parts[#parts+1]=table.concat(l.borderMids or {},',')
+  local policy,disabled=waterPolicy(r.def)
+  local water={disabled and'off'or'on'}
+  for _,name in ipairs(waterFields)do water[#water+1]=name..'='..tostring(policy[name])end
+  parts[#parts+1]=table.concat(water,',')
   local keys={};for k in pairs(l.overrides)do keys[#keys+1]=k end;table.sort(keys)
   for _,k in ipairs(keys)do local c=l.overrides[k];parts[#parts+1]=table.concat({k,c.mid or 0,c.coll or 255,c.elev or 0},',')end
  end
@@ -31,8 +41,11 @@ local function matches(regions,tiles,cam)
   or battleYaw~=(battle and cam.yaw or nil) then return false end
  for i,r in ipairs(regions)do
   local a,l=snapshot[i],r.def.midLayout
-  if not l or a.layout~=l or a.cells~=l.cells or a.pair~=l.pair
+  if not l or a.mapId~=r.mapId or a.layout~=l or a.cells~=l.cells or a.pair~=l.pair
    or a.x~=r.x or a.y~=r.y or a.w~=r.w or a.h~=r.h then return false end
+  local policy,disabled=waterPolicy(r.def)
+  if a.waterDisabled~=disabled then return false end
+  for _,name in ipairs(waterFields)do if a.water[name]~=policy[name]then return false end end
   local ts=tiles[l.pair]
   if a.provider~=ts or a.image~=(ts and ts.imageData) or a.over~=(ts and ts.overImageData)then return false end
   local border=l.borderMids or a.empty
@@ -58,8 +71,10 @@ function M.keys(regions,x0,z0,x1,z1,tiles,cam)
  snapshot={}
  for i,r in ipairs(regions)do
   local l=r.def.midLayout;local ts=tiles[l.pair]
-  local a={layout=l,cells=l.cells,pair=l.pair,x=r.x,y=r.y,w=r.w,h=r.h,
+  local a={mapId=r.mapId,layout=l,cells=l.cells,pair=l.pair,x=r.x,y=r.y,w=r.w,h=r.h,
    provider=ts,image=ts and ts.imageData,over=ts and ts.overImageData,border={},empty={},edits={},count=0}
+  local policy,disabled=waterPolicy(r.def);a.waterDisabled=disabled;a.water={}
+  for _,name in ipairs(waterFields)do a.water[name]=policy[name]end
   for k,v in ipairs(l.borderMids or a.empty)do a.border[k]=v end
   for k,v in pairs(l.overrides)do a.edits[k]={v.mid or 0,v.coll or 255,v.elev or 0};a.count=a.count+1 end
   snapshot[i]=a

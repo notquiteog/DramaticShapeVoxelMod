@@ -146,7 +146,7 @@ canDraw=true;hooks['input.key'](function()error('3 forwarded')end,game,{key='3',
 local schemaLength=#definedSchema
 events['mod.options_changed']({mod=mod.id,key='fireredCamera',value=7});assert(A.level==7)
 assert(#definedSchema==schemaLength,'option changes appended duplicate Crystal rows')
-assert(treeStyle.flat(),'flat trunks must be default')
+assert(treeStyle.voxel()and not treeStyle.flat(),'solid 3D trees/trunks must be default')
 events['mod.options_changed']({mod=mod.id,key='hdTreeTrunks',value='solid'});assert(not treeStyle.flat() and SceneInvalidated,'tree option did not refresh scene')
 SceneInvalidated=false;events['mod.options_changed']({mod=mod.id,key='communityGrass',value='n64memory'});assert(SceneInvalidated,'grass option did not refresh scene')
 fail=true;Field.draw(game);assert(native==4 and not A.active)

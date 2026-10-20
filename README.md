@@ -1,3 +1,63 @@
+## 1.54.0 — Consolidated camera, native battle audio and HUD work
+
+Combine the released realistic water/source scenery with pending camera continuity,
+native GSC paired battle animation/audio, guarded GBA release audio and safe-area
+HUD layouts. Companion integrations remain optional. Preserve experimental XD
+source tools without exposing an unfinished playable feature.
+[Snapshot scope and verification](docs/CONSOLIDATED_RELEASE_2026-10-20.md).
+The new three-mode scenery categories and remaining model placements are queued.
+
+## 1.53.0 — Realistic water and imported scenery
+
+Smooth realistic water is the default across all eleven games. Continuous
+analytic ripples, soft highlights and sky/scenery reflections replace the
+pixel-stepped surface and baked sprite-wave colors. SKY skips scenery reflection
+copies; OFF retains native water artwork.
+
+Trees default to solid 3D models. Actual OR/AS broadleaf geometry replaces matching
+complete blocked tree footprints, with completed rear/underside geometry and
+source textures. Distinct conifers, small fragments and custom tree providers keep
+their existing 3D models; saved card options remain available.
+
+Outdoor water now sits below its banks, using measured HG/SS Kanto/Johto and
+OR/AS Hoenn reference heights. Soil and stone faces close the shore edges;
+surfing sprites, reflections and genuinely wet rocks follow the same surface.
+Existing recessed pools, native bridges and author overrides retain their levels.
+Dry copies of shared Hoenn rock art keep their local land instead of acquiring
+an animated water base. Original shallow-shore foam remains native artwork.
+
+Original OR/AS standing grass replaces eligible ordinary grass patches across
+eleven games, with bounded footprints, native Cut updates and sprite fallback.
+BW2 sign models retain the native regional board art in all five GBA games.
+An extensible scenery catalog also includes closed Center and Oak's Lab models;
+these two buildings await individual native placement and material review.
+
+Characters, Pokémon and flowers remain HD-2D. Every partner mod stays optional.
+This is an incremental scenery batch. The older regional queue remains 84/125
+complete; the expanded [all-eleven-game model inventory](docs/ALL_ELEVEN_MODEL_COVERAGE_2026-10-20.md)
+tracks remaining source-model replacements separately.
+[Grass and source credits](docs/IMPORTED_GRASS_2026-10-20.md),
+[tree sources and supported families](docs/IMPORTED_TREES_2026-10-20.md),
+[water material and bounded timing](docs/REALISTIC_WATER_2026-10-20.md),
+[water reference measurements](docs/GEN3_WATER_BANK_REFERENCES_2026-10-20.md),
+[catalog scope](docs/STATIC_SCENERY_CATALOG_2026-10-20.md),
+[release verification](docs/SCENERY_RELEASE_2026-10-20.md).
+
+## 1.52.0 — Half-submerged rocks, continuous water and soft clouds
+
+Hoenn sea rocks now sit halfway through the surrounding water. Their bases use
+that same animated sheet, removing the static square patches. Closed hulls,
+original footprints and native walking boundaries are preserved.
+
+Across all five GBA games, water gains shallow moving ripples, smoother native
+palette colors and matching cloud reflections. Soft, lit cumulus replace the
+stippled cloud decks with one cached draw. SKY skips the full reflection copies;
+FULL retains scenery and actor reflections plus submerged rock color.
+
+Characters, Pokémon and flowers remain HD-2D. All partner mods remain optional.
+This is an effects correction; regional model coverage remains 84/125 placements.
+[Verification and timing limits](docs/GEN3_WATER_CLOUDS_2026-10-17.md).
+
 ## 1.50.0 — 2026-10-17
 
 Android GLES 3D fixes, scene streaming optimizations, camera controls across eleven games, native battle presentation parity, and all published model improvements through 1.49.0. GLES rendering verified on desktop; physical Android hardware remains unverified. Full feature parity and sustained 165 FPS are not claimed.

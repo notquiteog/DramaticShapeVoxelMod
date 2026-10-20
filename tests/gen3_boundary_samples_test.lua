@@ -22,3 +22,15 @@ assert(calls<uncached/2,'overlapping edge strips were repeatedly classified')
 local first=calls;local fresh=B.sampler();fresh(r,0,0)
 assert(calls==first+1,'new build reused stale classification')
 print('PASS identical native perimeter selection; classifications '..uncached..' -> '..first)
+
+-- Connected providers may omit def.id; retain public world entry IDs so
+-- optional forest/safari overrides resolve the actual owning map.
+local primary={midLayout={width=10,height=8}}
+local neighbor={midLayout={width=6,height=9}}
+local world={{id='FR_VIRIDIAN_FOREST',def=neighbor,ox=10,oy=0}}
+local regions=B.regions(primary,world,'FR_ROUTE_2')
+assert(regions[1].mapId=='FR_ROUTE_2'and regions[2].mapId=='FR_VIRIDIAN_FOREST')
+assert(B.regions(primary,world,'FR_ROUTE_2')==regions,'unchanged map identities discarded region cache')
+local changed=B.regions(primary,world,'FR_ROUTE_2_ALIAS')
+assert(changed~=regions and changed[1].mapId=='FR_ROUTE_2_ALIAS','map identity change reused stale owner metadata')
+print('PASS connected owner map identities without native def.id and stable identity-aware region reuse')

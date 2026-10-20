@@ -56,7 +56,6 @@ def spline_point(path, parameter):
     return tuple(sum(point[axis]*weight for point, weight in zip(p, weights))
                  for axis in range(3))
 
-
 def sample(keys, frame, default):
     """Evaluate source channels, including authored cubic tangent handles."""
     if not keys:

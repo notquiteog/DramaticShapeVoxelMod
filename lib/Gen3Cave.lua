@@ -80,11 +80,20 @@ function M.rock(c,emit,uvFor)
  -- the centre -- not the minimum -- lands the silhouette back exactly where the
  -- drawing put it, so a boulder drawn left of centre stays left of centre.
  local ox,oz=minX+hw/2,minY+hh/2
+ local scaleY=card and 1 or(c.shape.height or 16)/16
+ local immersion=0
+ if c.shape.wetRock then
+  local low,high=math.huge,-math.huge
+  for _,q in ipairs(hull)do for _,p in ipairs(q)do
+   local y=p[2]*scaleY;low=math.min(low,y);high=math.max(high,y)
+  end end
+  if high>=low then immersion=V.require('Gen3SeaRocks').waterline(c)-(low+high)*.5 end
+ end
  for _,q in ipairs(hull)do
   local points={};local t={q.u,q.v}
   for _,p in ipairs(q)do
    points[#points+1]={c.cx*16+ox+p[1],
-    p[2]*(card and 1 or (c.shape.height or 16)/16),
+    p[2]*scaleY+immersion,
     c.cy*16+oz+p[3]}
   end
   emit(points,{t,t,t,t},q.shade,card and {c.cx*16+8,c.cy*16+8,.001} or nil)

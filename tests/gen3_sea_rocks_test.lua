@@ -35,13 +35,15 @@ check(S.prepare(c)==1,'complete blocked stack claimed')
 check(c['0:0'].shape.root and not c['1:1'].shape.root,'one hull root per group')
 check(c['1:1'].shape.kind=='rock' and c['1:1'].shape.ground==0x170,'native water underlay')
 local uvFor=function(t,m)local s=t.midToSlot[m];local l=s/8;return {{l,0},{l+1/8,0},{l+1/8,1},{l,1}}end
-local n,minX,maxX,minZ,maxZ,top=0,1e9,-1e9,1e9,-1e9,0
+local n,minX,maxX,minZ,maxZ,top=0,1e9,-1e9,1e9,-1e9,-1e9
+local bottom=1e9
 S.append(c['0:0'],function(v)n=n+1;for _,p in ipairs(v)do
- minX,maxX=math.min(minX,p[1]),math.max(maxX,p[1]);minZ,maxZ=math.min(minZ,p[3]),math.max(maxZ,p[3]);top=math.max(top,p[2])
+ minX,maxX=math.min(minX,p[1]),math.max(maxX,p[1]);minZ,maxZ=math.min(minZ,p[3]),math.max(maxZ,p[3]);top=math.max(top,p[2]);bottom=math.min(bottom,p[2])
 end end,uvFor)
 check(n>20,'hull emitted')
 check(minX>=0 and maxX<=32 and minZ>=0 and maxZ<=32,'hull stays inside the blocked 2x2 footprint')
-check(top<=30.01 and top>20,'stack height')
+check(top<=15.06 and top>10 and bottom< -10,'stack is halfway submerged')
+check(math.abs(top+bottom-.1)<1e-9,'actual hull midpoint meets local waterline')
 check(minZ>4,'thin foam line excluded from the solid')
 local d=cells(function(x,y)return (x==1 and y==0) and 0x18 or 7 end)
 check(S.prepare(d)==0 and d['0:0'].shape.kind=='flat','walkable cell rejects the whole group')
@@ -105,6 +107,7 @@ local function quad(v,i,points,uv,shade)
  for _,k in ipairs({1,2,3,1,3,4})do i[#i+1]=first+k end
 end
 local roots={repeated['0:0'],repeated['5:7']};roots[1].base=7;roots[2].base=19
+roots[1].shape.waterline=.05;roots[2].shape.waterline=2.25
 local groups={}
 for _,c in ipairs(roots)do check(S.queue(c,groups),'root queued')end
 check(S.queue(repeated['1:1'],groups),'non-root geometry omitted')
@@ -134,3 +137,27 @@ available=false;check(not S.queue(roots[1],{}),'unavailable GPU uses ordinary pa
 version='firered'
 check(S.prepare(cells(function()return 7 end))==0,'Kanto IDs never claimed')
 print(('PASS %d Hoenn sea-rock checks'):format(checks))
+-- Both complete sea families straddle the water at the actual hull midpoint.
+version='emerald'
+for _,family in ipairs(S.families)do
+ local mids={0x170};local coords={}
+ for y,row in ipairs(family.rows)do for x,mid in ipairs(row)do mids[#mids+1]=mid;coords[mid]={x-1,y-1}end end
+ local slots={};for i,mid in ipairs(mids)do slots[mid]=i-1 end
+ local atlas={cols=8,rows=1,midToSlot=slots,imageData={getPixel=function(_,px,py)
+  local mid=mids[math.floor(px/16)+1];if mid==0x170 then return .3,.4,.9,1 end
+  local xy=coords[mid];local x,y=xy[1]*16+px%16,xy[2]*16+py%16
+  if(x-16)^2+(y-17)^2<144 then return .6,.4,.3,1 end
+  return .3,.4,.9,1
+ end}}
+ local grid={};for y=-1,2 do for x=-1,2 do
+  local row=family.rows[y+1];local mid=row and row[x+1]or 0x170
+  grid[x..':'..y]={cx=x,cy=y,mid=mid,pair='general__petalburg',primary='general',collision=mid==0x170 and 41 or 7,ts=atlas,shape={kind=mid==0x170 and'water'or'flat'}}
+ end end
+ check(S.prepare(grid)==1,'complete native family prepared')
+ local low,high=math.huge,-math.huge
+ S.append(grid['0:0'],function(points)for _,p in ipairs(points)do
+  low=math.min(low,p[2]);high=math.max(high,p[2]);check(p[1]>=0 and p[1]<=32 and p[3]>=0 and p[3]<=32,'submerged hull escaped blocked cells')
+ end end,function(t,mid)local a=t.midToSlot[mid]/8;return{{a,0},{a+.125,0},{a+.125,1},{a,1}}end)
+ check(low<0 and high>0 and math.abs(low+high-.1)<1e-9,'complete family midpoint is not waterline')
+end
+print('PASS both complete sea families retain submerged closed geometry and source footprints')

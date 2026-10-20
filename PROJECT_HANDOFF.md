@@ -44,6 +44,94 @@ suites pass. Original native UI and older-provider fallback remain unchanged.
 Physical phones remain unverified; portrait GBA paired actor clipping is a
 separate camera follow-up. Evidence: `docs/NATIVE_SAFE_AREA_HUD_2026-10-20.md`.
 
+# Consolidation snapshot — 2026-10-20
+
+1.54.0 merges published scenery with captured primary camera/native paired battle,
+audio, safe-area HUD and dormant XD prototype work. Fixed primary snapshot053d534
+(11:21:24UTC) preserves concurrent later edits separately. Source370/0/58 tests;
+exact ZIP all11native/183 inspected water/camera captures, Crystalpaired6 and
+FireRedmixedaudio6 pass. 533publichashes/game; runtimepreservedthroughdocsrepack. Historical own-project branches reconciled;
+release workflow now uses bounded portable packaging and consistent vtags.
+See docs/CONSOLIDATED_RELEASE_2026-10-20.md. Three-mode scenery request remains queued.
+
+# Realistic water and source-model trees — 2026-10-20
+
+Current1.53.0 adds smooth analytic water as the default across11games, solid tree
+trunks by default, and actual ORAS broadleaf replacements only inside matching
+complete native blocked footprints. Existing source families/card options/custom
+providers retain fallback and priority. Original source foliage UV/RGBA/PNG data
+is retained; authored360completion is separately credited. Native water battle
+cameras/HD-2D actors use the recessed sheet, fixing an observed land-datum gap.
+
+Exact archive verification is complete:364/0/58 tests,11,518 packaged files,
+529 Lua compiled;30 standalone+2 all6-partner native runners pass,404 final
+captures inspected.529 mounted file hashes and all shader/default gates pass
+per runner. Final evidence repackage retains the full tested runtime SHA map.
+See docs/SCENERY_RELEASE_2026-10-20.md. Earlier captures below are not relabeled as proof
+of the new shader/tree code. Shader GB batch cost drops35–57%; GBA FULL remains
+within control variation. No general FPS/AAA/all-map completion claim is made.
+Details: docs/REALISTIC_WATER_2026-10-20.md and tree source/verification docs.
+
+The latest user directive expands imported-model placement to every supported
+edition (R/B/Y, G/S/C, FR/LG, R/S/E), choosing the newest appropriate model per
+building/location. The older84/125 regional-polish queue is not the expanded
+coverage denominator. docs/ALL_ELEVEN_MODEL_COVERAGE_2026-10-20.md is the explicit
+per-game gap inventory. Grass has eleven-game native adapters; imported whole
+buildings currently have zero native placements (Center/Oak are prepared assets).
+Continue region/family-specific native adapters and verification; do not count
+prepared catalog entries as completed map replacements.
+
+# Recessed banks and imported source scenery — 2026-10-20
+
+1.53.0 / mesh108 is in final source verification; exact archive verification and
+publication are pending. Water uses measured HGSS/ORAS bank profiles, closed
+source-material shores and matching sprite/reflection support. Source native
+Surf/Cut checks cover all five GBA editions; the six GB editions have native
+imported-grass and uploaded-water-plane checks, with final camera checks pending.
+Original foam remains source art. Dry Hoenn shared rock IDs require actual native
+adjacent water before receiving a submerged hull or animated-water underlay.
+
+Actual ORAS standing grass follows native 8px GB / 16px GBA masks, local levels,
+Cut and safe sprite fallback. Imported BW2 signs preserve regional native faces.
+Center/Oak rear and underside closures are prepared catalog assets, not automatic
+building coverage. Characters/Pokémon/flowers stay HD-2D; hard dependencies remain
+empty. Regional queue remains84/125 complete,41queued. Source/provenance details:
+`docs/IMPORTED_GRASS_2026-10-20.md`,
+`docs/GEN3_WATER_BANK_REFERENCES_2026-10-20.md`,
+`docs/STATIC_SCENERY_CATALOG_2026-10-20.md`.
+
+Other local partner work is preserved: a read-only audit found five partners
+clean/current and active concurrent Doubles GSC animation commits unpublished.
+Use published partner snapshots for this batch; do not publish another owner's
+unfinished work as part of this scenery release.
+
+# Half-submerged rocks and water/cloud finish — 2026-10-20
+
+1.52.0 / mesh107 moves reviewed Hoenn sea stacks, boulders and small wet rocks
+halfway through their actual neighboring water sheet, preserving closed hulls,
+source footprints, instancing fallback and native permissions/elevations. Shared
+animated underlays replace static square rock patches. Native GBA water uses
+shallow analytic ripples, a cached live native palette and the sky's cloud field.
+Soft lit cumulus use1 draw/1152 vertices rather than15/5616. SKY skips full mirror
+copies; FULL reuses reflection color plus one packed opaque-depth snapshot for
+submerged rocks. Actor reflection clipping receives the actual water plane.
+
+Merged with published1.51.2, retaining its camera/GLES/native presentation work.
+Latest official0.3.91:350pass/0fail/58 unavailable-fixture skips. Exact archive:
+221 standalone+24 all6-partner captures inspected;3 shore walks/3 no-surf bumps;
+15 actual loaded hashes/8 shader variants per20 clean native runners.11,469
+files/518 Lua compile. All5 GBA water/clouds and Yellow/Crystal legacy pass.
+Current published partner versions include Doubles0.14.4 andWilds2.6.5; no
+companion source modified. Runtime hashes retained through evidence repackage.
+Pre-merge0.3.89 timing is labeled historical; no general FPS gain is claimed.
+Retained native foam bands and existing partner spawn occlusion remain limits.
+Full archive/timing evidence:
+`docs/GEN3_WATER_CLOUDS_2026-10-17.md`; companion docs detail rock/cloud scope.
+Native gameplay/UI/VM/collision and HD-2D actors/Pokémon/flowers remain intact;
+all partners optional. No whole-region or generic FPS claim. Regional queue
+still84/125 complete,41 queued. Primary concurrent GSC and partner unpublished
+changes are preserved. No unrelated partner production edits are included.
+
 # Mixed native GBA release audio — 2026-10-20
 
 Shared native send-out cues now retain both verified normal/shiny variants.

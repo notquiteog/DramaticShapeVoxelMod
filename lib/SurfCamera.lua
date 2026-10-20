@@ -28,6 +28,15 @@ function M.measure(me, posed, state)
   -- Live engine lifecycle wins over reusable/stale render metadata.
   if not (state and state.player and state.player.surfing) or state.flyAnim then return nil end
   if state.player._pokepcAsPokemon or not me then return nil end
+  -- Native HD-2D Surf has no oversized mount to clear. Only an actual
+  -- provider seat/posed mount warrants the conservative Stadium fallback.
+  local provider=me.surfRide and finite(me.surfRide.seatY)
+  if not provider then
+    for _,p in ipairs(posed or{})do
+      if p.surfMount and p.surfMount.playerPose==me and p.stadiumMon then provider=true;break end
+    end
+  end
+  if not provider then return nil end
   local ground = finite(me.gh) and me.gh or 0
   local seat = me.surfRide and me.surfRide.seatY
   if not finite(seat) then seat=ground+32 end

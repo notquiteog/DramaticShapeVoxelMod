@@ -59,7 +59,7 @@ function M.surface(primary,mid,collision,secondary)
 end
 function M.emeraldSurface(primary,mid,collision)
  if primary=='general' and collision==7 and (mid==0xc5 or mid==0x18c or mid==0x194)then
-  return {kind='rock',ground=0x2d,height=6}
+  return {kind='rock',ground=0x2d,height=6,wetRock=true,waterline=.05}
  end
 end
 -- Complete Mossdeep tree drawings. Composite cliff artwork uses the native

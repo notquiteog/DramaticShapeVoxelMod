@@ -116,6 +116,8 @@ function M.roaming(posed,state)
     x,z=math.floor((p.px+8)/16),math.floor((p.py+8)/16)
    end
    if x and z and map.isWaterCell and map:isWaterCell(x,z)==true then
+    local ok,W=pcall(V.require,'GBWater')
+    local localWater=ok and type(W.surfaceAt)=='function'and W.surfaceAt(map,x*16+8,z*16+8)or water
     local lo,hi=bounds(mon)
     -- Ordinary swimming matrices have yaw and scale. Do not approximate a
     -- banked/tilted or deformed provider with a vertical-only bounds measure.
@@ -123,7 +125,7 @@ function M.roaming(posed,state)
         and math.abs(m[5])<1e-6 and math.abs(m[7])<1e-6 then
      local h=(hi-lo)*m[6]
      local bob=liveRide and math.sin((tonumber(mon.time)or 0)*1.8)*.12 or 0
-     local target=water-raft.immersion(p.stadiumDex,h)+(tonumber(p.lift)or 0)+bob
+     local target=localWater-raft.immersion(p.stadiumDex,h)+(tonumber(p.lift)or 0)+bob
      local dy=target-(m[8]+lo*m[6])
      if finite(dy)and math.abs(dy)<math.max(16,h*2)then
       p.stadiumMatrix=Mat.mul(Mat.translate(0,dy,0),m)

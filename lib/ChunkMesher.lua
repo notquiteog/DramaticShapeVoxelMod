@@ -814,7 +814,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
   local function heightAt(tx, ty)
     local k = keyOf(tx, ty)
     local base=LG.support(tx*8+4,ty*8+4)-LG.lift
-    if S.waterGround and S.waterGround[k] then return base+(S.gen2WaterHeight or -2) end
+    if S.waterGround and S.waterGround[k] then return base+(V.require('GBWater').relative(map,S.gen2WaterHeight or -2)) end
     if S.skip[k] then return base end
     local run = S.runs[k]
     if run then return base+run.h end
@@ -1289,9 +1289,9 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
       -- that face is what shades the seam -- on water it is the shadow
       -- floating on the sea. Report the neighbour as continuing flat, so the
       -- face is never built and nothing at the seam needs shading off.
-      return S.gen2WaterHeight or -2
+      return V.require('GBWater').relative(map,S.gen2WaterHeight or -2)
     end
-    if S.waterGround and S.waterGround[k] then return S.gen2WaterHeight or -2 end
+    if S.waterGround and S.waterGround[k] then return V.require('GBWater').relative(map,S.gen2WaterHeight or -2) end
     if S.skip[k] then return 0 end
     local s = S.shapeAt[k]
     local run = S.runs[k]
@@ -3098,7 +3098,7 @@ local function runGeometry(map, bodyOnly, masks, sink, waterSink, visualSinks)
         -- Coastal rock footprints share the same recessed, reflective sea
         -- mesh as their neighbors. An opaque y=0 tile here made blue square
         -- plinths even after the source-rock pedestal was removed.
-        topQuad(tx*8,ty*8,S.gen2WaterHeight or -2,S.ground[k] or 20,1,waterPush)
+        topQuad(tx*8,ty*8,V.require('GBWater').relative(map,S.gen2WaterHeight or -2),S.ground[k] or 20,1,waterPush)
       elseif s and S.skip[k] then
         -- an object stands here; paint its synthesized ground and let the
         -- prebuilt prism quads (appended below) carry the art
@@ -4093,7 +4093,7 @@ local function buildRawAux(map)
   return aux
 end
 
-local function meshesFromRawAux(aux)
+local function meshesFromRawAux(aux, importedGrass)
   local figures = {}
   for _, raw in ipairs(aux.figures or {}) do
     local mesh = meshFromRaw(raw)
@@ -4103,8 +4103,8 @@ local function meshesFromRawAux(aux)
       }
     end
   end
-  return meshFromRaw(aux.grass), meshFromRaw(aux.flowers), figures,
-         aux.grass and aux.grass.spans or nil,
+  return not importedGrass and meshFromRaw(aux.grass) or nil, meshFromRaw(aux.flowers), figures,
+         not importedGrass and aux.grass and aux.grass.spans or nil,
          aux.flowers and aux.flowers.spans or nil
 end
 
@@ -4179,6 +4179,62 @@ local function releaseVisualMeshes(list)
   for _, mesh in pairs(type(list) == "table" and list or {}) do
     if mesh and mesh.release then pcall(mesh.release, mesh) end
   end
+end
+
+local function releaseGrassModels(parts)
+  if type(parts) ~= 'table' or #parts == 0 then return end
+  V.require('GrassModels').releaseBatches(parts)
+end
+
+local function discardPendingGrass(c, parts)
+  if c.pendingGrassModels and c.pendingGrassModels[parts] then
+    releaseGrassModels(parts)
+    c.pendingGrassModels[parts] = nil
+  end
+end
+
+local function releasePendingGrass(c)
+  for parts in pairs(c.pendingGrassModels or {}) do releaseGrassModels(parts) end
+  c.pendingGrassModels = nil
+end
+
+local function buildGrassModels(map, c, current, job)
+  if type(Structures.grassPlacements) ~= 'function' then return false end
+  local scanned, placements = pcall(Structures.grassPlacements, map)
+  if not scanned then c.grassModelError = tostring(placements);return false end
+  -- Authored Safari vegetation retains its existing presentation and cards.
+  if not placements then return false end
+  if #placements == 0 then return {} end
+  local ok, models = pcall(V.require, 'GrassModels')
+  if not ok or type(models.buildBatches) ~= 'function' then return false end
+  local owned = {}
+  c.pendingGrassModels = c.pendingGrassModels or {}
+  c.pendingGrassModels[owned] = true
+  -- FULL and BODY can interleave while the shared AUX is still building.
+  -- Each job owns its own unpublished parts; cancelling one must not free
+  -- another job's uploads or the still-visible previous generation.
+  if job then
+    local cancel = job.cancel
+    job.cancel = function()
+      discardPendingGrass(c, owned)
+      if cancel then cancel() end
+    end
+  end
+  local built, parts, err = pcall(models.buildBatches, placements, Voxel3D.newMesh,
+    {parts=owned, cancelled=current and function() return not current() end or nil})
+  if not built or not parts then
+    discardPendingGrass(c, owned)
+    c.grassModelError = tostring(built and err or parts)
+    return false
+  end
+  return parts
+end
+
+local function swapGrassModels(c, parts)
+  if c.grassModels ~= parts then releaseGrassModels(c.grassModels) end
+  c.grassModels = parts
+  if c.pendingGrassModels and type(parts) == 'table' then c.pendingGrassModels[parts] = nil end
+  if type(parts) == 'table' then c.grassModelError = nil end
 end
 
 local function visualSlot(slot)
@@ -4306,6 +4362,11 @@ local function waterSlot(slot)
 end
 
 local function releaseEntry(c)
+  if c.waterBank and c.waterBank.mesh then c.waterBank.mesh:release() end
+  c.waterBank,c.waterBankKey=nil,nil
+  releaseGrassModels(c.grassModels)
+  releasePendingGrass(c)
+  c.grassModels, c.pendingGrassModels, c.grassModelError = nil, nil, nil
   for _, slot in ipairs({ "full", "body", "fullWater", "bodyWater",
                           "grass", "flowers" }) do
     local mesh = c[slot]
@@ -4369,9 +4430,11 @@ local function runJob(job)
   local function current()
     return (gen[job.id] or 0) == job.gen
   end
-  if c.grass == nil or c.flowers == nil or c.figures == nil
+  if c.grass == nil or c.grassModels == nil or c.flowers == nil or c.figures == nil
      or (c.stale and c.stale.aux) then
     local grass, flowers, figures, grassSpans, flowerSpans
+    local grassModels = buildGrassModels(map, c, current, job)
+    local importedGrass = type(grassModels) == 'table'
     -- Crystal's flat plant cards carry per-card camera anchors. The legacy
     -- auxiliary disk stream stores only six floats; use the small indexed
     -- card builder here so cache loading cannot drop those anchors.
@@ -4380,19 +4443,21 @@ local function runJob(job)
       if not aux then
         CacheTrace.log("build-aux", job.id, "cache miss")
         aux = buildRawAux(map)
-        if not current() then return end
+        if not current() then discardPendingGrass(c, grassModels);return end
         local savedAux, auxError = MeshDisk.saveAux(map, aux)
         if not savedAux then
           print("[warn] voxel aux cache write failed for " .. tostring(job.id)
                 .. ": " .. tostring(auxError))
         end
         if not current() then
+          discardPendingGrass(c, grassModels)
           return
         end
       end
-      grass, flowers, figures, grassSpans, flowerSpans = meshesFromRawAux(aux)
+      grass, flowers, figures, grassSpans, flowerSpans = meshesFromRawAux(aux, importedGrass)
     else
-      local okG, builtGrass, builtGrassSpans = pcall(buildGrassMesh, map)
+      local okG, builtGrass, builtGrassSpans = true, nil, nil
+      if not importedGrass then okG, builtGrass, builtGrassSpans = pcall(buildGrassMesh, map) end
       local okF, builtFlowers, builtFlowerSpans = pcall(buildFlowerMesh, map)
       local okX, builtFigures = pcall(buildFigureMeshes, map)
       grass = (okG and builtGrass) or false
@@ -4405,8 +4470,10 @@ local function runJob(job)
       if grass and grass.release then pcall(grass.release, grass) end
       if flowers and flowers.release then pcall(flowers.release, flowers) end
       releaseFigures(figures)
+      discardPendingGrass(c, grassModels)
       return
     end
+    swapGrassModels(c, grassModels)
     swapSlot(c, "grass", grass or false)
     swapSlot(c, "flowers", flowers or false)
     c.grassSpans = grass and grassSpans or nil
@@ -4662,6 +4729,7 @@ function ChunkMesher.cancelSpeculative(mapId, bodyOnly)
   local job = jobIndex[key]
   if not job or (job.priority or 0) > 0 then return false end
   Budget.cancel(job.co)
+  if job.cancel then job.cancel() end
   jobIndex[key] = nil
   for i = #jobs, 1, -1 do
     if jobs[i] == job then table.remove(jobs, i); break end
@@ -4770,11 +4838,16 @@ end
 function ChunkMesher.get(map, bodyOnly, masks)
   local slot = bodyOnly and "body" or "full"
   local c = entry(map.id)
-  if c.grass == nil or c.flowers == nil or (c.stale and c.stale.aux) then
-    local okG, grass = pcall(buildGrassMesh, map)
-    local okF, flowers = pcall(buildFlowerMesh, map)
+  if c.grass == nil or c.grassModels == nil or c.flowers == nil or (c.stale and c.stale.aux) then
+    local grassModels = buildGrassModels(map, c)
+    local okG, grass, grassSpans = true, nil, nil
+    if type(grassModels) ~= 'table' then okG, grass, grassSpans = pcall(buildGrassMesh, map) end
+    local okF, flowers, flowerSpans = pcall(buildFlowerMesh, map)
     swapSlot(c, "grass", (okG and grass) or false)
     swapSlot(c, "flowers", (okF and flowers) or false)
+    c.grassSpans = grass and grassSpans or nil
+    c.flowersSpans = flowers and flowerSpans or nil
+    swapGrassModels(c, grassModels)
     if c.stale then c.stale.aux = nil end
   end
   if c[slot] == nil or (c.stale and c.stale[slot]) then
@@ -4837,7 +4910,50 @@ end
 
 function ChunkMesher.grass(map)
   local c = cache[map.id]
-  return c and c.grass or nil
+  return c and type(c.grassModels) ~= 'table' and c.grass or nil
+end
+
+function ChunkMesher.grassModels(map)
+  local c = cache[map.id]
+  return c and type(c.grassModels) == 'table' and c.grassModels or nil
+end
+
+-- Real geometry remains at its native depth; only the original card fallback
+-- needs the old camera-ward grass-over-feet bias. Empty Cut parts never draw.
+function ChunkMesher.drawGrass(map, texture, model, pull)
+  local parts = ChunkMesher.grassModels(map)
+  if parts then
+    for _, part in ipairs(parts) do
+      if part.mesh and part.count > 0 then Voxel3D.draw(part.mesh, part.image, model, 0) end
+    end
+  else
+    Voxel3D.draw(ChunkMesher.grass(map), texture, model, pull)
+  end
+end
+
+-- A single source-textured sidecar per active map, independent of disk AUX.
+-- GPU creation does not yield; ownership transfers before any later draw.
+function ChunkMesher.drawBanks(map,model,draw)
+  local c=cache[map.id];if not c then return end
+  local okWater,W=pcall(V.require,'GBWater');if not okWater or type(W.bankGeometry)~='function'then return end
+  local key=W.policyKey(map)
+  if c.waterBankKey~=key then
+    if c.waterBank and c.waterBank.mesh then c.waterBank.mesh:release()end
+    c.waterBank,c.waterBankKey=nil,key
+  end
+  if c.waterBank==nil then
+    c.waterBank=false
+    local ok,part=pcall(function()
+      local vertices,indices=W.bankGeometry(map)
+      if #vertices==0 then return false end
+      local image=V.require('BankMaterials').image('kanto');if not image then return false end
+      local mesh=Voxel3D.newMesh(vertices,indices);if not mesh then return false end
+      return{mesh=mesh,image=image,edges=#vertices/4}
+    end)
+    if ok then c.waterBank=part end
+  end
+  local bank=c.waterBank
+  if bank then (draw or Voxel3D.draw)(bank.mesh,bank.image,model) end
 end
 
 function ChunkMesher.flowers(map)
@@ -4980,6 +5096,9 @@ function ChunkMesher.dropBlock(mapId, bx, by, map, before)
   -- tufts and billboards are meshes of their own, so a cut through tall
   -- grass has to reach them as well
   n = n + blankMesh(c.grass, c.grassSpans, px0, pz0, px1, pz1)
+  if type(c.grassModels) == 'table' then
+    n = n + V.require('GrassModels').hideRect(c.grassModels, px0, pz0, px1, pz1)
+  end
   n = n + blankMesh(c.flowers, c.flowersSpans, px0, pz0, px1, pz1)
   return n
 end
@@ -5034,6 +5153,9 @@ function ChunkMesher.refresh(mapId, bx, by, map, before)
   if not (c and (c.full or c.body)) then
     return ChunkMesher.invalidate(mapId)
   end
+  if c.waterBank and c.waterBank.mesh then c.waterBank.mesh:release()end
+  c.waterBank=nil
+  local okWater,W=pcall(V.require,'GBWater');if okWater and type(W.invalidate)=='function'then W.invalidate(mapId)end
   ChunkMesher.dropBlock(mapId, bx, by, map, before)
   Structures.invalidate(mapId)
   gen[mapId] = (gen[mapId] or 0) + 1
@@ -5130,6 +5252,7 @@ end
 -- the generation counter.
 function ChunkMesher.invalidate(mapId, reason)
   CacheTrace.log("invalidate", mapId, reason or "unspecified caller")
+  local okWater,W=pcall(V.require,'GBWater');if okWater and type(W.invalidate)=='function'then W.invalidate(mapId)end
   trees("evictTrees", mapId)
   Structures.invalidate(mapId)
   if mapId then

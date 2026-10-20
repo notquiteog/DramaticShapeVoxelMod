@@ -2175,84 +2175,13 @@ T.eq(Water.enabled(), false,
   "which is what puts the water back in the ordinary scene shader")
 Water.setting:sync("full")
 
--- ------- the waves are geometry, not shading -- and they step at 15fps
---
--- The surface is a heightfield of one-world-pixel columns, each standing a
--- WHOLE number of pixels tall -- a voxel like every other voxel in this
--- mode -- and it advances in STEPS rather than sliding: 15 a second, the
--- cadence hand-drawn pixel art is animated at. A surface built out of whole
--- pixels that crawls smoothly between them gives away that the quantisation
--- is only skin deep.
-do
-local TerrainAtlas = run.loader.exports.BATTLE_ART_VOXEL_FORK.lib.require("TerrainAtlas")
-realClock = TerrainAtlas._animFrame
-local frame = 0
-TerrainAtlas._animFrame = function() return frame end
-local function at(f)
-  frame = f
-  return Water._waveTime()
-end
-
-period = 60 / Water.WAVE_FPS
-T.eq(period, 5, "12 steps a second is one every five engine frames")
-T.eq(math.floor(period), period,
-  "and the beat divides the engine's 60 exactly, so every step spans the "
-  .. "same whole number of frames")
--- inside one step nothing moves; crossing one, it does
-T.eq(at(0), at(period - 1),
-  "every frame inside one wave step gets the same phase -- the surface "
-  .. "steps rather than crawling between its own pixels")
-T.neq(at(0), at(period), "and the step boundary is where it moves")
-
-steps = {}
-for f = 0, 59 do steps[at(f)] = true end
-n = 0
-for _ in pairs(steps) do n = n + 1 end
-T.eq(n, Water.WAVE_FPS, "which is WAVE_FPS distinct positions in a second")
-TerrainAtlas._animFrame = realClock
-
--- and the step is worth taking: one world pixel of the dominant train per
--- step, DERIVED from that train rather than tuned beside it, so a change of
--- wavelength moves the speed with it. A step the surface cannot resolve is
--- a smooth crawl wearing a quantised clock.
-t = Water.WAVE_TRAINS[1]
-freq = math.sqrt(t[1] * t[1] + t[2] * t[2])
-travel = (Water.waveRate() / Water.WAVE_FPS) * math.abs(t[3]) / freq
-T.check(math.abs(travel - Water.WAVE_PIXELS_PER_STEP) < 1e-9,
-  "each step advances the dominant crest by exactly WAVE_PIXELS_PER_STEP "
-  .. "world pixels, so nothing ever lands half-way between two")
-
--- the trains reach the shader as source, off the same table the rate above
--- is derived from -- one list, so the two cannot drift
-trains = Water._trainSource()
-T.eq(select(2, trains:gsub("h %+= sin", "")), #Water.WAVE_TRAINS,
-  "every train in the table is summed by the shader")
-T.check(trains:find(("%.4f"):format(t[1]), 1, true) ~= nil,
-  "at the frequency the table states")
-
--- the variation that keeps three periodic trains from reading as wallpaper:
--- the dominant train's amplitude breathes with the swell and its crests bow
--- with the bend, both pasted from their own tables like the trains are
-T.check(trains:find(("%.4f"):format(Water.WAVE_SWELL[1]), 1, true) ~= nil
-        and trains:find(("%.4f"):format(Water.WAVE_BEND[1]), 1, true) ~= nil,
-  "the swell and the bend reach the shader off the tables that document "
-  .. "them, not off copies kept in step by hand")
-T.check(Water.WAVE_SWELL[4] > 0 and Water.WAVE_SWELL[4] < 1,
-  "the swell's deepest lull thins the dominant train without deleting or "
-  .. "inverting it -- a sea with sets in it, not a sea that turns off")
-for _, mod in ipairs({ Water.WAVE_SWELL, Water.WAVE_BEND }) do
-  local mf = math.sqrt(mod[1] * mod[1] + mod[2] * mod[2])
-  T.check(mf * 3.5 < freq,
-    "a modulator's wavelength sits several times the carrier's, far enough "
-    .. "apart that it reads as weather over the waves rather than as a "
-    .. "fourth wave -- which would be the soup the weights exist to avoid")
-end
-
-T.check(Water.WAVE_HEIGHT > -TileShapeHeights.water,
-  "the crests stand taller than the recess TileShape sinks water into -- "
-  .. "they are RELIEF inside the quad's own footprint, so a bar that reaches "
-  .. "above the bank is clipped at the water's edge rather than spilling")
-end
+-- ------- smooth waves are the default across every generation
+T.eq(Water.REALISTIC,true,'the existing FULL default selects realistic water')
+local Surface=run.loader.exports.BATTLE_ART_VOXEL_FORK.lib.require('NativeWaterSurface')
+local h,dx,dz=Surface.sample(22.7,45.2,1)
+T.check(math.abs(h-Surface.sample(22.7,45.2,1.01))>1e-6,'wave phase advances continuously between old sprite ticks')
+T.check(math.abs((h-.5)*Surface.HEIGHT)<.15,'small waves preserve native bank/actor height')
+T.check(math.abs(dx)+math.abs(dz)>0,'analytic surface supplies a continuous reflection gradient')
 
 -- ------- the moon on the water is the moon in the sky
 --
@@ -2374,120 +2303,18 @@ end
 end
 
 -- ------- the compiled variants
-local plain = Water._source(false)
-gridded = Water._source(true)
-skyOnly = Water._source(false, true)
-T.check(skyOnly:find("#define SKY_ONLY 1", 1, true) ~= nil,
-  "the Android fallback compiles a dedicated sky-only water variant")
-T.check(skyOnly:find("#ifndef SKY_ONLY", 1, true) ~= nil,
-  "the lightweight variant compiles out depth reads and the frame ray march")
-T.check(plain:find("uniform float rays", 1, true) ~= nil,
-  "the proven shared pass still lets SKY disable only the shoreline march")
-T.check(plain:find("#define WAVE_STEPS " .. Water.WAVE_STEPS, 1, true) ~= nil,
-  "the relief march's step count is compiled in too")
--- the whole surface is answered per COLUMN: the ray picks one, and the art,
--- the shading, the reflection and the dither all read that one rather than
--- the fragment's own place on the flat quad. A smoothly-shaded reflection
--- over hard-edged 8-bit water is two pictures stacked.
-T.check(plain:find("floor(waveRaw(q) * waveHeight + 0.5)", 1, true) ~= nil,
-  "column heights are floored to WHOLE world pixels -- a fractional step is "
-  .. "a smooth wave with extra arithmetic, not a bar")
--- and the normal is read off the SMOOTH field underneath, which is the
--- difference between a moon on the water and confetti: integer heights give
--- integer differences, so a normal built from them can only point in about
--- five directions and a two-degree disc falls between them
-T.check(plain:find("float h = waveRaw(q);", 1, true) ~= nil,
-  "but the reflection's normal comes off the smooth surface the columns are "
-  .. "a quantisation of, so the ray sweeps instead of jumping")
-T.check(plain:find("waveNormal(vec2 q, float tilt)", 1, true) ~= nil
-        and plain:find("waveNormal(col,", 1, true) ~= nil,
-  "still one answer per column, so the surface stays pixel-quantised in "
-  .. "space while the value it reflects with is continuous")
-T.check(plain:find("relief(sheet, view, hit, col, face, axis)", 1, true) ~= nil,
-  "and the visible column is found by walking the view ray through the "
-  .. "slab, which is what makes a tall bar hide the short ones behind it")
--- ...over the FLAT sheet, which is the one thing that walk is built on: an
--- even slab over a level plane. The world curve drops each bar straight down
--- by its own column's drop, so undoing that drop hands relief() the field it
--- was written for. Walked in the world as DRAWN instead, the slab is a bowl:
--- the backward step up the ray climbs the bowl's near side as fast as it
--- climbs out of the water, the walk starts inside the sheet, and it returns a
--- column a pixel or three off -- differently per fragment, which is a
--- hard-edged patch of noise in the middle of a pond.
-T.check(plain:find("vec3 sheet = vec3(vBent.x, vBent.y + bendDrop(vBent.xz), vBent.z)",
-                   1, true) ~= nil,
-  "and it walks the sheet the mesh was AUTHORED as, the bend taken back off, "
-  .. "because a slab walk over a bowl starts inside the water")
--- the march's reach grows as one over the ray's descent, so a grazing camera
--- asks for hundreds of world pixels of it from a fixed number of samples --
--- which stepped over whole crests and smeared the surface into streaks
--- a sample is worth a SCREEN pixel of surface, so that is the stride: held
--- at a world pixel up close (finer buys nothing and skipping costs the
--- pepper) and opened out with distance (holding it there just runs the march
--- out of samples part-way down the slab, which flattened the lowest rung's
--- whole middle distance)
-T.check(plain:find("#define WAVE_STRIDE", 1, true) ~= nil
-        and plain:find("max(WAVE_STRIDE, dist * pxAngle / dy)", 1, true) ~= nil,
-  "the relief stride is a screen pixel's worth of surface, floored at a "
-  .. "world pixel")
-T.check(Water.WAVE_STRIDE <= 1,
-  "and that floor is at most ONE world pixel, because a column is one world "
-  .. "pixel wide -- a longer one steps over columns, and which ones it "
-  .. "misses changes fragment to fragment, which is the peppery noise")
--- and the art is read off the COLUMN rather than by offsetting the
--- fragment's own uv by however far the march happened to travel: one world
--- pixel is one texel, so a column's texel follows from where it stands and
--- two fragments landing on the same column cannot disagree about it
-T.check(plain:find("org + (mod(col, 8.0) + 0.5) * texel", 1, true) ~= nil,
-  "a column's art follows from its own world position, so it cannot swim "
-  .. "with the camera or speckle between neighbouring fragments")
-T.check(plain:find("waveUV(tc,col)", 1, true) ~= nil,
-  "and the column is what is handed to it")
-
--- the wireframe is ruled on the COLUMNS, not on the flat sheet they stand on
-T.check(gridded:find("columnSeam(hit, sheet, axis)", 1, true) ~= nil,
-  "with V-GRID on, the seams outline the column the ray landed on -- every "
-  .. "voxel of water its own block -- rather than ruling a grid across the "
-  .. "flat quad underneath and ignoring the bars entirely")
-T.check(gridded:find("vec3 w = fwidth(base);", 1, true) ~= nil,
-  "measured off the smooth plane, because the hit jumps a whole column "
-  .. "between neighbouring fragments and its own derivative is a step")
-T.check(plain:find("march(surf, r)", 1, true) ~= nil,
-  "the reflection marches from that column, not from the raw fragment")
--- The two halves of the world curve, and they pull opposite ways. WHAT the
--- lake reflects is worked out FLAT -- the same rule the rest of the mode
--- keeps, that the world tips away and the things standing on it do not lean
--- with it. Reflect off the bowl the bend has made instead and the far half
--- of a pond is a mirror tilted twenty degrees, throwing the ray past the
--- vertical, where the sky ramp's own measure (a screen row, through the
--- frame's matrix) swings from one end of the ramp to the other across a
--- single column and stamps hard-edged patches of the wrong sky into the
--- water.  But WHERE it lands has to be found in the world as DRAWN, because
--- that is what the depth buffer holds -- so the ray stays straight in the
--- flat world and every sample of it is bent on the way to the screen, by the
--- vertex stage's own displacement.
-T.check(plain:find("p.y -= bendDrop(p.xz);", 1, true) ~= nil,
-  "and every marched sample is bent into the world as DRAWN before it is "
-  .. "projected, because that is the world the depth buffer holds")
-T.check(plain:find("vec3 r = reflect(view, n);", 1, true) ~= nil
-        and plain:find("reflect(view, vec3(0.0, 1.0, 0.0))", 1, true) ~= nil,
-  "while the reflection itself is taken about the FLAT normal, so a curved "
-  .. "world does not tip the lake the way it does not lean the buildings")
-T.check(plain:find("mod(col.x + col.y, 2.0)", 1, true) ~= nil,
-  "and the dither's checkerboard is cut from the columns too, so a camera "
-  .. "pan slides the world through nothing")
-T.check(plain:find("#define RAY_STEPS " .. Water.RAY_STEPS, 1, true) ~= nil,
-  "the march's step count is compiled in -- GLSL wants a constant bound")
-T.check(plain:find("VOXEL_GRID", 1, true) ~= nil,
-  "the wireframe is guarded in the source")
-T.check(plain:find("#define VOXEL_GRID", 1, true) == nil,
-  "and off in the plain variant")
-T.check(gridded:find("#define VOXEL_GRID", 1, true) ~= nil,
-  "so a frame with the seams on gets its own compilation, like the scene "
-  .. "shader -- a driver that refuses derivatives loses the seams and not "
-  .. "the water")
-T.check(plain:find("//@CRATERS", 1, true) == nil,
-  "and the crater placeholder is gone by the time a driver sees the source")
+local plain=Water._source(false)
+local gridded=Water._source(true)
+local skyOnly=Water._source(false,true)
+T.check(skyOnly:find('#define SKY_ONLY 1',1,true)~=nil,'SKY compiles without the SSR path')
+T.check(plain:find('uniform float rays',1,true)~=nil,'FULL retains bounded optional scene reflections')
+T.check(plain:find('nativeSurface(sheet.xz,rippleT',1,true)~=nil,'all games share continuous world-space wave evaluation')
+T.check(not plain:find('void relief',1,true)and not plain:find('waveNormal(',1,true),'no relief traversal or repeated finite-difference normals remain')
+T.check(not plain:find('waveUV(',1,true)and not plain:find('p.rgb',1,true),'source sprite wave RGB cannot become material')
+T.check(not plain:find('columnSeam(',1,true),'terrain wireframe cannot turn smooth water into pixel columns')
+T.check(plain:find('vec3 sheet=vec3(vBent.x,vBent.y+bendDrop(vBent.xz),vBent.z)',1,true)~=nil,'surface samples physical unbent world coordinates')
+T.check(plain:find('#define RAY_STEPS '..Water.RAY_STEPS,1,true)~=nil,'SSR retains a fixed compiled depth-sample bound')
+T.check(not plain:find('//@CRATERS',1,true),'no unresolved shader source placeholder remains')
 
 -- The scene colour, readable depth, and reflection-copy canvases are one
 -- attachment/copy family. On high-DPI Android, mixing an explicit dpiscale=1

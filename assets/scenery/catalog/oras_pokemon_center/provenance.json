@@ -1,0 +1,221 @@
+{
+  "asset": 292908,
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/292908/",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire",
+  "title": "Pokémon Center",
+  "author": "Fallenleader (RSRazr)",
+  "submitted": "2015-06-21",
+  "file": "ORAS_Pokemon_Center/Pokemon_Center.obj",
+  "mtl": "ORAS_Pokemon_Center/Pokemon_Center.mtl",
+  "sourceBounds": [
+    -60.003845,
+    -44.554868,
+    -57.969524,
+    56.804138,
+    36.444641,
+    32.944771
+  ],
+  "sourceOrigin": [
+    -1.5998534999999983,
+    -44.554868,
+    -12.512376499999998
+  ],
+  "sourceUnitSpan": 116.80798300000001,
+  "bounds": [
+    -0.5,
+    0.0,
+    -0.38916130843557156,
+    0.5,
+    0.693441551850099,
+    0.38916130843557156
+  ],
+  "originalSourceBounds": [
+    -60.003845,
+    -44.504868,
+    -57.969524,
+    56.804138,
+    36.444641,
+    32.944771
+  ],
+  "archiveSha256": "2605a3230dbb19eeb703db31f2de4fa3dbb9fd6424d46a634ea52a604256d044",
+  "sourceModelSha256": "9b767d6da4d2e9e43d09cc973c8337d8d486b37506d1effa713183929a43a027",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "textureBindings": {
+    "pc_mado": "pc_mado.png",
+    "pokecen00": "pokecen00.png",
+    "pokecen_01": "pokecen_01.png"
+  },
+  "repairs": [],
+  "authoredClosure": {
+    "door": [
+      -1.5998535,
+      -44.504868,
+      31.67667
+    ],
+    "description": "Authored rear wall/roof return/skylight cap where present, plus closed foundation. Original front portal remains open. Existing source wall/roof UV islands only.",
+    "parts": [
+      "authored_rear_wall",
+      "authored_rear_plinth",
+      "authored_rear_roof_trim",
+      "authored_skylight_rear_cap",
+      "authored_closed_underside"
+    ],
+    "triangles": 103,
+    "foundationBottom": -44.554868,
+    "foundationTop": -44.504868
+  },
+  "textures": {
+    "pokecen_01.png": {
+      "sha256": "37104845e0a21b7929948f4641fb8f1f2ef29030045df1418e609f6997dd766c",
+      "bytes": 10899
+    },
+    "pc_mado.png": {
+      "sha256": "ce0b18f901cd2cd4e63df571b9d611f8f779c66634b672c77a8f7deec27c10b9",
+      "bytes": 2157
+    },
+    "pokecen00.png": {
+      "sha256": "6a5c75ec94d710e52ded46fed4336ba7897b050d501b321dd2082c2ec761904b",
+      "bytes": 661
+    }
+  },
+  "generatedMaterials": {},
+  "parts": [
+    {
+      "name": "pokecenter_1_pokecenter_1_pokecen_01",
+      "authored": false,
+      "material": "pokecen_01",
+      "texture": "assets/scenery/catalog/oras_pokemon_center/pokecen_01.png",
+      "triangles": 791,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.5,
+        0.00042805293538881805,
+        -0.38916130843557156,
+        0.5,
+        0.693441551850099,
+        0.3783051069377681
+      ]
+    },
+    {
+      "name": "pokecenter_2_pokecenter_2_pc_mado",
+      "authored": false,
+      "material": "pc_mado",
+      "texture": "assets/scenery/catalog/oras_pokemon_center/pc_mado.png",
+      "triangles": 60,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.49143728044683377,
+        0.20484465518080214,
+        -0.217806795790661,
+        0.49144061069867107,
+        0.6679688579161579,
+        0.22602767226962558
+      ]
+    },
+    {
+      "name": "pokecenter_3_pokecenter_3_pokecen00",
+      "authored": false,
+      "material": "pokecen00",
+      "texture": "assets/scenery/catalog/oras_pokemon_center/pokecen00.png",
+      "triangles": 194,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.0733402741831438,
+        0.1614364233992466,
+        0.2859579511787306,
+        0.4621368515540586,
+        0.6200865740486247,
+        0.38916130843557156
+      ]
+    },
+    {
+      "name": "authored_rear_wall",
+      "authored": true,
+      "material": "pokecen_01",
+      "texture": "assets/scenery/catalog/oras_pokemon_center/pokecen_01.png",
+      "triangles": 8,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.4051349683865357,
+        0.0759426947728393,
+        -0.3675857710855259,
+        0.4051349683865357,
+        0.3995763971029274,
+        -0.3675857710855259
+      ]
+    },
+    {
+      "name": "authored_rear_plinth",
+      "authored": true,
+      "material": "pokecen_01",
+      "texture": "assets/scenery/catalog/oras_pokemon_center/pokecen_01.png",
+      "triangles": 2,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.4051349683865357,
+        0.00042805293538881805,
+        -0.3675857710855259,
+        0.4051349683865357,
+        0.0759426947728393,
+        -0.3675857710855259
+      ]
+    },
+    {
+      "name": "authored_rear_roof_trim",
+      "authored": true,
+      "material": "pokecen_01",
+      "texture": "assets/scenery/catalog/oras_pokemon_center/pokecen_01.png",
+      "triangles": 46,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.4051349683865357,
+        0.3995763971029274,
+        -0.38916130843557156,
+        0.4051349683865357,
+        0.4833797446874842,
+        -0.34601019949124534
+      ]
+    },
+    {
+      "name": "authored_skylight_rear_cap",
+      "authored": true,
+      "material": "pokecen_01",
+      "texture": "assets/scenery/catalog/oras_pokemon_center/pokecen_01.png",
+      "triangles": 7,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.17260889180836209,
+        0.5937596576768216,
+        -0.25970505372051494,
+        0.17260895173577304,
+        0.693441551850099,
+        -0.25970505372051494
+      ]
+    },
+    {
+      "name": "authored_closed_underside",
+      "authored": true,
+      "material": "pokecen_01",
+      "texture": "assets/scenery/catalog/oras_pokemon_center/pokecen_01.png",
+      "triangles": 40,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.5,
+        0.0,
+        -0.3675857710855259,
+        0.5,
+        0.00042805293538881805,
+        0.378305021327181
+      ]
+    }
+  ],
+  "placement": "Catalog only. No generation/map/footprint compatibility is implied; native adapter review required."
+}
