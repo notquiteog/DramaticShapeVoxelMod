@@ -77,7 +77,7 @@ rendered native captures, not a manual keyboard session.
 The benchmark uses one NVIDIA process at a time, matched fixtures/settings,
 warm frames, actual renderer/source hashes and an unrelated no-water lab
 control. Software-renderer captures are excluded from hardware timing claims.
-The final performance report records cost changes and presentation/control
+The [pre-merge performance report](GEN3_WATER_PERFORMANCE_2026-10-20.md) records cost changes and presentation/control
 variation; no generic FPS guarantee or Android result is inferred.
 
 The release archive receives its own loaded-source hash checks and native
