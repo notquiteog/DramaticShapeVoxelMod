@@ -7,12 +7,14 @@ This is a conversion tool, not a claim of runtime/rendering completeness.
 """
 import argparse
 import bisect
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import dataclasses
 from enum import Enum
 import hashlib
 import importlib
 import json
 import math
+import re
 from pathlib import Path
 import struct
 import sys
@@ -90,6 +92,21 @@ def parser_modules(root):
             load("plan.helpers.animations"))
 
 
+_worker_pipeline = None
+
+
+def start_worker(root):
+    global _worker_pipeline
+    _worker_pipeline = parser_modules(root)
+
+
+def convert_job(source, output, digest):
+    source = Path(source)
+    if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+        raise ValueError("Source hash mismatch")
+    return convert_record(source, Path(output), _worker_pipeline)
+
+
 def convert_record(source, output, pipeline):
     extract, route, parse, describe, animation = pipeline
     from mathutils import Matrix
@@ -104,6 +121,11 @@ def convert_record(source, output, pipeline):
     if len(scene.models) != 1:
         raise ValueError("Expected one skeleton per PKX")
     model = scene.models[0]
+    mesh_ids = {}
+    digits = len(str(max(0, len(model.meshes) - 1)))
+    for i, mesh in enumerate(model.meshes):
+        mesh.id = f"mesh_{i:0{digits}d}_{model.bones[mesh.parent_bone_index].name}"
+        mesh_ids[mesh.id] = mesh
     output.mkdir(parents=True)
     textures = {}
 
@@ -137,6 +159,7 @@ def convert_record(source, output, pipeline):
             raise ValueError("Unreasonable animation duration")
         count = math.ceil(duration) + 1
         packed = bytearray()
+        material_frames = []
         for frame in range(count):
             srts = {}
             for track in clip.tracks:
@@ -155,10 +178,34 @@ def convert_record(source, output, pipeline):
                 if not all(math.isfinite(v) for v in numbers):
                     raise ValueError("Non-finite skin matrix")
                 packed.extend(struct.pack("<12f", *numbers))
+            materials = {}
+            for track in clip.material_tracks:
+                mesh = mesh_ids.get(track.material_mesh_name)
+                if mesh is None or mesh.material is None:
+                    raise ValueError("Material animation has no owning mesh")
+                base = mesh.material
+                values = {"diffuse": [
+                    sample(track.diffuse_r, frame, base.diffuse_color[0]),
+                    sample(track.diffuse_g, frame, base.diffuse_color[1]),
+                    sample(track.diffuse_b, frame, base.diffuse_color[2])],
+                    "alpha": sample(track.alpha, frame, base.alpha), "layers": {}}
+                for uv in track.texture_uv_tracks:
+                    layer = base.texture_layers[uv.texture_index]
+                    values["layers"][str(uv.texture_index)] = {
+                        "translation": [sample(uv.translation_u, frame, layer.translation[0]),
+                                        sample(uv.translation_v, frame, layer.translation[1]), 0],
+                        "scale": [sample(uv.scale_u, frame, layer.scale[0]),
+                                  sample(uv.scale_v, frame, layer.scale[1]), layer.scale[2]],
+                        "rotation": [sample(uv.rotation_x, frame, layer.rotation[0]),
+                                     sample(uv.rotation_y, frame, layer.rotation[1]),
+                                     sample(uv.rotation_z, frame, layer.rotation[2])]}
+                materials[track.material_mesh_name] = values
+            material_frames.append(materials)
         filename = f"clip-{clip_index}.bin.z"
         (output / filename).write_bytes(zlib.compress(packed, 6))
         clips.append({"name": clip.name, "frames": count, "fps": 30,
-                      "bones": len(model.bones), "path": filename})
+                      "bones": len(model.bones), "path": filename,
+                      "materials": material_frames if clip.material_tracks else []})
     result = {"version": 1, "model": serial(model), "clips": clips,
               "header": serial(meta.pkx_header), "shiny": serial(meta.shiny_params),
               "particlesPresent": bool(meta.gpt1_data),
@@ -178,27 +225,35 @@ def main():
     parser.add_argument("--parser", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--dex", type=int, help="Diagnostic subset only, not a full pack")
+    parser.add_argument("--workers", type=int, default=2)
     args = parser.parse_args()
     if args.output.exists():
         parser.error("Output exists; choose a new directory")
     manifest = json.loads((args.source / "manifest.json").read_text())
-    pipeline = parser_modules(args.parser)
     args.output.mkdir(parents=True)
     converted, failures = {}, {}
     records = [r for r in manifest["models"] if args.dex is None or r["dex"] == args.dex]
+    unique = {}
     for row in records:
         digest = row["sha256"]
-        if digest in converted or digest in failures:
-            continue
-        try:
-            source = args.source / row["path"]
-            if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
-                raise ValueError("Source hash mismatch")
-            converted[digest] = convert_record(source, args.output / digest, pipeline)
-            print(f"{row['dex']:03d} {row['variant']} {row['form']}: {converted[digest]}", flush=True)
-        except Exception as error:
-            failures[digest] = str(error)
-            print(f"FAILED {row['dex']}: {error}", flush=True)
+        if not isinstance(digest, str) or not re.fullmatch("[0-9a-f]{64}", digest):
+            raise ValueError("Invalid source hash/path")
+        if row["path"] != "pkx/" + digest + ".pkx":
+            raise ValueError("Invalid source record path")
+        unique[digest] = row
+    with ProcessPoolExecutor(max_workers=max(1, min(8, args.workers)),
+                             initializer=start_worker, initargs=(args.parser,)) as pool:
+        pending = {pool.submit(convert_job, args.source / row["path"], args.output / digest,
+                               digest): digest for digest, row in unique.items()}
+        for future in as_completed(pending):
+            digest = pending[future]
+            row = unique[digest]
+            try:
+                converted[digest] = future.result()
+                print(f"{row['dex']:03d} {row['variant']} {row['form']}: {converted[digest]}", flush=True)
+            except Exception as error:
+                failures[digest] = str(error)
+                print(f"FAILED {row['dex']}: {error}", flush=True)
     report = {"format": "xd-converted-pack", "version": 1, "renderReady": False,
               "targetGames": manifest["targetGames"], "models": records,
               "converted": converted, "failures": failures,

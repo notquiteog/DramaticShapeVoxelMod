@@ -19,7 +19,7 @@ local stack,rects,color,inks=0,{},{},{}
 love={graphics={push=function()stack=stack+1 end,pop=function()stack=stack-1 end,
  setShader=function()end,setScissor=function()end,setColor=function(...)color={...}end,
  rectangle=function(mode,...)rects[#rects+1]={mode=mode,color=color}end,
- origin=function()end,scale=function()end,getDimensions=function()return 640,480 end}}
+ origin=function()end,translate=function()end,scale=function()end,getDimensions=function()return 640,480 end}}
 local Chrome={DEFAULT_BOX_PALETTE={{255,255,255},{255,255,255},{255,255,255},{0,0,0}},
  box=function()end,printThrough=function()end,printRightThrough=function()end,cursorThrough=function()end,
  paletteGlyphs=function(p)return p,function()inks[#inks+1]=p[4]end,function()end end}
@@ -60,6 +60,13 @@ local game={stack={top=function()return s end}}
 hooks['render.hud'](function()return 'native' end,game,{})
 check(cards==2 and buttons==4,'modern displays both status cards and native command choices')
 check(texts[#texts]=='RUN','modern choices preserve native labels/order')
+local positions
+modules.BattleTheme.viewport=function()return 20,10,600,430 end
+local layout=modules.BattleTheme.layoutStatusCards
+modules.BattleTheme.layoutStatusCards=function(items,w,h)positions=items;check(w==600 and h==430,'modern safe bounds ignored');return layout(items)end
+hooks['render.hud'](function()end,game,{})
+check(positions[1].x==172 and positions[1].y==278 and positions[2].x==428,'native head safe offset lost')
+modules.BattleTheme.viewport=nil;modules.BattleTheme.layoutStatusCards=layout
 local ownedCards=cards
 s.usesModernDoublesHud=function()return true end
 hooks['render.hud'](function()end,game,{})

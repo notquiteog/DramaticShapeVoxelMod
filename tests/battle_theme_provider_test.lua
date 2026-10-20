@@ -19,3 +19,13 @@ local supplied
 V.mod.find=function()return {exports={apiVersion=1,enabled=function()return true end,battleTheme={apiVersion=1,statusCard=function(x,y,w,h,tip,selected,style)supplied=style end}}}end
 T.statusCard(0,0,40,20,20,false,{paper={.07,.1,.13,.96}})
 assert(supplied.paper[1]==.07,'provider did not receive per-card style')
+
+-- Mobile insets are read through the public engine API, never OS guesses.
+local rect={24,12,592,436}
+package.loaded['src.core.SafeArea']={rect=function()return unpack(rect)end}
+local x,y,w,h=T.viewport(640,480);assert(x==24 and y==12 and w==592 and h==436)
+rect={0,32,360,580};x,y,w,h=T.viewport(360,640);assert(y==32 and h==580,'rotation reused old inset')
+rect={900,0,10,10};x,y,w,h=T.viewport(640,480);assert(x==0 and w==640,'invalid inset escaped window')
+package.loaded['src.core.SafeArea'].rect=function()error('backend unavailable')end
+x,y,w,h=T.viewport(640,480);assert(x==0 and y==0 and w==640 and h==480)
+print('PASS public safe area, rotation, invalid/backend fallback without native UI changes')
