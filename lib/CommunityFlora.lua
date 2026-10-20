@@ -779,6 +779,9 @@ function MOUND.treeSectionOrder(reg, focusX, focusZ, bw, bh)
 end
 
 function MOUND.publishTreePart(p, rawParts, parts)
+  if p.importedTreePlacements then
+    V.require('ImportedTrees').buildGB(p,Voxel3D.newMesh,MOUND.treeContext().resources)
+  end
   if p.nativeGroups then
     local ctx=MOUND.treeContext()
     p.nativeInstances={}
@@ -792,7 +795,9 @@ function MOUND.publishTreePart(p, rawParts, parts)
     local piece, used = nil, 0
     local function fresh()
       local instances=p.nativeInstances;p.nativeInstances=nil
+      local imported,owner=p.importedTreeParts,p.importedTreeOwner;p.importedTreeParts,p.importedTreeOwner=nil,nil
       return { x=p.x, y=p.y, z=p.z, radius=p.radius, apron=p.apron,nativeInstances=instances,
+        importedTreeParts=imported,importedTreeOwner=owner,
         essentialFoliage=p.essentialFoliage,
         tV=p.tV, tI={}, sV=p.sV, sI={}, cV=p.cV, cI={},
         dV=p.dV, dI={}, shV=p.shV, shI={} }
@@ -886,7 +891,7 @@ function MOUND.publishTreePart(p, rawParts, parts)
   end
   p.tV, p.tI, p.sV, p.sI, p.cV, p.cI = nil, nil, nil, nil, nil, nil
   p.dV, p.dI, p.shV, p.shI = nil, nil, nil, nil
-  if p.trunks or p.stones or p.hoods or p.detail or p.shadows or p.nativeInstances and #p.nativeInstances>0 then
+  if p.trunks or p.stones or p.hoods or p.detail or p.shadows or p.nativeInstances and #p.nativeInstances>0 or p.importedTreeParts and #p.importedTreeParts>0 then
     parts[#parts + 1] = p
     MOUND.treeBuildYield(true)
   end
@@ -2118,6 +2123,10 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
         if style.original() then
           local native=V.require("NativeTreeArt")
           local card=native.gen2(map,cx,cy,lift)
+          if not MOUND.treeContext().captureTemplate and V.require('ImportedTrees').queueGB(spatialPart,map,cx,cy,lift,base,card,mx,mz)then
+            -- Actual source tree batches replace this complete native owner;
+            -- publishTreePart restores its old closed hull on asset failure.
+          else
           local underside=card and native.foliageFloor(card)
           if card and lift>4 then V.require("KfpTreeDetails").record(map,mx,base,mz,base+card.h-(card.bottom or 0)-4,base+(underside or 0))end
           card=V.require('NativeLegendaryForest').card(card,{cx=cx,cy=cy},map.id)
@@ -2130,6 +2139,7 @@ function MOUND.buildTrunks(map, nbRects, buildGroup, publishedParts,
           if card and lift>4 and not style.voxel() and not style.flat() then
             -- Keep the source crown and add a short physical stem behind it.
             tQ=V.require("Gen2Trees").appendTrunk(tV,tI,tQ,mx,base,mz,4,cx*31+cy*17)
+          end
           end
         else
         local trees=V.require("Gen2Trees")
@@ -3547,6 +3557,7 @@ end
 
 function MOUND.releaseTreeParts(parts)
   for _, part in ipairs(parts or {}) do
+    if part.importedTreeOwner then V.require('ImportedTrees').releaseGB(part,MOUND.treeContext().resources)end
     for _,batch in ipairs(part.nativeInstances or {})do
       pcall(batch.release,batch)
       local ctx=MOUND.treeContext();if ctx.resources then ctx.resources[batch]=nil end
@@ -3598,6 +3609,7 @@ function MOUND.drawTreeParts(parts, ox, oz, px, pz, model, treeSway, current,
   local detailModel = treeSway and model and Mat4.mul(model, treeSway)
                       or treeSway or model
   for _, part in ipairs(visibleParts) do
+    if part.importedTreeParts then V.require('ImportedTrees').drawGB(part,Voxel3D.draw,model)end
     for _,batch in ipairs(part.nativeInstances or {})do
       Voxel3D.drawFoliage(batch,MOUND.detailImg(),detailModel)
     end
@@ -7647,7 +7659,7 @@ function Flora.nearestShadowPart(state, wx, wz)
     for _, part in ipairs(parts or {}) do
       -- A section can contain granite posts but no tree geometry. Never let
       -- a nearer post-only section consume the single tree-shadow budget.
-      if part.trunks or part.hoods or part.nativeInstances and #part.nativeInstances>0 then
+      if part.trunks or part.hoods or part.nativeInstances and #part.nativeInstances>0 or part.importedTreeParts and #part.importedTreeParts>0 then
         local dx, dz = part.x + ox - px, part.z + oz - pz
         local d = dx * dx + dz * dz
         if not bestD or d < bestD then
@@ -7681,6 +7693,7 @@ function Flora.castShadows(state, ShadowMap, Mat4x, wx, wz)
   local part, ox, oz = Flora.nearestShadowPart(state, wx, wz)
   if not part then return end
   local model = (ox ~= 0 or oz ~= 0) and Mat4x.translate(ox, 0, oz) or nil
+  if part.importedTreeParts then V.require('ImportedTrees').drawGB(part,ShadowMap.draw,model)end
   for _,batch in ipairs(part.nativeInstances or {})do
     pcall(ShadowMap.draw,batch,MOUND.detailImg(),model)
   end

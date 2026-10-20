@@ -65,7 +65,7 @@ function M.install()
  local walkPhase=Player.walkPhase
  Player.walkPhase=function()return nativeWalk.phase(Player)or walkPhase()end
  local function ready(game)return recovery:ready(Scene.context and Scene.context()or game.session)end
- mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original battle background.'),Trees.art:schema('Solid voxel trees carved from the original game art (default), original flat cards, or illustrated cards.'),Trees.setting:schema('For card trees: flat trunks follow the crown, or use modeled trunks. Original model trees are fully solid.'),mode:schema('Gen 3 2.5D camera. Press 3 to cycle; Look with the right stick, a right-mouse drag or a touch drag in 1ST/rotating 3RD. Pinch to zoom 3RD; native field effects retain their original presentation.')})
+ mode:read();M.level=mode:get();local schema=mod.options:define({Distance.setting:schema('Scenery distance: AUTO adapts to the platform; FULL includes the loaded connected maps. Distant scenery fades into the sky.'),BattleStage.setting:schema('Native battle sprites and attacks over the 2.5D field. Disable to use the original battle background.'),Trees.art:schema('Solid 3D trees by default, including reviewed imported scenery. Unavailable or unreviewed families retain their original-art models. Original and illustrated cards remain optional.'),Trees.setting:schema('Modeled trunks by default. Card trees can optionally use flat trunks. Solid model trees retain their complete physical trunks.'),mode:schema('Gen 3 2.5D camera. Press 3 to cycle; Look with the right stick, a right-mouse drag or a touch drag in 1ST/rotating 3RD. Pinch to zoom 3RD; native field effects retain their original presentation.')})
  local fullPreset=V.require('Gen3FullPreset').new(M.level)
  local nativeArt=V.require('NativeBattleArt');nativeArt.install()
  local interfaceArt=V.require('NativeInterfaceArt')
@@ -83,7 +83,7 @@ function M.install()
  for _,setting in ipairs(V.require('Gen3BattleOptions').settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(V.require('Gen3BattleBackdrop').settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(sharedSettings)do
-  schema[#schema+1]=setting:schema(setting.key=='movementMode' and V.require('MovementMode').description or setting.key=='spatialUpscale' and V.require('SpatialUpscale').description or 'Shared renderer option; applies immediately to the native Gen 3 presentation.')
+  schema[#schema+1]=setting:schema(setting.key=='water' and 'Smooth realistic water by default. FULL reflects sky and nearby scenery; SKY skips scenery reflection copies. OFF retains native water art.' or setting.key=='movementMode' and V.require('MovementMode').description or setting.key=='spatialUpscale' and V.require('SpatialUpscale').description or 'Shared renderer option; applies immediately to the native Gen 3 presentation.')
  end
  for _,row in ipairs(V.require('NativeCrystalArt').schemas())do schema[#schema+1]=row end
  for _,setting in ipairs(nativeArt.settings())do schema[#schema+1]=setting:schema('Shared Battle Art sprite settings. ANIMATED uses installed atlases or bundled BW backs (dex 1–251); missing art falls back to static full-body images. ROM/MODDED preserves native/provider art.')end

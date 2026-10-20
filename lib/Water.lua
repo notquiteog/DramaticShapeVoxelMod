@@ -1,77 +1,10 @@
--- Voxel world mode: water, and what it reflects.
---
--- Every other surface in this mode is opaque and is drawn once, inside the
--- terrain mesh, by the scene shader. Water is neither: it is a MIRROR, and
--- a mirror cannot be drawn until the thing it reflects already exists. So
--- the water surface is lifted out of the terrain mesh at build time
--- (ChunkMesher's water sink) and drawn as its own pass, after the world and
--- before the characters, by the shader below.
---
--- WHAT IT REFLECTS, in the order the shader resolves them:
---
---   the sky      the reflected direction is put through the SAME matrix the
---                frame is drawn with, as a point at infinity, and the canvas
---                row that lands on is looked up on Sky's own band ramp --
---                the identical texture, dither and display-mode transform
---                the painted sky uses. So the sky in the lake is the sky
---                over it: blue at noon, gold at dusk, navy under the moon,
---                and it meets the painted sky at the waterline with no seam.
---
---   the sun,     hung by ANGLE rather than by screen position, because a
---   the moon     reflected body is usually off the top of the frame and a
---                projected point is meaningless out there. The angular
---                radius is Sky.discRadius converted through the camera's own
---                field of view, so the disc on the water is exactly as big
---                as the disc in the sky -- craters, dithered rim, the
---                sunset's loom and all. This is also the specular: a low sun
---                lays a broken gold path across the water on its own, out of
---                the reflection rather than out of a highlight term.
---
---   the world    SCREEN SPACE. The reflected ray is walked forward in world
---                space, each step projected through the same matrix, looking
---                for where it passes behind what the depth buffer holds --
---                then binary-refined onto the contact and read out of a copy
---                of the frame as it stood before the water went down. Shore
---                trees, buildings, ledges and cliffs land in the water
---                because they are on screen; where the ray leaves the frame
---                or finds nothing, the sky above answers instead, which is
---                what makes the far half of a lake sky and the near half
---                scenery without a seam between them.
---
---   the cast     the walkers, the NPCs, the authored figures and a staged
---                battle's two Pokemon. Awkward, and settled by drawing them
---                twice: Gen 1 draws people OVER the world and water is
---                world, so a surfing player has to composite after the
---                water, and a reflection can only hold what came before it.
---                So they are painted into the reflection copy alone
---                (Voxel3D.beginWater), in the picture the water reflects and
---                not yet in the picture it is drawn into.
---
--- WHAT IT CANNOT REFLECT is what no screen-space reflection can: anything
--- that is not in the frame. A tree just off the top edge is not in the water
--- below it, and a ray that runs off the side of the screen fades into the
--- sky rather than ending on a line.
---
--- THE SURFACE ITSELF is not flat. It is a heightfield of one-world-pixel
--- columns, each standing a whole number of pixels tall and rising and
--- falling as waves, walked by the view ray in the pixel shader -- so the
--- bars occlude each other and show their sides without a single extra
--- vertex. See WAVE_HEIGHT and relief().
---
--- THE PASS ITSELF, and why it is shaped this way. The scene canvas carries a
--- READABLE depth canvas (Voxel3D), and a texture cannot be sampled while it
--- is bound as a render target -- so for the length of this pass the depth
--- buffer is DETACHED and the shader does the depth test itself, comparing
--- its own fragment depth against the texture it just stopped writing to.
--- That is the same test the hardware would have run, so a tree in front of a
--- pond still hides it; what it costs is depth WRITES, which water has no use
--- for anyway (it is flat, it never overlaps itself, and everything drawn
--- after it stands on top of it by construction).
---
--- Falls back all the way down. No readable depth canvas, a driver that will
--- not compile this, or the row set to OFF and the water mesh is simply drawn
--- by the ordinary scene shader -- flat animated water, exactly what the mode
--- drew before any of this existed.
+-- Smooth water material shared by every native game adapter.
+-- The existing FULL/SKY/OFF ladder remains: FULL reflects the opaque scene,
+-- SKY uses the same surface without SSR, OFF retains ordinary native artwork.
+-- Only alpha coverage is read from source water tiles; their pixel-wave RGB
+-- never colors the reflective material. Native banks/floors remain separate.
+-- A single analytic wave/gradient evaluation replaces relief traversal and
+-- finite-difference normals. No additional surface textures or render passes.
 
 -- the mod namespace (see main.lua): V.require loads a sibling module
 local V = ...
@@ -111,252 +44,36 @@ function Water.enabled()
   return Water.level() > 0
 end
 
--- ------- the look, in constants
---
--- FRESNEL. Water reflects almost nothing looked straight down at and almost
--- everything looked along, which is Schlick's curve -- and taken literally
--- it hands the top rung a mirror and the other four nothing at all. This
--- mode's rungs are named for the camera's tilt off VERTICAL, so 15 is a
--- near-overhead camera meeting the water at 15 degrees off its normal:
--- honest Schlick gives that about 2%, and even a generous floor of 0.14 was
--- invisible.
---
--- So the floor is lifted a long way above water's true 0.04 and the exponent
--- softened from 5 to 2: the SHAPE is still the honest one -- a low camera
--- still gets much more of it than a high one -- but the bottom of the curve
--- is a pond rather than a painted tile.
-Water.FRESNEL_FLOOR = 0.34
-Water.FRESNEL_CEIL = 0.92
-Water.FRESNEL_POWER = 2.0
-
--- THE HORIZON LEAN, which is the other half of why the steeper rungs showed
--- nothing -- and the bigger half.
---
--- A reflection off flat water points as far ABOVE the horizon as the eye is
--- above the water. At the top rung that is 15 degrees: the reflected ray
--- grazes the sky's pale end, sweeps the sun's own path and travels far
--- enough across the screen for the march to find the shoreline. At the 15
--- rung it is 75 degrees -- straight up. Up there the sky's bands are at
--- their DARKEST (deep blue over blue water, which is no picture at all), the
--- sun and moon sit at about 6 degrees of squashed elevation and are nowhere
--- near it, and the screen-space ray leaves the top of the frame in two
--- steps. All three of those are correct, and together they are a lake with
--- nothing in it.
---
--- So the reflected direction LEANS toward the way this camera is looking, by
--- however far the camera is from having a horizon in frame. That is a
--- deliberate stylisation and it is worth being exact about what it costs and
--- what it does not:
---
---   at the rung where the horizon IS in frame the lean is ZERO, so the one
---   place the join can actually be seen -- the waterline, where the lake
---   meets the painted sky -- is still the exact reflection it was.
---
---   at the rungs where the horizon is above the top edge there is no join to
---   break, and what the lean buys is the whole of the effect: the pale bands,
---   the sunset, the moon's path, and a screen-space ray that travels ACROSS
---   the diorama instead of straight out of it.
---
--- It leans toward an ELEVATION rather than by a weight, and that matters.
--- Mixing the ray a fixed fraction of the way toward horizontal sounds like
--- the same thing and is not: the ray it starts from is different at every
--- rung, so a fixed fraction lands them all somewhere different, and the
--- middle rungs came out worst of all -- further from the sun than the
--- steepest one. Aimed at an elevation, every rung below the top one puts its
--- reflection where the TOP rung puts its own, which is the one place the
--- effect is known to work.
---
--- Measured off Voxel3D.descent -- the sine of how far below horizontal the
--- view runs -- so it answers for the battle's placed camera too, which has
--- no rung to be asked about.
-Water.LEAN_FROM = 0.30         -- descent where the lean starts: the top rung's
-Water.LEAN_FULL = 0.55         -- and where it is complete
--- the elevation it aims at: the one the top rung's own reflection sits at,
--- stated as that same descent so the two cannot drift apart
-Water.LEAN_ELEV = math.asin(Water.LEAN_FROM)
-
+-- Smooth Schlick reflectance: modest reflection overhead, strong grazing
+-- reflections. The shader uses a fixed fifth-power polynomial, no pow loop.
+Water.FRESNEL_FLOOR=.08
+Water.FRESNEL_CEIL=.92
+Water.FRESNEL_POWER=5
+-- Compatibility telemetry for old external camera probes. The realistic
+-- shader reflects the actual wave normal and does not apply a horizon lean.
+Water.LEAN_FROM=.30;Water.LEAN_FULL=.55;Water.LEAN_ELEV=math.asin(.30)
 function Water.lean(descent)
-  local span = Water.LEAN_FULL - Water.LEAN_FROM
-  local t = ((descent or 0) - Water.LEAN_FROM) / span
-  if t <= 0 then return 0 end
-  return t < 1 and t or 1
+ local t=((descent or 0)-Water.LEAN_FROM)/(Water.LEAN_FULL-Water.LEAN_FROM)
+ return math.max(0,math.min(1,t))
 end
 
--- ------- the waves
---
--- Not a normal map. The surface is a HEIGHTFIELD of one-world-pixel columns
--- -- the same unit every other voxel in this mode is built from, and exactly
--- one texel of the water tile (a tile is 8 texels across 8 world pixels) --
--- and every column stands at a whole number of pixels. So the water is a
--- field of little square bars rising and falling on their own, which is what
--- water made of pixels should look like from a camera that can see it in 3D.
---
--- It is drawn without any extra geometry. The mesh is still one flat quad
--- per tile; the columns are found by walking the view ray down through the
--- slab in the pixel shader (relief mapping) and taking the first one it
--- meets. That is what makes them read as SOLID rather than as shading: a
--- tall bar hides the shorter ones behind it, you see the SIDE of the ones
--- facing you, and the whole field parallaxes against the plane as the camera
--- moves. The side faces wear the mesh's own direction shading
--- (Voxel3D.FACE_SHADE, sent in rather than restated) so a wave crest is lit
--- like every other voxel in the world.
---
--- HEIGHT is in world pixels: the tallest a column may stand above the plane
--- the quad is drawn on, and so both the amplitude and the number of rungs a
--- crest can climb through (five gives six).
---
--- It is well past the 2px recess TileShape sinks water into, which is a
--- deliberate look rather than an oversight: the crests are RELIEF, drawn
--- inside the water quad's own screen footprint, so a bar that reaches above
--- the shoreline cannot actually spill over the bank -- it is clipped at the
--- water's edge like everything else this pass draws. What it buys is a
--- surface with real swell in it instead of a two-rung terrace.
-Water.WAVE_HEIGHT = 5
-
--- ------- the trains
---
--- Each is { fx, fz, speed, weight }. The vector is the train's DIRECTION and
--- its frequency in one -- the crest runs across it, and two pi over its
--- length is the wavelength in world pixels -- and `speed` is what walks it.
---
--- The first one dominates, and that weighting is the whole difference
--- between water and soup: a wave has a direction, and its crest is a line
--- running across it for as far as the surface goes. Three trains of equal
--- weight cancel and reinforce in patches instead, and the field comes out as
--- round islands of raised pixels with no travel to them.
---
--- Long, too: the dominant wavelength is about forty world pixels, five
--- tiles, so a crest is a run of hundreds of columns at one height with a
--- step down either side. Pitched anywhere near a pixel they stop being waves
--- and become static -- every column its own island.
---
--- Read into the shader source rather than sent as uniforms, so the rate
--- below can be derived from the same numbers the field is built out of.
-Water.WAVE_TRAINS = {
-  { 0.150, 0.062, 1.60, 0.60 },
-  { 0.058, 0.132, -1.05, 0.29 },
-  { -0.041, 0.033, 0.55, 0.11 },
-}
-
--- ------- and what keeps them from reading as one pattern
---
--- Three fixed trains are still an exactly periodic field: every forty-odd
--- pixels of sea wears the same crest at the same height, and a lake's worth
--- of that reads as wallpaper. Real swell varies two ways a sum of sines
--- cannot: waves arrive in SETS -- a few tall ones, then a lull -- and a
--- crest line curves as it runs rather than ruling itself across the whole
--- surface. Both are put back with one long-wavelength field each, riding
--- the DOMINANT train only; the two lesser trains stay plain, because they
--- are texture rather than structure and three modulators is soup again.
---
--- Both wear the trains' own shape, { fx, fz, speed, x }: a direction whose
--- length is the spatial frequency, a phase rate, and what the field does.
--- Their wavelengths sit four to five times the carrier's, far enough apart
--- that neither reads as a wave itself -- the swell as slow weather over the
--- crests, the bend as the crests' own drift.
---
--- THE SWELL scales the dominant train's amplitude; `x` is the DEPTH of the
--- deepest lull, as the fraction of the train it takes away. It runs roughly
--- along the carrier's own direction and slower than it, which is a wave
--- group's honest habit (deep-water groups travel at about half the phase
--- speed) -- so sets of crests swell up, march a while, and hand over to a
--- calm patch that is itself moving.
-Water.WAVE_SWELL = { 0.0325, 0.0134, 0.55, 0.35 }
-
--- THE BEND adds a slow wobble to the dominant train's phase; `x` is the
--- wobble's reach in RADIANS of carrier phase. 1.1 radians against a carrier
--- of about forty pixels bows a crest some seven pixels off its line over
--- the bend's own hundred-and-seventy-five -- a visible curve, not a
--- scribble -- and it runs ACROSS the carrier, which is the direction a
--- crest line actually wanders. What it costs is exactness in waveRate's
--- derivation: the carrier's local frequency now breathes around the number
--- the rate is derived from, so the one-pixel step is the average step
--- rather than every step's. The step CLOCK is untouched; only how far a
--- bowed stretch of crest moves on one tick varies, and by under a pixel.
-Water.WAVE_BEND = { -0.0138, 0.0333, 0.35, 1.10 }
-
--- ------- and the beat they move on
---
--- The surface does not slide, it advances in STEPS, off the engine's own
--- frame counter -- the move that makes this read as art rather than as a
--- simulation someone forgot to stylise. A surface built out of whole pixels
--- that crawls between them smoothly gives away that the quantisation is
--- only skin deep.
---
--- 12 a second, a shade under the 15 hand-drawn pixel art is usually
--- animated at: the crests were hurrying, and a big wave is slower than a
--- sprite's walk cycle. Still a clean divisor of the engine's 60, so every
--- step spans the same whole number of frames.
-Water.WAVE_FPS = 12
-
--- How far the dominant train advances each of those steps, in WORLD PIXELS.
--- One is the honest choice for a stepped surface: the whole field shifts by
--- exactly one pixel per frame, so nothing ever lands half-way between two.
--- The rate below is derived from it rather than tuned beside it, so changing
--- a wavelength moves the speed with it instead of quietly desynchronising.
-Water.WAVE_PIXELS_PER_STEP = 1
-
--- Radians of wave phase per second. A train travels `speed / frequency`
--- world pixels per radian of phase, so the phase that moves the dominant one
--- a pixel is its frequency over its speed -- times the step rate.
+-- Legacy telemetry retained for companion diagnostics. The active surface
+-- does not use these quantized waves, their stepped clock or their geometry.
+Water.WAVE_HEIGHT=5
+Water.WAVE_TRAINS={{.150,.062,1.60,.60},{.058,.132,-1.05,.29},{-.041,.033,.55,.11}}
+Water.WAVE_SWELL={.0325,.0134,.55,.35}
+Water.WAVE_BEND={-.0138,.0333,.35,1.10}
+Water.WAVE_FPS=12
+Water.WAVE_PIXELS_PER_STEP=1
+Water.WAVE_STEPS=0
+Water.WAVE_STRIDE=1
+Water.WAVE_SLOPE=3.5
+Water.WAVE_SLOPE_LEAN=1.5
 function Water.waveRate()
-  local t = Water.WAVE_TRAINS[1]
-  local freq = math.sqrt(t[1] * t[1] + t[2] * t[2])
-  local speed = math.abs(t[3])
-  if not (freq > 0 and speed > 0) then return 0 end
-  return Water.WAVE_PIXELS_PER_STEP * (freq / speed) * Water.WAVE_FPS
+ local t=Water.WAVE_TRAINS[1];local freq=math.sqrt(t[1]^2+t[2]^2);local speed=math.abs(t[3])
+ return freq>0 and speed>0 and Water.WAVE_PIXELS_PER_STEP*(freq/speed)*Water.WAVE_FPS or 0
 end
--- Relief samples down through the slab. With the stride pinned at one world
--- pixel (see WAVE_STRIDE) this is also how FAR the march can see: sixteen
--- samples, sixteen pixels of parallax, which covers the slab at every rung
--- but the very lowest and leaves the rest to fade out honestly.
---
--- The pass early-outs entirely (see relief) whenever the camera is steep
--- enough that the whole slab projects to under a pixel across, which is most
--- of the ladder -- so the cost of this only lands where it buys something.
-Water.WAVE_STEPS = 16
-
--- The furthest one relief sample may travel ACROSS the surface, in world
--- pixels -- which is what bounds how far the march runs in total.
---
--- The march's reach is the slab's depth over the ray's descent, so it grows
--- without limit as the camera flattens: at the top rung, fragments near the
--- horizon look along the water at a few degrees and the reach runs to
--- hundreds of world pixels. Spread over a fixed number of samples that steps
--- clean over whole crests, and the surface comes apart into streaks running
--- away from the eye. Capping the span is what keeps a sample worth taking;
--- what it costs is parallax on the far water, where the columns are under a
--- pixel across and there was nothing left to see anyway.
---
--- This is the FLOOR on it. The stride the march actually takes is a SCREEN
--- pixel's worth of surface, which is the only rate that makes sense:
---
---   up close, a screen pixel is a fraction of a world pixel, so the stride
---   sits on this floor of one world pixel and the march visits every column
---   on its path. It has to: a column is one world pixel wide, a longer
---   stride steps over columns, and which ones it misses changes from
---   fragment to fragment -- neighbouring pixels landing on different columns
---   at different heights wearing different faces. That is peppery noise.
---
---   far away, a screen pixel already spans several world pixels, so a stride
---   that matches it skips columns the screen could not have resolved anyway.
---   Holding it at one world pixel out there does not buy detail, it just
---   runs out of samples -- and a march that runs out stops part-way down the
---   slab and reports the surface as flat, which is why the lowest rung lost
---   its waves entirely across the whole middle distance.
-Water.WAVE_STRIDE = 1
-
--- How far the wave field's own gradient tilts the REFLECTION. A multiplier
--- on the SMOOTH surface's slope, not on the stepped one -- see waveNormal
--- for why that distinction is the whole difference between a moon on the
--- water and confetti. The field's gradient peaks around 0.06 per world
--- pixel, so this lands the steepest faces about twelve degrees off vertical:
--- enough to sweep a low sun or moon into a broken glitter path down the
--- lake, and not so much that the sky's own bands come apart.
-Water.WAVE_SLOPE = 3.5
--- and how far the horizon lean is allowed to open that up, since it squashes
--- the same tilt on its way past (see LEAN_FROM)
-Water.WAVE_SLOPE_LEAN = 1.5
+Water.REALISTIC=true
 
 -- ------- the cast, reflected in the plane rather than marched for
 --
@@ -400,36 +117,8 @@ Water.RAY_GROW = 1.33
 Water.RAY_THICK = 1.6
 Water.EDGE_FADE = 0.14         -- reflection eased off over this much of the frame
 
--- ------- the shader
---
--- The scene shader's own vertex path, plus the world position the geometry
--- was actually DRAWN at -- after the world curve, because that is the space
--- the surface the eye MEETS lives in: which wave column a screen pixel is
--- looking at is a question about the geometry as drawn, and relief() answers
--- it there. (The curve only ever moves Y, so a fragment's world XZ is the
--- same on both sides of it and the ripple can be measured off this one too.)
---
--- WHAT IT REFLECTS is worked out on the other side of the bend, in the FLAT
--- world, and this is the same rule the rest of the mode keeps: the curve
--- tips the world away and the things standing on it do not lean with it (see
--- WorldCurve -- buildings stay upright, shadows are resolved before the bend
--- and ride along). A lake is one of those things. Reflect off the bowl the
--- bend has made instead and the far half of a pond is a mirror tilted twenty
--- degrees: it throws the ray past the vertical, where the sky ramp's own
--- measure -- a screen row, through the frame's matrix -- swings from one end
--- of the ramp to the other across a single column, and the pond comes out
--- with hard-edged patches of the wrong sky stamped into it -- the overhead
--- band and the horizon band abutting in the middle of a lake, which reads as
--- something other than water showing through. The same tilt sends the
--- screen-space march grazing along the bank instead of over it, which is the
--- other half: the dock and the roofs smeared across the harbour.
---
--- So the reflection is taken with the flat view ray about the flat normal,
--- exactly as it would be with the curve off -- and the MARCH still has to
--- walk the world as drawn, because that is what the depth buffer holds. Both
--- at once: the ray is straight in the flat world, and project() bends each
--- sample on its way to the screen, which is the same displacement the vertex
--- stage applies and therefore lands in the same place the geometry did.
+-- Shared scene vertex/curve path; lighting/reflection uses the unbent
+-- physical sheet and re-applies the scene curve during depth projection.
 local SHADER_SRC = [[
 varying float vShade;
 varying vec3 vSun;
@@ -482,9 +171,6 @@ uniform vec3 fogColor;
 uniform vec4 fogBounds;
 uniform vec3 fogOrigin;
 uniform vec4 fogInfo;
-uniform vec2 screen;         // the canvas, in pixels
-uniform float cell;          // one diorama pixel, in canvas pixels
-uniform float pxAngle;       // radians of view one screen pixel subtends
 // The same bend the vertex stage applied. This stage has to undo it to get
 // back to the flat world it reflects in, and re-apply it on every marched
 // sample to get back to the screen. Declared in both stages, like `vp`, and
@@ -519,6 +205,7 @@ uniform Image underColor;
 uniform LOVE_HIGHP_OR_MEDIUMP Image underDepth;
 uniform mat4 inverseVP;
 uniform float underOn;
+uniform float transmissionOn; // SSR RGB must not transmit a curved water prepass
 uniform LOVE_HIGHP_OR_MEDIUMP Image depthTex;
 uniform float rays;          // 0 = sky only, 1 = march the screen too
 #endif
@@ -536,28 +223,14 @@ uniform LOVE_HIGHP_OR_MEDIUMP Image castTex;
 uniform float castOn;        // 0 = there is no cast canvas this frame
 uniform float castAlpha;
 uniform float castWobble;
-uniform vec3 lookFlat;       // the way the horizon lies from this camera
-uniform float lean;          // and how far the reflection tilts toward it
-uniform float leanElev;      // the elevation it aims at, in radians
-uniform float waveHeight;    // the tallest column, in whole world pixels
-uniform float waveSlope;     // how far a column's neighbours tilt its normal
-uniform float waveSlopeLean; // and how far the horizon lean may open that up
-uniform float waveT;
+uniform float waveHeight;    // bounded physical ripple height
+uniform float waveSlope;     // reflection-normal strength
 uniform float rippleT; // continuous, independent of paused engine tile ticks
-uniform vec4 faceShade;      // the mesh's own direction shading: E, W, S, N
 uniform float gardenWater;
-#ifdef NATIVE_WATER
-#define nativeWater 1.0
 uniform vec4 nativePalette;
-#else
-uniform float nativeWater;
-#endif
 uniform float reserveWater;
-uniform float atlasTileScale;
-uniform vec2 atlasSize;      // the tileset atlas, in texels
 uniform float fresnelFloor;
 uniform float fresnelCeil;
-uniform float fresnelPower;
 uniform float rayStep;
 uniform float rayGrow;
 uniform float rayThick;
@@ -567,7 +240,6 @@ uniform float edgeFade;
 uniform Image skyRamp;
 uniform float skyCount;
 uniform float skyEdge;       // the sky's bottom, in canvas pixels
-uniform float skyStart;      // where the checker begins inside a band
 uniform float skyOn;         // 0 indoors: there is no sky to reflect
 
 // and what hangs in it
@@ -582,10 +254,6 @@ uniform float glowAmt;
 uniform float glowReach;     // in radians, like bodyAng
 uniform vec3 glowColor;
 
-#ifdef VOXEL_GRID
-uniform float gridDark;
-uniform float gridWidth;
-#endif
 
 // ------- the sun's pass (the scene shader's, verbatim)
 
@@ -620,60 +288,9 @@ float sunlight(vec3 p) {
   return 1.0 - sunDark * edge * (1.0 - lit * 0.25);
 }
 
-#ifdef VOXEL_GRID
-// The wireframe, ruled on the COLUMNS rather than on the flat sheet they
-// stand on.
-//
-// The scene shader reads a mesh's own model space, and for water that is the
-// base plane -- so it would draw a grid across a flat sheet and ignore the
-// bars entirely, which is the one thing that would give away that they are
-// bars. What has to be outlined is what is actually SEEN: the column the ray
-// landed on, at the height it landed at, so every voxel of water reads as
-// its own block with its own edges.
-//
-// `p` is that hit; `base` is the smooth plane under it, and the derivative
-// comes from THERE. `p` jumps a whole column between neighbouring fragments,
-// so fwidth() of it reports a step rather than a scale and every column edge
-// would blow out into a band. The plane underneath is smooth, and is the
-// same scale in x and z that the columns are built on.
-//
-// `axis` is the direction the face does not vary along -- the top's own y,
-// or a side's x or z. Its distance to the nearest plane is a constant zero,
-// and taken at face value it floods the whole face solid; pushed out of
-// reach it simply drops out, exactly as the scene shader's own seam handles
-// the axis a face's normal points along.
-float columnSeam(vec3 p, vec3 base, float axis) {
-  vec3 w = fwidth(base);
-  float wide = max(w.x, w.z);
-  // the plane has no vertical extent of its own to measure, so y borrows
-  // the horizontal scale -- it sets a line's THICKNESS and nothing else
-  w.y = wide;
-  vec3 d = abs(fract(p + 0.5) - 0.5);
-  vec3 px = d / max(w, vec3(1e-6));
-  if (axis < 0.5) { px.y += 1e6; }
-  else if (axis < 1.5) { px.x += 1e6; }
-  else { px.z += 1e6; }
-  float near = min(min(px.x, px.y), px.z);
-  // Fade out where a column is too small on screen to hold a line at all,
-  // or the far water turns into a flat wash of seams rather than a grid.
-  //
-  // It holds on further than the scene shader's own does. That one is ruling
-  // seams across whole 16px walls and roofs; these are one world pixel
-  // apart, so the fade starts biting while the water is still perfectly
-  // readable -- and at the lowest rung, where the middle distance is most of
-  // the frame, it took the grid off nearly all of it. Full lines by a pixel
-  // and a half of screen space, gone under three quarters of one.
-  float span = 1.0 / max(wide, 1e-6);
-  float fade = clamp((span - 0.75) * 1.35, 0.0, 1.0);
-  return fade * clamp(gridWidth * 0.5 + 0.5 - near, 0.0, 1.0);
-}
-#endif
-
 // ------- the sky, by direction
 
-#ifdef NATIVE_WATER
 //@CLOUDS
-#endif
 
 vec3 bandAt(float i) {
   return Texel(skyRamp,
@@ -692,36 +309,12 @@ vec3 bandAt(float i) {
 // A direction whose w comes out negative is BEHIND the camera plane, which
 // for an upward reflection means near-vertical: the top band, overhead.
 float skyPos(vec3 d) {
-  // Custom water samples the existing palette by reflected elevation. A wave
-  // can point behind the camera; projecting that direction to screen space
-  // abruptly wrapped it to the darkest band, producing large oval patches.
-  if (gardenWater > .5 || nativeWater > .5) {
-    float elevation=asin(clamp(d.y,0.0,1.0));
-    return (1.0-elevation/1.570796327)*max(skyCount-1.0,0.0);
-  }
-  vec4 c = vp * vec4(d, 0.0);
-  if (c.w <= 1e-6) return 0.0;
-  float py = (c.y / c.w * 0.5 + 0.5) * screen.y;
-  float row = mix(floor(py / cell) * cell, py, gardenWater);
-  return clamp(row / max(skyEdge, 1.0), 0.0, 1.0) * skyCount;
+ float elevation=asin(clamp(d.y,0.0,1.0));
+ return (1.0-elevation/1.570796327)*max(skyCount-1.0,0.0);
 }
-
-// `parity` is the diorama checkerboard this fragment sits on -- the same
-// one Sky's own dither is cut from, so the reflected gradient breaks up in
-// the same 8-bit way rather than being the one smooth thing in the frame.
-vec3 skyAt(vec3 d, float parity) {
-  float pos = skyPos(d);
-  // Custom water interpolates the same sky palette; discrete sky bands must
-  // not become large, hard-edged blue patches sliding across small ripples.
-  if (gardenWater > .5 || nativeWater > .5) {
-    return mix(bandAt(floor(pos)), bandAt(floor(pos) + 1.0), fract(pos));
-  }
-  float base = min(floor(pos), skyCount - 1.0);
-  vec3 c = bandAt(base);
-  if (base < skyCount - 1.0 && (pos - base) > skyStart && parity < 0.5) {
-    c = bandAt(base + 1.0);
-  }
-  return c;
+vec3 skyAt(vec3 d,float parity) {
+ float pos=skyPos(d);
+ return mix(bandAt(floor(pos)),bandAt(floor(pos)+1.0),fract(pos));
 }
 
 //@CELESTIAL
@@ -741,9 +334,7 @@ vec3 bodyAt(vec3 d, vec3 c, float parity) {
   float ang = acos(clamp(dot(d, bodyDir), -1.0, 1.0));
   if (glowAmt > 0.0) {
     float g = glowAmt * pow(clamp(1.0 - ang / glowReach, 0.0, 1.0), 2.0);
-    float lvl = floor(g * 4.0);
-    if (g * 4.0 - lvl > 0.5 && parity < 0.5) { lvl += 1.0; }
-    c = mix(c, glowColor, min(lvl / 3.0, 1.0) * 0.65);
+    c = mix(c,glowColor,g*.65);
   }
   float t = ang / max(bodyAng,0.00001);
   if (t > 1.3) return c;
@@ -841,214 +432,11 @@ vec4 march(vec3 origin, vec3 dir) {
 }
 #endif
 
-// ------- the surface, as a field of pixel-tall columns
+// ------- the continuous surface and analytic gradient
 
-// How high the column at world pixel `q` stands, in WHOLE world pixels.
-//
-// Whole, because that is what makes them BARS: a column is a voxel like
-// every other voxel in this mode, one unit on a side, and a surface that
-// stepped in fractions would just be a smooth wave with extra arithmetic.
-// Three crossing wave trains, so the field has no readable repeat inside a
-// lake's worth of pixels.
-//
-// The SMOOTH surface underneath, 0 to 1 -- the thing the columns are a
-// quantisation of. Summed from Water.WAVE_TRAINS, which is where the trains
-// and the reasoning behind their weights live; pasted in rather than sent,
-// so the speed derived from those same numbers cannot drift from the field
-// they describe.
-// TEST125: uneven flow bends and breaks the crests across the water.
-// Smooth, band-limited detail; all time rates repeat at the existing 40pi wrap.
-float gardenHash(vec2 p) {
-  vec3 h=fract(vec3(p.xyx)*vec3(.1031,.1030,.0973));
-  h+=dot(h,h.yzx+33.33);
-  return fract((h.x+h.y)*h.z);
-}
-float gardenNoise(vec2 p) {
-  vec2 i=floor(p),f=fract(p);f=f*f*f*(f*(f*6.0-15.0)+10.0);
-  return mix(mix(gardenHash(i),gardenHash(i+vec2(1,0)),f.x),
-             mix(gardenHash(i+vec2(0,1)),gardenHash(i+vec2(1,1)),f.x),f.y);
-}
-float gardenRipple(vec2 q, float t) {
-  vec2 drift=vec2(cos(t*.10),sin(t*.10))*3.0;
-  float flow=gardenNoise(q*.034+drift);
-  float crossFlow=gardenNoise(q*.049+vec2(-drift.y,drift.x)+vec2(13.4,7.8));
-  vec2 bent=q+(vec2(flow,crossFlow)-.5)*26.0;
-  vec2 span=fwidth(bent);
-  vec3 fade=1.0-smoothstep(vec3(.65),vec3(2.2),vec3(
-    dot(span,vec2(.24,.07)),dot(span,vec2(.08,.37)),length(span)*.32));
-  float fine=gardenNoise(bent*.19+drift*1.5)*2.0-1.0;
-  return .50*fade.x*(.4+.6*crossFlow)*sin(dot(bent,vec2(.24,.07))+t*.85)
-       + .30*fade.y*sin(dot(bent,vec2(-.08,.37))-t*1.25+flow*5.0)
-       + .20*fade.z*fine;
-}
-
+// Analytic, continuous world-space surface; one evaluation supplies its
+// height and exact X/Z gradient, with derivative-based horizon filtering.
 //@NATIVE_SURFACE
-
-float waveRaw(vec2 q) {
-  if (gardenWater > .5) {
-    return .5 + .5*gardenRipple(q,rippleT);
-  }
-  float h = 0.0;
-//@TRAINS
-  return h * 0.5 + 0.5;
-}
-
-// and the voxel surface: that field, in whole world pixels.
-float waveAt(vec2 q) {
-  if (waveHeight <= 0.0) return 0.0;
-  if (reserveWater > .5 || gardenWater > .5) return waveRaw(q) * waveHeight;
-  return floor(waveRaw(q) * waveHeight + 0.5);
-}
-
-// The tilt this column reflects with -- taken from the SMOOTH field, not
-// from the stepped one, and this is the difference between a moon on the
-// water and confetti.
-//
-// Floored heights are integers, so their differences are integers too: a
-// column's neighbours are level with it or a whole pixel off, and nothing in
-// between. Build the normal out of THOSE and the reflected ray can only ever
-// point in about five directions -- straight up, or rotated by twice the
-// arctangent of one step, or of two. A flat sky does not mind; the sun and
-// the moon are discs barely two degrees across, and a ray that jumps in
-// eighteen-degree increments simply steps over them. The lake goes dark and
-// the odd column that happens to land dead on flares -- which is exactly
-// what "the moon doesn't reflect right" looks like.
-//
-// The columns are an approximation of a real surface, and light reflects off
-// the surface being approximated. So the SHAPE stays quantised -- it is what
-// you see, and it is the whole point -- while the normal is read off the
-// smooth field the shape is made from. Still one answer per column, because
-// `q` is an integer: pixel-quantised in space, continuous in value, which
-// puts the glitter path back without softening a single edge.
-//
-// Forward differences over one pixel: three samples, and the answer only has
-// to say which way this piece of the surface leans.
-vec3 waveNormal(vec2 q, float tilt) {
-  float h = waveRaw(q);
-  float e = waveRaw(q + vec2(1.0, 0.0)) - h;
-  float s = waveRaw(q + vec2(0.0, 1.0)) - h;
-  return normalize(vec3(-e * tilt, 1.0, -s * tilt));
-}
-
-
-// Walk the view ray down through the wave slab and return the column it
-// actually meets -- RELIEF MAPPING, and the whole reason the bars read as
-// solid rather than as a pattern painted on a flat sheet.
-//
-// The mesh is still one flat quad per tile, so what gets rasterised is the
-// point where the ray crosses the BASE plane. The visible surface is
-// somewhere above that, and the two differ by more the lower the camera
-// sits. So the ray is walked BACKWARD to the top of the slab and then
-// stepped down: the first column whose top it falls below is what the eye is
-// looking at, and everything shorter behind that column is hidden by it for
-// free, because the march simply never reaches it.
-//
-// A step that lands below a column's top having just ARRIVED in that column
-// is looking at its side; one that was already there and fell through is
-// looking at its top. That is the whole of the face test, and it is what
-// gives a crest a lit face and a shaded one.
-//
-// `axis` names which way the face it found points -- 0 top, 1 east/west, 2
-// north/south -- because the wireframe needs to know the one direction the
-// face does not vary along (see columnSeam).
-void relief(vec3 base, vec3 dir, out vec3 hit, out vec2 col, out float face,
-            out float axis) {
-  col = floor(base.xz);
-  hit = base;
-  face = 1.0;
-  axis = 0.0;
-  if (reserveWater > .5 || gardenWater > .5) {
-    // Shallow continuous ripples, not a quantized column staircase.
-    col = base.xz - vec2(.5);
-    hit.y = base.y + waveRaw(base.xz)*waveHeight;
-    return;
-  }
-  float dy = -dir.y;
-  // a ray running level along the surface has no slab to walk through, and
-  // dividing by its descent would send the start point to infinity
-  if (waveHeight <= 0.0 || dy < 0.02) return;
-  float across = length(dir.xz);
-  float reach = waveHeight / dy;
-  // How far across the surface the whole slab displaces the answer. Under
-  // half a pixel it cannot pick a different column than the one already
-  // under the fragment, so the march would spend its samples arriving where
-  // it started -- which is exactly the case at the steep rungs, where the
-  // camera looks nearly straight down the columns and there is no side of a
-  // bar to see anyway.
-  float span = reach * across;
-  if (span < 0.5) {
-    hit.y = base.y + waveAt(col);
-    return;
-  }
-  // and the other end: `reach` grows as one over the descent, so a grazing
-  // ray asks for hundreds of world pixels of march from a fixed number of
-  // samples.
-  //
-  // What one sample is worth is a SCREEN pixel of surface, so that is the
-  // stride (see WAVE_STRIDE). A screen pixel covers this much of the water:
-  // the distance to the eye times the angle one pixel subtends, opened out
-  // by the obliquity -- a surface seen edge-on runs away far faster per
-  // pixel than one seen face-on. Floored at a world pixel, because up close
-  // a finer stride than the columns themselves buys nothing and skipping
-  // them costs everything.
-  float dist = length(base - eye);
-  float stride = max(WAVE_STRIDE, dist * pxAngle / dy);
-  float maxSpan = float(WAVE_STEPS) * stride;
-  if (span > maxSpan) { reach = maxSpan / max(across, 1e-4); }
-  vec3 top = base - dir * reach;
-  vec2 wasCol = floor(top.xz);
-  for (int i = 1; i <= WAVE_STEPS; i++) {
-    vec3 p = mix(top, base, float(i) / float(WAVE_STEPS));
-    vec2 q = floor(p.xz);
-    float y = base.y + waveAt(q);
-    if (p.y <= y) {
-      col = q;
-      hit = vec3(p.x, y, p.z);
-      vec2 d = q - wasCol;
-      if (abs(d.x) + abs(d.y) < 0.5) {
-        face = 1.0;                                  // fell through the top
-        axis = 0.0;
-      } else if (abs(d.x) > abs(d.y)) {
-        face = (d.x > 0.0) ? faceShade.y : faceShade.x;   // west : east
-        axis = 1.0;
-      } else {
-        face = (d.y > 0.0) ? faceShade.w : faceShade.z;   // north : south
-        axis = 2.0;
-      }
-      return;
-    }
-    wasCol = q;
-  }
-}
-
-// The water's own art, read at the column the ray landed on rather than at
-// the fragment's own place on the flat quad -- otherwise the bars parallax
-// away and the pixels they are made of stay behind on the plane.
-//
-// Read off the COLUMN, not off the fragment.
-//
-// One world pixel is one atlas texel exactly, and the mesher lays a tile's
-// eight texels across its eight world pixels -- so the column at world
-// (cx, cz) wears texel (cx mod 8, cz mod 8) and nothing else. That makes the
-// lookup exact, and far more importantly STABLE: the art a column shows
-// depends only on where that column stands in the world, so it cannot swim
-// as the camera moves and two fragments that landed on the same column
-// cannot disagree about it.
-//
-// Offsetting the fragment's own uv by the parallax instead makes the art
-// depend on how far the march happened to travel -- and wherever the march
-// skipped a column, neighbouring fragments picked texels several apart. That
-// is what peppered the surface with noise, and why it cleared up in patches:
-// the patches are where the march was not skipping.
-//
-// The tile origin is the FRAGMENT's, so the lookup can never leave the tile
-// this quad was built to sample -- the same bleed the mesher's INSET stops.
-vec2 waveUV(vec2 tc, vec2 col) {
-  vec2 texel = atlasTileScale / atlasSize;
-  vec2 tile = 8.0 * texel;
-  vec2 org = floor(tc / tile) * tile;
-  return org + (mod(col, 8.0) + 0.5) * texel;
-}
 
 // The float parameters are pinned to mediump BECAUSE the stage default is
 // not: LOVE's own header forward-declares effect() under its default, and
@@ -1116,167 +504,66 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
   if (selfZ > Texel(depthTex, uv).r + 2e-4) discard;
 #endif
 
-  // THE COLUMN THIS FRAGMENT IS LOOKING AT. Every water pixel is a bar of
-  // its own standing a whole number of pixels tall, and the ray decides
-  // which one it meets -- so what follows is answered per COLUMN and not per
-  // screen pixel: one colour to a bar, at the resolution the water art is
-  // drawn at, with no smooth shading anywhere across it. (The depth test
-  // above is the one thing that stays per fragment: that is the hardware's
-  // own question and it is asked in screen space.)
-  //
-  // Answered on the FLAT sheet, which is where the bars are a slab of even
-  // thickness over a level plane -- the one thing relief() is built on. The
-  // bend translates every bar straight down by its own column's drop, so the
-  // field keeps its shape and only its height moves; undo that here and the
-  // walk is the walk it was written for. Try it in the world as DRAWN
-  // instead and the slab is a bowl: the backward step up the ray climbs the
-  // bowl's near side as fast as it climbs out of the water, the walk starts
-  // inside the sheet, and it hands back a column a pixel or three off -- per
-  // fragment, differently, which is a patch of noise rather than parallax.
-  vec3 sheet = vec3(vBent.x, vBent.y + bendDrop(vBent.xz), vBent.z);
-  vec3 view = normalize(sheet - eye);
-  vec3 hit;
-  vec2 col;
-  float face;
-  float axis;
-  vec3 nativeWave=vec3(.5,0.0,0.0);
-  if (nativeWater > .5) {
-    nativeWave=nativeSurface(sheet.xz,rippleT,abs(fwidth(sheet.xz)));
-    hit=vec3(sheet.x,sheet.y+(nativeWave.x-.5)*waveHeight,sheet.z);
-    col=sheet.xz-vec2(.5);face=1.0;axis=0.0;
-  } else relief(sheet, view, hit, col, face, axis);
-  // and the bar's centre, so a column is sampled and reflected from one
-  // place rather than from wherever inside it the fragment happened to land
-  vec3 surf = vec3(col.x + 0.5, hit.y, col.y + 0.5);
-
-  // Continuous custom ripples do not live on the source tile's pixel grid.
-  // waveUV's centre offset can cross an 8px tile edge at fractional columns.
-  // Use the mesher's inset UV only for coverage; its RGB is not water color.
-  vec4 p = (gardenWater > .5 || nativeWater > .5) ? Texel(tex,tc) : Texel(tex,waveUV(tc,col));
-  if (p.a < 0.5) discard;
-  // `face` is the column's own side shading, which is what makes a crest
-  // read as a solid thing with a lit flank rather than as a bright patch
-  // Continuous custom color belongs to the world, independent of source
-  // tile borders; preserve the native art when the custom profile is off.
-  float broad = .5 + .25*sin(surf.x*.027 + surf.z*.013)
-                   + .25*cos(surf.z*.033 - surf.x*.009);
-  vec3 calm = mix(vec3(.13,.25,.34),vec3(.22,.37,.45),broad);
-  vec3 material = mix(p.rgb,calm,gardenWater);
-#ifdef NATIVE_WATER
-  // Retain the source palette without projecting its repeated diagonal wave
-  // drawing over the continuous surface. Similar body colors are softened;
-  // distant bank/foam colors and the original alpha remain intact.
-  vec3 paletteDelta=p.rgb-nativePalette.rgb;
-  float bodyWeight=1.0-smoothstep(.008,.080,dot(paletteDelta,paletteDelta));
-  material=mix(material,nativePalette.rgb,nativePalette.a*bodyWeight);
-#endif
-  float reliefShade = mix(face,mix(1.0,face,.40),gardenWater);
-  vec3 base = material * vShade * reliefShade * sunlight(vSun) * dayTint;
-
-  // the reflection follows the WAVES' own shape -- the tilt this column
-  // takes from the neighbours it stands beside -- rather than an invented
-  // wobble, so the sky and the sun break along the bars instead of across
-  // them. Opened up by the lean, which is about to squash it (see below).
-  vec3 n;
-  if (nativeWater > .5) n=normalize(vec3(-nativeWave.y*waveSlope,1.0,-nativeWave.z*waveSlope));
-  else n=waveNormal(col, waveSlope * (1.0 + lean * waveSlopeLean) * mix(1.0,.38,gardenWater));
-  vec3 r = reflect(view, n);
-  // the same reflection off a LEVEL surface, which is what the lean below
-  // moves: the difference between the two is this column's own contribution
-  vec3 rFlat = reflect(view, vec3(0.0, 1.0, 0.0));
-  // The horizon lean (see LEAN_FROM in Water.lua): zero at the rung whose
-  // horizon is in frame, so the waterline join is untouched; taking the ray
-  // down to the elevation THAT rung reflects at as the camera tips over,
-  // where there is no join to break and a straight-up reflection has nothing
-  // in it. Applied to the sky, the body AND the march, because the same
-  // seventy-five-degree ray that misses the sun also leaves the frame.
-  //
-  // What is leaned is the LEVEL reflection, with this column's own deflection
-  // put back on top afterwards. Leaning the perturbed ray instead sets its
-  // elevation outright, which overwrites the very variation the waves are
-  // there to provide: at full lean every column on the lake reflects the
-  // same elevation, the sky comes out one flat band and the moon -- a disc
-  // two degrees wide that the ray now never sweeps past -- vanishes
-  // completely. Which is exactly what it did.
-  //
-  // The ray keeps its own BEARING and is only tipped in elevation, so a
-  // reflection still points where the water is pointing it -- and a ray so
-  // near vertical that it has no bearing left borrows the camera's.
-  if (lean > 0.0) {
-    float fl = length(rFlat.xz);
-    vec3 bearing = (fl > 1e-3) ? vec3(rFlat.x / fl, 0.0, rFlat.z / fl)
-                               : lookFlat;
-    float e = mix(asin(clamp(rFlat.y, -1.0, 1.0)), leanElev, lean);
-    r = normalize(bearing * cos(e) + vec3(0.0, sin(e), 0.0) + (r - rFlat));
-  }
-
-  // The checkerboard the sky's bands and the sunset's glow are dithered on,
-  // cut from the WATER's own columns rather than from the screen. Same
-  // reasoning the window glint follows in the scene shader: a pattern
-  // anchored to the screen has the world sliding through it at zoom speed
-  // whenever the camera pans, which strobes. Anchored to the surface,
-  // panning moves nothing and only the waves do.
-  float parity = mod(col.x + col.y, 2.0);
-  vec3 refl = base;
-  if (skyOn > 0.5) {
-    refl = bodyAt(r, skyAt(r, parity), parity);
-#ifdef NATIVE_WATER
-    vec4 reflectedCloud=cloudAt(r);
-    refl=mix(refl,reflectedCloud.rgb,reflectedCloud.a);
-#endif
+  vec3 sheet=vec3(vBent.x,vBent.y+bendDrop(vBent.xz),vBent.z);
+  vec3 view=normalize(sheet-eye);
+  vec3 wave=nativeSurface(sheet.xz,rippleT,abs(fwidth(sheet.xz)));
+  vec3 surf=vec3(sheet.x,sheet.y+(wave.x-.5)*waveHeight,sheet.z);
+  vec3 hit=surf;
+  vec3 n=normalize(vec3(-wave.y*waveSlope,1.0,-wave.z*waveSlope));
+  // Keep source alpha coverage, including cutouts. RGB is never sampled as
+  // material: white/blue sprite-wave bands cannot bleed into this surface.
+  if (Texel(tex,tc).a<.5)discard;
+  vec3 material=vec3(.025,.225,.280);
+  vec3 regional=clamp(nativePalette.rgb*vec3(.28,.48,.58),vec3(.018,.10,.14),vec3(.065,.25,.31));
+  material=mix(material,regional,nativePalette.a*.25);
+  float sun= sunlight(vSun);
+  vec3 base=material*(.94+.12*wave.x)*sun*dayTint;
+  vec3 r=reflect(view,n);
+  vec3 refl=base;
+  if(skyOn>.5){
+    refl=bodyAt(r,skyAt(r,0.0),0.0);
+    vec4 cloud=cloudAt(r);refl=mix(refl,cloud.rgb,cloud.a);
   }
 #ifndef SKY_ONLY
-  if (rays > 0.5 && (nativeWater < .5 || r.y > .01)) {
-    vec4 hit = march(surf, r);
-    refl = mix(refl, hit.rgb, hit.a);
+  if(rays>.5&&r.y>.01){
+    vec4 scene=march(surf,r);refl=mix(refl,scene.rgb,scene.a);
   }
 #endif
-
-  // Schlick, floored and softened (see FRESNEL_* in Water.lua): the angle
-  // still decides, a grazing camera still gets a mirror, and a steep one
-  // still gets a pond rather than a flat sticker.
-  float ct = clamp(dot(-view, n), 0.0, 1.0);
-  float f = fresnelFloor
-            + (fresnelCeil - fresnelFloor) * pow(1.0 - ct, fresnelPower);
-  // TEST7: reconstruct the opaque scene below this surface, before any
-  // water prepass or characters. Reject foreground/sky samples explicitly.
+  float ct=clamp(dot(-view,n),0.0,1.0);
+  float grazing=1.0-ct;float grazing2=grazing*grazing;
+  float f=fresnelFloor+(fresnelCeil-fresnelFloor)*grazing2*grazing2*grazing;
 #ifndef SKY_ONLY
-  if (underOn > .5 && (gardenWater > .5 || nativeWater > .5)) {
-    vec2 tuv = sc / love_ScreenSize.xy;
-    vec3 packedDepth = floor(Texel(underDepth,tuv).rgb*255.0+.5);
+  if(underOn>.5&&transmissionOn>.5){
+    vec2 tuv=sc/love_ScreenSize.xy;
+    vec3 packedDepth=floor(Texel(underDepth,tuv).rgb*255.0+.5);
     float bd=dot(packedDepth,vec3(65536.0,256.0,1.0))/16777215.0;
     vec4 bw=inverseVP*vec4(tuv*2.0-1.0,bd*2.0-1.0,1.0);
-    if (abs(bw.w)>.000001 && bd<.999999) {
+    if(abs(bw.w)>.000001&&bd<.999999){
       vec3 bentBed=bw.xyz/bw.w;
-      vec3 bed=vec3(bentBed.x,bentBed.y+bendDrop(bentBed.xz),bentBed.z);
-      float waterDepth=sheet.y-bed.y;
-      if (waterDepth>.10 && waterDepth<40.0) {
+      float depth=sheet.y-(bentBed.y+bendDrop(bentBed.xz));
+      if(depth>.10&&depth<64.0){
 #ifdef NATIVE_WATER
         vec3 bedColor=Texel(reflectTex,tuv).rgb;
 #else
         vec3 bedColor=Texel(underColor,tuv).rgb;
 #endif
-        float transmission=exp(-waterDepth*.065);
-        vec3 tinted=bedColor*vec3(.78,.94,1.0);
-        base=mix(base,tinted,transmission*.58);
-        f=mix(.14,.78,pow(1.0-ct,3.0));
+        // RGB absorption makes deeper water bluer without a tiled color map.
+        vec3 transmission=exp(-depth*vec3(.18,.075,.045));
+        base=mix(base,bedColor*vec3(.72,.93,.96)*dayTint,transmission*.62);
       }
     }
   }
 #endif
-  if (nativeWater > .5) f=.18+.60*pow(1.0-ct,3.0);
-  vec3 rgb = mix(base, refl, clamp(f * mix(1.0,.78,gardenWater), 0.0, 1.0));
-  // Surface detail belongs above transmitted bed color. Small broken crests
-  // remain readable at night even when the reflected sky is nearly uniform.
-  float ripple=nativeWater > .5 ? nativeWave.x : waveRaw(surf.xz);
-  float crest=smoothstep(.68,.94,ripple);
-  rgb += gardenWater * (vec3(.024,.046,.065)*(ripple-.5)
-         + vec3(.030,.058,.076)*crest) * max(dayTint,vec3(.38));
-
-  if (nativeWater > .5) {
-    // Restrained world-space highlights keep native color without tile-sized
-    // shimmering staircases; filtering fades fine waves toward the horizon.
-    rgb += vec3(.014,.022,.028)*(nativeWave.x-.5)*max(dayTint,vec3(.30));
+  vec3 rgb = mix(base, refl, clamp(f,0.0,1.0));
+  // Small filtered variations, with no quantized color or crest staircases.
+  rgb+=vec3(.008,.018,.023)*(wave.x-.5)*max(dayTint,vec3(.25));
+  if(bodyOn>.5){
+    // A broad, restrained microfacet lobe responds to the same normal. No
+    // noise/octaves, extra texture lookups or time-dependent sparkle hash.
+    vec3 halfLight=normalize(bodyDir-view);
+    float spec=max(dot(n,halfLight),0.0);float s2=spec*spec;float s4=s2*s2;
+    float s8=s4*s4;float s16=s8*s8;
+    rgb+=bodyMain*(s16*s8)*sun*(bodyMoon>.5?.035:.16);
   }
 
   // THE CAST, mirrored in this plane (see CAST_ALPHA). Read at this
@@ -1299,7 +586,7 @@ EFFECT_PREC vec4 effect(EFFECT_PREC vec4 color, Image tex, EFFECT_PREC vec2 tc, 
   }
 
 #ifdef VOXEL_GRID
-  rgb *= 1.0 - gridDark * (1.0-gardenWater) * (1.0-reserveWater) * (1.0-nativeWater) * columnSeam(hit, sheet, axis);
+  // Smooth water deliberately does not inherit terrain voxel-grid seams.
 #endif
   if (fogInfo.x > 0.0) {
     float distance = fogInfo.w > 0.5 ? length(hit.xz - fogOrigin.xz) : length(hit - eye);
@@ -1371,9 +658,8 @@ local function source(grid, skyOnly, bare, native)
   src = src:gsub("//@CELESTIAL", function()return Celestial.surface end)
   src = src:gsub("//@NATIVE_SURFACE",function()return V.require("NativeWaterSurface").glsl end)
   local clouds
-  if native then local ok,result=pcall(V.require,'Clouds');if ok then clouds=result end end
+  if native or skyOnly then local ok,result=pcall(V.require,'Clouds');if ok then clouds=result end end
   src=src:gsub("//@CLOUDS",function()return clouds and clouds.glsl or 'vec4 cloudAt(vec3 d){return vec4(0.0);}'end)
-  src = src:gsub("//@TRAINS", (trainSource():gsub("%%", "%%%%")))
   local head = ("#define RAY_STEPS %d\n#define RAY_REFINE %d\n"
                 .. "#define WAVE_STEPS %d\n#define WAVE_STRIDE %.1f\n")
     :format(Water.RAY_STEPS, Water.RAY_REFINE, Water.WAVE_STEPS,
@@ -1386,9 +672,8 @@ end
 
 Water._source = source                 -- named for the suite
 
--- Two compilations, exactly as Voxel3D keeps two of the scene shader: the
--- wireframe variant needs derivatives, the one thing a driver can refuse,
--- and a refusal must cost the seams on the water and nothing else.
+-- Four programs: FULL/SKY and packed/native source-depth variants. Grid
+-- requests reuse them because smooth water has no voxel seam program.
 -- nil = untried, false = unavailable.
 local shaders = {
   full = { [false] = nil, [true] = nil },
@@ -1398,7 +683,8 @@ local shaders = {
 }
 
 function Water.shader(grid, skyOnly, native)
-  grid = grid and true or false
+  -- Terrain grid does not add seams to smooth water; share its program.
+  grid = false
   local family = native and (skyOnly and shaders.nativeSky or shaders.nativeFull) or (skyOnly and shaders.sky or shaders.full)
   if family[grid] == nil then
     if not (love.graphics and love.graphics.newShader) then
@@ -1422,6 +708,8 @@ end
 
 local active = nil        -- the shader this pass bound, or nil
 local activeNative = false
+local noPalette={0,0,0,0}
+local identity=Mat4.identity()
 
 -- The ripple phase. Driven by the ENGINE's tile-animation clock, the same
 -- 60Hz counter the water tiles rotate on, so the ripple and the art it
@@ -1471,7 +759,10 @@ function Water.begin(ctx, skyOnly)
   end
   local level = Water.level()
   if level <= 0 then return false end
-  local native=ctx.nativeWater==true
+  -- A separate opaque-color snapshot is required for planted/curved GB
+  -- transmission. Its FULL program omits cloudAtlas to stay within eight
+  -- samplers. Ordinary water shares the compact FULL program and clouds.
+  local native=ctx.nativeWater==true or not ctx.underColor
   local sh = ctx.grid and Water.shader(true, skyOnly, native) or nil
   if not sh then sh = Water.shader(false, skyOnly, native) end
   if not sh then return false end
@@ -1483,22 +774,17 @@ function Water.begin(ctx, skyOnly)
   end
 
   activeNative=native
-  if not native then send("nativeWater",0)end
   send("gardenWater", 0)
   send("reserveWater", 0)
   send("vp", "row", ctx.vp)
   send("eye", ctx.eye)
   send("curve", ctx.curve)
-  send("screen", { ctx.screen[1], ctx.screen[2] })
-  send("cell", math.max(1, ctx.cell or 1))
-  -- how much of the view one screen pixel is worth: what sets the relief
-  -- march's stride, so a sample is always about a pixel of surface
-  send("pxAngle", (ctx.fov or 1) / math.max(1, ctx.screen[2]))
   if not skyOnly then
     send("reflectTex", ctx.reflect)
     send("depthTex", ctx.depth)
     local inverse=ctx.underDepth and (ctx.nativeWater or ctx.underColor) and V.require('WaterBackdrop').inverse(ctx.vp)
     send('underOn',inverse and 1 or 0)
+    send('transmissionOn',native and ctx.curve and (ctx.curve[3]or 0)>0 and 0 or 1)
     send('underColor',ctx.underColor or ctx.reflect)
     send('underDepth',ctx.underDepth or ctx.reflect)
     send('inverseVP','row',inverse or Mat4.identity())
@@ -1541,33 +827,17 @@ function Water.begin(ctx, skyOnly)
   if castBound then send("castTex", castBound) end
 
   if not skyOnly then send("rays", level >= 2 and 1 or 0) end
-  -- the horizon lean, and the direction it leans toward (see Water.lean)
-  send("lookFlat", ctx.lookFlat or { 0, 0, -1 })
-  send("lean", Water.lean(ctx.descent))
-  send("leanElev", Water.LEAN_ELEV)
-  send("waveHeight", Water.WAVE_HEIGHT)
-  send("waveSlope", Water.WAVE_SLOPE)
-  send("waveSlopeLean", Water.WAVE_SLOPE_LEAN)
-  send("waveT", waveTime())
+  send("waveHeight",V.require("NativeWaterSurface").HEIGHT)
+  send("waveSlope",V.require("NativeWaterSurface").SLOPE)
   send("rippleT", rippleTime())
-  -- the columns' side faces wear the MESH's own direction shading, sent in
-  -- rather than restated, so a wave crest is lit like every other voxel
-  local fs = Voxel3D.FACE_SHADE
-  send("faceShade", { fs[1], fs[2], fs[5], fs[6] })   -- east, west, south, north
   send("fresnelFloor", Water.FRESNEL_FLOOR)
   send("fresnelCeil", Water.FRESNEL_CEIL)
-  send("fresnelPower", Water.FRESNEL_POWER)
   send("rayStep", Water.RAY_STEP)
   send("rayGrow", Water.RAY_GROW)
   send("rayThick", Water.RAY_THICK)
   send("edgeFade", Water.EDGE_FADE)
-  if ctx.grid then
-    local VoxelGrid = V.require("VoxelGrid")
-    send("gridDark", VoxelGrid.DARK)
-    send("gridWidth", VoxelGrid.width())
-  end
 
-  if native then
+  if native or skyOnly then
     local ok,clouds=pcall(V.require,'Clouds')
     local reflected=ok and clouds.reflection and clouds.reflection()
     send('cloudAtlas',reflected and reflected.image or ctx.reflect or Sky.ramp())
@@ -1601,7 +871,6 @@ function Water.sendSky(sh, ctx)
     send("skyRamp", ctx.reflect)
     send("skyCount", 1)
     send("skyEdge", 1)
-    send("skyStart", 2)
     send("skyOn", 0)
     send("bodyOn", 0)
     send("glowAmt", 0)
@@ -1610,7 +879,6 @@ function Water.sendSky(sh, ctx)
   send("skyRamp", ramp)
   send("skyCount", count)
   send("skyEdge", edge)
-  send("skyStart", Sky.DITHER and Sky.DITHER_START or 2)
   send("skyOn", 1)
 
   local replaced = V.companion and V.companion.celestialWasReplaced and V.companion:celestialWasReplaced()
@@ -1656,29 +924,16 @@ end
 function Water.draw(mesh, texture, model, nativePalette)
   if not (active and mesh) then return end
   if texture then mesh:setTexture(texture) end
-  if activeNative then pcall(active.send,active,'nativePalette',nativePalette or {0,0,0,0})end
+  pcall(active.send,active,'nativePalette',nativePalette or noPalette)
   local safariScale=V.require("SafariMaterials").texelScale(texture)
   local atlasScale=safariScale or V.require("DecorAtlas").texelScale(texture)
   local garden = atlasScale>1 and V.require("CommunityVisuals").customRoads()
   pcall(active.send,active,"reserveWater",safariScale and 1 or 0)
-  -- Existing town pads start at +.14; keep the crest below them. Moving
-  -- normals/reflections remain full strength. Safari's taller plants retain
-  -- their accepted .22 profile; unmodified atlases retain the voxel waves.
-  pcall(active.send,active,"waveHeight",activeNative and V.require("NativeWaterSurface").HEIGHT or safariScale and .22 or garden and .12 or Water.WAVE_HEIGHT)
-  if activeNative then pcall(active.send,active,"waveSlope",V.require("NativeWaterSurface").SLOPE)end
-  pcall(active.send,active,"atlasTileScale",atlasScale)
+  -- Keep the existing tiny plant/pad clearance; normals remain full strength.
+  pcall(active.send,active,"waveHeight",safariScale and .22 or garden and .12 or V.require("NativeWaterSurface").HEIGHT)
+  pcall(active.send,active,"waveSlope",V.require("NativeWaterSurface").SLOPE)
   pcall(active.send,active,"gardenWater",(safariScale or garden) and 1 or 0)
-  pcall(active.send, active, "model", "row", model or Mat4.identity())
-  -- Per draw rather than per pass, and read off the TEXTURE rather than
-  -- assumed: it is what converts a world pixel of the columns' parallax into
-  -- the texel of art standing on it, and two maps in one frame can be drawn
-  -- from atlases of different sizes.
-  if texture and texture.getDimensions then
-    local ok, w, h = pcall(texture.getDimensions, texture)
-    if ok and w and h then
-      pcall(active.send, active, "atlasSize", { w, h })
-    end
-  end
+  pcall(active.send, active, "model", "row", model or identity)
   love.graphics.draw(mesh)
 end
 

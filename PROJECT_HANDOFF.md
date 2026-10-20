@@ -1,3 +1,41 @@
+# Realistic water and source-model trees — 2026-10-20
+
+Current1.53.0 adds smooth analytic water as the default across11games, solid tree
+trunks by default, and actual ORAS broadleaf replacements only inside matching
+complete native blocked footprints. Existing source families/card options/custom
+providers retain fallback and priority. Original source foliage UV/RGBA/PNG data
+is retained; authored360completion is separately credited. Native water battle
+cameras/HD-2D actors use the recessed sheet, fixing an observed land-datum gap.
+
+Final source/native GPU review and exact-archive verification are in progress;
+do not treat the older captures below as evidence for the new shader/tree code.
+No generic FPS/AAA/all-map completion claim is made. Runtime/source docs will
+record paired timing and remaining model-family limits before publication.
+
+# Recessed banks and imported source scenery — 2026-10-20
+
+1.53.0 / mesh108 is in final source verification; exact archive verification and
+publication are pending. Water uses measured HGSS/ORAS bank profiles, closed
+source-material shores and matching sprite/reflection support. Source native
+Surf/Cut checks cover all five GBA editions; the six GB editions have native
+imported-grass and uploaded-water-plane checks, with final camera checks pending.
+Original foam remains source art. Dry Hoenn shared rock IDs require actual native
+adjacent water before receiving a submerged hull or animated-water underlay.
+
+Actual ORAS standing grass follows native 8px GB / 16px GBA masks, local levels,
+Cut and safe sprite fallback. Imported BW2 signs preserve regional native faces.
+Center/Oak rear and underside closures are prepared catalog assets, not automatic
+building coverage. Characters/Pokémon/flowers stay HD-2D; hard dependencies remain
+empty. Regional queue remains84/125 complete,41queued. Source/provenance details:
+`docs/IMPORTED_GRASS_2026-10-20.md`,
+`docs/GEN3_WATER_BANK_REFERENCES_2026-10-20.md`,
+`docs/STATIC_SCENERY_CATALOG_2026-10-20.md`.
+
+Other local partner work is preserved: a read-only audit found five partners
+clean/current and active concurrent Doubles GSC animation commits unpublished.
+Use published partner snapshots for this batch; do not publish another owner's
+unfinished work as part of this scenery release.
+
 # Half-submerged rocks and water/cloud finish — 2026-10-20
 
 1.52.0 / mesh107 moves reviewed Hoenn sea stacks, boulders and small wet rocks

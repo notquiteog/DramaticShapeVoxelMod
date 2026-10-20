@@ -39,7 +39,7 @@ local alternate = {
   tileset = { id = "CAVERN" },
 }
 
-local colorDraws, shadowDraws, pairCalls = {}, {}, {}
+local colorDraws, shadowDraws, pairCalls, grassCalls = {}, {}, {}, {}
 local alternateFullReady = true
 local function countDraws(log, target)
   local count = 0
@@ -138,12 +138,16 @@ function ChunkMesher.pair(map, bodyOnly)
   }
 end
 function ChunkMesher.grass() return nil end
+function ChunkMesher.drawGrass(map, texture, model, pull)
+  grassCalls[#grassCalls + 1] = {map=map, texture=texture, model=model, pull=pull}
+end
 function ChunkMesher.flowers() return nil end
+function ChunkMesher.drawBanks()end
 function ChunkMesher.visualObjectVisible()
   error("BattleScene must not apply overworld replacement claims", 0)
 end
 
-local VoxelScene = {
+local VoxelScene = {waterPlane=function()return -2 end,
   drawWater=function(draws,_,draw)for _,d in ipairs(draws)do Voxel3D.draw(d.mesh,d.texture,d.model)end end,}
 function VoxelScene.prefetch(state)
   check(state.map == current, "current-map prefetch receives the overworld state")
@@ -297,12 +301,18 @@ local function arena(host)
 end
 
 local function resetLogs()
-  colorDraws, shadowDraws, pairCalls = {}, {}, {}
+  colorDraws, shadowDraws, pairCalls, grassCalls = {}, {}, {}, {}
 end
 
 resetLogs()
 check(BattleScene.render(state, arena(nil), nil, 1),
   "current-map staged battle renders")
+equal(#grassCalls, 2, "staged grass adapter draws host and neighbor once")
+equal(grassCalls[1].map, current, "staged grass uses current host")
+equal(grassCalls[1].pull, 0, "staged model/card grass stays at physical depth")
+equal(grassCalls[2].map, neighbor, "staged grass includes connected native source")
+equal(grassCalls[2].model[2], 64, "neighbor grass keeps X offset")
+equal(grassCalls[2].model[4], -32, "neighbor grass keeps Z offset")
 equal(countDraws(colorDraws, currentSign), 1,
   "current-map original sign draws in the color pass")
 equal(countDraws(shadowDraws, currentSign), 1,

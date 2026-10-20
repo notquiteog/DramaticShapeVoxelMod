@@ -1,0 +1,93 @@
+{
+  "asset": 364272,
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/364272/",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire",
+  "uploadedBy": "MasterPengo",
+  "submitted": "2025-06-29",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "0d849831180a5bf9484efff71e8947d420558fb6019417cfebb124e673a9257b",
+  "sourceModel": "world03_02_02.dae",
+  "sourceModelSha256": "c3e3481bd89769f3cb6c7195fbb4101f8c8e12bd91c9eea6343c49a399fdb065",
+  "trunkComponents": 5,
+  "canopyComponents": 30,
+  "selectedCopy": 0,
+  "selectedSourceBounds": [
+    67.97998,
+    6.66240712960492,
+    -224.9098846814996,
+    186.91,
+    115.71403239034031,
+    -155.54999418158604
+  ],
+  "sourceTriangles": 108,
+  "sourceBounds": [
+    67.97998,
+    6.66240712960492,
+    -239.89006891455836,
+    187.67001999999997,
+    115.71403239034031,
+    -120.20002891455839
+  ],
+  "sourceOrigin": [
+    127.82499999999999,
+    6.66240712960492,
+    -180.04504891455838
+  ],
+  "sourceUnitSpan": 119.69003999999997,
+  "bounds": [
+    -0.5000000000000001,
+    0.0,
+    -0.49999999999999994,
+    0.49999999999999994,
+    0.9111169589444152,
+    0.5000000000000001
+  ],
+  "authoredCompletion": {
+    "sourceTriangles": 108,
+    "barkClosureTriangles": 24,
+    "addedCanopyTriangles": 144,
+    "insetBarkBackingTriangles": 84,
+    "canopyRotations": [
+      90,
+      180,
+      270
+    ],
+    "trunkAxisXZ": [
+      127.82499999999999,
+      -180.04504891455838
+    ],
+    "barkHullEdgesClosed": true,
+    "notes": "Original108triangles retained. Source leaf shells remain alpha-cutout foliage; their open leaf edges are intentional, not opaque solid hulls."
+  },
+  "textures": {
+    "wood_base.png": {
+      "sha256": "f0a7708b74497237197371e0d735f04b4865cd431e5ca70eb495857c5a6cbd06",
+      "size": [
+        128,
+        128
+      ],
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    "forest_wood_a.png": {
+      "sha256": "d2c7553fe3fdd1e4c982cc8b62422cb3b3c2cb84cb5954dc53c0d9b537b0bc2a",
+      "size": [
+        256,
+        256
+      ],
+      "alphaRange": [
+        0,
+        255
+      ]
+    }
+  },
+  "processing": [
+    "Evaluated full static scene hierarchy, declared Z_UP and asset unit through the shared DAE converter.",
+    "Selected one connected trunk and its six canopy lobes from five original translation copies; excluded distant tree cards and all unrelated scenery.",
+    "Preserved original UVs, per-vertex RGB colors, alpha-cutout textures and repeat samplers; PNG bytes unchanged.",
+    "Uniformly scaled XYZ, centered X/Z, grounded actual mesh minimum Y; native adapter must fit complete blocked footprint."
+  ],
+  "placement": "Prepared family only; native adapter must review the complete blocked footprint, source family and fallback."
+}

@@ -1,7 +1,7 @@
--- Coherent low waves for the native GBA scenery adapter. The shader computes
+-- Coherent low waves shared by every GB/GBC/GBA water adapter. The shader computes
 -- height and its analytic gradient together; no relief traversal or repeated
--- noise/finite-difference samples are needed. Legacy GB water is separate.
-local M={HEIGHT=.30,SLOPE=1.9}
+-- noise/finite-difference samples are needed. Native source RGB is unrelated.
+local M={HEIGHT=.30,SLOPE=3.2}
 M.glsl=[[
 vec3 nativeSurface(vec2 q,float t,vec2 footprint) {
  vec2 k0=vec2(.105,.033),k1=vec2(-.049,.119),k2=vec2(.174,.153);

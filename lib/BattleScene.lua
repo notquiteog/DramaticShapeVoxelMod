@@ -1494,6 +1494,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
         end
       end
       drawBattleTerrain(terrain, atlasFor(host), nil)
+      ChunkMesher.drawBanks(host,nil,drawBattleTerrain)
       V.require("Gen2Boundary").draw({map=host,neighbors=neighbors},cx,cy,vw,vh,atlasFor)
       V.require("GameCorner").draw(host)
       LegendaryTowerExterior.drawMap(host)
@@ -1508,6 +1509,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
       drawBattleTerrain(nbMesh[i], atlasFor(nb.map),
                    Mat4.translate(nb.ox, 0, nb.oy))
     end
+    for _,nb in ipairs(neighbors)do ChunkMesher.drawBanks(nb.map,Mat4.translate(nb.ox,0,nb.oy),drawBattleTerrain)end
     for _, visual in ipairs(visuals or {}) do
       Voxel3D.draw(visual.mesh, atlasFor(host), nil)
     end
@@ -1523,17 +1525,18 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
     local waterDraws = BattleScene._waterDraws or {}
     BattleScene._waterDraws = waterDraws
     local waterCount = 0
-    local function addWater(mesh, texture, model, plants)
+    local function addWater(mesh, texture, model, plants, map)
       if not mesh then return end
       waterCount = waterCount + 1
       local d = waterDraws[waterCount] or {}
       d[1], d[2], d[3], d[4] = mesh, texture, model, plants
+      d.plane=VoxelScene.waterPlane(map)
       waterDraws[waterCount] = d
     end
-    addWater(water, atlasFor(host), nil, visuals)
+    addWater(water, atlasFor(host), nil, visuals,host)
     for i, nb in ipairs(neighbors) do
       addWater(nbWater and nbWater[i], atlasFor(nb.map),
-               Mat4.translate(nb.ox, 0, nb.oy), nbVisuals and nbVisuals[i])
+               Mat4.translate(nb.ox, 0, nb.oy), nbVisuals and nbVisuals[i],nb.map)
     end
     for i = #waterDraws, waterCount + 1, -1 do waterDraws[i] = nil end
     if waterCount > 0 then
@@ -1695,9 +1698,9 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
     if not flatFill then
     Voxel3D.battleOcclusion(arena,groundY,textures)
     local pull = 0
-    Voxel3D.draw(ChunkMesher.grass(host), atlasFor(host), nil, pull)
+    ChunkMesher.drawGrass(host, atlasFor(host), nil, pull)
     for _, nb in ipairs(neighbors) do
-      Voxel3D.draw(ChunkMesher.grass(nb.map), atlasFor(nb.map),
+      ChunkMesher.drawGrass(nb.map, atlasFor(nb.map),
                    Mat4.translate(nb.ox, 0, nb.oy), pull)
     end
     local fpull = 0

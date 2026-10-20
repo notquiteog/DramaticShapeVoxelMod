@@ -1,0 +1,93 @@
+{
+  "asset": 582551,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonblack2white2/asset/582551/",
+  "game": "Pokémon Black 2 / White 2",
+  "title": "Sign 01",
+  "author": "pentaenix",
+  "submitted": "2026-07-30",
+  "file": "sign01.dae",
+  "sourceBounds": [
+    -13.0,
+    2.0,
+    -6.0,
+    17.0,
+    32.0,
+    4.0
+  ],
+  "sourceOrigin": [
+    2.0,
+    2.0,
+    -1.0
+  ],
+  "sourceUnitSpan": 30.0,
+  "bounds": [
+    -0.5,
+    0.0,
+    -0.16666666666666666,
+    0.5,
+    1.0,
+    0.16666666666666666
+  ],
+  "originalSourceBounds": [
+    -13.0,
+    2.0,
+    -6.0,
+    17.0,
+    32.0,
+    4.0
+  ],
+  "archiveSha256": "245dd511bbda47f9d85d8d393c6fa10a3b93856ae0540c2afae4f5b776e0f7f8",
+  "sourceModelSha256": "c6d874cc2eb76ac78292ab231d90c6df56dca1f77c4adadf53eb0c8ed461a6ca",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "textureBindings": {},
+  "repairs": [],
+  "authoredClosure": {},
+  "textures": {
+    "h_kage.png": {
+      "sha256": "851c9f83288e2c2ed3730a261f4df9d0facbcec61d94a1277532fb5cd9859d88",
+      "bytes": 256
+    },
+    "sign01a.png": {
+      "sha256": "fc9ea6679d3469fa38afee2a4d7edf238dcbdf8388ca79c3dd1948336ab11e71",
+      "bytes": 1297
+    }
+  },
+  "generatedMaterials": {},
+  "parts": [
+    {
+      "name": "geometry",
+      "authored": false,
+      "material": "h_kage.png",
+      "texture": "assets/scenery/catalog/bw2_sign01/h_kage.png",
+      "triangles": 8,
+      "opacity": 1.0,
+      "role": "ground_shadow",
+      "bounds": [
+        -0.5,
+        0.0,
+        -0.16666666666666666,
+        0.5,
+        0.0,
+        0.16666666666666666
+      ]
+    },
+    {
+      "name": "geometry",
+      "authored": false,
+      "material": "sign01a.png",
+      "texture": "assets/scenery/catalog/bw2_sign01/sign01a.png",
+      "triangles": 20,
+      "opacity": 1.0,
+      "role": "structure",
+      "bounds": [
+        -0.5,
+        0.03333333333333333,
+        -0.1,
+        0.36666666666666664,
+        1.0,
+        0.03333333333333333
+      ]
+    }
+  ],
+  "placement": "Catalog only. No generation/map/footprint compatibility is implied; native adapter review required."
+}

@@ -54,7 +54,7 @@ return function(game)
   local Scene=V.require('Gen3Scene');local stable,last=0
   for _=1,1800 do
    U.wait(1);local stats=Scene.streaming
-   if Scene.sceneDef==def and stats.started==stats.completed+stats.cancelled and stats.started==last then stable=stable+1 else stable=0 end
+   if Scene.sceneDef==def and stats.started+stats.promoted==stats.completed+stats.cancelled and stats.started==last then stable=stable+1 else stable=0 end
    last=stats.started;if stable>=8 then break end
   end
   assert(stable>=8,'inspection window still streaming')

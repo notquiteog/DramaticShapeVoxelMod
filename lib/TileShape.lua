@@ -552,7 +552,7 @@ end
 -- resolution including the cell-granularity steps (see the header).
 -- `shapes` is the table forMap returned for this map; `tile` is
 -- map:tileAt(tx, ty), passed in because every caller already has it.
-function TileShape.at(map, shapes, tile, tx, ty)
+local function sourceShapeAt(map, shapes, tile, tx, ty)
   local cx, cy = math.floor(tx / 2), math.floor(ty / 2)
   local row = shapes.warpStairs and shapes.warpStairs[cy]
   local candidates = row and row[cx]
@@ -614,6 +614,16 @@ function TileShape.at(map, shapes, tile, tx, ty)
   if map:isWaterCell(cx, cy) then return shapes.classes.water end
   if map:isWalkableCell(cx, cy) then return shapes.classes.ground end
   return s
+end
+
+-- Copy the resolved presentation shape; never mutate shared tileset classes.
+function TileShape.at(map,shapes,tile,tx,ty)
+  local shape=sourceShapeAt(map,shapes,tile,tx,ty)
+  if shape and shape.class=='water' then
+    local ok,W=pcall(V.require,'GBWater')
+    if ok and type(W.shape)=='function' then return W.shape(map,shape) end
+  end
+  return shape
 end
 
 -- Hand-authored FIGURES for one tileset: a drawing painted INTO furniture,

@@ -38,7 +38,7 @@ print('PASS wet hull/card half immersion, arbitrary local waterlines, source foo
 -- adjacent water; the local offset must still meet the one world water plane.
 do
  local W=V.require('Gen3Water');local c={cx=0,cy=0,pair='general__petalburg',base=7,shape={kind='rock',ground=0x2d,wetRock=true}}
- local cells={['0:0']=c,['1:0']={cx=1,cy=0,pair=c.pair,base=2,mid=0x170,shape={kind='water'}}}
+ local cells={['0:0']=c,['1:0']={cx=1,cy=0,pair=c.pair,base=2,mid=0x170,collision=0x29,shape={kind='water'}}}
  assert(W.bind(cells)==1 and math.abs(c.shape.waterline+4.95)<1e-9)
  assert(c.shape.waterGround==0x170 and math.abs(c.base+Sea.waterline(c)-2.05)<1e-9)
 end

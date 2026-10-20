@@ -8,18 +8,18 @@ local Versions=require('src.import.gba.versions')
 local Collision=require('src.core.game3.collision')
 local M={}
 local key,regions
-function M.regions(def,world)
- local parts={tostring(def),tostring(def.midLayout)}
+function M.regions(def,world,mapId)
+ local parts={tostring(def),tostring(def.midLayout),mapId or def.id or ''}
  for _,e in ipairs(world or {})do parts[#parts+1]=table.concat({e.id or '',e.ox,e.oy,tostring(e.def.midLayout)},':')end
  local nextKey=table.concat(parts,';')
  if nextKey==key then return regions end
  key=nextKey;regions={}
- local function add(d,x,y)
+ local function add(d,x,y,id)
   local L=d.midLayout
-  if L then regions[#regions+1]={def=d,x=x,y=y,w=L.width,h=L.height}end
+  if L then regions[#regions+1]={def=d,mapId=id or d.id,x=x,y=y,w=L.width,h=L.height}end
  end
- add(def,0,0)
- for _,e in ipairs(world or {})do add(e.def,e.ox,e.oy)end
+ add(def,0,0,mapId)
+ for _,e in ipairs(world or {})do add(e.def,e.ox,e.oy,e.id)end
  return regions
 end
 local function sample(r,x,y)

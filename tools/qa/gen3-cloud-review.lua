@@ -19,7 +19,7 @@ return function(game)
  Weather.setting:sync('clear');Day.setting:sync('day');K.sky:sync(false);C.setLevel(6,game);C.yaw=0;C.pitch=-.50
  local stable,last=0
  for _=1,1800 do U.wait(1);local s=V.require('Gen3Scene').streaming
-  if s.started==s.completed+s.cancelled and last==s.started and C.active then stable=stable+1 else stable=0 end
+  if s.started+s.promoted==s.completed+s.cancelled and last==s.started and C.active then stable=stable+1 else stable=0 end
   last=s.started;if stable>=8 then break end
  end
  assert(stable>=8,'native scene did not settle')
@@ -50,7 +50,7 @@ return function(game)
   C.setLevel(0,game);local Map=require('src.core.game3.map');assert(Map.load(nil,game,prefix=='FR_'and'FR_OAKS_LAB'or prefix..'LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB',{x=6,y=9,facing='up'}));require('src.ui.game3.map_preview_screen').dismiss();require('src.ui.game3.map_name_popup').dismiss();U.wait(3);C.setLevel(6,game);C.pitch=.08
   local stable,last=0,0
   for _=1,1800 do U.wait(1);local scene=V.require('Gen3Scene');local s=scene.streaming
-   if scene.sceneDef==Map.currentDef()and s.started==s.completed+s.cancelled and last==s.started then stable=stable+1 else stable=0 end
+   if scene.sceneDef==Map.currentDef()and s.started+s.promoted==s.completed+s.cancelled and last==s.started then stable=stable+1 else stable=0 end
    last=s.started;if stable>=8 then break end
   end
   assert(stable>=8,'indoor scene did not settle');require('src.ui.game3.map_preview_screen').dismiss();require('src.ui.game3.map_name_popup').dismiss();U.wait(3)

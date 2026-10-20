@@ -15,7 +15,7 @@ return function(game)
  local Cam,Scene,Water=V.require('Gen3Integration'),V.require('Gen3Scene'),V.require('Water')
  local Map,Player,Col,Objects=require('src.core.game3.map'),require('src.core.game3.player'),require('src.core.game3.collision'),require('src.core.game3.objects')
  local NativeAnim=require('src.core.game3.tileset_anim');local FP=require('src.core.FrameProfiler');local Json=require('src.link.Json')
- V.require('DayNight').setting:sync('day');V.require('RenderDistance').setting:sync(tonumber(os.getenv('QA_DISTANCE'))or 16)
+ V.require('DayNight').setting:sync(os.getenv('QA_DAYTIME')or'day');V.require('RenderDistance').setting:sync(tonumber(os.getenv('QA_DISTANCE'))or 16)
  V.require('AntiAlias').setting:sync(0);V.require('SpatialUpscale').setting:sync(1);V.require('WorldCurve').setting:sync(0)
  V.require('Shadows').setting:sync('high');V.require('TreePresentation').art:sync('modeled');V.require('CommunityVisuals').treeDetail:sync('balanced')
  V.require('Gen3SceneOptions').tilt:sync(0);require('src.core.FrameCap').apply(160)
@@ -67,7 +67,7 @@ return function(game)
   for _,camera in ipairs(cameras)do camera=tonumber(camera);Cam.setLevel(camera,game);Cam.yaw=spot[4];Cam.pitch=.12
    local stable,last=0
    for _=1,1800 do U.wait(1);local s=Scene.streaming
-    if Scene.sceneDef==def and s.started==s.completed+s.cancelled and last==s.started then stable=stable+1 else stable=0 end
+    if Scene.sceneDef==def and s.started+s.promoted==s.completed+s.cancelled and last==s.started then stable=stable+1 else stable=0 end
     last=s.started;if stable>=8 then break end
    end
    assert(stable>=8 and Cam.active,'native scene did not settle')
@@ -84,6 +84,18 @@ return function(game)
     report:write(table.concat({id,spot[1],spot[2],spot[3],camera,mode,#interval,s.mean,s.p95,s.max,1000/s.mean,cpu.mean or'-',waterCPU.mean or'-',waterCPU.p95 or'-',lastGfx.drawcalls or 0,lastGfx.canvasswitches or 0,waterVertices,record.legacyPhase[1],record.legacyPhase[2],nativeStart,NativeAnim.counter},'\t')..'\n');report:flush()
     local f=assert(io.open(dir..'/surface-results.json','w'));f:write(Json.encode(results));f:close()
     assert(U.shot(game,dir..'/'..id..'-camera'..camera..'-'..mode..'.png'))
+    if os.getenv('QA_RIPPLE_PAIRS')=='1'and mode=='full'then
+     local phase=Water._rippleTime();U.wait(45);assert(Water._rippleTime()>phase+.2)
+     assert(U.shot(game,dir..'/'..id..'-camera'..camera..'-full-phase2.png'))
+     if camera==6 then
+      local body=V.require('DayNight').body();if body then
+       Cam.yaw=math.atan2(body.dx,body.dz);Cam.pitch=.15;U.wait(8)
+       assert(U.shot(game,dir..'/'..id..'-sunward-first-person.png'))
+       U.wait(45);assert(U.shot(game,dir..'/'..id..'-sunward-first-person-phase2.png'))
+       Cam.yaw=spot[4];Cam.pitch=.12
+      end
+     end
+    end
     print('[SURFACE]',id,spot[1],spot[2],spot[3],camera,mode,string.format('frame %.3f/%.3fms fps%.1f waterCPU%.3f',s.mean,s.p95,1000/s.mean,waterCPU.mean or 0),'legacy',legacyStart,Water._waveTime(),'native',nativeStart,NativeAnim.counter)
    end
   end

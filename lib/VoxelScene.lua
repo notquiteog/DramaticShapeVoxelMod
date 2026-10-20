@@ -233,6 +233,12 @@ local function groundAt(map, cellX, cellY, px, py)
       cellX,cellY = math.floor(wx/16),math.floor(wz/16)
     end
   end
+  -- Native Surf, camera support and the drawn outdoor sheet share one level.
+  local okWater,water=pcall(V.require,'GBWater')
+  if okWater and type(water.surfaceAt)=='function' and water.relative(map,-2)~=-2 then
+    local surface=water.surfaceAt(map,(px or cellX*16)+8,(py or cellY*16)+8)
+    if surface~=nil then return surface end
+  end
   -- Off the map, cellTile border-extends into the map's borderBlock --
   -- which on maps ringed with trees is a RAISED tile. The only entity
   -- ever standing off-map is the player mid seam-step (placed one cell
@@ -1083,7 +1089,7 @@ end
 -- GPUs they don't reliably (that fight is what put the Android port back on
 -- flat water). Confined to the curve there is no regression to reach: the
 -- flat world never had the far-shore bug in the first place.
-function VoxelScene.drawWater(draws, cast, fallbackDraw)
+local function drawWaterPlane(draws, cast, fallbackDraw, plane)
   local underColor,underDepth
   local gardenWater=false
   for _,d in ipairs(draws)do
@@ -1121,11 +1127,11 @@ function VoxelScene.drawWater(draws, cast, fallbackDraw)
   local castTex = nil
   if cast and Water.enabled() and Water.CAST_ALPHA > 0
      and Voxel3D.depthReadable() then
-    castTex = Voxel3D.beginCast((TileShape.heights() or {}).water or 0)
+    castTex = Voxel3D.beginCast(plane)
     if castTex then
       -- cleared unconditionally, so a cast() that throws cannot leave every
       -- later card in the frame drawn upside down under the pier
-      reflectPlane = (TileShape.heights() or {}).water or 0
+      reflectPlane = plane
       pcall(cast)
       reflectPlane = nil
       Voxel3D.endCast()
@@ -1215,6 +1221,28 @@ end
 -- redrawing the whole world from the sun would buy nothing -- which is
 -- most of a dialog, a menu, or any moment standing still.
 local sigBuf = {}
+-- Neighbour maps can retain authored pools at another height. Group their
+-- sheets before planar capture instead of reflecting every cast at -2.
+function VoxelScene.waterPlane(map)
+  local ok,W=pcall(V.require,'GBWater')
+  return ok and type(W.plane)=='function' and W.plane(map) or (TileShape.heights()or{}).water or -2
+end
+function VoxelScene.drawWater(draws,cast,fallbackDraw)
+  local default=(TileShape.heights()or{}).water or -2
+  local plane=draws[1]and draws[1].plane or default
+  local same=true
+  for i=2,#draws do if(draws[i].plane or default)~=plane then same=false;break end end
+  -- Ordinary connected maps share one sheet: no per-frame grouping allocation.
+  if same then return drawWaterPlane(draws,cast,fallbackDraw,plane)end
+  local groups,order={},{}
+  for _,d in ipairs(draws)do
+    local plane=d.plane or (TileShape.heights()or{}).water or -2
+    if not groups[plane]then groups[plane]={};order[#order+1]=plane end
+    groups[plane][#groups[plane]+1]=d
+  end
+  for _,plane in ipairs(order)do drawWaterPlane(groups[plane],cast,fallbackDraw,plane) end
+end
+
 local function shadowSignature(state, terrain, nbMesh, posed, cx, cy, vw, vh)
   local n = 0
   local function put(v)
@@ -1606,6 +1634,7 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
     WorldUnderlay.draw(state, cx, cy, underlayColor)
   end
   Voxel3D.draw(terrain, atlasFor(state.map), nil)
+  ChunkMesher.drawBanks(state.map,nil)
   CavePerimeter.draw(state.map, atlasFor(state.map))
   ShipHull.draw(state, atlasFor(state.map), false)
   local drawnVisuals, drawnNeighborVisuals = {}, {}
@@ -1619,6 +1648,7 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
     if RenderDistance.neighbor(nb, state.player) then
       Voxel3D.draw(nbMesh[i], atlasFor(nb.map),
                    Mat4.translate(nb.ox, 0, nb.oy))
+      ChunkMesher.drawBanks(nb.map,Mat4.translate(nb.ox,0,nb.oy))
       local drawn = {}
       drawnNeighborVisuals[i] = drawn
       for _, visual in ipairs((nbVisualShadows and nbVisualShadows[i]) or {}) do
@@ -1729,20 +1759,21 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   local waterDraws = VoxelScene._waterDrawBuf
   local waterN = 0
 
-  local function addWaterDraw(mesh, texture, model, visuals)
+  local function addWaterDraw(mesh, texture, model, visuals, map)
     waterN = waterN + 1
     local d = waterDraws[waterN]
     if not d then d = {}; waterDraws[waterN] = d end
     d[1], d[2], d[3], d[4] = mesh, texture, model, visuals
+    d.plane=VoxelScene.waterPlane(map)
   end
 
   if water then
-    addWaterDraw(water, atlasFor(state.map), nil, visualShadows)
+    addWaterDraw(water, atlasFor(state.map), nil, visualShadows,state.map)
   end
   for i, nb in ipairs(state.neighbors or {}) do
     if RenderDistance.neighbor(nb, state.player) and nbWater and nbWater[i] then
       addWaterDraw(nbWater[i], atlasFor(nb.map),
-                   Mat4.translate(nb.ox, 0, nb.oy), nbVisualShadows and nbVisualShadows[i])
+                   Mat4.translate(nb.ox, 0, nb.oy), nbVisualShadows and nbVisualShadows[i],nb.map)
     end
   end
   for i = waterN + 1, #waterDraws do waterDraws[i] = nil end
@@ -1823,11 +1854,11 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
   local Voxel = V.require("VoxelState")
   local pull = VoxelScene.pull(math.max(Voxel.angle, 0.05))
   Timings.call("grass_flowers", function()
-  Voxel3D.draw(ChunkMesher.grass(state.map), atlasFor(state.map), nil,
+  ChunkMesher.drawGrass(state.map, atlasFor(state.map), nil,
     V.require("SafariLandscape").grassPull(state.map,pull))
   for _, nb in ipairs(state.neighbors or {}) do
     if RenderDistance.neighbor(nb, state.player) then
-      Voxel3D.draw(ChunkMesher.grass(nb.map), atlasFor(nb.map),
+      ChunkMesher.drawGrass(nb.map, atlasFor(nb.map),
                    Mat4.translate(nb.ox, 0, nb.oy),
                    V.require("SafariLandscape").grassPull(nb.map,pull))
     end

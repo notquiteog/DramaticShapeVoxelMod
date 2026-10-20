@@ -1,0 +1,74 @@
+{
+  "processing": "Original PNG bytes unchanged; reviewed opaque atlas bands are selected by runtime UVs only. No recoloring, resampling or invented pixels. Full map archives are not bundled. Bare cliff/cave faces select the same original coastal stone rows36..49 without its grass-rim rows25..35.",
+  "materials": {
+    "kanto": {
+      "asset_id": 592847,
+      "source_file": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Pallet Town/pond_line.png",
+      "source_archive_sha256": "8cce4d10885adebb7e0e2362cc8d1bd07ac9d49ef9bc94b61a66d51ce9e178bc",
+      "texture_sha256": "09bd09e3b8d5cf536034a247d0411f1b5a3f2c43313babb71ee4ae6a675118bf",
+      "bundled_file": "hgss-pond-line.png",
+      "size": [
+        16,
+        16
+      ],
+      "uv_pixel_centers": [
+        0.5,
+        2.5,
+        15.5,
+        13.5
+      ],
+      "uploaded_by": "Kuramapika1",
+      "game": "Pokemon HeartGold / SoulSilver",
+      "original_art": "Nintendo / Creatures / GAME FREAK",
+      "submitted": "2026-09-01"
+    },
+    "hoennRiver": {
+      "asset_id": 364272,
+      "source_file": "r104a_gake01.png",
+      "source_archive_sha256": "0d849831180a5bf9484efff71e8947d420558fb6019417cfebb124e673a9257b",
+      "texture_sha256": "d7ec24c5fa856cb2791fe1ca3041d97dcdf0cadd8613dc99e3cb7c36f64a6e0b",
+      "bundled_file": "oras-river-bank.png",
+      "size": [
+        128,
+        256
+      ],
+      "uv_pixel_centers": [
+        0.5,
+        24.5,
+        127.5,
+        43.5
+      ],
+      "uploaded_by": "MasterPengo",
+      "game": "Pokemon Omega Ruby / Alpha Sapphire",
+      "original_art": "Nintendo / Creatures / GAME FREAK",
+      "submitted": "2025-06-29"
+    },
+    "hoennSea": {
+      "asset_id": 364272,
+      "source_file": "chip_gake_sea.png",
+      "source_archive_sha256": "0d849831180a5bf9484efff71e8947d420558fb6019417cfebb124e673a9257b",
+      "texture_sha256": "3bf57e77dba5f5cd168cd7d9ce2b70c5e08870abd7e73c87c892ee9acd3b6a92",
+      "bundled_file": "oras-sea-bank.png",
+      "size": [
+        128,
+        128
+      ],
+      "uv_pixel_centers": [
+        0.5,
+        25.5,
+        127.5,
+        49.5
+      ],
+      "uploaded_by": "MasterPengo",
+      "game": "Pokemon Omega Ruby / Alpha Sapphire",
+      "original_art": "Nintendo / Creatures / GAME FREAK",
+      "submitted": "2025-06-29",
+      "bare_cliff_uv_pixel_centers": [
+        0.5,
+        36.5,
+        127.5,
+        49.5
+      ]
+    }
+  }
+}

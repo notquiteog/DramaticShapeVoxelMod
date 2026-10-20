@@ -17,6 +17,8 @@ local Outdoor=V.require('Gen3Outdoor')
 local Terrain=V.require('Gen3Terrain')
 local Elevation=V.require('Gen3Elevation')
 local NativeWater=V.require('Gen3Water')
+local ShoreBanks=V.require('ShoreBanks')
+local BankMaterials=V.require('BankMaterials')
 local BattleClear=V.require('Gen3BattleClear')
 local Distance=V.require('RenderDistance')
 local Boundary=V.require('Gen3Boundary')
@@ -110,6 +112,10 @@ function M.nativeRequired(game)
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
 local function releaseGeometry(cache)
+ if cache.grassModels then V.require('GrassModels').releaseBatches(cache.grassModels)end
+ if cache.sceneryModels then V.require('SceneryModels').releaseBatches(cache.sceneryModels)end
+ if cache.importedTrees then V.require('SceneryModels').releaseBatches(cache.importedTrees)end
+ for _,part in ipairs(cache.bankModels or{})do if part.mesh then part.mesh:release()end end
  for _,part in ipairs(cache.parts or {})do
   if part.under then part.under:release() end
   if part.roof then part.roof:release() end
@@ -147,7 +153,7 @@ local function request(game,cam)
  -- FULL keeps at least FAR's connected-map frontier, then draws each
  -- loaded rectangle completely rather than shrinking back to two hops.
  if not replay then Map.refreshWorld(game,radius*2+12,radius*2+12,Map.current)end
- local regions=replay and {{def=def,x=0,y=0,w=def.midLayout.width,h=def.midLayout.height}} or Boundary.regions(def,Map.world)
+ local regions=replay and {{def=def,x=0,y=0,w=def.midLayout.width,h=def.midLayout.height}} or Boundary.regions(def,Map.world,Map.current)
  local x0,z0,x1,z1=Lookahead.window(px,pz,radius)
  if not budget then x0,z0,x1,z1=BoundarySelect.bounds(regions,16)end
  local key,context=SceneCache.keys(regions,x0,z0,x1,z1,Tiles._pairs,cam)
@@ -332,7 +338,13 @@ local function build(req,cache,previous)
  end
  for _,c in pairs(cells)do if c.gym then c.column=Buildings.column(c.gym)end end
  Elevation.bind(cells,regions)
- cache.wetRockCells=NativeWater.bind(cells)
+ for _,c in pairs(cells)do
+  for _,r in ipairs(regions)do
+   if c.cx>=r.x and c.cy>=r.y and c.cx<r.x+r.w and c.cy<r.y+r.h then c.region=r;break end
+  end
+ end
+ cache.wetRockCells,cache.waterField=NativeWater.bind(cells,{regions=regions,
+  region=V.require('Gen3Hoenn').active()and'hoenn'or'kanto',outdoor=Pairs.outdoor,tick=Budget.tick})
  cache.waterOptions={nativeWater=true}
  cache.floorRegions=regions
  local terrainHeight=Terrain.sampler(cells,Budget.tick)
@@ -359,6 +371,21 @@ local function build(req,cache,previous)
  cache.rocketWalls=V.require('NativeRocketWalls').build(cells,def.id or req.mapId)
  local masonry=V.require("NativeMasonry").new(def)
  M.cliffCount=0
+ -- Register the output before the cooperative uploader can yield, so scene
+ -- cancellation can release prototypes and offsets as well as finished parts.
+ cache.grassModels={}
+ local grass,grassError,grassCount=V.require('Gen3GrassModels').build(cells,R.newMesh,cache.grassModels)
+ cache.grassModels=grass;cache.grassModelCount=grass and grassCount or 0
+ cache.grassModelError=grassError;cache.grassContext=req.context
+ cache.sceneryModels={}
+ local scenery,sceneryError,sceneryCount=V.require('Gen3SceneryModels').build(cells,R.newMesh,cache.sceneryModels)
+ cache.sceneryModels=scenery;cache.sceneryModelCount=scenery and sceneryCount or 0
+ cache.sceneryModelError=sceneryError
+ cache.importedTrees={}
+ local trees,treeError,treeCount=V.require('ImportedTrees').buildGen3(cells,R.newMesh,cache.importedTrees,{region=V.require('Gen3Hoenn').active()and'hoenn'or'kanto',mapId=def.id or req.mapId})
+ cache.importedTrees=trees;cache.importedTreeCount=trees and treeCount or 0;cache.importedTreeError=treeError
+ cache.bankModels={};cache.bankFaceCount=0
+ local bankBatches={}
  local batches={};local wood,wi,leaf,li,hedges,hi={},{},{},{},{},{}
  for _,c in pairs(cells)do
   Budget.tick()
@@ -387,7 +414,7 @@ local function build(req,cache,previous)
    plane(b.v,b.i,x,z,uvFor(ts,1)or uv)
   elseif shape.kind=='water' then
    NativeWater.note(b,shape.ground or c.mid)
-   plane(b.wv,b.wi,x,z,uvFor(ts,shape.ground) or uv,.05)
+   plane(b.wv,b.wi,x,z,uvFor(ts,shape.ground) or uv,NativeWater.localLevel(c))
   elseif shape.kind=='interiorFloor' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
   elseif shape.kind=='caveWall' then
@@ -409,6 +436,11 @@ local function build(req,cache,previous)
   elseif shape.kind=='tree' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    if shape.root and not c.stageHidden then
+    if c.importedTree then
+     local t=c.importedTree;local b=t.bounds
+     V.require('KfpTreeDetails').record({nativeDef=def},(b[1]+b[3])/2,c.base or 0,(b[2]+b[4])/2,
+      (c.base or 0)+t.height,(c.base or 0)+(t.canopyBottom or t.height))
+    else
     local crown=V.require('NativeTreeArt').gen3(c)
     local underside=crown and V.require('NativeTreeArt').foliageFloor(crown)
     if crown then V.require('KfpTreeDetails').record({nativeDef=def},x+(shape.anchorX or 16),c.base or 0,z+(shape.anchorZ or 12),(c.base or 0)+crown.h-(crown.bottom or 0)-4,(c.base or 0)+(underside or 0))end
@@ -455,6 +487,7 @@ local function build(req,cache,previous)
     end
     end
    end
+    end -- complete imported tree replaces the native crown/trunk together
   elseif cache.legendaryPillars and cache.legendaryPillars.claims[c.cx..':'..c.cy] then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
   elseif cache.legendaryTunnels and cache.legendaryTunnels.claims[c.cx..':'..c.cy] then
@@ -559,7 +592,7 @@ local function build(req,cache,previous)
   elseif shape.kind=='sign' or shape.kind=='fence' or shape.kind=='ledge' or shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass' then
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    local plant=shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass'
-   if not c.stageHidden then Outdoor.append(c,function(vertices,tex,shade,anchor)quad(plant and b.pv or b.v,plant and b.pi or b.i,vertices,tex,shade,anchor)end,uvFor,shrubHulls)end
+   if not(c.stageHidden or c.importedGrass or c.importedSign)then Outdoor.append(c,function(vertices,tex,shade,anchor)quad(plant and b.pv or b.v,plant and b.pi or b.i,vertices,tex,shade,anchor)end,uvFor,shrubHulls)end
   else
    plane(b.v,b.i,x,z,uv)
   end
@@ -571,10 +604,34 @@ local function build(req,cache,previous)
   Elevation.lift(wood,starts[5],base);Elevation.lift(leaf,starts[6],base)
   Elevation.lift(hedges,starts[7],base)
   if c.bridge then V.require('Gen3Bridges').append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
+  local face,indices=V.require('Gen3SceneryModels').face(c,uv)
+  if face then local offset=#b.v
+   for _,p in ipairs(face)do b.v[#b.v+1]=p end
+   for _,i in ipairs(indices)do b.i[#b.i+1]=offset+i end
+  end
+  for _,edge in ipairs(ShoreBanks.edges(cells,c,NativeWater.surface))do
+   local nativeDef=c.region and c.region.def or def
+   local config=nativeDef.voxelWater
+   local imported=Pairs.outdoor(nativeDef)and config~=false and shape.bankMaterial~=false
+    and not(type(config)=='table'and config.bankMaterial==false)
+   local region=V.require('Gen3Hoenn').active()and'hoenn'or'kanto'
+   local bankImage=imported and BankMaterials.image(region,edge)
+   if bankImage then
+    local key=BankMaterials.key(region,edge);local batch=bankBatches[key]
+    if not batch then batch={v={},i={},image=bankImage};bankBatches[key]=batch end
+    quad(batch.v,batch.i,edge.vertices,BankMaterials.uv(region,edge),.9)
+   else
+    local ground=c.civic and Civic.ground(c)or c.prop and Furniture.groundAt(c)or ShoreBanks.material(c)
+    local donor=ground and uvFor(ts,ground)
+    if donor then quad(b.v,b.i,edge.vertices,donor,.78)end
+   end
+   cache.bankFaceCount=cache.bankFaceCount+1
+  end
   if c.floor and c.floor.underpass then
    local u=c.floor.underpass
    local water=u.kind=='water'
-   plane(water and b.wv or b.v,water and b.wi or b.i,x,z,uvFor(ts,u.mid) or uv,u.height+base-c.floor.height)
+   plane(water and b.wv or b.v,water and b.wi or b.i,x,z,uvFor(ts,u.mid) or uv,
+    water and NativeWater.surface(c,u.layer)or u.height+base-c.floor.height)
   end
   if shape.kind~='cliff' and shape.kind~='caveWall' and shape.kind~='water' and not c.stairs and shape.kind~='steps' then
    for _,d in ipairs({{-1,0},{1,0},{0,-1},{0,1}})do
@@ -583,7 +640,7 @@ local function build(req,cache,previous)
      local low=n.base or 0
      -- Bridge fascia must not become a solid retaining wall across the path.
      if c.floor and c.floor.underpass then low=math.max(low,base-1.5)end
-     if low<base and not c.bridge then
+     if low<base and not c.bridge and not ShoreBanks.skipRiser(c,n)then
       local ax,az=x+(d[1]>0 and 16 or 0),z+(d[2]>0 and 16 or 0)
       local bx,bz=ax+(d[1]==0 and 16 or 0),az+(d[2]==0 and 16 or 0)
       -- Claimed source cells contain roof/window art. Their raised
@@ -600,6 +657,10 @@ local function build(req,cache,previous)
   end
  end
  cache.masonry=V.require("NativeMasonry").finish(masonry)
+ for key,b in pairs(bankBatches)do
+  local part={image=b.image,key=key};cache.bankModels[#cache.bankModels+1]=part
+  part.mesh=assert(R.newMesh(b.v,b.i),'bank mesh upload failed');Budget.check()
+ end
  local function wallFront(cx,front)
   if cache.northWallFront then return cache.northWallFront end
   local x=cx*16+8
@@ -785,6 +846,10 @@ end
 local function prepare(game,vw,vh,cam)
  local req=request(game,cam);if not req then return false end
  cache=stream:update(req.key,req.context,function(candidate,previous)return build(req,candidate,previous)end,.002,function(candidate)return Lookahead.accept(candidate,req)end)
+ if cache.grassModels and cache.grassContext~=req.context then
+  V.require('Gen3GrassModels').prune(cache.grassModels,cache.cells,cache.floorRegions)
+  cache.grassContext=req.context
+ end
  prefetch(req)
  -- Native tileset construction binds its animation clock. Restore the live
  -- map after EVERY slice, including suspended scans of connected tilesets.
@@ -844,6 +909,12 @@ local function terrain(draw)
  if cache.hedges then draw(cache.hedges,V.require('Gen3Hedges').image())end
  V.require('NativeLegendaryTrees').draw(cache.legendaryTreeInstances,draw)
  for _,batch in ipairs(cache.treeInstances or {})do draw(batch,V.require('NativeTreeArt').image())end
+ for _,part in ipairs(cache.grassModels or{})do if part.count>0 then draw(part.mesh,part.image)end end
+ for _,part in ipairs(cache.bankModels or{})do draw(part.mesh,part.image)end
+ for _,part in ipairs(cache.importedTrees or{})do if part.count>0 then draw(part.mesh,part.image)end end
+ for _,part in ipairs(cache.sceneryModels or{})do
+  if part.count>0 and not(draw==Shadow.draw and part.role=='ground_shadow')then draw(part.mesh,part.image)end
+ end
 end
 local function waterMeshes()
  return NativeWater.sync(cache.waterDraws or{},Tiles._pairs)
@@ -926,6 +997,8 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  else draw(mesh,spr.image,model,nil,caster) end
 end
 function M.groundAt(x,z,layer)
+ local water=NativeWater.at(cache.waterField,x,z,layer)
+ if water then return water end
  for _,r in ipairs(cache.floorRegions or {})do
   local lx,lz=x-r.x*16,z-r.y*16
   if lx>=0 and lz>=0 and lx<r.w*16 and lz<r.h*16 then
@@ -1073,7 +1146,10 @@ function M.draw(game,vw,vh,cam)
  if cam.battle and cam.center then cx,cz=cam.center[1],cam.center[2]end
  local layer=Player.currentElevation
  if cam.battle then layer=cam.elevation elseif cam.replay then layer=focus.elevation end
- local support=cam.battle and cam.floorHeight or M.groundAt(cx,cz,layer)
+ -- Native battle floors are land datums. Actual recessed water must carry
+ -- the camera and HD-2D actors at the same surface as the overworld.
+ local waterSupport=cam.battle and NativeWater.at(cache.waterField,cx,cz,layer)
+ local support=waterSupport or (cam.battle and cam.floorHeight or M.groundAt(cx,cz,layer))
  local width,height=love.graphics.getCanvas():getDimensions()
  local Renderer=require('src.render.Renderer')
  local Display=require('src.core.game3.display')
@@ -1285,7 +1361,10 @@ function M.performanceSnapshot()
  return {stream=stream.stats,prepares=M.prepares or 0,builds=M.builds or 0,
   cacheHits=M.cacheHits or 0,map=M.sceneDef and M.sceneDef.id,
   distance=M.distance,renderWidth=M.renderWidth,renderHeight=M.renderHeight,
-  water={wetRockCells=cache.wetRockCells or 0,draws=#(cache.waterDraws or{}),levels=#(cache.waterLevels or{})},
+  water={wetRockCells=cache.wetRockCells or 0,draws=#(cache.waterDraws or{}),levels=#(cache.waterLevels or{}),banks=cache.bankFaceCount or 0},
+  grass={placements=cache.grassModelCount or 0,batches=#(cache.grassModels or{}),error=cache.grassModelError},
+  importedTrees={placements=cache.importedTreeCount or 0,batches=#(cache.importedTrees or{}),error=cache.importedTreeError},
+  scenery={placements=cache.sceneryModelCount or 0,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
 function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
@@ -1298,6 +1377,7 @@ function M.release()
  if dustImage then dustImage:release();dustImage=nil end
  for _,c in pairs(effectCanvases)do c:release()end;effectCanvases={}
  future=nil;stream:clear();cache={}
+ if V.releaseSceneryResources then V.releaseSceneryResources()end
  for _,mesh in pairs(spriteMeshes)do if mesh then mesh:release() end end
  spriteMeshes={}
  if foliage then foliage:release();foliage=nil end

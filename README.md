@@ -1,3 +1,36 @@
+## 1.53.0 — Realistic water and imported scenery
+
+Smooth realistic water is the default across all eleven games. Continuous
+analytic ripples, soft highlights and sky/scenery reflections replace the
+pixel-stepped surface and baked sprite-wave colors. SKY skips scenery reflection
+copies; OFF retains native water artwork.
+
+Trees default to solid 3D models. Actual OR/AS broadleaf geometry replaces matching
+complete blocked tree footprints, with completed rear/underside geometry and
+source textures. Distinct conifers, small fragments and custom tree providers keep
+their existing 3D models; saved card options remain available.
+
+Outdoor water now sits below its banks, using measured HG/SS Kanto/Johto and
+OR/AS Hoenn reference heights. Soil and stone faces close the shore edges;
+surfing sprites, reflections and genuinely wet rocks follow the same surface.
+Existing recessed pools, native bridges and author overrides retain their levels.
+Dry copies of shared Hoenn rock art keep their local land instead of acquiring
+an animated water base. Original shallow-shore foam remains native artwork.
+
+Original OR/AS standing grass replaces eligible ordinary grass patches across
+eleven games, with bounded footprints, native Cut updates and sprite fallback.
+BW2 sign models retain the native regional board art in all five GBA games.
+An extensible scenery catalog also includes closed Center and Oak's Lab models;
+these two buildings await individual native placement and material review.
+
+Characters, Pokémon and flowers remain HD-2D. Every partner mod stays optional.
+This is an incremental scenery batch; the regional queue remains 84/125 complete.
+[Grass and source credits](docs/IMPORTED_GRASS_2026-10-20.md),
+[tree sources and supported families](docs/IMPORTED_TREES_2026-10-20.md),
+[water reference measurements](docs/GEN3_WATER_BANK_REFERENCES_2026-10-20.md),
+[catalog scope](docs/STATIC_SCENERY_CATALOG_2026-10-20.md),
+[release verification](docs/SCENERY_RELEASE_2026-10-20.md).
+
 ## 1.52.0 — Half-submerged rocks, continuous water and soft clouds
 
 Hoenn sea rocks now sit halfway through the surrounding water. Their bases use

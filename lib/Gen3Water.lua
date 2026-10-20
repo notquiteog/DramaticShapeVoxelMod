@@ -1,6 +1,153 @@
 -- One physical sheet for native water and reviewed wet-rock underlays.
 -- Native permissions/elevations and source drawings remain authoritative.
 local M={LEVEL=.05}
+-- Reviewed source dimensions, not collision-layer-to-height guesses.
+-- ORAS Route104: walking grid36; riverbank Y0 -> -5; near-sea terrace
+-- -18 -> -27. HGSS Pallet: grid16; land16 -> upper water8.
+M.BANK_DEPTH={kanto=8,hoennRiver=20/9,hoennSea=4}
+local directions={{1,0},{-1,0},{0,1},{0,-1}}
+local function finite(n)return type(n)=='number'and n==n and math.abs(n)<math.huge end
+local function ck(x,y)return x..':'..y end
+local function isWater(c)return c and c.shape and c.shape.kind=='water'end
+local function behaviorName(c,options)
+ if options.behaviorName then return options.behaviorName(c.behavior)end
+ local ok,MB=pcall(require,'src.core.game3.mb')
+ return ok and MB.nameOf(c.behavior)or nil
+end
+local seaNames={OCEAN_WATER=true,DEEP_WATER=true,SOOTOPOLIS_DEEP_WATER=true,
+ SEAWEED=true,SEAWEED_NO_SURFACING=true,NO_SURFACING=true,UNDERWATER_BLOCKED_ABOVE=true}
+-- Third-party scenery can set shape.bankDepth / shape.waterLevel (absolute
+-- world Y), shape.waterline (local offset), or preserveWaterLevel=true.
+-- A region's def.voxelWater supports the same settings; false opts out.
+function M.policy(c,options)
+ options=options or{};local s=c.shape or{}
+ local config=c.region and c.region.def and c.region.def.voxelWater
+ if config==false then return{preserve=true}end
+ config=type(config)=='table'and config or{}
+ local authored=s.waterLevel
+ if not finite(authored)and finite(config.waterLevel)then authored=config.waterLevel+(c.region.floorOffset or 0)end
+ if finite(authored)then return{level=authored}end
+ if finite(s.waterline)then return{level=(c.base or 0)+s.waterline}end
+ if finite(config.waterline)then return{level=(c.base or 0)+config.waterline}end
+ if s.preserveWaterLevel or config.preserveWaterLevel then return{preserve=true}end
+ local depth=s.bankDepth
+ if not finite(depth)then depth=config.bankDepth end
+ if not finite(depth)then
+  depth=type(options.bankDepth)=='function'and options.bankDepth(c)or options.bankDepth
+ end
+ if finite(depth)then return depth>0 and{depth=depth}or{preserve=true}end
+ local outdoor=options.outdoor
+ if type(outdoor)=='function'then outdoor=outdoor(c.region and c.region.def,c)end
+ if not outdoor then return{preserve=true}end
+ local region=type(options.region)=='function'and options.region(c)or options.region
+ if region=='kanto'then return{depth=M.BANK_DEPTH.kanto}end
+ if region=='hoenn'then
+  local name=behaviorName(c,options)
+  -- Native waterfall/underwater traversal already owns its distinct surface.
+  if name=='WATERFALL'or name=='INTERIOR_DEEP_WATER'then return{preserve=true}end
+  return{depth=(seaNames[name]or s.seaRock or s.wetRock)and M.BANK_DEPTH.hoennSea or M.BANK_DEPTH.hoennRiver}
+ end
+ return{preserve=true}
+end
+local function bank(c)
+ local s=c and c.shape
+ return s and s.kind~='water'and not(s.kind=='rock'and(s.seaRock or s.wetRock))
+  and not c.bridge and not(c.floor and c.floor.underpass)and not c.underpass
+  and s.kind~='steps'and s.kind~='ladder'and s.kind~='cliff'and s.kind~='caveWall'
+end
+-- Build from complete native floor fields when available, so ocean level
+-- never depends on whether a moving render window currently contains a bank.
+function M.plan(cells,options)
+ options=options or{}
+ local source=cells
+ if options.regions then
+  source={}
+  for _,r in ipairs(options.regions)do for _,f in pairs(r.floorField and r.floorField.cells or{})do
+   local u=f.underpass and f.underpass.kind=='water'and f.underpass
+   local c={cx=r.x+f.x,cy=r.y+f.y,mid=u and u.mid or f.mid,behavior=f.behavior,
+    base=(u and u.height or f.height or 0)+(r.floorOffset or 0),floor=f,region=r,pair=r.def and r.def.midLayout and r.def.midLayout.pair,
+    shape={kind=u and'water'or f.kind},underpass=u and true or nil,layer=u and u.layer or f.layer}
+   local loaded=cells[ck(c.cx,c.cy)]
+   -- Preserve extension recipes/overrides while the native full-map field
+   -- continues to supply the stable water topology and datum outside view.
+   if loaded and not u then c.shape=loaded.shape;c.bridge=loaded.bridge end
+   source[ck(c.cx,c.cy)]=c
+   if options.tick then options.tick()end
+  end end
+  -- Boundary-fill cells and a late/missing floor-field provider still use the
+  -- same reviewed component profile. They cannot leave a raised water apron
+  -- outside the original map or disable the entire safe presentation fallback.
+  for k,c in pairs(cells)do if not source[k]then
+   local nearest,distance
+   for _,r in ipairs(options.regions)do
+    local dx=math.max(r.x-c.cx,0,c.cx-(r.x+r.w-1))
+    local dy=math.max(r.y-c.cy,0,c.cy-(r.y+r.h-1));local d=dx*dx+dy*dy
+    if not distance or d<distance then nearest,distance=r,d end
+   end
+   source[k]={cx=c.cx,cy=c.cy,mid=c.mid,behavior=c.behavior,base=c.base,
+    floor=c.floor,shape=c.shape,pair=c.pair,bridge=c.bridge,region=nearest,boundary=c.boundary}
+  end end
+ end
+ local result={cells={},components={},source=source};local order={}
+ for _,c in pairs(source)do if isWater(c)then
+  local p=M.policy(c,options);local datum=c.base or 0
+  local token=p.level and('level:'..p.level)or p.preserve and'preserve'or'auto'
+  local n={cx=c.cx,cy=c.cy,base=datum,mid=c.shape.ground or c.mid,source=c,policy=p,
+   token=token,underpass=c.underpass,layer=c.layer or(c.floor and c.floor.layer)}
+  result.cells[ck(c.cx,c.cy)]=n;order[#order+1]=n
+ end end
+ table.sort(order,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
+ for _,start in ipairs(order)do if not start.component then
+  local g={cells={},depth=0,base=start.base};result.components[#result.components+1]=g
+  local queue,head={start},1;start.component=g
+  while queue[head]do
+   local n=queue[head];head=head+1;g.cells[#g.cells+1]=n
+   g.depth=math.max(g.depth,n.policy.depth or 0)
+   for _,d in ipairs(directions)do
+    local k=ck(n.cx+d[1],n.cy+d[2]);local near=result.cells[k]
+    if near and not near.component and near.token==n.token and math.abs(near.base-n.base)<1e-6 then
+     near.component=g;queue[#queue+1]=near
+    elseif not near then
+     local land=source[k]
+     if bank(land)then g.bank=math.min(g.bank or math.huge,land.base or 0)end
+    end
+   end
+   if options.tick then options.tick()end
+  end
+  -- Existing visibly recessed pools/decks retain their complete drawn level.
+  -- A higher cliff beside one shore never deepens an already lower body.
+  local recessed=g.bank and g.bank-g.base>.15
+  g.surface=start.policy.level or g.base+M.LEVEL
+  if not start.policy.preserve and not start.policy.level and not recessed and g.depth>0 then
+   g.surface=g.base-g.depth
+  end
+  g.preserved=recessed or start.policy.preserve or start.policy.level~=nil
+  for _,n in ipairs(g.cells)do n.surface=g.surface end
+ end end
+ return result
+end
+function M.surface(c,layer)
+ if not c then return end
+ if isWater(c)then return c.waterSurface or(c.base or 0)+M.LEVEL end
+ if c.floor and c.floor.underpass and c.floor.underpass.kind=='water'and layer==c.floor.underpass.layer then
+  return c.underWaterSurface or c.floor.underpass.height+(c.base or 0)-(c.floor.height or 0)+M.LEVEL
+ end
+ if c.shape and c.shape.kind=='rock'and(c.shape.seaRock or c.shape.wetRock)then
+  return(c.base or 0)+(c.shape.waterline or M.LEVEL)
+ end
+end
+function M.localLevel(c,layer)local level=M.surface(c,layer);return level and level-(c.base or 0)end
+-- This support query excludes blocked wet-rock cells. Land actors remain on
+-- the ordinary native terrain; underpass water requires its exact native layer.
+function M.support(c,layer)
+ if c and(isWater(c)or c.floor and c.floor.underpass and c.floor.underpass.kind=='water'and layer==c.floor.underpass.layer)then
+  return M.surface(c,layer)
+ end
+end
+function M.at(field,x,z,layer)
+ local n=field and field.cells[ck(math.floor(x/16),math.floor(z/16))]
+ if n and(not n.underpass or layer==n.layer)then return n.surface end
+end
 local palettes=setmetatable({},{__mode='k'})
 -- Derive body color from a real native water drawing once per live atlas.
 -- Only blue water pixels contribute; banks, white foam and transparent art
@@ -71,7 +218,43 @@ end
 function M.underlay(c)
  if wet(c)then return c.shape.waterGround or c.shape.ground,c.shape.waterline or M.LEVEL end
 end
-function M.bind(cells)
+function M.bind(cells,options)
+ local field=M.plan(cells,options)
+ -- The small-rock metatiles are also reused on dry native town floors.
+ -- An ID/permission alone never proves a water underlay. Require an actual
+ -- neighboring native water cell, including the complete field outside a
+ -- streamed window; synthesized biome water is not evidence.
+ for _,c in pairs(cells)do if c.shape.wetRock and not c.shape.seaRock then
+  local proven=false;local votes={}
+  for y=c.cy-1,c.cy+1 do for x=c.cx-1,c.cx+1 do if x~=c.cx or y~=c.cy then
+   local k=ck(x,y);local n=cells[k];local full=field.cells[k]
+   if full and not full.underpass then
+    local source=full.source
+    if source and not source.boundary and(source.floor and source.floor.kind=='water'
+     or n and not n.boundary and n.collision~=nil and isWater(n))then proven=true end
+   end
+   local donor=n or field.source[k]
+   if donor and not donor.boundary and(donor.pair==c.pair or donor.pair==c.nativePair)then
+    local s=donor.shape;local mid
+    if s and not donor.prop and not donor.civic and not donor.column then
+     if s.kind=='flat'or s.kind=='ground'or s.kind=='interiorFloor'then mid=s.ground or donor.mid
+     elseif s.kind=='tree'or s.kind=='grass'or s.kind=='flowers'or s.kind=='shrub'then mid=s.ground end
+    end
+    if mid and(not c.ts or not c.ts.midToSlot or c.ts.midToSlot[mid]~=nil)then votes[mid]=(votes[mid]or 0)+1 end
+   end
+  end end end
+  if not proven then
+   local ground,best=1,0
+   for mid,n in pairs(votes)do if n>best or n==best and mid<ground then ground,best=mid,n end end
+   c.shape.wetRock,c.shape.waterline,c.shape.waterGround=nil,nil,nil
+   c.shape.ground=ground
+  end
+ end end
+ for k,c in pairs(cells)do
+  local n=field.cells[k]
+  c.waterSurface=n and not n.underpass and n.surface or nil
+  c.underWaterSurface=n and n.underpass and n.surface or nil
+ end
  local count,seen=0,{}
  for _,c in pairs(cells)do if wet(c)then
   count=count+1
@@ -83,15 +266,31 @@ function M.bind(cells)
    -- Use the immediate body's actual drawn level and source water, rather
    -- than a blocked cell's unrelated collision-layer number or land height.
    for y=root.cy-1,root.cy+h do for x=root.cx-1,root.cx+w do
-    local n=cells[x..':'..y]
-    if n and n.pair==c.pair and n.shape.kind=='water'then
-     local level=(n.base or 0)+M.LEVEL
-     local k=string.format('%.6f:%s',level,n.shape.ground or n.mid)
+    local n=cells[x..':'..y];local full=field.cells[x..':'..y]
+    if (n and n.shape.kind=='water')or full and not full.underpass then
+     local level=full and full.surface or M.surface(n)
+     local mid=full and full.mid or n.shape.ground or n.mid
+     -- A connected neighboring tileset can prove the plane without donating
+     -- an incompatible metatile number to this rock's own atlas.
+     local own=n and n.pair==c.pair or c.ts and c.ts.midToSlot and c.ts.midToSlot[mid]~=nil
+     if not own then mid=root.shape.ground or g.ground or mid end
+     local k=string.format('%.6f:%s',level,mid)
      votes[k]=(votes[k]or 0)+1
-     if votes[k]>best then best=votes[k];chosen={level,n.shape.ground or n.mid}end
+     if votes[k]>best then best=votes[k];chosen={level,mid}end
     end
    end end
    local level=chosen and chosen[1]or(root.base or 0)+M.LEVEL
+   if not chosen and options then
+    -- A complete rock at a window edge may have no emitted water neighbor.
+    -- Retain the reviewed body's datum without treating our previous generated
+    -- rock waterline as an author override on the next scene build.
+    local s=root.shape
+    local proxy={base=root.base,behavior=root.behavior,region=root.region,
+     shape={kind='water',seaRock=s.seaRock,wetRock=s.wetRock,bankDepth=s.bankDepth,
+      waterLevel=s.waterLevel,preserveWaterLevel=s.preserveWaterLevel}}
+    local p=M.policy(proxy,options)
+    level=p.level or(p.depth and(root.base or 0)-p.depth)or level
+   end
    local ground=chosen and chosen[2]or root.shape.ground
    for y=root.cy,root.cy+h-1 do for x=root.cx,root.cx+w-1 do
     local n=cells[x..':'..y]
@@ -101,7 +300,7 @@ function M.bind(cells)
    end end
   end
  end end
- return count
+ return count,field
 end
 -- Water geometry and height groups do not change between scene rebuilds.
 -- Keep these lists stable, but refresh the provider image after palette reloads.

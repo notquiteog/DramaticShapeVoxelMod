@@ -98,4 +98,39 @@ models = {}
 drawPlayer()
 T.same(models[1], Mat4.billboard(32, 48, 0, 0, 0, false),
   "reflection errors cannot leave the player flipped")
-T.finish("restored world feature hooks")
+
+-- Outdoor HGSS water and an unchanged indoor/authored sheet can coexist in
+-- connected-map captures. Each group mirrors actors about its own GPU plane.
+local castPlanes,waterGroups={},{}
+Vox.beginCast=function(y)castPlanes[#castPlanes+1]=y;return reflectedTexture end
+Water.draw=function(mesh)waterGroups[#waterGroups+1]=mesh end
+models={}
+Scene.drawWater({{{}, {}, plane=-8},{{},{},plane=-2},{{},{},plane=-8}},drawPlayer)
+T.eq(#castPlanes,2,'one actor capture per distinct water plane')
+T.eq(castPlanes[1],-8,'natural outdoor plane follows source-profile depth')
+T.eq(castPlanes[2],-2,'authored neighbouring pool retains its plane')
+T.eq(#waterGroups,3,'each sheet draws exactly once after grouping')
+T.same(models[1],Mat4.mul(Mat4.billboard(32,48,-16+Water.CAST_RAISE,0,0,false),Mat4.scale(1,-1,1)),'outdoor actor mirror follows eight-pixel-deep sheet')
+T.same(models[2],Mat4.mul(Mat4.billboard(32,48,-4+Water.CAST_RAISE,0,0,false),Mat4.scale(1,-1,1)),'pool actor mirror preserves authored sheet')
+
+-- The public cache key must vary with live extension policy even when the
+-- canonical immutable native map snapshot itself is unchanged.
+local Disk=V.require('VoxelMeshDisk')
+local keyMap={id='GB_WATER_KEY',def={tileset='OVERWORLD',width=1,height=1,blocks={0}},
+ tileset={id='OVERWORLD',blocks={0}}}
+local natural=Disk.fingerprint(keyMap,'body',nil,'terrain')
+local aux=Disk.fingerprint(keyMap,'aux',nil,'aux')
+keyMap.def.voxelWater=false
+T.check(Disk.fingerprint(keyMap,'body',nil,'terrain')~=natural,'water opt-out cannot load natural deep-water cache')
+T.eq(Disk.fingerprint(keyMap,'aux',nil,'aux'),aux,'water policy does not invalidate unchanged grass/flowers AUX')
+keyMap.def.voxelWater={bankDepth=12}
+T.check(Disk.fingerprint(keyMap,'body',nil,'terrain')~=natural,'extension depth has a distinct immutable terrain cache')
+local GBWater=V.require('GBWater')
+local pool={class='water',h=-20,art='flat',authored=true}
+keyMap.def.voxelWater=nil
+local deepKey=Disk.fingerprint(keyMap,'body',nil,'terrain')
+T.eq(GBWater.shape(keyMap,pool).h,-20,'default profile preserves authored deep pool')
+keyMap.def.voxelWater={waterline=-8}
+T.eq(GBWater.shape(keyMap,pool).h,-8,'explicit relative waterline overrides authored pool')
+T.check(Disk.fingerprint(keyMap,'body',nil,'terrain')~=deepKey,'explicit -8 waterline cannot reuse default preserved -20 cache')
+T.finish('restored world feature hooks and source water planes')

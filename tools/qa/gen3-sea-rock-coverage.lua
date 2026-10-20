@@ -6,7 +6,7 @@ return function(V)
  local bind,draws,newMesh=W.bind,W.draws,R.newMesh
  local cells;local vertices=setmetatable({},{__mode='k'})
  local stats={builds=0,cells=0,large=0,small=0}
- W.bind=function(c)local n=bind(c);cells=c;return n end
+ W.bind=function(c,options)local n,field=bind(c,options);cells=c;return n,field end
  R.newMesh=function(v,...)
   local m,e=newMesh(v,...);if m then vertices[m]=v end;return m,e
  end

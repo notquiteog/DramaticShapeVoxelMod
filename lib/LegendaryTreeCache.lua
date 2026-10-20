@@ -50,6 +50,7 @@ function Cache.new(M)
     local key = id .. ":" .. group
     local ctx = M.treeInputs(map, group)
     local style=V.require('TreePresentation')
+    ctx.importedTrees=V.require('ImportedTrees').gbPossible and V.require('ImportedTrees').gbPossible(map)or false
     ctx.nativeInstances=type(map.cellCollision)=='function' and style.original()
       and (style.voxel() or style.props:get()=='modeled') and V.require('ModelInstances').available()
     local recipe = group == "sapling" and "sapling" or Visuals.treeDetailLevel()
@@ -99,7 +100,7 @@ function Cache.new(M)
       -- Native instances share live atlas/model resources. Rebuild their small
       -- placement buffers through the budgeted queue; never restore stale UVs
       -- from a different session's transient native-art atlas.
-      local cached = not ctx.nativeInstances and Disk.loadTreeParts(target, recipe, indexKey, Budget.check) or nil
+      local cached = not(ctx.nativeInstances or ctx.importedTrees)and Disk.loadTreeParts(target, recipe, indexKey, Budget.check) or nil
       local cacheHit = cached ~= nil
       if cached then
         for i in ipairs(cached.parts or {}) do
@@ -112,7 +113,7 @@ function Cache.new(M)
         release(job); job.parts = {}
         local index = { parts = {}, cells = {} }
         local wrote = true
-        ctx.sectionWriter = not ctx.nativeInstances and function(raw)
+        ctx.sectionWriter = not(ctx.nativeInstances or ctx.importedTrees)and function(raw)
           local i = #index.parts + 1
           index.parts[i] = { x = raw.x, y = raw.y, z = raw.z,
             radius = raw.radius, apron = raw.apron, detailFarCount = raw.detailFarCount }
@@ -127,7 +128,7 @@ function Cache.new(M)
         ctx.sectionWriter = nil
         index.count, index.tN, index.bN = count or 0, ctx.tN, ctx.bN
         index.cells = ctx.cells
-        if not ctx.nativeInstances and Disk.available() then
+        if not(ctx.nativeInstances or ctx.importedTrees)and Disk.available() then
           if not wrote or not Disk.saveTreeParts(target, recipe, indexKey, index, Budget.check) then
             -- Storage is optional. The completed GPU sections already belong
             -- to this job; publish them even when a sandbox rejects caching.

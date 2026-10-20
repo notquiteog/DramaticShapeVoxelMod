@@ -44,6 +44,10 @@ function M.dex(battle,side)
  end
  return id
 end
+local function waterAt(map,point)
+ local ok,W=pcall(V.require,'GBWater')
+ return ok and type(W.surfaceAt)=='function'and W.surfaceAt(map,point[1],point[2])or (V.require('TileShape').heights()or{}).water or -2
+end
 -- World-space support for the Stadium model path; callers keep move flight separate.
 function M.support(arena,battle,side,groundY,worldHeight,hover)
  if not V.require('CommunityVisuals').customRoads() or not M.onWater(arena.map,arena[side]) then
@@ -52,7 +56,7 @@ function M.support(arena,battle,side,groundY,worldHeight,hover)
  local kind=M.kind(battle,side)
  if kind=='land' then return groundY,0 end
  if kind=='swimmer' then
-  local waterY=(V.require('TileShape').heights() or {}).water or -2
+  local waterY=waterAt(arena.map,arena[side])
   -- The same support matrix reaches color/shadow and preserves action lift.
   return waterY-M.immersion(M.dex(battle,side),worldHeight),0
  end
@@ -171,10 +175,10 @@ function M.draw(map,arena,groundY,battle)
   if (tonumber(hand[1])-p[1])^2+(tonumber(hand[3])-p[2])^2<48^2 then trainerPoint=M.layout(arena,hand)end
  end
  local tp=trainerPoint or M.layout(arena)
- local waterY=(V.require('TileShape').heights() or {}).water or -2
  local time=love.timer and love.timer.getTime and love.timer.getTime() or 0
  R.glass(false)
  local function ripples(p,radius,radiusZ)
+  local waterY=waterAt(arena.map,p)
   for i=0,2 do
    local phase=(time*.20+i/3)%1
    local growth=1+phase*.16
