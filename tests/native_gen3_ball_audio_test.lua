@@ -41,7 +41,15 @@ plays=false;native();plays=true
 raises=true;native();raises=false
 Anim._headless=true;native();Anim._headless=false
 scene.ball.visible=false;native();scene.ball.visible=true
-Intro._steps={{kind='player_throw',data={ids={0,2}}}};native();Intro._steps=nil
+Intro._steps={{kind='player_throw',data={ids={0,2}}}}
+assert(Audio.playSe(1)==true and events[#events][3]==true,'shared shiny cue not consumed')
+st.battlers[2].shiny=false;native()
+st.battlers[0].shiny=false
+assert(Audio.playSe(1)==true and events[#events][3]==false,'shared normal cue not consumed')
+Intro._steps[1].data.ids={0,9};native();Intro._steps[1].data.ids={};native()
+st.battlers[0].shiny=true;Intro._steps=nil
+scene.balls={[0]=scene.ball}
+assert(Audio.playSe(1)==true,'aliased native ball appeared ambiguous');scene.balls=nil
 scene.balls={[1]={visible=true,frame=1,battler=1}};native();scene.balls=nil
 scene.ball.battler=3;st.battlers[3]={};Audio.playSe(1);assert(events[#events][3]==false)
 local n=nativeCalls;Audio.playSe(7);assert(nativeCalls==n+1)

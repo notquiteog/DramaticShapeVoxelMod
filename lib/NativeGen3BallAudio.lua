@@ -29,29 +29,34 @@ function M.install()
   local intro=Intro._st==st and Intro._steps and Intro._steps[Intro._i]
   if intro and(intro.kind=='player_throw'or intro.kind=='opponent_sendout')then
    local ids=intro.data and intro.data.ids
-   if ids and #ids~=1 then return end
-   return 'sendout',ids and ids[1]or(intro.kind=='player_throw'and 0 or 1)
+   return 'sendout',ids or(intro.kind=='player_throw'and 0 or 1)
   end
-  local stage=Anim.stage();local selected,id
+  local stage=Anim.stage();local ids,seen={},{}
   local function consider(ball,key)
    if ball and ball.visible and ball.frame==1 then
-    if selected then id=false;return end
-    selected=ball;id=ball.battler or Coords.idOf(ball.side)or key
+    local id=ball.battler or Coords.idOf(ball.side)or key
+    if type(id)~='number'then ids.invalid=true;return end
+    if not seen[id]then ids[#ids+1]=id;seen[id]=true end
    end
   end
   consider(stage.ball)
   for key,ball in pairs(stage.balls or{})do consider(ball,key)end
-  -- Simultaneous ambiguous opens retain native sound rather than choosing a
-  -- potentially wrong battler's shiny variant.
-  if selected and type(id)=='number'then return 'sendout',id end
+  -- A simultaneous native cue is shared. Replace it only when every known
+  -- participant requires the same variant, never by picking the first actor.
+  if #ids>0 and not ids.invalid then return 'sendout',ids end
  end
  local function replace(st,event,id)
+  local ids=type(id)=='table'and id or{id};local shiny
+  if #ids==0 then return false end
+  for _,key in ipairs(ids)do
+   local b=Coords.battler(st,key);if not b then return false end
+   local variant=event=='sendout'and V.require('BattleArt').isShiny(b)==true or false
+   if shiny~=nil and shiny~=variant then return false end
+   shiny=variant
+  end
   local a=V.require('EmberLegacyAudio')
   a.nativeMaster(st,function()return Audio._sfxVolume or 1 end)
   if not a.sync(st)then return false end
-  local b=Coords.battler(st,id)
-  if not b then return false end
-  local shiny=event=='sendout'and b and V.require('BattleArt').isShiny(b)or false
   serial=serial+1
   if a.play(event,serial,shiny)~=true then return false end
   owner,audio=st,a;return true

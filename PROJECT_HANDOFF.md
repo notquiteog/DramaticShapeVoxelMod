@@ -1,3 +1,15 @@
+# Native paired audio and all-eleven settings — 2026-10-20
+
+GBA shared release cues now consume optional Ember playback when every known
+actor agrees on the normal/shiny variant; mixed/unknown groups and failed/OFF
+paths retain native audio. All five original paired intros pass exact cue counts
+on official 0.3.91. Playback-sink verification does not certify audible assets.
+All eleven native menus expose their full schema (119 GB/GBC, 121 GBA), and
+inversion changes/restores. FR/LG isolated imports were refreshed to required
+cache139 through the official importer; no normal saves or engine code changed.
+Evidence: `docs/NATIVE_PAIRED_AUDIO_2026-10-20.md`. Paired GSC Q57 needs separate
+actor world subjects; ownerless native particles/provider assets remain limits.
+
 # GSC secondary damage and form ownership — 2026-10-20
 
 Doubles now maps standalone damage scripts to their actual target/source slots
