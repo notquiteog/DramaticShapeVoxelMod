@@ -1,3 +1,12 @@
+# Portrait GBA battle framing — 2026-10-20
+
+Gen3 battle lenses now preserve their native3:2 horizontal span on narrow
+screens, fixing cropped allied actors in modern doubles. No actor positions,
+world scales, native UI or landscape lens changed. Official0.3.91 native
+FR/LG/R/S/E portrait+landscape fixtures pass;10 captures reviewed, all four
+actors visible. New modern/native paired projection test and1171 SDK checks
+pass. See `docs/CAMERA_POLISH_2026-10-20.md` follow-up; physical phones untested.
+
 # Modern battle safe areas across eleven editions — 2026-10-20
 
 Optional modern cards/commands use the original public SafeArea viewport and
