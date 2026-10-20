@@ -1,6 +1,6 @@
--- Compose independently rendered native slots. The caller only enters this
--- path outside move scripts, whose public BG state still has side-wide keys.
--- Persistent dolls, faint clocks and visibility belong to each original slot.
+-- Compose independently rendered native slots. Animated pairs require the
+-- caller's verified public release slot or move-context map. Dolls, faint
+-- clocks and visibility remain owned by each original slot.
 local M={}
 function M.texture(game,side,screen,render,canvasFor,drawn)
  local other=side..'2'
@@ -18,10 +18,11 @@ function M.texture(game,side,screen,render,canvasFor,drawn)
  if not(lead and pair and leadMon and pairMon)then return nil end
  if leadMon==pairMon then return render(game,side,true)end
  local w,h=lead.contentWidth+pair.contentWidth,math.max(lead.contentHeight,pair.contentHeight)
- local cw,ch=math.max(160,w+2),math.max(144,h+2)
+ local padding=math.max(lead.bottomPadding or 1,pair.bottomPadding or 1)
+ local cw,ch=math.max(160,w+2),math.max(144,h+padding+1)
  local canvas=canvasFor(side,cw,ch)
  if not canvas then return nil end
- local ax,ay=cw/2,ch-1
+ local ax,ay=cw/2,ch-padding
  local lx,rx=ax-lead.contentWidth/2,ax+pair.contentWidth/2
  local g=love.graphics
  local prev=g.getCanvas();local r,green,b,a=g.getColor()
@@ -48,6 +49,10 @@ function M.texture(game,side,screen,render,canvasFor,drawn)
  end
  return{canvas=canvas,ax=ax,ay=ay,trainer=false,noMirror=lead.noMirror,
   modernFraming=true,contentWidth=w,contentHeight=h,
-  hudAnchors={[side]=anchor(lead,side,lx),[other]=anchor(pair,other,rx)}}
+  actors={{slot=side,card=lead,x=lx-lead.ax,y=ay-lead.ay},
+   {slot=other,card=pair,x=rx-pair.ax,y=ay-pair.ay}},
+  hudAnchors={[side]=anchor(lead,side,lx),[other]=anchor(pair,other,rx),
+   [side..':effect']=anchor(lead,side..':effect',lx),
+   [other..':effect']=anchor(pair,other..':effect',rx)}}
 end
 return M

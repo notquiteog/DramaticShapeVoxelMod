@@ -1171,7 +1171,7 @@ function M.draw(game,vw,vh,cam)
  local plate=cam.battle and cam.plate
  if plate then background=plate.color end
  local S=V.require('VoxelState')
- S.level=cam.level;S.angle=math.rad(S.ANGLES_DEG[cam.level+1] or 35)
+ S.level=cam.level;S.angle=cam.angle or math.rad(S.ANGLES_DEG[cam.level+1] or 35)
  R.canopyFacing=cam.battle or cam.level>=6
  if cam.level>=6 then
   local ground=support

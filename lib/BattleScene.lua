@@ -805,6 +805,10 @@ local function monCards(arena, groundY, textures, battle)
                         hudAnchors=tex.hudAnchors or (not tex.trainer and {[side]={tex.ax,tex.ay-(tex.contentHeight or 56)}}or nil),
                         noDayTint = tex.noDayTint,
                         model = model }
+      if tex.actors then
+        local children=V.require('NativeGen2PairCards').split(tex,out[#out])
+        if children then table.remove(out);for _,child in ipairs(children)do out[#out+1]=child end end
+      end
     end
   end
   return out
@@ -926,7 +930,7 @@ local function castShadows(state, arena, terrain, nbMesh, cx, cy, vw, vh,
     for _, card in ipairs(cards or {}) do
       -- Model/shadow failure is local to one side; its retained card casts
       -- for this pass rather than leaving that battler without a silhouette.
-      if not modelShadows[card.side] then
+      if not modelShadows[card.teamSide or card.side] then
         ShadowMap.draw(BattleBillboard.mesh(), card.tex,
                        ShadowMap.snug(card.model))
       end
@@ -992,13 +996,15 @@ local function updateSendout(battle)
     if not nativeScreen then sendoutSides={}; return end
   end
   local now = love.timer.getTime()
-  for _,side in ipairs({"player","enemy"}) do
-    local battler = battle[side]
+  local paired=nativeScreen and nativeScreen.battle.doubles
+  for _,side in ipairs(paired and{"player","player2","enemy","enemy2"}or{"player","enemy"}) do
+    local battler = paired and nativeScreen:activeMon(side)or battle[side]
     local entry = sendoutSides[side]
     if not entry or entry.battler~=battler then
       entry={battler=battler}; sendoutSides[side]=entry
     end
-    if nativeScreen and entry.nativeCue and nativeScreen.afterSendOut~=entry.nativeCue then
+    if nativeScreen and entry.nativeCue and(nativeScreen.afterSendOut~=entry.nativeCue
+      or not nativeReader.cue(nativeScreen,side,battler))then
       entry.shell=nil
     end
     local grow
@@ -1008,7 +1014,7 @@ local function updateSendout(battle)
     end
     local growing=type(grow)=="number" and grow<1
     local capturing=battle._legendaryBallSequence or battle._dsBallSequenceActive
-    local eligible=side=="player" or (nativeScreen and not nativeScreen.battle.wild)
+    local eligible=side:match("^player") or (nativeScreen and not nativeScreen.battle.wild)
       or (not nativeScreen and battle.kind~="wild")
     local provider=battle.legendaryModelRelease
     local cue=provider and provider[side]
@@ -1024,19 +1030,23 @@ local function updateSendout(battle)
       entry.started=start or now
       entry.cueStarted=start
       entry.nativeCue=nativeCue
+      entry.nativePair=paired and true or nil
       entry.age,entry.last=math.max(0,now-entry.started),now
     end
     entry.wasGrowing=growing
     if entry.shell then
       local dt=math.max(0,math.min(0.08,now-(entry.last or now)))
       entry.last=now; entry.age=math.max(0,now-entry.started)
+      if entry.nativePair then entry.age=math.min(Q57.releaseDuration-.0001,nativeReader.progress(nativeScreen,side)*Q57.releaseDuration)end
       entry.shell:update(dt)
-      if entry.age<0.44 then
+      if not entry.nativePair and entry.age<0.44 then
         local q=math.min(1,entry.age/0.28)
         battle.legendaryReleasePose[side]={scale=0.08+0.92*q*q*(3-2*q),
           amount=math.max(0,1-math.max(0,entry.age-0.28)/0.16)}
       end
-      if entry.age>=1.15 and not entry.emberClosed then
+      -- Native runners own their sound clock; a visual size step must not
+      -- synthesize an extra close cue alongside the original send-out poof.
+      if not nativeReader and entry.age>=1.15 and not entry.emberClosed then
         entry.emberClosed=true;EmberAudio.play("close")
       end
       if entry.age>=Q57.releaseDuration then entry.shell=nil end
@@ -1374,9 +1384,9 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
   local hostedCards = type(drawActors) == "table"
                       and type(drawActors.cards) == "table"
   updateSendout(battle)
-  Q57.prepare(battle,arena,V.require("SafariFooting").ground(battle,arena,"enemy",groundY),normalBall,sendoutSides)
   local cards = (not hostedActors or hostedCards)
                 and monCards(arena, groundY, textures, battle) or {}
+  Q57.prepare(battle,arena,V.require("SafariFooting").ground(battle,arena,"enemy",groundY),normalBall,sendoutSides,cards)
   local stadium = hostedActors and {}
     or V.require("SafariFooting").placements(StadiumModels,arena,groundY,textures,battle)
   -- Prepare before terrain/model draws; a per-scene value never persists into overworld.
@@ -1585,7 +1595,9 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
     -- and no glass either: the cards wear the battle screen, not the
     -- tileset atlas, so the mask's coordinates mean nothing on them
     Voxel3D.glass(false)
+    Q57.draw(battle,true)
     local function drawCard(card)
+      if card.releaseCanvas and Q57.subject(battle,card,BattleBillboard.mesh(),BattleBillboard.PULL)then return end
       -- Static front illustrations retain their authored brightness instead
       -- of being dimmed or colour-cast by the clock. Only the hour tint is
       -- neutral here; depth and alpha-shaped lighting/shadows stay active.
@@ -1636,7 +1648,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
     end
     for _, card in ipairs(cards) do
       local trainerReplaced=safariTrainer and card.side=='player' and card.trainer
-      if not trainerReplaced and not StadiumModels.uses(stadium, card.side) then drawCard(card) end
+      if not trainerReplaced and not StadiumModels.uses(stadium, card.teamSide or card.side) then drawCard(card) end
     end
 
     local failedModels = {}
@@ -1671,7 +1683,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
     end
     -- A provider failure cannot strand a missing battler for the frame.
     for _, card in ipairs(cards) do
-      if failedModels[card.side] and not(safariTrainer and card.side=='player' and card.trainer) then drawCard(card) end
+      if failedModels[card.teamSide or card.side] and not(safariTrainer and card.side=='player' and card.trainer) then drawCard(card) end
     end
 
     -- Legendary standing-trainer bridge. The companion 3D-player mod exports

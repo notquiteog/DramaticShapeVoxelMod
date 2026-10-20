@@ -60,7 +60,7 @@ function Gen2Staged.holdsScene(game,battle)
 end
 
 -- One canvas per side, kept and resized rather than reallocated per frame.
-local canvases = {}
+local canvases, failedCanvases = {}, {}
 
 local function canvasFor(side, w, h)
   local g = love.graphics
@@ -69,10 +69,14 @@ local function canvasFor(side, w, h)
   if held and held:getWidth() >= w and held:getHeight() >= h then
     return held
   end
-  local ok, canvas = pcall(g.newCanvas, w, h)
-  if not ok or not canvas then return nil end
+  local failed=failedCanvases[side]
+  if failed and failed.w==w and failed.h==h then return nil end
+  local ok, canvas = pcall(g.newCanvas, w, h, {dpiscale=1})
+  if not ok or not canvas then failedCanvases[side]={w=w,h=h};return nil end
+  failedCanvases[side]=nil
   if canvas.setFilter then pcall(canvas.setFilter, canvas, "nearest", "nearest") end
   canvases[side] = canvas
+  if held and held.release then pcall(held.release,held)end
   return canvas
 end
 
@@ -81,6 +85,7 @@ function Gen2Staged.release()
     if canvas and canvas.release then pcall(canvas.release, canvas) end
     canvases[side] = nil
   end
+  failedCanvases={}
 end
 
 -- Which sides a billboard was actually drawn for this frame, so the flat
@@ -142,7 +147,7 @@ local function poseFor(screen,side,mon,back,actorOnly)
     return
   end
   local sink=screen.faintSink and screen:faintSink(side)or 0
-  local bg=screen.anim and screen.anim.bg
+  local bg=V.require('NativeGen2MoveProjection').background(screen,side)
   -- The native shaderless BGP veil is a whole-panel approximation; let its
   -- original painter own that path rather than silently drop it on a card.
   if bg and bg.lcdc=='BGP'and not Palette.available()then return end
@@ -152,7 +157,8 @@ local function poseFor(screen,side,mon,back,actorOnly)
   if anim and anim.pic~=nil then substitute=anim.pic=='substitute'end
   local lifted=anim and anim.lifted
   local scale=anim and RESIZE_TILES[anim.size]
-  scale=scale and scale/(back and 6 or 7)or 1
+  local nativeBack=V.require('NativeGen2MoveProjection').back(screen,side,back)
+  scale=scale and scale/(nativeBack and 6 or 7)or 1
   local slide=anim and anim.slide or 0
   if not actorOnly and screen.battle and screen.battle.doubles and(scale~=1 or slide~=0 or sink>0 or substitute or lifted or raster)then return end
   return scale,slide,anim and anim.shade,sink,substitute,lifted
@@ -167,6 +173,7 @@ local function sideTexture(game, side, actorOnly)
     local ok,slot=pcall(screen.nativeAnimationSlot,screen)
     pairedAnimation=ok and(slot=='player'or slot=='player2'or slot=='enemy'or slot=='enemy2')
   end
+  pairedAnimation=pairedAnimation or V.require('NativeGen2MoveProjection').actors(screen)~=nil
   if not actorOnly and screen.battle and screen.battle.doubles and(not screen.anim or pairedAnimation)then
     return V.require('NativeGen2PairPicture').texture(game,side,screen,sideTexture,canvasFor,Gen2Staged.drawn)
   end
@@ -215,7 +222,9 @@ local function sideTexture(game, side, actorOnly)
   local pm=pimage and Art.metrics and Art.metrics(pimage)
   groundY=groundY or (metric and metric.y1+1) or box[4]
   pground=pground or (pm and pm.y1+1) or (pbox and pbox[4])
-  local bg=screen.anim and screen.anim.bg
+  local Projection=V.require('NativeGen2MoveProjection')
+  local nativeBack=Projection.back(screen,side,back)
+  local bg=Projection.background(screen,side)
   local raster=bg and(V.require('NativeGen2PictureBands').raster(bg)or poseSlide~=0)
   local sinkPixels=poseSink
   local nativeWidth,nativeHeight,nativeScale
@@ -244,12 +253,24 @@ local function sideTexture(game, side, actorOnly)
     dollGround=Foot.bounds(doll,dollQuad)[4]
   end
   local BattleScene = V.require("BattleScene")
+  local Effects=actorOnly and V.require('NativeGen2ActorEffects')
+  local effects=Effects and Effects.owner(screen,side,mon)
+  local releaseCue=effects and V.require('NativeGen2Sendout').paired(screen,side,mon)
+  local bottomPadding=effects and 64 or FOOT_PAD
   local cw = math.max(BattleScene.GB_W or 160, iw + iw2 + 2)
-  local ch = math.max(BattleScene.GB_H or 144, math.max(ih, ih2) + 2)
+  local ch = math.max(BattleScene.GB_H or 144, math.max(ih, ih2) + bottomPadding + 1)
   local ax = cw / 2
-  local ay = ch - FOOT_PAD
+  local ay = ch - bottomPadding
   local canvas = canvasFor(actorOnly and side..':actor' or side, cw, ch)
   if not canvas then return nil end
+  local releaseCanvas=releaseCue and love.graphics.getBlendMode and love.graphics.setBlendMode
+    and canvasFor(side..':release',cw,ch)or nil
+  local effectAnchor
+  if Projection.actors(screen)then
+    local ok,value=pcall(Projection.anchor,screen,side,mon,ax,ay,iw)
+    if not(ok and value)then return nil end
+    effectAnchor=value
+  end
 
   local pictureHeight,pictureScale,pictureGround,colored=ih,poseScale,groundY,trueColor
   if doll then pictureHeight,pictureScale,pictureGround,colored=dollHeight,1,dollGround,false end
@@ -269,7 +290,7 @@ local function sideTexture(game, side, actorOnly)
   if lifted or raster then
     if not(nativeHeight and love.graphics.getScissor and love.graphics.setScissor)then return nil end
     if lifted then
-      band=V.require('NativeGen2PictureBands').range(back,nativeHeight,nativeScale,pictureHeight,pictureScale,pictureGround,ay,lifted)
+      band=V.require('NativeGen2PictureBands').range(nativeBack,nativeHeight,nativeScale,pictureHeight,pictureScale,pictureGround,ay,lifted)
       if not band then return nil end
     end
   end
@@ -278,7 +299,7 @@ local function sideTexture(game, side, actorOnly)
     if screen.introGrayscale and screen:introGrayscale()then colors=require('src.world.gen2.Palettes').BLACKOUT end
     if colors and poseShade then colors=Palette.remap(colors,poseShade)end
     if colors and not(colored and Palette.mode=='gbc')and Palette.available()then
-      local bg=screen.anim and screen.anim.bg
+      local bg=Projection.background(screen,side)
       local old=Palette.setBgp and Palette.setBgp(byte or(bg and bg.bgp))
       local ok,err=pcall(Palette.with,colors,fn)
       if Palette.setBgp then Palette.setBgp(old)end
@@ -311,9 +332,9 @@ local function sideTexture(game, side, actorOnly)
     elseif raster then
       local Bands=V.require('NativeGen2PictureBands')
       local View=require('src.ui.gen2.BattleAnimView')
-      local runs=Bands.runs(View,bg,back,lifted)
-      local clipX=Bands.viewport(back,nativeWidth,nativeScale,dollWidth or iw,pictureScale,ax,poseSlide,doll and(back and 32 or 112))
-      Bands.drawRaster(g,cw,ch,runs,back,nativeHeight,nativeScale,pictureHeight,pictureScale,pictureGround,ay,function(dx,dy,byte)
+      local runs=Bands.runs(View,bg,nativeBack,lifted)
+      local clipX=Bands.viewport(nativeBack,nativeWidth,nativeScale,dollWidth or iw,pictureScale,ax,poseSlide,doll and(nativeBack and 32 or 112))
+      Bands.drawRaster(g,cw,ch,runs,nativeBack,nativeHeight,nativeScale,pictureHeight,pictureScale,pictureGround,ay,function(dx,dy,byte)
         paint(mon,colored,function()body(slidePixels,dx,dy)end,byte)
       end,clipX)
       if band then
@@ -341,6 +362,18 @@ local function sideTexture(game, side, actorOnly)
       if poseSink>0 then g.setScissor(0,0,cw,ay)end
       paint(mon,trueColor,function()drawPic(g,image,quad,ax-iw*poseScale/2+slidePixels,ay-groundY*poseScale+sinkPixels,poseScale)end)
     end
+    if releaseCanvas then
+      -- Save this exact native body before adding its original OBJ particles.
+      -- Both versions survive until the scene knows whether Q57 actually drew.
+      local blend,alpha=g.getBlendMode()
+      local copied=pcall(function()
+        g.setCanvas(releaseCanvas);g.clear(0,0,0,0);g.setColor(1,1,1,1)
+        g.setBlendMode('alpha','premultiplied');g.draw(canvas,0,0)
+      end)
+      g.setBlendMode(blend,alpha);g.setCanvas(canvas)
+      if not copied then releaseCanvas=nil end
+    end
+    if effects then Effects.paint(screen,side,mon,ax,ay)end
   end)
   g.setCanvas(prev)
   if poseSink>0 then
@@ -356,11 +389,13 @@ local function sideTexture(game, side, actorOnly)
   return { canvas = canvas, ax = ax, ay = ay, trainer = false,
     hudAnchors={
       [side]={pimage and ax-iw/2 or ax,ay-groundY+box[2]},
+      [side..':effect']=effectAnchor,
       [side..'2']=pimage and {ax+iw2/2,ay-pground+pbox[2]}or nil,
     },
     noMirror=back and not (selectedArt and V.require('BattleArt').playerSide()=='front'
       and V.require('BattleArt').flipsPlayerFront()),
-    modernFraming=true,contentWidth=iw+iw2,contentHeight=math.max(ih,ih2) }
+    modernFraming=true,contentWidth=iw+iw2,contentHeight=math.max(ih,ih2),
+    bottomPadding=bottomPadding,actorMon=mon,releaseCanvas=releaseCanvas,releaseCue=releaseCue }
 end
 
 -- The same shape OverworldBattle.textures returns, so BattleScene cannot tell
@@ -369,6 +404,8 @@ Gen2Staged.sideTexture=sideTexture
 function Gen2Staged.textures(game)
   if not Generation.isGen2() then return nil end
   Gen2Staged.drawn = {}
+  V.require('NativeGen2ActorEffects').begin()
+  V.require('NativeGen2MoveProjection').begin(screenFor(game))
   local out = {}
   out.enemy = Gen2Staged.sideTexture(game, "enemy")
   out.player = Gen2Staged.sideTexture(game, "player")
@@ -380,5 +417,8 @@ function Gen2Staged.textures(game)
   end
   return out
 end
+
+local assetsOK,Assets=pcall(require,'src.render.Assets')
+if assetsOK and type(Assets.register)=='function'then Assets.register({release=Gen2Staged.release})end
 
 return Gen2Staged

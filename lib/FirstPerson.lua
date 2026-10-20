@@ -724,7 +724,7 @@ function FirstPerson.frame(me, cx, cy, vw, vh, posed, state)
   -- as far as the world allows. Fully in (1ST, and every frame of the
   -- diorama) this hands back the head and the focus untouched, so the two
   -- rungs are one rig with one number between them.
-  local camEye, camFocus = ThirdPerson.place(head, lx, ly, lz, fpFocus, surf)
+  local camEye, camFocus = ThirdPerson.place(head, lx, ly, lz, fpFocus, surf, me and (me.gh or 0))
 
   local oEye, oFocus, oFov, oUp = orbitRig(cx, cy, vh)
   local function mix(p, q)

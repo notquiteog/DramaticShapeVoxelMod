@@ -30,7 +30,9 @@ function M.install(camera)
   if not (game and camera.level>0 and frame and def)then return draw(playback,session)end
   Map.ensureMidLayout(game,scene.map,def)
   if not def.midLayout then return draw(playback,session)end
-  local cam={level=camera.level,yaw=camera.yaw,pitch=camera.pitch,replay={def=def,scene=scene,frame=frame}}
+  local cam={level=camera.level,yaw=camera.yaw,pitch=camera.pitch,
+   angle=camera.angle,boomZoom=camera.boomZoom,boomBlend=camera.boomBlend,
+   replay={def=def,scene=scene,frame=frame}}
   love.graphics.clear(0,0,0,0);Renderer.uiOpaque=false
   Renderer:beginWorldPass()
   local vw,vh=Renderer:worldViewSize()

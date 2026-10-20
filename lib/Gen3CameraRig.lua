@@ -2,29 +2,32 @@
 -- and aim instead of leaving a high camera fixed while the player exits frame.
 local M={}
 function M.showsPlayer(camera)
- return camera.level~=6 and(camera.level~=7 or camera.boomClearance==nil or camera.boomClearance>=48)
+ return camera.level~=6 and(camera.level~=7 or camera.boomDistance==nil or camera.boomDistance>=48)
 end
 function M.place(camera,x,z,ground,eyeHeight,lift,solid)
  local yaw,pitch=camera.yaw or 0,camera.pitch or 0
  local dx,dz=math.sin(yaw),-math.cos(yaw)
  local ly=-math.sin(pitch);local flat=math.cos(pitch)
  local y=ground+eyeHeight+(lift or 0)
- if camera.level==6 then
-  camera.boomClearance=nil
+ local extension=camera.boomBlend
+ if extension==nil then extension=camera.level==6 and 0 or 1 end
+ if camera.level==6 and extension<=0 then
+  camera.boomDistance=0
   return {eye={x,y,z},focus={x+dx*flat*24,y+ly*24,z+dz*flat*24},fov=math.rad(62),curve=0}
  end
- local distance=75*(camera.boomZoom or 1)
- local pivot=y+4
+ local distance=75*(camera.boomZoom or 1)*extension
+ local pivot=y+4*extension
  -- Keep the orbit above the current support plane when looking upward.
  -- This does not alter the selected pitch or any native movement/collision.
  if ly>0 then distance=math.min(distance,math.max(0,(pivot-ground-5)/ly))end
+ camera.boomDistance=distance
  -- The boom always extends to its full length: it never culls against
  -- walls, terrain or any other geometry. (The Gen 1/2 boom lives in
  -- ThirdPerson.lua and was changed the same way in Release 1.51.0.)
  local shoulder=4*(camera.boomZoom or 1)*(distance/math.max(1,75*(camera.boomZoom or 1)))
  local sx,sz=math.cos(yaw)*shoulder,math.sin(yaw)*shoulder
  return {eye={x-dx*flat*distance+sx,pivot-ly*distance,z-dz*flat*distance+sz},
-  focus={x+dx*flat*24+sx,pivot+ly*24,z+dz*flat*24+sz},fov=math.rad(62)}
+  focus={x+dx*flat*24+sx,pivot+ly*24,z+dz*flat*24+sz},fov=math.rad(62),curve=camera.level==6 and 0 or nil}
 end
 -- Native map cells own occupancy. Connected maps are sampled in their own
 -- coordinates; unknown void blocks the boom instead of exposing map backs.

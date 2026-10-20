@@ -21,7 +21,7 @@ function A.clear()
   if owner then owner.legendaryQ57=nil end
   owner=nil
 end
-function A.prepare(battle,arena,ground,n,entries)
+function A.prepare(battle,arena,ground,n,entries,cards)
   if not battle then return end
   if owner~=battle then A.clear();owner=battle end
   local poses={};battle.legendaryQ57=poses
@@ -59,23 +59,42 @@ function A.prepare(battle,arena,ground,n,entries)
   for side,e in pairs(entries or {}) do
     if not poses[side] and e.shell and e.age and e.age<Release.DURATION then
       local point=arena[side]
+      local body,center,width,height,yaw
+      if e.nativePair then
+        point=nil;e.q57Used=false
+        for _,card in ipairs(cards or{})do
+          if card.side==side and card.actorMon==e.battler and card.releaseCue==e.nativeCue and card.releaseCanvas then
+            body=card
+            local Pair=V.require('NativeGen2PairCards')
+            local foot=Pair.point(card,card.anchor[1],card.anchor[2])
+            center=Pair.point(card,card.anchor[1],card.anchor[2]-card.contentHeight/2)
+            local m=card.model
+            width=card.contentWidth*math.sqrt(m[1]^2+m[9]^2)/card.tex:getWidth()
+            height=card.contentHeight*math.abs(m[6])/card.tex:getHeight()
+            yaw=math.atan2(-m[9],m[1]);point={foot[1],foot[3],foot[2]}
+            break
+          end
+        end
+      end
       if point then
-        e.shell.pos={point[1],ground+2.2*e.shell.scale,point[2]}
+        e.shell.pos={point[1],(point[3]or ground)+2.2*e.shell.scale,point[2]}
         local opening=math.min(1,e.age/.15)
         local closing=math.max(0,math.min(1,(e.age-1.0)/.15))
         e.shell.lid=opening*(1-closing);e.shell.lidTarget=e.shell.lid
-        local p=Release.pose(e.age,source(side),{e.shell:mouth()},14,14,0,'battle')
-        if p then p.shell=e.shell;p.entry=e end
+        local p=Release.pose(e.age,center or source(side),{e.shell:mouth()},width or 14,height or 14,yaw or 0,'battle')
+        if p then p.shell=e.shell;p.entry=e;p.nativePair=e.nativePair;p.card=body end
         poses[side]=p
       end
     end
   end
 end
-function A.draw(battle)
+function A.draw(battle,pairedOnly)
   local poses=battle and battle.legendaryQ57
   if not poses then return false end
   local drew=false
   for side,p in pairs(poses) do
+   if (p.nativePair==true)==(pairedOnly==true)then
+    local function drawPose()
     local e=meshes[side]
     if not e then e={};e.vertices,e.indices=Plasma.newGeometry();meshes[side]=e end
     local model=Mat4.identity()
@@ -95,15 +114,17 @@ function A.draw(battle)
       Breakout.draw(p.timer,p.mouth,p.yaw,p.ball and p.ball.scale)
       if p.ball then p.ball:drawBreakShell(p.burstProgress) end
     end
-    if p.shell and p.timer<1.15 then p.shell:drawShell(0) end
+    if not p.nativePair and p.shell and p.timer<1.15 then p.shell:drawShell(0) end
     local disabled=p.captureOwner and not p.burst and (p.suction==false or (p.volumeScale or 1)<=0)
     if disabled then drew=true;p.captureOwner.q57Used=true end -- suppress legacy fallback when deliberately OFF
     local volumeVisible=not disabled and (p.burst or ((p.fade or 1)>.001 and (not p.release or p.pull<.995)))
+    p.volumeReady=not volumeVisible and(p.pull or 0)<.995
     if volumeVisible and e.mesh and Material.draw(Voxel3D,e.mesh,nil,model,0,paint,false) then
-      drew=true
+      p.volumeReady=true;drew=true
       if p.captureOwner then p.captureOwner.q57Used=true end
       if p.entry then p.entry.q57Used=true end
     end
+    if p.nativePair and p.volumeReady and p.shell and p.timer<1.15 then p.shell:drawShell(0)end
     if p.captureOwner and not p.burst and not disabled and p.captureOwner.q57Used then
       local ball=p.captureOwner.ball
       if ball and ball.drawCaptureAura then
@@ -112,7 +133,19 @@ function A.draw(battle)
         ball:drawCaptureAura(x,y,z,1-.62*(p.pull or 0),0,e.aura)
       end
     end
+    end
+    if p.nativePair then
+      local ok=pcall(drawPose);if not ok then p.volumeReady=false;p.entry.q57Used=false end
+    else drawPose()end
+   end
   end
   return drew
+end
+function A.subject(battle,card,mesh,pull)
+  local p=battle and battle.legendaryQ57 and battle.legendaryQ57[card.side]
+  if not(p and p.nativePair and p.card==card and p.volumeReady and p.pull<.995)then return false end
+  local ok,painted=pcall(Material.draw,Voxel3D,mesh,card.releaseCanvas,card.model,pull,p,true)
+  p.entry.q57Used=ok and painted==true
+  return p.entry.q57Used
 end
 return A

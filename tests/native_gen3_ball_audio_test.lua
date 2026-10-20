@@ -9,11 +9,12 @@ local Switch={_st=st,_steps={{kind='withdraw',data={id=2}}},_i=1}
 Switch.update=function()Audio.playSe(1);return nil,'native',false end
 local Intro={}
 local SE={SE_BALL_OPEN=1};local enabled,staged,assets,plays=true,true,true,true
-local master;local clears=0;local syncs=0;local raises=false
+local master;local clears=0;local syncs=0;local raises=false;local groups={}
 local V={require=function(name)return ({Gen3Battle={active=staged,enabled=function()return enabled end},
  PokeballSettings={active=function()return enabled end},BattleArt={isShiny=function(b)return b.shiny end},
  EmberLegacyAudio={nativeMaster=function(s,f)assert(s==st);master=f end,sync=function(s)syncs=syncs+1;return assets end,clear=function()clears=clears+1 end,
- play=function(...)if raises then error('decoder failed')end;events[#events+1]={...};return plays end}})[name]end}
+ play=function(...)if raises then error('decoder failed')end;events[#events+1]={...};return plays end,
+ playSendoutGroup=function(index,variants)groups[#groups+1]={index,variants};return plays end}})[name]end}
 for name,value in pairs({audio=Audio,se_ids=SE,['battle.anim']=Anim,['battle.anim_coords']=Coords,['battle.switch_seq']=Switch,['battle.intro_seq']=Intro,['battle.catch_seq']=Catch,battle=Battle})do package.loaded['src.core.game3.'..name]=value end
 local originalSound,originalUpdate=Audio.playSe,Switch.update
 local M=assert(loadfile('lib/NativeGen3BallAudio.lua'))(V);local undo=M.install()
@@ -41,8 +42,18 @@ plays=false;native();plays=true
 raises=true;native();raises=false
 Anim._headless=true;native();Anim._headless=false
 scene.ball.visible=false;native();scene.ball.visible=true
-Intro._steps={{kind='player_throw',data={ids={0,2}}}};native();Intro._steps=nil
-scene.balls={[1]={visible=true,frame=1,battler=1}};native();scene.balls=nil
+Intro._steps={{kind='player_throw',data={ids={0,2}}}}
+assert(Audio.playSe(1)==true and events[#events][3]==true,'shared shiny cue not consumed')
+st.battlers[2].shiny=false;assert(Audio.playSe(1)==true and #groups==1)
+assert(groups[1][2][1]==true and groups[1][2][2]==false,'mixed variants lost actor identity')
+plays=false;native();plays=true
+st.battlers[0].shiny=false
+assert(Audio.playSe(1)==true and events[#events][3]==false,'shared normal cue not consumed')
+Intro._steps[1].data.ids={0,9};native();Intro._steps[1].data.ids={};native()
+st.battlers[0].shiny=true;Intro._steps=nil
+scene.balls={[0]=scene.ball}
+assert(Audio.playSe(1)==true,'aliased native ball appeared ambiguous');scene.balls=nil
+scene.balls={[1]={visible=true,frame=1,battler=1}};assert(Audio.playSe(1)==true);scene.balls=nil
 scene.ball.battler=3;st.battlers[3]={};Audio.playSe(1);assert(events[#events][3]==false)
 local n=nativeCalls;Audio.playSe(7);assert(nativeCalls==n+1)
 local prior=syncs;M.update();assert(syncs==prior+1,'playing sounds not synced to live master')

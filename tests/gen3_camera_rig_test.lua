@@ -37,4 +37,15 @@ assert(solid(-16,100,8),'void was not closed')
 collision.behaviorOn=function()return 'water'end
 solid=Rig.obstacles({world={{def=neighbor,ox=4,oy=0}}},primary,function()return 0 end,collision,false)
 assert(not solid(70,20,8),'water stopped camera like a wall')
+local previous
+for i=0,20 do
+ local c={level=7,yaw=.2,pitch=.1,boomBlend=i/20}
+ local r=Rig.place(c,100,200,0,14,0)
+ if previous then
+  local dx,dy,dz=r.eye[1]-previous[1],r.eye[2]-previous[2],r.eye[3]-previous[3]
+  assert(math.sqrt(dx*dx+dy*dy+dz*dz)<4,'mode interpolation jumped its eye')
+ end
+ assert(Rig.showsPlayer(c)==(c.boomDistance>=48),'body occluded close transition framing')
+ previous=r.eye
+end
 print('PASS Gen3 orbit pitch/zoom/ground, movement/elevation follow and first-person anchor')

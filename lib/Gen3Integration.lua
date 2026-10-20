@@ -215,7 +215,7 @@ function M.install()
   -- voxel field resumes exactly where the player aimed. Menus still own input.
   Look.resetLost(stick,love.window)
   local canLook=looking(game) and free()
-  controls:update(dt,canLook,love.mouse)
+  controls:update(dt,canLook,love.mouse,math.rad(V.require('VoxelState').ANGLES_DEG[M.level+1]or 35))
   local battleLook=battleLooking()
   local touchMode=battleLook and 'battle' or canLook and M.level or nil
   local width,height=1280,720

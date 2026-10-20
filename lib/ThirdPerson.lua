@@ -198,7 +198,7 @@ function ThirdPerson.update(dt, blend)
   -- rather than a jump: three notches of wheel should read as one glide.
   local zg = ThirdPerson.zoomGoal
   if ThirdPerson.zoom ~= zg then
-    local k = math.min(1, dt / ThirdPerson.ZOOM_TIME)
+    local k = 1 - math.exp(-math.max(0, dt) / ThirdPerson.ZOOM_TIME)
     local z = ThirdPerson.zoom + (zg - ThirdPerson.zoom) * k
     ThirdPerson.zoom = (math.abs(zg - z) < 1e-4) and zg or z
   end
@@ -240,7 +240,7 @@ end
 -- With the boom fully in this is exactly the first-person answer, to the
 -- pixel -- which is what makes 1ST and 3RD one rig with a number between
 -- them rather than two cameras to keep in sync.
-function ThirdPerson.place(pivot, lx, ly, lz, focus, surf)
+function ThirdPerson.place(pivot, lx, ly, lz, focus, surf, support)
   local e = surf and 1 or ThirdPerson.extension()
   if e <= 0 then
     ThirdPerson.want, ThirdPerson.len = 0, 0
@@ -256,7 +256,11 @@ function ThirdPerson.place(pivot, lx, ly, lz, focus, surf)
   local want = surf and ThirdPerson.surfDistance
     or math.max(ThirdPerson.reachFor() * e, (ThirdPerson.surfDistance or 0) * e)
   ThirdPerson.want = want
-  ThirdPerson.len = want
+  -- Match the Gen 3 orbit's support-plane bound. Looking up pulls the eye
+  -- downward; a full boom must not put it below the floor. This does not
+  -- test walls/scenery or change native collision, and keeps the chosen pitch.
+  ThirdPerson.len = ly > 0 and support ~= nil
+    and math.min(want, math.max(0, (orbit[2] - support - 5) / ly)) or want
   local len = ThirdPerson.len
 
   -- the rail offset, faded with how much boom actually survived: a camera

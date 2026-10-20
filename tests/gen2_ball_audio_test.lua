@@ -41,3 +41,11 @@ before=syncs;s:update();assert(syncs==before,'idle audio polled assets')
 sound('Sfx_BallPoof');assert(s:finishBattle()=='finished'and clears==2)
 M.finish();assert(clears==2)
 print('PASS Gen2 normal sendout audio, shiny-arm/capture isolation, live master, exact returns, failure/OFF/stale fallback and lifecycle')
+
+-- A reused screen/actor cannot grant an old runner audio ownership in a new battle.
+s.phase='menu';sound=start();sound('Sfx_BallPoof');local originalBattle=s.battle
+s.battle={};fallback(sound);local beforeClear=clears;s:update()
+assert(clears==beforeClear+1,'replaced battle retained optional voices')
+s.battle=originalBattle;sound=start();s.phase='done';fallback(sound)
+s.phase='fadeout';fallback(sound);s.phase='evolving';fallback(sound)
+print('PASS exact originating battle and terminal-phase audio ownership')

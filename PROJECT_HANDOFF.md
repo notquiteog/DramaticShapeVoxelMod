@@ -76,6 +76,114 @@ all partners optional. No whole-region or generic FPS claim. Regional queue
 still84/125 complete,41 queued. Primary concurrent GSC and partner unpublished
 changes are preserved. No unrelated partner production edits are included.
 
+# Mixed native GBA release audio — 2026-10-20
+
+Shared native send-out cues now retain both verified normal/shiny variants.
+Grouped playback prepares all sources, rolls back only the group on failure,
+and keeps native fallback, volume and bounded cleanup. All five official0.3.91
+native paired intros pass normal/shiny/mixed/mixed-failed/failed/OFF cue counts;
+five final captures inspected. Focused source rollback, volume, unknown identity
+and cleanup checks pass. Optional audio assets/timbre and real-device playback
+remain unverified. Evidence: `docs/NATIVE_MIXED_AUDIO_2026-10-20.md`.
+
+# Camera continuity across editions — 2026-10-20
+
+Gen1/2 upward orbit stays above its support plane; zoom smoothing is frame-rate
+independent. Gen3 fixed angles and 1ST/3RD boom changes ease continuously, and
+recorded scenes retain zoom/angle. Native official0.3.91 checks pass all11 modes,
+all6 GB/GBC walking connections and house exits, all5 GBA running connections,
+dust/exclamation effects and battle input/return. Six Yellow/Crystal/Emerald
+portrait/landscape touch simulations pass; native overlay captures inspected.
+Shared349/0/58 suite and focused checks pass. Existing deliberate no-obstruction
+policy preserved: third-person scenery can still cover the view. No physical
+phone certification or exhaustive cutscene claim. Evidence and limits:
+`docs/CAMERA_POLISH_2026-10-20.md`.
+
+# Updated parity boundaries and native HUD companion — 2026-10-20
+
+Doubles c09db78 composes static GSC native HUD cards at window resolution,
+retaining original positions, ROM glyphs and state readers. G/S/C pass four
+window sizes,12captures inspected;640×480/360×640 names and HP are readable.
+Tiny1× card text still loses pixels; animation/fade/modern fallbacks stay native.
+Six companion Gen2 suites pass. The live inventory now records verified paired
+audio ownership; historical move/Q57 gaps are superseded in
+`docs/PARITY_AUDIT_2026-10-20.md`. Ownerless GBA particles, indexed RS hatch limits,
+GSC recall cues, optional assets/providers, model scope and physical-device QA
+remain explicit. Full parity is not claimed.
+
+# GSC paired audio and mobile resources — 2026-10-20
+
+Original native runners now exclusively own release sound timing; removed the
+extra synthetic Q57 close cue and bound audio cleanup to the originating battle.
+G/S/C official0.3.91 native checks pass all four slots × played/failed/OFF.
+Staged canvases use DPI1, release replaced GPU resources and memoize allocation
+failure until cleanup. Desktop GL/GLES Q57 draw/readback passes;349/0/58 shared
+suite. Six small-window captures inspected: framing fits, native paired HUD
+lettering still loses pixels and needs follow-up. No phone certification.
+Evidence: `docs/NATIVE_GSC_AUDIO_MOBILE_2026-10-20.md`.
+
+# GSC water encounter provenance — 2026-10-20
+
+Native world.playerState now drives water-arena eligibility and frozen surfing
+backdrop identity. The Gen1 player.surfing field is absent in standalone GSC
+and may be a stale optional-companion marker; native GSC state takes precedence.
+Official0.3.91 NVIDIA Gold/Silver/Crystal original water battles pass, including
+later land reset;3captures inspected.80 routing assertions and16 affected
+suites pass. Evidence: `docs/NATIVE_GSC_SURF_2026-10-20.md`.
+
+# GSC paired Q57 subjects — 2026-10-20
+
+All four native slots now own independent release subjects with exactly the old
+composite card projection. Native size/reveal/shiny clocks stay authoritative;
+teammates, HUD and gameplay are unchanged. Missing material/body-copy, OFF and
+provider paths retain original particles/art. Official0.3.91 NVIDIA G/S/C pass
+39/39 normal and108/108 shiny frames, identity/HP and failure/OFF checks;
+18final captures inspected. Shared348/0/58 includes the current camera batch.
+Evidence: `docs/NATIVE_GSC_PAIR_Q57_2026-10-20.md`. Ownerless GBA particles,
+optional provider/art assets and remaining scenery families remain separate.
+
+# Native paired audio and all-eleven settings — 2026-10-20
+
+GBA shared release cues now consume optional Ember playback when every known
+actor agrees on the normal/shiny variant; mixed/unknown groups and failed/OFF
+paths retain native audio. All five original paired intros pass exact cue counts
+on official 0.3.91. Playback-sink verification does not certify audible assets.
+All eleven native menus expose their full schema (119 GB/GBC, 121 GBA), and
+inversion changes/restores. FR/LG isolated imports were refreshed to required
+cache139 through the official importer; no normal saves or engine code changed.
+Evidence: `docs/NATIVE_PAIRED_AUDIO_2026-10-20.md`. Paired GSC Q57 needs separate
+actor world subjects; ownerless native particles/provider assets remain limits.
+
+# GSC secondary damage and form ownership — 2026-10-20
+
+Doubles now maps standalone damage scripts to their actual target/source slots
+and tracks display copies created by native Transform/identity queue events.
+Battle Art consumes the existing public owner descriptor, retaining four cards,
+native clocks and HUD ownership. G/S/C official 0.3.91 NVIDIA damage replays pass
+49/49, 42/42 and 49/49 OFF/ON frames; Transform passes 116/116. Thirty final
+captures inspected, 89 core contracts and focused companion tests pass.
+Evidence: `docs/NATIVE_GSC_MOVE_OWNERS_2026-10-20.md`.
+Paired Legendary Q57, unproven external identity proxies, optional model deformation
+and ownerless GBA particle replacement remain separate; no full parity claim.
+
+# GSC paired moves — 2026-10-20
+
+Exact public move/after-animation ownership now drives all four world cards,
+including friendly targets. Original OBJ pixels project between actor centers;
+native HUD/text retain foreground ownership. Model/missing/stale paths fall back.
+Official0.3.91 NVIDIA G/S/C pass81/81,212/212,81/81,74/74 native frame checks;
+27final captures reviewed. Combined346/0/58 and88Doubles core contracts pass.
+Evidence: `docs/NATIVE_GSC_MOVE_OWNERS_2026-10-20.md`.
+Secondary damage-event and form-identity audit remain; no full parity claim.
+
+# GSC paired release particles — 2026-10-20
+
+Original smoke/shiny stars now follow the exact public release slot on its world
+card, with native clocks, palette ownership and failed/OFF fallback preserved.
+Official0.3.91 Linux NVIDIA G/S/C checks pass39/39 normal and108/108 shiny frames;
+30final captures reviewed. Four focused suites and inventory check pass.
+Evidence: `docs/NATIVE_GSC_PAIR_PARTICLES_2026-10-20.md`.
+GSC actor-targeted move mapping and paired Q57 remain; no full parity claim.
 
 # GSC native last-wild capture — 2026-10-17
 
