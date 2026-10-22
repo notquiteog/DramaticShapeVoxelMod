@@ -44,6 +44,40 @@ The native contexts show lawn around the rural service buildings, and clean
 paving around Rustboro's foundations. Nearby path corners, lamps or grass behind
 a roof are insufficient evidence to replace those source surfaces.
 
+### Oldale dark-lawn source proof
+
+General0x001 is the dark lawn requested for the first Center north of
+Littleroot, not the lighter surrounding path. In each imported R/S/E source,
+its bottom four metatile entries are2002,2003,2003,2002 and its top four are
+empty. Original Center roof tiles048/049 contain exactly those same bottom
+entries beneath their roof art. Lower-left060 retains grass entries2002/2003
+in its left quadrants; lower-right063 retains2003/2002 in its right quadrants.
+Thus the chosen lawn is proven inside the original building drawing. No vote
+from neighboring terrain is needed. Path tiles1D0/1D8/1D9/1E0/1E1 use different
+bottom entries and cannot change this source-family choice.
+
+The original right roof overhang282/283 contains a light-path background,
+while the foundation/side drawing contains dark lawn. The fixed policy uses
+the building lawn across the replaced footprint; it does not claim all16 native
+metatiles contained a complete dark-lawn bottom layer. Most body tiles already
+contain building pixels in their bottom entries. They cannot simply be flattened
+onto the ground in pursuit of generic layer preservation.
+
+Native0.3.95 already exposes the under-sprite atlas as ts.image/imageData and
+the above-sprite atlas as ts.overImage/overImageData; there is no additional
+underImageData field. For NORMAL roof tiles048/049, the under atlas is the clean
+native lawn. COVERED tiles merge both source layers there, and wall/body bottoms
+are not clean terrain. A future reviewed per-cell underlay map can reuse a proven
+clean source MID/layer UV, falling back to the explicit native family ground when
+the original terrain is occluded. Public atlas presence alone is not proof of
+clean terrain. This change adds no atlas/scene API or runtime source decoder.
+
+The read-only tests/gen3_civic_native_ground_source_test.py accepts one or more
+user-imported generated/gba roots and checks these exact source identities.
+It passed against all three existing edition caches. The Lua regression also
+surrounds each edition's Oldale Center entirely with light path-border tiles and
+requires dark001 under every claimed cell.
+
 ## Corridor and checks
 
 The offline before/after census covers Littleroot, Route101, Oldale, Route102,

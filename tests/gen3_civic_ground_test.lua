@@ -48,6 +48,14 @@ for _,ed in ipairs{'emerald','ruby','sapphire'}do
  end end
  for name in pairs(rural)do assert(seen[name],ed..' missing rural family '..name)end
  for name in pairs(urban)do assert(seen[name],ed..' missing urban family '..name)end
+ -- Oldale's light path wraps behind its Center; the original building lawn is
+ -- still dark General001 even when every available neighbor is path artwork.
+ for _,r in ipairs(families)do if r.name=='oldale_center'then
+  local cells=fixture(r);local path={0x1d0,0x1d8,0x1d9,0x1e0,0x1e1};local n=0
+  for _,c in pairs(cells)do if c.cx<0 or c.cy<0 or c.cx>=#r.rows[1]or c.cy>=#r.rows then n=n+1;c.mid=path[n%#path+1]end end
+  assert(#Civic.prepare(cells,{},{})==1)
+  for _,c in pairs(cells)do if c.civic then assert(Civic.ground(c)==1,'Oldale native dark lawn was replaced by light path')end end
+ end end
 end
 -- Unknown/cross-edition/falsely named drawings keep their previous fallback.
 local Plain=assert(loadfile('lib/Gen3Civic.lua'))()

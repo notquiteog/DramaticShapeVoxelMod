@@ -7,6 +7,8 @@ local Architecture=V and V.require('ArchitecturalDetails') or dofile('lib/Archit
 -- Native corridor drawings have explicit ground identities. A walkable
 -- neighbor may be a path edge or a street-lamp tile, not a clean underlay.
 -- Keep Route104's lawn separate from Rustboro paving despite their shared pair.
+-- General001 is the dark lawn embedded in Oldale Center048/049's bottom layer
+-- (2002,2003,2003,2002), not the lighter1D0..1E1 path-border artwork nearby.
 local hoennGrounds={
  ['general__petalburg']={
   littleroot_player_house={1,0x22a,0x229},littleroot_rival_house={1,0x228,0x22b},birch_lab={1,0x226,0x227},
