@@ -24,6 +24,11 @@ function M.profile(def,gen)
  local id=def.id or '';local ts=def.tileset or '';local spec
  local cave=gen==1 and ts=='CAVERN' or gen==2 and def.environment=='CAVE' or gen==3 and tonumber(def.mapType)==4
  if gen==3 then
+  if tonumber(def.mapType)==9 then
+   local pair=def.midLayout and def.midLayout.pair
+   local spec=pair and V.require('Gen3Tilesets').resolve(pair,require('src.import.gba.versions').TILESET_PAIRS)
+   return V.require('Gen3SecretBases').profile(def,spec)
+  end
   if tonumber(def.mapType)~=8 and not cave then return end
   local pair=def.midLayout and def.midLayout.pair
   if not pair then return end
@@ -132,6 +137,9 @@ local function texture(theme)
  local image=love.graphics.newImage(data);image:setFilter('nearest','nearest');data:release();materials[theme]=image;return image
 end
 function M.geometry(p,side,opened)
+ -- The native irregular rock/leaf contours own every secret-base wall.
+ -- A second rectangular shell would bisect their corridors and exits.
+ if p.secretBase and side<=4 then return {},{} end
  if p.serviceRoom then return services().geometry(p,side,opened)end
  -- A reviewed irregular room can supply native boundary segments. Each
  -- uses the same closed wall construction/materials as rectangular rooms.
@@ -297,7 +305,7 @@ function M.forMap(map,gen)
  if entry~=nil then return entry or nil end
  local p=M.profile(def,gen)
  if not p then cache[def]=false;return end
- if p.cave then
+ if p.cave and not p.secretBase then
   local field=gen==2 and V.require('Gen2Elevation').field(map) or gen==3 and V.require('Gen3Elevation').field(def)
   for _,c in pairs(field and field.cells or {})do p.height=math.max(p.height,(c.high or c.height or 0)+64)end
   -- Only native exits/connections open the shell. Several cave boundary

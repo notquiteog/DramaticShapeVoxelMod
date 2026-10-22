@@ -138,6 +138,10 @@ local gymWalls={}
 for _,id in ipairs({0x280,0x281,0x282,0x286,0x287,0x288,0x28A,0x290,0x291,0x292,
  0x2C1,0x2C5,0x2C6,0x2C7,0x2CD,0x2CE,0x2CF})do gymWalls[id]=true end
 function M.of(primary,secondary,mid,behavior,collision)
+ if primary=='secret_base'then
+  local B=V and V.require and V.require('Gen3SecretBases')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3SecretBases.lua')
+  local s=B.shape(primary,secondary,mid,behavior,collision);if s then return s end
+ end
  -- Native semantic stairs survive every tileset pair, including LeafGreen.
  local H=V and V.require and V.require('Gen3Hoenn')
  local hoenn=H and H.active()
