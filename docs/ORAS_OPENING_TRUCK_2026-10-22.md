@@ -29,7 +29,7 @@ is not emulated by this exterior helper.
 
 ## Integration
 
-Root owns Scene. Once actor height and reflection plane are known, call:
+The Gen3 scene calls the exterior helper after resolving native actor height and before drawing the ordinary sprite:
 
 ```lua
 if V.require('Gen3TruckExterior').draw(
@@ -37,7 +37,7 @@ if V.require('Gen3TruckExterior').draw(
 )then return end
 ```
 
-Call `.clear()` from Scene invalidation/release, alongside TruckCargo/Boats.
+Scene invalidation/release calls `.clear()` alongside TruckCargo/Boats.
 The exact guard requires native94, the original48x48 inanimate single-frame
 drawing, R/S/E, and Littleroot's `general__petalburg` layout. No map cells or
 native sprite resources are changed, and no source truck paint is present in
@@ -75,3 +75,9 @@ scratch; test processes ended and player settings/saves are untouched.
 The distinct authentic ORAS room was also identified as zone399 (also535)
 →AD180→matrix302→GR653 `sptruck_00_00`. Its separate wall/floor/cargo conversion
 is the next batch; this exterior commit makes no claim to replace that room.
+
+Root integration verification: the merged scene, rather than a worker-only
+override, rendered Emerald native/front/side/rear views in official0.3.95.
+The ORAS helper completed810 draws with no reported error. Original actor94
+positions remained(2,10)/(11,10); both source loading bays, wheels and rear
+doors were inspected. Fixture story flags remain intentionally unadvanced.
