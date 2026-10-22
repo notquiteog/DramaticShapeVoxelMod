@@ -1,0 +1,163 @@
+{
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592847/",
+  "asset": 592847,
+  "submitted": "2026-09-01",
+  "author": "Kuramapika1",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "8cce4d10885adebb7e0e2362cc8d1bd07ac9d49ef9bc94b61a66d51ce9e178bc",
+  "sourceDaeSha256": "bc080c23a190dd815cf1e1f1cc2cdc5f837cbd8ae6cec579c3d3d0fcd931e663",
+  "geometry": "mst_rdh-mesh",
+  "sourceLocalUp": "Y",
+  "sceneTransforms": "Town-only translation/orientation removed; original local geometry retained.",
+  "sourceTriangles": 234,
+  "triangles": 260,
+  "sourceBounds": [
+    -46.0,
+    1.0,
+    -38.0,
+    50.0,
+    90.01953,
+    36.0
+  ],
+  "normalization": {
+    "sourceBounds": [
+      -46.0,
+      1.0,
+      -38.0,
+      50.0,
+      90.01953,
+      36.0
+    ],
+    "sourceOrigin": [
+      2.0,
+      1.0,
+      -1.0
+    ],
+    "sourceUnitSpan": 96.0,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.3854166666666667,
+      0.5,
+      0.9272867708333333,
+      0.3854166666666667
+    ]
+  },
+  "authoredClosure": {
+    "description": "Measured rear siding, rear roof cut and foundation closure; original front/recess/fixtures unchanged."
+  },
+  "textures": {
+    "h_mado.png": {
+      "sha256": "ddf8daca4b57e903f962c663f89f06be6d43ca5f29459d0094b4b8140514601f",
+      "bytes": 187
+    },
+    "h_kage.png": {
+      "sha256": "ae1cd3dbd43a0a6923f9e7004703abf3665e3b3e33062fae531d9617ec3a9698",
+      "bytes": 84
+    },
+    "h_in.png": {
+      "sha256": "3142cd93a33fa44fa70b74cdd9ff93fda4501a146a26a1a274a89976f3d3ac12",
+      "bytes": 81
+    },
+    "mt_rdh02.png": {
+      "sha256": "d150789ab00ba7fc15b8db12ae7a3a90684cae8271b6f24e5b65bca87945235a",
+      "bytes": 247
+    },
+    "mt_rdh01.png": {
+      "sha256": "527b316d2530b8a320897d1358d3bdbca996a46661d19633d47eeb77e72fcb40",
+      "bytes": 738
+    },
+    "mt_dr01.png": {
+      "sha256": "3c6f9c8d4cca476cde5793d5a2d93036c42a8196e60db6ccadcb8ddf9f431388",
+      "bytes": 373
+    }
+  },
+  "parts": [
+    {
+      "name": "mst_rdh-mesh:h_mado_lm1_009-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 10
+    },
+    {
+      "name": "mst_rdh-mesh:h_kage_lm1_041-material",
+      "opacity": 0.2903226,
+      "role": "source_shading",
+      "authored": false,
+      "triangles": 16
+    },
+    {
+      "name": "mst_rdh-mesh:h_in_026-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 14
+    },
+    {
+      "name": "mst_rdh-mesh:mt_rdh02-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 18
+    },
+    {
+      "name": "mst_rdh-mesh:mt_rdh01_001-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 154
+    },
+    {
+      "name": "mst_dr1-mesh:mt_dr01w-material",
+      "opacity": 1.0,
+      "role": "source_door",
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "mst_dr1-mesh:mt_dr01-material",
+      "opacity": 1.0,
+      "role": "source_door",
+      "authored": false,
+      "triangles": 20
+    },
+    {
+      "name": "authored_rear_siding",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_rear_inner_eave",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_rear_gable",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": true,
+      "triangles": 1
+    },
+    {
+      "name": "authored_rear_eave_returns",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_closed_underside",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": true,
+      "triangles": 13
+    }
+  ],
+  "placement": "Guarded native FR/LG Pallet adapter only. No other regional coverage implied."
+}
