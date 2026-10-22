@@ -12,6 +12,28 @@ GLES shaders, small-screen controls and real-device verification.
 
 ## Source preparation
 
+The combined desktop preparation command now handles extraction and conversion
+transactionally. Configure the pinned parser checkout and standalone `mathutils`
+once, then run:
+
+```sh
+python3 tools/prepare_xd_pack.py --parser /path/to/pinned-parser
+```
+
+It opens a disc/archive picker and destination picker. For headless use, supply
+the source path and `--output /path/to/new-pack`; `--dolphin-tool` and `--sevenzip`
+select tools outside PATH. Cancellation or conversion failure does not publish a
+partial pack. This prepares data only: mobile installation and rendering acceptance
+are still pending, and `renderReady` remains false.
+
+Converter revision 2 removes original bone/material curve graphs after baking.
+Pikachu metadata fell from 9,920,636 to 1,656,704 uncompressed bytes (83.3%);
+all 29 texture/pose files and baked clip metadata remain identical. These are
+metadata-size measurements, not measured phone RAM or frame-time improvements.
+Revision checks prevent resuming a conversion with stale converter output.
+Twelve CPU intake/conversion/orchestration tests pass; file dialogs have not yet
+been exercised interactively.
+
 Install Dolphin's `dolphin-tool`, then:
 
 ```sh

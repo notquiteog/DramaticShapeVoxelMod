@@ -18,6 +18,15 @@ def key(frame, value, kind="LINEAR", **kw):
 
 
 class Conversion(unittest.TestCase):
+    def test_runtime_drops_only_baked_source_curves(self):
+        source = {'meshes': [1], 'bones': [2], 'bone_animations': [3],
+                  'shape_animations': [4], 'particles': [5]}
+        runtime = xd.runtime_model(source)
+        self.assertNotIn('bone_animations', runtime)
+        self.assertEqual(runtime['shape_animations'], [4])
+        self.assertEqual(runtime['particles'], [5])
+        self.assertEqual(source['bone_animations'], [3])
+
     def test_channels(self):
         self.assertEqual(xd.sample([], 4, 7), 7)
         keys = [key(2, 1), key(6, 5)]

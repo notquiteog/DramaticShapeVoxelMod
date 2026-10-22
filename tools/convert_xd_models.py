@@ -25,6 +25,12 @@ import types
 import zlib
 
 PARSER_REVISION = "dc71de837978a6a2fe8c5082f2840cfafb135235"
+CONVERTER_REVISION = 2
+
+
+def runtime_model(serialized):
+    """Baked clips own poses and material keys; retain no duplicate curve graph."""
+    return {key: value for key, value in serialized.items() if key != 'bone_animations'}
 
 def spline_point(path, parameter):
     """Evaluate a decoded path in its own coordinate system."""
@@ -259,7 +265,8 @@ def convert_record(source, output, pipeline):
         clips.append({"name": clip.name, "frames": count, "fps": 30,
                       "bones": len(model.bones), "path": filename,
                       "materials": material_frames if clip.material_tracks else []})
-    result = {"version": 1, "model": serial(model), "clips": clips,
+    result = {"version": 1, "converterRevision": CONVERTER_REVISION,
+              "model": runtime_model(serial(model)), "clips": clips,
               "header": serial(meta.pkx_header), "shiny": serial(meta.shiny_params),
               "particlesPresent": bool(meta.gpt1_data),
               "particleBytes": len(meta.gpt1_data)}
@@ -290,7 +297,9 @@ def main():
     previous = args.output / "manifest.json"
     if args.resume and previous.exists():
         old = json.loads(previous.read_text())
-        if old.get("parserRevision") != PARSER_REVISION or old.get("format") != "xd-converted-pack":
+        if (old.get("parserRevision") != PARSER_REVISION
+                or old.get("converterRevision") != CONVERTER_REVISION
+                or old.get("format") != "xd-converted-pack"):
             parser.error("Resume requires a matching converter manifest")
         converted = old.get("converted", {})
     records = [r for r in manifest["models"] if args.dex is None or r["dex"] == args.dex]
@@ -323,7 +332,7 @@ def main():
     report = {"format": "xd-converted-pack", "version": 1, "renderReady": False,
               "targetGames": manifest["targetGames"], "models": records,
               "converted": converted, "failures": failures,
-              "parserRevision": PARSER_REVISION,
+              "parserRevision": PARSER_REVISION, "converterRevision": CONVERTER_REVISION,
               "note": "Conversion evidence only; runtime/material/particle validation pending."}
     (args.output / "manifest.json").write_text(json.dumps(report, indent=2) + "\n")
     return 1 if failures else 0
