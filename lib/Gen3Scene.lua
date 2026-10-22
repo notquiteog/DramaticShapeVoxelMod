@@ -604,7 +604,7 @@ local function build(req,cache,previous)
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
    if not c.stageHidden then V.require('Gen3Hedges').append(c,function(v,t,shade)quad(hedges,hi,v,t,shade)end)end
   elseif shape.kind=='sign' or shape.kind=='fence' or shape.kind=='ledge' or shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass' then
-   plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+   plane(b.v,b.i,x,z,uvFor(ts,V.require('Gen3PropGround').ground(cells,c)) or uv)
    local plant=shape.kind=='flowers' or shape.kind=='shrub' or shape.kind=='grass'
    if not(c.stageHidden or c.importedGrass or c.importedSign)then Outdoor.append(c,function(vertices,tex,shade,anchor)quad(plant and b.pv or b.v,plant and b.pi or b.i,vertices,tex,shade,anchor)end,uvFor,shrubHulls)end
   else

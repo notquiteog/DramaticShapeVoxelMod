@@ -65,8 +65,9 @@ function M.gen3Placements(cells,options)
  local list={};if not enabled()then return list end
  for _,c in pairs(cells)do
   local b,hoenn=ownerBounds(c,cells,options)
-  if b and hoenn and c.shape.treeFamily=='conifer'and not c.shape.importedTreeModel then
-   local group=V.require('Gen3ImportedHoennTrees').placements(c,cells,options)
+  local adapter=b and hoenn and c.primary=='general'and not c.shape.importedTreeModel and V.require('Gen3ImportedHoennTrees')
+  if adapter and adapter.select(c,options)then
+   local group=adapter.placements(c,cells,options)
    for _,p in ipairs(group or{})do list[#list+1]=p end
   else local p=M.gen3Placement(c,cells,options);if p then list[#list+1]=p end end
  end
@@ -82,7 +83,12 @@ function M.buildGen3(cells,newMesh,parts,options)
   if not seen[p.model]then Models.retryImages(p.model);seen[p.model]=true end
  end end
  local out,err=Models.buildBatches(list,newMesh,{parts=parts})
- if out then for _,p in ipairs(list)do p.source.importedTree=p.treeInfo end end
+ if out then for _,p in ipairs(list)do
+  p.source.importedTree=p.treeInfo
+  for _,source in ipairs(p.sources or{})do
+   source.importedTree=p.sourceTreeInfos and p.sourceTreeInfos[source]or p.treeInfo
+  end
+ end end
  return out,err,#list
 end
 -- GSC's existing wide-tree registry is the lower-left cell of the original
