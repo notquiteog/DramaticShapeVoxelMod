@@ -286,6 +286,7 @@ local mod = {
     error(tostring(format):format(value), 0)
   end },
 }
+moduleSources.VisualStyles='return {registrations={},byKey={}}'
 function mod:read(relative)
   local name = relative:match("^lib/(.+)%.lua$")
   if actualModules[name] then return readFile(relative) end

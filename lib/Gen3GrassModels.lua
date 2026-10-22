@@ -3,8 +3,10 @@
 local V=...
 local Models=V.require('GrassModels')
 local M={}
+local okStyles,Styles=pcall(V.require,'VisualStyles')
 function M.placements(cells)
  local list={}
+ if okStyles and not Styles.modern('props')then return list end
  for _,c in pairs(cells)do
   if c.shape.kind=='grass'and not(c.stageHidden or c.boundary)and c.collision~=7 then
    list[#list+1]={model=c.shape.grassModel or'oras_green',extent=16,

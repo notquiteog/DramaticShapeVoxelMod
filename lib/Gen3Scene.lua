@@ -18,6 +18,7 @@ local Terrain=V.require('Gen3Terrain')
 local Elevation=V.require('Gen3Elevation')
 local NativeWater=V.require('Gen3Water')
 local ShoreBanks=V.require('ShoreBanks')
+local Styles=V.require('VisualStyles')
 local BankMaterials=V.require('BankMaterials')
 local BattleClear=V.require('Gen3BattleClear')
 local Distance=V.require('RenderDistance')
@@ -362,7 +363,7 @@ local function build(req,cache,previous)
  end
  cache.sceneryModels={};cache.importedKanto={};cache.importedHoenn={}
  local kanto=V.require('Gen3ImportedKanto')
- for _,g in ipairs(kanto.prepare(cells,regions))do
+ for _,g in ipairs(Styles.modern('buildings')and kanto.prepare(cells,regions)or{})do
   g.stageHidden=BattleClear.hits(cam,g.cx*16,g.cy*16,(g.cx+g.width)*16,(g.cy+g.depth)*16)
   if kanto.build(g,cells,R.newMesh,cache.sceneryModels)then
    civics[#civics+1]=g;cache.importedKanto[#cache.importedKanto+1]=g
@@ -390,7 +391,8 @@ local function build(req,cache,previous)
  local scenery,sceneryError,sceneryCount=V.require('Gen3SceneryModels').build(cells,R.newMesh,cache.sceneryModels)
  cache.sceneryModels=scenery or cache.sceneryModels;cache.sceneryModelCount=scenery and sceneryCount or 0
  cache.sceneryModelError=sceneryError
- local _,interiorError,interiorCount=V.require('Gen3ImportedInteriors').build(cells,R.newMesh,cache.sceneryModels)
+ local interiorError,interiorCount=nil,0
+ if Styles.modern('interiors')then local _;_,interiorError,interiorCount=V.require('Gen3ImportedInteriors').build(cells,R.newMesh,cache.sceneryModels)end
  cache.importedInteriorCount,cache.importedInteriorError=interiorCount,interiorError
  cache.importedTrees={}
  local trees,treeError,treeCount=V.require('ImportedTrees').buildGen3(cells,R.newMesh,cache.importedTrees,{region=V.require('Gen3Hoenn').active()and'hoenn'or'kanto',mapId=def.id or req.mapId})
@@ -733,26 +735,30 @@ local function build(req,cache,previous)
   end)
   Elevation.lift(b.v,start,p.groundHeight or 0);Elevation.lift(b.pv,plantStart,p.groundHeight or 0)
  end end
- cache.civics={};cache.importedCenters={};cache.importedKantoCenters={};cache.importedViridianHouses={};M.legendaryBuildingCount=0
+ cache.civics={};cache.importedCenters={};cache.importedKantoCenters={};cache.importedPewterMuseum={};cache.importedViridianHouses={};M.legendaryBuildingCount=0
  for _,g in ipairs(civics)do if not g.stageHidden and not g.importedKanto then
-  local nativeKit=V.require('NativeLegendaryBuildings').build(g,def,cells)
+  local nativeKit=Styles.modern('buildings')and V.require('NativeLegendaryBuildings').build(g,def,cells)
   if nativeKit then cache.civics[#cache.civics+1]=nativeKit;M.legendaryBuildingCount=M.legendaryBuildingCount+1 else
-  local imported=V.require('Gen3ImportedCenters').build(g,cells,R.newMesh,cache.sceneryModels)
+  local imported=Styles.modern('buildings')and V.require('Gen3ImportedCenters').build(g,cells,R.newMesh,cache.sceneryModels)
   if imported then cache.importedCenters[#cache.importedCenters+1]=g
   else
-   imported=V.require('Gen3ImportedKantoCenters').build(g,cells,R.newMesh,cache.sceneryModels)
+   imported=Styles.modern('buildings')and V.require('Gen3ImportedKantoCenters').build(g,cells,R.newMesh,cache.sceneryModels)
    if imported then cache.importedKantoCenters[#cache.importedKantoCenters+1]=g end
   end
   if not imported then
+   imported=Styles.modern('buildings')and V.require('Gen3ImportedPewterMuseum').build(g,cells,R.newMesh,cache.sceneryModels)
+   if imported then cache.importedPewterMuseum[#cache.importedPewterMuseum+1]=g end
+  end
+  if not imported then
    local adapter=V.require('Gen3ImportedViridianHouses')
-   imported=adapter.build(g,cells,R.newMesh,cache.sceneryModels)
+   imported=Styles.modern('buildings')and adapter.build(g,cells,R.newMesh,cache.sceneryModels)
    if imported then
     cache.importedViridianHouses[#cache.importedViridianHouses+1]=g
     local outlet=adapter.chimney(g);if outlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=outlet end
    end
   end
   if not imported then
-   imported=V.require('Gen3ImportedHoenn').build(g,cells,R.newMesh,cache.sceneryModels)
+   imported=Styles.modern('buildings')and V.require('Gen3ImportedHoenn').build(g,cells,R.newMesh,cache.sceneryModels)
    if imported then cache.importedHoenn[#cache.importedHoenn+1]=g end
   end
   if not imported then
@@ -1131,7 +1137,7 @@ local function fieldEffects(draw,cam)
    surface=V.require('Gen3ImportedCenters').doorSurface(g,a.x,a.y)
    if surface then break end
   end
-  for _,entry in ipairs{{'Gen3ImportedViridianHouses',cache.importedViridianHouses},{'Gen3ImportedKantoCenters',cache.importedKantoCenters},{'Gen3ImportedKanto',cache.importedKanto},{'Gen3ImportedHoenn',cache.importedHoenn}}do
+  for _,entry in ipairs{{'Gen3ImportedPewterMuseum',cache.importedPewterMuseum},{'Gen3ImportedViridianHouses',cache.importedViridianHouses},{'Gen3ImportedKantoCenters',cache.importedKantoCenters},{'Gen3ImportedKanto',cache.importedKanto},{'Gen3ImportedHoenn',cache.importedHoenn}}do
    if surface then break end
    for _,g in ipairs(entry[2]or{})do
     surface=V.require(entry[1]).doorSurface(g,a.x,a.y);if surface then break end
@@ -1412,7 +1418,7 @@ function M.performanceSnapshot()
   water={wetRockCells=cache.wetRockCells or 0,draws=#(cache.waterDraws or{}),levels=#(cache.waterLevels or{}),banks=cache.bankFaceCount or 0},
   grass={placements=cache.grassModelCount or 0,batches=#(cache.grassModels or{}),error=cache.grassModelError},
   importedTrees={placements=cache.importedTreeCount or 0,batches=#(cache.importedTrees or{}),error=cache.importedTreeError},
-  scenery={placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
+  scenery={placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),pewterMuseum=#(cache.importedPewterMuseum or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
 function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end

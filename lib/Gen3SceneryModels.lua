@@ -4,9 +4,11 @@ local V=...
 local Models=V.require('SceneryModels')
 local Permissions=require('src.core.CollPermissions')
 local M={}
+local okStyles,Styles=pcall(V.require,'VisualStyles')
 local fit={width=16,depth=16,rotation=0}
 function M.placements(cells)
  local list={}
+ if okStyles and not Styles.modern('props')then return list end
  if V.require('TreePresentation').props:get()~='modeled'
   or V.require('CommunityVisuals').customSigns()then return list end
  for _,c in pairs(cells)do

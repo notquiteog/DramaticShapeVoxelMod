@@ -13,8 +13,13 @@ assert(T.art:schema('').default=='modeled'and T.setting:schema('').default=='sol
 for _,art in ipairs{'original','illustrated','modeled'}do for _,trunk in ipairs{'flat','solid'}do
  local saved={treeArtwork=art,hdTreeTrunks=trunk,sceneryProps='cards'}
  local t=fixture(saved)
- assert(t.art:get()==art and t.setting:get()==trunk and t.props:get()=='cards','explicit option replaced')
+ assert(t.art:get()==art and t.setting:get()==trunk and t.props:get()=='modeled','explicit option replaced')
  assert(saved.treeArtwork==art and saved.hdTreeTrunks==trunk,'reading defaults persisted a replacement')
- assert(t.flat()==(trunk=='flat')and t.voxel()==(art=='modeled'))
+ assert(not t.flat()and t.voxel(),'legacy choices overrode new modern default')
 end end
+for _,mode in ipairs{'modern','voxel','hd2d'}do
+ local t=fixture({visualStyleTrees=mode,visualStyleProps=mode,treeArtwork='illustrated',hdTreeTrunks='flat'})
+ assert(t.original()and t.voxel()==(mode~='hd2d')and t.flat()==(mode=='hd2d'))
+ assert(t.props:get()==(mode=='hd2d'and'cards'or'modeled'))
+end
 print('PASS new-install solid trees/trunks, saved card/flat optouts and schema/runtime agreement')
