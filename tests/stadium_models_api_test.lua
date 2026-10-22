@@ -60,11 +60,13 @@ local provider = {exports={
 }}
 local logger = {warnings={}}
 function logger:warn(_, message) self.warnings[#self.warnings+1]=message end
+local modules = {}
 local V = {mod={
   find=function(id) return id=="STADIUM2_IMPORTER" and provider or nil end,
   log=logger,
 }}
 function V.require(name)
+  if modules[name] then return modules[name] end
   if name == 'XDModels' then return {active=function()return false end}end
   if name == 'SafariFooting' then return assert(loadfile('lib/SafariFooting.lua'))(V)end
   if name == 'WaterFooting' then return assert(loadfile('lib/WaterFooting.lua'))(V)end
@@ -76,11 +78,17 @@ function V.require(name)
   return assert(({Mat4=Mat4,BattleArt=BattleArt})[name],name)
 end
 
+modules.ModSetting=assert(loadfile('lib/ModSetting.lua'))(V)
+modules.VisualStyles=assert(loadfile('lib/VisualStyles.lua'))(V)
+local Styles=modules.VisualStyles
 local StadiumModels = assert(loadfile("lib/StadiumModels.lua"))(V)
 ok(StadiumModels.installed(),"detects Stadium model API v2")
 ok(not StadiumModels.active(),"Battle Art sprites remain while Stadium battle is off")
 
 providerBattleEnabled=true
+ok(not StadiumModels.active(),"HD2D default blocks an enabled installed model provider")
+ok(#created==0,"default HD2D allocates no model instances")
+Styles.setting('pokemon'):sync('modern')
 local battle={
   data={pokemon={EEVEE={dex=133}},moves={THUNDERBOLT={index=85}}},
   player={mon={species=25},shiny=true},
@@ -145,6 +153,14 @@ placements=StadiumModels.placements(arena,3,textures,battle)
 ok(not StadiumModels.draw(placements.player,context,"opaque"),
   "draw failure is reported for same-frame card fallback")
 
+-- A mode switch must also reject already prepared placements in this frame.
+Styles.setting('pokemon'):sync('hd2d')
+ok(not StadiumModels.uses(placements,'player'),"HD2D rejects stale model ownership")
+ok(not StadiumModels.draw(placements.player,context,'opaque'),"HD2D rejects stale model draw")
+ok(not StadiumModels.drawShadow(placements.player,identity()),"HD2D rejects stale shadow draw")
+Styles.setting('pokemon'):sync('voxel')
+ok(not StadiumModels.active(),"native voxel cannot reuse modern model instances")
+Styles.setting('pokemon'):sync('modern')
 providerEnabled=false
 ok(not StadiumModels.update(battle,0.1),"disabled provider fails open")
 local status=StadiumModels.status()

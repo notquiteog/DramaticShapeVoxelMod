@@ -1,0 +1,63 @@
+{
+  "asset": 294940,
+  "title": "Comfortable Bed",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire",
+  "author": "Hallow",
+  "submitted": "2015-11-15",
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/294940/",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "98f3d0d6bacf64b28cd7b99920a1320b5230fafbb6e69a21acc174372717d5b0",
+  "sourceModelSha256": "5de69fc2ff1ed8b3036ffa2e750a9d0cb592019c943b130fc7df7cd169fe7fe6",
+  "selection": "Original bed body, curved head/foot boards, blue spotted blanket and white pillow. Planar source shadow excluded; renderer owns shadows.",
+  "textures": {
+    "sutekinabed.png": {
+      "sha256": "bd13284774ceaf31b0cb92e223ce3afcddf09ff4244e4d00eac4977d37ef4320",
+      "bytes": 10152
+    }
+  },
+  "repairs": [
+    "Separately authored board rear, foot-bottom, base, blanket-end/underside and pillow-underside caps follow original rims; source534 triangles and source UV/PNG unchanged."
+  ],
+  "sourceBounds": [
+    -0.975718,
+    -0.006201,
+    -1.468652,
+    0.95806,
+    1.035193,
+    1.494388
+  ],
+  "sourceOrigin": [
+    -0.008828999999999976,
+    -0.006201,
+    0.01286799999999999
+  ],
+  "sourceUnitSpan": 2.9630400000000003,
+  "bounds": [
+    -0.32631655326961495,
+    0.0,
+    -0.5,
+    0.32631655326961495,
+    0.3514613370052378,
+    0.5
+  ],
+  "parts": [
+    {
+      "name": "polySurface67_polySurface67_sutekinabed.png",
+      "material": "sutekinabed.png",
+      "triangles": 534,
+      "authored": false
+    },
+    {
+      "name": "authored_board_rear_and_feet",
+      "material": "authored_board_rear_and_feet",
+      "triangles": 38,
+      "authored": true
+    },
+    {
+      "name": "authored_bedding_and_base_undersides",
+      "material": "authored_bedding_and_base_undersides",
+      "triangles": 52,
+      "authored": true
+    }
+  ]
+}

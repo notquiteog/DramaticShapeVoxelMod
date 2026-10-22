@@ -1,5 +1,5 @@
 local mode='stock';local errors=0
-local modules={ModSetting={new=function()return {get=function()return mode end}end}}
+local modules={VisualStyles={get=function()return 'modern'end},ModSetting={new=function()return {get=function()return mode end}end}}
 local V={mod={log={error=function()errors=errors+1 end}},require=function(k)return assert(modules[k],k)end}
 local C=assert(loadfile('lib/CharacterRenderers.lua'))(V);modules.CharacterRenderers=C
 local S=assert(loadfile('lib/StandingTrainer.lua'))(V)

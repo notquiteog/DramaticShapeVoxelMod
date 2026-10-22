@@ -1,0 +1,52 @@
+{
+  "asset": 364272,
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/364272/",
+  "game": "Pokemon Omega Ruby / Alpha Sapphire",
+  "sourceFile": "world04_02_06.dae",
+  "archiveSha256": "0d849831180a5bf9484efff71e8947d420558fb6019417cfebb124e673a9257b",
+  "sourceSha256": "219b452e7850410640f8ece11e85f1219e27905a9cb5573b60ce2dcc858dd38f",
+  "sourceMaterial": "_2_0-mesh / r104_dif03.png",
+  "sourceComponents": [
+    5,
+    6,
+    9
+  ],
+  "sourceTriangles": 24,
+  "identity": "Three pink blossoms with yellow centers in the existing front masonry planter.",
+  "geometry": "Original authored bent flower surfaces. These are source textured surfaces, not newly sculpted closed petals. All original XYZ relationships, UVs, shade and RGBA are retained; only the existing shop uniform normalization/placement is applied.",
+  "textureSha256": "d3310aee8dcb13abc3cc5126bba3134d3e04d828f66f9647954cb8859e08b0c7",
+  "normalization": {
+    "sourceBounds": [
+      58.9673,
+      0.4999199135239079,
+      91.8000100814692,
+      180.4327,
+      76.4499847505944,
+      176.6189022598283
+    ],
+    "sourceOrigin": [
+      119.7,
+      0.4999199135239079,
+      134.20945617064876
+    ],
+    "sourceUnitSpan": 121.46540000000002,
+    "bounds": [
+      -0.49999999999999994,
+      0.0,
+      -0.349148367264913,
+      0.5,
+      0.6252814779934901,
+      0.3491483672649128
+    ]
+  },
+  "sourcePlanterBounds": [
+    133.21,
+    163.81,
+    176.84,
+    175.79
+  ],
+  "default": "All19 source flower/leaf components remain current HD2D cards.",
+  "modern": "Only source components5/6/9 use their authored geometry. The other16 stay current HD2D. Each selected component remains within both the original planter and the native96x48blocked body; no clamping, stretching or relocation.",
+  "voxel": "An optional native-sprite voxel provider can supply this family. Without that provider, return native-source-unavailable so the Hoenn caller restores the entire native-art Civic building. Do not call ORAS-textured cards native GBA voxel art.",
+  "limits": "No standalone route flowerbed, other flower color/family, other map, or BDSP model is claimed."
+}

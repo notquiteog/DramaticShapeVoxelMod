@@ -4,9 +4,10 @@ local V=...
 local M={}
 local held={}
 local owner
+local function enabled()return V.require('VisualStyles').modern('pokemon') and V.require('XDModels').active()end
 local function release(id)
  local e=held[id]
- if e and e.instance then e.instance:release()end
+ if e and e.instance then pcall(e.instance.release,e.instance)end
  held[id]=nil
 end
 function M.clear()
@@ -14,6 +15,7 @@ function M.clear()
  owner=nil
 end
 function M.context(id,name)
+ if not enabled()then return end
  local e=held[id]
  if e and e.instance then
   local ok=e.instance:playContext(name,false)
@@ -25,7 +27,7 @@ function M.install()
  local move,faint=Anim.launchMove,Anim.faintMon
  local moveHook=function(moveId,opts)
   local result=move(moveId,opts)
-  if result~=false and V.require('XDModels').active()then
+  if result~=false and enabled()then
    pcall(function()
     local def=require('src.core.game3.battle.moves').get(moveId)
     local id=opts and(opts.attackerId or Anim.idOf(opts.attackerSide))or 0
@@ -48,7 +50,7 @@ end
 function M.prepare(frame)
  frame.xdActors=nil
  local pack=V.require('XDModels')
- if not pack.active()then M.clear();return end
+ if not enabled()then M.clear();return end
  if owner~=frame.st then M.clear();owner=frame.st end
  local Pokemon=require('src.core.game3.pokemon')
  local Coords=require('src.core.game3.battle.anim_coords')
@@ -63,7 +65,8 @@ function M.prepare(frame)
   local e=held[id]
   if e and(e.battler~=b or e.dex~=dex or e.variant~=variant)then release(id);e=nil end
   if not e and b and dex then
-   local instance=pack.newInstance(dex,variant)
+   local ok,instance=pcall(pack.newInstance,dex,variant)
+   if not ok then instance=nil end
    e={battler=b,dex=dex,variant=variant,instance=instance}
    held[id]=e
   end
@@ -89,6 +92,7 @@ function M.prepare(frame)
  end
 end
 function M.draw(frame,card,shadow)
+ if not enabled()then M.clear();frame.xdActors=nil;return false end
  local e=frame.xdActors and frame.xdActors[card.id]
  if not(e and e.instance)then return false end
  local draw=shadow or V.require('Voxel3D').draw

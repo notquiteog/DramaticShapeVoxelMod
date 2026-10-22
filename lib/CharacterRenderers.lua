@@ -25,6 +25,63 @@ local CALLBACKS = {
   drawBattleTrainerShadow = true,
 }
 
+-- A missing declaration identifies a legacy 3D provider, never an HD2D or
+-- native-voxel implementation. Providers may advertise a style list/set, or
+-- separate lists under supportedStyles.characters / supportedStyles.pokemon.
+local styleNames = { modern=true, voxel=true, hd2d=true }
+local function styleSet(raw)
+  if type(raw) ~= 'table' then return nil end
+  local out = {}
+  for key, value in pairs(raw) do
+    if type(key)=='number' and key%1==0 and key>=1 and styleNames[value] then out[value]=true
+    elseif styleNames[key] and type(value)=='boolean' then out[key]=value
+    else return nil end
+  end
+  return out
+end
+local function providerStyles(raw)
+  if raw==nil then return {characters={modern=true},pokemon={modern=true}} end
+  if type(raw)~='table' then return nil end
+  if raw.characters~=nil or raw.pokemon~=nil then
+    for key in pairs(raw)do if key~='characters'and key~='pokemon'then return nil end end
+    local characters=styleSet(raw.characters or {})
+    local pokemon=styleSet(raw.pokemon or {})
+    if characters and pokemon then return {characters=characters,pokemon=pokemon}end
+  else
+    local styles=styleSet(raw)
+    if styles then return {characters=styles,pokemon=styles}end
+  end
+end
+
+local creatureIcons={SPRITE_MONSTER=true,SPRITE_FAIRY=true,SPRITE_BIRD=true,
+ SPRITE_PIKACHU=true,SPRITE_SEEL=true,SPRITE_SLOWBRO=true,SPRITE_CHANSEY=true,
+ SPRITE_LAPRAS=true,SPRITE_SNORLAX=true,SPRITE_OMANYTE=true,SPRITE_KABUTO=true,
+ SPRITE_AERODACTYL=true}
+function CharacterRenderers.category(context,method)
+  if method and method:match('^drawBattleTrainer')then return 'characters'end
+  context=context or {}
+  if context.isPlayer or context.role=='player'then return 'characters'end
+  local category=context.visualCategory or context.category
+  if category=='pokemon'or category=='characters'then return category end
+  if context.isPokemon or context.role=='pokemon'or context.role=='companion'then return 'pokemon'end
+  local entity=context.entity or context.actor or context.pose and context.pose.entity
+  local def=entity and(entity.def or entity.spriteDef)or context.sprite and context.sprite.def
+  if entity and(entity.isPokemon or entity.pikachuFollower or entity.pokemon)
+   or def and(def.isPokemon or def.species or def.category=='pokemon')then return 'pokemon'end
+  local id=context.spriteId or def and(def.sprite or def.id)
+  if creatureIcons[id]then return 'pokemon'end
+  local species=type(id)=='string'and id:match('^SPRITE_(.+)$')
+  local state=context.state
+  local data=state and(state.data or state.game and state.game.data)
+  if species and data and data.pokemon and data.pokemon[species]then return 'pokemon'end
+  return 'characters'
+end
+local function styleSupports(entry,method,context)
+  local category=CharacterRenderers.category(context,method)
+  local style=V.require('VisualStyles').get(category)
+  return entry.styles[category][style]==true
+end
+
 local function logError(entry, method, err)
   entry.failed = entry.failed or {}
   if entry.failed[method] then return end
@@ -76,6 +133,9 @@ function CharacterRenderers.register(spec)
   end
   if not hasCallback then return nil, "renderer has no supported callbacks" end
 
+  local styles = providerStyles(spec.supportedStyles)
+  if not styles then return nil, "supportedStyles must declare modern, voxel or hd2d" end
+
   CharacterRenderers.serial = CharacterRenderers.serial + 1
   local entry = {
     id = id,
@@ -83,6 +143,7 @@ function CharacterRenderers.register(spec)
     priority = tonumber(spec.priority) or 0,
     serial = CharacterRenderers.serial,
     spec = spec,
+    styles = styles,
     failed = {},
   }
   CharacterRenderers.byId[id] = entry
@@ -146,11 +207,11 @@ local function supports(entry,method,generation)
   return false
 end
 
-function CharacterRenderers.has(method,generation)
+function CharacterRenderers.has(method,generation,context)
   discoverExports()
   if not CALLBACKS[method] then return false end
   for _, entry in ipairs(CharacterRenderers.entries) do
-    if not entry.removed and supports(entry,method,generation) and type(entry.spec[method]) == "function" then
+    if not entry.removed and supports(entry,method,generation) and styleSupports(entry,method,context) and type(entry.spec[method]) == "function" then
       return true
     end
   end
@@ -170,7 +231,7 @@ function CharacterRenderers.first(method, context)
   discoverExports()
   if not CALLBACKS[method] then return false end
   for _, entry in ipairs(CharacterRenderers.entries) do
-    local fn = not entry.removed and supports(entry,method,context and context.generation or (method:match('^drawBattleTrainer') and CharacterRenderers.battle.generation)) and entry.spec[method] or nil
+    local fn = not entry.removed and supports(entry,method,context and context.generation or (method:match('^drawBattleTrainer') and CharacterRenderers.battle.generation)) and styleSupports(entry,method,context) and entry.spec[method] or nil
     if type(fn) == "function" then
       local ok, claimed = pcall(fn, context)
       if not ok then logError(entry, method, claimed)
@@ -184,7 +245,7 @@ function CharacterRenderers.all(method, context)
   discoverExports()
   if not CALLBACKS[method] then return end
   for _, entry in ipairs(CharacterRenderers.entries) do
-    local fn = not entry.removed and entry.spec[method] or nil
+    local fn = not entry.removed and supports(entry,method,context and context.generation) and styleSupports(entry,method,context) and entry.spec[method] or nil
     if type(fn) == "function" then
       local ok, err = pcall(fn, context)
       if not ok then logError(entry, method, err) end
@@ -192,8 +253,15 @@ function CharacterRenderers.all(method, context)
   end
 end
 
+local lastStyleRevision
 function CharacterRenderers.revision()
   discoverExports()
+  local styles=V.require('VisualStyles')
+  local revision=tostring(styles.get('characters'))..':'..tostring(styles.get('pokemon'))
+  if lastStyleRevision and revision~=lastStyleRevision then
+    CharacterRenderers.generation=CharacterRenderers.generation+1
+  end
+  lastStyleRevision=revision
   return CharacterRenderers.generation
 end
 
@@ -206,6 +274,7 @@ end
 
 function CharacterRenderers.battleActive()
   return CharacterRenderers.battle.active
+    and CharacterRenderers.has("drawBattleTrainer",CharacterRenderers.battle.generation)
 end
 
 function CharacterRenderers.battleState()
@@ -225,13 +294,15 @@ function CharacterRenderers.setBattleHand(value)
 end
 
 function CharacterRenderers.battleHandWorld()
-  return CharacterRenderers.battle.handWorld
+  return CharacterRenderers.battleActive() and CharacterRenderers.battle.handWorld or nil
 end
 
 function CharacterRenderers.export()
   return {
     apiVersion = CharacterRenderers.API_VERSION,
     source = "BATTLE_ART_VOXEL_FORK",
+    visualStyles = { "modern", "voxel", "hd2d" },
+    visualStyleCategories = { "characters", "pokemon" },
     register = function(spec) return CharacterRenderers.register(spec) end,
     refresh = function() discoverExports(); return CharacterRenderers.generation end,
   }

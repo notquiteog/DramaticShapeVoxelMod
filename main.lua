@@ -766,10 +766,7 @@ local SETTINGS = {
   { V.require('ModernBattleUI').setting, "With optional Modern Pokemon UI enabled: compact overhead status cards and window-resolution commands. Without that provider, native menus remain unchanged.", full=true },
   { V.require("CrystalSprites").setting, "Crystal animation, shiny effects and portraits in Gen 1/2. SELECTED ART uses the existing Battle Art collections. Restart the game after changing this pack.", full=true },
   { V.require("CrystalSprites").fullBody, "Animated Gen 5 full-body backs on 2.5D battle stages with the Crystal pack. Normal menus retain Crystal art.", full=true },
-  { TreePresentation.props, "Model rocks, bushes and supported grass, or use native foliage. People, Pokemon and flowers keep their sprite art.", full=true, when=function()return Generation.isGen2()end },
-  { TreePresentation.surfaces, "Original game scenery textures, or optional detailed materials. Geometry is preserved.", full=true, when=function()return Generation.isGen2()end },
-  { TreePresentation.art, "Use 3D trees, or choose original or illustrated tree cards. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
-  { TreePresentation.setting, "Modeled trunks and boughs are the default. Flat trunks remain available for tree cards. Rebuilds scenery when changed.", full=true, when=function()return Generation.isGen2()end },
+  { TreePresentation.surfaces, "Original game scenery textures, or optional detailed materials. Geometry is preserved.", full=true, when=function()return Generation.isGen2()and V.require('VisualStyles').modern('terrain')end },
   { LegendaryVisualsPreset.setting,
     "One master profile for Legendary world visuals. OFF preserves Battle Art, "
     .. "CUSTOM restores the exact individual choices you last made, AUTO enables "
@@ -1219,6 +1216,23 @@ local SETTINGS = {
     full = true },
 }
 
+local VisualStyles=V.require('VisualStyles')
+mod.exports.visualStyles=VisualStyles
+local function visualStyleChanged(key)
+ if not VisualStyles.byKey[key]then return end
+ if Generation.isGen3()then V.require('Gen3Scene').invalidate()
+ else CommunityVisuals.invalidate()end
+ V.require('ShadowMap').invalidate()
+end
+for index,registration in ipairs(VisualStyles.registrations)do
+ local setting=registration.setting;local nativeRow=setting.row
+ function setting:row()
+  local row=nativeRow(self);local step=row.step
+  row.step=function(game,dir)local result=step(game,dir);visualStyleChanged(self.key);return result end
+  return row
+ end
+ table.insert(SETTINGS,index,{setting,registration.help,full=true})
+end
 local schema = {}
 for _, entry in ipairs(SETTINGS) do
   -- Provider-only settings should not leave a dead row when the optional
@@ -1788,6 +1802,7 @@ mod.events:on("mod.options_changed", function(payload)
   for _, entry in ipairs(SETTINGS) do
     if payload.key == entry[1].key then entry[1]:sync(payload.value) end
   end
+  visualStyleChanged(payload.key)
   TreePresentation.changed(payload.key)
   local presetHandled = LegendaryVisualsPreset.changed(payload.key)
   if not presetHandled then CommunityVisuals.changed(payload.key) end

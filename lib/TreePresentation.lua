@@ -10,9 +10,15 @@ M.props=V.require('ModSetting').new('sceneryProps','ROCKS & PLANTS',
  {'modeled','cards'},{'3D MODELS','2.5D SPRITES'},1)
 M.surfaces=V.require('ModSetting').new('surfaceArtwork','SCENERY TEXTURES',
  {'original','detailed'},{'ORIGINAL GAME','DETAILED'},1)
-function M.original()return M.art:get()~='illustrated' end
-function M.voxel()return M.art:get()=='modeled' end
-function M.flat()return M.setting:get()=='flat' end
+local okStyles,Styles=pcall(V.require,'VisualStyles')
+local originalPropsGet=M.props.get
+function M.props:get()
+ if okStyles then return Styles.hd2d('props')and'cards'or'modeled'end
+ return originalPropsGet(self)
+end
+function M.original()return okStyles or M.art:get()~='illustrated'end
+function M.voxel()return okStyles and not Styles.hd2d('trees')or not okStyles and M.art:get()=='modeled'end
+function M.flat()return okStyles and Styles.hd2d('trees')or not okStyles and M.setting:get()=='flat'end
 function M.changed(key)
  if key~=M.setting.key and key~=M.art.key and key~=M.surfaces.key and key~=M.props.key and key~="communityTreeDetail" and key~="communityGrass" and key~="communityForest" and key~="communitySafari" and key~="communityRoads" and key~="communityWalls" and key~="communityMasonry" and key~="communityPillars" and key~="communityRocket" and key~="communityElevator" and key~="communityCutTrees" and key~="communitySigns" and key~="communityTowerWall" and key~="communityTower" and key~="communityTunnels" and key~="communityCityGround" and key~="communityTrees" and key~="communityCasino" and key~="communityCourtyards" and key~="communityPrizeRoom" and key~="vermilionBuildings" then return end
  if V.require('Generation').isGen3() then V.require('Gen3Scene').invalidate()

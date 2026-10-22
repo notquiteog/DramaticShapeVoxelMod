@@ -2,10 +2,12 @@
 -- source ownership and the complete older solid model on any standdown.
 local V=...
 local M={model='oras_route104_broadleaf'}
+local okStyles,Styles=pcall(V.require,'VisualStyles')
+if not okStyles or type(Styles)~='table'or type(Styles.modern)~='function'then Styles=nil end
 local function finite(n)return type(n)=='number'and n==n and math.abs(n)<math.huge end
 local function enabled()
  local T=V.require('TreePresentation');local C=V.require('CommunityVisuals')
- return T.voxel()and not C.customTrees()
+ return(not Styles or Styles.modern('trees'))and T.voxel()and not C.customTrees()
 end
 local function customForest(mapId)
  local C=V.require('CommunityVisuals')

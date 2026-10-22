@@ -1,0 +1,219 @@
+{
+  "asset": 353301,
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/353301/",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire",
+  "uploadedBy": "MasterPengo",
+  "submitted": "2024-06-24",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "0ba714556711305c2905a913ca1d8a035254a8ab3001cb44e02ea14b101da1e2",
+  "sourceModel": "world07_02_03.dae",
+  "sourceModelSha256": "3cf746ff7667b21ddd93fdcc11c513329a16b0e3c51b97564c53d47248836aff",
+  "geometrySelection": {
+    "polySurface17_13_0-mesh": "t104_object_a_dif02.png",
+    "polySurface17_14_0-mesh": "t104_object_a_dif03.png",
+    "polySurface17_15_0-mesh": "t104_object_a_dif01.png",
+    "polySurface17_16_0-mesh": "chip_mado_a_1.png"
+  },
+  "models": {
+    "oras_lavaridge_herb_shop": {
+      "selectedSourceBounds": [
+        72.5945,
+        72.49997396440959,
+        84.43332208231234,
+        161.352,
+        159.47697946755514,
+        172.68602313282696
+      ],
+      "sourceTriangles": 1265,
+      "selectionBoundsX": [
+        72,
+        162
+      ],
+      "sideWindow": "left",
+      "nativeLocalOrigin": [
+        11,
+        12
+      ],
+      "sourceBounds": [
+        72.5945,
+        72.49997396440959,
+        84.43332208231234,
+        161.352,
+        159.47697946755514,
+        172.68602313282696
+      ],
+      "sourceOrigin": [
+        116.97325000000001,
+        72.49997396440959,
+        128.55967260756967
+      ],
+      "sourceUnitSpan": 88.75750000000001,
+      "bounds": [
+        -0.5000000000000001,
+        0.0,
+        -0.49715630256887944,
+        0.49999999999999994,
+        0.9799397854056902,
+        0.49715630256887916
+      ],
+      "authoredCompletion": {
+        "authoredTriangles": 36,
+        "notes": "Original roof, ridge ornaments, projecting vent pipe, plaster/timber walls, lattice base, window bars and glass retained. Rear wall infill, backed timber skirt, foundation join, floor and ceiling authored inside source bounds using original atlas crops."
+      },
+      "nativeAdaptation": {
+        "unadaptedBounds": [
+          -0.5000000000000001,
+          0.0,
+          -0.49715630256887944,
+          0.49999999999999994,
+          0.9799397854056902,
+          0.49715630256887916
+        ],
+        "sourceDepthBays": [
+          [
+            100.6,
+            105.9
+          ],
+          [
+            146.4,
+            152.7
+          ]
+        ],
+        "shortenEach": 4,
+        "totalShortening": 8,
+        "rigidAssemblies": {
+          "frontDoorFacadePipeFrontCornerPosts": "unchanged",
+          "completeSideWindowBarsGlass": "translated4depthunits",
+          "rearFacadeCornerPosts": "translated8depthunits"
+        },
+        "sourceUvsColorsUnchanged": true
+      }
+    },
+    "oras_lavaridge_home": {
+      "selectedSourceBounds": [
+        162.594,
+        72.49997396440959,
+        84.43332208231234,
+        251.352,
+        159.47697946755514,
+        172.68602313282696
+      ],
+      "sourceTriangles": 1263,
+      "selectionBoundsX": [
+        162,
+        252
+      ],
+      "sideWindow": "right",
+      "nativeLocalOrigin": [
+        15,
+        12
+      ],
+      "sourceBounds": [
+        162.594,
+        72.49997396440959,
+        84.43332208231234,
+        251.352,
+        159.47697946755514,
+        172.68602313282696
+      ],
+      "sourceOrigin": [
+        206.973,
+        72.49997396440959,
+        128.55967260756967
+      ],
+      "sourceUnitSpan": 88.75800000000001,
+      "bounds": [
+        -0.5000000000000001,
+        0.0,
+        -0.4971535019407526,
+        0.49999999999999983,
+        0.9799342651157703,
+        0.49715350194075225
+      ],
+      "authoredCompletion": {
+        "authoredTriangles": 36,
+        "notes": "Original roof, ridge ornaments, projecting vent pipe, plaster/timber walls, lattice base, window bars and glass retained. Rear wall infill, backed timber skirt, foundation join, floor and ceiling authored inside source bounds using original atlas crops."
+      },
+      "nativeAdaptation": {
+        "unadaptedBounds": [
+          -0.5000000000000001,
+          0.0,
+          -0.4971535019407526,
+          0.49999999999999983,
+          0.9799342651157703,
+          0.49715350194075225
+        ],
+        "sourceDepthBays": [
+          [
+            100.6,
+            105.9
+          ],
+          [
+            146.4,
+            152.7
+          ]
+        ],
+        "shortenEach": 4,
+        "totalShortening": 8,
+        "rigidAssemblies": {
+          "frontDoorFacadePipeFrontCornerPosts": "unchanged",
+          "completeSideWindowBarsGlass": "translated4depthunits",
+          "rearFacadeCornerPosts": "translated8depthunits"
+        },
+        "sourceUvsColorsUnchanged": true
+      }
+    }
+  },
+  "textures": {
+    "t104_object_a_dif02.png": {
+      "sha256": "90ff292940539707e7f6e5cbb0afeaa43cb1d7e77c5ce490ea6945ee53005544",
+      "size": [
+        128,
+        128
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    },
+    "t104_object_a_dif03.png": {
+      "sha256": "2581c8fa8a9547c44e921480b82cc177eaf6c721435675265f0bedfbf6d8668b",
+      "size": [
+        64,
+        64
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    },
+    "t104_object_a_dif01.png": {
+      "sha256": "3b057f197f39d6edaec6e5952e95a8f44e8351de389b5fb06f510dfd6c6dd83f",
+      "size": [
+        256,
+        128
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    },
+    "chip_mado_a_1.png": {
+      "sha256": "77da71d60cc4e4a91287d25b52fa1880b9d32cf22ea53a8fb454806bc7aa9144",
+      "size": [
+        128,
+        64
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    }
+  },
+  "processing": [
+    "Evaluated original static hierarchy, Z_UP conversion and asset unit using shared DAE converter.",
+    "Selected complete original west Herb Shop and east home separately. Their side-window orientations and a tiny original bar fragment differ; neither is substituted for the other. Excluded every other town object.",
+    "Preserved2528 original architectural triangles, source UV/RGBA and PNG bytes. Native adapter shortens two plain depth bays while preserving windows, portal, vent pipe and corner-post assemblies."
+  ],
+  "nativePlacement": "R/S/E LavaridgeTown only: HerbShop native origin11,12/door12,15 and home15,12/door16,15. Existinglavaridge_town_home recipe remains authoritative. Map/region-local-coordinate, exact mid/permission, height and boundary guards; all geometry stays inside64x48body rows. Other Hoenn cities and custom-map copies retain native fallback."
+}
