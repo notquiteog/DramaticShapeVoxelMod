@@ -1,3 +1,24 @@
+# Consolidated unreleased source snapshot — 2026-10-22
+
+User requested every pending change committed and pushed to main. Consolidates
+all active source worktree histories: native corridor ground and clean roof
+underlays, original-source sign gating, complete/shallow/dense tree adapters,
+Lavaridge/bed/Pewter Museum sources, local ORAS audit tooling, independent style
+preferences, native scenery-card provider and optional actor-provider style
+ownership. Preserves concurrent main XD form/visibility and prefetch work.
+The latest verified published package remains1.57.2. This source snapshot is
+NOT a visual acceptance/release of every new family or style mode. Keep the
+manifest release version until the next verified batch is assembled.
+
+Pending: native review of appended pine canopy completion/dense groups,
+post-fix corridor ground/source comparisons, Museum/beds/Lavaridge acceptance,
+remaining style-mode hooks and whole-corridor coverage. User's latest bugs:
+Route104 boat-dock water/rock edges, plank thickness/wood sides/open board gaps,
+and the starting truck losing voxel camera/flattening crates. Read-only agents
+are tracing these while this requested snapshot is consolidated. Preserve native
+collision, scripts, original terrain, characters/Pokemon/flowers HD2D defaults
+and optional standalone integrations. Source gaps are not coverage claims.
+
 # XD native form and battle presentation — 2026-10-22
 
 Native Unown/Deoxys form identity reaches imported pack consumers and cache

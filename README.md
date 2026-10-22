@@ -1,3 +1,10 @@
+## Unreleased main snapshot
+
+Pending scenery, tree, native-ground and category-style work is consolidated on
+main. Native visual verification and several style rendering hooks are still in
+progress; this does not certify complete Littleroot–Rustboro coverage. The latest
+verified release is1.57.2 below. See PROJECT_HANDOFF.md for remaining work.
+
 ## 1.57.2 — Genuine ORAS Center doors
 
 Hoenn Pokémon Centers now use the original ORAS sliding panels, glass/trim

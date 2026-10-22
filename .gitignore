@@ -67,3 +67,6 @@ THIS-TEST-NOTES.txt
 /options.lua.bak
 /options.lua.tmp
 /mod_option_schemas.json
+
+# Generated release archives; reproducible from committed source.
+/dist/

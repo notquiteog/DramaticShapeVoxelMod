@@ -89,12 +89,14 @@ for _,r in ipairs(H.exteriors)do
    assert(roof[8]==roof[32] and roof[32]==roof[56],'Mart plateau acquired a Center hump or house gable')
    assert(roof[8]>roof[0],'Mart rolled roof edges flattened')
   end
-  -- Closest native paving/sand underlay must replace the hardcoded lawn.
+  -- Reviewed native building ground wins over unrelated nearby paving/sand.
+  -- Unreviewed families retain the existing guarded neighborhood fallback.
   for _,c in pairs(cells)do c.civic=nil end
   cells['1:4']={cx=1,cy=4,mid=0x777,pair=r.pair,collision=0,shape={kind='flat'}}
   cells['2:4']={cx=2,cy=4,mid=0x778,pair=r.pair,collision=7,shape={kind='flat'}}
   local floor=Civic.prepare(cells,{},{})[1]
-  assert(floor and Civic.ground(cells['2:3'])==0x777,'Center/Mart underlay ignored native ground or used solid decoration')
+  assert(floor and Civic.ground(cells['2:3'])==(floor.sourceGround or 0x777),
+   'Center/Mart underlay ignored original source ground or used solid decoration')
  end
  if r.openings and (r.name:match('^petalburg_city_.*home$') or r.name:match('^dewford_town_.*home$') or r.name=='dewford_town_hall' or r.name=='lavaridge_town_home') then
   local g=found[1];local faces={}
