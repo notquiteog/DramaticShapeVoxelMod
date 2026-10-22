@@ -5,7 +5,7 @@ local Models=V.require('SceneryModels')
 local M={model='oras_evergreen_tree',shallowModel='oras_route104_broadleaf_shallow',foregroundModel='oras_evergreen_foreground',compactModel='oras_compact_broadleaf',narrowModel='oras_compact_broadleaf_narrow'}
 local crowns={[0xe]=true,[0xf]=true,[0xc6]=true,[0xc7]=true,[0xce]=true}
 local trunks={[0x16]=true,[0x17]=true,[0x1f4]=true,[0x1f5]=true}
-local round={};for _,mid in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1de,0x1df,0x1e4,0x1e5,0x1e6,0x1e7,0x1f2,0x1f3}do round[mid]=true end
+local round={};for _,mid in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1de,0x1df,0x1e4,0x1e5,0x1e6,0x1e7,0x1ec,0x1ed,0x1f2,0x1f3}do round[mid]=true end
 M.shallowSource={model='oras_route104_broadleaf',scale={1,1,.5},rotations={0,2}}
 M.foregroundSource={model=M.model,scale={1,1,2},rotations={0,2}}
 M.compactSource={model='oras_route104_broadleaf',canopyLift=.20,canopyHeightScale=1.25,trunkHeightScale=1.25,narrowCanopyDepthScale=2}
@@ -96,7 +96,7 @@ function M.wholeRoundSlope(c,cells,options)
  local a,ar,base,br=cells[x..':'..y],cells[(x+1)..':'..y],cells[x..':'..(y+1)],cells[(x+1)..':'..(y+1)]
  if not(a and ar and base==c and br and(a.mid==0x1d4 or a.mid==0x1d6)
   and(ar.mid==0x1d5 or ar.mid==0x1d7)
-  and((c.mid==0x1dc and br.mid==0x1dd or c.mid==0x1de and br.mid==0x1df)or c.mid==0x1e6 and(br.mid==0x1e7 or br.mid==0x1f2)or c.mid==0x1f3 and br.mid==0x1e5))then return false end
+  and((c.mid==0x1dc and br.mid==0x1dd or c.mid==0x1de and br.mid==0x1df or c.mid==0x1ec and br.mid==0x1ed)or c.mid==0x1e6 and(br.mid==0x1e7 or br.mid==0x1f2)or c.mid==0x1f3 and br.mid==0x1e5))then return false end
  local low,high,allZero=math.huge,-math.huge,true
  for _,q in ipairs{a,ar,base,br}do local shape=q.shape
   if not(q.primary=='general'and q.pair==c.pair and q.secondary==c.secondary and q.region==c.region
@@ -174,6 +174,23 @@ local function foreground(c,cells,options)
   and validOwner(root,cells,tb,trunks,'round',true))then return end
  return root,b[4]/16-1
 end
+-- EC/ED combines the round tree's lower body with the next evergreen's
+-- projected cap. Its native017 body is a distinct tree below the round owner.
+local function backgroundPineCap(c,cells,above)
+ if not(above and(c.mid==0x16 or c.mid==0x17)and(above.mid==0x1ec or above.mid==0x1ed)
+  and above.collision==7 and not above.boundary and above.region==c.region
+  and above.pair==c.pair and above.secondary==c.secondary and above.primary=='general'
+  and math.abs((above.base or 0)-(c.base or 0))<.01)then return false end
+ local master=ownerRoot(above,cells);local b=bounds(master,32,32)
+ if not(b and above.cy==b[4]/16-1 and master.mid==0x1ec
+  and validOwner(master,cells,b,round,'round',false))then return false end
+ for yy=b[2]/16,b[4]/16-1 do for xx=b[1]/16,b[3]/16-1 do
+  if cells[xx..':'..yy].region~=c.region then return false end
+ end end
+ local x,y=b[1]/16,b[2]/16
+ local a,ar,br=cells[x..':'..y],cells[(x+1)..':'..y],cells[(x+1)..':'..(y+1)]
+ return a and ar and br and(a.mid==0x1d4 or a.mid==0x1d6)and(ar.mid==0x1d5 or ar.mid==0x1d7)and br.mid==0x1ed
+end
 function M.placements(c,cells,options)
  local model=M.select(c,options)
  if not model or type(cells)~='table'then return end
@@ -205,9 +222,10 @@ function M.placements(c,cells,options)
   -- duplicate from its lower trunk owner; upload success marks both sources.
   local master=ownerRoot(above,cells)
   if master and foreground(master,cells,options)==c then return{}end
-  if not(above and above.pair==c.pair and above.primary=='general'and above.secondary==c.secondary
-   and (above.mid==0xe or above.mid==0xf)and above.collision==0 and not(above.boundary or above.prop or above.civic or above.stageHidden)
-   and above.shape and above.shape.kind=='tree'and not above.shape.root and not above.shape.treeBounds)then return end
+  local walking=above and above.pair==c.pair and above.primary=='general'and above.secondary==c.secondary
+   and(above.mid==0xe or above.mid==0xf)and above.collision==0 and not(above.boundary or above.prop or above.civic or above.stageHidden)
+   and above.shape and above.shape.kind=='tree'and not above.shape.root and not above.shape.treeBounds
+  if not(walking or backgroundPineCap(c,cells,above))then return end
  end
  local accepted=shallow and round or trunk and trunks or crowns
  local varying=not(shallow or trunk)and M.multilevelPineOwner(c,cells,options)
