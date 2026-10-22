@@ -144,11 +144,13 @@ print('PASS source evergreen packing, safe projected-cap trunks, full shallow br
 
 -- Boundary-fill forest already has explicit blocked ownership in ImportedTrees.
 -- It may use the same reviewed full shallow body, without pretending that its
--- synthetic cells carry native permission7. Mixed ownership still stands down.
+-- synthetic cells carry native permission7. A reviewed native boundary join
+-- is permitted only inside the same complete owner; walking cells stand down.
 local root,cells=shallowFixture(2)
 for _,q in pairs(cells)do q.boundary='forest';q.collision=nil;q.region=nil end
 local plans=assert(M.placements(root,cells,{region='hoenn'}));assert(#plans==1 and plans[1].model==M.shallowModel)
 assert(cells['3:3'].collision==nil and cells['3:3'].boundary=='forest')
-cells['3:3'].collision=7;assert(not M.placements(root,cells,{region='hoenn'}),'mixed native/synthetic owner accepted')
+cells['3:3'].collision=7;cells['3:3'].boundary=nil;assert(M.placements(root,cells,{region='hoenn'}),'blocked native forest join rejected')
+cells['3:3'].collision=0;assert(not M.placements(root,cells,{region='hoenn'}),'walking native join accepted')
 cells['3:3'].collision=nil;cells['3:3'].boundary='water';assert(not M.placements(root,cells,{region='hoenn'}),'water boundary became tree')
-print('PASS full synthetic forest shallow body and strict mixed-owner fallback')
+print('PASS full forest shallow body, blocked native joins and walking/water standdown')
