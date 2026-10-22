@@ -41,20 +41,24 @@ local fenceMauville={
  [0x273]={axis=2,turn='north'},[0x290]={axis=2,turn='north'},
  [0x2b2]={axis=2,stop=true},[0x2ba]={axis=2,stop=true},
 }
+-- Cosmetic enclosure profiles use compact Hoenn proportions. ORAS Route104
+-- t103gake rises18 source units per36-unit tile:8 units at native16px scale.
+-- Real stair/terrace support is still supplied by Gen3Terrain/Elevation; these
+-- heights apply only above a single-level boundary, never to native collision.
 -- Regional rock masses with their own cap/face drawings (source sheets
 -- inspected 2026-10-14). Only native solid (0x07) copies are raised; walkable
 -- copies of the same drawings stay native ground.
 local regionalCliffs={}
 local function rockBand(secondary,ids,cap,side,height)
  local t=regionalCliffs[secondary] or {};regionalCliffs[secondary]=t
- for _,id in ipairs(ids)do t[id]={kind='cliff',height=height or 24,ground=cap,cap=cap,side=side}end
+ for _,id in ipairs(ids)do t[id]={kind='cliff',height=height or 12,ground=cap,cap=cap,side=side}end
 end
 -- Mt. Chimney / Jagged Pass / Route 112 volcanic red rock (2BD lava excluded).
 rockBand('lavaridge',{0x268,0x269,0x26a,0x270,0x271,0x272,0x273,0x274,0x275,0x278,0x279,0x27a,0x27b,0x27c,0x27e,0x27f},0x271,0x274)
 -- Route 113/114 khaki mountain faces.
-rockBand('fallarbor',{0x23c,0x240,0x241,0x242,0x243,0x244,0x245,0x246,0x247},0x241,0x243,32)
+rockBand('fallarbor',{0x23c,0x240,0x241,0x242,0x243,0x244,0x245,0x246,0x247},0x241,0x243,16)
 -- Sootopolis crater and Mossdeep white limestone (2E8 water edge excluded).
-rockBand('sootopolis',{0x2d0,0x2d1,0x2d2,0x2d3,0x2d4,0x2d8,0x2d9,0x2da,0x2db,0x2e0,0x2e1,0x2e2,0x2e9},0x2d9,0x2e1,32)
+rockBand('sootopolis',{0x2d0,0x2d1,0x2d2,0x2d3,0x2d4,0x2d8,0x2d9,0x2da,0x2db,0x2e0,0x2e1,0x2e2,0x2e9},0x2d9,0x2e1,16)
 rockBand('mossdeep',{0x2a8,0x2a9,0x2aa,0x2b0,0x2b1,0x2b2,0x2b8,0x2b9,0x2ba},0x2a9,0x2b9)
 M.regionalCliffs=regionalCliffs
 -- Ocean barrier rocks remain low, with their own water underlay. Resolve
@@ -124,7 +128,7 @@ function M.emeraldShape(primary,secondary,mid,behavior,collision)
   return {kind='roomWall',ground=mid>=0x3c9 and 0x3d9 or 0x229}
  end
  if primary=='general' and secondary=='fallarbor' and collision==7 and fallarborWalls[mid]then
-  return {kind='cliff',height=32,ground=0x279,cap=0x269,side=0x270}
+  return {kind='cliff',height=16,ground=0x279,cap=0x269,side=0x270}
  end
  if secondary=='oceanic_museum' and collision==7 and (mid==0x204 or mid==0x20c)then
   return {kind='roomWall',ground=0x201}
@@ -190,15 +194,15 @@ function M.emeraldShape(primary,secondary,mid,behavior,collision)
   if collision==7 and (mid==0xa9 or (mid>=0x66 and mid<=0x6c) or
     (mid>=0x70 and mid<=0x7e) or (mid>=0x80 and mid<=0x8e) or
     (mid>=0x90 and mid<=0x9e)) then
-   return {kind='cliff',height=16,ground=1,cap=0x6c,side=0x71}
+   return {kind='cliff',height=8,ground=1,cap=0x6c,side=0x71}
   end
   -- Open-sea island rims: corner/side drawings around the same rock band,
   -- standing in deep water (identical primary art in RS and Emerald).
   if collision==7 and (mid==0x17a or mid==0x17c or mid==0x182 or mid==0x184)then
-   return {kind='cliff',height=24,ground=0x170,cap=0x6c,side=0x71}
+   return {kind='cliff',height=12,ground=0x170,cap=0x6c,side=0x71}
   end
   if collision==7 and behavior==0xc and mid<0x200 then
-   return {kind='cliff',height=16,ground=1,cap=0x6c,side=0x71}
+   return {kind='cliff',height=8,ground=1,cap=0x6c,side=0x71}
   end
   if mid==3 then return {kind='sign',height=12,ground=1,hoenn=true}end
   if mid==4 then return {kind='flowers',height=6,ground=1}end

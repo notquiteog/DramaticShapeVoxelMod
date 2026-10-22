@@ -14,7 +14,7 @@ for _,mid in ipairs({0x3c9,0x3d1})do
 end
 for _,mid in ipairs({0x268,0x269,0x26a,0x270,0x272,0x278,0x27a})do
  local cliff=S.of('general','fallarbor',mid,0,7)
- assert(cliff.kind=='cliff' and cliff.ground==0x279 and cliff.height==32)
+ assert(cliff.kind=='cliff' and cliff.ground==0x279 and cliff.height==16)
  assert(S.of('general','fallarbor',mid,0,0).kind=='flat','walkable native floor raised')
  assert(S.of('general','petalburg',mid,0,7).kind=='flat','Fallarbor art leaked to another atlas')
 end

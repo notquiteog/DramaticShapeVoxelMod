@@ -91,3 +91,15 @@ for _,h in ipairs({16,32,48})do
  end end
 end
 print('PASS 5043 exact support-profile samples across slopes, terraces and boundaries')
+
+-- Compact enclosure art must not flatten actual native stair/terrace support.
+local terrace={}
+for y=-2,3 do for x=-2,3 do terrace[x..':'..y]={cx=x,cy=y,base=x<1 and 0 or 6,shape={kind='flat'}}end end
+for y=0,1 do for x=0,1 do terrace[x..':'..y].shape={kind='cliff',height=8}end end
+local original={};for k,c in pairs(terrace)do original[k]=c.base end
+assert(T.height(terrace,16,16,8)==6,'compact wall raised the existing upper terrace')
+for _,c in pairs(terrace)do if c.shape.kind=='flat'then c.base=6 end end
+assert(T.height(terrace,16,16,8)==14,'enclosure height is not relative to local land')
+assert(T.height(terrace,16,16,24)==30,'explicit wall profile was globally capped')
+for k,c in pairs(terrace)do if c.shape.kind=='cliff'then assert(c.base==original[k])end end
+print('PASS compact enclosure profiles preserve native upper terraces and explicit wall heights')
