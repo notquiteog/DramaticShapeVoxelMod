@@ -4439,6 +4439,14 @@ local function voxelPaperCompat()
 end
 
 local function exportHelpers()
+  -- Optional command owners may pause the native battle update while their
+  -- own target prompt is active. Advance presentation without resolving turns,
+  -- ticking move effects, input, cries or the shiny reveal sequence twice.
+  mod.exports.updateBattlePresentation = function(battle, dt)
+    if isGen2 then return end -- GSC resolves pictures directly at draw time.
+    updateEnemyAnimation(battle, dt)
+    updatePlayerAnimation(battle, dt)
+  end
   if not mod.exports.stagedPokemonSprite then
     local provider = V.require("Crystal/full_body")
     mod.exports.stagedPokemonSprite = provider(mod, dexFor, isShiny)

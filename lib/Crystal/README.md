@@ -5,3 +5,10 @@ Battle Art integrates Crystal Animated Sprites with Shiny Visuals 2.1.0: Crystal
 SPRITE PACK (RESTART) switches between CRYSTAL and SELECTED ART; restart after changing it because the pack installs native menu and battle adapters. Existing Crystal preferences are preserved in the save options. CRYSTAL SPRITES retains its five presentation controls; FULL-BODY BATTLE BACKS is now a Battle Art option. Gen 1 doubles animate both enemy slots and can use both full-body player backs. One renderer owns species and trainer art.
 
 TEST PRERELEASE, published before gameplay verification as requested. Prior camera regression fixture reproduced the old failure, then passed with test.3 in Yellow, Crystal and FireRed (lab-to-town transition and movement). Full feature/visual parity across generations remains unfinished; adapter-pending settings are not claimed functional.
+
+The parent exports `updateBattlePresentation(battle, dt)` for command providers
+that pause Gen 1's native update during their own target prompts. It refreshes
+both allied and opponent Crystal frames without advancing battle logic or
+reveal/audio timing. Ordinary phases must not call it in addition to the native
+update. GSC already resolves animation pictures per draw and this callback is
+therefore a no-op there.

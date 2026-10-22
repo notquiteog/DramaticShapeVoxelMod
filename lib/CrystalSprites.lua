@@ -40,6 +40,7 @@ function M.install()
   function V.crystalContext:read(path) return V.mod:read(path) end
   V.mod.exports.crystalSprites = exports
   V.require('Crystal/main')()
+  V.mod.exports.updateBattlePresentation = exports.updateBattlePresentation
 
   -- Both the legacy Crystal submenu and the mod manager write the same
   -- options. Import old save preferences only when no new value is stored.
