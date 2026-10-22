@@ -3,6 +3,7 @@ local modules={SceneryModelData={},ImportedHoennShopData={oras_route104_pretty_p
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 modules.Gen3ImportedFlowerCards=assert(loadfile('lib/Gen3ImportedFlowerCards.lua'))(V)
+modules.Gen3ImportedFlowers=assert(loadfile('lib/Gen3ImportedFlowers.lua'))(V)
 local H=assert(loadfile('lib/Gen3ImportedHoenn.lua'))(V);local id=H.shopId
 local first=source.parts[1].vertices[1][3];assert(H.register(id));assert(source.parts[1].vertices[1][3]==first,'source module mutated')
 assert(S.info(id).parts==7)

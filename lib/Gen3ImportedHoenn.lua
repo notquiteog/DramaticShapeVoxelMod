@@ -84,7 +84,7 @@ function M.build(g,cells,newMesh,parts)
  if not result then return false,why end
  local fitted=assert(Models.fit(id,fit))
  if shop then
-  local flowers,flowerError=V.require('Gen3ImportedFlowerCards').build(g,fitted,id,newMesh,parts)
+  local flowers,flowerError=V.require('Gen3ImportedFlowers').build(g,fitted,id,newMesh,parts)
   if not flowers then
    for i=#parts,first,-1 do Models.releaseBatches({parts[i]});parts[i]=nil end
    return false,flowerError
