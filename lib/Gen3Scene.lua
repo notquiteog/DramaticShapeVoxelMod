@@ -112,6 +112,7 @@ function M.nativeRequired(game)
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
 local function releaseGeometry(cache)
+ for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').release(center)end
  if cache.grassModels then V.require('GrassModels').releaseBatches(cache.grassModels)end
  if cache.sceneryModels then V.require('SceneryModels').releaseBatches(cache.sceneryModels)end
  if cache.importedTrees then V.require('SceneryModels').releaseBatches(cache.importedTrees)end
@@ -949,6 +950,8 @@ local function terrain(draw)
  for _,part in ipairs(cache.bankModels or{})do draw(part.mesh,part.image)end
  for _,part in ipairs(cache.importedTrees or{})do if part.count>0 then draw(part.mesh,part.image)end end
  V.require('SceneryDraw').opaque(cache.sceneryModels,draw,original==Shadow.draw)
+ local doorAnim=require('src.core.game3.doors').getActiveAnim()
+ for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').draw(center,doorAnim,draw)end
 end
 local function waterMeshes()
  return NativeWater.sync(cache.waterDraws or{},Tiles._pairs)
@@ -1126,8 +1129,9 @@ local function fieldEffects(draw,cam)
  V.require('Gen3GroundEffects').draw(fx,M.groundAt,effect,cam)
  local doors=require('src.core.game3.doors');local a=doors._activeAnim
  if a then
-  local surface
+  local surface,sourceDoor
   for _,g in ipairs(cache.importedCenters or{})do
+   if g.importedCenterDoors and a.x==g.cx+1 and a.y==g.cy+3 then sourceDoor=true;break end
    surface=V.require('Gen3ImportedCenters').doorSurface(g,a.x,a.y)
    if surface then break end
   end
@@ -1146,7 +1150,9 @@ local function fieldEffects(draw,cam)
    local cell=cache.cells and cache.cells[a.x..':'..a.y]
    surface=V.require('Gen3TowerInteriors').doorSurface(cell and cell.prop,a.x,a.y)
   end
-  if surface then
+  if sourceDoor then
+   -- Original ORAS sliding panels share the opaque/depth pass above.
+  elseif surface then
    effect('door',surface.w,surface.h,function()doors.draw(surface.sourceX,surface.sourceY,surface.w,surface.h)end,surface.vertices,surface.base)
   else
    local x,z=a.x*16,a.y*16+16.15

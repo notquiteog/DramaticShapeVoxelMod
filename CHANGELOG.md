@@ -1,3 +1,11 @@
+## 1.57.1 — Genuine ORAS Center doors
+
+Hoenn Pokémon Centers now use the original ORAS sliding panels, glass/trim
+textures and opening poses. Removes the mismatched native RSE animation overlay;
+keeps native timing, sounds, warps and collision. Missing door assets retain the
+complete native building. No companion is required; actors and flowers retain
+HD-2D. [Source and verification](docs/ORAS_CENTER_DOORS_2026-10-22.md).
+
 ## 1.57.0 — Regional source buildings, PCs and TVs
 
 Adds52 guarded HGSS/ORAS building placements across the five GBA editions,

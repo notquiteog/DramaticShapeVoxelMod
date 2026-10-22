@@ -1,3 +1,21 @@
+# Genuine ORAS Center door hotfix — 2026-10-22
+
+1.57.1 replaces the native RSE overlay and empty static entrance with the actual
+separate ORAS BM0008 sliding panels and original glass/trim textures. Native
+frame selection, sound, warp and collision remain engine-owned. Source states
+share opaque/depth/shadow drawing; cached meshes release with their Center.
+Atomic failure retains the complete native building. Official0.3.95 native QA:
+all46 Hoenn Center placements; actual entry/return in allR/S/E Oldale Centers,
+Emerald Pacifidlog and Battle Frontier; source closed/half/open, first/side/rear,
+missing-texture and flat2D captures inspected.390/0/58 source suites and525
+production LuaJIT compilations pass. Published-package checks belong to the
+release record. See docs/ORAS_CENTER_DOORS_2026-10-22.md.
+
+Broader tree/style/building batch remains separately committed in the resource
+integration worktree pending native completion; it is not included in this
+focused hotfix. Concurrent primary-checkout cache/performance and XD material
+work must be preserved independently.
+
 # Crystal mobile world framing — 2026-10-22
 
 Confirmed reserved-playfield cropping and Gen2 high-DPI presentation mismatch.

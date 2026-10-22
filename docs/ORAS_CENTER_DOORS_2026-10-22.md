@@ -44,9 +44,9 @@ shared SceneryModels textures. There are no per-frame mesh uploads.
 Gen3ImportedCenters.build now uploads doors first, then the structure. A missing
 source/PNG, partial upload, cancellation or structure failure leaves the scene's
 older parts intact and g.importedCenter unset, with all newly created meshes
-released. The ordinary native building remains the honest fallback. Parent scene
-integration must draw these source states, release them with each Center, and
-skip native doors.draw only when the matching importedCenterDoors is ready.
+released. The ordinary native building remains the honest fallback. Scene integration draws these source states in the opaque/depth/shadow pass,
+releases them with each Center, and skips native doors.draw only when the matching
+importedCenterDoors is ready.
 
 Passed mocked LuaJIT checks: original panel UV/shade, left/right source movement,
 all-state body bounds, default/matching native frame selection, shared-image
@@ -64,3 +64,36 @@ and --nitrogen identify the external public decoder checkouts. None is bundled
 or imported by runtime code. Hashes, original tracks and provenance are recorded
 in assets/scenery/oras-center-doors/provenance.json. Raw ROM/model intermediates
 and screenshots stay outside Git.
+
+## Native acceptance for1.57.1
+
+Latest official engine checked October22: Gen1Recomp0.3.95, published October21
+02:42:51UTC; native LÖVE11.5/OpenGL3.3/NVIDIA615.71.09 on RTX5060Ti. Separate
+QA engine mounts only Battle Art; disposable per-edition profiles use existing
+imported user data. Fixtures create fresh games without touching player saves.
+Historical0.3.91 test-only driver helpers are not the running engine.
+
+Before: Emerald Oldale shows an empty gray entrance at rest and the small native
+RSE blue door during opening. After: original ORAS glass panels fill the arch and
+slide behind its side pockets. All46 existing Hoenn Center placements render;
+all metatile/collision/elevation hashes remain identical. Actual native input
+enters and returns through Oldale in R/S/E plus Emerald Pacifidlog and Battle
+Frontier, capturing frame0/1/2 for opening and closing. The initial exit frame2
+occurs during the native fade; visible opening poses and returned closed doors
+provide the unobscured source comparison. No engine callback/timing was replaced.
+
+First-person front, left/right, rear and destination interiors were inspected
+for all five fixtures. Emerald additionally verifies native-model fallback when
+the new PNGs are missing and unchanged flat2D. Default actors/flowers and native
+UI remain untouched.390 suites pass,0 fail,58 explicitly skip unavailable
+external fixtures;525 production Lua files compile with native LuaJIT2.1.
+The SDK test harness combines official0.3.95 modules with historical test-only
+helpers missing from the official release. Physical phones are untested.
+
+Scratch evidence: /home/admin/Projects/.scratch/center-doors-20261022/.
+verify.lua/run.sh drive before/after, entry/return and missing-source checks;
+census.lua drives all46 placements. Camera35 for fronts/animations and1ST with
+8-degree pitch for other views; day,16-cell view distance, QA-only haze disabled.
+Render/stream failures and native-hash changes are fatal assertions. All owned
+processes exit normally. Final ZIP integrity, mounted source hashes and native
+smoke checks are recorded with the release.
