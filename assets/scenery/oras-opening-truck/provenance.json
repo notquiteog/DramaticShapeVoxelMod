@@ -1,0 +1,70 @@
+{
+  "id": "oras_opening_truck",
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "model": "a/0/2/3 BM0006 slot0 t101_bm_truck",
+  "texturesRecord": "a/0/1/4 AD0008 slot1",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "modelBchSha256": "6582793e674a7e516f3372f6883e652ca1c49838fa8b537a867fcda99af60abc",
+  "textureBchSha256": "fffc1d6ed04fda474175abc69b1cd01aac899d8f34207baaf9f58a7611b34b19",
+  "textures": {
+    "in": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "f87163ea0f53269df2adc9252daef2da4a40dc454b24a0047c3970238c1c42d1",
+      "pngSha256": "2d0ab0d53509ec7b23af901ab3687578029c394d11b43b28aa0df7c634cc0b77"
+    },
+    "track": {
+      "size": [
+        256,
+        256
+      ],
+      "rgbaSha256": "7468030f529eac34bed88bb8648b025ceacd8b5ed06f64d9528e8c3a15da3187",
+      "pngSha256": "a5d31ad47fb280174e50e2ce4a13898c070b1f52f707688b242818ca8b5b8f28"
+    }
+  },
+  "independentValidation": "All source positions, UV0, triangle indices, rigid palettes and identity inverse binds agree with Nitrogen.",
+  "sourcePhysicalTriangles": 2104,
+  "authoredUndersideTriangles": 6,
+  "excludedShadowTriangles": {
+    "pasted__kageMAT": 136,
+    "shadow1": 54
+  },
+  "axisAlignment": {
+    "sourceRearAxis": [
+      0.3069089661344161,
+      0,
+      0.9517388751681335
+    ],
+    "yawRadians": 1.258852777731594,
+    "alignedBounds": [
+      -97.84266682900407,
+      1.3375500440597534,
+      -36.2502026469635,
+      12.332033293738936,
+      57.15079879760742,
+      25.344464319695657
+    ],
+    "uniformDivisor": 110.174700122743,
+    "origin": [
+      -42.75531676763257,
+      1.3375500440597534,
+      -5.452869163633922
+    ],
+    "canonicalCabin": "-X",
+    "canonicalOpenRear": "+X"
+  },
+  "sourceVertexRgbRange": [
+    -0.25196850393700787,
+    1.0
+  ],
+  "processing": [
+    "All2104 physical source triangles, original PNG pixels, UVs and vertex alpha retained. Rigid rotation and uniform normalization only.",
+    "User clean-lighting preference: source baked vertex RGB tints,136 cargo-shadow overlay triangles and54 ground-shadow sheet triangles omitted.",
+    "Closed only the exact original planar4/6-vertex underside rims with6 triangles using their source edge UVs. Genuine rear loading doors remain open, including original interior cargo."
+  ],
+  "limitations": [
+    "Original ORAS TEV and skeletal/texture animation are not emulated. Source bind pose has open rear doors. Native sprite actor owns visibility, position, scripts and lifetime."
+  ]
+}
