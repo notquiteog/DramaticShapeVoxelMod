@@ -1,0 +1,84 @@
+{
+  "asset": 297853,
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/297853/",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire",
+  "title": "PC",
+  "author": "Hallow",
+  "submitted": "2016-06-02",
+  "file": "ORAS PC/com_bm_pc01.dae",
+  "sourceBounds": [
+    -9.86266,
+    -7.62939e-06,
+    -10.3649,
+    9.86265,
+    35.4012,
+    9.00002
+  ],
+  "sourceOrigin": [
+    -4.999999999810711e-06,
+    -7.62939e-06,
+    -0.6824400000000006
+  ],
+  "sourceUnitSpan": 19.72531,
+  "bounds": [
+    -0.5,
+    0.0,
+    -0.4908647823532304,
+    0.5,
+    1.794709823540923,
+    0.4908647823532304
+  ],
+  "archiveSha256": "0dc218d658350ada3b9a7ed907b1eb29dc343643b8d19733892c3f39a905826b",
+  "sourceModelSha256": "9224d46c148d488849692ff8bb28f207b9967ce3f0d63eb8239df94907ef816e",
+  "textures": {
+    "com_bm_pc01_2.png": {
+      "sha256": "667bb32f653ddda8ee0fbcca72b0a38e58ca3279d5df3a57f7efd268ed46635c",
+      "bytes": 1010
+    },
+    "com_bm_pc01_1.png": {
+      "sha256": "e1e4a5c01252993805c5c2272a21dcb146dcd3de5b460a89eb2f3202a5d7f8d2",
+      "bytes": 1415
+    },
+    "source-vertex-rgba.png": {
+      "sha256": "d5a51b6aed15684ec8c123e30fe5703155359d6543b6d7b47cb5766ef44939de",
+      "bytes": 70
+    }
+  },
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "processing": "All 170 source triangles and vertex RGBA retained, body/screen UVs and original PNG bytes retained. Uniform normalization, documented screen depth separation, and separately authored rear/underside closure. Glow without UVs uses a solid vertex-RGBA material.",
+  "repairs": [
+    {
+      "material": "pasted__room01_pc02",
+      "triangles": 30,
+      "repair": "No source TEXCOORD stream. Retained original geometry and white vertex RGB with original alpha on a generated solid white 1px material; declared glow texture is unused. No source UV projection invented."
+    },
+    "Dedicated screen moved forward 0.01 source units (0.05% of width) to resolve exported coplanar casing/screen depth fight; UVs/topology unchanged.",
+    "Authored blue case rear, keyboard/frame rear and underside closures follow original exported rim; native open knee space retained. Original 170 triangles unchanged."
+  ],
+  "parts": [
+    {
+      "name": "mesh_0_polySurface5_id",
+      "texture": "assets/scenery/interiors/oras_center_pc/com_bm_pc01_2.png",
+      "triangles": 4,
+      "authored": false
+    },
+    {
+      "name": "mesh_1_polySurface5_id",
+      "texture": "assets/scenery/interiors/oras_center_pc/com_bm_pc01_1.png",
+      "triangles": 136,
+      "authored": false
+    },
+    {
+      "name": "mesh_2_polySurface5_id",
+      "texture": "assets/scenery/interiors/oras_center_pc/source-vertex-rgba.png",
+      "triangles": 30,
+      "authored": false
+    },
+    {
+      "name": "authored_source_case_closure",
+      "texture": "assets/scenery/interiors/oras_center_pc/com_bm_pc01_1.png",
+      "triangles": 32,
+      "authored": true
+    }
+  ]
+}
