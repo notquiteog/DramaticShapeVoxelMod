@@ -82,3 +82,32 @@ inspect moving, braking, unloading and final-open views in all three editions.
 The static audit found no truck-specific camera-look lock; native walking and
 engine zoom remain intentionally locked. A separate live reproduction must
 identify the reported camera-control failure before changing that behavior.
+
+## Official0.3.95 native follow-up
+
+Fresh native truck callbacks were run in isolated copied R/S/E profiles using
+the matching official Linux shell. Moving, braking, stopped-closed, unloading
+and open captures were inspected; the cargo recipe remained present throughout
+all three editions with no renderer quarantine or native fallback. The native
+door opens/unlocks at frame865, including its original exit permissions changing
+from0 to114. The native 15-cell blocked footprint matches the tested mask.
+
+Rendered inspection found the three moving box objects hidden inside duplicate
+static volumes at `(0,0)`, `(0,3)` and `(2,3)`. The native atlas already depicts
+those same boxes. `dynamicCargo` removes only those static placeholders, so the
+live moving objects own their source geometry instead of being occluded by a
+second body. Other cargo and the native floor/exit remain intact.
+
+Focused X11 input checks exercised public native gamepad, mouse and key methods:
+right-stick rotation changed yaw by1.167rad during the locked animation and the
+same angle after unlocking; mouse changed yaw/pitch and key3 cycled camera modes
+while locked. No camera-lock production change is justified by this reproduction.
+First/third-person and35-degree captures were inspected. Evidence is under the
+scratch `truck-camera-20261022/{emerald,ruby,sapphire}-unmasked` runs.
+
+Two fixture limitations were corrected before accepting camera evidence: the
+sandboxed Wayland test window lacked focus even after unlocking, and the official
+frame-driver branch calls `Game:update` directly, bypassing `core.update` hooks.
+The focused scratch driver dispatches the public `core.update` hook with a no-op
+vanilla step once per test frame; the engine still executes its original native
+update exactly once per frame. No protected callback or truck timing is replaced.

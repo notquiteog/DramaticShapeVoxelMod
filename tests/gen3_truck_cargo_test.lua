@@ -54,6 +54,18 @@ local def={midLayout={pair=T.pair}}
 for _,ed in ipairs{'ruby','sapphire','emerald'}do assert(T.eligible(113,def,ed))end
 assert(not T.eligible(113,def,'firered') and not T.eligible(1,def,'emerald'))
 assert(not T.eligible(113,{midLayout={pair='building__generic_building'}},'emerald'))
+-- The real moving objects must not be buried inside matching background
+-- crate volumes. Retain every other static cargo assembly and walking lane.
+local Geometry=V.require('InteriorFurniture');local static=0
+assert(Geometry.draw('em_truck_cargo',{recipe=recipe,width=80,sample=function()return{}end,source=function()end,
+ box=function(l,b,n,r,h,s)
+  static=static+1
+  for _,cell in ipairs{{0,0},{0,3},{2,3}}do
+   assert(not(l<(cell[1]+1)*16 and r>cell[1]*16 and n<(cell[2]+1)*16 and s>cell[2]*16),
+    'static crate masks its live native moving prop')
+  end
+ end}))
+assert(static>0,'unrelated static cargo vanished')
 
 local image={getDimensions=function()return 16,16 end}
 local spr={image=image,frameCount=1,quads={[0]={getViewport=function()return 0,0,16,16 end}}}

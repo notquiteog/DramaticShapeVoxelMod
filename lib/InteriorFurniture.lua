@@ -373,13 +373,17 @@ function M.draw(id,A)
   -- Every solid base is inside the original blocked cells. Perspective
   -- fronts from the ROM become vertical faces, never obstacles on the floor.
   for z=0,64,16 do
-   cargo(.2,z+.2,15.8,z+15.8,20+(z%32==0 and 2 or 0),{0,0,16,32})
+   -- These three native moving-box objects replace their background crate,
+   -- rather than disappearing inside a second, static body at the same cell.
+   if not(A.recipe and A.recipe.dynamicCargo)or z~=0 and z~=48 then
+    cargo(.2,z+.2,15.8,z+15.8,20+(z%32==0 and 2 or 0),{0,0,16,32})
+   end
   end
   cargo(16,.2,31.8,15.8,17,{16,16,16,16})
   cargo(32,.2,79.8,15.8,20,{32,16,32,16})
   for x=16,64,16 do cargo(x+.2,64,x+15.8,79.8,17,{16,64,16,16})end
   cargo(16,48,31.8,63.8,10,{16,48,16,16})
-  cargo(32,48,47.8,63.8,22,{32,48,16,32})
+  if not(A.recipe and A.recipe.dynamicCargo)then cargo(32,48,47.8,63.8,22,{32,48,16,32})end
  elseif id=='em_start_bed' then
   local wood,cloth=T(14,20),T(20,31)
   -- Only the centre foot cell is impassable. The apparent long head in the
