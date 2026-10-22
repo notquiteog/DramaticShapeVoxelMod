@@ -1,3 +1,18 @@
+## 1.57.5 — ORAS trucks, boat and corridor repairs
+
+- Genuine ORAS outdoor truck actor and source cargo room, retaining native
+  opening scripts, movement, visibility and camera ownership.
+- Genuine ORAS Briney boat and Dewford animated doors.
+- Original terrain beneath buildings/signs, clean roof underlays, Dewford sand,
+  closed wooden docks with real gaps and continuous shore attachment.
+- Correct coastal water support, compact cosmetic rock walls and additional
+  original ORAS tree families, including compact one-cell forms.
+- Remove reviewed imported vertex lighting and baked shadow overlays while
+  preserving source paint and native dynamic shadows.
+- Preserve standalone operation and characters/Pokémon/flowers HD-2D defaults.
+
+See [verification and remaining coverage](docs/SCENERY_FIXES_2026-10-22.md).
+
 ## 1.57.4 — Test preview
 
 User-requested test package of the consolidated main snapshot: native building
@@ -5,7 +20,7 @@ underlays, expanded ORAS tree sources/completions, pending source buildings and
 interiors, category preferences and actor-provider ownership. Source checks:
 406 passed,0 failed,58 external skips;540 production LuaJIT compilations.
 Native acceptance remains in progress. Dock water/edges/planks, truck intro and
-Route115→Rustboro tree fallback are open investigations. This is a prerelease.
+Route115→Rustboro tree fallback are open investigations. Promoted to a regular latest release so Gen1Recomp can discover it.
 
 ## 1.57.3 — Destination streaming and XD identity
 

@@ -58,7 +58,10 @@ closed six-face native-source geometry and follows the engine's own position
 and raise offsets, including shadow/reflection passes. HD2D prop selection and
 missing/unreviewed source retain native cards. No character/Pokémon style is
 changed. These native-source cargo repairs precede the separate authentic ORAS
-exterior import; the cargo room conversion remains tracked independently.
+exterior import. The authentic GR653 cargo conversion is now included: separate
+source cardboard/dressers, actual moving ORAS boxes, continuous metal walls and
+one clean source floor; native openings and movement remain engine-owned.
+See [the interior source and native sequence checks](ORAS_TRUCK_INTERIOR_2026-10-22.md).
 
 Fresh native new-game truck callbacks run without outdoor start overrides.
 Camera input checks need a genuinely focused test window: an unfocused Xvfb
@@ -139,3 +142,15 @@ settlements, connecting routes and interiors without changing native data.
 It emits identifiers, native hashes and adapter eligibility only. It is not
 rendered acceptance: unclassified painted foliage, composite terrain/tree
 sources and every missing modern building/interior still need individual work.
+
+
+## Release snapshot and lighting
+
+Version1.57.5 consolidates all active worker commits at the user's explicit
+request to publish promptly. Reviewed imported vertex lighting and explicit
+baked shadow overlays now yield to native dynamic lighting. Painted source
+textures, original alpha, structural closure, native floors and third-party
+vertex paint remain intact. See [lighting scope](IMPORTED_SOURCE_LIGHTING_2026-10-22.md).
+The latest exact040/synthetic forest source extension passed focused tests;
+its final GPU acceptance is pending. This release does not certify full modern
+coverage of the corridor or every source texture's lighting.

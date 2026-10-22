@@ -1,3 +1,13 @@
+## 1.57.5 — ORAS trucks, boat and corridor repairs
+
+Authentic ORAS outdoor trucks and cargo interiors join the Briney boat and
+Dewford hinged doors. Fixes native building underlays, sand beneath Dewford
+buildings/signs, dock attachments, board depth/gaps, coastal water levels,
+compact rock walls and additional modern tree families. Characters, Pokémon
+and flowers keep HD-2D defaults; all companions remain optional.
+This is an incremental verified batch; complete corridor model coverage remains
+in progress. [Changes and evidence](docs/SCENERY_FIXES_2026-10-22.md).
+
 ## 1.57.4 — Test preview
 
 Test preview of the consolidated scenery, tree, native-ground and category-style

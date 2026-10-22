@@ -1,3 +1,20 @@
+# User-requested consolidated release1.57.5 — 2026-10-22
+
+All active corridor worker histories merged, including latest tree source
+follow-upb1b61cf4, source lightingb2994869 and ORAS truck interior5039701e.
+User explicitly requested prompt commit/push/main/release of all current work.
+Includes genuine outdoor ORAS trucks, cargo room and moving boxes, Briney boat,
+Dewford doors/sand, clean native roof underlays, attached solid wooden docks,
+correct ocean datum, compact cosmetic cliffs and expanded modern tree families.
+Native collision, warps, scripts and HD2D actor/flower defaults stay intact;
+companions remain optional.551 production LuaJIT files compile. Focused native
+0.3.95 Linux source checks cover allRSE opening sequences, truck exteriors,
+boat trip, docks, doors/ground, route transitions and FRLG foundation regressions.
+Final combined package checks are recorded separately from those worker checks.
+The latest040/synthetic tree follow-up lacks final GPU acceptance; per-texture
+AO and complete corridor modern building/interior/tree coverage remain pending.
+Raw ROMs/archives/caches/captures excluded. See docs/SCENERY_FIXES_2026-10-22.md.
+
 # User-requested test release1.57.4 — 2026-10-22
 
 Package the pushed a72dee0 source snapshot for user testing, with version/docs
