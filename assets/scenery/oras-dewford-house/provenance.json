@@ -1,0 +1,110 @@
+{
+  "asset": 364274,
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/364274/",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire",
+  "uploadedBy": "MasterPengo",
+  "submitted": "2025-06-29",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "e407379611fadcb38b6e9af2f23e53c88bf4338bc074114132dc804a4d6358be",
+  "sourceModel": "world03_04_07.dae",
+  "sourceModelSha256": "b25aba21ee42e0f7c653dfc0119d83ec46dd342167e91f0379d51b265c51f23a",
+  "geometrySelection": [
+    {
+      "geometry": "_1_0-mesh",
+      "selectedTriangles": 938,
+      "excludedTriangles": 2604,
+      "matchingOriginalCopies": 2,
+      "matchingCopyMaxPositionDelta": 0.7130000024028222
+    },
+    {
+      "geometry": "_3_0-mesh",
+      "selectedTriangles": 54,
+      "excludedTriangles": 108,
+      "matchingOriginalCopies": 2,
+      "matchingCopyMaxPositionDelta": 5.865156000073313e-05
+    },
+    {
+      "geometry": "_23_0-mesh",
+      "selectedTriangles": 4,
+      "excludedTriangles": 8,
+      "matchingOriginalCopies": 2,
+      "matchingCopyMaxPositionDelta": 0.07400002323373438
+    }
+  ],
+  "selectedSourceBounds": [
+    -40.588,
+    -17.999961518874404,
+    -311.5669926620219,
+    58.412,
+    67.39494432314682,
+    -229.97099281611256
+  ],
+  "sourceBounds": [
+    -40.588,
+    -17.999961518874404,
+    -311.5669926620219,
+    58.412,
+    67.39494432314682,
+    -229.97099281611256
+  ],
+  "sourceOrigin": [
+    8.911999999999999,
+    -17.999961518874404,
+    -270.76899273906724
+  ],
+  "sourceUnitSpan": 99.0,
+  "bounds": [
+    -0.5,
+    0.0,
+    -0.4121010093227743,
+    0.5,
+    0.8625748064850628,
+    0.4121010093227746
+  ],
+  "authoredCompletion": {
+    "sourceTriangles": 996,
+    "authoredTriangles": 18,
+    "notes": "Original roof, ridge fixtures, wall elevations, timber posts, cobblestone base, window frames and glass retained. Missing rear wall/floor/ceiling closed inside source bounds with original plaster, stone and timber crops. No floral, tree, actor, dock or hall geometry selected."
+  },
+  "textures": {
+    "muro_house.png": {
+      "sha256": "7a30629d6a55570d2ed1e9a6c5054efb530f7f12a179790eef2baecc42461e3e",
+      "size": [
+        256,
+        128
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    },
+    "muro_waku.png": {
+      "sha256": "3af25fedbd2f9744179fdf04e230268399bc8e26db99d1207bfab8aabd2c1e8e",
+      "size": [
+        128,
+        128
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    },
+    "chip_mado.png": {
+      "sha256": "42b0ebdbe0f1e8feee108d687b224c96e70c44cef514213a8c845de8f0abf573",
+      "size": [
+        64,
+        64
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    }
+  },
+  "processing": [
+    "Evaluated original static hierarchy, Z_UP conversion and asset unit using shared DAE converter.",
+    "Selected the narrow home by complete source connected-component bounds. Verified the other original narrow home matches UV/RGB and XYZ within1sourceunit after its translation (tiny original foundation/glass/entrance-floor offsets retained in selected copy); excluded the distinct wide hall and all route/dock scenery.",
+    "Retained996 original source triangles, source RGB, UVs and PNG bytes. Added rear/floor/ceiling completion; uniform XYZ normalization only."
+  ],
+  "nativePlacement": "Existing R/S/E dewford_town_home at7,5 and dewford_town_south_home at16,11; native doors8,8and17,14. Six placements across three editions. Model stays inside64x48body rectangle, below native roof-art row; all source doorway/geometry remain rigid. Widehall remains native pending a separate doorway review."
+}
