@@ -1,0 +1,81 @@
+{
+  "asset": 364272,
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/364272/",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire",
+  "uploadedBy": "MasterPengo",
+  "submitted": "2025-06-29",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "0d849831180a5bf9484efff71e8947d420558fb6019417cfebb124e673a9257b",
+  "sourceModel": "world03_03_02.dae",
+  "sourceModelSha256": "3ddd0ce7406142360b28e1d16fd8982d3bed8d6458762c68c63607da7c8e6696",
+  "geometrySelection": {
+    "_10_0-mesh": "hagi_house01.png",
+    "_11_0-mesh": "hagi_komono01.png"
+  },
+  "selectedSourceBounds": [
+    -244.5,
+    0.4999446866148,
+    202.0000014764882,
+    -112.0,
+    82.86176107973715,
+    284.00000204671136
+  ],
+  "sourceBounds": [
+    -244.5,
+    0.4999446866148,
+    202,
+    -112.0,
+    82.86176107973715,
+    284.00000204671136
+  ],
+  "sourceOrigin": [
+    -178.25,
+    0.4999446866148,
+    243.00000102335568
+  ],
+  "sourceUnitSpan": 132.5,
+  "bounds": [
+    -0.5,
+    0.0,
+    -0.30943396998759004,
+    0.5,
+    0.6215986142877159,
+    0.30943396998759004
+  ],
+  "authoredCompletion": {
+    "sourceTriangles": 1328,
+    "supportBoxesCompleted": 29,
+    "authoredTriangles": 234,
+    "notes": "Original source surfaces, UVs and vertex colors retained. Rear wall, main floor, ceiling, deck undersides and missing support-box faces authored inside source bounds. Original fabric, oars and lifebuoy remain source geometry."
+  },
+  "textures": {
+    "hagi_house01.png": {
+      "sha256": "d1230a949f865db7a2d0fad935c644771c0fd0dcc93d6df26843e6aa9a4a3883",
+      "size": [
+        256,
+        128
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    },
+    "hagi_komono01.png": {
+      "sha256": "6f518872ac304b7bc0a95e1cd182e080d3ca5ff463343de4a01ab7b0e2464fc8",
+      "size": [
+        128,
+        128
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    }
+  },
+  "processing": [
+    "Evaluated original static scene hierarchy, Z_UP conversion and asset unit using shared DAE converter.",
+    "Selected only the original house and its attached deck, railings, steps, blinds, oars and lifebuoy. Excluded terrain, water, trees, shadows, flowers and unrelated route props.",
+    "Preserved all1328 original triangles, UVs, source RGB colors and PNG bytes; uniform XYZ normalization only."
+  ],
+  "nativePlacement": "R/S/E Route104 Mr. Briney exterior only. Native5x4 drawing at15,47; three blocked body rows48..50. Door stays17,50. Adapter rejects unknown/mixed permissions, heights, hidden and boundary cells."
+}
