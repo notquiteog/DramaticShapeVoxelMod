@@ -177,7 +177,7 @@ function M.geometry(p,side,opened)
    local tu,tv=u,.5
    if p.wallpaper and side<=4 then
     local along=side==1 and(a[1]-x0)or side==2 and(a[3]-z0)or side==3 and(x1-a[1])or(z1-a[3])
-    tu,tv=along/16,(h-a[2])/(p.wallpaperHeight or 32)
+    tu,tv=along/(p.wallpaperWidth or 16),(h-a[2])/(p.wallpaperHeight or 32)
    end
    verts[#verts+1]={a[1],a[2],a[3],tu,tv,shade or 1}
   end
@@ -301,6 +301,7 @@ end
 local function prepareTruck(p)
  if not(p and p.truckRoom)then return end
  local material=V.require('Gen3TruckCargo').wallpaper()
+ p.wallpaperWidth=material and material.wallpaperWidth or nil
  M.setWallpaper(p,material and material.wall or nil)
  p.shellTexture=material and material.wall or nil
 end
@@ -499,6 +500,7 @@ function M.draw(p)
   if not p.meshes[key]then local v,i=M.geometry(p,side,cut);p.meshes[key]=R.newMesh(v,i)end
   R.draw(p.meshes[key],side<=4 and p.wallpaper or p.shellTexture or texture(p.theme))
  end
+ if p.truckRoom then V.require('Gen3TruckCargo').drawFloor(p,R.draw)end
  if p.truckRoom and not opened[2]then V.require('Gen3TruckCargo').drawShutter(p,R.draw)end
  if policy.dressing:get()then V.require('KfpInteriorDecor').draw(p,opened,ceiling,texture(p.theme))end
  R.interiorClip(true)

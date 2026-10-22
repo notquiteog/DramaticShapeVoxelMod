@@ -20,7 +20,13 @@ local families={
 function M.register(id)
  id=id or M.id
  if registered[id]and Models.info(id)then return true end
- local file=dataFiles[id];if not file then return nil,'unknown imported interior'end
+ local file=dataFiles[id];if not file then
+  if type(id)=='string'and id:match('^oras_truck_')then
+   local truck=V.require('Gen3ImportedTruckRoom')
+   if truck.isModel(id)then return truck.register(id)end
+  end
+  return nil,'unknown imported interior'
+ end
  local ok,data=pcall(V.require,file)
  if not ok or type(data)~='table'or not data[id]then return nil,'imported interior source unavailable'end
  local result,err=Models.register(id,data[id],{read=function(path)return V.mod:read(path)end})
@@ -57,7 +63,9 @@ function M.placements(cells)
  for _,c in pairs(cells)do local p=c.prop
   if p and not seen[p]then
    seen[p]=true
-   if M.eligible(p,cells)then
+   if p.recipe and p.recipe.name=='hoenn_truck_cargo'then
+    for _,item in ipairs(V.require('Gen3ImportedTruckRoom').placements(p,cells))do list[#list+1]=item end
+   elseif M.eligible(p,cells)then
     local f=families[p.recipe.name]
     list[#list+1]={model=f.model or M.id,x=p.cx*16,y=(p.groundHeight or 0)+(f.cabinet or 0),z=(p.cy+(f.zRows or 1))*16,
      fit={width=f.fitWidth or 16,depth=f.fitDepth or 16,height=f.fitHeight or(f.model and 17 or 24),padding=.25},source=p}
@@ -74,7 +82,7 @@ function M.build(cells,newMesh,parts)
  local result,why=Models.buildBatches(list,newMesh,{parts=parts})
  -- Mark only after every texture and mesh uploads. A failed source load keeps
  -- the complete native furniture, including its existing wall/ground handling.
- if result then for _,p in ipairs(list)do p.source.importedInterior=p.model end end
+ if result then for _,p in ipairs(list)do p.source.importedInterior=p.marker or p.model end end
  return result,why,result and #list or 0
 end
 -- Retain the exact native cabinet and wall note as separate components.

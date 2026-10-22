@@ -8,6 +8,12 @@ local closed={[0x208]=0x20d,[0x210]=0x215,[0x218]=0x21d}
 local meshes={}
 local roomMaterials=setmetatable({},{__mode='k'})
 local shutterMeshes={}
+local importedRoom
+local function modernRoom()
+ if importedRoom then return importedRoom end
+ local ok,m=pcall(V.require,'Gen3ImportedTruckRoom')
+ if ok and type(m)=='table'then importedRoom=m;return m end
+end
 local nativeRows={{0x201,0x202,0x203,0x204,0x205},{0x209,0x20a,0x20b,0x20c,0x208},
  {0x211,0x212,0x213,0x214,0x210},{0x219,0x21a,0x21b,0x21c,0x218},{0x221,0x222,0x223,0x224,0x220}}
 local floorArt={}
@@ -98,12 +104,19 @@ function M.roomMaterial(ts)
  roomMaterials[ts]=out;return out
 end
 function M.wallpaper()
+ local modern,source=pcall(function()local room=modernRoom();return room and room.wallpaper()end)
+ if modern and source then return source end
  local ok,result=pcall(function()
   local ts=require('src.core.game3.tileset_native').get(M.pair)
   return ts and M.roomMaterial(ts)
  end)
  if not ok then M.lastError=tostring(result);return end
  return result
+end
+function M.drawFloor(p,draw)
+ local ok,result=pcall(function()local room=modernRoom();return room and room.drawFloor(p,draw)end)
+ if not ok then M.lastError=tostring(result);return false end
+ return result or false
 end
 function M.shutterGeometry(width,height)
  local v,i={},{}
@@ -181,6 +194,8 @@ function M.draw(gid,x,z,height,spr,frame,draw,reflection)
   local GV=require('src.core.GameVersion')
   local Map=require('src.core.game3.map')
   if not M.eligible(gid,Map.currentDef(),GV.get()) or V.require('VisualStyles').hd2d('props')then return false end
+  local modern,drawn=pcall(function()local room=modernRoom();return room and room.drawCargo(gid,x,z,height,spr,frame,draw,reflection)end)
+  if modern and drawn then return true end
   local byFrame=meshes[spr and spr.image]
   local mesh=byFrame and byFrame[frame]
   if not mesh then
@@ -204,6 +219,7 @@ function M.draw(gid,x,z,height,spr,frame,draw,reflection)
  return result
 end
 function M.clear()
+ if importedRoom then importedRoom.clear()end
  for _,frames in pairs(meshes)do for _,mesh in pairs(frames)do mesh:release()end end
  for _,mesh in pairs(shutterMeshes)do mesh:release()end
  for _,material in pairs(roomMaterials)do material.wall:release();material.door:release()end
