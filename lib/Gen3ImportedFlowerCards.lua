@@ -19,7 +19,7 @@ function M.geometry(g,fit,options)
   for j,v in ipairs(card.vertices)do
    local color=card.colors[j]
    vs[#vs+1]={x0+v[1]*fit.scale+fit.x+nx-ax,base+v[2]*fit.scale,z0+nz,
-    v[4],v[5],v[6],color[1],color[2],color[3],color[4],x0+nx,z0+nz,ay}
+    v[4],v[5],1,1,1,1,color[4],x0+nx,z0+nz,ay}
   end
   for _,i in ipairs(card.indices)do indices[#indices+1]=first+i end
  end

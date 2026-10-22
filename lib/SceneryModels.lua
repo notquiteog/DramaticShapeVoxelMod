@@ -14,7 +14,23 @@ local function path(p)return type(p)=='string'and #p<=240 and not p:find('\\',1,
 local function clone(a)local r={};for i,v in ipairs(a)do r[i]=v end;return r end
 local function rotate(x,z,r)if r==1 then return -z,x elseif r==2 then return -x,-z elseif r==3 then return z,-x end;return x,z end
 local function clearVariants()variants,order={},{};cachedVertices=0;cachedBytes=0 end
-local function validate(def)
+-- Imported source lighting is replaced by the renderer's live lighting. Source
+-- textures still own paint; explicit color roles distinguish lighting from paint.
+-- Retain source slots/bounds for authored surfaces and exactly stable fitting.
+local function lightingOnly(p)
+ local material=(tostring(p.material or'')..' '..tostring(p.texture or'')):lower()
+ return p.role=='source_shading'or p.role=='ground_shadow'or material:find('h_kage',1,true)~=nil
+end
+-- Reviewed ORAS color streams tint the same textured surfaces white/gray/blue
+-- by exposure (including blue canopy shadows); actual paint is in source PNGs.
+-- Unknown providers retain vertex paint unless they explicitly declare lighting.
+local sourceLighting={oras_route104_briney_house=true,oras_route104_pretty_petal_shop=true,
+ oras_route104_broadleaf=true,oras_lavaridge_home=true,oras_lavaridge_herb_shop=true,
+ oras_dewford_narrow_house=true,oras_center_pc=true,oras_opening_truck=true,
+ oras_route104_pretty_petal_shop_native=true,oras_route104_broadleaf_shallow=true,
+ oras_compact_broadleaf=true,oras_compact_broadleaf_narrow=true,
+ oras_lavaridge_home_native=true,oras_lavaridge_herb_shop_native=true}
+local function validate(def,id)
  if type(def)~='table'or type(def.parts)~='table'or #def.parts==0 or #def.parts>M.limits.parts then return nil,'invalid scenery parts'end
  local out={parts={},anchors={},surfaces={},bounds={math.huge,math.huge,math.huge,-math.huge,-math.huge,-math.huge},count=0,bytes=0}
  local ni=0
@@ -25,6 +41,10 @@ local function validate(def)
   if p.colors~=nil and(type(p.colors)~='table'or #p.colors~=#p.vertices)then return nil,'scenery color count mismatch'end
   out.bytes=out.bytes+#p.vertices*(p.colors and 40 or 24)
   local part={name=p.name,material=p.material,texture=p.texture,role=p.role or'structure',alphaMode=p.alphaMode or'cutout',opacity=p.opacity or 1,wrapS=p.wrapS or'repeat',wrapT=p.wrapT or'repeat',vertices={},indices={}}
+  part.lightingOnly=lightingOnly(p)
+  local colorRole=p.vertexColorRole or def.vertexColorRole or(sourceLighting[id]and'lighting'or'paint')
+  if colorRole~='lighting'and colorRole~='paint'then return nil,'unsupported scenery vertex color role'end
+  part.vertexColorRole=colorRole
   part.diffuse=clone(p.diffuse or{1,1,1});if #part.diffuse~=3 then return nil,'invalid material diffuse'end
   for _,v in ipairs(part.diffuse)do if not finite(v)or v<0 or v>4 then return nil,'invalid material diffuse'end end
   if not finite(part.opacity)or part.opacity<0 or part.opacity>1 then return nil,'invalid material opacity'end
@@ -33,11 +53,11 @@ local function validate(def)
   for j,pv in ipairs(p.vertices)do
    if type(pv)~='table'or #pv~=6 then return nil,'scenery vertex must have XYZ UV shade'end
    for _,n in ipairs(pv)do if not finite(n)or math.abs(n)>1e7 then return nil,'nonfinite/unbounded scenery vertex'end end
-   part.vertices[j]=clone(pv)
+   part.vertices[j]=clone(pv);part.vertices[j][6]=1
    if p.colors then
     local color=p.colors[j];if type(color)~='table'or #color~=4 then return nil,'scenery colors must be RGBA'end
     for _,n in ipairs(color)do if not finite(n)or n<0 or n>1 then return nil,'invalid scenery vertex color'end end
-    part.colors[j]=clone(color)
+    part.colors[j]=colorRole=='paint'and clone(color)or{1,1,1,color[4]}
    end
    for a=1,3 do out.bounds[a]=math.min(out.bounds[a],pv[a]);out.bounds[a+3]=math.max(out.bounds[a+3],pv[a])end
   end
@@ -71,7 +91,7 @@ function M.register(id,def,provider)
  if definitions[id]then return nil,'scenery id already registered'end
  local n=0;for _ in pairs(definitions)do n=n+1 end;if n>=M.limits.models then return nil,'scenery catalog budget exceeded'end
  if type(provider)~='table'or type(provider.read)~='function'then return nil,'scenery provider needs a public byte reader'end
- local d,err=validate(def);if not d then return nil,err end
+ local d,err=validate(def,id);if not d then return nil,err end
  if registeredBytes+d.bytes>M.limits.catalogBytes then return nil,'scenery catalog byte budget exceeded'end
  if registeredVertices+d.count>M.limits.catalogVertices then return nil,'scenery catalog vertex budget exceeded'end
  d.read=provider.read;definitions[id]=d;registeredVertices=registeredVertices+d.count;registeredBytes=registeredBytes+d.bytes;return true
@@ -125,7 +145,7 @@ function M.vertices(id,opts)
  local k=table.concat({id,fit.rotation,fit.scale,fit.x,fit.z},':');if variants[k]then return variants[k],fit end
  local d=definitions[id];local parts={}
  for i,p in ipairs(d.parts)do
-  local q={vertices={},indices=p.indices,texture=p.texture,wrapS=p.wrapS,wrapT=p.wrapT,opacity=p.opacity,role=p.role,alphaMode=p.alphaMode,name=p.name,material=p.material,diffuse=p.diffuse}
+  local q={vertices={},indices=p.indices,texture=p.texture,wrapS=p.wrapS,wrapT=p.wrapT,opacity=p.opacity,role=p.role,alphaMode=p.alphaMode,name=p.name,material=p.material,diffuse=p.diffuse,lightingOnly=p.lightingOnly,vertexColorRole=p.vertexColorRole}
   q.format=p.colors and M.COLOR_FORMAT or nil
   for j,v in ipairs(p.vertices)do
    local x,z=rotate(v[1],v[3],fit.rotation);local row={x*fit.scale+fit.x,v[2]*fit.scale,z*fit.scale+fit.z,v[4],v[5],v[6]}
@@ -189,8 +209,8 @@ end
 -- cancellation can release an abandoned build. On failure only new parts unwind.
 -- Caller supplies the ordinary
 -- renderer uploader; returned image-bound parts retain source material metadata.
--- Draw with ModelInstances.draw. AlphaMode/opacity remain explicit so adapters
--- can schedule source shading in their correct pass or choose native shadows.
+-- Draw with ModelInstances.draw. Physical alpha/opacity are preserved. Proven
+-- baked shadow overlays never load textures or upload; dynamic shadows own them.
 function M.buildBatches(placements,newMesh,options)
  if type(placements)~='table'or #placements>M.limits.placements or type(newMesh)~='function'then return nil,'invalid scenery batch'end
  local groups,keys={},{};local workVertices,workBytes=0,0
@@ -210,7 +230,7 @@ function M.buildBatches(placements,newMesh,options)
  local first=#out+1
  local ok,err=pcall(function()
   for _,key in ipairs(keys)do local g=groups[key]
-   for partIndex,p in ipairs(g.parts)do
+   for partIndex,p in ipairs(g.parts)do if not p.lightingOnly then
     local part={modelId=g.id,part=partIndex,name=p.name,material=p.material,opacity=p.opacity,alphaMode=p.alphaMode,role=p.role,count=#g.positions,diffuse=p.diffuse};out[#out+1]=part
     local l,n,b,r,t,f=math.huge,math.huge,math.huge,-math.huge,-math.huge,-math.huge
     for _,v in ipairs(p.vertices)do
@@ -235,7 +255,7 @@ function M.buildBatches(placements,newMesh,options)
      part.mesh=assert(newMesh(verts,indices,p.format),'scenery merged upload failed');part.mesh:setTexture(part.image)
     end
     Budget.check()
-   end
+   end end
   end
  end)
  if not ok then
