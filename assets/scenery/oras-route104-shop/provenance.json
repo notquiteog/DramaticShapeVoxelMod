@@ -47,9 +47,9 @@
   ],
   "authoredCompletion": {
     "sourceTriangles": 1509,
-    "excludedPlantFlowerTriangles": 208,
+    "hd2dSourceTriangles": 208,
     "authoredTriangles": 28,
-    "notes": "Original architectural triangles/UVs/RGB retained, including rigid flower-shaped sign. All19 living leaf/flower components excluded; native HD2D flowers remain engine-owned. Rear wall, main floor/ceiling and planter caps close the incomplete source shell inside its existing footprint."
+    "notes": "Original architectural triangles/UVs/RGB retained, including rigid flower-shaped sign. All19 living leaf/flower components stay separate as flat HD2D cards; native field flowers remain engine-owned. Rear wall, main floor/ceiling and planter caps close the incomplete source shell inside its existing footprint."
   },
   "textures": {
     "r104_dif02.png": {
@@ -108,6 +108,14 @@
       ]
     }
   },
+  "hd2dFlowers": {
+    "cards": 19,
+    "sourceTriangles": 208,
+    "projectionPitchDegrees": 35,
+    "sourceUvRgbRetained": true,
+    "sourceTexture": "r104_dif03.png",
+    "placement": "Flat source cards rotate by the existing native cylindrical billboard shader; card anchors clamp by their full yaw radius inside the same96x48blocked rectangle. Architecture and door fit remain unchanged."
+  },
   "nativeAdaptation": {
     "unadaptedBounds": [
       -0.49999999999999994,
@@ -131,7 +139,7 @@
   },
   "processing": [
     "Evaluated original static hierarchy, Z_UP conversion and asset unit using shared DAE converter.",
-    "Selected original shop walls, curved roof, awning, architectural flower-emblem sign, windows, empty pot/stool and masonry planter. Excluded all19 live leaf/flower components, terrain, water, trees and unrelated route props.",
+    "Selected original shop walls, curved roof, awning, architectural flower-emblem sign, windows, empty pot/stool and masonry planter. Separated all19 live leaf/flower components into flat HD2D cards; excluded terrain, water, trees and unrelated route props.",
     "Preserved1509 selected source triangles, original UVs, RGB and PNG bytes; uniform XYZ normalization only."
   ],
   "nativePlacement": "R/S/E Route104 Pretty Petal Flower Shop only. Native6x4 drawing at3,15; body16..18. Door remains5,18. Entire original building fits inside96x48blocked rectangle, omitting rear-left walkable drawing cell. Native collisions/warps/HD2D flowers never change."

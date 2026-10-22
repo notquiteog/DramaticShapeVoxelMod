@@ -8,7 +8,7 @@ archive=Path(sys.argv[1]);root=Path(__file__).resolve().parents[1]
 with zipfile.ZipFile(archive)as z,tempfile.TemporaryDirectory()as tmp:
  source=I.extract(z.read(I.SOURCE));saved=copy.deepcopy(source);added,completion=I.complete(source)
  assert source==saved and [len(p['vertices'])//3 for p in source]==[450,579,20,424,36]
- assert completion['excludedPlantFlowerTriangles']==208 and completion['authoredTriangles']==28
+ assert completion['hd2dSourceTriangles']==208 and completion['authoredTriangles']==28
  # Only the original striped awning remains on the flower/leaf atlas.
  assert all(v[4]<.5 for v in source[2]['vertices'])
  bounds=I.bounds([v for p in source for v in p['vertices']])
@@ -23,4 +23,10 @@ with zipfile.ZipFile(archive)as z,tempfile.TemporaryDirectory()as tmp:
  model=data[I.MODEL];assert len(model['parts'])==7 and min(v[1]for p in model['parts']for v in p['vertices'])==0
  assert sum(p['triangles']for p in model['parts'])==1537
  assert report['nativeAdaptation']['shortenedBySourceUnits']==8
-print('PASS deterministic shop selection/closures,1509 unchanged architectural triangles,208 excluded livingplant triangles, original PNG bytes and explicit bay adaptation metadata')
+ assert len(model['hd2dCards'])==19 and sum(len(c['indices'])//3 for c in model['hd2dCards'])==208
+ selected,cards=I.extract(z.read(I.SOURCE),True)
+ for original,card in zip(cards,model['hd2dCards']):
+  assert len(set(v[2]for v in card['vertices']))==1,'HD2D source card is not flat'
+  assert [(card['vertices'][n-1][3:]+card['colors'][n-1])for n in card['indices']]==[v[3:]for v in original]
+ assert report['hd2dFlowers']['sourceUvRgbRetained']
+print('PASS deterministic shop selection/closures,1509 unchanged architectural triangles,208 separate flatHD2D livingplant triangles, original PNG bytes and explicit bay adaptation metadata')
