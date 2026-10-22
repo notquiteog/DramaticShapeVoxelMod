@@ -1,6 +1,7 @@
 -- Independently reviewed Ruby/Sapphire source families. Do not dispatch the
 -- entire Emerald catalogue: several identical IDs draw different objects.
 local V=...
+local Fences=V and V.require('Gen3FenceFamilies')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3FenceFamilies.lua')
 local M={recipes={}}
 local BoundaryProps=V and V.require('Gen3BoundaryProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3BoundaryProps.lua')
 local EarlyProps=V and V.require('Gen3EarlyProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3EarlyProps.lua')
@@ -181,6 +182,7 @@ function M.shape(primary,secondary,mid,behavior,collision,emerald)
  return own
 end
 function M.ownShape(primary,secondary,mid,behavior,collision)
+ local fence=Fences.shape(primary,secondary,mid,behavior,collision);if fence then return fence end
  local prop=EarlyProps.shape(primary,secondary,mid,collision,'ruby');if prop then return prop end
  local boundary=BoundaryProps.hoenn(primary,secondary,mid,collision);if boundary then return boundary end
  if primary=='general' then
