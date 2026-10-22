@@ -1,0 +1,187 @@
+{
+  "asset": 293549,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/293549/",
+  "title": "Pokémon Center (standard)",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "author": "Cheesy Mac n Cheese",
+  "submitted": "2015-08-23",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "f1609b7494d56c65c89b82b8cb2b81ff9eae6ee6fc677e60b2f2966a6b481fe2",
+  "sourceFile": "Pokémon Center/Pokémon Center.obj",
+  "sourceModelSha256": "da7fea43e63b136916568847c2e650fde4bd9a9519665e9b3a1a44ce357ccf37",
+  "sourceMaterialSha256": "9245fd01889ce99ac9c93352316c9b2f8adcb837682302ddbfc2a64e4777e1d2",
+  "containerRepairs": [
+    {
+      "centralName": "Pokémon Center/gs_pc_a.png",
+      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f67735f70635f612e706e67",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center/gs_pc_a_.png",
+      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f67735f70635f615f2e706e67",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center/gs_pc_b.png",
+      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f67735f70635f622e706e67",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center/h_kage.png",
+      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f685f6b6167652e706e67",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center/Pokémon Center.mtl",
+      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f506f6b2c6d6f6e2043656e7465722e6d746c",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center/Pokémon Center.obj",
+      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f506f6b2c6d6f6e2043656e7465722e6f626a",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center (Violet City and Ecruteak City)/gs_pc_a.png",
+      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f67735f70635f612e706e67",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center (Violet City and Ecruteak City)/gs_pc_a_.png",
+      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f67735f70635f615f2e706e67",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center (Violet City and Ecruteak City)/gs_pc_b.png",
+      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f67735f70635f622e706e67",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center (Violet City and Ecruteak City)/h_kage.png",
+      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f685f6b6167652e706e67",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center (Violet City and Ecruteak City)/Pokémon Center (Ecruteak City).mtl",
+      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f506f6b826d6f6e2043656e7465722028456372757465616b2043697479292e6d746c",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    },
+    {
+      "centralName": "Pokémon Center (Violet City and Ecruteak City)/Pokémon Center (Ecruteak City).obj",
+      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f506f6b826d6f6e2043656e7465722028456372757465616b2043697479292e6f626a",
+      "repair": "Central-directory name retained; compressed stream and CRC verified."
+    }
+  ],
+  "closure": "Authored stepped rear wall follows original outer wall/partition ends; rear soffit joins existing roof; thin closed foundation0.05below source shadow datum. Original front/door recess/roof retained.",
+  "sourceRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -42.0,
+      1.45,
+      -32.0,
+      48.0,
+      60.0,
+      36.98828
+    ],
+    "sourceOrigin": [
+      3.0,
+      1.45,
+      2.4941400000000016
+    ],
+    "sourceUnitSpan": 90.0,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.38326822222222223,
+      0.5,
+      0.6505555555555556,
+      0.38326822222222223
+    ]
+  },
+  "originalBounds": [
+    -42.0,
+    1.5,
+    -32.0,
+    48.0,
+    60.0,
+    36.98828
+  ],
+  "textures": {
+    "gs_pc_b.png": {
+      "sha256": "f2a58b0694fb5403dedba39205970c8924611fa65c94fba84749b1c78782ad30",
+      "bytes": 188
+    },
+    "h_kage.png": {
+      "sha256": "67db103a7b625b50c0ba0c424fd76a6ddeac3b76590b07aa37521a1a9dfde45f",
+      "bytes": 164
+    },
+    "gs_pc_a_.png": {
+      "sha256": "90b4e7ff7c62eeb653498083f85b043da1235b2a7f4f1eecf3499a0d337b0a09",
+      "bytes": 699
+    },
+    "gs_pc_a.png": {
+      "sha256": "90b4e7ff7c62eeb653498083f85b043da1235b2a7f4f1eecf3499a0d337b0a09",
+      "bytes": 699
+    }
+  },
+  "originalTriangles": 256,
+  "processedTriangles": 324,
+  "parts": [
+    {
+      "name": "polygon0",
+      "material": "gs_pc_b",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 12
+    },
+    {
+      "name": "polygon1",
+      "material": "h_kage",
+      "role": "ground_shadow",
+      "opacity": 0.2903226,
+      "authored": false,
+      "triangles": 16
+    },
+    {
+      "name": "polygon2",
+      "material": "gs_pc_a_",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 12
+    },
+    {
+      "name": "polygon3",
+      "material": "gs_pc_a",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 216
+    },
+    {
+      "name": "authored_stepped_rear_wall",
+      "material": "gs_pc_a",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 24
+    },
+    {
+      "name": "authored_rear_roof_soffit",
+      "material": "gs_pc_a",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 10
+    },
+    {
+      "name": "authored_closed_foundation",
+      "material": "gs_pc_a",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 34
+    }
+  ]
+}
