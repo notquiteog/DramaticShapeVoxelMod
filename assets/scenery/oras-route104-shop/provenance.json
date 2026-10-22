@@ -1,0 +1,138 @@
+{
+  "asset": 364272,
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/364272/",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire",
+  "uploadedBy": "MasterPengo",
+  "submitted": "2025-06-29",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "0d849831180a5bf9484efff71e8947d420558fb6019417cfebb124e673a9257b",
+  "sourceModel": "world04_02_06.dae",
+  "sourceModelSha256": "219b452e7850410640f8ece11e85f1219e27905a9cb5573b60ce2dcc858dd38f",
+  "geometrySelection": {
+    "_0_0-mesh": "r104_dif02.png",
+    "_1_0-mesh": "r104_dif01.png",
+    "_2_0-mesh": "r104_dif03.png",
+    "_3_0-mesh": "r104_dif04.png",
+    "_4_0-mesh": "chip_mado_a_1.png"
+  },
+  "selectedSourceBounds": [
+    58.9673,
+    0.4999199135239079,
+    91.8000100814692,
+    180.4327,
+    76.4499847505944,
+    176.6189022598283
+  ],
+  "sourceBounds": [
+    58.9673,
+    0.4999199135239079,
+    91.8000100814692,
+    180.4327,
+    76.4499847505944,
+    176.6189022598283
+  ],
+  "sourceOrigin": [
+    119.7,
+    0.4999199135239079,
+    134.20945617064876
+  ],
+  "sourceUnitSpan": 121.46540000000002,
+  "bounds": [
+    -0.49999999999999994,
+    0.0,
+    -0.349148367264913,
+    0.5,
+    0.6252814779934901,
+    0.3491483672649128
+  ],
+  "authoredCompletion": {
+    "sourceTriangles": 1509,
+    "excludedPlantFlowerTriangles": 208,
+    "authoredTriangles": 28,
+    "notes": "Original architectural triangles/UVs/RGB retained, including rigid flower-shaped sign. All19 living leaf/flower components excluded; native HD2D flowers remain engine-owned. Rear wall, main floor/ceiling and planter caps close the incomplete source shell inside its existing footprint."
+  },
+  "textures": {
+    "r104_dif02.png": {
+      "sha256": "bba126f98032f50420360ac582d42ac8f2b82ec7961638e64607a705956fc2ac",
+      "size": [
+        128,
+        128
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    },
+    "r104_dif01.png": {
+      "sha256": "89a895ca4cc9688662f35f398d15e75cd78d0d24066391282d204bae7cd7b6bc",
+      "size": [
+        256,
+        128
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    },
+    "r104_dif03.png": {
+      "sha256": "d3310aee8dcb13abc3cc5126bba3134d3e04d828f66f9647954cb8859e08b0c7",
+      "size": [
+        128,
+        128
+      ],
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    "r104_dif04.png": {
+      "sha256": "8da19cbfdb90e06403299a89caf9fe0284113b7219682343e0a258199b7a3b62",
+      "size": [
+        64,
+        64
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    },
+    "chip_mado_a_1.png": {
+      "sha256": "77da71d60cc4e4a91287d25b52fa1880b9d32cf22ea53a8fb454806bc7aa9144",
+      "size": [
+        128,
+        64
+      ],
+      "alphaRange": [
+        255,
+        255
+      ]
+    }
+  },
+  "nativeAdaptation": {
+    "unadaptedBounds": [
+      -0.49999999999999994,
+      0.0,
+      -0.349148367264913,
+      0.5,
+      0.6252814779934901,
+      0.3491483672649128
+    ],
+    "plainSideWallBaySourceZ": [
+      120.4,
+      136.7
+    ],
+    "shortenedBySourceUnits": 8,
+    "rigidSourceSpans": [
+      "rear z<=120.4 translates+8",
+      "front z>=136.7 unchanged"
+    ],
+    "uvsUnchanged": true,
+    "note": "Only the plain central side-wall/roof span changes depth; side window assemblies and front entrance/sign/awning/planter/pot/stool remain rigid."
+  },
+  "processing": [
+    "Evaluated original static hierarchy, Z_UP conversion and asset unit using shared DAE converter.",
+    "Selected original shop walls, curved roof, awning, architectural flower-emblem sign, windows, empty pot/stool and masonry planter. Excluded all19 live leaf/flower components, terrain, water, trees and unrelated route props.",
+    "Preserved1509 selected source triangles, original UVs, RGB and PNG bytes; uniform XYZ normalization only."
+  ],
+  "nativePlacement": "R/S/E Route104 Pretty Petal Flower Shop only. Native6x4 drawing at3,15; body16..18. Door remains5,18. Entire original building fits inside96x48blocked rectangle, omitting rear-left walkable drawing cell. Native collisions/warps/HD2D flowers never change."
+}
