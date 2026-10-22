@@ -1,0 +1,145 @@
+{
+  "asset": 592881,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592881/",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "title": "Viridian City, ordinary house",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "969737481ce8e8e55887ffdd612f5ff96b8a19e8430f7433078d24ef444b918e",
+  "sourceModelSha256": "704ce4c6e39d630cbb2e55036ef3755c1ee482cb7156fd3ca4868bb80fb01433",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Viridian City/Viridian City.dae",
+  "geometry": "to_h01_001-mesh",
+  "doorGeometry": "ko_door1_001-mesh",
+  "doorOffset": [
+    2,
+    -1.125,
+    11.9395
+  ],
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -34.0,
+      0.95,
+      -26.0,
+      40.0,
+      66.5,
+      28.0
+    ],
+    "sourceOrigin": [
+      3.0,
+      0.95,
+      1.0
+    ],
+    "sourceUnitSpan": 74.0,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.36486486486486486,
+      0.5,
+      0.8858108108108108,
+      0.36486486486486486
+    ]
+  },
+  "originalBounds": [
+    -34.0,
+    1.0,
+    -26.0,
+    40.0,
+    66.5,
+    28.0
+  ],
+  "originalTriangles": 240,
+  "processedTriangles": 274,
+  "authoredClosure": "Measured rear wall, side gable cuts, roof soffit and foundation0.05below original shadow. Source roof/chimney/entrance/fixtures unchanged.",
+  "textures": {
+    "h_mado.png": {
+      "sha256": "ddf8daca4b57e903f962c663f89f06be6d43ca5f29459d0094b4b8140514601f",
+      "bytes": 187
+    },
+    "h_kage.png": {
+      "sha256": "ae1cd3dbd43a0a6923f9e7004703abf3665e3b3e33062fae531d9617ec3a9698",
+      "bytes": 84
+    },
+    "to_h01.png": {
+      "sha256": "7534ba57f0bc57f776dbcc103d361128c3752a0c96a64bd8cd7228b03e6a267d",
+      "bytes": 475
+    },
+    "ko_door1.png": {
+      "sha256": "d3e617d836dd39e6ddf866156702114c039b2da449c9d0c40e498a7139c49090",
+      "bytes": 302
+    }
+  },
+  "parts": [
+    {
+      "name": "to_h01_001-mesh:mado_004-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 4
+    },
+    {
+      "name": "to_h01_001-mesh:kage_106-material",
+      "role": "ground_shadow",
+      "opacity": 0.2903226,
+      "authored": false,
+      "triangles": 4
+    },
+    {
+      "name": "to_h01_001-mesh:lambert2_184-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 60
+    },
+    {
+      "name": "to_h01_001-mesh:lambert3_057-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 164
+    },
+    {
+      "name": "ko_door1_001-mesh:wk_door2_lm1_001-material",
+      "role": "source_door",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "authored_rear_siding",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_side_gables",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 16
+    },
+    {
+      "name": "authored_closed_roof_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_roof_return",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 10
+    }
+  ]
+}
