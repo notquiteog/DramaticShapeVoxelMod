@@ -15,5 +15,29 @@
     "height": 10.25,
     "sourcePostScale": 0.5,
     "processing": "Uniform source posts at native centers4/12; only straight rail span length fits each native repeat; original cross sections/UVs retained. No source shadow sheets or baked vertex RGB."
+  },
+  "nativeGroundProof": {
+    "editions": [
+      "ruby",
+      "sapphire",
+      "emerald"
+    ],
+    "general149FirstFourEntries": [
+      8194,
+      8195,
+      8195,
+      8194
+    ],
+    "general1AllEntries": [
+      8194,
+      8195,
+      8195,
+      8194,
+      0,
+      0,
+      0,
+      0
+    ],
+    "processing": "149 first four tile entries are byte-identical to clean General1, in all three imported native caches. Runtime ts.image can retain the middle fence art: use proven clean1, never nearest-neighbor inference."
   }
 }
