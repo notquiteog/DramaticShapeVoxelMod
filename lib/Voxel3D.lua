@@ -326,6 +326,8 @@ local SHADER = [[
   uniform float surfaceDetail; // optional native scenery grain, never UI/actors
   uniform float lightOn;      // 1 = scene lighting, 0 = texture true-colour
   uniform float weatherHaze;
+  uniform float sceneWeatherFog;
+  uniform vec2 sceneWeatherOrigin;
   uniform vec3 weatherHazeColor;
   uniform vec3 weatherMul;
   uniform vec3 weatherAdd;
@@ -745,6 +747,9 @@ float gardenRipple(vec2 q, float t) {
     // seam can mottle it.
     rgb = clamp(rgb * weatherMul + weatherAdd, 0.0, 1.0);
     rgb = mix(rgb, weatherHazeColor, min(0.28, 1.0-exp(-weatherHaze*weatherDistance)));
+    // Clear foreground, continuous distance falloff; independent of resolution.
+    float mist = min(0.38, 1.0-exp(-sceneWeatherFog*max(0.0,length((vFoliageRay+eye).xz-sceneWeatherOrigin)-80.0)));
+    rgb = mix(rgb, vec3(0.70,0.77,0.79), mist);
     rgb = mix(rgb, ghostColor, ghost);
     return vec4(rgb, sceneryBlend > 0.5 ? p.a : 1.0) * color;
   }
@@ -1504,6 +1509,8 @@ function Voxel3D.beginScene(w, h, cx, cy, vw, vh, sky, slot, modelShadow, borrow
   pcall(sh.send, sh, "weatherHazeColor", weather.haze and weather.haze.color or {0,0,0})
   pcall(sh.send, sh, "weatherMul", weather.tint and weather.tint.multiplier or {1,1,1})
   pcall(sh.send, sh, "weatherAdd", weather.tint and weather.tint.additive or {0,0,0})
+  pcall(sh.send, sh, "sceneWeatherFog", borrowed and 0 or (Voxel3D.weatherFog or 0))
+  pcall(sh.send, sh, "sceneWeatherOrigin", {cx,cy})
   local fog = Voxel3D.fog
   pcall(sh.send, sh, "fogColor", (fog and fog.color) or { 0, 0, 0 })
   pcall(sh.send, sh, "fogBounds", (fog and fog.bounds) or {0,0,0,0})

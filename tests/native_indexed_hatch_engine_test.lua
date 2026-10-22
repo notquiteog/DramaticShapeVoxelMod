@@ -1,8 +1,12 @@
 local engine=assert(os.getenv('ASTRA_ENGINE'),'ASTRA_ENGINE required')
 local Vram=assert(loadfile(engine..'/src/ui/game3/rse/contest_vram.lua'))()
 local Palette=assert(loadfile(engine..'/src/core/game3/gba_palette.lua'))()
-local indexed=Vram.indexedPic;local selectedPalette
+local indexed=Vram.indexedPic;local selectedPalette;local selectedBytes
 Vram.indexedPic=function(rgba)
+ selectedBytes=rgba
+ local colors={}
+ for i=1,#rgba,4 do local r,g,b,a=rgba:byte(i,i+3);if a~=0 then colors[r..","..g..","..b]=true end end
+ local count=0;for _ in pairs(colors)do count=count+1 end;assert(count<=15,"quantization exceeded native palette")
  local sheet,pal=indexed(rgba,true);selectedPalette=pal;return sheet,pal
 end
 package.loaded['src.ui.game3.rse.contest_vram']=Vram
@@ -32,5 +36,11 @@ for _,target in ipairs({0,32767,31+15*32+7*1024})do
  end
 end
 assert(selectedPalette[2]==31 and selectedPalette[3]==31*32 and selectedPalette[4]==31*1024,'real decoder preserved distinct opaque colors')
+image={}
+data.getPixel=function(_,x,y)if x==0 then return 0,0,0,0 end;return (x%32)/31,(y%32)/31,((x+y)%32)/31,1 end
+H.Scene.draw(self)
+assert(selectedBytes:byte(4)==0 and selectedBytes:byte(8)==255,'rich frame preserves transparent footprint')
+local first=selectedBytes;image={};H.Scene.draw(self)
+assert(selectedBytes==first,'rich frame palette reduction must be deterministic')
 undo()
 print('PASS '..checks..' actual indexed-decoder/native-palette combinations')

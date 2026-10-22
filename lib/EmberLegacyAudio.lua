@@ -15,7 +15,8 @@ local function masterVolume()
   local ok,value=pcall(read)
   if ok and tonumber(value)then return math.max(0,math.min(1,value))end
  end
- local options=owner and owner.game and owner.game.save and owner.game.save.options
+ local game=owner and owner.game
+ local options=game and (game.options or (game.save and game.save.options))
  return math.max(0,math.min(7,tonumber(options and options.sfxVol)or 7))/7
 end
 local function release(x) if x and x.release then pcall(x.release,x) end end

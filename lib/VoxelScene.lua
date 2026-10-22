@@ -1500,6 +1500,7 @@ function VoxelScene.render(state, w, h, vw, vh, paletteFor)
                 and ForestAtmos.frame(state.map) or nil
   Voxel3D.fog = V.require("NativeAtmosphere").fog(state.map) or (atmos and (atmos.roamFog or atmos.fog)) or V.require("Gen2Boundary").haze(state,cx,cy,VoxelScene.skyColor(state.map,1))
 
+  Voxel3D.weatherFog = V.require("Weather").fogStrength(state.map)
   renderGeneration = renderGeneration + 1
   local generation = renderGeneration
 

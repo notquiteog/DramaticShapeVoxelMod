@@ -27,6 +27,7 @@ for i=1,40 do a:update(.1,nil,0,0,false,1)end
 assert(not sources['amb-cave.mp3'].playing and a.volume==0)
 sound='mid';for i=1,40 do a:update(.1,cave,0,0,true,.5)end
 assert(math.abs(a.volume-.31)<.0001)
+a:update(.1,cave,0,0,true,0);assert(a.volume==0 and not sources['amb-cave.mp3'].playing and not sources['sfx-cavestep.mp3'].playing,'mute must stop ambience and footsteps immediately')
 sound='off';for i=1,40 do a:update(.1,cave,16,0,true,1)end
 assert(a.volume==0 and steps==1)
 a:clear();assert(sources['amb-cave.mp3'].released)

@@ -25,3 +25,13 @@ assert(paints>0,'weather drew nothing')
 local old=paints;W.apply(canvas,640,360,maps[1],1,'clear');eq(paints,old,'clear has no effect cost')
 local clock=W.clock;W.update(.25);eq(W.clock,clock+.25,'single update clock')
 print('PASS shared weather parity ('..count..' checks)')
+
+local before=paints
+W.apply(canvas,640,360,maps[1],1,'fog')
+eq(paints,before,'fog must never paint a screen-space veil')
+setting.get=function()return 'fog'end
+assert(W.fogStrength(maps[1])>0,'outdoor mist missing')
+eq(W.fogStrength({id='LAB',def={environment='INDOOR'}}),0,'mist leaks indoors')
+setting.get=function()return 'clear'end
+eq(W.fogStrength(maps[1]),0,'clear daylight adds fog')
+print('PASS depth-only fog, clear daylight and interior isolation')

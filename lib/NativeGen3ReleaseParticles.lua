@@ -1,12 +1,17 @@
--- Original BallOpen particles have no per-particle owner. Only an exclusive
--- public start epoch proves ownership; overlapping or anonymous starts retain
--- the existing native projection until the original subsystem becomes idle.
+-- Prefer explicit public per-particle ownership when an engine supplies it.
+-- Older BallOpen versions expose only anonymous particles: an exclusive public
+-- start epoch is safe, overlapping/anonymous starts retain native projection.
 local V=...
 local M={}
 local drawOwner,epoch
+local explicitOwner,insideDraw
 local function pack(...)return{n=select('#',...),...}end
-function M.clear()drawOwner,epoch=nil,nil end
+function M.clear()drawOwner,epoch,insideDraw=nil,nil,nil end
 function M.owner(st)
+ if insideDraw and explicitOwner then
+  local owner=explicitOwner()
+  if owner~=nil then return owner and owner.state==st and owner.id or nil end
+ end
  if drawOwner and drawOwner.state==st then return drawOwner.id end
 end
 -- Preserve the complete native particle picture around the original actor
@@ -33,6 +38,17 @@ function M.install()
    and e.actor.mon==e.mon
  end
  local function safeValid(e)local ok,value=pcall(valid,e);return ok and value end
+ -- Optional engine capability: queried during each particle's graphics draw.
+ -- The engine supplies original state/actor/mon identities, not inferred XY.
+ -- Absent or anonymous ownership retains the conservative exclusive epoch.
+ explicitOwner=function()
+  if type(Ball.currentParticleOwner)~='function'then return end
+  local ok,e=pcall(Ball.currentParticleOwner)
+  if ok and e==nil then return end
+  if ok and type(e)=='table'and type(e.id)=='number'and e.id%1==0
+   and e.id>=0 and e.id<=3 and safeValid(e)then return e end
+  return false -- Invalid explicit ownership must not acquire the epoch owner.
+ end
  local function wrap(key,fn)
   local original=Ball[key]
   if type(original)~='function'then return false end
@@ -67,13 +83,14 @@ function M.install()
   return unpack(result,1,result.n)
  end)
  wrap('draw',function(original,...)
-  local previous=drawOwner;drawOwner=safeValid(epoch)and epoch or nil
-  local result=pack(pcall(original,...));drawOwner=previous
+  local previous,previousInside=drawOwner,insideDraw;drawOwner=safeValid(epoch)and epoch or nil
+  insideDraw=true
+  local result=pack(pcall(original,...));drawOwner,insideDraw=previous,previousInside
   if not result[1]then error(result[2],0)end
   return unpack(result,2,result.n)
  end)
  return function()
-  M.clear()
+  M.clear();explicitOwner=nil
   for key,original in pairs(originals)do if Ball[key]==wrappers[key]then Ball[key]=original end end
  end
 end

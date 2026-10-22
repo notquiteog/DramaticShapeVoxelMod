@@ -24,3 +24,9 @@ level=0;A.sync(battle);assert(voices[#voices].volume==0,'live native master igno
 mode='ORIGINAL';assert(not A.sync(battle));assert(not voices[#voices].playing)
 mode='EMBER';exists=false;A.clear();A.beginCapture(battle);assert(not A.capture('throw'),'missing asset claimed playback')
 print('PASS shared capture audio: Gen1 master unchanged, native master and OFF live, missing assets silent')
+
+exists=true;A.clear()
+local gba={game={options={sfxVol=2},save={options={sfxVol=7}}}}
+A.beginCapture(gba);assert(A.capture('throw'));assert(math.abs(voices[#voices].volume-.75*2/7)<1e-8,'native options must override stale save options')
+gba.game.options.sfxVol=0;A.sync(gba);assert(voices[#voices].volume==0,'Gen3 mute ignored')
+print('PASS native options and live mute without a registered master provider')

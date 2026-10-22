@@ -48,11 +48,14 @@ for _,m in ipairs({{species=1025,egg=true},{species=1025,form=1},{species=1327},
  self.mon=m;H.Scene.draw(self);check(during.sheet==sheet,'special native pictures retain original')
 end
 self.mon={species=1025,shiny=false}
-for _,m in ipairs({'large','alpha','colors'})do
+for _,m in ipairs({'large','alpha'})do
  mode=m;image={};local count=decodeCalls;H.Scene.draw(self)
  check(during.sheet==sheet and decodeCalls==count,'unrepresentable selected frame stays native: '..m)
  local r=reads;H.Scene.draw(self);check(reads==r,'unsupported frame is not rescanned each draw')
 end
+mode='colors';image={};local count=decodeCalls;H.Scene.draw(self)
+check(during.sheet==selectedSheet and decodeCalls==count+1,'rich RGB555 artwork is quantized through native OAM')
+local r=reads;H.Scene.draw(self);check(reads==r,'rich frame reduction is cached')
 mode='normal';image={};nativeShown[2]={sheet={},paletteNum=2};H.Scene.draw(self)
 check(during.sheet==sheet,'shared palette bank cannot recolor other sprites');nativeShown[2]=nil
 entry.sheet={};H.Scene.draw(self);check(during.sheet==entry.sheet,'not-yet-visible native front retains reveal timing');entry.sheet=sheet

@@ -25,7 +25,10 @@ function M.new()
   local active=enabled and V.require('NativeAtmosphere').kind(map)=='cave' and volumes[sound]~=nil
   master=math.max(0,math.min(1,tonumber(master)or 1))
   local target=active and volumes[sound]*master or 0
-  if self.volume<target then self.volume=math.min(target,self.volume+.30*dt)
+  if master==0 then
+   self.volume=0
+   local step=self.sources['sfx-cavestep.mp3'];if step then step:stop()end
+  elseif self.volume<target then self.volume=math.min(target,self.volume+.30*dt)
   else self.volume=math.max(target,self.volume-.55*dt)end
   local bed=self.sources['amb-cave.mp3']
   if target>0 then bed=self:source('amb-cave.mp3',true)end
@@ -67,7 +70,7 @@ function M.install(gen,cameraEnabled)
    local top=game.stack and game.stack:top()
    enabled=game.phase=='play' and not top and map~=nil
   end
-  local opts=game.save and game.save.options or {}
+  local opts=game.options or (game.save and game.save.options) or {}
   audio:update(dt,map,x,y,enabled and cameraEnabled(),math.max(0,math.min(7,tonumber(opts.sfxVol)or 7))/7)
   return result
  end)

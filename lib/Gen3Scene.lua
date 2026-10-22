@@ -1292,6 +1292,7 @@ function M.draw(game,vw,vh,cam)
  local bounds=M.distance.bounds
  R.fog=not indoor and Distance.haze(background,M.fadeExtent,{cx,0,cz},
   {bounds[1]*16,bounds[2]*16,(bounds[3]+1)*16,(bounds[4]+1)*16})or nil
+ R.weatherFog=V.require("Weather").fogStrength({id=Map.current,def={outdoor=not indoor}})
  R.fog=atmosphere.fog(atmosphereMap) or R.fog
  R.glassMask=nil;R.glassNight=not indoor and V.require('DayNight').windowLight() or 0
  R.buildingLightField=not indoor and cache.lightField or nil

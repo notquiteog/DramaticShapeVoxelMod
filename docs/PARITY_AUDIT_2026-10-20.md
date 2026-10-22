@@ -1,5 +1,8 @@
 # Remaining feature/options parity — 2026-10-20
 
+Update: see [2026-10-22 batch](PARITY_BATCH_2026-10-22.md) for richer RS hatch art,
+release ownership capability and semantic HUD color. Counts below are historical.
+
 Scope: R/B/Y, G/S/C, FR/LG/Ru/Sa/E on official0.3.91. This supersedes the
 unfinished animation/release entries in the2026-10-17 audit, not its historical
 runtime evidence. No model/art work is included here.
