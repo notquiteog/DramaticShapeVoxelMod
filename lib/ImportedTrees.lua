@@ -15,45 +15,61 @@ end
 local function blocked(c)
  return c and(c.collision==7 or c.collision==nil and c.boundary=='forest')
 end
-local function fitPlacement(bounds,y,rotation,source,model)
+local function fitPlacement(bounds,y,rotation,source,model,policy)
  if not(enabled()and type(bounds)=='table'and #bounds==4 and finite(y))then return end
  for _,n in ipairs(bounds)do if not finite(n)then return end end
  local w,d=bounds[3]-bounds[1],bounds[4]-bounds[2]
  -- One-cell fragments from a cropped border retain their original solid
  -- family instead of shrinking a mature broadleaf into a miniature bush.
- if w<23.9 or d<15.9 or math.max(w/d,d/w)>2.1 then return end
+ policy=policy or{}
+ if w<(policy.minWidth or 23.9)or d<(policy.minDepth or 15.9)or math.max(w/d,d/w)>2.1 then return end
  model=model or M.model
  local Models=V.require('SceneryModels');if not Models.info(model)then return end
  local opts={width=w,depth=d,padding=.25,rotation=rotation or 0}
  local fitted=Models.fit(model,opts);if not fitted then return end
- if fitted.bounds[5]<20 then return end
+ if fitted.bounds[5]<(policy.minHeight or 20)then return end
  return{model=model,x=bounds[1],y=y,z=bounds[2],fit=opts,source=source,
   treeInfo={height=fitted.bounds[5],canopyBottom=fitted.anchors.canopyBottom and fitted.anchors.canopyBottom[2]or nil,
    bounds={bounds[1]+fitted.bounds[1],bounds[2]+fitted.bounds[3],bounds[1]+fitted.bounds[4],bounds[2]+fitted.bounds[6]}}}
 end
-function M.gen3Placement(c,cells,options)
+local function ownerBounds(c,cells,options)
  local s=c and c.shape
  local def=c and(c.def or c.region and c.region.def)
  local id=def and def.id or c and c.region and c.region.mapId or options and options.mapId or ''
  if not(s and s.kind=='tree'and s.root and not(c.prop or c.civic or c.stageHidden)
   and blocked(c)and not customForest(id))then return end
- -- Specialized volcanic/golden/sapling art has no matching imported source.
  if s.treeFamily=='ash'or s.treePalette or s.treeFamily=='sapling'then return end
- local hoenn=options and options.region=='hoenn'or id:match('^EM_')or id:match('^RU_')or id:match('^SA_')
- if not s.importedTreeModel and not hoenn and s.treeFamily~='broad'and s.treeFamily~='round'then return end
  local b=s.treeBounds;if not b then return end
- -- Verify the complete native owner rectangle; corners and projected crowns
- -- cannot borrow a walkable tile just because their center is blocked.
  for y=math.floor(b[2]/16),math.ceil(b[4]/16)-1 do for x=math.floor(b[1]/16),math.ceil(b[3]/16)-1 do
   local q=cells[x..':'..y]
   if not(blocked(q)and q.shape and q.shape.kind=='tree'and not(q.prop or q.civic or q.stageHidden)
    and q.shape.treeBounds==b and math.abs((q.base or 0)-(c.base or 0))<.01)then return end
  end end
- return fitPlacement(b,c.base or 0,(c.cx*17+c.cy*29)%4,c,s.importedTreeModel)
+ return b,options and options.region=='hoenn'or id:match('^EM_')or id:match('^RU_')or id:match('^SA_')
+end
+function M.gen3Placement(c,cells,options)
+ local b,hoenn=ownerBounds(c,cells,options);if not b then return end
+ local s=c.shape;local model=s.importedTreeModel;local policy
+ if not model and not hoenn and c.primary=='general'then
+  model=V.require('Gen3ImportedKantoTrees').select(c,options)
+  if model then
+   local pine=V.require('Gen3ImportedHoennTrees')
+   if not pine.register()then return end
+   policy=pine.policy(model)
+  end
+ end
+ if not model and(hoenn and s.treeFamily=='conifer'or not hoenn and s.treeFamily~='broad'and s.treeFamily~='round')then return end
+ return fitPlacement(b,c.base or 0,(c.cx*17+c.cy*29)%4,c,model,policy)
 end
 function M.gen3Placements(cells,options)
  local list={};if not enabled()then return list end
- for _,c in pairs(cells)do local p=M.gen3Placement(c,cells,options);if p then list[#list+1]=p end end
+ for _,c in pairs(cells)do
+  local b,hoenn=ownerBounds(c,cells,options)
+  if b and hoenn and c.shape.treeFamily=='conifer'and not c.shape.importedTreeModel then
+   local group=V.require('Gen3ImportedHoennTrees').placements(c,cells,options)
+   for _,p in ipairs(group or{})do list[#list+1]=p end
+  else local p=M.gen3Placement(c,cells,options);if p then list[#list+1]=p end end
+ end
  table.sort(list,function(a,b)return a.z==b.z and a.x<b.x or a.z<b.z end)
  return list
 end
