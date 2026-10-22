@@ -4,6 +4,11 @@ local V=...
 local Models=V.require('SceneryModels')
 local M={recipes={}}
 local registered={}
+-- Source closures and original flat h_kage shade both sit at modelY0. Native
+-- lawn also ownsY0: keep the closed underside just below it and the authentic
+-- flat source shade just above it, rather than drawing three coplanar faces.
+local footingDepth=.05
+local flatShadeLift=.001
 local houses={{0x281,0x282,0x282,0x282,0x283},{0x289,0x28a,0x28a,0x28a,0x28b},
  {0x291,0x293,0x292,0x292,0x294},{0x298,0x299,0x29a,0x29b,0x29c},{0x2a0,0x2a3,0x2a2,0x2a1,0x2a4}}
 local lab={{0x2a8,0x2a9,0x2a9,0x2a9,0x2a9,0x2bd,0x2b5},{0x2b0,0x2b1,0x2b1,0x2b1,0x2b1,0x2b3,0x2b4},
@@ -52,17 +57,29 @@ end
 function M.register(id)
  if registered[id]then return true end
  local data=V.require('PalletBuildingData')[id];if not data then return nil,'unknown Pallet model'end
- local ok,err=Models.register(id,data,{read=function(path)return V.mod:read(path)end})
+ local prepared={};for k,v in pairs(data)do prepared[k]=v end;prepared.parts={}
+ for i,p in ipairs(data.parts)do
+  prepared.parts[i]=p
+  local flat=p.role=='source_shading'and p.texture:match('/h_kage%.png$')
+  for _,v in ipairs(p.vertices)do if math.abs(v[2])>1e-8 then flat=false;break end end
+  if flat then
+   local q={};for k,v in pairs(p)do q[k]=v end;q.vertices={}
+   for j,v in ipairs(p.vertices)do q.vertices[j]={unpack(v)};q.vertices[j][2]=v[2]+flatShadeLift end
+   prepared.parts[i]=q
+  end
+ end
+ local ok,err=Models.register(id,prepared,{read=function(path)return V.mod:read(path)end})
  if ok then registered[id]=true end;return ok,err
 end
 function M.build(g,cells,newMesh,parts)
  if not M.eligible(g,cells)then return false end
  local r=g.kantoRecipe;local ok,err=M.register(r.model);if not ok then return false,err end
  local fit={width=g.width*16,depth=64,padding=.25,anchor='door',targetX=r.doorX*16+8,targetZ=49}
- local placement={model=r.model,x=g.cx*16,y=g.groundHeight or 0,z=(g.cy+1)*16,fit=fit}
+ local placement={model=r.model,x=g.cx*16,y=(g.groundHeight or 0)-footingDepth,z=(g.cy+1)*16,fit=fit}
  local result,why=Models.buildBatches({placement},newMesh,{parts=parts})
  if not result then return false,why end
  g.importedKanto=assert(Models.fit(r.model,fit))
+ g.importedKantoY=placement.y
  -- Commit presentation ownership only after every image/mesh is available.
  for y=0,4 do for x=0,g.width-1 do cells[(g.cx+x)..':'..(g.cy+y)].civic=g end end
  return true
@@ -72,7 +89,7 @@ function M.doorSurface(g,tx,ty)
  if not f or tx~=g.cx+r.doorX or ty~=g.cy+4 then return end
  local a=f.anchors.door;local x,z=g.cx*16+a[1],(g.cy+1)*16+a[3]+.025
  local half=10*f.scale/(r.width==7 and 116 or 96);local height=26*f.scale/(r.width==7 and 116 or 96)
- return {w=14,h=16,sourceX=(g.cx+r.doorX)*16+1,sourceY=(g.cy+4)*16,base=g.groundHeight or 0,
+ return {w=14,h=16,sourceX=(g.cx+r.doorX)*16+1,sourceY=(g.cy+4)*16,base=g.importedKantoY or g.groundHeight or 0,
   vertices={{x-half,a[2]+height,z},{x+half,a[2]+height,z},{x+half,a[2],z},{x-half,a[2],z}}}
 end
 return M
