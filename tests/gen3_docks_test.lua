@@ -25,6 +25,9 @@ for _,prefix in ipairs{'RU','SA','EM'}do for _,name in ipairs{'ROUTE104','DEWFOR
  assert(B.prepareDocks(cells)==0,'claimed twice')
  local donor=cells['-1:0'];local n=0
  for k,c in pairs(cells)do if c~=donor then
+  if c.dockShore then
+   assert(not B.replacesTop(c)and not c.bridge and c.shape.kind=='cliff'and c.shape.cap==0x6c,'native land attachment consumed as ocean')
+  else
   assert(B.replacesTop(c));local ts,mid,h=B.water(c,function(w)return w.waterSurface end)
   assert(ts==donor.ts and mid==0x170 and h==-4,'water did not use genuine planned ocean')
   assert(#S.edges(cells,c,function()return -4 end)==0,'soil bank remains on dock')
@@ -50,9 +53,10 @@ for _,prefix in ipairs{'RU','SA','EM'}do for _,name in ipairs{'ROUTE104','DEWFOR
    end end
    for _,v in pairs(edges)do assert(v==2,'open board edge')end
   end
+  end
   n=n+1
  end
- local old=snapshot[k];assert(c.mid==old[1]and c.collision==old[2]and c.floor.layer==old[3]and c.base==old[4]and c.shape==old[5],'native data mutated')
+ local old=snapshot[k];assert(c.mid==old[1]and c.collision==old[2]and c.floor.layer==old[3]and c.base==old[4]and(c.dockShore or c.shape==old[5]),'native data mutated')
  end
  assert(n==count)
 end end
@@ -91,3 +95,17 @@ local c=cells['1:0'];cells['-1:0'].waterSurface=-9
 local _,_,h=D.water(c,function(n)return n.waterSurface end);assert(h==-9)
 cells['-1:0'].waterSurface=6;assert(D.water(c,function(n)return n.waterSurface end)==nil,'water emitted above underside')
 print('PASS open top/bottom gap rays and final planned-water datum refresh')
+
+-- Land beside the ocean under a deck keeps a closed physical bank. This is
+-- independent of the timber geometry and does not turn bridges into soil.
+local water={cx=2,cy=0,shape={kind='water'},waterSurface=-4}
+local land={cx=0,cy=0,base=6,shape={kind='flat'},mid=1}
+local deck={cx=1,cy=0,base=6,shape={kind='flat'},bridge={kind='dock',group={height=6,waterCandidates={water}}}}
+local sea={['0:0']=land,['1:0']=deck,['2:0']=water}
+local edges=S.edges(sea,land,function(c)return c.waterSurface end)
+assert(#edges==1 and edges[1].top==6 and edges[1].bottom==-4 and edges[1].bankDepth==10,'land floats beside dock')
+for _,p in ipairs(edges[1].vertices)do assert(p[1]==16 and(p[2]==6 or p[2]==-4))end
+assert(S.skipRiser(land,deck)and#S.edges(sea,deck,function(c)return c.waterSurface end)==0)
+deck.bridge.kind=nil
+assert(#S.edges(sea,land,function(c)return c.waterSurface end)==0,'ordinary bridge received dock shore policy')
+print('PASS exact land attachment above dock ocean, closed bank and ordinary bridge isolation')

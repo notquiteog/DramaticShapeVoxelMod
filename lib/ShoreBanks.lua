@@ -3,9 +3,10 @@
 -- authoritative. Vertices are absolute world coordinates; do not lift twice.
 local M={}
 local directions={{-1,0},{1,0},{0,-1},{0,1}}
+local function dock(c)return c and c.bridge and c.bridge.kind=='dock'end
 local function wet(c)
  local s=c and c.shape
- return s and(s.kind=='water'or s.kind=='rock'and(s.seaRock or s.wetRock))
+ return dock(c)or s and(s.kind=='water'or s.kind=='rock'and(s.seaRock or s.wetRock))
 end
 function M.skipRiser(c,n)return wet(n)or false end
 function M.material(c)
@@ -18,13 +19,19 @@ function M.edges(cells,c,surface)
  local out={};local x,z=c.cx*16,c.cy*16;local top=c.base or 0
  for _,d in ipairs(directions)do
   local n=cells[(c.cx+d[1])..':'..(c.cy+d[2])]
-  if wet(n)and not n.bridge and not(n.floor and n.floor.underpass)then
-   local bottom=surface(n)
+  if wet(n)and(not n.bridge or dock(n))and not(n.floor and n.floor.underpass)then
+   local bottom
+   if dock(n)then
+    for _,water in ipairs(n.bridge.group.waterCandidates)do
+     local h=surface(water)
+     if type(h)=='number'and h<n.bridge.group.height-2 then bottom=h;break end
+    end
+   else bottom=surface(n)end
    if type(bottom)=='number'and bottom<top-.001 then
     local ax,az=x+(d[1]>0 and 16 or 0),z+(d[2]>0 and 16 or 0)
     local bx,bz=ax+(d[1]==0 and 16 or 0),az+(d[2]==0 and 16 or 0)
     out[#out+1]={vertices={{ax,bottom,az},{bx,bottom,bz},{bx,top,bz},{ax,top,az}},
-     direction=d,top=top,bottom=bottom,land=c,water=n}
+     direction=d,top=top,bottom=bottom,land=c,water=n,bankDepth=dock(n)and top-bottom or nil}
    end
   end
  end

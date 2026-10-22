@@ -4,7 +4,7 @@ local M={}
 local recipes={
  {name='route104',map='ROUTE104',pair='general__rustboro',rows={
   {0x33d,0x26e,0x26e,0x32e},{0x345,0x26d,0x26d,0x336},{0x335,0x276,0x276,0x277}},
-  permissions={{7,0,0,0},{7,0,0,0},{41,41,41,7}},layers={{0,4,4,4},{0,4,4,4},{1,1,1,0}},deck={2,1}},
+  permissions={{7,0,0,0},{7,0,0,0},{41,41,41,7}},layers={{0,4,4,4},{0,4,4,4},{1,1,1,0}},deck={2,1},shore={4,3}},
  {name='dewford',map='DEWFORD_TOWN',pair='general__dewford',rows={{0x228,0x229,0x229},{0x230,0x231,0x231}},
   permissions={{0,0,0},{7,7,7}},layers={{3,3,3},{0,0,0}},deck={1,1}},
 }
@@ -16,7 +16,7 @@ local function map(c)
  if edition=='RU'or edition=='SA'or edition=='EM'then return name end
 end
 local function occupied(c)
- return c.boundary or c.bridge or c.civic or c.prop or c.treeBounds or c.column or c.stairs or c.stageHidden
+ return c.boundary or c.bridge or c.dockShore or c.civic or c.prop or c.treeBounds or c.column or c.stairs or c.stageHidden
 end
 function M.prepare(cells)
  local count=0
@@ -54,7 +54,14 @@ function M.prepare(cells)
    if valid then
     for y,row in ipairs(r.rows)do for x in ipairs(row)do
      local c=cells[key(root.cx+x-1,root.cy+y-1)]
-     c.bridge={kind='dock',group=group,x=x,y=y,material=c.mid,depth=2};count=count+1
+     if r.shore and x==r.shore[1]and y==r.shore[2]then
+      --277 is the blocked land corner, not painted ocean below the deck.
+      -- Retain its real shore volume and the untouched native floor datum.
+      c.dockShore=group
+      local shape={};for k,v in pairs(c.shape)do shape[k]=v end
+      shape.kind='cliff';shape.height=8;shape.ground=0x6c;shape.cap=0x6c;shape.side=0x71;c.shape=shape
+     else c.bridge={kind='dock',group=group,x=x,y=y,material=c.mid,depth=2}end
+     count=count+1
     end end
    end
   end
