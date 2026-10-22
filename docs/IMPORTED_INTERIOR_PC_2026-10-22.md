@@ -79,3 +79,8 @@ sequence. Bedroom/lab machines and unrelated uses of these IDs are not aliased.
 The all-five edition extraction/fallback regression and imported eligibility
 test cover repeated OFF/ON/OFF transitions; parent owns real native interaction
 captures for this follow-up.
+
+Native `setMetatile(..., true)` also changes the body permission from initial
+`93` to hard-blocked `7` throughout ON/OFF flicker. The exact reviewed body row
+accepts both hard-blocked values; its header stays 7 and approach stays 0.
+Tests reproduce this collision transition together with both artwork frames.

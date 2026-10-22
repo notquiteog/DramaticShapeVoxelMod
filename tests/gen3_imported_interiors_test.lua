@@ -25,7 +25,7 @@ local function fixture(hoenn,x)
  return p,cells
 end
 local p,cells=fixture(true,5);assert(I.eligible(p,cells))
-cells['5:1'].mid=5;assert(I.eligible(p,cells),'Hoenn powered native PC vanished');cells['5:1'].mid=4
+cells['5:1'].mid=5;cells['5:1'].collision=7;assert(I.eligible(p,cells),'Hoenn powered native PC vanished');cells['5:1'].mid=4;assert(I.eligible(p,cells),'Hoenn flicker OFF lost blocked collision7');cells['5:1'].collision=0x93
 for _,field in ipairs{'boundary','stageHidden','stairs','civic'}do
  cells['5:1'][field]=true;assert(not I.eligible(p,cells),field);cells['5:1'][field]=nil
 end
@@ -41,7 +41,7 @@ assert(result==parts and not err and count==1 and p.importedInterior=='oras_cent
 assert(placements[1].x==80 and placements[1].z==16 and placements[1].y==8)
 assert(placements[1].fit.width==16 and placements[1].fit.depth==16 and placements[1].fit.height==24)
 local q,kanto=fixture(false,3);assert(I.eligible(q,kanto))
-kanto['3:1'].mid=0x63;assert(I.eligible(q,kanto),'Kanto powered native PC vanished');kanto['3:1'].mid=0x62
+kanto['3:1'].mid=0x63;kanto['3:1'].collision=7;assert(I.eligible(q,kanto),'Kanto powered native PC vanished');kanto['3:1'].mid=0x62;assert(I.eligible(q,kanto),'Kanto flicker OFF lost blocked collision7');kanto['3:1'].collision=0x93
 for k,c in pairs(kanto)do cells[k]=c end
 assert(#I.placements(cells)==2 and I.placements(cells)[1].source==q)
 q.recipe.name='room_computer';assert(not I.eligible(q,cells),'home computer identity substituted')
