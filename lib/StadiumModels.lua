@@ -61,10 +61,11 @@ local function exportEnabled(exports, name)
 end
 
 function StadiumModels.active()
+  if not V.require("VisualStyles").modern("pokemon") then return false end
   local api, exports = connect()
   if not api then return false end
-  -- The importer toggles are the single source of truth for Pokemon art in a
-  -- staged voxel battle. Both ON selects its scene-neutral model instances;
+  -- The category preference admits modern models; the provider must also
+  -- opt in through both existing toggles before any instance can be selected;
   -- either OFF releases them and leaves Battle Art's sprite cards in place.
   if exportEnabled(exports, "modelsEnabled") ~= true then return false end
   if exportEnabled(exports, "battleEnabled") ~= true then return false end
@@ -400,6 +401,7 @@ function StadiumModels.placements(arena, groundY, textures, battle)
 end
 
 function StadiumModels.draw(placement, context, pass)
+  if not StadiumModels.active() then StadiumModels.release(); return false end
   if placement and placement.flightHidden then return true end
   if not (placement and placement.instance and context) then return false end
   local actor = placement.actor
@@ -449,6 +451,7 @@ end
 local FROM_UNIT_Z = { 1,0,0,0, 0,1,0,0, 0,0,2,-1, 0,0,0,1 }
 
 function StadiumModels.drawShadow(placement, lightClipVP)
+  if not StadiumModels.active() then StadiumModels.release(); return false end
   if placement and placement.flightHidden then return true end
   if not (placement and placement.instance and lightClipVP) then return false end
   local called, ok, err = pcall(placement.instance.drawShadow,
@@ -466,7 +469,7 @@ function StadiumModels.drawShadow(placement, lightClipVP)
 end
 
 function StadiumModels.uses(placements, side)
-  return type(placements) == "table" and placements[side] ~= nil
+  return StadiumModels.active() and type(placements) == "table" and placements[side] ~= nil
 end
 
 function StadiumModels.status()

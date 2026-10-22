@@ -28,7 +28,7 @@ function M.available()
  if not ok or not data then failed=true;return false end
  manifest=data;return true
 end
-function M.active()return M.setting:get()==true and M.available()end
+function M.active()return V.require('VisualStyles').modern('pokemon') and M.setting:get()==true and M.available()end
 function M.reset()manifest=nil;failed=nil end
 function M.newInstance(dex,variant,options)
  if not M.active()then return nil,'XD pack unavailable or disabled'end
