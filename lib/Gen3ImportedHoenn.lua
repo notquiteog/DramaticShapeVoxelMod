@@ -21,6 +21,10 @@ M.recipes={{family='rse',name='route104_briney_house',pair='general__rustboro',h
  back=2,bodyBack=16,roofEnd=36,wallBottom=63,bevel=0,roofShape='barrel',roofRise=13,
  openings={{33,45,47,63,door=true}},groundCandidates={[1]=true},wallSample={5,57},trimSample={5,40}}}
 local recipes={};for _,r in ipairs(M.recipes)do recipes[r.name]=r end
+local function dewford(g)
+ local n=g.custom and g.custom.name
+ return n=='dewford_town_home' or n=='dewford_town_south_home'
+end
 -- Regional adaptation shortens only the plain central wall/roof bay between
 -- the two side-window assemblies. Front fixtures and rear facade are rigid;
 -- all source UVs/colors remain unchanged. This is applied to a private copy.
@@ -49,6 +53,7 @@ function M.register(id)
  registered[id]=true;return true
 end
 function M.eligible(g,cells)
+ if dewford(g)then return V.require('Gen3ImportedDewford').eligible(g,cells)end
  local r=g.custom and recipes[g.custom.name]
  if not(r and g.custom.family=='rse')or g.pair~=r.pair or g.kind~='house'
   or g.width~=#r.rows[1] or g.depth~=#r.rows or g.stageHidden then return false end
@@ -62,6 +67,7 @@ function M.eligible(g,cells)
  return true
 end
 function M.build(g,cells,newMesh,parts)
+ if dewford(g)then return V.require('Gen3ImportedDewford').build(g,cells,newMesh,parts)end
  if not M.eligible(g,cells)then return false end
  local shop=g.custom.name=='route104_pretty_petal_shop';local id=shop and M.shopId or M.id
  local ok,err=M.register(id);if not ok then return false,err end
@@ -76,6 +82,7 @@ function M.build(g,cells,newMesh,parts)
  return true
 end
 function M.doorSurface(g,tx,ty)
+ if g.importedHoenn and g.importedHoenn.model=='oras_dewford_narrow_house'then return V.require('Gen3ImportedDewford').doorSurface(g,tx,ty)end
  if not g.importedHoenn or tx~=g.cx+2 or ty~=g.cy+3 then return end
  local fit=g.importedHoenn;local a=fit.anchors.door;local top=fit.anchors.doorTop
  local x,z=g.cx*16+a[1],(g.cy+1)*16+a[3]+.025
