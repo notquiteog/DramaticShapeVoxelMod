@@ -1,3 +1,17 @@
+# ORAS Center placements — 2026-10-22
+
+1.56.0 adds the first imported whole-building native adapter: 15 Hoenn city
+Centers per R/S/E plus Emerald Battle Frontier, 46 reviewed placements. Original
+left-hand warp stays fixed; rigid entrance/badge adaptation, closed catalog rear,
+original textures, three-row bounded body and guarded native fallback. No gameplay,
+NPC/Pokémon/flower or companion changes. Official0.3.95 LÖVE11.5/NVIDIA native
+fixtures pass tile-hash, blocked-side, actual entrance/door-animation checks;
+46 front and18 other final captures inspected. Missing-texture and2D fallbacks
+also inspected. Source374/0/58 (external historical test helpers, current engine
+modules); first attempt lacked the test harness and was corrected. No phone or
+all11 building completion claim. Concurrent3e10a24 XD preparation work preserved.
+See docs/ORAS_CENTERS_2026-10-22.md for scope, source and remaining work.
+
 # XD conversion and guarded battle consumers — 2026-10-20
 
 Local USA pack now converts all457 records/454 unique models,4019 clips; all

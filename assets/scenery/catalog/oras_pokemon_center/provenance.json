@@ -217,5 +217,5 @@
       ]
     }
   ],
-  "placement": "Catalog only. No generation/map/footprint compatibility is implied; native adapter review required."
+  "placement": "Gen3ImportedCenters: guarded native Hoenn 4x4 Center adapter, original left-hand warp retained. See docs/ORAS_CENTERS_2026-10-22.md. Catalog geometry/textures remain unchanged; adapter derives its own piecewise-X regional variant."
 }

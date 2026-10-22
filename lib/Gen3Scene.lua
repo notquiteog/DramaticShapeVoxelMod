@@ -379,7 +379,7 @@ local function build(req,cache,previous)
  cache.grassModelError=grassError;cache.grassContext=req.context
  cache.sceneryModels={}
  local scenery,sceneryError,sceneryCount=V.require('Gen3SceneryModels').build(cells,R.newMesh,cache.sceneryModels)
- cache.sceneryModels=scenery;cache.sceneryModelCount=scenery and sceneryCount or 0
+ cache.sceneryModels=scenery or {};cache.sceneryModelCount=scenery and sceneryCount or 0
  cache.sceneryModelError=sceneryError
  cache.importedTrees={}
  local trees,treeError,treeCount=V.require('ImportedTrees').buildGen3(cells,R.newMesh,cache.importedTrees,{region=V.require('Gen3Hoenn').active()and'hoenn'or'kanto',mapId=def.id or req.mapId})
@@ -717,10 +717,12 @@ local function build(req,cache,previous)
   end)
   Elevation.lift(b.v,start,p.groundHeight or 0);Elevation.lift(b.pv,plantStart,p.groundHeight or 0)
  end end
- cache.civics={};M.legendaryBuildingCount=0
+ cache.civics={};cache.importedCenters={};M.legendaryBuildingCount=0
  for _,g in ipairs(civics)do if not g.stageHidden then
   local nativeKit=V.require('NativeLegendaryBuildings').build(g,def,cells)
   if nativeKit then cache.civics[#cache.civics+1]=nativeKit;M.legendaryBuildingCount=M.legendaryBuildingCount+1 else
+  local imported=V.require('Gen3ImportedCenters').build(g,cells,R.newMesh,cache.sceneryModels)
+  if imported then cache.importedCenters[#cache.importedCenters+1]=g else
   local vertices,indices={},{}
   modelCache.append(def.id or req.mapId,g,Civic.append,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
   if g.chimneyOutlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=g.chimneyOutlet end
@@ -740,6 +742,7 @@ local function build(req,cache,previous)
      part.lights[1]={(a[1]+b[1])/2,d[2]+door.h*.35+(g.groundHeight or 0),a[3]+1.5,32,0,1}
     end
    end end
+  end
   end
   end
   Budget.check()
@@ -1093,7 +1096,12 @@ local function fieldEffects(draw,cam)
  local doors=require('src.core.game3.doors');local a=doors._activeAnim
  if a then
   local surface
+  for _,g in ipairs(cache.importedCenters or{})do
+   surface=V.require('Gen3ImportedCenters').doorSurface(g,a.x,a.y)
+   if surface then break end
+  end
   for _,part in ipairs(cache.civics or {})do
+   if surface then break end
    if part.placement then surface=V.require('NativeLegendaryBuildings').doorSurface(part,a.x,a.y)or Civic.doorSurface(part.placement,a.x,a.y)end
    if surface then break end
   end
@@ -1365,7 +1373,7 @@ function M.performanceSnapshot()
   water={wetRockCells=cache.wetRockCells or 0,draws=#(cache.waterDraws or{}),levels=#(cache.waterLevels or{}),banks=cache.bankFaceCount or 0},
   grass={placements=cache.grassModelCount or 0,batches=#(cache.grassModels or{}),error=cache.grassModelError},
   importedTrees={placements=cache.importedTreeCount or 0,batches=#(cache.importedTrees or{}),error=cache.importedTreeError},
-  scenery={placements=cache.sceneryModelCount or 0,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
+  scenery={placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
 function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end

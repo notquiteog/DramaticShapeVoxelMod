@@ -1,3 +1,17 @@
+## 1.56.0 — ORAS Pokémon Centers in Hoenn
+
+Ruby, Sapphire and Emerald now place the imported ORAS Center exterior in the
+original Hoenn footprint. The doorway and arched badge move together to match
+the original left-hand entrance; source textures, side displays and closed rear
+geometry remain intact. Native collision, local ground, door animation and warps
+are preserved. Unsupported footprints or missing textures retain the native model.
+
+Verified 15 city Centers per edition and Emerald's Battle Frontier Center on
+Gen1Recomp 0.3.95. Characters, Pokémon and flowers keep their existing HD-2D
+presentation; no companion is required. Imported interiors and the remaining
+eight editions' building adapters are still pending. See
+[the evidence record](docs/ORAS_CENTERS_2026-10-22.md).
+
 ## 1.53.0 — Realistic water and imported scenery
 
 Smooth realistic water is the default across all eleven games. Continuous

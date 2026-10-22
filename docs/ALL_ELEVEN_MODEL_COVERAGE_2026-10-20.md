@@ -1,3 +1,8 @@
+> **2026-10-22 follow-up:** [ORAS Center adapter](ORAS_CENTERS_2026-10-22.md)
+> adds 46 verified imported exterior placements: 15 each in Ruby/Sapphire and
+> 16 in Emerald. Other building adapters and imported interiors remain pending.
+> The tables below retain the original October20 snapshot.
+
 # Eleven-game model coverage and next work — 2026-10-20
 
 The current request covers every location, building, interior and outdoor object
