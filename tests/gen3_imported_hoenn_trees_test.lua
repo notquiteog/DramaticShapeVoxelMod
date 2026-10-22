@@ -50,4 +50,55 @@ for r=0,3 do
   assert(v[1]>=.25-1e-6 and v[1]<=31.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=31.75+1e-6)
  end end
 end
-print('PASS source evergreen UVs, closed bark, rigid per-crown owner packing, narrow/full fits, native walking clearance, rail/stair/edge exclusions and fallback ownership')
+-- Actual 016/017 lower foliage/trunks are not round-tree source art. Only
+-- accept a single blocked base beneath its own walkable projected 00E/F cap.
+for _,mid in ipairs{0x16,0x17}do
+ local b={32,48,48,64};local c={cx=2,cy=3,mid=mid,primary='general',secondary='petalburg',pair='general__petalburg',collision=7,base=4,
+  region={mapId='EM_ROUTE103'},shape={kind='tree',root=true,treeFamily='round',treeRows={{mid}},treeBounds=b}}
+ local above={cx=2,cy=2,mid=0xf,primary='general',secondary=c.secondary,pair=c.pair,collision=0,base=4,
+  shape={kind='tree',root=false,treeFamily='conifer'}}
+ local cells={['2:3']=c,['2:2']=above};local p=assert(M.placements(c,cells));assert(#p==1 and p[1].model==M.model and p[1].source==c)
+ assert(p[1].x==32 and p[1].z==48 and p[1].treeInfo.bounds[2]>=48.25,'walking cap acquired geometry')
+ assert(above.shape.treeBounds==nil and not above.importedTree and c.shape.treeFamily=='round','native ownership/classification changed')
+ above.collision=7;assert(not M.placements(c,cells),'blocked canopy and trunk could represent the same imported tree');above.collision=0
+ above.mid=0xc7;assert(not M.placements(c,cells),'dense front row gained duplicate pine');above.mid=0xf
+ above.shape.root=true;assert(not M.placements(c,cells),'independent tree owner above ignored');above.shape.root=false
+ above.civic={};assert(not M.placements(c,cells),'foreign cap owner');above.civic=nil
+ cells['2:2']=nil;assert(not M.placements(c,cells),'unverified projected cap guessed')
+end
+-- The shallow broadleaf is an explicit source-depth edit, not a miniature
+-- uniformly fitted tree: X/Y and source UV/RGBA/topology remain intact.
+local broad=V.require('ImportedTreeData')[M.shallowSource.model];local originalZ={}
+for i,p in ipairs(broad.parts)do originalZ[i]={};for j,v in ipairs(p.vertices)do originalZ[i][j]=v[3]end end
+local function shallowFixture(x)
+ local b={x*16,48,x*16+32,64};local cells={}
+ for xx=x,x+1 do cells[xx..':3']={cx=xx,cy=3,mid=xx==x and 0x1d4 or 0x1d5,primary='general',secondary='petalburg',pair='general__petalburg',collision=7,base=4,
+  region={def={id='EM_PETALBURG_CITY'}},shape={kind='tree',root=xx==x,treeFamily='round',treeBounds=b}}end
+ return cells[x..':3'],cells
+end
+for _,x in ipairs{2,3}do
+ local c,cells=shallowFixture(x);local p=assert(M.placements(c,cells));assert(#p==1 and p[1].model==M.shallowModel)
+ local entry=p[1];assert(entry.fit.rotation==0 or entry.fit.rotation==2)
+ local parts,f=assert(S.vertices(entry.model,entry.fit));assert(f.bounds[4]-f.bounds[1]>30.9 and f.bounds[6]-f.bounds[3]>15.4)
+ assert(f.bounds[5]>28 and f.bounds[5]<28.5,'native width/height shrank with source depth')
+ for i,part in ipairs(parts)do
+  local source=broad.parts[i];assert(part.texture==source.texture and #part.indices==#source.indices and part.opacity==source.opacity)
+  for j,n in ipairs(part.indices)do assert(n==source.indices[j],'closure topology changed')end
+  for j,v in ipairs(part.vertices)do local original=source.vertices[j]
+   assert(original[3]==originalZ[i][j],'shared full-depth source mutated')
+   assert(v[4]==original[4]and v[5]==original[5]and v[6]==original[6],'source UV/shade changed')
+   assert(math.abs(v[2]-original[2]*f.scale)<1e-6,'source vertical proportions changed')
+   if source.colors then for k=1,4 do assert(v[k+6]==source.colors[j][k],'source vertex RGBA changed')end end
+   assert(v[1]>=.25-1e-6 and v[1]<=31.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=15.75+1e-6)
+   assert(cells[math.floor((entry.x+v[1])/16)..':'..math.floor((entry.z+v[3])/16)].collision==7,'shallow source enters walking cell')
+  end
+ end
+ local other=cells[(x+1)..':3'];other.collision=0;assert(not M.placements(c,cells),'walking broadleaf corner');other.collision=7
+ other.mid=0x16;assert(not M.placements(c,cells),'mixed evergreen source borrowed');other.mid=0x1d5
+ other.base=12;assert(not M.placements(c,cells),'shallow source spans elevations');other.base=4
+ other.prop={};assert(not M.placements(c,cells),'foreign prop consumed');other.prop=nil
+ c.shape.treePalette='gold';assert(not M.placements(c,cells),'specialized palette substituted');c.shape.treePalette=nil
+ c.shape.treeFamily='sapling';assert(not M.placements(c,cells),'sapling substituted')
+end
+assert(M.policy(M.shallowModel).minHeight==27.5 and not M.register('unknown_source'))
+print('PASS source evergreen packing, safe projected-cap trunks, full shallow broadleaf bodies, unchanged UV/RGBA/closures and native walking/owner/fallback guards')
