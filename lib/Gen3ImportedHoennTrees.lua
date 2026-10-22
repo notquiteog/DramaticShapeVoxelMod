@@ -2,12 +2,13 @@
 -- geometry. Ambiguous exposed trunks below blocked dense crowns stand down.
 local V=...
 local Models=V.require('SceneryModels')
-local M={model='oras_evergreen_tree',shallowModel='oras_route104_broadleaf_shallow',foregroundModel='oras_evergreen_foreground'}
+local M={model='oras_evergreen_tree',shallowModel='oras_route104_broadleaf_shallow',foregroundModel='oras_evergreen_foreground',compactModel='oras_compact_broadleaf',narrowModel='oras_compact_broadleaf_narrow'}
 local crowns={[0xe]=true,[0xf]=true,[0xc6]=true,[0xc7]=true,[0xce]=true}
 local trunks={[0x16]=true,[0x17]=true}
 local round={};for _,mid in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1e4,0x1e5,0x1e6,0x1e7}do round[mid]=true end
 M.shallowSource={model='oras_route104_broadleaf',scale={1,1,.5},rotations={0,2}}
 M.foregroundSource={model=M.model,scale={1,1,2},rotations={0,2}}
+M.compactSource={model='oras_route104_broadleaf',canopyLift=.20,canopyHeightScale=1.25,trunkHeightScale=1.25,narrowCanopyDepthScale=2}
 local function finite(n)return type(n)=='number'and n==n and math.abs(n)<math.huge end
 local function hoenn(c,options)
  local def=c and(c.def or c.region and c.region.def)
@@ -20,6 +21,11 @@ end
 function M.register(id)
  id=id or M.model
  if Models.info(id)then return true end
+ if id==M.compactModel or id==M.narrowModel then
+  local ok,data=pcall(V.require,'ImportedCompactTreeData')
+  if not ok or type(data)~='table'or not data[id]then return nil,'designed ORAS compact tree unavailable'end
+  return Models.register(id,data[id],{read=function(path)return V.mod:read(path)end})
+ end
  if id==M.foregroundModel then
   local ok,data=pcall(V.require,'ImportedPineTreeData')
   if not ok or type(data)~='table'or not data[M.model]then return nil,'ORAS evergreen source unavailable'end
@@ -65,8 +71,12 @@ function M.select(c,options)
  local w,d=b[3]-b[1],b[4]-b[2]
  if trunks[c.mid]and w==16 and d==16 then return M.model end
  if round[c.mid]and w==32 and d==16 then return M.shallowModel end
+ if round[c.mid]and w==16 and d==16 then return M.compactModel end
+ if round[c.mid]and w==16 and d==32 then return M.narrowModel end
 end
 function M.policy(id)
+ if id==M.compactModel then return{minWidth=15.9,minDepth=15.9,minHeight=19.5}end
+ if id==M.narrowModel then return{minWidth=15.9,minDepth=31.9,minHeight=19.5}end
  if id==M.model then return{minWidth=15.9,minDepth=15.9,minHeight=18}end
  if id==M.shallowModel then return{minWidth=31.9,minDepth=15.9,minHeight=27.5}end
  if id==M.foregroundModel then return{minWidth=15.9,minDepth=31.9,minHeight=18}end
@@ -109,11 +119,10 @@ local function bounds(c,w,d)
 end
 local function validOwner(c,cells,b,accepted,family,allowForest)
  if not finite(c.base or 0)then return end
- local forest=allowForest and c.boundary=='forest'and c.collision==nil
  for y=b[2]/16,b[4]/16-1 do for x=b[1]/16,b[3]/16-1 do
   local q=cells[x..':'..y];local s=q and q.shape
   if not(q and q.primary=='general'and q.pair==c.pair and q.secondary==c.secondary and accepted[q.mid]
-   and((not forest and q.collision==7 and not q.boundary)or(forest and q.collision==nil and q.boundary=='forest'and q.region==c.region))
+   and((q.collision==7 and not q.boundary)or(allowForest and q.collision==nil and q.boundary=='forest'))
    and not(q.prop or q.civic or q.stageHidden)
    and s and s.kind=='tree'and s.treeFamily==family and not(s.treePalette or s.importedTreeModel)and s.treeBounds==b
    and finite(q.base or 0)and math.abs((q.base or 0)-(c.base or 0))<.01)then return end
@@ -143,6 +152,17 @@ function M.placements(c,cells,options)
  local b=c.shape.treeBounds
  if type(b)~='table'or #b~=4 then return end
  for _,n in ipairs(b)do if not finite(n)or n%16~=0 then return end end
+ if model==M.compactModel or model==M.narrowModel then
+  local depth=model==M.compactModel and 16 or 32
+  if b[3]-b[1]~=16 or b[4]-b[2]~=depth or not validOwner(c,cells,b,round,'round',true)then return end
+  if not M.register(model)then return end
+  local fit={width=16,depth=depth,padding=.25,rotation=depth==16 and(c.cx*17+c.cy*29)%4 or((c.cx+c.cy)%2)*2}
+  local f=Models.fit(model,fit)
+  if not f or f.bounds[5]<19.5 or f.bounds[5]>20.5 or f.bounds[4]-f.bounds[1]<15.4 or f.bounds[6]-f.bounds[3]<(depth==16 and 15.4 or 30.9) then return end
+  return{{model=model,x=b[1],y=c.base or 0,z=b[2],fit=fit,source=c,
+   treeInfo={height=f.bounds[5],canopyBottom=f.anchors.canopyBottom[2],
+    bounds={b[1]+f.bounds[1],b[2]+f.bounds[3],b[1]+f.bounds[4],b[2]+f.bounds[6]}}}}
+ end
  local shallow=model==M.shallowModel;local trunk=not shallow and trunks[c.mid]
  if not finite(c.base or 0)then return end
  if shallow then

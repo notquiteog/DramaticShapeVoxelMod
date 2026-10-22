@@ -1,0 +1,78 @@
+{
+  "asset": 364272,
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/364272/",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire",
+  "uploadedBy": "MasterPengo",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "0d849831180a5bf9484efff71e8947d420558fb6019417cfebb124e673a9257b",
+  "sourceModel": "world03_02_02.dae",
+  "sourceModelSha256": "c3e3481bd89769f3cb6c7195fbb4101f8c8e12bd91c9eea6343c49a399fdb065",
+  "derivedFrom": "oras_route104_broadleaf",
+  "derivedData": "lib/ImportedCompactTreeData.lua",
+  "authorization": "User requested designed one-tile Modern trees and authorized model/texture edits.",
+  "models": {
+    "oras_compact_broadleaf": {
+      "footprint": [
+        16,
+        16
+      ],
+      "fittedBody": [
+        15.5,
+        15.5
+      ],
+      "fittedHeight": 19.82928,
+      "canopyBottom": 6.79446
+    },
+    "oras_compact_broadleaf_narrow": {
+      "footprint": [
+        16,
+        32
+      ],
+      "fittedBody": [
+        15.5,
+        31
+      ],
+      "fittedHeight": 19.82928,
+      "canopyBottom": 6.79446,
+      "canopyDepthScale": 2
+    }
+  },
+  "design": {
+    "canopyHeightScaleAboutLowerFoliage": 1.25,
+    "canopyLiftInSourceUnits": 0.2,
+    "trunkHeightScale": 1.25,
+    "oneTileCanopyXZ": "unchanged source geometry; uniform bounded fit",
+    "narrowCanopyZ": "source canopy Z doubled; closed trunk XZ unchanged",
+    "sourceVertexCount": 332,
+    "sourceTriangles": 108,
+    "retainedClosureAndCompletionTriangles": 252,
+    "totalTriangles": 360,
+    "retained": "all indices, UVs, RGBA, shade, role, textures and material metadata; no source prototype mutation",
+    "closure": "Original closed outer bark and authored caps; inner bark backing; original radial source foliage completion. Transparent leaf edges remain cutout foliage.",
+    "nativeOwnership": "one placement per unchanged native blocked owner; no collision, elevation or ownership edits; no extra duplicate placement"
+  },
+  "texturesUnchanged": {
+    "wood_base.png": {
+      "sha256": "f0a7708b74497237197371e0d735f04b4865cd431e5ca70eb495857c5a6cbd06",
+      "size": [
+        128,
+        128
+      ],
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    "forest_wood_a.png": {
+      "sha256": "d2c7553fe3fdd1e4c982cc8b62422cb3b3c2cb84cb5954dc53c0d9b537b0bc2a",
+      "size": [
+        256,
+        256
+      ],
+      "alphaRange": [
+        0,
+        255
+      ]
+    }
+  }
+}
