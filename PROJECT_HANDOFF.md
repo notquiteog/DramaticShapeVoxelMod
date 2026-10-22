@@ -1,3 +1,12 @@
+# Destination progress / XD identity — 2026-10-22
+
+Preserve valid in-flight and ready destination windows during lateral movement;
+retain provider/context invalidation. Skip redundant native cell fingerprints
+and expose forced-completion timing. All5 native GBA crossings and10 focused
+suites pass on0.3.95. RSE12-cell approaches complete before entry; cold FRLG
+2-cell approaches still stall150–164ms. XDidentity worker committed fe78440.
+No full-parity/165FPS/mobile claim. See docs/STREAM_PROGRESS_2026-10-22.md.
+
 # XD native form and battle presentation — 2026-10-22
 
 Native Unown/Deoxys form identity reaches imported pack consumers and cache
