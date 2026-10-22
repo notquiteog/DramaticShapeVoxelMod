@@ -29,4 +29,31 @@ local H=V.require('Gen3Hoenn');local R=V.require('Gen3RubySapphire')
 assert(H.emeraldShape('general','petalburg',0x149,0,7).nativeFence=='rural149')
 assert(R.ownShape('general','petalburg',0x149,0,7).nativeFence=='rural149')
 assert(not H.emeraldShape('general','petalburg',0x149,0,0).nativeFence)
+local F=V.require('Gen3FenceFamilies');local ornate={}
+for mid,segments in pairs(F.ornate)do
+ local q=cell(mid);q.mid=mid;q.secondary='rustboro';q.ts.midToSlot={}
+ for _,row in pairs(F.ground)do for _,g in ipairs(row)do q.ts.midToSlot[g[1]]=g[1]end end
+ assert(M.eligible(q)=='oras_rustboro_fence');ornate[mid..':5']=q
+ q.secondary='petalburg';assert(not M.eligible(q),'secondary collision');q.secondary='rustboro'
+end
+available=false;assert(not M.build(ornate,function()end,{}))
+for _,q in pairs(ornate)do assert(not q.importedFence)end
+available=true;local r,e,num=M.build(ornate,function()end,{})
+assert(r and not e and num==13,'unique native cells count')
+for _,q in pairs(ornate)do
+ local quads={};assert(M.appendFloor(q,function(v,uv)quads[#quads+1]={v,uv}end,function()return{{0,0},{1,0},{1,1},{0,1}}end))
+ assert(#quads==4);for _,a in ipairs(quads)do for _,v in ipairs(a[1])do assert(v[1]>=q.cx*16 and v[1]<=q.cx*16+16 and v[3]>=80 and v[3]<=96)end end
+ local count=0;assert(not M.appendFloor(q,function()count=count+1 end,function()return nil end)and count==0,'partial ground must be atomic')
+end
+assert(not F.shape('general','rustboro',0x2e8,0,7),'plain pavement corner is not fence')
+-- Real Models validation/fit, independent of the mock GPU batch above.
+local Q={require=function(n)
+ if n=='ModelInstances'then return{}elseif n=='BuildBudget'then return{check=function()end}elseif n=='SceneryModelData'then return{}end;error(n)
+end}
+local Real=assert(loadfile('lib/SceneryModels.lua'))(Q)
+for id,data in pairs(V.require('ImportedFenceData'))do assert(Real.register(id,data,{read=function()end}))end
+for _,p in ipairs(M.placements(ornate))do
+ local verts,fit=assert(Real.vertices(p.model,p.fit));assert(math.abs(fit.bounds[5]-11)<1e-5,'corner fitting shrank height')
+ for _,part in ipairs(verts)do for _,v in ipairs(part.vertices)do assert(v[1]>=-1e-5 and v[1]<=16.00001 and v[3]>=-1e-5 and v[3]<=16.00001,'fence crossed walking bounds')end end
+end
 print('PASS source-failure atomicity, exact RSE fence/blocked guards, original lower layer, elevation and closed native bounds')
