@@ -1,0 +1,229 @@
+{
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592847/",
+  "asset": 592847,
+  "submitted": "2026-09-01",
+  "author": "Kuramapika1",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "8cce4d10885adebb7e0e2362cc8d1bd07ac9d49ef9bc94b61a66d51ce9e178bc",
+  "sourceDaeSha256": "bc080c23a190dd815cf1e1f1cc2cdc5f837cbd8ae6cec579c3d3d0fcd931e663",
+  "geometry": "mst_okl-mesh",
+  "sourceLocalUp": "Y",
+  "sceneTransforms": "Town-only translation/orientation removed; original local geometry retained.",
+  "sourceTriangles": 234,
+  "triangles": 270,
+  "sourceBounds": [
+    -54.0,
+    1.0,
+    -34.0,
+    62.0,
+    81.0,
+    36.0
+  ],
+  "normalization": {
+    "sourceBounds": [
+      -54.0,
+      1.0,
+      -34.0,
+      62.0,
+      81.0,
+      36.0
+    ],
+    "sourceOrigin": [
+      4.0,
+      1.0,
+      1.0
+    ],
+    "sourceUnitSpan": 116.0,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.3017241379310345,
+      0.5,
+      0.6896551724137931,
+      0.3017241379310345
+    ]
+  },
+  "authoredClosure": {
+    "door": [
+      0.0,
+      2.0,
+      23.0
+    ],
+    "description": "Authored rear wall/roof return/skylight cap where present, plus closed foundation. Original front portal remains open. Existing source wall/roof UV islands only.",
+    "parts": [
+      "authored_rear_brick",
+      "authored_rear_foundation",
+      "authored_rear_roof_trim",
+      "authored_closed_underside"
+    ],
+    "triangles": 36,
+    "foundationBottom": 1.0,
+    "foundationTop": 2.0
+  },
+  "textures": {
+    "source-kd.png": {
+      "sha256": "adfc59e76a1a902955e67b7aaed427201f5853fd5281148c361467a28e74ab4b",
+      "bytes": 70
+    },
+    "mt_okl01.png": {
+      "sha256": "f725f0c951b8e855aa0862023940d2d5a9f1feb94fec37d650df9b080b415b47",
+      "bytes": 119
+    },
+    "h_mado.png": {
+      "sha256": "ddf8daca4b57e903f962c663f89f06be6d43ca5f29459d0094b4b8140514601f",
+      "bytes": 187
+    },
+    "mt_okl02.png": {
+      "sha256": "4443760cc589c9e22419efe55383c7dc0740f39425d8dbb4e206fd3b3a0243d0",
+      "bytes": 279
+    },
+    "mt_okl06.png": {
+      "sha256": "14bd47dc8158565c193ac70a91e32ead66dc72f516fff1b599c6bc8f4e482440",
+      "bytes": 127
+    },
+    "h_kage.png": {
+      "sha256": "ae1cd3dbd43a0a6923f9e7004703abf3665e3b3e33062fae531d9617ec3a9698",
+      "bytes": 84
+    },
+    "mt_okl07.png": {
+      "sha256": "8a8a3989d5ee3f5f7d611e6e4131f8c58a4980bd078a086f5031863fb51d6822",
+      "bytes": 157
+    },
+    "mt_okl03.png": {
+      "sha256": "4580cdb4735dec2a47b847face1d1c74bf3ce456f414b1ec42fe9dcb4ab67955",
+      "bytes": 143
+    },
+    "h_in.png": {
+      "sha256": "3142cd93a33fa44fa70b74cdd9ff93fda4501a146a26a1a274a89976f3d3ac12",
+      "bytes": 81
+    },
+    "mt_okl05.png": {
+      "sha256": "2e8edc97e4000b4548f1d9f0fbe7878641a8e867672205b8ff375f7dcd2c98f4",
+      "bytes": 247
+    },
+    "mt_okl04.png": {
+      "sha256": "528a15ba5788f2630da0f6c86e5414d33bb36714d20ab2970409dbb291c18393",
+      "bytes": 268
+    },
+    "mt_dr02.png": {
+      "sha256": "f3c22b7a6da4e8f80fa22f8d975bca3618cc603fd694adb0b80705a2a546b24b",
+      "bytes": 417
+    }
+  },
+  "parts": [
+    {
+      "name": "mst_okl-mesh:lambert1_009-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "mst_okl-mesh:mt_okl01-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "mst_okl-mesh:h_mado_021-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "mst_okl-mesh:mt_okl02-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "mst_okl-mesh:mt_okl06-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 10
+    },
+    {
+      "name": "mst_okl-mesh:h_kage_204-material",
+      "opacity": 0.2903226,
+      "role": "source_shading",
+      "authored": false,
+      "triangles": 16
+    },
+    {
+      "name": "mst_okl-mesh:mt_okl07-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 14
+    },
+    {
+      "name": "mst_okl-mesh:mt_okl03-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 12
+    },
+    {
+      "name": "mst_okl-mesh:h_in_027-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 16
+    },
+    {
+      "name": "mst_okl-mesh:mt_okl05-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 58
+    },
+    {
+      "name": "mst_okl-mesh:mt_okl04-material",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": false,
+      "triangles": 84
+    },
+    {
+      "name": "mst_dr2-mesh:mt_dr02-material",
+      "opacity": 1.0,
+      "role": "source_door",
+      "authored": false,
+      "triangles": 4
+    },
+    {
+      "name": "authored_rear_brick",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_foundation",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_roof_trim",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": true,
+      "triangles": 22
+    },
+    {
+      "name": "authored_closed_underside",
+      "opacity": 1.0,
+      "role": "structure",
+      "authored": true,
+      "triangles": 10
+    }
+  ],
+  "placement": "Guarded native FR/LG Pallet adapter only. No other regional coverage implied."
+}
