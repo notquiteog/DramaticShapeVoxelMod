@@ -1,3 +1,12 @@
+# Streaming and feature parity follow-up — 2026-10-22
+
+Smaller shared streaming allowances, earlier Gen3 destination prefetch, cheaper
+native geometry encoding and reusable transient effect meshes. All11 editions
+pass bounded streaming/camera fixtures; native cache and120splash frames pass.
+Emerald1440p battle2.86ms mean/4.24p95, moving field8.18/13.57:165FPS is not
+certified. Late cold crossings still stall. XD menu/material follow-ups committed
+separately; unvalidated models remain gated. See docs/PERFORMANCE_PARITY_2026-10-22.md.
+
 # XD material and animation correctness — 2026-10-22
 
 Shared consumer respects material/vertex color and alpha, unlit surface shade,

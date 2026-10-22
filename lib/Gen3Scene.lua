@@ -842,14 +842,16 @@ local function build(req,cache,previous)
 end
 local future
 local futureKeys=SceneCache.new()
-local function prefetch(req)
+local function prefetch(req,seconds)
  if req.replay or req.cam and req.cam.battle or not Pairs.outdoor(req.def)then
   future=nil;stream:discardPrefetch();return
  end
- local entry=Lookahead.entry(req.def,Connections.each(req.def),req.game.data.maps,req.px,req.pz,24,Player.moving and Player.moveDir or Player.facing)
+ local entry=Lookahead.entry(req.def,Connections.each(req.def),req.game.data.maps,req.px,req.pz,48,Player.moving and Player.moveDir or Player.facing)
  if not entry or not Pairs.outdoor(entry.def)then
   future=nil;stream:discardPrefetch(Lookahead.interpolating(req.def,req.px,req.pz));return
  end
+ seconds=(entry.distance<=12 and .004 or .002)-seconds
+ if seconds<=0 then return end
  local world=Map.world
  if not future or future.source~=req.def or future.world~=world or future.id~=entry.id or future.radius~=req.radius then
   local reach=req.radius*2+12
@@ -874,19 +876,19 @@ local function prefetch(req)
   radius=req.radius,budget=req.budget}
  local direct,neighbors=future.direct,future.neighbors
  target.sample=function(x,y)return Lookahead.sample(target.def,direct,neighbors,x,y)end
- -- Reserve more build time on the approach so running reaches a ready scene.
- -- Budgets are cooperative targets; an individual engine upload can overrun.
- -- Pending local-window work must not starve the destination while running.
- stream:prefetch(key,context,function(candidate)return build(target,candidate)end,entry.distance<=8 and .008 or .004,function(candidate)return Lookahead.accept(candidate,target)end)
+ -- Start earlier rather than spending 8ms next to an exit. Destination and
+ -- local-window work share one allowance; atomic GPU uploads may still overrun.
+ stream:prefetch(key,context,function(candidate)return build(target,candidate)end,seconds,function(candidate)return Lookahead.accept(candidate,target)end)
 end
 local function prepare(game,vw,vh,cam)
+ local started=love.timer.getTime()
  local req=request(game,cam);if not req then return false end
- cache=stream:update(req.key,req.context,function(candidate,previous)return build(req,candidate,previous)end,.002,function(candidate)return Lookahead.accept(candidate,req)end)
+ cache=stream:update(req.key,req.context,function(candidate,previous)return build(req,candidate,previous)end,.0015,function(candidate)return Lookahead.accept(candidate,req)end)
  if cache.grassModels and cache.grassContext~=req.context then
   V.require('Gen3GrassModels').prune(cache.grassModels,cache.cells,cache.floorRegions)
   cache.grassContext=req.context
  end
- prefetch(req)
+ prefetch(req,love.timer.getTime()-started)
  -- Native tileset construction binds its animation clock. Restore the live
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
@@ -1099,6 +1101,7 @@ end
 -- Project the engine-owned door/healing frames into the existing 3D room.
 -- Reading/drawing these effects never advances their timers or script state.
 local effectCanvases={}
+local effectMeshes=V.require('EffectMeshPool').new(R.newMesh)
 local function fieldEffects(draw,cam)
  local g=love.graphics
  local function effect(name,w,h,paint,verts,base,geometry)
@@ -1112,7 +1115,7 @@ local function fieldEffects(draw,cam)
   if not modeled then quad(v,i,verts,{{0,0},{1,0},{1,1},{0,1}})end
   if #v==0 then return end
   Elevation.lift(v,0,base or 0)
-  local mesh=R.newMesh(v,i);draw(mesh,c);mesh:release()
+  local mesh=assert(effectMeshes:get(name,v,i));draw(mesh,c)
  end
  local fx=require('src.core.game3.field_effects')
  for i,a in ipairs(fx._anims or {})do if a.kind=='dust' then
@@ -1424,6 +1427,7 @@ function M.release()
  if dustMesh then dustMesh:release();dustMesh=nil end
  if dustImage then dustImage:release();dustImage=nil end
  for _,c in pairs(effectCanvases)do c:release()end;effectCanvases={}
+ effectMeshes:clear()
  future=nil;stream:clear();cache={}
  if V.releaseSceneryResources then V.releaseSceneryResources()end
  for _,mesh in pairs(spriteMeshes)do if mesh then mesh:release() end end

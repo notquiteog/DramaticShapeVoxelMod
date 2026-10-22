@@ -4785,8 +4785,8 @@ end
 -- this frame (a warp's fade, a menu): nothing visible can hitch, so the
 -- slice opens up and a door fade swallows most of a destination build.
 local BODY_BOOTSTRAP_SLICE = 0.0065
-local FOREGROUND_SLICE = 0.00475
-local IDLE_SLICE = 0.005
+local FOREGROUND_SLICE = 0.002
+local IDLE_SLICE = 0.0015
 local COVERED_SLICE = 0.030
 
 local function nextJob()

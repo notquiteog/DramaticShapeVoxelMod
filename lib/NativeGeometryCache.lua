@@ -7,18 +7,31 @@ local RAM=V.require('RamPrecache');local Budget=V.require('BuildBudget')
 local records,index={},{};local clock=0;local policy;local scope,prefix,sourceHash
 local preloaded={}
 local atlasKeys=setmetatable({},{__mode="k"})
+local quadFormat='<'..string.rep('f',25)
+local settingsValues,settingsEncoded
 local function canonical(value,seen)
  local t=type(value)
  if t=='nil'then return 'n'elseif t=='boolean'then return value and 't'or'f'
  elseif t=='number'then assert(value==value and math.abs(value)<math.huge);return 'd'..string.format('%.17g',value)..';'
  elseif t=='string'then return 's'..#value..':'..value end
  assert(t=='table','unsupported geometry dependency');seen=seen or{};assert(not seen[value],'cyclic geometry dependency');seen[value]=true
- local keys={};for k in pairs(value)do assert(type(k)=='string'or type(k)=='number');keys[#keys+1]=k end
- table.sort(keys,function(a,b)return canonical(a)<canonical(b)end)
- local out={'{'};for _,k in ipairs(keys)do out[#out+1]=canonical(k)..canonical(value[k],seen)end
+ local keys={};for k in pairs(value)do assert(type(k)=='string'or type(k)=='number');keys[#keys+1]={key=k,encoded=canonical(k)} end
+ table.sort(keys,function(a,b)return a.encoded<b.encoded end)
+ local out={'{'};for _,k in ipairs(keys)do out[#out+1]=k.encoded..canonical(value[k.key],seen)end
  seen[value]=nil;out[#out+1]='}';return table.concat(out)
 end
 M.canonical=canonical
+-- Settings usually stay identical for every model in a streamed scene. Check
+-- values (including newly registered settings), but sort/encode only changes.
+local function encodeSettings(values)
+ local same=settingsValues~=nil
+ if same then
+  for k,v in pairs(values)do if settingsValues[k]~=v then same=false;break end end
+  if same then for k in pairs(settingsValues)do if values[k]==nil then same=false;break end end end
+ end
+ if not same then settingsValues=values;settingsEncoded=canonical(values)end
+ return settingsEncoded
+end
 local function hash(bytes)return love.data.encode('string','hex',love.data.hash('sha256',bytes))end
 local function codeHash()
  if sourceHash then return sourceHash end
@@ -113,7 +126,7 @@ local function unpackRecord(bytes,emit,g)
  g.chimneyOutlet=flag==1 and{x=x,y=y,z=z}or nil
  local pos=17
  for _=1,count do
-  local row={love.data.unpack('<'..string.rep('f',25),raw,pos)};pos=row[26]
+  local row={love.data.unpack(quadFormat,raw,pos)};pos=row[26]
   for i=1,25 do if not finite(row[i])then return false end end
   if row[22]~=0 and row[22]~=1 then return false end
   local p,t={},{}
@@ -142,7 +155,7 @@ function M.append(map,g,build,emit)
   end end
   input.atlas={ts.cols,ts.rows,used}
   local settings=V.require('ModSetting').snapshot();settings.ramPrecacheMb=nil
-  local key=hash(canonical({map,input,settings}))
+  local key=hash(canonical({map,input})..encodeSettings(settings))
   if M.onKey then M.onKey(map,g,input,settings,key)end
   return key
  end)
@@ -156,19 +169,19 @@ function M.append(map,g,build,emit)
   local valid,done=pcall(unpackRecord,bytes,function(p,t,s,a)decoded[#decoded+1]={p,t,s,a}end,meta)
   if valid and done then
    retain(key,bytes);g.chimneyOutlet=meta.chimneyOutlet
-   for _,q in ipairs(decoded)do emit(q[1],q[2],q[3],q[4])end
+   for _,q in ipairs(decoded)do emit(q[1],q[2],q[3],q[4]);Budget.check()end
    M.stats.hits=M.stats.hits+1;return
   end
  end
  M.stats.misses=M.stats.misses+1
- local chunks={};local count=0;local supported=true
+ local chunks={};local count=0;local supported=true;local row={}
  local result=build(g,function(p,t,shade,anchor)
   if #p~=4 or #t~=4 or type(shade or 1)~='number'then supported=false;emit(p,t,shade,anchor);return end
-  local row={};for i=1,4 do for j=1,3 do row[#row+1]=p[i][j]end;for j=1,2 do row[#row+1]=t[i][j]end end
-  row[#row+1]=shade or 1;row[#row+1]=anchor and 1 or 0
-  for i=1,3 do row[#row+1]=anchor and anchor[i]or 0 end
-  chunks[#chunks+1]=love.data.pack('string','<'..string.rep('f',25),unpack(row));count=count+1
-  emit(p,t,shade,anchor)
+  for i=1,4 do local k=(i-1)*5;for j=1,3 do row[k+j]=p[i][j]end;for j=1,2 do row[k+3+j]=t[i][j]end end
+  row[21]=shade or 1;row[22]=anchor and 1 or 0
+  for i=1,3 do row[22+i]=anchor and anchor[i]or 0 end
+  chunks[#chunks+1]=love.data.pack('string',quadFormat,unpack(row));count=count+1
+  emit(p,t,shade,anchor);Budget.check()
  end)
  if supported and count>0 and count<=524288 then
   local c=g.chimneyOutlet;local raw=love.data.pack('string','<ffff',c and 1 or 0,c and c.x or 0,c and c.y or 0,c and c.z or 0)..table.concat(chunks)
