@@ -76,6 +76,15 @@ function M.register(id,def,provider)
  if registeredVertices+d.count>M.limits.catalogVertices then return nil,'scenery catalog vertex budget exceeded'end
  d.read=provider.read;definitions[id]=d;registeredVertices=registeredVertices+d.count;registeredBytes=registeredBytes+d.bytes;return true
 end
+-- Read-only resource accounting for native streaming diagnostics.
+function M.stats()
+ local models,failures=0,0
+ for _ in pairs(definitions)do models=models+1 end
+ for _ in pairs(failed)do failures=failures+1 end
+ return{models=models,catalogVertices=registeredVertices,catalogBytes=registeredBytes,
+  textures=imageCount,textureBytes=imageBytes,failedImages=failures,
+  variants=#order,cachedVertices=cachedVertices,cachedBytes=cachedBytes}
+end
 function M.info(id)
  local d=definitions[id];if not d then return end
  local anchors={};for k,p in pairs(d.anchors)do anchors[k]=clone(p)end

@@ -141,3 +141,14 @@ for i,v in ipairs(completion.vertices)do
  assert(v[4]==leaf.vertices[i][4]and v[5]==leaf.vertices[i][5],'canopy completion invented UVs')
 end
 print('PASS source evergreen packing, safe projected-cap trunks, full shallow broadleaf bodies, unchanged UV/RGBA/closures and native walking/owner/fallback guards')
+
+-- Boundary-fill forest already has explicit blocked ownership in ImportedTrees.
+-- It may use the same reviewed full shallow body, without pretending that its
+-- synthetic cells carry native permission7. Mixed ownership still stands down.
+local root,cells=shallowFixture(2)
+for _,q in pairs(cells)do q.boundary='forest';q.collision=nil;q.region=nil end
+local plans=assert(M.placements(root,cells,{region='hoenn'}));assert(#plans==1 and plans[1].model==M.shallowModel)
+assert(cells['3:3'].collision==nil and cells['3:3'].boundary=='forest')
+cells['3:3'].collision=7;assert(not M.placements(root,cells,{region='hoenn'}),'mixed native/synthetic owner accepted')
+cells['3:3'].collision=nil;cells['3:3'].boundary='water';assert(not M.placements(root,cells,{region='hoenn'}),'water boundary became tree')
+print('PASS full synthetic forest shallow body and strict mixed-owner fallback')

@@ -71,6 +71,35 @@ function M.policy(id)
  if id==M.shallowModel then return{minWidth=31.9,minDepth=15.9,minHeight=27.5}end
  if id==M.foregroundModel then return{minWidth=15.9,minDepth=31.9,minHeight=18}end
 end
+-- A native blocked crown can straddle one authored six-pixel terrace step.
+-- This is still one complete 2x2 tree, not four independent ground owners.
+-- Only the reviewed round-tree drawing is accepted; native floor heights stay
+-- intact and the original trunk/root remains the source model's ground datum.
+function M.wholeRoundSlope(c,cells,options)
+ local s=c and c.shape;local b=s and s.treeBounds
+ if not(s and s.kind=='tree'and s.root and s.treeFamily=='round'and not(s.treePalette or s.importedTreeModel)
+  and c.primary=='general'and c.pair=='general__'..(c.secondary or'')and hoenn(c,options)
+  and type(b)=='table'and #b==4 and finite(c.base))then return false end
+ for _,n in ipairs(b)do if not finite(n)or n%16~=0 then return false end end
+ if b[3]-b[1]~=32 or b[4]-b[2]~=32 or c.cx~=b[1]/16 or c.cy~=b[4]/16-1 then return false end
+ local x,y=b[1]/16,b[2]/16
+ local a,ar,base,br=cells[x..':'..y],cells[(x+1)..':'..y],cells[x..':'..(y+1)],cells[(x+1)..':'..(y+1)]
+ if not(a and ar and base==c and br and(a.mid==0x1d4 or a.mid==0x1d6)
+  and(ar.mid==0x1d5 or ar.mid==0x1d7)
+  and(c.mid==0x1dc and br.mid==0x1dd or c.mid==0x1e6 and br.mid==0x1e7))then return false end
+ local low,high=math.huge,-math.huge
+ for _,q in ipairs{a,ar,base,br}do local shape=q.shape
+  if not(q.primary=='general'and q.pair==c.pair and q.secondary==c.secondary and q.region==c.region
+   and q.collision==7 and not(q.boundary or q.prop or q.civic or q.stageHidden)
+   and q.floor and q.floor.layer==0 and shape and shape.kind=='tree'and shape.treeFamily=='round'
+   and shape.treeBounds==b and shape.root==(q==c)and not(shape.treePalette or shape.importedTreeModel)and finite(q.base))then return false end
+  low,high=math.min(low,q.base),math.max(high,q.base)
+ end
+ for _,q in ipairs{a,ar,base,br}do
+  if math.abs(q.base-low)>.01 and math.abs(q.base-high)>.01 then return false end
+ end
+ return high-low>0.01 and math.abs(high-low-6)<.01
+end
 local function bounds(c,w,d)
  local b=c and c.shape and c.shape.treeBounds
  if type(b)~='table'or #b~=4 then return end
@@ -78,12 +107,14 @@ local function bounds(c,w,d)
  if b[3]-b[1]~=w or d and b[4]-b[2]~=d then return end
  return b
 end
-local function validOwner(c,cells,b,accepted,family)
+local function validOwner(c,cells,b,accepted,family,allowForest)
  if not finite(c.base or 0)then return end
+ local forest=allowForest and c.boundary=='forest'and c.collision==nil
  for y=b[2]/16,b[4]/16-1 do for x=b[1]/16,b[3]/16-1 do
   local q=cells[x..':'..y];local s=q and q.shape
   if not(q and q.primary=='general'and q.pair==c.pair and q.secondary==c.secondary and accepted[q.mid]
-   and q.collision==7 and not(q.boundary or q.prop or q.civic or q.stageHidden)
+   and((not forest and q.collision==7 and not q.boundary)or(forest and q.collision==nil and q.boundary=='forest'and q.region==c.region))
+   and not(q.prop or q.civic or q.stageHidden)
    and s and s.kind=='tree'and s.treeFamily==family and not(s.treePalette or s.importedTreeModel)and s.treeBounds==b
    and finite(q.base or 0)and math.abs((q.base or 0)-(c.base or 0))<.01)then return end
  end end;return true
@@ -131,7 +162,7 @@ function M.placements(c,cells,options)
    and above.shape and above.shape.kind=='tree'and not above.shape.root and not above.shape.treeBounds)then return end
  end
  local accepted=shallow and round or trunk and trunks or crowns
- if not validOwner(c,cells,b,accepted,c.shape.treeFamily)then return end
+ if not validOwner(c,cells,b,accepted,c.shape.treeFamily,shallow)then return end
  if not M.register(model)then return end
  local lower,frontY
  if not(shallow or trunk)then lower,frontY=foreground(c,cells,options)end
