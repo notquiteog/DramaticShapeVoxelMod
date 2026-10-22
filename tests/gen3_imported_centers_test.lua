@@ -2,6 +2,8 @@ local data=dofile('lib/SceneryModelData.lua')
 local modules={SceneryModelData=data,ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
+modules.ImportedCenterDoorData=dofile('lib/ImportedCenterDoorData.lua')
+modules.Gen3CenterDoors=assert(loadfile('lib/Gen3CenterDoors.lua'))(V)
 local C=assert(loadfile('lib/Gen3ImportedCenters.lua'))(V)
 local sourceX=data.oras_pokemon_center.parts[1].vertices[1][1]
 assert(C.register());assert(data.oras_pokemon_center.parts[1].vertices[1][1]==sourceX)
@@ -29,12 +31,15 @@ local build=S.buildBatches;S.buildBatches=function(placements,_,opts)
  end end
  return opts.parts
 end
-assert(C.build(g,cells,function()end,{}))
+local image=S.image;S.image=function()return{}end
+assert(C.build(g,cells,function()return{setTexture=function()end,release=function()end}end,{}))
+assert(g.importedCenterDoors,'source doors missing from imported Center')
 local d=assert(C.doorSurface(g,6,16));assert(not C.doorSurface(g,7,16))
 assert(math.abs((d.vertices[1][1]+d.vertices[2][1])/2-104)<1e-6)
 assert(d.vertices[4][2]==0 and d.base==0)
 assert(C.shift(-.5)==-.5 and C.shift(.5)==.5)
 assert(math.abs(C.shift(.1)-C.shift(-.1)-.2)<1e-6,'arched doorway was stretched')
 assert(math.abs(C.shift(.4)-.4)<1e-6,'display panel was stretched')
+modules.Gen3CenterDoors.release(g);S.image=image
 S.buildBatches=build
 print('PASS native collision/height guards, bounded source adaptation, rigid door/display, exact warp alignment and missing-resource fallback')
