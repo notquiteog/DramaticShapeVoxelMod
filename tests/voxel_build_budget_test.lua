@@ -89,9 +89,9 @@ local function scenario(body, priority, covered, expected, every)
   check(m.pending() == 0, 'yielded work eventually completes')
 end
 scenario(true, true, false, 0.0065, 4)
-scenario(false, true, false, 0.00475, 4)
-scenario(true, 1.5, false, 0.00475, 4)
-scenario(true, nil, false, 0.005, 4)
+scenario(false, true, false, 0.002, 4)
+scenario(true, 1.5, false, 0.002, 4)
+scenario(true, nil, false, 0.0015, 4)
 scenario(true, true, true, 0.030, 32)
 
 now, begun = 0, {}
@@ -113,7 +113,7 @@ local completed = 0
 m = mesher(function() completed = completed + 1; now = now + 0.001 end)
 for i = 1, 12 do m.request({ id = tostring(i) }, false, nil, true) end
 m.pump(false)
-check(completed == 5 and m.pending() == 7,
+check(completed == 2 and m.pending() == 10,
   'many short jobs cannot each receive a fresh foreground slice')
 
 m = mesher(function() error('intentional budget test failure') end)

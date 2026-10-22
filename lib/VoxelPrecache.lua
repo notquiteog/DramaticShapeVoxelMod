@@ -179,7 +179,7 @@ end
 
 -- Called once from the voxel pipeline update.  It only ENQUEUES work; the
 -- existing ChunkMesher.pump call remains the single place CPU/GPU work runs,
--- under the same 5 ms idle slice as neighbour streaming.
+-- under the same bounded idle slice as neighbour streaming.
 function Precache.update(game)
   if RamPrecache.off() then
     Precache.reset()
