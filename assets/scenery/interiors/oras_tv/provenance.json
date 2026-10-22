@@ -1,0 +1,64 @@
+{
+  "asset": 294979,
+  "title": "TV",
+  "game": "Pokémon Omega Ruby / Alpha Sapphire",
+  "author": "Hallow",
+  "submitted": "2015-11-15",
+  "sourcePage": "https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/294979/",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "707a9f1f84248cd5a0a53f955906130fe1add1c3cf5b0a76b9de402969dccc8b",
+  "sourceModelSha256": "393698532e9f6e64d268a764a9a95f2eb46e335d6c7954ed5c02ba48916d17c0",
+  "selection": "Original static body plus original terebi0 off-screen. Alternate coplanar animated screen/glow and planar ground shadow are not selected.",
+  "textures": {
+    "terebi0.png": {
+      "sha256": "167ec99e619331d3cbe259c1e880b72cb340cfeab51aac4faf601e13604ddb5e",
+      "bytes": 2294
+    }
+  },
+  "repairs": [
+    "Off-screen bottom UV clamped to original grayscale row19 texel center, excluding adjacent unused green atlas pixels.",
+    "Separately authored rear case and stand underside caps follow original open rims; source geometry unchanged."
+  ],
+  "sourceBounds": [
+    -1.857898,
+    0.0,
+    -0.291325,
+    1.825541,
+    2.682863,
+    0.315194
+  ],
+  "sourceOrigin": [
+    -0.016178499999999985,
+    0.0,
+    0.011934499999999987
+  ],
+  "sourceUnitSpan": 3.683439,
+  "bounds": [
+    -0.5,
+    0.0,
+    -0.08233053404712282,
+    0.5,
+    0.7283582000407772,
+    0.08233053404712282
+  ],
+  "parts": [
+    {
+      "name": "tv1.002_tv1.002_terebi0.png",
+      "material": "terebi0.png",
+      "triangles": 8,
+      "authored": false
+    },
+    {
+      "name": "terebi_terebi_terebi0.png",
+      "material": "terebi0.png",
+      "triangles": 76,
+      "authored": false
+    },
+    {
+      "name": "authored_rear_and_stand_closure",
+      "material": "authored_case_swatch",
+      "triangles": 20,
+      "authored": true
+    }
+  ]
+}
