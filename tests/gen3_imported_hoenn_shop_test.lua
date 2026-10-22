@@ -2,6 +2,7 @@ local source=dofile('lib/ImportedHoennShopData.lua').oras_route104_pretty_petal_
 local modules={SceneryModelData={},ImportedHoennShopData={oras_route104_pretty_petal_shop=source},ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
+modules.Gen3ImportedFlowerCards=assert(loadfile('lib/Gen3ImportedFlowerCards.lua'))(V)
 local H=assert(loadfile('lib/Gen3ImportedHoenn.lua'))(V);local id=H.shopId
 local first=source.parts[1].vertices[1][3];assert(H.register(id));assert(source.parts[1].vertices[1][3]==first,'source module mutated')
 assert(S.info(id).parts==7)
@@ -10,6 +11,7 @@ local cells={};for y=0,3 do for x=0,5 do cells[(g.cx+x)..':'..(g.cy+y)]={civic=g
 assert(H.eligible(g,cells));local c=cells['3:15'];c.collision=7;assert(not H.eligible(g,cells));c.collision=0
 local p={};assert(not H.build(g,cells,function()error('unexpected upload')end,p));assert(#p==0 and not g.importedHoenn)
 local captured
+local getImage=S.image;S.image=function()return{}end
 S.buildBatches=function(placements,_,opts)
  local q=placements[1];assert(q.model==id and q.x==48 and q.z==256)
  local parts,fit=assert(S.vertices(id,q.fit));captured=fit
@@ -29,9 +31,27 @@ S.buildBatches=function(placements,_,opts)
  end end
  return opts.parts
 end
-assert(H.build(g,cells,function()end,{}));local door=assert(H.doorSurface(g,5,18))
+assert(H.build(g,cells,function()return{setTexture=function()end,release=function()end}end,{}));local door=assert(H.doorSurface(g,5,18))
 assert(not H.doorSurface(g,6,18));assert(math.abs((door.vertices[1][1]+door.vertices[2][1])/2-88)<1e-6)
 assert(door.vertices[3][2]>=0 and door.vertices[1][2]>door.vertices[3][2])
+local vertices,indices,count=modules.Gen3ImportedFlowerCards.geometry(g,g.importedHoenn)
+assert(count==19 and #indices==624 and #vertices>0)
+for _,v in ipairs(vertices)do
+ assert(#v==13 and v[13]>0,'missing cylindrical billboard anchor')
+ local dx=v[1]-v[11]
+ for angle=0,360,15 do
+  local x,z=v[11]+dx*math.cos(math.rad(angle)),v[12]+dx*math.sin(math.rad(angle))
+  assert(x>=g.cx*16+.25-1e-5 and x<=g.cx*16+95.75+1e-5 and z>=(g.cy+1)*16+.25-1e-5 and z<=(g.cy+1)*16+47.75+1e-5,'HD2D card crosses native blocked rectangle at yaw')
+ end
+end
+-- A flower atlas/upload failure must unwind already-built architecture and
+-- preserve preexisting scene-owned parts for ordinary Civic fallback.
+local freed=0;local existing={mesh={release=function()error('released preexisting part')end}}
+local parts={existing};g.importedHoenn=nil;S.image=function()return nil end
+S.buildBatches=function(_,_,opts)opts.parts[#opts.parts+1]={mesh={release=function()freed=freed+1 end}};return opts.parts end
+assert(not H.build(g,cells,function()error('unexpected flower upload')end,parts))
+assert(not g.importedHoenn and #parts==1 and parts[1]==existing and freed==1)
+S.image=getImage
 local b=source.nativeDepthBay
 assert(H.shopDepth(b.start-.1,b)==b.start-.1+b.shorten)
 assert(H.shopDepth(b.finish+.1,b)==b.finish+.1)

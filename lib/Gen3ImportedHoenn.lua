@@ -76,9 +76,18 @@ function M.build(g,cells,newMesh,parts)
  -- follows the documented shop bay adaptation; entrance X stays native.
  local fit={width=g.width*16,depth=48,padding=.25,anchor='door',targetX=40,targetZ=shop and 39.8 or 38}
  local placement={model=id,x=g.cx*16,y=g.groundHeight or 0,z=(g.cy+1)*16,fit=fit}
+ local first=#parts+1
  local result,why=Models.buildBatches({placement},newMesh,{parts=parts})
  if not result then return false,why end
- g.importedHoenn=assert(Models.fit(id,fit));g.importedHoenn.model=id
+ local fitted=assert(Models.fit(id,fit))
+ if shop then
+  local flowers,flowerError=V.require('Gen3ImportedFlowerCards').build(g,fitted,id,newMesh,parts)
+  if not flowers then
+   for i=#parts,first,-1 do Models.releaseBatches({parts[i]});parts[i]=nil end
+   return false,flowerError
+  end
+ end
+ g.importedHoenn=fitted;g.importedHoenn.model=id
  return true
 end
 function M.doorSurface(g,tx,ty)
