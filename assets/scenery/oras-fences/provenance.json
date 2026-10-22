@@ -1,0 +1,19 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "rural": {
+    "model": "a/0/3/9 GR0042 slot1 world04_03_07 chip_steps01a",
+    "textures": "a/0/1/4 AD0011 slot11 chip_steps01",
+    "modelBchSha256": "e1cdd3120380d85827d4ce973f1fe63b02fde4e3577bbbf456067792e6a600e6",
+    "textureBchSha256": "d18613583473d81eb790a83d1629bacee9d7595b57af71bb87f2850cddb66151",
+    "textureRgbaSha256": "2767ec27e4131c06d38cbd3a290212debe0b8703c3e1e47757d6df3f968e91f0",
+    "sourcePostTriangles": 23,
+    "sourceRailTriangles": 4,
+    "closedPostTriangles": 11,
+    "closedRailTriangles": 8,
+    "repeatWidth": 16,
+    "height": 10.25,
+    "sourcePostScale": 0.5,
+    "processing": "Uniform source posts at native centers4/12; only straight rail span length fits each native repeat; original cross sections/UVs retained. No source shadow sheets or baked vertex RGB."
+  }
+}
