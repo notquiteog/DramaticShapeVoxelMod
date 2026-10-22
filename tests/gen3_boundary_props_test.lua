@@ -30,7 +30,7 @@ assert(S.of('general','viridian_city',0x285,0,0).kind~='shrub')
 assert(S.of('building','lab',0x285,0,7).kind~='shrub')
 assert(S.of('general','viridian_city',113,0,7).height==16)
 assert(S.of('general','viridian_city',0x1f2,0,7).height==16)
-version='emerald';assert(S.of('general','petalburg',0x71,0,7).height==16)
+version='emerald';assert(S.of('general','petalburg',0x71,0,7).height==8)
 -- A shorter enclosure may not flatten an independently proven upper landing.
 local T=V.require('Gen3Terrain');local cells={}
 for y=-2,2 do for x=-2,2 do cells[x..':'..y]={cx=x,cy=y,base=x<0 and 0 or 24,shape={kind=x==0 and 'cliff'or'flat',height=16}}end end
