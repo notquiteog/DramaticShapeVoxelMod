@@ -14,7 +14,9 @@ to the active edition's atlas, so RS keeps its own paving/grass pixels.
 Route104 shares general__rustboro with Rustboro itself; its two source houses
 explicitly keep lawn rather than inheriting urban paving from the pair.
 
-The fixed policy fills g.grounds before any proximity selection. Existing
+The fixed policy fills g.grounds before any proximity selection. Nineteen
+reviewed clean roof-overhang cells then retain their exact native under-atlas
+MID, including Oldale Center's original dark-lawn/light-path split. Existing
 M.ground priority is unchanged: explicit groundPreserve cells, native lawn,
 explicit recipe ground and preserveWalkableFloor still override that field.
 In particular, Devon's original walking/front-floor0x2C3/0x2C4 tiles survive.
@@ -30,12 +32,12 @@ the existing imported R/S/E cache and inspected. Exact source examples:
 
 | Location / building origin | Previous ground IDs | Correct underlay |
 | --- | --- | --- |
-| Oldale Mart13,3 | 001,1D1,1D2,1DA grass edges | 001 lawn |
-| Oldale Center5,13 | 001,1D0,1D8,1D9,1E0,1E1 grass edges | 001 lawn |
+| Oldale Mart13,3 | 001,1D1,1D2,1DA grass edges | 001 lawn; clean native header retained |
+| Oldale Center5,13 | 001,1D0,1D8,1D9,1E0,1E1 grass edges | 001 body lawn; exact mixed native header retained |
 | Petalburg Mart24,9 | 001,002,118,11A dirt/edge pieces | 001 lawn |
-| Petalburg Center19,13 | 001,119 dirt edge | 001 lawn |
-| Rustboro Center15,35 | 212 lamp,2BB paving | 2BB paving |
-| Rustboro Mart15,42 | 212 lamp,2BB paving,309 pale road | 2BB paving |
+| Petalburg Center19,13 | 001,119 dirt edge | 001 lawn; clean native header retained |
+| Rustboro Center15,35 | 212 lamp,2BB paving | 2BB paving; clean native header retained |
+| Rustboro Mart15,42 | 212 lamp,2BB paving,309 pale road | 2BB paving; clean native header retained |
 | Rustboro east tan home24,30 | 001 fallback grass | 2BB paving |
 | Rustboro Gym24,15 | 001 fallback grass | 2BB paving |
 | Devon7,7 | 001 fallback grass plus preserved patio | 2BB plus preserved patio |
@@ -57,26 +59,41 @@ from neighboring terrain is needed. Path tiles1D0/1D8/1D9/1E0/1E1 use different
 bottom entries and cannot change this source-family choice.
 
 The original right roof overhang282/283 contains a light-path background,
-while the foundation/side drawing contains dark lawn. The fixed policy uses
-the building lawn across the replaced footprint; it does not claim all16 native
-metatiles contained a complete dark-lawn bottom layer. Most body tiles already
-contain building pixels in their bottom entries. They cannot simply be flattened
-onto the ground in pursuit of generic layer preservation.
+while the foundation/side drawing contains dark lawn. Those exact overhang
+backgrounds now survive individually; the building body retains dark001.
+Most body tiles already contain building pixels in their bottom entries. They
+cannot simply be flattened onto the ground in pursuit of generic preservation.
 
 Native0.3.95 already exposes the under-sprite atlas as ts.image/imageData and
 the above-sprite atlas as ts.overImage/overImageData; there is no additional
 underImageData field. For NORMAL roof tiles048/049, the under atlas is the clean
 native lawn. COVERED tiles merge both source layers there, and wall/body bottoms
-are not clean terrain. A future reviewed per-cell underlay map can reuse a proven
-clean source MID/layer UV, falling back to the explicit native family ground when
-the original terrain is occluded. Public atlas presence alone is not proof of
-clean terrain. This change adds no atlas/scene API or runtime source decoder.
+are not clean terrain. The reviewed per-family/per-cell map reuses a proven clean
+source MID/layer UV, falling back to the explicit native family ground when the
+original terrain is occluded. It requires the expected pair/family/lower corners,
+the exact source MID at each header column and a public layered atlas. A flat
+composite atlas falls back to clean family ground rather than projecting roofs
+onto terrain. This adds no atlas/scene API or runtime source decoder.
+
+| Service family | Retained clean native header MIDs | Exclusions |
+| --- | --- | --- |
+| Oldale Center | 048,049,282,283 | Body wall/window/foundation |
+| Oldale Mart | 028,029,029 | Right285 contains tree crown |
+| Petalburg Center | 048,049,04A,04B | Body wall/window/foundation |
+| Petalburg Mart | None | Header contains ledge and tree foliage |
+| Rustboro Center | 256,25E,25F,257 | Body wall/window/foundation |
+| Rustboro Mart | 325,267,267,326 | Body wall/window/foundation |
+
+All19 retained header positions have NORMAL source layer attributes in each
+edition. Layer-only source images were inspected: these selected lower entries
+contain clean lawn/path/paving, and the roof occurs solely in the upper entries.
 
 The read-only tests/gen3_civic_native_ground_source_test.py accepts one or more
 user-imported generated/gba roots and checks these exact source identities.
 It passed against all three existing edition caches. The Lua regression also
 surrounds each edition's Oldale Center entirely with light path-border tiles and
-requires dark001 under every claimed cell.
+requires exact original header backgrounds plus dark001 under the body. It
+rejects an altered body MID in the header and a missing layered-atlas split.
 
 ## Corridor and checks
 
@@ -84,10 +101,11 @@ The offline before/after census covers Littleroot, Route101, Oldale, Route102,
 Petalburg, both Route104 segments, Petalburg Woods and Rustboro in all three
 editions. Route104 is one native map: the northern shop is at3,15 and Briney's
 southern house at15,47. Each edition has27 matched Civic placements across these
-maps. Nine placements/184 under-building cells per edition change; the other18
+maps. Nine placements/195 ground MID selections per edition change; the other18
 placements retain their previous correct floors. All81 original source grids
 match before/after. [Per-building CSV](coverage/hoenn-civic-ground-corridor-2026-10-22.csv)
-records the complete comparison.
+records the complete comparison. A retained clean header MID may have identical
+under pixels to001 or2BB, so changed MID counts are not changed-pixel counts.
 
 Routes101/102 and Petalburg Woods contain no matched Civic building in this
 census, so their ground remains native. Standalone signs use a different shape/
