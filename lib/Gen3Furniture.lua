@@ -105,7 +105,9 @@ local function recipeActive(r)
  if Hoenn.recipeActive then return Hoenn.recipeActive(r)end
  return Hoenn.active()==(r.family=='rse')
 end
+local PCFrames=V and V.require('Gen3PublicPCFrames')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3PublicPCFrames.lua')
 local function matched(mid,expected,r)
+ if PCFrames.matches(r,mid,expected)then return true end
  return (r.kind=='escalator' and r.family~='rse' and Center.canonical(mid) or mid)==expected
 end
 local Budget=V and V.require('BuildBudget') or {tick=function()end}
@@ -149,6 +151,16 @@ function M.extract(cells,onlyKind)
     end end
     if match then
      local p={recipe=r,cx=c.cx,cy=c.cy,pair=c.pair,ts=c.ts,w=#r.rows[1]*16,d=#r.rows*16}
+     -- Retain the actual native powered drawing for missing-source/native
+     -- fallback. The immutable recipe still identifies the complete object.
+     if r.name=='center_terminal'or r.name=='hoenn_center_pc'then for _,n in ipairs(parts)do
+      local dy,dx=n.cy-c.cy+1,n.cx-c.cx+1
+      if n.mid~=r.rows[dy][dx]then
+       p.nativeRows={}
+       for y,row in ipairs(r.rows)do p.nativeRows[y]={};for x in ipairs(row)do p.nativeRows[y][x]=cells[(c.cx+x-1)..':'..(c.cy+y-1)].mid end end
+       break
+      end
+     end end
      if r.localGround then
       local votes,best={},0
       for yy=c.cy-1,c.cy+#r.rows do for xx=c.cx-1,c.cx+#r.rows[1] do
@@ -174,6 +186,7 @@ end
 -- split them at atlas boundaries, preserving their native pixels and layers.
 function M.append(p,emit,uvFor)
  local r,x,z=p.recipe,p.cx*16,p.cy*16
+ if p.nativeRows then local copy={};for k,v in pairs(r)do copy[k]=v end;copy.rows=p.nativeRows;r=copy end
  local function source(sx,sy,sw,sh,a,b,c,d,shade)
   local xend,yend=sx+sw,sy+sh
   local function point(u,v)
