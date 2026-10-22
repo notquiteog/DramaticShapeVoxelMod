@@ -1,0 +1,230 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "graphicsBchSha256": {
+    "7": "71568e6bf1105c2f6a21aea687f536d6b90473749a28ad0020b05edbd09f8fe0",
+    "8": "b008075154a17ea5d0fb5ed89262e448289f1196cd6d2cdc5a955914aa6b47e9",
+    "22": "2c9de93ef409a618a5d367e1935d767979d3aa5110ede355a1c70838198712ec",
+    "33": "25c35a9b173563023a966347bc96876502641e04d13eabd25b8c0905f3ff43da"
+  },
+  "textureBchSha256": {
+    "1": "63bee61aaac7ac3368be44c77be6698bc0de067aa4ced34a49e181c8734aacd3",
+    "11": "0447f5f1cec4b8c0abcb710544b98bffd204191281a924bb03322f3eb4dedc4c"
+  },
+  "doorModelSha256": "5360e6a16df449008814204f4636dad6671973d255c75ba4b712cc71c6372e20",
+  "doorAnimationSha256": "db0ac003f728180c5aeb9c7c7c16502defc19d2d1a2ca48efcb6a1afd1e85aa8",
+  "sourceBounds": [
+    -91.14409637451172,
+    0.5,
+    272.0,
+    37.14390182495117,
+    71.50630187988281,
+    364.0
+  ],
+  "origin": [
+    -27.000097274780273,
+    0.5,
+    318.0
+  ],
+  "divisor": 128.2879981994629,
+  "sourceTriangles": 1040,
+  "undersideTriangles": 16,
+  "noticeBounds": [
+    16.683719635009766,
+    0.0,
+    -315.1673889160156,
+    35.81626892089844,
+    31.88759994506836,
+    -312.7323913574219
+  ],
+  "noticeTriangles": 191,
+  "noticeUndersideTriangles": 4,
+  "townGeometryMaximumTranslationError": {
+    "22": 3.0517578125e-05,
+    "33": 0.0002002716064453125
+  },
+  "doorBindErrors": {
+    "com_bm_door01": 0.0,
+    "anim_door_left": 0.0,
+    "anim_door_right": 2.384185791015625e-07,
+    "anim_light": 2.528890945541207e-07,
+    "door": 0.0,
+    "door_1": 0.0,
+    "door_r": 0.0,
+    "window1": 0.0,
+    "light": 11.939887504681979
+  },
+  "doorRigidPalettes": [
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ]
+  ],
+  "doorPhysicalTriangles": 60,
+  "doorAngles": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.7853981852531433,
+      -0.7853981852531433
+    ],
+    [
+      1.5707963705062866,
+      -1.5707963705062866
+    ]
+  ],
+  "textures": {
+    "poke_gym01": {
+      "size": [
+        256,
+        128
+      ],
+      "rgbaSha256": "9535a49e34d73d71dfbb6d5fa61f3c159775f7e6b23286f07993503442795fd1",
+      "pngSha256": "4998f71f300d3e1bdb8b085f4d9205c65449b520e352336cd872d6d3dadd8d33"
+    },
+    "poke_gym_waku": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "9c49bcadcfadbbaccd1b8bbd4279c1bf919d25942f26bb47952fb9df9102ada6",
+      "pngSha256": "6c97e570dfb2a30aac43c1455a7036925cbc1d7d6503189eba72c28df31a51fd"
+    },
+    "poke_gym_mark": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "22c637c17117ae0989134757dc1c6366df0048100f2ed4053ddcacd68a021d49",
+      "pngSha256": "72188c77be9b5a81266ec9ac9b5c397572eaa137e05b053571ff4a2b36f1f718"
+    },
+    "poke_gym_elecbr01": {
+      "size": [
+        64,
+        32
+      ],
+      "rgbaSha256": "5dd2b97481db382db794905aba4acfbb50d6bee924feae740fc69b811016230d",
+      "pngSha256": "1b2d534ae87b048dcbfa9544d8111787afc6400e75004690b98fe76b8f2ac98e"
+    },
+    "poke_gym_mado": {
+      "size": [
+        16,
+        128
+      ],
+      "rgbaSha256": "d5f096cc76ec8271961bef32892438bc80fbb782aa65701258884d2999e51675",
+      "pngSha256": "6bfe2da313cbd0ed178aade005a105b2c5790d1b17c7786b9d3dcddb91f90cef"
+    },
+    "poke_gym_sign": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "baffd39dba1566d90cafdeb4afcef20b7928ba96753106f8995a7ca702723ad5",
+      "pngSha256": "14f22262c9ab32567fe2272f3d145149d7bfd7ebac950f3e8d86f8cf6129fd65"
+    },
+    "poke_gym_door01": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "e915f40cac2abaf9445c0d9a2494ec00163e55503161e99e658d2c16f5e75522",
+      "pngSha256": "6558816b76abba9547269972c667dfb66e7f9ae5e3566409fb6ba593559e6528"
+    }
+  },
+  "processing": [
+    "Original physical source triangles/UVs/texture pixels retained; source RGB exposure tint omitted, alpha preserved by original PNGs.",
+    "Two source Gym glow triangles and24 BM light-effect triangles omitted; native renderer owns lighting.",
+    "Sixteen underside triangles use exact18 source bottom-rim vertices and original UVs; concave source portal recess remains.",
+    "GR22/33 genuine town Gyms independently match GR7 source geometry, topology and UVs within recorded translation error.",
+    "BM mixed rigid glass palette checked using Nitrogen per-vertex attributes, avoiding incorrect all-left fallback in n3ds_importer. Original source +/-90degree hinge tracks sampled at0/2.5/5; native scripts own timing."
+  ],
+  "limitations": [
+    "No global texture AO recoloring performed. Native dynamic lighting is applied to original painted textures.",
+    "Original PICA/TEV and emissive effect animation are not emulated."
+  ]
+}
