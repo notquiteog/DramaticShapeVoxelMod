@@ -29,6 +29,7 @@ function M.available()
  manifest=data;return true
 end
 function M.active()return V.require('VisualStyles').modern('pokemon') and M.setting:get()==true and M.available()end
+function M.formFor(battler,dex,presentation)return V.require('XDIdentity').form(dex,battler,presentation)end
 function M.reset()manifest=nil;failed=nil end
 function M.newInstance(dex,variant,options)
  if not M.active()then return nil,'XD pack unavailable or disabled'end

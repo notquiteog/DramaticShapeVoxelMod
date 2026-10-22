@@ -1,3 +1,12 @@
+# XD native form and battle presentation — 2026-10-22
+
+Native Unown/Deoxys form identity reaches imported pack consumers and cache
+invalidation. Missing Castform/Spinda/Transform forms keep native art. GBA
+substitute/ghost/Transform cards remain authoritative; imported models face the
+opposing row regardless of orbit angle. Four Lua suites and five native0.3.95
+identity/option checks pass. Pack gate remains false; no complete model/mobile
+acceptance claim. See docs/XD_IMPORT_STATUS.md. No scenery or streaming edits.
+
 # Genuine ORAS Center door hotfix — 2026-10-22
 
 1.57.2 replaces the native RSE overlay and empty static entrance with the actual

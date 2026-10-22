@@ -60,6 +60,7 @@ assert(releases[home],'displaced retained scene leaked')
 local partial=warm.warm.value
 local third=warm:update('third','third',function()error('partial warm scene restarted')end,.002)
 assert(third==partial and third.ready and not releases[promoted] and warm.warm.value==promoted)
+assert(warm.stats.forcedCompletions==1 and warm.stats.maxPromotionSlice>.002,'late completion cost missing from metrics')
 warm:prefetch('bad','bad',build('bad',true),.002)
 for i=1,20 do warm:prefetch('bad','bad',build('bad',true),.002)end
 assert(warm.warm.failed and warm.stats.prefetchFailed==1 and warm.active==third)
@@ -104,3 +105,32 @@ swap:prefetch('left-new-atlas','edited-layout',build('edit'),.002)
 assert(releases[stale],'gameplay context change retained old scene')
 swap:clear();swap:clear();assert(releases[right])
 print('PASS repeated return crossings reuse bounded scenes; provider/edit invalidation and cleanup')
+
+local advancing=S.new(function(v)assert(not releases[v]);releases[v]=true end)
+advancing:update('home','home',build('home'),.002)
+advancing:prefetch('ahead1','ahead',build('ahead1'),.002)
+local original=advancing.warm.value
+for i=2,20 do
+ advancing:prefetch('ahead'..i,'ahead',build('ahead'..i),.002,function()return true end)
+ if advancing.warm.ready then break end
+end
+assert(advancing.warm.ready and advancing.warm.value==original and original.name=='ahead1',
+ 'moving destination restarted unfinished work')
+local stamp=now
+advancing:prefetch('adjacent','ahead',function()error('ready nearby candidate rebuilt')end,.002,function()return true end)
+assert(advancing.warm.value==original and now==stamp,'ready destination coverage was discarded')
+advancing:prefetch('new-provider','ahead',build('provider'),.002,function()return false end)
+assert(releases[original] and advancing.warm.value~=original,'unacceptable provider remained cached')
+local stale=advancing.warm.value
+advancing:prefetch('edited','changed-context',build('edited'),.002,function()return true end)
+assert(releases[stale],'changed native layout retained stale prefetch')
+advancing:clear()
+print('PASS destination window progress, ready adjacent reuse and provider/context invalidation')
+
+local provider=S.new(function(v)assert(not releases[v]);releases[v]=true end)
+provider:prefetch('unloaded','world',build('old-atlas'),.002)
+local missing=provider.warm.value
+provider:prefetch('loaded','world',build('new-atlas'),.002,function()return false end)
+assert(releases[missing] and provider.warm.value~=missing,'partial provider change reused stale atlas')
+provider:clear()
+print('PASS partial provider readiness changes cancel safely before crossing')

@@ -6,7 +6,7 @@ local Budget=V.require('BuildBudget')
 local clock=(love and love.timer and love.timer.getTime) or os.clock
 local M={}
 function M.new(release)
- local self={stats={started=0,completed=0,cancelled=0,hits=0,slices=0,maxSlice=0,maxStreamSlice=0,prefetched=0,promoted=0,prefetchFailed=0,retainedHits=0}}
+ local self={stats={started=0,completed=0,cancelled=0,hits=0,slices=0,maxSlice=0,maxStreamSlice=0,prefetched=0,promoted=0,prefetchFailed=0,retainedHits=0,forcedCompletions=0,maxPromotionSlice=0}}
  function self:cancel()
   if self.pending then
    Budget.cancel(self.pending.co);release(self.pending.value);self.pending=nil
@@ -28,11 +28,15 @@ function M.new(release)
  function self:prefetch(key,context,build,seconds,acceptWarm)
   if not key or not context then self:discardPrefetch();return end
   local p=self.warm
-  if p and p.ready and p.retained and p.context==context
+  if p and p.ready and p.context==context
    and (p.key==key or acceptWarm and acceptWarm(p.value))then
-   self.stats.retainedHits=self.stats.retainedHits+1;return
+   if p.retained then self.stats.retainedHits=self.stats.retainedHits+1 end;return
   end
-  if p and(p.key~=key or p.context~=context)then self:discardPrefetch();p=nil end
+  -- Lateral movement can change a destination's window key
+  -- before it completes. Finish that immutable snapshot, just like update(),
+  -- instead of repeatedly throwing away uploads. Context/provider changes still cancel.
+  if p and(p.context~=context or p.key~=key and
+   (p.ready or p.failed or not acceptWarm or not acceptWarm(p.value)))then self:discardPrefetch();p=nil end
   if not p then
    p={key=key,context=context,value={}}
    p.co=coroutine.create(function()return build(p.value)end);self.warm=p
@@ -62,7 +66,12 @@ function M.new(release)
    -- A late crossing can finish an already partly prepared candidate rather
    -- than discarding all its work and starting the same build again.
    if not warm.ready then
-    Budget.finish();local ok,result=coroutine.resume(warm.co)
+    Budget.finish();local started=clock();local ok,result=coroutine.resume(warm.co)
+    self.stats.forcedCompletions=self.stats.forcedCompletions+1
+    local elapsed=clock()-started
+    self.stats.maxPromotionSlice=math.max(self.stats.maxPromotionSlice,elapsed)
+    self.stats.maxSlice=math.max(self.stats.maxSlice,elapsed)
+    if not ok then self.stats.prefetchFailed=self.stats.prefetchFailed+1 end
     if ok and coroutine.status(warm.co)=='dead' then warm.value=result or warm.value;warm.ready=true end
    end
    if warm.ready and (not warm.value.terrainContext or warm.value.terrainContext==context)then
