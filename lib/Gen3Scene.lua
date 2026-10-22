@@ -175,7 +175,10 @@ local function build(req,cache,previous)
  M.terrainKey,M.terrainContext=req.key,req.context
  M.distance={radius=req.radius,full=not req.budget,regions=#regions,bounds={x0,z0,x1,z1}}
  M.fadeExtent=req.budget or math.max(math.abs(x0*16-req.px),math.abs(x1*16-req.px),math.abs(z0*16-req.pz),math.abs(z1*16-req.pz))
- local cells,groups,signature={}, {}, {replay and replay.scene.map or req.mapId,x0,z0,x1,z1}
+ local cells,groups={},{}
+ -- Immutable layouts already have a checked scene key. Avoid thousands of
+ -- redundant per-cell strings; replay/unknown providers retain the full scan.
+ local signature=not req.key and {replay and replay.scene.map or req.mapId,x0,z0,x1,z1}or nil
  M.fillCounts={forest=0,water=0,mountain=0,ground=0}
  local pairInfo={}
  local boundarySample=Boundary.sampler()
@@ -218,9 +221,9 @@ local function build(req,cache,previous)
      shape=fillShape or classify(spec.primary,spec.secondary,mid,
       info.behaviors[mid],collision),boundary=biome}
     cells[cx..':'..cy]=c
-    signature[#signature+1]=pair..'/'..mid..'/'..tostring(collision)..(biome or '')
-   else signature[#signature+1]='?' end
-  else signature[#signature+1]='-' end
+    if signature then signature[#signature+1]=pair..'/'..mid..'/'..tostring(collision)..(biome or '')end
+   elseif signature then signature[#signature+1]='?' end
+  elseif signature then signature[#signature+1]='-' end
  end
  for cy=z0,z1 do for cx=x0,x1 do addCell(cx,cy)end end
  if V.require('Gen3Hoenn').active()then
@@ -228,9 +231,12 @@ local function build(req,cache,previous)
  end
  Tiles.get(def.midLayout.pair)
  -- Provider replacement (palette reload) invalidates meshes even if IDs match.
- for pair,ts in pairs(groups)do signature[#signature+1]=pair..tostring(ts) end
- if cam and cam.battle then signature[#signature+1]=table.concat({'battle',cam.center[1],cam.center[2],cam.yaw},':')end
- local sig=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam) or table.concat(signature,';')
+ if signature then
+  for pair,ts in pairs(groups)do signature[#signature+1]=pair..tostring(ts) end
+  if cam and cam.battle then signature[#signature+1]=table.concat({'battle',cam.center[1],cam.center[2],cam.yaw},':')end
+ end
+ -- A provider becoming unkeyable mid-build must never match an old scene.
+ local sig=SceneCache.key(regions,x0,z0,x1,z1,Tiles._pairs,cam) or (signature and table.concat(signature,';'))or tostring(cells)
  if previous and previous.signature==sig then return previous end
  cache.signature=sig;cache.parts={};cache.cells=cells
  local treeGroups,legendaryTreeGroups,rockGroups={},{},{};M.legendaryTreeCount=0
