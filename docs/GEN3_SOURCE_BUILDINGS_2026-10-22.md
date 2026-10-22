@@ -46,14 +46,43 @@ No player saves or source engine callbacks were changed. A historical test-only
 bootstrap supplies helpers absent from the current release; its captures are not
 relabeled as current-engine evidence.
 
-Source SDK suite:386 passed,0 failed,58 explicit external-fixture skips.
+Merged source SDK suite:387 passed,0 failed,58 explicit external-fixture skips.
 Original-archive converter checks pass for Briney, Pretty Petal and Dewford;
 all six catalog importer tests pass with their external source archives supplied.
 Initial Python unittest discovery was unsuitable for standalone scripts requiring
 archive arguments; the scripts were rerun correctly with their source ZIPs.
 
-Native acceptance evidence and packaged verification are recorded below once
-completed. Scratch captures, ROMs, archives and generated caches are excluded.
+Native rendered captures inspected: all52 new exterior fronts, every eligible TV
+room (62, including engine-retained unused house records), all72 secret-base
+layouts, and representative first-person/side/rear/entry views. Existing nearby
+trees can occlude some exterior test viewpoints; separate original/adapted source
+renders establish their closed backs/undersides. All native cell/MID/collision/
+elevation hashes stay unchanged. PCs remain visible through native power states;
+normal A-button PC and TV dialogue passes in all five editions. Source sprites,
+cabinets/notes and no-source fallback were inspected; OFF/3D restoration passes.
+
+All20 non-Center building entrances pass actual native movement/warp checks.
+For eachFR/LG,15 Center entrances pass. Four Island's Center approach remains
+obstructed on the fresh fixture in both native2D and3D; the identical blocked
+player cell is recorded, and no gameplay event was bypassed to obtain a pass.
+All32 Center fronts still render with the proper source model. Missing-texture
+fixtures cover Pallet/Viridian houses, Hoenn houses/shop and publicPC native
+fallback. No all87-PC interaction or real player progression certification is
+implied by a family test and an eligibility census.
+
+The merged1.57.0 installable ZIP passes five isolated native runners with640
+mounted code/source-texture SHA256 checks each. Its186 final captures were
+inspected: all new exterior families, Kanto Center/Hoenn building entrances,
+publicPC interaction, TVs and six secret-base palettes perHoenn edition. No
+renderer recovery failures.521 production Lua files compile with native
+LuaJIT2.1; the optional Python Lupa helper was unavailable, so the actual compiler
+was used directly. A final evidence-only repack must preserve these640 hashes.
+Scratch captures, ROMs, archives and generated caches are excluded.
+
+Fixtures and drivers remain in a dedicated `scenery-20261022` QA scratch set:
+`verify.lua`, `services.lua`, `secrets.lua`, `tv-interaction.lua`, and `package.lua`.
+Native profiles are disposable, standalone and separate from player progress;
+no phone, companion-combination or other-edition certification is implied.
 
 ## Map ledger and remaining queue
 
@@ -70,7 +99,8 @@ profiles; model eligibility is separately checked against complete native drawin
 
 Next sources: exact Lavaridge variants, Pewter Museum with its irregular native
 footprint and two entrances, authentic full-blocked Hoenn beds, and local ORAS
-town/interior extraction. Vermilion and One Island Centers, Dewford's wide hall,
+town/interior extraction. A new tree-family audit tracks remaining ORAS/HGSS
+replacement gaps separately from the existing native tree presentation. Vermilion and One Island Centers, Dewford's wide hall,
 other regional houses/Marts and unverified interior families retain native models.
 All-game modern replacement and the requested per-category three-mode settings
 remain unfinished. No phone certification or general performance claim is made.

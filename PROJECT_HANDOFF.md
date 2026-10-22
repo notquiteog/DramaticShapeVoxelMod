@@ -9,7 +9,8 @@ original archive converter tests pass. Official0.3.95 native captures cover all
 new exterior families/all TV placements/all secret-base layouts.15 Center
 entrances perFR/LG pass; Four Island's fresh-fixture obstruction reproduces in
 native2D. The2161-record identifier ledger is adapter/gap inventory, not a claim
-of all-map modern-model completion. Final merged/package evidence follows in
+of all-map modern-model completion. Merged387/0/58,521 LuaJIT compilations, five packaged native runners and186
+inspected ZIP captures pass (640 mounted hashes peredition). Final evidence is in
 `docs/GEN3_SOURCE_BUILDINGS_2026-10-22.md`.
 
 Next separate source commits: Lavaridge48b8804 and Hoenn beds e943d12 (nativeQA
