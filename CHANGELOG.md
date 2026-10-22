@@ -1,3 +1,13 @@
+## 1.57.3 — Destination streaming and XD identity
+
+Keep valid destination prefetch work while its view window moves, reuse ready
+nearby windows and reduce Gen3 scene-key allocations. Preserve provider/edit
+invalidation and expose late-completion costs. Shared XD consumers now respect
+native forms, substitute/ghost/Transform ownership and physical model heading.
+All five native GBA running-connection fixtures pass. Cold late-entry stalls,
+full XD acceptance and physical mobile verification remain incomplete.
+See [verification](docs/STREAM_PROGRESS_2026-10-22.md).
+
 ## 1.57.2 — Genuine ORAS Center doors
 
 Hoenn Pokémon Centers now use the original ORAS sliding panels, glass/trim

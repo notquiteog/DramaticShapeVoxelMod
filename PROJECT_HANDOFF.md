@@ -6,7 +6,7 @@ underlays, original-source sign gating, complete/shallow/dense tree adapters,
 Lavaridge/bed/Pewter Museum sources, local ORAS audit tooling, independent style
 preferences, native scenery-card provider and optional actor-provider style
 ownership. Preserves concurrent main XD form/visibility and prefetch work.
-The latest verified published package remains1.57.2. This source snapshot is
+Existing verified release artifacts are unchanged by this source snapshot. It is
 NOT a visual acceptance/release of every new family or style mode. Keep the
 manifest release version until the next verified batch is assembled.
 
@@ -18,6 +18,14 @@ and the starting truck losing voxel camera/flattening crates. Read-only agents
 are tracing these while this requested snapshot is consolidated. Preserve native
 collision, scripts, original terrain, characters/Pokemon/flowers HD2D defaults
 and optional standalone integrations. Source gaps are not coverage claims.
+# Destination progress / XD identity — 2026-10-22
+
+Preserve valid in-flight and ready destination windows during lateral movement;
+retain provider/context invalidation. Skip redundant native cell fingerprints
+and expose forced-completion timing. All5 native GBA crossings and10 focused
+suites pass on0.3.95. RSE12-cell approaches complete before entry; cold FRLG
+2-cell approaches still stall150–164ms. XDidentity worker committed fe78440.
+No full-parity/165FPS/mobile claim. See docs/STREAM_PROGRESS_2026-10-22.md.
 
 # XD native form and battle presentation — 2026-10-22
 
