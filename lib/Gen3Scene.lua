@@ -948,7 +948,7 @@ local function terrain(draw)
  for _,part in ipairs(cache.grassModels or{})do if part.count>0 then draw(part.mesh,part.image)end end
  for _,part in ipairs(cache.bankModels or{})do draw(part.mesh,part.image)end
  for _,part in ipairs(cache.importedTrees or{})do if part.count>0 then draw(part.mesh,part.image)end end
- V.require('SceneryDraw').opaque(cache.sceneryModels,draw,draw==Shadow.draw)
+ V.require('SceneryDraw').opaque(cache.sceneryModels,draw,original==Shadow.draw)
 end
 local function waterMeshes()
  return NativeWater.sync(cache.waterDraws or{},Tiles._pairs)
