@@ -1,3 +1,12 @@
+## 1.57.6 — Large forests and missing grass
+
+Fixes all-modern-tree fallback when connected route scenes exceed4096 trees,
+and restores ORAS grass on reviewed encounter patches beneath projected tree
+tips. Includes current coastal pine source work and staged Gym/fence progress;
+remaining grass families and source-model coverage are still in progress.
+Standalone compatibility and HD-2D actor/flower defaults remain unchanged.
+[Changes and verification](docs/ROUTE103_TREE_GRASS_2026-10-22.md).
+
 ## 1.57.5 — ORAS trucks, boat and corridor repairs
 
 Authentic ORAS outdoor trucks and cargo interiors join the Briney boat and

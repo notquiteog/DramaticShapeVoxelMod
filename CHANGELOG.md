@@ -1,3 +1,12 @@
+## 1.57.6 — Large forests and missing grass
+
+Bound native tree uploads instead of falling back for the entire forest above
+4096 placements. Restore138 skipped ORAS grass cells in six reviewed Emerald
+windows without changing native encounters, Cut, ground or ownership. Include
+all current coastal tree source work and staged Gym/fence progress. Remaining
+source families and final coastal boundary acceptance are tracked explicitly.
+See [verification](docs/ROUTE103_TREE_GRASS_2026-10-22.md).
+
 ## 1.57.5 — ORAS trucks, boat and corridor repairs
 
 - Genuine ORAS outdoor truck actor and source cargo room, retaining native

@@ -1,3 +1,17 @@
+# User-requested consolidated release1.57.6 — 2026-10-22
+
+User requests prompt commit/push/main/release of all current work. The Route103
+systemic fallback is reproduced and fixed: native FAR64 source uploads change
+from0/error to5656 modern trees on entry. The grass/tree-tip source conflict
+is fixed:138 missing cells across six native Emerald windows now have models.
+Exact source and atomic resource/late-failure tests pass. Current coastal pine
+work is included; final boundary/RSE GPU review remains pending. Genuine Gym
+source models/helpers and verified fence inventory are staged, with incomplete
+runtime integrations kept inactive. JaggedPass206 and Fortree015 grass still
+need source/material review. Source worktrees are paused for this snapshot.
+Characters/Pokemon/flowers retain HD2D defaults; native gameplay and standalone
+compatibility remain unchanged. See docs/ROUTE103_TREE_GRASS_2026-10-22.md.
+
 # User-requested consolidated release1.57.5 — 2026-10-22
 
 All active corridor worker histories merged, including latest tree source
