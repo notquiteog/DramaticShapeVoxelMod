@@ -13,7 +13,12 @@ local function RS()return V and V.require('Gen3RubySapphire') or dofile((os.gete
 function M.active()
  local v=version();return v=='emerald' or v=='ruby' or v=='sapphire'
 end
-function M.exteriorRecipes()return rubySapphire() and RS().exteriors(M.exteriors) or M.exteriors end
+function M.exteriorRecipes()
+ local native=rubySapphire()and RS().exteriors(M.exteriors)or M.exteriors
+ local recipes={};for _,r in ipairs(native)do recipes[#recipes+1]=r end
+ if V then for _,r in ipairs(V.require('Gen3ImportedHoenn').recipes)do recipes[#recipes+1]=r end end
+ return recipes
+end
 function M.recipeActive(r)
  -- RS interiors opt in only after their own source/render batches.
  if rubySapphire() then return RS().recipeActive(r) end

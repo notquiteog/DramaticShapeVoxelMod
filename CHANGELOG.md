@@ -1,3 +1,17 @@
+## 1.57.0 — Regional source buildings, PCs and TVs
+
+Adds52 guarded HGSS/ORAS building placements across the five GBA editions,
+87 working public PCs,62 genuine TVs retaining native cabinets, and72 native-art
+secret-base room templates. Source doors, textures and fixtures stay faithful;
+characters, Pokémon and flowers remain HD-2D. Missing assets retain native models
+and all integrations stay optional. This is an incremental coverage batch.
+
+Preserves the concurrent native SFX/mute, clear-weather, optional HUD-color,
+Ruby/Sapphire hatch-palette and guarded release-owner updates from main.
+See [coverage and verification](docs/GEN3_SOURCE_BUILDINGS_2026-10-22.md)
+and the individual parity/audio/weather records. Complete modern coverage of
+every building, map and interior remains in progress.
+
 ## 1.56.0 — ORAS Pokémon Centers in Hoenn
 
 Ruby, Sapphire and Emerald now place the imported ORAS Center exterior in the

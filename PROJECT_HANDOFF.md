@@ -1,3 +1,22 @@
+# Regional source buildings and native rooms — 2026-10-22
+
+1.57.0 integrates52 new source-building placements (32 Kanto Centers,6 Pallet
+homes/labs,2 Viridian homes,12 Hoenn houses/shop),87 public PCs and62 genuine
+TVs.72 native-art secret-base templates enter the guarded3D adapter. Flat HD-2D
+shop flowers, original fixtures/UV/PNG, closed completion, native footprints,
+door projections and optional fallback preserved.386/0/58 source checks pass;
+original archive converter tests pass. Official0.3.95 native captures cover all
+new exterior families/all TV placements/all secret-base layouts.15 Center
+entrances perFR/LG pass; Four Island's fresh-fixture obstruction reproduces in
+native2D. The2161-record identifier ledger is adapter/gap inventory, not a claim
+of all-map modern-model completion. Final merged/package evidence follows in
+`docs/GEN3_SOURCE_BUILDINGS_2026-10-22.md`.
+
+Next separate source commits: Lavaridge48b8804 and Hoenn beds e943d12 (nativeQA
+pending); Pewter Museum in progress. User-provided local ORAS files now extract;
+map geometry/texture-bank tracing continues outsideGit. Preserve concurrent
+main audio/weather/parity work. No phone or exhaustive modern coverage claim.
+
 # ORAS Center placements — 2026-10-22
 
 1.56.0 adds the first imported whole-building native adapter: 15 Hoenn city

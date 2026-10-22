@@ -129,7 +129,7 @@ function M.append(map,g,build,emit)
   local ts=assert(g.ts)
   local pixels=assert(ts.imageData)
   local atlas=atlasKeys[ts];if not atlas then atlas={};atlasKeys[ts]=atlas end
-  local used={};local rows=g.rows or g.recipe and g.recipe.rows
+  local used={};local rows=g.nativeRows or g.rows or g.recipe and g.recipe.rows
   assert(rows,'native model source rows unavailable')
   for _,row in ipairs(rows)do for _,mid in ipairs(row)do
    local slot=assert(ts.midToSlot[mid])

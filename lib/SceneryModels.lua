@@ -203,6 +203,14 @@ function M.buildBatches(placements,newMesh,options)
   for _,key in ipairs(keys)do local g=groups[key]
    for partIndex,p in ipairs(g.parts)do
     local part={modelId=g.id,part=partIndex,name=p.name,material=p.material,opacity=p.opacity,alphaMode=p.alphaMode,role=p.role,count=#g.positions,diffuse=p.diffuse};out[#out+1]=part
+    local l,n,b,r,t,f=math.huge,math.huge,math.huge,-math.huge,-math.huge,-math.huge
+    for _,v in ipairs(p.vertices)do
+     l,n,b=math.min(l,v[1]),math.min(n,v[2]),math.min(b,v[3])
+     r,t,f=math.max(r,v[1]),math.max(t,v[2]),math.max(f,v[3])
+    end
+    local x,y,z=0,0,0
+    for _,offset in ipairs(g.positions)do x,y,z=x+offset[1],y+offset[2],z+offset[3]end
+    part.center={x/#g.positions+(l+r)/2,y/#g.positions+(n+t)/2,z/#g.positions+(b+f)/2}
     part.image=assert(M.image(g.id,p.texture,p.wrapS,p.wrapT),'scenery image unavailable')
     part.model=assert(newMesh(p.vertices,p.indices,p.format),'scenery prototype upload failed');part.model:setTexture(part.image)
     part.mesh=Instances.new(part.model,g.positions);part.instanced=part.mesh~=nil

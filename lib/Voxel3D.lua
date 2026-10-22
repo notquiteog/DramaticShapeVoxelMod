@@ -321,6 +321,7 @@ local SHADER = [[
 
   uniform vec3 ghostColor;    // the flat silhouette colour
   uniform float ghost;        // 0 = shade normally, 1 = flatten to it
+  uniform float sceneryBlend; // continuous source-material alpha; scoped separately from VFX
   uniform float effectSurface; // scoped translucent VFX; zero for normal world
   uniform float surfaceDetail; // optional native scenery grain, never UI/actors
   uniform float lightOn;      // 1 = scene lighting, 0 = texture true-colour
@@ -613,7 +614,8 @@ float gardenRipple(vec2 q, float t) {
     // sprite sheets key GB OBJ color 0 to alpha 0; discarding rather than
     // blending keeps those texels out of the depth buffer, so a model never
     // carves a transparent hole out of whatever stands behind it
-    if (p.a < 0.5) discard;
+    if (sceneryBlend > 0.5) { if (p.a <= 0.001) discard; }
+    else if (p.a < 0.5) discard;
     if (vReferenceMaterial>0.5) p.rgb=referenceSurface(vReferenceMaterial,vFoliageRay+eye,tc);
     // UNLIT is an exact texture pass, not merely a zero-weight blend with
     // the lit result. Some GLSL drivers still evaluate both sides of mix(),
@@ -622,13 +624,13 @@ float gardenRipple(vec2 q, float t) {
     // UNLIT card cannot receive face light, the day tint, voxel seams, glass
     // or any cast/self shadow.
     if (lightOn < 0.5) {
-      return vec4(mix(p.rgb, ghostColor, ghost), 1.0) * color;
+      return vec4(mix(p.rgb, ghostColor, ghost), sceneryBlend > 0.5 ? p.a : 1.0) * color;
     }
 #ifdef UNLIT_ONLY
     // A separately compiled card shader. Unlike a uniform branch in the
     // scene shader, this program contains no live day/shadow calculation for
     // a driver to evaluate or fold incorrectly. Ghost remains for hit flashes.
-    return vec4(mix(p.rgb, ghostColor, ghost), 1.0) * color;
+    return vec4(mix(p.rgb, ghostColor, ghost), sceneryBlend > 0.5 ? p.a : 1.0) * color;
 #endif
     // Low-cost battle fallback when reflective water is OFF or unavailable.
     // World coordinates keep the material continuous across tile/neighbor seams.
@@ -744,7 +746,7 @@ float gardenRipple(vec2 q, float t) {
     rgb = clamp(rgb * weatherMul + weatherAdd, 0.0, 1.0);
     rgb = mix(rgb, weatherHazeColor, min(0.28, 1.0-exp(-weatherHaze*weatherDistance)));
     rgb = mix(rgb, ghostColor, ghost);
-    return vec4(rgb, 1.0) * color;
+    return vec4(rgb, sceneryBlend > 0.5 ? p.a : 1.0) * color;
   }
 #endif
 ]]
@@ -1924,6 +1926,31 @@ function Voxel3D.withEffect(mode, draw)
   if previousShader then pcall(previousShader.send, previousShader, "lightOn", previousLight) end
   g.pop()
   if not ok then error(err, 0) end
+  return true
+end
+
+-- Imported translucent materials keep ordinary scene lighting. Render after
+-- opaque actors/terrain, test their depth without writing it, and restore even
+-- when the provider draw fails. This does not enter the unlit VFX scope.
+local sceneryScopeShader
+function Voxel3D.withSceneryMaterial(opacity, draw)
+  if not (active and activeShader) then return false end
+  assert(type(opacity)=="number" and opacity>=0 and opacity<=1,"invalid scenery opacity")
+  local g=love.graphics
+  local sh,previous=activeShader,sceneryScopeShader
+  g.push("all")
+  local ok,err=pcall(function()
+    sh:send("sceneryBlend",1)
+    sceneryScopeShader=sh
+    g.setBlendMode("alpha","alphamultiply")
+    g.setDepthMode("lequal",false)
+    g.setColor(1,1,1,opacity)
+    draw()
+  end)
+  pcall(sh.send,sh,"sceneryBlend",previous==sh and 1 or 0)
+  sceneryScopeShader=previous
+  g.pop()
+  if not ok then error(err,0)end
   return true
 end
 

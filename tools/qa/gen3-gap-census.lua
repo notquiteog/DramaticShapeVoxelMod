@@ -13,7 +13,7 @@
 -- never writes imported pixels. Refuses non-QA identities.
 return function(game)
  assert(love.filesystem.getIdentity():match('%-qa$'),'refusing a non-QA profile')
- local U=dofile('tests/drivers/util.lua')
+ local U=dofile(os.getenv('QA_DRIVER_UTIL') or 'tests/drivers/util.lua')
  local edition=require('src.core.GameVersion').get()
  local start=edition=='emerald' and 'EM_OLDALE_TOWN' or edition=='ruby' and 'RU_OLDALE_TOWN'
   or edition=='sapphire' and 'SA_OLDALE_TOWN' or 'FR_PALLET_TOWN'
@@ -29,16 +29,20 @@ return function(game)
  for i,id in ipairs(ids)do Map.ensureMidLayout(game,id,game.data.maps[id]);if i%30==0 then U.wait(1)end end
  Pairs.bind(game.data.maps)
  local dir=assert(os.getenv('SHOT_DIR'))
+ local inventory=assert(io.open(dir..'/'..edition..'-maps.csv','w'))
+ inventory:write('map,map_type,outdoor,pair,width,height,supported,prepare_error,civic_objects,furniture_objects,blocked_cells,unclaimed_blocked_cells\n')
+ local function field(value)return '"'..tostring(value or ''):gsub('"','""')..'"'end
  local comp=assert(io.open(dir..'/'..edition..'-gap-components.csv','w'))
  comp:write('map,outdoor,pair,x,y,w,h,cells,family\n')
  local families,mapsDone,gapCells,claimedCells,mids={},0,0,0,{}
  for index,id in ipairs(ids)do
   local def=game.data.maps[id]
   local outdoor=Pairs.outdoor(def)
+  local row={id,def.mapType,tostring(outdoor),def.midLayout and def.midLayout.pair or '',def.width or 0,def.height or 0,'false','',0,0,0,0}
   if def.midLayout and (scope=='all' or (scope=='outdoor')==outdoor) then
    local pair=def.midLayout.pair;local spec=Pairs.resolve(pair,Versions.TILESET_PAIRS)
    if Pairs.supports(def,spec) then
-    mapsDone=mapsDone+1
+    mapsDone=mapsDone+1;row[7]='true'
     local cells={}
     local beh=I.behaviors[pair] or {}
     for y=0,def.height-1 do for x=0,def.width-1 do
@@ -54,14 +58,14 @@ return function(game)
      local recipes=V.data('gen3_exteriors')
      local optional=V.require('NativeLegendaryBuildings').recipes(def)
      if #optional>0 then local combined={};for _,r in ipairs(optional)do combined[#combined+1]=r end;for _,r in ipairs(recipes)do combined[#combined+1]=r end;recipes=combined end
-     V.require('Gen3Civic').prepare(cells,gyms,recipes)
+     row[9]=#V.require('Gen3Civic').prepare(cells,gyms,recipes)
      V.require('Gen3NativeLamps').prepare(cells)
      V.require('Gen3Stairs').prepare(cells)
-     Furniture.extract(cells)
+     row[10]=#Furniture.extract(cells)
      Shapes.layout(cells)
      for _,c in pairs(cells)do if c.gym then c.column=V.require('Gen3Buildings').column(c.gym)end end
     end)
-    if not ok then print('[GAP ERROR]',id,err)end
+    if not ok then row[8]=tostring(err);print('[GAP ERROR]',id,err)end
     local function gap(c)
      -- Native Gen3 collision arrives as Gen2 permission codes: 0x18 tall
      -- grass and similar walkable codes are not obstacles.
@@ -71,7 +75,8 @@ return function(game)
      return k=='flat' or k=='roof' or k=='wall' or (k=='roomWall' and not c.column) or k=='interiorFloor'
     end
     for _,c in pairs(cells)do if c.collision and not Perm.isWalkable(c.collision) then
-     if gap(c)then gapCells=gapCells+1
+     row[11]=row[11]+1
+     if gap(c)then gapCells=gapCells+1;row[12]=row[12]+1
       local k=c.pair..':'..c.mid;local m=mids[k] or {pair=c.pair,mid=c.mid,kind=c.shape and c.shape.kind or 'flat',cells=0,maps={},example=id,x=c.cx,y=c.cy}
       mids[k]=m;m.cells=m.cells+1;m.maps[id]=true
      else claimedCells=claimedCells+1 end
@@ -101,9 +106,10 @@ return function(game)
     end end
    end
   end
+  local columns={};for i=1,12 do columns[i]=field(row[i])end;inventory:write(table.concat(columns,',')..'\n')
   if index%15==0 then U.wait(1)end
  end
- comp:close()
+ inventory:close();comp:close()
  local list={};for _,f in pairs(families)do list[#list+1]=f end
  table.sort(list,function(a,b)local wa,wb=a.cells*a.count,b.cells*b.count;if wa~=wb then return wa>wb end;return a.example<b.example end)
  local fam=assert(io.open(dir..'/'..edition..'-gap-families.csv','w'))

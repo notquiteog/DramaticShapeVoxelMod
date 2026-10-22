@@ -14,8 +14,8 @@ function M.shape(primary,secondary,mid,behavior,collision)
  if not M.family(primary,secondary)then return end
  if walls[mid]and collision==7 then
   return{kind='caveWall',height=32,ground=0x20a,cap=0x210,side=0x202,secretBase=true}
- elseif collision==7 and(mid==0x220 or mid==0x20c or mid==0x222 or mid==0x223)then
-  return{kind='secretBaseProp',secretBase=mid==0x220 and'pc'or mid==0x20c and'door'or'pit',ground=0x20a}
+ elseif collision==7 and(mid==0x220 or mid==0x221 or mid==0x224 or mid==0x20c or mid==0x222 or mid==0x223)then
+  return{kind='secretBaseProp',secretBase=(mid==0x220 or mid==0x221 or mid==0x224)and'pc'or mid==0x20c and'door'or'pit',ground=0x20a}
  end
  -- Native removable/walkable stones, mats and user decorations must retain
  -- their original surface/clearance; a blocked permission alone is no recipe.

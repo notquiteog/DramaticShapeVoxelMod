@@ -40,6 +40,7 @@ for _,f in ipairs(faces)do local y=0;for _,v in ipairs(f)do y=math.max(y,v[2])en
   assert(right<=2 or left>=14 or low>=24,'entry opening obstructed')
  end
 end
+for _,mid in ipairs{0x221,0x224}do assert(B.shape('secret_base','secret_base_red_cave',mid,0,7).secretBase=='pc','native PC power/registration state lost its model')end
 local pit=fixture(0x222,'pit');faces=mesh(pit,{['3:4']=pit});local negative,vertical=false,false
 for _,f in ipairs(faces)do for _,v in ipairs(f)do negative=negative or v[2]==-8 end;vertical=vertical or(f[1][2]~=f[3][2])end
 assert(negative and vertical,'pit stayed flat')
