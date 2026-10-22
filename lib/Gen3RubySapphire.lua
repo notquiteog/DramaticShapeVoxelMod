@@ -188,6 +188,9 @@ function M.ownShape(primary,secondary,mid,behavior,collision)
   if mid==0xe0 and collision==7 then return {kind='rock',ground=1,height=14}end
   if trees[mid]then return {kind='tree',ground=1,root=roots[mid],anchorX=16,anchorZ=8,
    treeRows={{0x1d4,0x1d5},{0x1dc,0x1dd}},treeFamily='round',treeTrim=0}end
+  if mid==0x40 then
+   return{kind='tree',ground=1,root=collision~=0,anchorX=8,anchorZ=8,treeRows={{0xe},{0xc7}},treeFamily='conifer',treeTrim=0}
+  end
   if collision==7 and(mid==0x1f4 or mid==0x1f5)then
    return{kind='tree',ground=1,root=true,anchorX=8,anchorZ=8,treeRows={{mid}},treeFamily='round',treeTrim=0}
   end

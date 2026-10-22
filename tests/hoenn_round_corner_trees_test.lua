@@ -51,6 +51,14 @@ for game,prefix in pairs{ruby='RU',sapphire='SA',emerald='EM'}do
   cap.shape={kind='flat'};body.civic={};assert(V.require('Gen3Hoenn').prepareTreeCaps(cells)==0 and cap.shape.kind=='flat','conflicting civic body removed source projection');body.civic=nil
   body.collision=0;assert(V.require('Gen3Hoenn').prepareTreeCaps(cells)==0 and cap.shape.kind=='flat','unverified body removed source projection')
  end
+ -- Source040 is a complete evergreen crown beside the fence, not a rail.
+ do
+  local region={def={id=prefix..'_ROUTE104'}}
+  local c={cx=0,cy=0,mid=0x40,collision=7,base=0,primary='general',secondary='rustboro',pair='general__rustboro',region=region,shape=S.of('general','rustboro',0x40,0,7)}
+  local cells={['0:0']=c};assert(c.shape.kind=='tree'and c.shape.treeFamily=='conifer')
+  F.prepare(cells,game);local p=T.gen3Placements(cells,{region='hoenn'});assert(#p==1 and p[1].model=='oras_evergreen_tree')
+  c.collision=0;c.shape=S.of('general','rustboro',0x40,0,0);F.prepare(cells,game);assert(#T.gen3Placements(cells,{region='hoenn'})==0 and not c.shape.root)
+ end
  -- Encounter-grass caps are walking projections, not new bushes/trees.
  for _,mid in ipairs{0x1c6,0x1c7}do
   local c={cx=0,cy=0,mid=mid,collision=24,primary='general',pair='general__rustboro',shape={kind='flat'}}

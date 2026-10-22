@@ -67,3 +67,35 @@ assert(#T.gen3Placements(cells,{region='hoenn'})==1)
 cells['14:73'].base=12;cells['14:74'].base=12
 assert(not H.wholeRoundSlope(root,cells),'unreviewed layer3 twelve-pixel owner accepted')
 print('PASS native blocked layer3 six-pixel tree ownership; twelve-pixel guard remains narrow')
+
+local function forestFixture(depth)
+ local b={896,320,928,320+depth};local cells={};local root
+ for y=20,19+depth/16 do for x=56,57 do
+  local c={cx=x,cy=y,mid=x==56 and 0x1dc or 0x1dd,boundary='forest',primary='general',secondary='rustboro',pair='general__rustboro',base=x==56 and 0 or 6,
+   shape={kind='tree',treeFamily='round',root=x==56 and y==20,treeBounds=b}}
+  cells[x..':'..y]=c;if c.shape.root then root=c end
+ end end
+ return root,cells
+end
+for _,depth in ipairs{16,32}do
+ local root,cells=forestFixture(depth);assert(H.forestRoundSlope(root,cells,{region='hoenn'}))
+ local p=T.gen3Placements(cells,{region='hoenn'});assert(#p==1 and p[1].model==(depth==16 and H.shallowModel or 'oras_route104_broadleaf')and p[1].y==0)
+ assert(not root.importedTree and root.base==0 and cells['57:20'].base==6 and root.collision==nil)
+ local parts=assert(S.vertices(p[1].model,p[1].fit));for _,part in ipairs(parts)do for _,v in ipairs(part.vertices)do
+  assert(v[1]>=.25-1e-6 and v[1]<=31.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=depth-.25+1e-6)
+ end end
+end
+for _,mutate in ipairs{
+ function(c)c['57:20'].base=12 end,
+ function(c)c['57:20'].base=-6 end,
+ function(c)c['57:20'].collision=7;c['57:20'].boundary=nil end,
+ function(c)c['57:20'].collision=0 end,
+ function(c)c['57:20'].boundary='water' end,
+ function(c)c['57:20'].region={}end,
+ function(c)c['57:20'].mid=0x1d5 end,
+ function(c)c['57:20'].shape.treePalette='gold'end,
+ function(c)c['57:20'].shape.root=true end,
+ function(c)c['57:20'].shape.treeBounds={896,320,928,352}end,
+ function(c)c['57:20'].civic={}end,
+}do local root,cells=forestFixture(32);mutate(cells);assert(not H.forestRoundSlope(root,cells,{region='hoenn'}),'unreviewed forest terrace accepted')end
+print('PASS exact synthetic DC/DD forest six-pixel owner; full/shallow source body, native/foreign/walking/span exclusions')
