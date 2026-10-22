@@ -1,7 +1,7 @@
-## Unreleased main snapshot
+## 1.57.4 — Test preview
 
-Pending scenery, tree, native-ground and category-style work is consolidated on
-main. Native visual verification and several style rendering hooks are still in
+Test preview of the consolidated scenery, tree, native-ground and category-style
+work on main. Native visual verification and several style rendering hooks are still in
 progress; this does not certify complete Littleroot–Rustboro coverage. Use the published release artifacts for verified packages. See PROJECT_HANDOFF.md for remaining work.
 
 ## 1.57.2 — Genuine ORAS Center doors

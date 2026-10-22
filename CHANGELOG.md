@@ -1,3 +1,12 @@
+## 1.57.4 — Test preview
+
+User-requested test package of the consolidated main snapshot: native building
+underlays, expanded ORAS tree sources/completions, pending source buildings and
+interiors, category preferences and actor-provider ownership. Source checks:
+406 passed,0 failed,58 external skips;540 production LuaJIT compilations.
+Native acceptance remains in progress. Dock water/edges/planks, truck intro and
+Route115→Rustboro tree fallback are open investigations. This is a prerelease.
+
 ## 1.57.3 — Destination streaming and XD identity
 
 Keep valid destination prefetch work while its view window moves, reuse ready

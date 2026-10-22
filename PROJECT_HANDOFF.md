@@ -1,3 +1,17 @@
+# User-requested test release1.57.4 — 2026-10-22
+
+Package the pushed a72dee0 source snapshot for user testing, with version/docs
+only added. Explicit user request overrides the previous hold on publishing
+pending visual work. Initially published as a prerelease, then promoted to the
+latest regular release because Gen1Recomp prefers non-prereleases. Live GitHub
+release-list JSON passed the official0.3.95 ModUpdate parser: installed1.57.3
+reports available1.57.4 and selects the matching ZIP; releases/latest also returns
+v1.57.4. Package bytes and pending visual limitations are unchanged.406 source suites
+pass,58 external fixtures skip,540 production LuaJIT files compile. Source-model
+and style native visual acceptance is still pending. Agents now independently
+fix dock water datum, dock geometry and truck cargo; root reproduces the native
+Route115→Rustboro tree fallback. Those fixes are not in this test snapshot.
+
 # Consolidated unreleased source snapshot — 2026-10-22
 
 User requested every pending change committed and pushed to main. Consolidates
