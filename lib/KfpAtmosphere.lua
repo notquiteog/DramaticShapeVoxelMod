@@ -42,6 +42,11 @@ function M.new()
  function self:update(facts,dt,master,enabled)
   facts=facts or {};dt=math.max(0,math.min(.1,tonumber(dt)or 0))
   local gain=enabled and math.max(0,math.min(1,tonumber(master)or 1))or 0
+  if gain==0 then
+   for name,source in pairs(self.sources)do
+    if source and name:sub(1,4)=='sfx-'then source:stop()end
+   end
+  end
   local level=({low=.35,mid=.62})[M.ambient:get()]or 0
   for _,kind in ipairs({'town','route','rain'})do
    local name='amb-'..kind..'.mp3'
@@ -129,7 +134,7 @@ function M.install(cameraEnabled)
    local top=game.stack and game.stack:top()
    enabled=map and p and (not top or top==state)
   end
-  local opts=game.save and game.save.options or {}
+  local opts=game.options or (game.save and game.save.options) or {}
   audio:update(M.facts(map,p,generation),dt,math.max(0,math.min(7,tonumber(opts.sfxVol)or 7))/7,
    enabled and cameraEnabled())
   return result
