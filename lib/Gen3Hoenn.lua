@@ -4,6 +4,7 @@ local V=...
 local M={recipes={},exteriors={}}
 local BoundaryProps=V and V.require('Gen3BoundaryProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3BoundaryProps.lua')
 local EarlyProps=V and V.require('Gen3EarlyProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3EarlyProps.lua')
+local Truck=V and V.require('Gen3TruckCargo')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3TruckCargo.lua')
 local function version()
  local ok,GV=pcall(require,'src.core.GameVersion')
  return ok and GV.get() or nil
@@ -379,7 +380,7 @@ add('hoenn_truck_cargo','general__inside_of_truck',{
  {0x201,0x202,0x203,0x204,0x205},{0x209,0x20a,0x20b,0x20c,0x208},
  {0x211,0x212,0x213,0x214,0x210},{0x219,0x21a,0x21b,0x21c,0x218},
  {0x221,0x222,0x223,0x224,0x220}},'designed',{
- primary='general',design='em_truck_cargo',ground=0x214,
+ primary='general',design='em_truck_cargo',ground=0x214,claimCells=Truck.claimCells(),
  groundRows={{0x214,0x214,0x214,0x214,0x214},{0x214,0x214,0x214,0x214,0x208},
  {0x214,0x214,0x214,0x214,0x210},{0x214,0x214,0x214,0x214,0x218},
  {0x214,0x214,0x214,0x214,0x214}}})
