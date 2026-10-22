@@ -38,7 +38,7 @@ function M.build(cells,newMesh,parts)
  return result,err,result and #list or 0
 end
 function M.floor(c)
- if c and c.importedFence and M.eligible(c)==c.importedFence then return c.mid end
+ if c and c.importedFence and M.eligible(c)==c.importedFence then return c.importedFence=='oras_rural_fence'and 1 or c.mid end
 end
 function M.underOnly(c)return M.floor(c)~=nil and c.ts.layered==true end
 return M
