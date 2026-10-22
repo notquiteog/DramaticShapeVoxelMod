@@ -29,3 +29,13 @@ rect={900,0,10,10};x,y,w,h=T.viewport(640,480);assert(x==0 and w==640,'invalid i
 package.loaded['src.core.SafeArea'].rect=function()error('backend unavailable')end
 x,y,w,h=T.viewport(640,480);assert(x==0 and y==0 and w==640 and h==480)
 print('PASS public safe area, rotation, invalid/backend fallback without native UI changes')
+
+local color=true
+V.require=function(name)assert(name=='UiBackplates');return {hudUsesColor=function()return color end}end
+local card
+provider={exports={apiVersion=1,enabled=function()return true end,battleTheme={apiVersion=1,combatCard=function(...)card=select(7,...);return true end}}}
+V.mod.find=function()return provider end
+local original={name='TEST'}
+for _,value in ipairs({true,false})do color=value;assert(T.combatCard(0,0,90,18,0,false,original));assert(card.hudColor==(value and 'COLOR'or'INVERTED'));assert(original.hudColor==nil)end
+provider.exports.enabled=function()return false end;assert(not T.combatCard(0,0,90,18,0,false,original))
+print('PASS shared semantic HUD color and independent OFF fallback')

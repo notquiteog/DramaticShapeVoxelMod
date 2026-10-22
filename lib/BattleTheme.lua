@@ -135,7 +135,14 @@ return setmetatable({}, {__index=function(_,key)
    local enabled,value=pcall(api.enabled)
    local theme=api.battleTheme
    if enabled and value==true and type(theme)=='table' and theme.apiVersion==1
-     and type(theme[key])==type(M[key]) then return theme[key] end
+     and type(theme[key])==type(M[key]) then
+     if key=='combatCard' then return function(x,y,w,h,tip,selected,data)
+      local card={};for k,v in pairs(data)do card[k]=v end
+      card.hudColor=V.require('UiBackplates').hudUsesColor()and'COLOR'or'INVERTED'
+      return theme.combatCard(x,y,w,h,tip,selected,card)
+     end end
+     return theme[key]
+   end
   end
  end
  return M[key]
