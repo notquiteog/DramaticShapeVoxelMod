@@ -42,12 +42,21 @@ local function ownerBounds(c,cells,options)
   and blocked(c)and not customForest(id))then return end
  if s.treeFamily=='ash'or s.treePalette or s.treeFamily=='sapling'then return end
  local b=s.treeBounds;if not b then return end
+ local hoenn=options and options.region=='hoenn'or id:match('^EM_')or id:match('^RU_')or id:match('^SA_')
+ local slope
  for y=math.floor(b[2]/16),math.ceil(b[4]/16)-1 do for x=math.floor(b[1]/16),math.ceil(b[3]/16)-1 do
   local q=cells[x..':'..y]
   if not(blocked(q)and q.shape and q.shape.kind=='tree'and not(q.prop or q.civic or q.stageHidden)
-   and q.shape.treeBounds==b and math.abs((q.base or 0)-(c.base or 0))<.01)then return end
+   and q.shape.treeBounds==b)then return end
+  if math.abs((q.base or 0)-(c.base or 0))>=.01 then
+   if slope==nil then
+    local adapter=hoenn and c.primary=='general'and V.require('Gen3ImportedHoennTrees')
+    slope=adapter and adapter.wholeRoundSlope and adapter.wholeRoundSlope(c,cells,options)or false
+   end
+   if not slope then return end
+  end
  end end
- return b,options and options.region=='hoenn'or id:match('^EM_')or id:match('^RU_')or id:match('^SA_')
+ return b,hoenn
 end
 function M.gen3Placement(c,cells,options)
  local b,hoenn=ownerBounds(c,cells,options);if not b then return end
