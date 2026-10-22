@@ -58,8 +58,8 @@ M.recipes[#M.recipes+1]={name='rs_mart_checkout',edition='rs',family='rse',prima
 M.recipes[#M.recipes+1]={name='birch_east_book_stacks',edition='rs',family='rse',primary='building',pair='building__lab',ground=0x202,kind='labStacks',sourceOffset=8,stackOffset=8,rows={{0x20f},{0x217},{0x21f}}}
 M.recipes[#M.recipes+1]={name='birch_east_small_desk',edition='rs',family='rse',primary='building',pair='building__lab',ground=0x202,kind='labSideDesk',rows={{0x227},{0x22f}}}
 local trees={}
-for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1de,0x1df,0x1e4,0x1e5,0x1e6,0x1e7,0x1f2,0x1f3}do trees[id]=true end
-local roots={[0x1dc]=true,[0x1de]=true,[0x1e4]=true,[0x1e6]=true,[0x1f3]=true}
+for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1de,0x1df,0x1e4,0x1e5,0x1e6,0x1e7,0x1ec,0x1ed,0x1f2,0x1f3}do trees[id]=true end
+local roots={[0x1dc]=true,[0x1de]=true,[0x1e4]=true,[0x1e6]=true,[0x1ec]=true,[0x1f3]=true}
 local rsSpace={name='rs_mossdeep_space_center',family='rse',pair='general__mossdeep',kind='space_center',geometry='landmark',landmark='rs_space',header=8,wallSample={4,44},trimSample={4,33},openings={{64,112,80,128,door=true}},permissions={
  {7,7,7,7,7,7,7,7,7},
  {7,7,0,7,7,7,0,7,7},

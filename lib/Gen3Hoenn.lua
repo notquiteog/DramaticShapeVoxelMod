@@ -26,8 +26,8 @@ function M.recipeActive(r)
  return M.active()==(r.family=='rse')
 end
 local trees={}
-for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1de,0x1df,0x1e4,0x1e5,0x1e6,0x1e7,0x1f2,0x1f3}do trees[id]=true end
-local roots={[0x1dc]=true,[0x1de]=true,[0x1e4]=true,[0x1e6]=true,[0x1f3]=true}
+for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1de,0x1df,0x1e4,0x1e5,0x1e6,0x1e7,0x1ec,0x1ed,0x1f2,0x1f3}do trees[id]=true end
+local roots={[0x1dc]=true,[0x1de]=true,[0x1e4]=true,[0x1e6]=true,[0x1ec]=true,[0x1f3]=true}
 -- Fallarbor/Route 114 brown rock bands, also used by the Fossil Maniac's
 -- tunnel. Sand, rock-on-sand decorations and the blank border stay separate.
 local fallarborWalls={ [0x268]=true,[0x269]=true,[0x26a]=true,
@@ -76,23 +76,48 @@ function M.prepareTreeCaps(cells)
  local roundBody={[0x1d4]=true,[0x1d5]=true,[0x1d6]=true,[0x1d7]=true}
  local pineBody={[0x16]=true,[0x17]=true,[0x1f4]=true,[0x1f5]=true}
  for _,c in pairs(cells)do
-  local round=c.mid==0x1e8 or c.mid==0x1e9
+  local grass=c.mid==0x1c6 or c.mid==0x1c7
+  local round=grass or c.mid==0x1e8 or c.mid==0x1e9
   local pine=c.mid==0x1fc or c.mid==0x1fd
-  if c.primary=='general'and c.collision==0 and not(c.boundary or c.prop or c.civic or c.stageHidden)and(round or pine)then
+  if c.primary=='general'and c.collision==(grass and 24 or 0)and not(c.boundary or c.prop or c.civic or c.stageHidden)and(round or pine)then
    local below=cells[c.cx..':'..(c.cy+1)]
    if below and below.primary=='general'and below.collision==7 and not(below.boundary or below.prop or below.civic or below.stageHidden)
     and below.shape and below.shape.kind=='tree'and not(below.shape.treePalette or below.shape.importedTreeModel)and(round and roundBody[below.mid]or pine and pineBody[below.mid])then
-    c.shape={kind='tree',root=false,ground=1,treeFamily=round and'round'or'conifer',projectedTreeCap=true}
+    c.shape={kind='tree',root=false,ground=grass and 0xd or 1,treeFamily=round and'round'or'conifer',projectedTreeCap=true}
     count=count+1
    end
   end
  end
  return count
 end
+-- Source F0/F1 is a real retaining face plus a projected leaf tip.
+-- Reuse this edition's reviewed Hoenn cliff profile, with native071 upper
+-- terrace support; never turn an isolated numbered tile into a new enclosure.
+function M.prepareTreeCliffs(cells)
+ if not M.active()then return 0 end
+ local count=0
+ for _,c in pairs(cells)do if c.primary=='general'and c.collision==7 and(c.mid==0x1f0 or c.mid==0x1f1)
+  and not(c.boundary or c.prop or c.civic or c.stageHidden)then
+  local above=cells[c.cx..':'..(c.cy-1)];local below=cells[c.cx..':'..(c.cy+1)]
+  if above and below and above.primary=='general'and below.primary=='general'
+   and above.pair==c.pair and below.pair==c.pair
+   and(above.mid==0x71 and above.collision==0 or above.mid==0x7d and above.collision==7 and above.shape and above.shape.kind=='cliff')
+   and below.collision==7 and not(above.boundary or below.boundary or above.prop or below.prop or above.civic or below.civic)
+   and below.shape and below.shape.kind=='tree'and below.shape.treeFamily=='round'
+   and(c.mid==0x1f0 and(below.mid==0x1d4 or below.mid==0x1d6)or c.mid==0x1f1 and(below.mid==0x1d5 or below.mid==0x1d7))then
+   local profile=M.shape('general',c.secondary,0x74,0,7)
+   if profile and profile.kind=='cliff'then
+    c.shape={kind='cliff',height=profile.height,ground=profile.ground,cap=profile.cap,side=profile.side,projectedTreeCap=true}
+    count=count+1
+   end
+  end
+ end end
+ return count
+end
 -- Complete Mossdeep tree drawings. Composite cliff artwork uses the native
 -- floor elevations and stone retaining faces, not an extra raised column.
 function M.prepareTrees(cells)
- local projected=M.prepareTreeCaps(cells)
+ local projected=M.prepareTreeCaps(cells)+M.prepareTreeCliffs(cells)
  if rubySapphire() then return projected end
  local rows={{0x302,0x303,0x304},{0x30a,0x30b,0x30c},{0x312,0x313,0x314}}
  local variants={

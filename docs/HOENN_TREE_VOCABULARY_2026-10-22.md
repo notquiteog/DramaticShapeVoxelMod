@@ -80,3 +80,41 @@ is checked separately. The stepped-pine screenshot was inspected: closed canopy,
 original upper-band trunk ground, no duplicate lower tree or walking overhang.
 Existing source comparison and compact front/rear/side/under acceptance still
 apply because this patch changes source recognition and placement grounds only.
+
+## Follow-up source composites
+
+The Route104 painted lower canopy bands were source EC/ED: ordinary round-tree
+lower bodies composited over the following evergreen crowns. They now form
+whole ordinary round owners with D4–D7 above, preserving separate pines below.
+There are14 such native cells per edition on Route104, plus7 in Emerald or8 in
+R/S on Route116. Three native Route116017 bodies below verified whole EC/ED
+owners are distinct evergreen trees, now fitted only to their original16×16
+blocked bodies. Incomplete/foreign/mixed-height background owners stand down.
+
+Source1C6/1C7 is the tiny projected round-tree cap over encounter grass. Exact
+permission24 cells with matching blocked round body below become non-root tree
+ground0xD. Native grass and encounter collision remain intact. These caps occur
+on Routes101–104/116 and Petalburg Woods; they never gain a trunk or footprint.
+
+Route116's five source F0/F1 cells per edition are real cliff faces with a tiny
+projected leaf strip. The guarded adapter requires matching D4–D7 blocked tree
+body below, same source pair, and exact native071 walking terrace support (or
+reviewed blocked7D cliff join) above. It reuses the current edition's existing
+Hoenn074 cliff profile and genuine071 wall texture. It does not copy arbitrary
+neighbor heights or change the real upper floor, native collision or elevation.
+The parent can retain its reviewed cosmetic enclosure height in that profile.
+
+Native0.3.95 Emerald captures were inspected at Route104(35,22), Route116(30,6)
+first-person, and the real walking upper terrace(58,16). The conspicuous EC/ED
+painted bands are gone, the three017 tree bodies render genuine grounded pines,
+and all five rock composites become continuous retaining geometry. The extra
+lower-view driver assertion failed because the proposed area is beyond the
+native20-row Route116 map; it is not evidence of a gameplay or rendering failure.
+The upper view and static native source footprint are the evidence for that
+cliff join. R/S share measured source rows and pass their own classifier tests;
+additional native release views remain the integrating parent's responsibility.
+
+The native/tree-owner denominator still omits some painted source families.
+A separate remaining full-crown source040 and generated forest DC/DD mixed-six-
+pixel boundary owners were discovered during this check and remain next work.
+No complete corridor visual acceptance is claimed by this source-family commit.
