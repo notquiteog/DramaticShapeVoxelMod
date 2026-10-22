@@ -37,11 +37,11 @@ for _,ed in ipairs{'emerald','ruby','sapphire'}do
   local g=out[1];local expected=rural[r.name]and 1 or 0x2bb
   assert(g.sourceGround==expected,r.name..' source family fell back to proximity')
   for _,c in pairs(cells)do
-   if c.civic then local clean=c.cy==0 and c.cx<(cleanHeaders[r.name]or 0);local want=(clean or g.custom.preserveWalkableFloor and c.collision==0)and c.mid or expected;assert(Civic.ground(c)==want,r.name..' lost clean source underlay or copied decorative/body artwork')end
+   if c.civic then local clean=c.cy==0 and c.cx<(cleanHeaders[r.name]or 0);local want=(clean or g.custom.preserveWalkableFloor and c.collision==0)and c.mid or expected;assert(Civic.ground(c)==want,r.name..' lost clean source underlay or copied decorative/body artwork');assert(Civic.underOnly(c)==clean,r.name..' roof-header floor must draw under atlas exactly once')end
   end
   -- Existing explicit overrides and preserved native floor cells retain priority.
   local c=cells['0:0'];local custom=g.custom;local savedGround=custom.ground
-  custom.ground=0x170;assert(Civic.ground(c)==0x170,'explicit water/underlay override lost');custom.ground=savedGround
+  custom.ground=0x170;assert(Civic.ground(c)==0x170 and not Civic.underOnly(c),'explicit water/underlay override lost');custom.ground=savedGround
   local savedPreserve=custom.groundPreserve;custom.groundPreserve={{0,0}};assert(Civic.ground(c)==c.mid,'source-preserved cell repainted');custom.groundPreserve=savedPreserve
   local preserve=custom.preserveWalkableFloor;custom.preserveWalkableFloor=true;custom.ground=nil;c.collision=0;assert(Civic.ground(c)==c.mid,'walkable source floor lost');custom.preserveWalkableFloor=preserve;custom.ground=savedGround;c.collision=before['0:0'][2]
   for k,c in pairs(cells)do local b=before[k];assert(c.mid==b[1]and c.collision==b[2]and c.base==b[3]and c.shape==b[4],'native terrain/permission/shape changed')end
@@ -62,12 +62,14 @@ for _,ed in ipairs{'emerald','ruby','sapphire'}do
   cells=fixture(r);for _,c in pairs(cells)do c.ts={layered=false}end
   assert(#Civic.prepare(cells,{},{})==1)
   assert(Civic.ground(cells['2:0'])==1,'flat roof artwork projected onto floor')
+  assert(not Civic.underOnly(cells['2:0']),'flat atlas accepted as clean source under layer')
   -- Reusing a known label/corner with different header art is not source proof.
   local changed={};for k,v in pairs(r)do changed[k]=v end;changed.rows={};for y,row in ipairs(r.rows)do changed.rows[y]={unpack(row)}end;changed.rows[1][3]=0x61
   local altered=fixture(changed);local Plain=assert(loadfile('lib/Gen3Civic.lua'))()
   local out=Plain.prepare(altered,{}, {changed});assert(#out==1 and Civic.ground(altered['2:0'])==1,'body pixels accepted as clean header')
  end end
 end
+assert(not Civic.underOnly(nil)and not Civic.underOnly({}),'unknown cells entered under-only batch')
 -- Unknown/cross-edition/falsely named drawings keep their previous fallback.
 local Plain=assert(loadfile('lib/Gen3Civic.lua'))()
 local function unknown(name,pair,family,rows)
