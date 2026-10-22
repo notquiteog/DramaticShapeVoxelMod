@@ -25,7 +25,7 @@ for _,depth in ipairs{16,32}do
  end
  local b=p[1].treeInfo.bounds;assert(b[1]>=32.25 and b[3]<=47.75 and b[2]>=48.25 and b[4]<=48+depth-.25)
  assert(not c.importedTree,'planning hid the fallback before upload')
- for _,mid in ipairs{0x1e,0x1f,0x2e,0x2f,0x3e,0x3f,0xce,0xcf,0x16,0x17,0x239,0x23a,0x243}do
+ for _,mid in ipairs{0x1e,0x1f,0x2e,0x2f,0x3e,0x3f,0xcf,0x16,0x17,0x239,0x23a,0x243}do
   local before=c.mid;c.mid=mid;assert(not M.placements(c,cells,{region='hoenn'}),'non-whole-crown source accepted');c.mid=before
  end
  local top=cells['2:3']
@@ -39,8 +39,9 @@ for _,depth in ipairs{16,32}do
  c.region.def.id='FR_ROUTE_2';assert(not M.placements(c,cells,{region='kanto'}),'cross-region substitution')
 end
 local data=V.require('ImportedPineTreeData')[M.model]
-assert(#data.parts==4 and #data.parts[1].indices/3==12 and #data.parts[2].indices/3==96)
+assert(#data.parts==5 and #data.parts[1].indices/3==12 and #data.parts[2].indices/3==96)
 assert(#data.parts[3].indices/3==12 and #data.parts[4].indices/3==24)
+assert(data.parts[5].name=='canopy_rotated_inset_completion'and #data.parts[5].indices/3==96)
 assert(M.policy(M.model).minHeight==18 and not M.policy('oras_route104_broadleaf'))
 for r=0,3 do
  local parts,f=assert(S.vertices(M.model,{width=32,depth=32,padding=.25,rotation=r}))
@@ -101,4 +102,42 @@ for _,x in ipairs{2,3}do
  c.shape.treeFamily='sapling';assert(not M.placements(c,cells),'sapling substituted')
 end
 assert(M.policy(M.shallowModel).minHeight==27.5 and not M.register('unknown_source'))
+-- The last canopy and exposed trunk are one front tree, including the
+-- cliff-clipped CE cap. Earlier overlapping canopy rows stay separate trees.
+for _,depth in ipairs{16,32}do for _,cap in ipairs{0xc7,0xce}do
+ local c,cells=fixture(depth);local b=c.shape.treeBounds
+ cells['2:3'].mid=cap
+ local y=3+depth/16;local tb={32,y*16,48,(y+1)*16}
+ local trunk={cx=2,cy=y,mid=0x16,primary=c.primary,pair=c.pair,secondary=c.secondary,base=4,collision=7,region=c.region,
+  shape={kind='tree',root=true,treeFamily='round',treeBounds=tb}}
+ cells['2:'..y]=trunk
+ local p=assert(M.placements(c,cells,{region='hoenn'}));assert(#p==depth/16,'extra front pine duplicated native tree')
+ local tail=p[#p];assert(tail.model==M.foregroundModel and tail.fit.width==16 and tail.fit.depth==32)
+ assert(tail.sources[1]==c and tail.sources[2]==trunk and tail.sourceTreeInfos[c]==tail.treeInfo)
+ assert(#assert(M.placements(trunk,cells,{region='hoenn'}))==0,'trunk owner emitted duplicate source tree')
+ assert(not c.importedTree and not trunk.importedTree,'planning suppressed native fallback before upload')
+ assert(c.shape.treeBounds==b and trunk.shape.treeBounds==tb and c.shape.treeFamily=='conifer'and trunk.shape.treeFamily=='round','native owner bounds changed')
+ local parts,f=assert(S.vertices(tail.model,tail.fit));assert(f.bounds[5]>19.6 and f.bounds[5]<19.7)
+ assert(f.bounds[4]-f.bounds[1]>15.4 and f.bounds[6]-f.bounds[3]>25.6,'merged native body left half empty')
+ assert(tail.fit.rotation==0 or tail.fit.rotation==2)
+ for _,part in ipairs(parts)do for _,v in ipairs(part.vertices)do
+  local q=assert(cells[math.floor((tail.x+v[1])/16)..':'..math.floor((tail.z+v[3])/16)])
+  assert(q.collision==7 and(q.shape.treeBounds==b or q.shape.treeBounds==tb),'foreground entered walking/foreign cell')
+ end end
+ local masterInfo,lowerInfo=tail.sourceTreeInfos[c],tail.sourceTreeInfos[trunk]
+ assert(masterInfo.bounds[2]<=lowerInfo.bounds[2]and masterInfo.bounds[4]>=lowerInfo.bounds[4])
+ for _,field in ipairs{'prop','civic','stageHidden','boundary'}do
+  trunk[field]=true;local old=assert(M.placements(c,cells,{region='hoenn'}));assert(old[#old].model==M.model and not old[#old].sources,'conflicted trunk group consumed');trunk[field]=nil
+ end
+ trunk.base=10;assert(M.placements(c,cells,{region='hoenn'})[#p].model==M.model,'unequal group levels flattened');trunk.base=4
+ trunk.shape.treePalette='gold';assert(M.placements(c,cells,{region='hoenn'})[#p].model==M.model,'specialized group replaced');trunk.shape.treePalette=nil
+ trunk.collision=0;assert(M.placements(c,cells,{region='hoenn'})[#p].model==M.model,'walkable trunk acquired merged tree');trunk.collision=7
+end end
+-- Added canopy uses exactly the source UV stream. The tiny inset prevents
+-- coincident foliage surfaces; all original108triangles remain first.
+local leaf,completion=data.parts[2],data.parts[5]
+assert(#leaf.vertices==#completion.vertices)
+for i,v in ipairs(completion.vertices)do
+ assert(v[4]==leaf.vertices[i][4]and v[5]==leaf.vertices[i][5],'canopy completion invented UVs')
+end
 print('PASS source evergreen packing, safe projected-cap trunks, full shallow broadleaf bodies, unchanged UV/RGBA/closures and native walking/owner/fallback guards')

@@ -19,6 +19,15 @@
   "sourceTriangles": 108,
   "addedBarkClosureTriangles": 12,
   "addedInsetBarkTriangles": 24,
+  "addedSourceCanopyTriangles": 96,
+  "canopyCompletion": {
+    "rotationDegrees": 180,
+    "axis": "original canopy X/Z bounds center",
+    "insetXZ": 0.998,
+    "insetY": 0.999,
+    "reason": "Close the large rear lower-crown alpha opening with the original dense front foliage and exact source UVs."
+  },
+  "finalTriangles": 240,
   "barkHullClosed": true,
   "sourceTextureBindings": {
     "chip_wood_a-effect": "chip_wood_a.png",
@@ -72,6 +81,6 @@
       0.4140302547794153
     ]
   },
-  "sourceRetention": "All original108triangles, UVs and both PNG bytes retained. No canopy rotations, stretching, added foliage or source deletion. New bark faces use an existing opaque bark texel; original cutouts retain an inset backing. Open alpha-cutout leaf edges remain foliage.",
+  "sourceRetention": "All original108triangles, original vertices/UVs and both PNG bytes retained. New bark faces use an existing opaque bark texel; original cutouts retain an inset backing. Added96triangle canopy copy rotates the original source foliage180degrees with a tiny inset to fill the rear crown. Source tree-depth variants inherit this completed geometry.",
   "bindingsNote": "Archive DAE has no image/sampler nodes; included readme requests assigning the UV-mapped textures. Material chip_wood_a maps to chip_wood_a.png, Material_001 maps to Chip_Wood_B.png."
 }
