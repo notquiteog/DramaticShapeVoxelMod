@@ -1,0 +1,393 @@
+{
+  "asset": 592849,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592849/",
+  "title": "Pewter Museum from Pewter City",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Pewter City/Pewter City.dae",
+  "geometry": "nbc_msem_001-mesh",
+  "archiveSha256": "bec6dedcd0a5f28375f06b9fdc436c8603b9357c754f77834461db573eee70be",
+  "sourceModelSha256": "f0f0baace0f8de7bb18e126027ae8a051bf15aa6c34e5ba1162f972d2a711665",
+  "containerRepairs": [],
+  "originalSourceBounds": [
+    -91.0,
+    1.0,
+    -62.78906,
+    160.0,
+    96.51563,
+    65.0
+  ],
+  "normalization": {
+    "sourceBounds": [
+      0.25,
+      0,
+      0.25,
+      255.75,
+      92.15257178571429,
+      111.75
+    ],
+    "sourceOrigin": [
+      128.0,
+      0,
+      56.0
+    ],
+    "sourceUnitSpan": 255.5,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.2181996086105675,
+      0.5,
+      0.3606754277327369,
+      0.2181996086105675
+    ]
+  },
+  "adaptation": {
+    "main": 318,
+    "wing": 68,
+    "portalCuts": 12,
+    "shadowTrianglesBefore": 59,
+    "shadowTrianglesAfter": 85,
+    "originalTriangles": 445,
+    "finalTriangles": 557,
+    "mainScaleXY": 0.9642857142857143,
+    "mainXOrigin": 88,
+    "mainZKnots": [
+      [
+        -62.78906,
+        0.25
+      ],
+      [
+        16,
+        88
+      ],
+      [
+        25.38281,
+        95.75
+      ],
+      [
+        48,
+        110
+      ]
+    ],
+    "wingSourceBoundsXZ": [
+      86,
+      -55.4375,
+      152,
+      -11.26562
+    ],
+    "wingTargetBoundsXZ": [
+      170.92857142857144,
+      32.25,
+      255.75,
+      79.75
+    ],
+    "sourceYOrigin": 0.95,
+    "mainOpeningX": [
+      80,
+      96
+    ],
+    "staffOpening": {
+      "x": [
+        209,
+        223
+      ],
+      "facadeZ": 74.65890924271278,
+      "height": 23.142857142857142,
+      "recess": 4
+    },
+    "edits": [
+      "Move and resize original east wing into native blocked side body.",
+      "Compress original main arch aperture to its original one-cell native warp.",
+      "Replace middle wing window strip with recessed native staff portal using source wall/trim palette.",
+      "Clip flat source shadows to native blocked mask with interpolated original UVs.",
+      "Close measured rear, gable, soffit and bottom cuts with source wall/trim textures."
+    ],
+    "textureEdits": false
+  },
+  "nativeMask": [
+    [
+      0.25,
+      0.25,
+      175.75,
+      95.75
+    ],
+    [
+      175.75,
+      32.25,
+      255.75,
+      79.75
+    ],
+    [
+      64.25,
+      95.75,
+      111.75,
+      111.75
+    ]
+  ],
+  "textures": {
+    "nbc_mm04.png": {
+      "sha256": "769277683f186c5290f52f5785246249353fcc2c30ac2b28fdf6247899dafc36",
+      "bytes": 203
+    },
+    "nbc_mm10.png": {
+      "sha256": "a6611800d3624817a5356f5f5d5077d2cb820da67b033319e2372602401758f6",
+      "bytes": 276
+    },
+    "nbc_mm05.png": {
+      "sha256": "03b528d1a4a029bc0b702a1e347591166c9b8a35dafa0acb924f80cd1ae85b8b",
+      "bytes": 138
+    },
+    "nbc_mm06.png": {
+      "sha256": "4ef55790fa8380396749f170fd8c4cfac84e7020ce5fe2b53dae0a4182044f8f",
+      "bytes": 175
+    },
+    "nbc_mm08.png": {
+      "sha256": "f25f30c3f071a565f0c06013bb73e052301ba93dbe3a564ba75a4b13dae88224",
+      "bytes": 104
+    },
+    "nbc_mm07.png": {
+      "sha256": "6edd408749889575b4e86ca6b7b44528126a111257653e28336fae8d4b3d5a53",
+      "bytes": 124
+    },
+    "nbc_mm03.png": {
+      "sha256": "bd090a17fe438689c4814125191137c8b31582bc03e151e76603a880ab06b8db",
+      "bytes": 203
+    },
+    "nbc_mm01.png": {
+      "sha256": "f1124f13dee443865d61ebb8cb50e80591d5feafe3dcb3e618e08bd407dae847",
+      "bytes": 347
+    },
+    "h_kage.png": {
+      "sha256": "ae1cd3dbd43a0a6923f9e7004703abf3665e3b3e33062fae531d9617ec3a9698",
+      "bytes": 84
+    },
+    "nbc_mm02.png": {
+      "sha256": "11faf7b0418c792f27d6423445e166541094ae280b8f76473a561abded6192f3",
+      "bytes": 194
+    },
+    "nbc_mm09.png": {
+      "sha256": "6c4826d0b70fc894006d41d1e6e88a64bb574bfb7d5a27d0f1961f4b78406149",
+      "bytes": 324
+    }
+  },
+  "parts": [
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm04_001-material:main",
+      "material": "nbc_mm04_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm10_001-material:main",
+      "material": "nbc_mm10_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm05_001-material:wing",
+      "material": "nbc_mm05_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm05_001-material:main",
+      "material": "nbc_mm05_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 4
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm06_001-material:wing",
+      "material": "nbc_mm06_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm06_001-material:main",
+      "material": "nbc_mm06_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 4
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm08_001-material:main",
+      "material": "nbc_mm08_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm07_001-material:main",
+      "material": "nbc_mm07_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 12
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm07_001-material:wing",
+      "material": "nbc_mm07_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm03_001-material:main",
+      "material": "nbc_mm03_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 16
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm03_001-material:wing",
+      "material": "nbc_mm03_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 6
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm01_001-material:wing",
+      "material": "nbc_mm01_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm01_001-material:main",
+      "material": "nbc_mm01_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 44
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm01w_001-material:wing",
+      "material": "nbc_mm01w_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 16
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm01w_001-material:main",
+      "material": "nbc_mm01w_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 36
+    },
+    {
+      "name": "nbc_msem_001-mesh:h_kage_191-material:main",
+      "material": "h_kage_191-material",
+      "role": "ground_shadow",
+      "opacity": 0.2903226,
+      "authored": false,
+      "triangles": 56
+    },
+    {
+      "name": "nbc_msem_001-mesh:h_kage_191-material:wing",
+      "material": "h_kage_191-material",
+      "role": "ground_shadow",
+      "opacity": 0.2903226,
+      "authored": false,
+      "triangles": 29
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm02_001-material:wing",
+      "material": "nbc_mm02_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 20
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm02_001-material:main",
+      "material": "nbc_mm02_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 42
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm09_001-material:main",
+      "material": "nbc_mm09_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 148
+    },
+    {
+      "name": "nbc_msem_001-mesh:nbc_mm09_001-material:wing",
+      "material": "nbc_mm09_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 16
+    },
+    {
+      "name": "authored_rear_walls",
+      "material": "nbc_mm05",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_roof_endcaps",
+      "material": "nbc_mm07",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 16
+    },
+    {
+      "name": "authored_roof_soffits_returns",
+      "material": "nbc_mm07",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 16
+    },
+    {
+      "name": "authored_native_staff_portal_wall",
+      "material": "nbc_mm05",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_native_staff_portal_recess",
+      "material": "nbc_mm07",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 10
+    },
+    {
+      "name": "authored_closed_foundations",
+      "material": "nbc_mm07",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 30
+    }
+  ]
+}
