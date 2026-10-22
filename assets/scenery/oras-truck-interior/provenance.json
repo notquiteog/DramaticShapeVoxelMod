@@ -1,0 +1,129 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO399 (also535) -> AD180 -> MM302 -> GR653",
+  "model": "a/0/3/9 GR0653 slot1 sptruck_00_00",
+  "textureRecord": "a/0/1/4 AD0180 slot11",
+  "modelBchSha256": "d989de0aeb20f2a41f03ac37606c23921837b880664f9239bbd5df72a6881907",
+  "textureBchSha256": "cc5d76727c54bb335f175decb65b32075f27159051a7250b0d2b5e66ac5049c1",
+  "textures": {
+    "box": {
+      "size": [
+        64,
+        128
+      ],
+      "rgbaSha256": "6a38807cb656af96880846eea7c467e25e7b5d023f47a761ab53db20a480edb7",
+      "pngSha256": "147e30e2d6c2133504ac09664b0828c1c96024965121b46c20cec6ad27898c97"
+    },
+    "shelf02": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "7cbe0b80ca593c8052dc63ce9515bc933ff8c34bd8c093fa4247a134f8b82ca7",
+      "pngSha256": "91167003516a7805f3d28de847a610a86fb5e298214b3b1fa4e6e36eec247f3a"
+    },
+    "wall01": {
+      "size": [
+        64,
+        128
+      ],
+      "rgbaSha256": "6b9115aefe32697840b96f755a3a84e1f2c1d7775d3a24dc032272c3c52f1d33",
+      "pngSha256": "ea4158b0036f5a8ed6527635e00098ecaa0e5849cba259d59978de08927485b1"
+    },
+    "yuka": {
+      "size": [
+        64,
+        128
+      ],
+      "rgbaSha256": "3b180400bf796ca8d90cce1d906d8528f1f16536fdfbebde7341be878a7289f9",
+      "pngSha256": "0221e4699375c26f1fa0712d020927d6964206734929bf1606a34df38629b4e0"
+    }
+  },
+  "independentValidation": "Every original submesh position, UV0 and triangle index agrees with Nitrogen; room is unskinned.",
+  "components": {
+    "north": {
+      "bounds": [
+        -266.78399658203125,
+        0.5843008756637573,
+        -322.02899169921875,
+        -233.61459350585938,
+        38.98759841918945,
+        -305.54901123046875
+      ],
+      "origin": [
+        -250.1992950439453,
+        0.5843008756637573,
+        -313.78900146484375
+      ],
+      "uniformDivisor": 33.169403076171875
+    },
+    "south": {
+      "bounds": [
+        -284.1824951171875,
+        0.5843126177787781,
+        -253.70579528808594,
+        -251.0135040283203,
+        23.74605941772461,
+        -237.2263946533203
+      ],
+      "origin": [
+        -267.5979995727539,
+        0.5843126177787781,
+        -245.46609497070312
+      ],
+      "uniformDivisor": 33.16899108886719
+    },
+    "box": {
+      "bounds": [
+        -200.060302734375,
+        1.5036,
+        -320.10101318359375,
+        -181.5373992919922,
+        12.34060001373291,
+        -305.502197265625
+      ],
+      "origin": [
+        -190.7988510131836,
+        1.5036,
+        -312.8016052246094
+      ],
+      "uniformDivisor": 18.522903442382812
+    },
+    "finishes": {
+      "bounds": [
+        -306.4360046386719,
+        0.0,
+        -324.506591796875,
+        -180.0,
+        43.0806999206543,
+        -235.36180114746094
+      ],
+      "origin": [
+        -243.21800231933594,
+        0.0,
+        -279.93419647216797
+      ],
+      "uniformDivisor": 126.43600463867188
+    }
+  },
+  "sourceSelectedCargoTriangles": 608,
+  "authoredCartonClosureTriangles": 4,
+  "sourceFinishTriangles": 27,
+  "processing": [
+    "Native north/south cargo uses the original312/288-triangle strapped dressers. The original8-triangle cardboard box gains only its exact two missing rectangular faces, reusing opposite source-face UVs.",
+    "All selected source positions/UVs retained; independent component normalization is uniform. Static placement fits only reviewed native blocked cargo cells. Original texture PNG pixels and vertex alpha retained, baked vertex RGB tint removed per user preference.",
+    "The original flat-floor16 triangles and metal-panel11 triangles are retained as finish provenance. Runtime floor is one clean native80x80 plane with the original broad corrugated yuka UV band; native boundaries receive continuous original wall01 panels."
+  ],
+  "exclusions": [
+    "No Azurill toy, plant or wrapped wardrobe substitutes for a native cardboard box. No floor-light effect, source shadow decal, untextured entrance-light plane or original source baked vertex RGB tint.",
+    "Raw ORAS room footprint differs from native RSE: original furniture is individually fitted; original collision/warps/scripts/animation are not moved to fit the source map."
+  ],
+  "wallRepeatAt40": 27.976565218782643,
+  "cleanFloorUv": [
+    0.3153809905052185,
+    1.0,
+    1.0013799667358398,
+    0.0006840229034423828
+  ]
+}
