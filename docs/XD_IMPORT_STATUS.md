@@ -1,8 +1,8 @@
 # XD model import work
 
 This feature is **not playable yet**. Existing Stadium integration is unchanged.
-`tools/import_xd_models.py` prepares source PKX records; it does not produce
-renderable meshes or claim animations/materials/particles are supported.
+`tools/import_xd_models.py` prepares source PKX records; a separate converter now produces portable meshes and baked clips, but complete
+material/animation/particle support and runtime acceptance remain unfinished.
 
 The intended finished flow is one disc selection, one conversion, and a portable
 model pack usable by all eleven games. Android/iOS must consume that prepared
@@ -88,8 +88,7 @@ by default, and the manifest deliberately remains `renderReady:false`.
 
 Experimental offline conversion (`tools/convert_xd_models.py`) and a dormant
 mesh/pose consumer (`lib/XDModelInstance.lua`) are also present. Conversion uses
-an external parser and mathutils; its recorded parser revision is not enforced
-against the checkout. Only the first texture layer is rendered; missing named
+an external parser and mathutils; its pinned parser revision is enforced against the checkout. Only the first texture layer is rendered; missing named
 textures can become white. Material/UV animation, animated lighting and parallel
 conversion are prototype code, without native-game or mobile acceptance. Failed
 converted records can leave diagnostic folders; output still declares
@@ -112,3 +111,29 @@ Format references:
 No third-party parser code or game artwork is bundled by this change. The latter
 parser is GPLv3 and has documented particle limitations; its source was inspected
 as a possible separate conversion dependency, not copied into the runtime.
+
+## Consumer/material correctness batch — 2026-10-22
+
+The shared portable consumer now honors material vs vertex color/alpha source,
+preserves unlit surface shade, respects explicit closest/linear filtering and
+restores SDK texture samplers even after draw failure. Primary Physical/Special
+clips take precedence over suffixed alternates and Extra composites; invalid
+pose metadata cannot replace a valid active clip. Converter revision3 includes
+material/UV key durations instead of truncating them to bone-track durations.
+Old converted output must be regenerated to gain that duration fix.
+
+Audit of the existing454-model local pack found6852 MATERIAL-color meshes,
+24VERTEX-color meshes,78UNLIT surfaces and two explicit Closest texture layers;
+these counts establish affected source semantics, not visual approval for each.
+Primary-clip choice changes41physical and16special selections. A native LÖVE11.5
+NVIDIA Pikachu idle-orbit preview was rendered and three front/side/rear images
+inspected using current consumer code and the existing local pack. This isolated
+preview uses the0.3.95 JSON decoder; it is not an eleven-game battle test.
+Six Python converter tests, two preparation tests, XD native actor lifecycle and
+new source-material/pose/sampler restoration Lua regression pass.
+
+No pack was marked renderReady. Multi-texture combiners, shiny parameters,
+particles, shape/sub-clip composition, verified authored path timing, GB paired
+ownership, source-form selection, import installation UI and all11/mobile battle
+acceptance still prevent production readiness. This batch does not alter scenery
+or distribute source game assets.

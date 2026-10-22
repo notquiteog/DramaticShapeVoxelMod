@@ -30,9 +30,25 @@ local function chooseClip(clips,context)
  local words={idle='idle',attack='physical',attack_default='physical',
   special='special',damage='damage',faint='faint'}
  local word=words[context]or context
+ -- Prefer the authored primary clip over Physical_B / Physical+Extra.
+ for i,c in ipairs(clips)do
+  if c.name:lower():match('_([^_]+)$')==word then return i end
+ end
  for i,c in ipairs(clips)do
   if c.name:lower():find(word,1,true)then return i end
  end
+end
+local function sourceColor(material,animated,vc)
+ local color=animated and animated.diffuse or material.diffuse_color or{1,1,1}
+ local alpha=animated and animated.alpha or material.alpha or 1
+ local source=material.color_source or'BOTH'
+ local aSource=material.alpha_source or'BOTH'
+ local r,g,b=color[1],color[2],color[3]
+ if source=='VERTEX'then r,g,b=vc[1],vc[2],vc[3]
+ elseif source~='MATERIAL'then r,g,b=r*vc[1],g*vc[2],b*vc[3]end
+ if aSource=='VERTEX'then alpha=vc[4]or 1
+ elseif aSource~='MATERIAL'then alpha=alpha*(vc[4]or 1)end
+ return r,g,b,alpha
 end
 function M.new(data,assets)
  assert(type(data)=='table'and data.version==1 and data.model,'Invalid XD model data')
@@ -65,7 +81,7 @@ function M.new(data,assets)
     local layer=material.texture_layers and material.texture_layers[1]
     local uv=src.uv_layers and src.uv_layers[(layer and layer.uv_index or 0)+1]
     local colors=src.color_layers and src.color_layers[1]
-    local diffuse=material.diffuse_color or{1,1,1,1}
+    local unlit=material.lighting=='UNLIT'
     local corner=0
     for _,face in ipairs(src.faces)do
      for t=2,#face-1 do
@@ -74,9 +90,8 @@ function M.new(data,assets)
        local tc=uv and uv.uvs[corner+j]or{0,0}
        local vc=colors and colors.colors[corner+j]or{1,1,1,1}
        local u,v=uvAt(tc,layer)
-       vertices[#vertices+1]={p[1],p[2],p[3],u,v,1,
-        vc[1]*diffuse[1],vc[2]*diffuse[2],vc[3]*diffuse[3],
-        (vc[4]or 1)*(material.alpha or 1)}
+       local r,g,b,a=sourceColor(material,nil,vc)
+       vertices[#vertices+1]={p[1],p[2],p[3],u,v,1,r,g,b,a}
        map[#map+1]=vi
        uvs[#map]=tc;vertexColors[#map]=vc
        local n=src.normals and src.normals[corner+j]
@@ -100,7 +115,7 @@ function M.new(data,assets)
      local key=src.id or ('mesh_%0'..#tostring(math.max(0,#model.meshes-1))..'d_%s')
       :format(sourceIndex-1,model.bones[(src.parent_bone_index or 0)+1].name)
      local entry={source=src,vertices=vertices,map=map,weights=weights,normals=normals,
-      key=key,uvs=uvs,vertexColors=vertexColors,layer=layer}
+      key=key,uvs=uvs,vertexColors=vertexColors,layer=layer,unlit=unlit}
      self.meshes[#self.meshes+1]=entry
      entry.mesh=love.graphics.newMesh(FORMAT,vertices,'triangles','dynamic')
      entry.texture=layer and assets.image(layer.image.path)or assets.white()
@@ -108,6 +123,7 @@ function M.new(data,assets)
      if layer then
       local wraps={CLAMP='clamp',REPEAT='repeat',MIRROR='mirroredrepeat'}
       entry.wrapS,entry.wrapT=wraps[layer.wrap_s]or'clamp',wraps[layer.wrap_t]or'clamp'
+      entry.filter=({Closest='nearest',Linear='linear'})[layer.interpolation]
      end
     end
    end
@@ -133,6 +149,9 @@ function Instance:playContext(name,loop)
  if not index then return false end
  if self.clip==index and self.context==name and self.loop==loop then return true end
  local clip=self.data.clips[index]
+ if type(clip.frames)~='number'or clip.frames<1 or clip.frames%1~=0
+  or type(clip.bones)~='number'or clip.bones~=#self.data.model.bones
+  or type(clip.fps)~='number'or clip.fps~=clip.fps or clip.fps<=0 or clip.fps==math.huge then return false end
  local bytes=self.assets.read(clip.path)
  if not bytes then return false end
  local ok,raw=pcall(love.data.decompress,'string','zlib',bytes)
@@ -176,14 +195,12 @@ function Instance:update(dt)
   for i,vi in ipairs(entry.map)do
    local p,v=posed[vi],entry.vertices[i];v[1],v[2],v[3]=p[1],p[2],p[3]
    local base=entry.source.material or{}
-   local color=animated and animated.diffuse or base.diffuse_color or{1,1,1}
-   local alpha=animated and animated.alpha or base.alpha or 1
    local vc=entry.vertexColors[i]
-   v[7],v[8],v[9],v[10]=vc[1]*color[1],vc[2]*color[2],vc[3]*color[3],(vc[4]or 1)*alpha
+   v[7],v[8],v[9],v[10]=sourceColor(base,animated,vc)
    local layer=animated and animated.layers and animated.layers['0']or entry.layer
    v[4],v[5]=uvAt(entry.uvs[i],layer)
    local n=entry.normals[i]
-   if n then
+   if n and not entry.unlit then
     local nx,ny,nz=0,0,0
     for _,w in ipairs(entry.weights[vi]or{{0,1}})do
      local a,b,c=normal(matrices[w[1]]or ID,n)
@@ -202,9 +219,9 @@ function Instance:update(dt)
    local nx,ny,nz=uy*vz-uz*vy,uz*vx-ux*vz,ux*vy-uy*vx
    local len=math.sqrt(nx*nx+ny*ny+nz*nz)
    local shade=len>1e-10 and .65+.35*math.max(0,(nx*.3+ny*.8+nz*.5)/len)or .8
-   if not entry.normals[i]then a[6]=shade end
-   if not entry.normals[i+1]then b[6]=shade end
-   if not entry.normals[i+2]then c[6]=shade end
+   if not entry.unlit and not entry.normals[i]then a[6]=shade end
+   if not entry.unlit and not entry.normals[i+1]then b[6]=shade end
+   if not entry.unlit and not entry.normals[i+2]then c[6]=shade end
   end
   entry.mesh:setVertices(entry.vertices)
  end
@@ -215,9 +232,15 @@ function Instance:drawWith(draw,matrix)
  if self.released then return false end
  for _,entry in ipairs(self.meshes)do
   local s,t=entry.texture:getWrap()
+  local min,mag,anisotropy
+  if entry.filter then
+   min,mag,anisotropy=entry.texture:getFilter()
+   entry.texture:setFilter(entry.filter,entry.filter,anisotropy)
+  end
   if entry.wrapS then entry.texture:setWrap(entry.wrapS,entry.wrapT)end
   local ok,err=pcall(draw,entry.mesh,entry.texture,matrix)
   entry.texture:setWrap(s,t)
+  if entry.filter then entry.texture:setFilter(min,mag,anisotropy)end
   if not ok then error(err,0)end
  end
  return true

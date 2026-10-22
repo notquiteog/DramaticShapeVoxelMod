@@ -25,12 +25,27 @@ import types
 import zlib
 
 PARSER_REVISION = "dc71de837978a6a2fe8c5082f2840cfafb135235"
-CONVERTER_REVISION = 2
+CONVERTER_REVISION = 3
 
 
 def runtime_model(serialized):
     """Baked clips own poses and material keys; retain no duplicate curve graph."""
     return {key: value for key, value in serialized.items() if key != 'bone_animations'}
+
+def clip_duration(clip):
+    """Material-only and longer UV tracks must not be truncated to bone duration."""
+    ends = [track.end_frame for track in clip.tracks]
+    for track in clip.material_tracks:
+        channels = [getattr(track, key, None) for key in
+                    ('diffuse_r', 'diffuse_g', 'diffuse_b', 'alpha')]
+        for uv in track.texture_uv_tracks:
+            channels.extend(getattr(uv, key, None) for key in
+                            ('translation_u', 'translation_v', 'scale_u', 'scale_v',
+                             'rotation_x', 'rotation_y', 'rotation_z'))
+        ends.extend(key.frame for channel in channels if channel for key in channel)
+    if any(not math.isfinite(value) or not 0 <= value <= 36000 for value in ends):
+        raise ValueError("Unreasonable animation duration")
+    return max(ends, default=0)
 
 def spline_point(path, parameter):
     """Evaluate a decoded path in its own coordinate system."""
@@ -206,7 +221,7 @@ def convert_record(source, output, pipeline):
     inverses = [Matrix(b.normalized_world_matrix).inverted_safe() for b in model.bones]
     clips = []
     for clip_index, clip in enumerate(model.bone_animations):
-        duration = max((t.end_frame for t in clip.tracks), default=0)
+        duration = clip_duration(clip)
         if not math.isfinite(duration) or not 0 <= duration <= 36000:
             raise ValueError("Unreasonable animation duration")
         count = math.ceil(duration) + 1
