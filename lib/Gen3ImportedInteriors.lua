@@ -29,7 +29,7 @@ function M.eligible(p,cells)
   if not r.rows[row]or #r.rows[row]~=1 or r.rows[row][1]~=f.rows[row][1]then return false end
   local c=cells[p.cx..':'..(p.cy+row-1)]
   if not c or c.prop~=p or c.pair~=f.pair or c.primary~='building'
-   or not PCFrames.matches(r,c.mid,f.rows[row][1])or c.collision~=({7,0x93,0})[row]
+   or not PCFrames.matches(r,c.mid,f.rows[row][1])or not(row==2 and(c.collision==0x93 or c.collision==7)or row~=2 and c.collision==({7,0x93,0})[row])
    or c.boundary or c.stageHidden or c.stairs or c.civic then return false end
   if base==nil then base=c.base or 0 elseif math.abs((c.base or 0)-base)>.001 then return false end
  end
