@@ -79,11 +79,11 @@ local function releaseActor(actor)
 end
 
 local function failActor(actor)
-  local battler, dex, variant, provider = actor.battler, actor.dex, actor.variant, actor.provider
+  local battler, dex, variant, provider, form = actor.battler, actor.dex, actor.variant, actor.provider, actor.form
   releaseActor(actor)
   actor.provider=provider
-  actor.failedBattler, actor.failedDex, actor.failedVariant =
-    battler, dex, variant
+  actor.failedBattler, actor.failedDex, actor.failedVariant, actor.failedForm =
+    battler, dex, variant, form
 end
 
 function StadiumModels.release()
@@ -138,18 +138,20 @@ local function syncSide(battle, side)
   local battler = battle and battle[side]
   local dex = dexFor(battle, battler)
   local variant = BattleArt.isShiny(battler) and "shiny" or "normal"
+  local form = api and api.formFor and api.formFor(battler,dex)or nil
   if actor.instance and actor.battler == battler and actor.dex == dex
-      and actor.variant == variant then return actor end
+      and actor.variant == variant and actor.form == form then return actor end
   if actor.failedBattler == battler and actor.failedDex == dex
-      and actor.failedVariant == variant then return actor end
+      and actor.failedVariant == variant and actor.failedForm == form then return actor end
 
   releaseActor(actor)
   actor.provider=api
-  actor.battler, actor.dex, actor.variant = battler, dex, variant
+  actor.battler, actor.dex, actor.variant, actor.form = battler, dex, variant, form
   if not (battler and dex) then return actor end
 
   if not api then return actor end
   local called, instance, err = pcall(api.newInstance, dex, variant, {
+    form = form,
     textureFilter = "nearest",
     anisotropy = 4,
     flipY = false,
@@ -157,8 +159,8 @@ local function syncSide(battle, side)
   })
   if not called then err, instance = instance, nil end
   if type(instance) ~= "table" then
-    actor.failedBattler, actor.failedDex, actor.failedVariant =
-      battler, dex, variant
+    actor.failedBattler, actor.failedDex, actor.failedVariant, actor.failedForm =
+      battler, dex, variant, form
     warnOnce(("load:%s:%d:%s"):format(side, dex, variant),
       ("Stadium 2 %s model %03d (%s) unavailable: %s; using Battle Art")
         :format(side, dex, variant, tostring(err)))

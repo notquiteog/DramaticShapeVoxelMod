@@ -60,21 +60,27 @@ function M.prepare(frame)
   local mon=b and b.mon
   local dex=b and Pokemon.national(b.species or(mon and Pokemon.speciesOf(mon)))
   local variant=mon and Pokemon.isShiny(mon)and'shiny'or'normal'
+  local p=Anim.present(id)
+  local form=pack.formFor and pack.formFor(b,dex,p)or nil
   local e=held[id]
-  if e and(e.battler~=b or e.dex~=dex or e.variant~=variant)then release(id);e=nil end
+  if e and(e.battler~=b or e.dex~=dex or e.variant~=variant or e.form~=form)then release(id);e=nil end
   if not e and b and dex then
-   local instance=pack.newInstance(dex,variant)
-   e={battler=b,dex=dex,variant=variant,instance=instance}
+   local instance=pack.newInstance(dex,variant,{form=form})
+   e={battler=b,dex=dex,variant=variant,form=form,instance=instance}
    held[id]=e
   end
   local card=frame.byId[id]
-  local p=Anim.present(id)
-  if e and e.instance and card and p and p.visible~=false then
+  local Ui=require('src.core.game3.battle.ui')
+  local ghost=Ui.showsGhost and Ui.showsGhost(id%2==0 and'player'or'enemy',frame.st)
+  if e and e.instance and card and p and p.visible~=false
+   and not p.substitute and not p.pendingTransform and not ghost then
    local metric=e.instance:metrics()
    local height=math.max(5,math.min(18,14*math.sqrt(metric.height)))
    local scale=height/metric.height*(p.scale or 1)
    local point=frame.points[id]
-   local yaw=id%2==0 and math.pi-frame.camera.yaw or-frame.camera.yaw
+   -- A physical model faces the opposite battle row, independent of orbit.
+   local target=frame.points[id%2==0 and 1 or 0]
+   local yaw=target and math.atan2(target[1]-point[1],target[3]-point[3])or 0
    e.matrix=Mat.mul(Mat.translate(point[1],point[2]-(p.oy or 0)*frame.PIXEL,point[3]),
     Mat.mul(Mat.rotateY(yaw),Mat.mul(Mat.scale(scale,scale,scale),
      Mat.translate(0,-metric.floor,0))))

@@ -137,3 +137,23 @@ particles, shape/sub-clip composition, verified authored path timing, GB paired
 ownership, source-form selection, import installation UI and all11/mobile battle
 acceptance still prevent production readiness. This batch does not alter scenery
 or distribute source game assets.
+
+## Native identity and presentation batch — 2026-10-22
+
+The shared pack receives native Unown letter identity (GSC DVs/GBA PID) and
+edition-specific Deoxys forms. Form changes invalidate both live and failed
+actor cache entries. Missing Castform weather models, unresolved Transform form
+identity and unsupported Spinda PID markings retain native sprites instead of
+silently displaying another form. GBA substitute/pending-Transform/ghost cards
+also retain native presentation. Physical GBA models face the opposing row;
+orbiting the camera no longer rotates their bodies.
+
+Four focused Lua suites pass, including form selection/cache changes, original
+Stadium provider compatibility, camera-independent model matrices and native
+substitute/ghost fallback. All five Gen3 native0.3.95 profiles additionally pass
+public Unown identity and edition Deoxys form assertions with the existing
+isolated option fixture. This is native API verification, not a rendered
+all-model battle claim. The model pack gate remains false. Form selection is
+now wired; complete form artwork, shiny filters, multi-layer materials,
+particles, shape/sub-animation composition, GB paired ownership, import UI and
+native battle/mobile acceptance are still outstanding.
