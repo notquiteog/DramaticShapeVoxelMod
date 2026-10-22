@@ -1,4 +1,4 @@
-## 1.57.1 — Genuine ORAS Center doors
+## 1.57.2 — Genuine ORAS Center doors
 
 Hoenn Pokémon Centers now use the original ORAS sliding panels, glass/trim
 textures and opening poses. Removes the mismatched native RSE animation overlay;

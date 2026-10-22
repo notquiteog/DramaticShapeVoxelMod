@@ -65,7 +65,7 @@ or imported by runtime code. Hashes, original tracks and provenance are recorded
 in assets/scenery/oras-center-doors/provenance.json. Raw ROM/model intermediates
 and screenshots stay outside Git.
 
-## Native acceptance for1.57.1
+## Native acceptance for1.57.2
 
 Latest official engine checked October22: Gen1Recomp0.3.95, published October21
 02:42:51UTC; native LÖVE11.5/OpenGL3.3/NVIDIA615.71.09 on RTX5060Ti. Separate

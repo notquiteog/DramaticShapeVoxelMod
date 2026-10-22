@@ -1,6 +1,6 @@
 # Genuine ORAS Center door hotfix — 2026-10-22
 
-1.57.1 replaces the native RSE overlay and empty static entrance with the actual
+1.57.2 replaces the native RSE overlay and empty static entrance with the actual
 separate ORAS BM0008 sliding panels and original glass/trim textures. Native
 frame selection, sound, warp and collision remain engine-owned. Source states
 share opaque/depth/shadow drawing; cached meshes release with their Center.

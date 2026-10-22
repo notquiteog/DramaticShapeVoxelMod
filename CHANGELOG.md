@@ -1,10 +1,19 @@
-## 1.57.1 — Genuine ORAS Center doors
+## 1.57.2 — Genuine ORAS Center doors
 
 Hoenn Pokémon Centers now use the original ORAS sliding panels, glass/trim
 textures and opening poses. Removes the mismatched native RSE animation overlay;
 keeps native timing, sounds, warps and collision. Missing door assets retain the
 complete native building. No companion is required; actors and flowers retain
 HD-2D. [Source and verification](docs/ORAS_CENTER_DOORS_2026-10-22.md).
+## 1.57.1 — Streaming and shared XD controls
+
+Reduce visible/background build allowances and start Gen3 connection prefetch
+earlier. Reuse transient field-effect meshes and reduce native geometry-cache
+encoding allocations. Expose the XD option in all five Gen3 menus; correct XD
+material colors/alpha, unlit shading, sampling and primary animation selection.
+Unvalidated XD packs remain disabled. All11 streaming/camera fixtures pass;
+165FPS and physical mobile validation remain unverified. See
+[measurements and limitations](docs/PERFORMANCE_PARITY_2026-10-22.md).
 
 ## 1.57.0 — Regional source buildings, PCs and TVs
 
