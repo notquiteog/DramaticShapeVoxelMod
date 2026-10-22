@@ -55,6 +55,35 @@ local function bank(c)
   and not c.bridge and not(c.floor and c.floor.underpass)and not c.underpass
   and s.kind~='steps'and s.kind~='ladder'and s.kind~='cliff'and s.kind~='caveWall'
 end
+-- Blocked surfable border art is not a physical floor anchor. TerrainLevels
+-- gives such cells nearest support, which can be a raised dock or land terrace
+-- instead of the surrounding ocean. Propagate actual native water-floor datums
+-- through those cells only, before splitting water into height components.
+local function nativeDatums(order,field,tick)
+ local queue={}
+ for _,n in ipairs(order)do
+  local c=n.source;local f=c.floor
+  if n.token=='auto'and not n.underpass and not c.boundary and f and f.kind=='water'then
+   if f.floor==true then n.datumAnchor=n;queue[#queue+1]=n
+   elseif f.floor==false then n.needsWaterDatum=true end
+  end
+ end
+ -- Sources are already in native row order. Breadth first ownership preserves
+ -- separate real water heights and deterministic ties between equal distances.
+ local head=1
+ while queue[head]do
+  local n=queue[head];head=head+1
+  for _,d in ipairs(directions)do
+   local near=field[ck(n.cx+d[1],n.cy+d[2])]
+   if near and near.needsWaterDatum and not near.datumAnchor
+    and (near.layer==n.layer or near.layer==0 or n.layer==0)then
+    near.datumAnchor=n.datumAnchor;near.base=n.datumAnchor.base
+    queue[#queue+1]=near
+   end
+  end
+  if tick then tick()end
+ end
+end
 -- Build from complete native floor fields when available, so ocean level
 -- never depends on whether a moving render window currently contains a bank.
 function M.plan(cells,options)
@@ -97,6 +126,7 @@ function M.plan(cells,options)
   result.cells[ck(c.cx,c.cy)]=n;order[#order+1]=n
  end end
  table.sort(order,function(a,b)return a.cy==b.cy and a.cx<b.cx or a.cy<b.cy end)
+ nativeDatums(order,result.cells,options.tick)
  for _,start in ipairs(order)do if not start.component then
   local g={cells={},depth=0,base=start.base};result.components[#result.components+1]=g
   local queue,head={start},1;start.component=g
