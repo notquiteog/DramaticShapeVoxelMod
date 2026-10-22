@@ -39,7 +39,7 @@ end
 available=false;assert(not M.build(ornate,function()end,{}))
 for _,q in pairs(ornate)do assert(not q.importedFence)end
 available=true;local r,e,num=M.build(ornate,function()end,{})
-assert(r and not e and num==13,'unique native cells count')
+assert(r and not e and num==17,'unique native cells count')
 for _,q in pairs(ornate)do
  local quads={};assert(M.appendFloor(q,function(v,uv)quads[#quads+1]={v,uv}end,function()return{{0,0},{1,0},{1,1},{0,1}}end))
  assert(#quads==4);for _,a in ipairs(quads)do for _,v in ipairs(a[1])do assert(v[1]>=q.cx*16 and v[1]<=q.cx*16+16 and v[3]>=80 and v[3]<=96)end end
