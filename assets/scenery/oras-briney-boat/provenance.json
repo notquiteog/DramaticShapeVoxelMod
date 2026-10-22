@@ -1,0 +1,163 @@
+{
+  "id": "oras_briney_boat",
+  "game": "Pok\u00e9mon Omega Ruby / Alpha Sapphire",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "source": "User-supplied local decrypted ORAS RomFS; no ROM/archive/decoder bundled",
+  "modelRecord": "a/0/2/3 BM0086 slot0 com_bm_boat01",
+  "textureRecord": "a/0/1/4 AD0010 or AD0012 slot1",
+  "modelBchSha256": "01a3e74197cb7dd6984c06cbb098a7b348e5550198bc96c216ce077ebbbfa99d",
+  "texturesBchSha256": "529e278b9562ba323f6e189d846e3f10a1b576d305181e0deb8aa2d8eba5ca42",
+  "textures": {
+    "hagiship_01": {
+      "size": [
+        128,
+        128
+      ],
+      "decodedRgbaSha256": "9bab1aa89566cf9b94b3fe1c8c1effe1524d4c10de64095f5994ab01a12485aa",
+      "pngSha256": "8540f3affd9130c73a185ced7a7ac55042529e50a9336f31364aa4b88daa1996"
+    },
+    "hagiship_02": {
+      "size": [
+        32,
+        64
+      ],
+      "decodedRgbaSha256": "9c2f6c45284ce6f4072b224df443c9113dfaf7a57a11a571d57876e298f76f22",
+      "pngSha256": "a451cce2f03d75069ef7bf968165d221c85c3af0023f77dc388af9da287860f2"
+    },
+    "hagiship_03": {
+      "size": [
+        128,
+        64
+      ],
+      "decodedRgbaSha256": "47e10abe266d13f2608729258dbf6f59181345003c591b253839d7fcb5e37aef",
+      "pngSha256": "ac4903345a7998082db72408deaf08394c95d54d94327a9c85aeefb801a52aa1"
+    }
+  },
+  "sourceBounds": [
+    6.094870090484619,
+    -6.600100040435791,
+    -47.77410125732422,
+    140.52200317382812,
+    41.7096004486084,
+    -4.443199157714844
+  ],
+  "sourceLength": 134.4271330833435,
+  "normalization": {
+    "origin": [
+      73.30843663215637,
+      -6.600100040435791,
+      -26.10865020751953
+    ],
+    "uniformDivisor": 134.4271330833435,
+    "axisMap": [
+      "+sourceZ",
+      "+sourceY",
+      "-sourceX"
+    ],
+    "canonicalBow": "+Z"
+  },
+  "anchors": {
+    "waterline": [
+      0.0,
+      0.049097975156130076,
+      0.0
+    ],
+    "bow": [
+      0.0,
+      0.049097975156130076,
+      0.5
+    ],
+    "stern": [
+      0.0,
+      0.049097975156130076,
+      -0.5
+    ]
+  },
+  "rigidBindProof": {
+    "bones": [
+      "com_bm_boat01",
+      "body",
+      "floor",
+      "hamon",
+      "parts_a",
+      "parts_b",
+      "parts_c",
+      "room"
+    ],
+    "globalBindTranslations": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -90.0
+      ],
+      [
+        77.24649810791016,
+        6.573249816894531,
+        -26.108600616455078
+      ],
+      [
+        96.59269714355469,
+        0.0,
+        -27.518199920654297
+      ],
+      [
+        0.0,
+        0.0,
+        -90.0
+      ],
+      [
+        0.0,
+        0.0,
+        -90.0
+      ],
+      [
+        24.876300811767578,
+        11.271900177001953,
+        -26.108999252319336
+      ],
+      [
+        87.04789733886719,
+        23.610700607299805,
+        -26.108600616455078
+      ]
+    ],
+    "inverseBindMaxError": 0.0,
+    "independentPositionsUvIndicesAndRigidPalettesEqual": true,
+    "sourceTriangles": 936,
+    "excludedWaterRippleTriangles": 66,
+    "vertexLightingCleanup": {
+      "originalFloatRgbaSha256": "3671a1c351d9a1b50f0f116a52c34bc4a4433cde96ad333fcda0a6274b6d75ce",
+      "sourceVertices": 912,
+      "originalRgbRange": [
+        0.0,
+        1.0
+      ],
+      "changedRgbVertices": 223,
+      "processing": "User-requested RGB=1 removes source baked vertex AO; original vertex alpha and texture pixels retained."
+    }
+  },
+  "authoredClosure": {
+    "planarKeelVertices": 18,
+    "authoredTriangles": 16,
+    "rawKeelY": -6.600100040435791,
+    "sourceHullBottomUv": [
+      1.2199599742889404,
+      0.0054872902110219
+    ],
+    "note": "Only the missing underside at the exact lower-hull rim is closed. Original source deck/cabin/openings remain unchanged."
+  },
+  "processing": [
+    "Validated all8 identity-rotation/scale bind transforms against independently decoded stored inverse binds; baked source rigid translations.",
+    "Retained all936 original structural triangles, UV0 coordinates, repeat samplers, vertex alpha and decoded source texture pixels. User-requested RGB=1 removes original baked vertex AO; source lighting statistics/hash recorded.",
+    "Excluded only the separate66-triangle hamon ripple/water sheet; native water/wake/gameplay remains authoritative.",
+    "Closed the original planar18-vertex keel rim with16 underside triangles inside source bounds. Uniform normalization and rigid quarter-turn only."
+  ],
+  "limitations": [
+    "Original PICA lighting/TEV and boat skeletal/texture animation are not emulated. Geometry uses the source bind pose. No native scripts, actors, collisions or paths are changed by this data module."
+  ]
+}
