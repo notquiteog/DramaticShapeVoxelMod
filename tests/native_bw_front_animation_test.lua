@@ -51,7 +51,9 @@ package.loaded['src.core.GameVersion']={generation=function()return 3 end}
 package.loaded['src.core.game3.pokemon']=P;package.loaded['src.core.game3.battle.ui']=UI;package.loaded['src.core.game3.battle.anim']=Anim
 local Native=assert(loadfile('lib/NativeBattleArt.lua'))(V);Native.fit=function(image)return image end;Native.install()
 UI.draw();local first=drawn[1];clock=.251;UI.draw();check(drawn[1]~=first,'native single enemy advances atlas frame')
-double=true;clock=0;UI.draw();local firstNormal,firstShiny=drawn[1],drawn[3];clock=.251;UI.draw()
+double=true;clock=0;UI.draw();local firstNormal,firstShiny=drawn[1],drawn[3];local ally1,ally2=drawn[0],drawn[2];clock=.251;UI.draw()
+check(drawn[0]~=ally1 and drawn[2]~=ally2,'both native double allies advance')
+check(drawn[0].source:find('/normal/19.png',1,true)and drawn[2].source:find('/shiny/19.png',1,true),'allied identity preserved')
 check(drawn[1]~=firstNormal and drawn[3]~=firstShiny,'both native double enemies advance')
 check(drawn[1].source:find('/normal/19.png',1,true)and drawn[3].source:find('/shiny/19.png',1,true),'same-species doubles retain shiny identity while animating')
 check(P.frontPic(19,0)=='native','non-battle picture owner unchanged')
