@@ -111,3 +111,30 @@ frame-driver branch calls `Game:update` directly, bypassing `core.update` hooks.
 The focused scratch driver dispatches the public `core.update` hook with a no-op
 vanilla step once per test frame; the engine still executes its original native
 update exactly once per frame. No protected callback or truck timing is replaced.
+
+## Native metal walls and actual shutter
+
+The complete native truck context now opts into its own flat metal finish in
+`InteriorDiorama`. Its wall/ceiling backing uses live closed drawings20D/215;
+the shutter uses all three native closed drawings20D/215/21D. Runtime composition
+includes under, middle and over BG layers. Wallpaper wraps continuously with a
+single vertical repeat; no cream home paint, synthetic cornice, overlapping
+door jamb or cabinet-shaped wall projection is added.
+
+A separate closed six-face shutter sits beyond the room's east boundary at
+`x=80.02..83.02`, spanning its real `(4,1)..(4,3)` exit aperture. It is visible
+only while all three live closed MIDs match and disappears when the native
+script opens them. Original warp/floor cells and permissions stay untouched.
+The shutter follows the normal near-wall cutaway when the camera is outside
+the east wall; an inside eye sees it closed. It has no independent timer,
+collision state or gameplay lock. Native/custom contexts that do not match the
+reviewed truck art retain their ordinary room renderer.
+
+Focused cargo, native panel/shutter, Hoenn, RS dispatch, Center furniture,
+secret-base and walking-footprint suites pass. The panel test includes all
+three BG layers, exact state guards, source image lifetime, physical warp
+clearance and inside/outside camera cutaway behavior. Final isolated official
+0.3.95 runs inspect closed/open, first/third-person,35-degree and east camera
+views in allR/S/E; evidence is in `truck-camera-20261022/*-accepted` scratch runs.
+Source comparison and captures verify native gray art and actual script timing;
+this remains an original-art 3D repair, not an imported ORAS truck interior.

@@ -14,6 +14,7 @@ local themes={
  cave={{.38,.34,.30},{.35,.32,.28},{.33,.30,.27},{.42,.38,.34}},
  ice={{.35,.49,.60},{.33,.47,.57},{.31,.44,.54},{.43,.57,.66}},
  ship={{.86,.86,.89},{.52,.52,.60},{.29,.29,.35},{.92,.91,.72}},
+ truck={{.51,.51,.57},{.39,.39,.49},{.29,.31,.42},{.51,.51,.57}},
  home={{.73,.71,.61},{.37,.35,.28},{.20,.22,.22},{.91,.87,.70}},
  shop={{.67,.76,.73},{.23,.43,.43},{.13,.25,.29},{.84,.94,.88}},
  center={{.79,.77,.70},{.45,.35,.32},{.22,.27,.30},{.97,.88,.72}},
@@ -124,8 +125,11 @@ function M.profile(def,gen)
  end
  if service then b=service.bounds end
  if flatInstitution then b[2]=3.8 end
+ local truck=gen==3 and spec and spec.secondary=='inside_of_truck'and V.require('Gen3TruckCargo').room(def)
+ if truck then theme='truck'end
  return {bounds=b,height=cave and 96 or gen==3 and (flatInstitution or service or home or research or theme=='lab' or theme=='center') and 32 or 40,theme=theme,gen=gen,cave=cave,
-  nativeWallFinish=flatInstitution or service~=nil or home~=nil or research~=nil,noInteriorTrim=flatInstitution or service~=nil or home~=nil or research~=nil,serviceRoom=service,homeFinish=home,researchRoom=research}
+  nativeWallFinish=truck~=nil and truck~=false or flatInstitution or service~=nil or home~=nil or research~=nil,noInteriorTrim=truck~=nil and truck~=false or flatInstitution or service~=nil or home~=nil or research~=nil,serviceRoom=service,homeFinish=home,researchRoom=research,
+  truckRoom=truck,wallpaperHeight=truck and 40 or nil}
 end
 local function texture(theme)
  if materials[theme]then return materials[theme]end
@@ -173,7 +177,7 @@ function M.geometry(p,side,opened)
    local tu,tv=u,.5
    if p.wallpaper and side<=4 then
     local along=side==1 and(a[1]-x0)or side==2 and(a[3]-z0)or side==3 and(x1-a[1])or(z1-a[3])
-    tu,tv=along/16,(h-a[2])/32
+    tu,tv=along/16,(h-a[2])/(p.wallpaperHeight or 32)
    end
    verts[#verts+1]={a[1],a[2],a[3],tu,tv,shade or 1}
   end
@@ -286,13 +290,19 @@ function M.geometry(p,side,opened)
   end
   -- Open exits have a visible frame even when the near wall is cut away.
   -- Jambs sit OUTSIDE the warp opening; no slab blocks the walking lane.
-  for _,q in ipairs((p.homeFinish or p.researchRoom)and{}or doors)do
+  for _,q in ipairs((p.homeFinish or p.researchRoom or p.truckRoom)and{}or doors)do
    rawPart(q[1]-1.5,0,q[1],doorHeight,2,4.2)
    rawPart(q[2],0,q[2]+1.5,doorHeight,2,4.2)
    rawPart(q[1]-1.5,doorHeight,q[2]+1.5,doorHeight+1.5,3,4.2)
   end
  end
  return verts,indices
+end
+local function prepareTruck(p)
+ if not(p and p.truckRoom)then return end
+ local material=V.require('Gen3TruckCargo').wallpaper()
+ M.setWallpaper(p,material and material.wall or nil)
+ p.shellTexture=material and material.wall or nil
 end
 function M.forMap(map,gen)
  local def=map and map.def or map
@@ -302,7 +312,7 @@ function M.forMap(map,gen)
  if entry and entry.legendaryElevator~=elevator then
   for _,mesh in pairs(entry.meshes or {})do mesh:release()end;entry=nil
  end
- if entry~=nil then return entry or nil end
+ if entry~=nil then prepareTruck(entry);return entry or nil end
  local p=M.profile(def,gen)
  if not p then cache[def]=false;return end
  if p.cave and not p.secretBase then
@@ -409,7 +419,7 @@ function M.forMap(map,gen)
    p.doorways[side]=merged
   end
  end
- p.legendaryElevator=elevator;p.meshes={};cache[def]=p;return p
+ p.legendaryElevator=elevator;p.meshes={};cache[def]=p;prepareTruck(p);return p
 end
 -- Recess north-wall backing behind corrected fixture footprints. Moving a
 -- desk into its real blocked row must not bury it in the synthetic shell.
@@ -487,8 +497,9 @@ function M.draw(p)
   local cut=opened[side]and not(side==1 and p.nativeWallFinish and p.wallpaper)
   local key=side..':'..tostring(cut or false)
   if not p.meshes[key]then local v,i=M.geometry(p,side,cut);p.meshes[key]=R.newMesh(v,i)end
-  R.draw(p.meshes[key],side<=4 and p.wallpaper or texture(p.theme))
+  R.draw(p.meshes[key],side<=4 and p.wallpaper or p.shellTexture or texture(p.theme))
  end
+ if p.truckRoom and not opened[2]then V.require('Gen3TruckCargo').drawShutter(p,R.draw)end
  if policy.dressing:get()then V.require('KfpInteriorDecor').draw(p,opened,ceiling,texture(p.theme))end
  R.interiorClip(true)
 end
