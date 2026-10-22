@@ -9,7 +9,7 @@ from import_pallet_buildings import extract as extract_scene
 ID='hgss_kanto_center';URL='https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/293549/'
 def archive_items(raw):
  z=zipfile.ZipFile(io.BytesIO(raw));items={};repairs=[]
- if len(z.infolist())>64 or sum(i.file_size for i in z.infolist())>8388608:raise ValueError('archive budget')
+ if len(z.infolist())>128 or sum(i.file_size for i in z.infolist())>8388608:raise ValueError('archive budget')
  for i in z.infolist():
   if i.is_dir():continue
   path=PurePosixPath(i.filename)
