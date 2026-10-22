@@ -1052,6 +1052,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  if contact and contact.prop then floor=contact.prop.groundHeight or floor end
  local height=floor+(opts.lift or 0)
  if V.require('Gen3Boats').draw(gid,x,z+(opts.depthOffset or 0),height,worldFacing,draw,reflectPlane)then return end
+ if V.require('Gen3TruckExterior').draw(gid,x,z+(opts.depthOffset or 0),height,spr,frame,draw,reflectPlane)then return end
  if V.require('Gen3TruckCargo').draw(gid,x,z+(opts.depthOffset or 0),height,spr,frame,draw,reflectPlane)then return end
  if V.require('NativeItemPokeballs').draw(gid,x,z+(opts.depthOffset or 0),height,draw,reflectPlane)then return end
  if V.require('NativeLegendarySapling').draw(gid,x,z,height,spr.image,draw,reflectPlane)then return end
@@ -1461,9 +1462,10 @@ function M.performanceSnapshot()
   scenery={placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),pewterMuseum=#(cache.importedPewterMuseum or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
-function M.invalidate()V.require('Gen3TruckCargo').clear();V.require('Gen3Boats').clear();V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
+function M.invalidate()V.require('Gen3TruckCargo').clear();V.require('Gen3TruckExterior').clear();V.require('Gen3Boats').clear();V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
 function M.release()
  V.require('Gen3TruckCargo').clear();V.require('Gen3Boats').clear()
+ V.require('Gen3TruckExterior').clear()
  V.require('Gen3SeaRocks').clearGeometry()
  V.require('Gen3Hedges').release()
  V.require("NativeLegendaryTower").clear()
