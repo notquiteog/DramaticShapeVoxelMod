@@ -1,0 +1,135 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "modelArchive": "a/0/2/3 BM0008 slot0",
+  "modelName": "com_bm_pcdoor01",
+  "animationArchive": "a/0/2/3 BM0008 slot1",
+  "textureArchive": "a/0/1/4 AD0008 slot1",
+  "sha256": {
+    "modelBch": "4cd9b705a427ee5cfecb7c146911651efa5e43edfec835d238d3545b80359a83",
+    "animationBch": "eb2f39a31774b5f3c53fb53e8a64003473f0e1d284f16cc3d0241c59fcfd6528",
+    "textureBch": "fffc1d6ed04fda474175abc69b1cd01aac899d8f34207baaf9f58a7611b34b19"
+  },
+  "triangles": 8,
+  "sourceBoundsYUp": [
+    -15.112782895565033,
+    0.975557267676777,
+    1.5418699979782104,
+    14.967988073825836,
+    47.5955162048449,
+    1.8267700672149658
+  ],
+  "sourceOrigin": [
+    -0.07239741086959839,
+    0.975557267676777,
+    1.8267700672149658
+  ],
+  "sourceUnitSpan": 30.08077096939087,
+  "movingBones": [
+    "anim_door_left",
+    "anim_door_right"
+  ],
+  "movingBoneInverseBindMaximumError": 0.0,
+  "sourceAnimation": {
+    "frames": 6,
+    "looping": false,
+    "samples": [
+      0,
+      2.5,
+      5
+    ],
+    "poses": [
+      {
+        "left": 0.0,
+        "right": 0.0
+      },
+      {
+        "left": -7.54500138759613,
+        "right": 7.545000087469816
+      },
+      {
+        "left": -15.0,
+        "right": 15.000000238418579
+      }
+    ],
+    "tracks": {
+      "anim_door_left": [
+        {
+          "frame": 0.0,
+          "value": -32.57018280029297,
+          "slope": -1.5600013732910156
+        },
+        {
+          "frame": 1.0,
+          "value": -34.130184173583984,
+          "slope": -2.6400012969970703
+        },
+        {
+          "frame": 3.0,
+          "value": -42.290184020996094,
+          "slope": -4.079999923706055
+        },
+        {
+          "frame": 4.0,
+          "value": -46.01018524169922,
+          "slope": -2.6399993896484375
+        },
+        {
+          "frame": 5.0,
+          "value": -47.57018280029297,
+          "slope": -1.55999755859375
+        }
+      ],
+      "anim_door_right": [
+        {
+          "frame": 0.0,
+          "value": -2.570183038711548,
+          "slope": 1.5600000619888306
+        },
+        {
+          "frame": 1.0,
+          "value": -1.0101829767227173,
+          "slope": 2.640000343322754
+        },
+        {
+          "frame": 3.0,
+          "value": 7.149816989898682,
+          "slope": 4.079999923706055
+        },
+        {
+          "frame": 4.0,
+          "value": 10.869817733764648,
+          "slope": 2.640000104904175
+        },
+        {
+          "frame": 5.0,
+          "value": 12.429817199707031,
+          "slope": 1.5599994659423828
+        }
+      ]
+    }
+  },
+  "textures": {
+    "pokecen_mado": {
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "a62860c6ab222750ff9ef395277107e83b9f27a997456d567fb3003bb25f6151"
+    },
+    "pokecen_door": {
+      "size": [
+        128,
+        128
+      ],
+      "sha256": "ad102910aade1750a812e0e999a985cf89be21a165c6851feb575cbc3c7e78e3"
+    }
+  },
+  "aperture": {
+    "width": 30.242005,
+    "height": 44.103495,
+    "buildingSpan": 116.807983,
+    "insetFromDoorAnchor": 5.065302000000001
+  },
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "processing": "Both moving rigid bones have weight1 and no rotation. Original local positions transformed by composed source TRS; independently checked against stored inverse bind matrices. All8 source triangles and UV islands retained (V origin converted once). Sampled original Hermite X tracks at closed/half/open; native engine owns timing/warp. Source floor-light effect intentionally omitted; door geometry/texture colors are not invented. Uniform fit to the existing source292908 aperture; original static gray recess remains."
+}
