@@ -10,6 +10,14 @@ local roomMaterials=setmetatable({},{__mode='k'})
 local shutterMeshes={}
 local nativeRows={{0x201,0x202,0x203,0x204,0x205},{0x209,0x20a,0x20b,0x20c,0x208},
  {0x211,0x212,0x213,0x214,0x210},{0x219,0x21a,0x21b,0x21c,0x218},{0x221,0x222,0x223,0x224,0x220}}
+local floorArt={}
+for _,row in ipairs(nativeRows)do for _,mid in ipairs(row)do floorArt[mid]=true;if closed[mid]then floorArt[closed[mid]]=true end end end
+-- Scene-only floor policy: use the same clean native gray floor everywhere,
+-- including beneath separate cargo and across live exit-light drawings. The
+-- caller also suppresses middle/over ground paint; padded black cells stay void.
+function M.floor(c)
+ if c and c.pair==M.pair and floorArt[c.mid]then return 0x214 end
+end
 local function recipe(r)
  return r and r.name=='hoenn_truck_cargo' and r.pair==M.pair
   and r.family=='rse' and r.primary=='general' and r.design=='em_truck_cargo'

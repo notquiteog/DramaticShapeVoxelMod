@@ -138,3 +138,14 @@ clearance and inside/outside camera cutaway behavior. Final isolated official
 views in allR/S/E; evidence is in `truck-camera-20261022/*-accepted` scratch runs.
 Source comparison and captures verify native gray art and actual script timing;
 this remains an original-art 3D repair, not an imported ORAS truck interior.
+
+## Uniform 3D floor
+
+The user's subsequent floor preference is exposed by `Gen3TruckCargo.floor(c)`:
+every reviewed nonvoid truck metatile, including cargo and both exit states,
+returns the same clean native gray floor MID214. Padded black cells and other
+tileset pairs returnnil. The parent-owned scene must select this material before
+its normal terrain/prop-floor cases and omit the original middle/over ground
+paint for these cells. This deliberately removes projected cargo and exit-light
+art from the 3D floor only; the native2D renderer and all collision/warp data are
+unchanged. Cargo and the real closed shutter retain separate3D source geometry.

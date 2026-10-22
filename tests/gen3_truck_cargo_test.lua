@@ -51,6 +51,11 @@ for _,other in ipairs{{name=recipe.name,pair='building__generic_building',family
 end
 assert(not T.matches(recipe,0x215,0x208),'wrong closed-door row accepted')
 local def={midLayout={pair=T.pair}}
+for _,shut in ipairs{true,false}do for _,c in pairs(cells(shut))do
+ assert(T.floor(c)==0x214,'truck art/exit retained a different floor material')
+end end
+assert(not T.floor({pair=T.pair,mid=0})and not T.floor({pair=T.pair,mid=0x200}),'void padding became floor')
+assert(not T.floor({pair='general__dewford',mid=0x214})and not T.floor(nil),'truck floor leaked to another source')
 for _,ed in ipairs{'ruby','sapphire','emerald'}do assert(T.eligible(113,def,ed))end
 assert(not T.eligible(113,def,'firered') and not T.eligible(1,def,'emerald'))
 assert(not T.eligible(113,{midLayout={pair='building__generic_building'}},'emerald'))
