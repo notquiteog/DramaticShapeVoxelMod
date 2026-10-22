@@ -4,6 +4,8 @@ local V=...
 local Models=V.require('SceneryModels')
 local M={model='oras_evergreen_tree',shallowModel='oras_route104_broadleaf_shallow',foregroundModel='oras_evergreen_foreground',compactModel='oras_compact_broadleaf',narrowModel='oras_compact_broadleaf_narrow'}
 local crowns={[0x40]=true,[0xe]=true,[0xf]=true,[0xc6]=true,[0xc7]=true,[0xce]=true}
+local coastal={[0x239]=true,[0x243]=true,[0x23a]=true}
+local function coast(c)return c and c.secondary=='dewford'and coastal[c.mid]and c.shape and c.shape.treeFamily=='conifer'end
 local trunks={[0x16]=true,[0x17]=true,[0x1f4]=true,[0x1f5]=true}
 local round={};for _,mid in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1de,0x1df,0x1e4,0x1e5,0x1e6,0x1e7,0x1ec,0x1ed,0x1f2,0x1f3}do round[mid]=true end
 M.shallowSource={model='oras_route104_broadleaf',scale={1,1,.5},rotations={0,2}}
@@ -64,7 +66,7 @@ function M.select(c,options)
  -- against the cliff, completed with the genuine source canopy.
  if not(s and s.kind=='tree'and s.root and not(s.treePalette or s.importedTreeModel)
   and c.primary=='general'and c.pair=='general__'..(c.secondary or'')and hoenn(c,options))then return end
- if s.treeFamily=='conifer'and crowns[c.mid]then return M.model end
+ if coast(c)or s.treeFamily=='conifer'and crowns[c.mid]then return M.model end
  local b=s.treeBounds
  if not(s.treeFamily=='round'and type(b)=='table'and #b==4)then return end
  for _,n in ipairs(b)do if not finite(n)then return end end
@@ -174,6 +176,90 @@ local function ownerRoot(q,cells)
   if c and c.shape and c.shape.treeBounds==b and c.shape.root then if root then return end;root=c end
  end end;return root
 end
+-- Dewford's native239/243 crowns and23A lower trunks share the genuine
+-- tiered evergreen source identity, on sand124. Keep this secondary vocabulary
+-- isolated: other towns reuse these identifiers for unrelated native drawings.
+local function coastalRegion(q)
+ if q.boundary=='forest'and q.collision==nil and q.region==nil then return true end
+ local id=q.region and q.region.def and q.region.def.id or''
+ return q.collision==7 and(id:match('^EM_')or id:match('^RU_')or id:match('^SA_'))
+end
+local function coastalOwner(c,cells)
+ local b=bounds(c,16)
+ if not(coast(c)and c.shape.root and coastalRegion(c)and b and(b[4]-b[2]==16 or b[4]-b[2]==32)
+  and validOwner(c,cells,b,coastal,'conifer',true))then return end
+ for y=b[2]/16,b[4]/16-1 do local q=cells[(b[1]/16)..':'..y]
+  if not coastalRegion(q)or q.shape.ground~=0x124 or q.shape.root~=(q==c)then return end
+  if q.region and c.region and q.region.def.id:sub(1,3)~=c.region.def.id:sub(1,3)then return end
+ end
+ return b
+end
+local function generatedCoast(c,cells,b)
+ for y=b[2]/16,b[4]/16-1 do local q=cells[(b[1]/16)..':'..y]
+  if q.boundary~='forest'or q.collision~=nil or q.region~=nil then return false end
+ end
+ return true
+end
+local function coastalTail(c,cells)
+ local b=coastalOwner(c,cells);if not b or generatedCoast(c,cells,b)then return end
+ local front=cells[(b[1]/16)..':'..(b[4]/16-1)]
+ if front.mid==0x23a then return end
+ local lower=ownerRoot(cells[(b[1]/16)..':'..(b[4]/16)],cells);local lb=coastalOwner(lower,cells)
+ if lb and lower.boundary~='forest'and lower.mid==0x23a and lb[1]==b[1]and lb[2]==b[4]and lb[4]-lb[2]==16
+  and lower.pair==c.pair and math.abs(lower.base-c.base)<.01 then return lower end
+end
+local function coastalPlacements(c,cells)
+ local b=coastalOwner(c,cells);if not b then return end
+ local x,y0,y1=b[1]/16,b[2]/16,b[4]/16-1
+ local first,last=cells[x..':'..y0],cells[x..':'..y1]
+ -- Synthetic forest owners use a canonical complete tree portrait regardless
+ -- of where the repeated source rows were sampled. One bounded full tree per
+ -- generated owner avoids treating its shifted trunk/cap phase as native roots.
+ local synthetic=generatedCoast(c,cells,b)
+ if synthetic then
+  local model=y1>y0 and M.foregroundModel or M.model;if not M.register(model)then return end
+  local fit={width=16,depth=(y1-y0+1)*16,padding=.25,rotation=y1>y0 and((x+y0)%2)*2 or(x*17+y0*29)%4}
+  local f=Models.fit(model,fit);if not f or f.bounds[5]<18 then return end
+  return{{model=model,x=b[1],y=c.base,z=b[2],fit=fit,source=c,treeInfo={height=f.bounds[5],canopyBottom=f.anchors.canopyBottom[2],
+   bounds={b[1]+f.bounds[1],b[2]+f.bounds[3],b[1]+f.bounds[4],b[2]+f.bounds[6]}}}}
+ end
+ local internal=last.mid==0x23a and y1>y0
+ if first.mid==0x23a then
+  if y1~=y0 then return end
+  local above=cells[x..':'..(y0-1)];local master=ownerRoot(above,cells)
+  if master and coastalTail(master,cells)==c then return{}end
+  local walking=above and above.mid==0x239 and above.collision==0 and above.primary=='general'
+   and above.pair==c.pair and above.secondary==c.secondary and not(above.boundary or above.prop or above.civic or above.stageHidden)
+   and above.shape and above.shape.kind=='tree'and not above.shape.root and not above.shape.treeBounds
+   and not(above.shape.treePalette or above.shape.importedTreeModel)
+  local mb=master and coastalOwner(master,cells);local boundary=mb and mb[4]==b[2]
+   and above.mid==0x23a and above.boundary=='forest'and above.collision==nil and not above.region
+   and master.boundary=='forest'and not master.region and master.pair==c.pair and math.abs(master.base-c.base)<.01
+  if not(walking or boundary)then return end
+ elseif first.mid~=0x239 and first.mid~=0x243 then return end
+ if not M.register(M.model)or(internal and not M.register(M.foregroundModel))then return end
+ local tail=not internal and coastalTail(c,cells)or nil
+ if tail and not M.register(M.foregroundModel)then return end
+ local list,union={}, {math.huge,math.huge,-math.huge,-math.huge}
+ local info={bounds=union,height=0,canopyBottom=math.huge}
+ for y=y0,internal and y0 or y1 do
+  local merged=internal or tail and y==y1
+  local model=merged and M.foregroundModel or M.model
+  local fit={width=16,depth=merged and 32 or 16,padding=.25,rotation=merged and((x+y)%2)*2 or(x*17+y*29)%4}
+  local f=Models.fit(model,fit);if not f or f.bounds[5]<18 then return end
+  local width,depth=f.bounds[4]-f.bounds[1],f.bounds[6]-f.bounds[3]
+  if merged and(width<15.4 or depth<25.5)or not merged and(math.max(width,depth)<15.4 or math.min(width,depth)<12.8)then return end
+  local wx,wz=x*16,y*16
+  local box={wx+f.bounds[1],wz+f.bounds[3],wx+f.bounds[4],wz+f.bounds[6]}
+  union[1],union[2]=math.min(union[1],box[1]),math.min(union[2],box[2])
+  union[3],union[4]=math.max(union[3],box[3]),math.max(union[4],box[4])
+  info.height=math.max(info.height,f.bounds[5]);info.canopyBottom=math.min(info.canopyBottom,f.anchors.canopyBottom[2])
+  local lowerInfo=tail and merged and{bounds=box,height=f.bounds[5],canopyBottom=f.anchors.canopyBottom[2]}or nil
+  list[#list+1]={model=model,x=wx,y=c.base,z=wz,fit=fit,source=c,treeInfo=info,
+   sources=tail and merged and{c,tail}or nil,sourceTreeInfos=lowerInfo and{[c]=info,[tail]=lowerInfo}or nil}
+ end
+ return list
+end
 local function foreground(c,cells,options)
  local b=bounds(c,16)
  if not(b and (b[4]-b[2]==16 or b[4]-b[2]==32)and c.shape.treeFamily=='conifer'and M.select(c,options)
@@ -201,7 +287,7 @@ local function backgroundPineCap(c,cells,above)
   and above.pair==c.pair and above.secondary==c.secondary and above.primary=='general'
   and math.abs((above.base or 0)-(c.base or 0))<.01)then return false end
  local master=ownerRoot(above,cells);local b=bounds(master,32,32)
- if not(b and above.cy==b[4]/16-1 and master.mid==0x1ec
+ if not(b and above.cy==b[4]/16-1 and(master.mid==0x1ec or master.mid==0x1e4 or master.mid==0x1e6)
   and validOwner(master,cells,b,round,'round',false))then return false end
  for yy=b[2]/16,b[4]/16-1 do for xx=b[1]/16,b[3]/16-1 do
   if cells[xx..':'..yy].region~=c.region then return false end
@@ -213,6 +299,7 @@ end
 function M.placements(c,cells,options)
  local model=M.select(c,options)
  if not model or type(cells)~='table'then return end
+ if coast(c)then return coastalPlacements(c,cells)end
  local b=c.shape.treeBounds
  if type(b)~='table'or #b~=4 then return end
  for _,n in ipairs(b)do if not finite(n)or n%16~=0 then return end end
