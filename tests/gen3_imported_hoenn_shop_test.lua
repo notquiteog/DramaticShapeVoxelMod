@@ -25,7 +25,7 @@ S.buildBatches=function(placements,_,opts)
   assert(math.abs((v[1]-fit.x)/fit.scale-old[1])<1e-6 and math.abs(v[2]/fit.scale-old[2])<1e-6)
   assert(math.abs((v[3]-fit.z)/fit.scale-H.shopDepth(old[3],source.nativeDepthBay))<1e-6)
   assert(v[4]==old[4]and v[5]==old[5]and v[6]==old[6],'source UV/shade changed')
-  for k=1,4 do assert(v[6+k]==source.parts[i].colors[j][k],'source vertex RGBA changed')end
+  assert(v[7]==1 and v[8]==1 and v[9]==1 and v[10]==source.parts[i].colors[j][4],'shop lighting retained or alpha lost')
   -- All triangles lie in this convex three-row blocked rectangle. None
   -- can enter the native walkable rear-left cell or the front approach.
   assert(q.z+v[3]>=(g.cy+1)*16 and q.z+v[3]<(g.cy+4)*16)
@@ -58,4 +58,4 @@ assert(H.shopDepth(b.start-.1,b)==b.start-.1+b.shorten)
 assert(H.shopDepth(b.finish+.1,b)==b.finish+.1)
 assert(math.abs(H.shopDepth(b.finish,b)-H.shopDepth(b.start,b)-((b.finish-b.start)-b.shorten))<1e-8)
 for y=0,3 do for x=0,5 do local q=cells[(g.cx+x)..':'..(g.cy+y)];assert(q.mid==r.rows[y+1][x+1]and q.collision==r.permissions[y+1][x+1])end end
-print(('PASS shop guards, unchanged source UV/RGBA, rigid front/rear assemblies and8unit bay adaptation; fitted%.4fx%.4f within96x48blocked, door%.4f/%.4f'):format(captured.bounds[4]-captured.bounds[1],captured.bounds[6]-captured.bounds[3],captured.anchors.door[1],captured.anchors.door[3]))
+print(('PASS shop guards, unchanged source UV/alpha, rigid front/rear assemblies and8unit bay adaptation; fitted%.4fx%.4f within96x48blocked, door%.4f/%.4f'):format(captured.bounds[4]-captured.bounds[1],captured.bounds[6]-captured.bounds[3],captured.anchors.door[1],captured.anchors.door[3]))

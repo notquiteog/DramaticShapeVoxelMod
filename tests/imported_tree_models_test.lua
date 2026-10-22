@@ -14,7 +14,7 @@ for r=0,3 do
   assert(p.format==S.COLOR_FORMAT and p.format[4][1]=='VertexColor')
   for j,v in ipairs(p.vertices)do
    assert(#v==10 and v[1]>=.25-1e-6 and v[1]<=31.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=31.75+1e-6)
-   for a=1,4 do assert(v[a+6]==Tree[id].parts[i].colors[j][a],'source vertex RGBA changed')end
+   assert(v[7]==1 and v[8]==1 and v[9]==1 and v[10]==Tree[id].parts[i].colors[j][4],'tree lighting retained or alpha lost')
   end
  end
 end
@@ -50,4 +50,4 @@ local held=assert(S.image(id,first.texture,'repeat','repeat'))
 assert(S.retryImages('late_tree')and S.image('late_tree',first.texture,'repeat','repeat'),'late reader bytes not retried')
 assert(not held.released and S.image(id,first.texture,'repeat','repeat')==held,'retry invalidated another active provider')
 S.release()
-print('PASS imported ORAS tree RGBA, unchanged six-float models, bounded fits, canopy anchor, explicit instance/merged formats and byte budgets')
+print('PASS imported ORAS tree lighting cleanup/alpha, unchanged six-float models, bounded fits, canopy anchor, explicit instance/merged formats and byte budgets')

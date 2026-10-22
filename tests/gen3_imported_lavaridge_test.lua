@@ -28,7 +28,7 @@ for _,ed in ipairs{'RU','SA','EM'}do for _,west in ipairs{true,false}do
    assert(v[1]>=.25-1e-6 and v[1]<=63.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=47.75+1e-6,'walkable cell overlap')
    assert(math.abs((v[1]-fit.x)/fit.scale-old[1])<1e-6 and math.abs(v[2]/fit.scale-old[2])<1e-6)
    assert(math.abs((v[3]-fit.z)/fit.scale-L.depthShift(old[3],source.nativeDepthBays))<1e-6)
-   assert(v[4]==old[4]and v[5]==old[5]and v[6]==old[6]);for k=1,4 do assert(v[6+k]==source.parts[i].colors[j][k])end
+   assert(v[4]==old[4]and v[5]==old[5]and v[6]==old[6]);assert(v[7]==1 and v[8]==1 and v[9]==1 and v[10]==source.parts[i].colors[j][4])
   end end
   local b=source.nativeDepthBays
   -- Source side glass/bars fit between the two edited bays, so every
@@ -50,4 +50,4 @@ for _,ed in ipairs{'RU','SA','EM'}do for _,west in ipairs{true,false}do
  region.def.id='CUSTOM_LAVARIDGE';assert(not L.eligible(g,translated));region.def.id=map
  S.buildBatches=build
 end end
-print(('PASS six edition/variant placements, original region-local identities, connected-map offsets, untouched UV/RGBA/rigid fixtures and fitted%.4fx%.4f inside64x48; missing-resource fallback'):format(last.bounds[4]-last.bounds[1],last.bounds[6]-last.bounds[3]))
+print(('PASS six edition/variant placements, original region-local identities, connected-map offsets, untouched UV/alpha/rigid fixtures and fitted%.4fx%.4f inside64x48; missing-resource fallback'):format(last.bounds[4]-last.bounds[1],last.bounds[6]-last.bounds[3]))

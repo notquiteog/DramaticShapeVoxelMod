@@ -35,7 +35,7 @@ function M.geometry(g,fit)
    local x,y,z=v[1]*fit.scale+fit.x,v[2]*fit.scale,v[3]*fit.scale+fit.z
    if x<.25 or x>95.75 or z<.25 or z>47.75 then return nil,'source flower crosses native blocked body'end
    local c=component.colors[j]
-   vs[#vs+1]={x0+x,base+y,z0+z,v[4],v[5],v[6],c[1],c[2],c[3],c[4]}
+   vs[#vs+1]={x0+x,base+y,z0+z,v[4],v[5],1,1,1,1,c[4]}
   end
   for _,i in ipairs(component.indices)do indices[#indices+1]=first+i end
  end

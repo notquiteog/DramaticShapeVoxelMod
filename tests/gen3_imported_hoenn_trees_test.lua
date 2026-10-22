@@ -89,7 +89,7 @@ for _,x in ipairs{2,3}do
    assert(original[3]==originalZ[i][j],'shared full-depth source mutated')
    assert(v[4]==original[4]and v[5]==original[5]and v[6]==original[6],'source UV/shade changed')
    assert(math.abs(v[2]-original[2]*f.scale)<1e-6,'source vertical proportions changed')
-   if source.colors then for k=1,4 do assert(v[k+6]==source.colors[j][k],'source vertex RGBA changed')end end
+   if source.colors then assert(v[7]==1 and v[8]==1 and v[9]==1 and v[10]==source.colors[j][4],'tree lighting retained or alpha lost')end
    assert(v[1]>=.25-1e-6 and v[1]<=31.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=15.75+1e-6)
    assert(cells[math.floor((entry.x+v[1])/16)..':'..math.floor((entry.z+v[3])/16)].collision==7,'shallow source enters walking cell')
   end
@@ -140,4 +140,4 @@ assert(#leaf.vertices==#completion.vertices)
 for i,v in ipairs(completion.vertices)do
  assert(v[4]==leaf.vertices[i][4]and v[5]==leaf.vertices[i][5],'canopy completion invented UVs')
 end
-print('PASS source evergreen packing, safe projected-cap trunks, full shallow broadleaf bodies, unchanged UV/RGBA/closures and native walking/owner/fallback guards')
+print('PASS source evergreen packing, safe projected-cap trunks, full shallow broadleaf bodies, unchanged UV/alpha/closures and native walking/owner/fallback guards')

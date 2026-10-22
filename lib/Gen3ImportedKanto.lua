@@ -4,11 +4,9 @@ local V=...
 local Models=V.require('SceneryModels')
 local M={recipes={}}
 local registered={}
--- Source closures and original flat h_kage shade both sit at modelY0. Native
--- lawn also ownsY0: keep the closed underside just below it and the authentic
--- flat source shade just above it, rather than drawing three coplanar faces.
+-- Keep the physical closure below the native lawn; source-only shadow overlays
+-- are omitted centrally by SceneryModels and need no coplanar lifting shim.
 local footingDepth=.05
-local flatShadeLift=.001
 local houses={{0x281,0x282,0x282,0x282,0x283},{0x289,0x28a,0x28a,0x28a,0x28b},
  {0x291,0x293,0x292,0x292,0x294},{0x298,0x299,0x29a,0x29b,0x29c},{0x2a0,0x2a3,0x2a2,0x2a1,0x2a4}}
 local lab={{0x2a8,0x2a9,0x2a9,0x2a9,0x2a9,0x2bd,0x2b5},{0x2b0,0x2b1,0x2b1,0x2b1,0x2b1,0x2b3,0x2b4},
@@ -57,18 +55,7 @@ end
 function M.register(id)
  if registered[id]then return true end
  local data=V.require('PalletBuildingData')[id];if not data then return nil,'unknown Pallet model'end
- local prepared={};for k,v in pairs(data)do prepared[k]=v end;prepared.parts={}
- for i,p in ipairs(data.parts)do
-  prepared.parts[i]=p
-  local flat=p.role=='source_shading'and p.texture:match('/h_kage%.png$')
-  for _,v in ipairs(p.vertices)do if math.abs(v[2])>1e-8 then flat=false;break end end
-  if flat then
-   local q={};for k,v in pairs(p)do q[k]=v end;q.vertices={}
-   for j,v in ipairs(p.vertices)do q.vertices[j]={unpack(v)};q.vertices[j][2]=v[2]+flatShadeLift end
-   prepared.parts[i]=q
-  end
- end
- local ok,err=Models.register(id,prepared,{read=function(path)return V.mod:read(path)end})
+ local ok,err=Models.register(id,data,{read=function(path)return V.mod:read(path)end})
  if ok then registered[id]=true end;return ok,err
 end
 function M.build(g,cells,newMesh,parts)

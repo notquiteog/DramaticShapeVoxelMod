@@ -13,7 +13,7 @@ for id,d in pairs(Data)do
    assert(p.texture==d.parts[j].texture and #p.indices==#d.parts[j].indices)
    for k,v in ipairs(p.vertices)do
     assert(v[1]>=.25-1e-6 and v[1]<=47.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=31.75+1e-6 and v[2]>=-1e-6 and v[2]<=40+1e-6)
-    local src=d.parts[j].vertices[k];assert(v[4]==src[4]and v[5]==src[5]and v[6]==src[6],'source UV/shade changed');count=count+1
+    local src=d.parts[j].vertices[k];assert(v[4]==src[4]and v[5]==src[5]and v[6]==1,'source UV changed or baked shade retained');count=count+1
    end
   end
   assert(count==info.vertices and fit.bounds[5]<=40)

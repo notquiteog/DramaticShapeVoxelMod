@@ -29,7 +29,7 @@ for _,component in ipairs(source.components)do
  assert(component.identity=='pink_flower_yellow_center'and source.excludedHd2dCards[component.sourceComponent])
  for j,v in ipairs(component.vertices)do at=at+1;local q=calls[1].vertices[at]
   assert(#q==10 and math.abs(q[1]-(g.cx*16+v[1]*fit.scale+fit.x))<1e-8 and math.abs(q[2]-(6+v[2]*fit.scale))<1e-8 and math.abs(q[3]-((g.cy+1)*16+v[3]*fit.scale+fit.z))<1e-8,'authored flower geometry changed')
-  assert(q[4]==v[4]and q[5]==v[5]and q[6]==v[6]);for k=1,4 do assert(q[6+k]==component.colors[j][k],'source flower RGBA changed')end
+  assert(q[4]==v[4]and q[5]==v[5]and q[6]==v[6]);assert(q[7]==1 and q[8]==1 and q[9]==1 and q[10]==component.colors[j][4],'flower lighting retained or alpha lost')
   local x,y=math.floor(q[1]/16)-g.cx,math.floor(q[3]/16)-g.cy
   assert(r.permissions[y+1][x+1]==7,'source blossom enters native walking/warp tile')
  end
@@ -58,4 +58,4 @@ local built,why=H.build(g,cells,upload,parts)
 assert(not built and why:find('native source unavailable',1,true)and #parts==1 and parts[1]==prior and freed==before+1 and not g.importedHoenn,'unsupported voxel flowers failed to restore native building fallback')
 for k,c in pairs(cells)do assert(c.mid==nativeBefore[k][1]and c.collision==nativeBefore[k][2],'native map changed')end
 g.custom={name='other',family='rse'};assert(not F.build(g,fit,H.shopId,upload,{}),'unrelated flower family substituted')
-print('PASS HD2D default, original pink source flower identity/XYZ/UV/RGBA, planter+walking bounds, complete mixed coverage and atomic modern/native-voxel provider fallback')
+print('PASS HD2D default, original pink source flower identity/XYZ/UV/alpha, planter+walking bounds, complete mixed coverage and atomic modern/native-voxel provider fallback')
