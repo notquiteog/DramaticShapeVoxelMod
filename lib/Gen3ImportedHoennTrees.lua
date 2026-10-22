@@ -3,7 +3,7 @@
 local V=...
 local Models=V.require('SceneryModels')
 local M={model='oras_evergreen_tree',shallowModel='oras_route104_broadleaf_shallow',foregroundModel='oras_evergreen_foreground',compactModel='oras_compact_broadleaf',narrowModel='oras_compact_broadleaf_narrow'}
-local crowns={[0xe]=true,[0xf]=true,[0xc6]=true,[0xc7]=true,[0xce]=true}
+local crowns={[0x40]=true,[0xe]=true,[0xf]=true,[0xc6]=true,[0xc7]=true,[0xce]=true}
 local trunks={[0x16]=true,[0x17]=true,[0x1f4]=true,[0x1f5]=true}
 local round={};for _,mid in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1de,0x1df,0x1e4,0x1e5,0x1e6,0x1e7,0x1ec,0x1ed,0x1f2,0x1f3}do round[mid]=true end
 M.shallowSource={model='oras_route104_broadleaf',scale={1,1,.5},rotations={0,2}}
@@ -147,6 +147,25 @@ function M.multilevelPineOwner(c,cells,options)
  end
  return math.abs(high-low-6)<.01
 end
+-- Generated forest borders can repeat the native lower-half source at
+-- every blocked row. This exact low-left/high-right six-pixel boundary has
+-- no native walking cells: retain one full/shallow source tree per owner.
+function M.forestRoundSlope(c,cells,options)
+ local b=bounds(c,32)
+ if not(b and(b[4]-b[2]==16 or b[4]-b[2]==32)and hoenn(c,options)
+  and c.shape.root and c.cx==b[1]/16 and c.cy==b[2]/16 and c.primary=='general'
+  and c.pair=='general__'..(c.secondary or'')and finite(c.base))then return false end
+ for y=b[2]/16,b[4]/16-1 do for x=b[1]/16,b[3]/16-1 do
+  local q=cells[x..':'..y];local s=q and q.shape
+  if not(q and q.boundary=='forest'and q.collision==nil and q.region==nil
+   and q.primary=='general'and q.pair==c.pair and q.secondary==c.secondary
+   and q.mid==(x==b[1]/16 and 0x1dc or 0x1dd)and not(q.prop or q.civic or q.stageHidden)
+   and s and s.kind=='tree'and s.treeFamily=='round'and s.treeBounds==b and s.root==(q==c)
+   and not(s.treePalette or s.importedTreeModel)and finite(q.base)
+   and math.abs(q.base-c.base-(x==b[1]/16 and 0 or 6))<.01)then return false end
+ end end
+ return true
+end
 local function ownerRoot(q,cells)
  local b=q and q.shape and q.shape.treeBounds;if not b then return end
  local root
@@ -228,7 +247,7 @@ function M.placements(c,cells,options)
   if not(walking or backgroundPineCap(c,cells,above))then return end
  end
  local accepted=shallow and round or trunk and trunks or crowns
- local varying=not(shallow or trunk)and M.multilevelPineOwner(c,cells,options)
+ local varying=shallow and M.forestRoundSlope(c,cells,options)or not(shallow or trunk)and M.multilevelPineOwner(c,cells,options)
  if not validOwner(c,cells,b,accepted,c.shape.treeFamily,true,varying)then return end
  if not M.register(model)then return end
  local lower,frontY

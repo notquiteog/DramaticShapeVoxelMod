@@ -118,3 +118,21 @@ The native/tree-owner denominator still omits some painted source families.
 A separate remaining full-crown source040 and generated forest DC/DD mixed-six-
 pixel boundary owners were discovered during this check and remain next work.
 No complete corridor visual acceptance is claimed by this source-family commit.
+
+## Snapshot: pure-forest terrace and040 crown follow-up
+
+The next focused policy is committed for the user's all-work snapshot with
+native GPU QA pending. Source040 was inspected directly: a complete evergreen
+crown with a narrow grass band, used as blocked native tree cells among Route104
+fence149 cells. It now selects the genuine ORAS evergreen within its original
+blocked owner; walking040 keeps ground only. R/S uses an explicit source rule.
+
+Generated DC/DD forest owners with low-left/high-right ground separated by
+exactly6px may retain the full32×32 or shallow32×16 ORAS broadleaf. Every cell
+must be synthetic permissionnil/boundaryforest with no native region, the exact
+repeated DC/DD source columns, one original root, common pair/owner, and no
+custom palette/prop/civic conflict. Native joins, arbitrary heights and walking
+or water boundaries stand down. Native data and original root ground remain
+unchanged. This targets12 observed Route116 boundary owners omitted from the
+native-map-only denominator. Tests verify body bounds and all these guards;
+actual current GPU counts and images for this final follow-up are pending.
