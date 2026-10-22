@@ -240,19 +240,10 @@ end
 -- is the display density (2.625 on a 420dpi panel), and the world came out
 -- a third of the size in each direction.
 --
--- So ask for the pixel dimensions rather than trusting the ctx.  That is
--- the number a fixed engine would hand over, so this keeps working either
--- way instead of double-correcting.  It also squares the FX pass: ctx.scale
--- is ALREADY in pixels per world pixel (Zoom.scale over Renderer:fitScale,
--- which measures the drawable), so the closures ctx.drawFx runs were being
--- scaled for a canvas 2.6x bigger than the one they drew into.
-local function sceneSize(ctx)
-  if love.graphics and love.graphics.getPixelDimensions then
-    local pw, ph = love.graphics.getPixelDimensions()
-    if pw and ph and pw > 0 and ph > 0 then return pw, ph end
-  end
-  return ctx.width, ctx.height
-end
+-- Use the active playfield's dimensions with the drawable DPI. The OS window
+-- can also contain a touch skin or a reserved layout region; allocating that
+-- entire window here crops the returned image and moves the player off-centre.
+local sceneSize = V.require("SceneSize").pixels
 
 -- A naming screen is a foreground state, but render-pipeline drawWorld calls
 -- still receive the live OverworldState as ctx.state.  Checking only that
@@ -2086,8 +2077,9 @@ OverworldBattle.install()
 Gen2Battle.install()
 if Generation.isGen2() then
  local uninstallGen2UI=V.require('Gen2BattleUI').install()
+ local uninstallGen2World=V.require('Gen2WorldPresentation').install(require('src.world.gen2.World'))
  V.require('NativeCaveAudio').install(2,function()return require('src.render.Pipelines').level('voxel')>0 end)
- mod.hooks:wrap('core.quit_to_launcher',function(next,...)uninstallGen2UI();return next(...)end)
+ mod.hooks:wrap('core.quit_to_launcher',function(next,...)uninstallGen2World();uninstallGen2UI();return next(...)end)
 end
 V.require("NativeBattleArt").install()
 if Generation.isGen1() then V.require('Gen1BattleHud').install() end
