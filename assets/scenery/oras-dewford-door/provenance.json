@@ -1,0 +1,62 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "modelArchive": "a/0/2/3 BM0034 slot0",
+  "animationArchive": "a/0/2/3 BM0034 slot1",
+  "textureArchive": "a/0/1/4 AD0010 slot1",
+  "modelName": "t103_bm_door01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "triangles": 18,
+  "sourceBoundsYUp": [
+    -12.24985933303833,
+    0.12118625641960534,
+    -0.07969766855239868,
+    12.254450093954802,
+    45.121215820323414,
+    2.4203004837036133
+  ],
+  "movingBone": "anim_door",
+  "movingBoneInverseBindMaximumError": 4.76837158203125e-07,
+  "sha256": {
+    "modelBch": "91b31590f3df421b194b8802e791f12d85be1392fe68108c6aebf7076c9a9218",
+    "animationBch": "bf28d62a01655536cc1d71fc66f53d0f1f06a445be4d85b6fb90b30b8d613187",
+    "textureBch": "529e278b9562ba323f6e189d846e3f10a1b576d305181e0deb8aa2d8eba5ca42",
+    "png": "e9f95dcac9723bfbd2813ec0234e1b1a2a523b6246ddd025dd48b57a75bdcae2"
+  },
+  "texture": {
+    "name": "muro_door",
+    "size": [
+      64,
+      64
+    ],
+    "rgbaSha256": "af15a01f27b4b69a218fdb61fda4cffc66d7eef0bd982b3a2ebc5faf18cbc913"
+  },
+  "sourceAnimation": {
+    "frames": 6,
+    "looping": false,
+    "samples": [
+      0,
+      2.5,
+      5
+    ],
+    "yRotationRadians": [
+      0.0,
+      -0.6981316804885864,
+      -1.3962633609771729
+    ]
+  },
+  "sourceVertexColors": [
+    [
+      0.6509803921568628,
+      0.6823529411764706,
+      0.7058823529411764,
+      1.0
+    ],
+    [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  ],
+  "processing": "All18 original physical door triangles and UVs retained, with source V-origin conversion once. Rigid bind independently checked with Nitrogen inverse matrices; source local Y-rotation sampled through original Hermite track. Source PNG paint is unchanged; baked vertex tints are omitted per user clean-lighting preference. The separate24-triangle untextured floor-light effect is omitted. Uniform fit inside the original source house doorway; native engine owns frame, collision, warp, sound and timing."
+}

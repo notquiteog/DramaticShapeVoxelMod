@@ -37,9 +37,13 @@ function M.build(g,cells,newMesh,parts)
  -- The first native art row contains walkable cells; the whole mesh remains
  -- inside the three solid rows. Both original narrow homes share this shape.
  local fit={width=64,depth=48,padding=.25,anchor='door',targetX=24,targetZ=43.05}
+ local placed=assert(Models.fit(M.id,fit));placed.model=M.id
+ local doors=V.require('Gen3DewfordDoors')
+ local door,doorError=doors.build(g,placed,newMesh)
+ if not door then return false,doorError end
  local result,why=Models.buildBatches({{model=M.id,x=g.cx*16,y=g.groundHeight or 0,z=(g.cy+1)*16,fit=fit}},newMesh,{parts=parts})
- if not result then return false,why end
- g.importedHoenn=assert(Models.fit(M.id,fit));g.importedHoenn.model=M.id
+ if not result then doors.release(g);return false,why end
+ g.importedHoenn=placed;doors.commit(g)
  return true
 end
 function M.doorSurface(g,tx,ty)

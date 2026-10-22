@@ -1,6 +1,7 @@
-local modules={SceneryModelData={},ImportedDewfordData=dofile('lib/ImportedDewfordData.lua'),ModelInstances={},BuildBudget={check=function()end}}
+local modules={SceneryModelData={},ImportedDewfordData=dofile('lib/ImportedDewfordData.lua'),ImportedDewfordDoorData=dofile('lib/ImportedDewfordDoorData.lua'),ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
+modules.Gen3DewfordDoors=assert(loadfile('lib/Gen3DewfordDoors.lua'))(V)
 local D=assert(loadfile('lib/Gen3ImportedDewford.lua'))(V);modules.Gen3ImportedDewford=D
 local H=assert(loadfile('lib/Gen3ImportedHoenn.lua'))(V)
 assert(D.register());assert(S.info(D.id).parts==4)
@@ -28,11 +29,13 @@ for name,rows in pairs(D.families)do
   assert(math.abs(fit.anchors.door[1]-24)<1e-6)
   return opts.parts
  end
- assert(H.build(g,cells,function()end,{}));local door=assert(H.doorSurface(g,cx+1,cy+3));assert(not H.doorSurface(g,cx+2,cy+3))
+ local oldImage=S.image;S.image=function()return{}end
+ assert(H.build(g,cells,function()return{setTexture=function()end,release=function()end}end,{}));local door=assert(H.doorSurface(g,cx+1,cy+3));assert(not H.doorSurface(g,cx+2,cy+3))
+ assert(g.importedDewfordDoors,'idle source door was omitted')
  assert(math.abs((door.vertices[1][1]+door.vertices[2][1])/2-((cx+1)*16+8))<1e-6)
  assert(door.vertices[3][2]>=0 and door.vertices[1][2]>door.vertices[3][2])
  for y=0,3 do for x=0,3 do assert(cells[(cx+x)..':'..(cy+y)].mid==r.rows[y+1][x+1])end end
- S.buildBatches=build
+ modules.Gen3DewfordDoors.release(g);S.image=oldImage;S.buildBatches=build
 end
 local hall={custom=recipes.dewford_town_hall,pair='general__dewford',kind='house',width=5,depth=4,cx=1,cy=0}
 assert(not D.eligible(hall,{}),'wide hall incorrectly substituted')
