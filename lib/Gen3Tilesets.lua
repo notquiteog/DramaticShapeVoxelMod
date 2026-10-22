@@ -124,6 +124,10 @@ function M.supports(def,spec)
  -- vocabulary and furniture recipes. Unclassified secondary drawings stay
  -- native artwork, not a reason to switch the entire room back to 2D.
  if M.cave(spec) or spec.primary=='building' then return true end
+ if spec.primary=='secret_base'then
+  local B=V and V.require and V.require('Gen3SecretBases')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3SecretBases.lua')
+  return B.supports(def,spec)
+ end
  if spec.primary=='general' then return true end
  return spec.primary=='building' and
   (M.canonical(def.midLayout.pair)=='player_house' or M.canonical(def.midLayout.pair)=='house' or M.canonical(def.midLayout.pair)=='oak_lab'
