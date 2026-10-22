@@ -4,6 +4,7 @@ local first=assert(source:find('local function currentGameSave()',1,true))
 local last=assert(source:find('-- The normal player trainer intro',first,true))
 local player, rival, animated, art = 'red','blue','red','gen3'
 local game={save={modData={}}}
+local generation=1;local legacyReads=0
 local handle={save={get=function(_,key) return key=='player' and player or rival end}}
 local assets, requested={},{}
 local api={
@@ -14,9 +15,9 @@ local api={
 }
 local env=setmetatable({
   BattleArt=api,
-  V={mod={find=function() return handle end,
+  V={require=function(name)assert(name=='Generation');return{isGen3=function()return generation==3 end}end,mod={find=function() return handle end,
     assets={path=function(_,path) return path end}}},
-  require=function(name) assert(name=='src.core.Game'); return game end,
+  require=function(name) assert(name=='src.core.Game');legacyReads=legacyReads+1; return game end,
   displayMode=function() return 'color' end,
   prepare=function(path) requested[#requested+1]=path; return assets[path] end,
 },{__index=_G})
@@ -51,6 +52,19 @@ assert(api.chooseYourHeroPlayer()=='green' and api.chooseYourHeroRival()=='yello
 handle=nil
 game.save.modData={choose_something_else={player='green',rival='yellow'}}
 assert(api.chooseYourHeroPlayer()=='red' and api.chooseYourHeroRival()=='blue')
+generation=3
+local reads=legacyReads
+assert(api.chooseYourHeroPlayer()=='red' and api.chooseYourHeroRival()=='blue')
+assert(legacyReads==reads,'Gen 3 queried the absent Gen 1 singleton before game.ready')
+env.liveGame={save={modData={}},session={modData={choose_your_hero={player='green',rival='yellow'}}}}
+assert(api.chooseYourHeroPlayer()=='green' and api.chooseYourHeroRival()=='yellow')
+assert(legacyReads==reads,'Gen 3 ignored the live native session')
+env.liveGame.session={modData={}}
+assert(api.chooseYourHeroRival()=='blue','new session retained old companion settings')
+env.liveGame=nil;generation=2
+assert(api.chooseYourHeroRival()=='blue' and legacyReads>reads,'Gen 2 fallback lost')
+generation=1
+print('PASS live native Gen 3 session, early boot safety and Gen 2 legacy fallback')
 local sets=assert(loadfile('data/animated_player_trainers.lua'))()
 assert(sets.green and sets.red)
 local animFile=assert(io.open('lib/AnimatedBattleArt.lua','rb'))

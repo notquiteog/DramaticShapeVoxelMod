@@ -1,3 +1,12 @@
+# Crystal mobile world framing — 2026-10-22
+
+Confirmed reserved-playfield cropping and Gen2 high-DPI presentation mismatch.
+Shared GB scene sizing now uses actual playfield dimensions; Gen2 returns a
+logical-size high-DPI canvas after world processing (zero copy at density1).
+Native0.3.95 Crystal portrait before/after and simulated2× screenshots inspected;
+player remains framed. Two focused LuaJIT suites pass. Physical phones untested.
+See docs/CRYSTAL_MOBILE_FRAMING_2026-10-22.md. No model or gameplay edits.
+
 # Regional source buildings and native rooms — 2026-10-22
 
 1.57.0 integrates52 new source-building placements (32 Kanto Centers,6 Pallet

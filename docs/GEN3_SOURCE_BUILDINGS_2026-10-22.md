@@ -76,7 +76,11 @@ inspected: all new exterior families, Kanto Center/Hoenn building entrances,
 publicPC interaction, TVs and six secret-base palettes perHoenn edition. No
 renderer recovery failures.521 production Lua files compile with native
 LuaJIT2.1; the optional Python Lupa helper was unavailable, so the actual compiler
-was used directly. A final evidence-only repack must preserve these640 hashes.
+was used directly. The final evidence-only repack preserves these640 hashes. Later concurrent
+Crystal animation tick and viewport/trainer preference commits are preserved
+with their own native evidence records; focused Crystal, native-animation and
+framing suites pass. Final archive hashes are regenerated only for those named
+changes, then checked again by five isolated native GBA smoke runners.
 Scratch captures, ROMs, archives and generated caches are excluded.
 
 Fixtures and drivers remain in a dedicated `scenery-20261022` QA scratch set:
