@@ -1,6 +1,8 @@
 -- Thickness below native walking decks. Source rows and permissions establish
 -- ownership; bridge tops and engine collision/layers stay unchanged.
+local V=...
 local M={}
+local function docks()return V and V.require('Gen3Docks')or dofile('lib/Gen3Docks.lua')end
 local rows={{0x2ee,0x2ce,0x2e5,0x2e6,0x2ef},{0x2cd,0x2ce,0x2e5,0x2e6,0x2cf}}
 local swatches=setmetatable({},{__mode='k'})
 function M.material(c,uv)
@@ -29,7 +31,7 @@ function M.material(c,uv)
  return {t,t,t,t}
 end
 function M.prepare(cells)
- local count=0
+ local count=docks().prepare(cells)
  for _,c in pairs(cells)do
   if c.primary=='general' and c.secondary=='fortree' and c.behavior==0x178 and c.collision==0 then
    c.bridge={depth=2.5,material=c.mid};count=count+1
@@ -49,8 +51,12 @@ function M.prepare(cells)
  end
  return count
 end
+function M.prepareDocks(cells)return docks().prepare(cells)end
+function M.replacesTop(c)return docks().replacesTop(c)end
+function M.water(c,surface)return docks().water(c,surface)end
 function M.append(cells,c,emit,uvFor)
  local g=c.bridge;if not g then return end
+ if g.kind=='dock'then return docks().append(cells,c,emit,uvFor)end
  local x,z=c.cx*16,c.cy*16;local top=c.base or 0;local bottom=top-g.depth
  local uv=assert(uvFor(c.ts,g.material));local tex=M.material(c,uv)
  -- A closed underside is required even when no crossing is proved beneath.
