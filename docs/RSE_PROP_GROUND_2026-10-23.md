@@ -41,12 +41,35 @@ nearby ground donors. That module is owned by the parallel building task and is
 not edited by this change. Generic `Gen3TileShape.layout` nearby floor selection
 is limited to indoor league walls, so it is not this outdoor defect.
 
+## Native source priority recheck
+
+The user's native-footprint rule takes precedence over every neighbor inference.
+Raw metatile data (before image composition) confirms this sign-only exception:
+
+- Ruby/Sapphire General MID3: bottom tile entries `{4405,4406,4421,4422}`;
+  all four top entries zero; native attribute `0x0000` (normal layer).
+- Emerald General MID3: bottom entries `{309,310,4421,4422}`; all four top
+  entries zero; attribute `0x0000`.
+- In all three editions, `mids_mid` equals `mids_under`; the over-layer is
+  256 zero bytes. Every under pixel is nonzero palette0/1 board art. There are
+  no palette2 grass pixels (the actual grass uses indices44–47), no paving
+  pixels, and no hidden clean BG3 floor behind a covered top layer.
+
+`boardOnly(ts)` now validates the original indexed source fingerprint and empty
+native over-layer before `resolve` admits any inference. Only metadata
+checksums are bundled. Missing/replaced blobs, genuine grass pixels, changed
+source patterns and a nonempty over-layer stand down. Both original R/S and
+Emerald signatures were checked against the supplied source caches. This rule
+must not be generalized to Center/building footprints with actual native dark
+grass, nor to other props with surviving ground/background pixels.
+
 ## Safe helper and integration
 
 `Gen3PropGround.ground(cells,c)` returns the inferred native MID, or the current
 `c.shape.ground` when evidence is absent. `resolve` limits the replacement to
 blocked RSE General MID3 signs; other prop families retain reviewed recipes.
-`infer` implements the reusable continuity check:
+`infer` is only the reusable topology check; callers must separately establish
+that no native ground art exists before using it. It implements:
 
 - Opposite native flat, walkable cells must carry the same MID. An additional
   same MID establishes ordinary continuation.
@@ -67,7 +90,9 @@ permissions, elevation, warps and prop ownership remain untouched.
 `tests/gen3_prop_ground_test.lua` passes with the exact six-cell source strips
 for all five Rustboro cases, source grass preservation, alternating floor phase,
 conflicting junctions, absent materials, source ownership and no source mutation.
-LuaJIT compilation and `git diff --check` pass.
+The source gate was additionally exercised against the actual original indexed
+blobs for Ruby, Sapphire and Emerald, each admitting the proven Rustboro paving
+case. LuaJIT compilation and `git diff --check` pass.
 
 Source comparison PNGs, the cache inspection script and per-edition coordinates
 remain in scratch `corridor-ground-20261023`. A read-only runtime driver is also
