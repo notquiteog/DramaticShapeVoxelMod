@@ -4,6 +4,12 @@ local V = ...
 
 local ModSetting = V.require("ModSetting")
 local BattleArt = {}
+local liveGame
+if V.mod and V.mod.events then
+  V.mod.events:on('game.ready', function(event)
+    liveGame = event and event.game
+  end)
+end
 local SPECIES_BY_DEX = V.data("battle_species_dex_386")
 
 BattleArt.setting = ModSetting.new("battleArt", "BATTLE ART",
@@ -482,6 +488,10 @@ end
 -- through to another generation (or to the old flat folder): a missing class
 -- is useful and predictable as a per-trainer ROM fallback.
 local function currentGameSave()
+  -- Gen 3 owns its live save in session; its native trainer renderer must
+  -- never probe the absent Gen 1 Game singleton, even inside a pcall.
+  if liveGame then return liveGame.session or liveGame.save end
+  if V.require('Generation').isGen3() then return nil end
   local ok, Game = pcall(require, "src.core.Game")
   if ok and type(Game) == "table" then
     return Game.save
@@ -567,13 +577,11 @@ function BattleArt.trainerImage(name)
   -- from the dotted prof.oak.png used by the introduction.
   if name == "prof-oak" then return load("prof-oak") end
   if name == "prof.oak" then return load("prof.oak") end
-  if chooseYourHeroRival() == "yellow" then
-    local femName = yellowRivalFile(name)
-    if femName then
-      -- nil leaves the companion's engine-installed Yellow portrait intact.
-      -- Falling back to the standard rival file would turn her back into Blue.
-      return load(femName)
-    end
+  local femName = yellowRivalFile(name)
+  if femName and chooseYourHeroRival() == "yellow" then
+    -- nil leaves the companion's engine-installed Yellow portrait intact.
+    -- Falling back to the standard rival file would turn her back into Blue.
+    return load(femName)
   end
   return load(name)
 end
