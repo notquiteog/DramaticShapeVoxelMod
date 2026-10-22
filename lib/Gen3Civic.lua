@@ -215,6 +215,16 @@ function M.ground(c)
  return c.civic.grounds and c.civic.grounds[c.cx..':'..c.cy]
   or (c.civic.variant=='saffron' and 0x2E5 or 1)
 end
+-- The ordinary native terrain batch draws both under and over atlases. These
+-- exact roof-header MIDs intentionally borrow ONLY their clean under layer;
+-- replaying their over layer would paint the original roof onto the ground.
+-- Callers must keep these floor faces in a mesh drawn once with ts.image.
+function M.underOnly(c)
+ local g=c and c.civic
+ local mid=g and g.sourceUnderlays and g.sourceUnderlays[c.cx..':'..c.cy]
+ return mid~=nil and mid==c.mid and c.ts and c.ts.layered==true
+  and M.ground(c)==mid or false
+end
 function M.profile(g)
  local w=g.width*16
  if g.custom then

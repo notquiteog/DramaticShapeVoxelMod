@@ -6,6 +6,20 @@ import argparse
 import json
 from pathlib import Path
 import struct
+import zlib
+
+
+def atlas(path):
+    data = path.read_bytes()
+    if data[:4] != b'SVMI':
+        data = zlib.decompress(data)
+    assert data[:4] == b'SVMI' and data[5] & 2, 'layered native atlas required'
+    count = struct.unpack_from('<H', data, 6)[0]
+    mids = struct.unpack_from('<' + 'H' * count, data, 12)
+    offset = 12 + count * 2
+    assert len(data) >= offset + count * 256
+    return {mid: data[offset + i * 256:offset + (i + 1) * 256]
+            for i, mid in enumerate(mids)}
 
 
 def check(root):
@@ -49,6 +63,11 @@ def check(root):
         h = json.loads((tree / f'maps/0_{mapnum}/header.json').read_text())
         ts = [tree / 'tilesets' / h[key]
               for key in ('primaryTileset', 'secondaryTileset')]
+        pair = 'general__rustboro' if mapnum == 3 else 'general__petalburg'
+        native = root / 'native' / pair
+        under, over = atlas(native / 'mids.idx'), atlas(native / 'mids_over.idx')
+        clean = 0x2BB if mapnum == 3 else 1
+        assert not any(over[clean]), 'body ground donor carries upper-layer artwork'
         for mid, bottom in mids.items():
             source = ts[mid >= 512]
             offset = (mid % 512) * 16
@@ -57,7 +76,15 @@ def check(root):
             assert attr == 0, f'{mid:03X} no longer NORMAL-layer clean source'
             assert parts[:4] == bottom, f'{mid:03X} clean underlay source changed'
             assert any(parts[4:]), 'test must inspect actual roof-overlay drawing'
-    print(f'PASS {root}: Oldale dark001/body, mixed overhang and19 reviewed clean native underlay cells')
+            # Public rendered cache proof, not merely raw source attributes:
+            # a second draw with overImage WILL project the roof onto the floor.
+            assert any(over[mid]), 'roof-bearing header no longer exercises dual draw bug'
+            assert bytes(over[mid][i] or v for i, v in enumerate(under[mid])) != under[mid]
+            if bottom == lawn or bottom == paving:
+                assert under[mid] == under[clean], 'public under atlas contains unexpected artwork'
+        if mapnum == 10:
+            assert [sum(v != 0 for v in over[mid]) for mid in (0x48, 0x49, 0x282, 0x283)] == [100, 220, 220, 100]
+    print(f'PASS {root}: actual native cached under/over proof;19 roof-bearing header MIDs require under-only drawing')
 
 
 if __name__ == '__main__':
