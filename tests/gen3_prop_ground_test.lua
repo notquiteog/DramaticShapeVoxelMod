@@ -24,16 +24,26 @@ local cases={
 for _,spec in ipairs(cases)do
  local cells,c=fixture(unpack(spec));local before={}
  for key,n in pairs(cells)do before[key]={n.mid,n.collision,n.shape.ground}end
- assert(G.ground(cells,c)==0x2bb,'Rustboro sign still received grass: '..spec[1]..','..spec[2])
+ assert(G.infer(cells,c)==0x2bb,'Rustboro sign still received grass: '..spec[1]..','..spec[2])
  for key,n in pairs(cells)do local b=before[key];assert(n.mid==b[1]and n.collision==b[2]and n.shape.ground==b[3],'native source was mutated')end
 end
+assert(not G.boardOnly(nil),'missing source should not admit inference')
+local function indexed(value)
+ return 'SVMI'..string.char(1,2,1,0,1,0,1,0,3,0)..string.rep(string.char(value),256)
+end
+assert(not G.boardOnly({idxBlob=indexed(45),overBlob=indexed(0)}),'genuine grass in source sign was discarded')
+assert(not G.boardOnly({idxBlob=indexed(19),overBlob=indexed(0)}),'changed source board pattern was inferred')
+assert(not G.boardOnly({idxBlob=indexed(19),overBlob=indexed(45)}),'new source over-layer was discarded')
+
+local missingCells,missing=fixture(unpack(cases[1]))
+assert(G.resolve(missingCells,missing)==nil and G.ground(missingCells,missing)==1,'unverified source art was replaced')
 local same={{1,0},{1,0},{1,0},{1,0},{1,0},{1,0}}
 local empty={}
 local cells,c=fixture(7,8,same,empty)
 assert(G.ground(cells,c)==1,'grass sign was repaved')
 local alternating={{20,0},{21,0},{20,0},{20,0},{21,0},{20,0}}
 cells,c=fixture(7,8,alternating,empty)
-assert(G.ground(cells,c)==21,'alternating native floor phase was lost')
+assert(G.infer(cells,c)==21,'alternating native floor phase was lost')
 -- Equal immediate donors alone cannot establish the phase under a prop.
 cells,c=fixture(7,8,{false,false,{20,0},{20,0}},empty)
 assert(G.resolve(cells,c)==nil and G.ground(cells,c)==1)
@@ -54,10 +64,10 @@ for _,mutate in ipairs{
 }do
  cells,c=fixture(7,8,paving,empty);c.region={mapId='current'}
  for _,n in pairs(cells)do if n~=c then mutate(n)end end
- assert(G.resolve(cells,c)==nil,'unsafe ground witness was used')
+ assert(G.infer(cells,c)==nil,'unsafe ground witness was used')
 end
 cells,c=fixture(7,8,paving,empty);c.ts={midToSlot={[1]=1}}
-assert(G.resolve(cells,c)==nil,'missing native material was invented')
+assert(G.infer(cells,c)==nil,'missing native material was invented')
 cells,c=fixture(7,8,paving,empty);c.shape.hoenn=false
 assert(G.resolve(cells,c)==nil and G.ground(cells,c)==1,'FRLG sign behavior changed')
 c.shape.hoenn=true;c.mid=0x34d;c.shape.kind='fence'

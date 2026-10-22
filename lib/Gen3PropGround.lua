@@ -2,6 +2,34 @@
 -- No nearest-tile vote: opposite strips must agree, including the phase of
 -- alternating native metatiles. Never changes source cells, collision or edges.
 local M={}
+-- Indexed source signatures identify the two original board-only drawings;
+-- no sprite pixels are bundled. A modified sign carrying genuine ground art
+-- must retain its own source treatment instead of borrowing nearby paving.
+local boardSignatures={[2051020077]=true,[2417954136]=true}
+local function nativePixels(blob,mid)
+ if type(blob)~='string'or #blob<12 or blob:sub(1,4)~='SVMI'then return end
+ local count=blob:byte(7)+blob:byte(8)*256
+ if count<1 or count>4096 or #blob<12+count*258 then return end
+ for slot=0,count-1 do
+  local at=13+slot*2
+  if blob:byte(at)+blob:byte(at+1)*256==mid then
+   local start=13+count*2+slot*256
+   return blob:sub(start,start+255)
+  end
+ end
+end
+function M.boardOnly(ts)
+ local pixels=nativePixels(ts and ts.idxBlob,3)
+ local over=nativePixels(ts and ts.overBlob,3)
+ if not(pixels and over)then return false end
+ local a,b=1,0
+ for i=1,256 do
+  local value=pixels:byte(i)
+  if value==0 or value>=32 or over:byte(i)~=0 then return false end
+  a=(a+value)%65521;b=(b+a)%65521
+ end
+ return boardSignatures[b*65536+a]==true
+end
 local function region(c)
  local r=c.region
  return r and(r.mapId or r.def and r.def.id)
@@ -46,6 +74,7 @@ function M.resolve(cells,c)
   and c.shape.kind=='sign'and c.shape.hoenn and not(c.boundary or c.stageHidden or c.prop or c.civic))then
   return nil,'unreviewed prop family'
  end
+ if not M.boardOnly(c.ts)then return nil,'native board-only source unverified'end
  return M.infer(cells,c)
 end
 function M.ground(cells,c)
