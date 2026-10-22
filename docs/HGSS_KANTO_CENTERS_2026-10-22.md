@@ -2,8 +2,11 @@
 
 `Gen3ImportedKantoCenters` places the standard [HGSS Pokémon Center,
 Cheesy Mac n Cheese, August23,2015](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/293549/)
-in the matching complete FR/LG service-building family. Original game art:
-Nintendo / Creatures / GAME FREAK. The standard256-triangle source retains its
+was compared with the newer [HGSS Viridian City scene, Kuramapika1,
+September1,2026](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592881/).
+The final asset uses that newer DAE's standard Center and original separate
+door, in the matching complete FR/LG service-building family. Original game art:
+Nintendo / Creatures / GAME FREAK. The standard256-triangle body plus2-triangle source door retain their
 original PNG bytes, UVs, recessed center entrance, rounded/beveled corners,
 roof/badge and0.2903226 ground-shadow opacity. The Violet/Ecruteak variant is
 excluded. Source ZIPS and OBJ/MTL remain outside source control.
@@ -12,7 +15,9 @@ excluded. Source ZIPS and OBJ/MTL remain outside source control.
 texture/provenance directory. The ZIP has mismatched accented filenames between
 local headers and its central directory; the converter uses bounded central
 metadata and verifies original compressed streams, decompressed sizes and CRCs.
-Every name repair and archive/model/material/texture hash is recorded. No source
+Every name repair and archive/model/material/texture hash is recorded under the
+older comparison source; the selected newer archive/DAE/texture hashes are primary.
+The newer local geometry/door transform and original source UVs are retained. No source
 geometry or UV repair is needed.
 
 The original rear and underside are open. Separately named authored parts close
@@ -20,7 +25,7 @@ the original stepped rear outline: outer wall ends(x±36,z−28), original cente
 partitions(x±18,z−30), roof soffit joins and a thin foundation. Wall and band art
 continues from the source side-wall UVs. The bottom is0.05source units below the
 source shadow, preventing the underside flicker observed in the first preview.
-Processed geometry totals324triangles. No front entrance, roof silhouette,
+Processed geometry totals326triangles. No front entrance, roof silhouette,
 original face or fixture is removed. Source material metadata remains explicit.
 
 Eligibility requires an existing ordinary native five-column Center civic,

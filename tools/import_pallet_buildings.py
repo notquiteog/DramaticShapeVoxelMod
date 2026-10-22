@@ -16,10 +16,11 @@ URL='https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asse
 SELECT={'hgss_pallet_red':'mst_rdh-mesh','hgss_pallet_rival':'mst_grh-mesh','hgss_pallet_oak':'mst_okl-mesh'}
 DOORS={'hgss_pallet_red':('mst_dr1-mesh',[-6,.01953,17.93848]),'hgss_pallet_rival':('mst_dr1_001-mesh',[-6,.01953,17.93848]),'hgss_pallet_oak':('mst_dr2-mesh',[10,-.63867,18.93848])}
 
-def extract(raw):
+def extract(raw,selection=None,door_specs=None):
+ selection=SELECT if selection is None else selection;door_specs=DOORS if door_specs is None else door_specs
  r=ET.fromstring(raw);out={};images={i.get('id'):i.findtext('c:init_from',namespaces=NS) for i in r.findall('c:library_images/c:image',NS)};effects={e.get('id'):e for e in r.findall('c:library_effects/c:effect',NS)}
  materials={m.get('id'):effects[m.find('c:instance_effect',NS).get('url')[1:]] for m in r.findall('c:library_materials/c:material',NS)}
- for model,gid in {**SELECT,**{k+'_door':v[0] for k,v in DOORS.items()}}.items():
+ for model,gid in {**selection,**{k+'_door':v[0] for k,v in door_specs.items()}}.items():
   mesh=r.find('.//c:geometry[@id="'+gid+'"]/c:mesh',NS);src=sources(mesh);vs={v.get('id'):inputs(v) for v in mesh.findall('c:vertices',NS)};parts=[]
   for p in mesh.findall('c:triangles',NS):
    name=p.get('material');e=materials[name];common=e.find('c:profile_COMMON',NS);params={n.get('sid'):n for n in common.findall('c:newparam',NS)};diff=common.find('.//c:diffuse',NS);tex=diff.find('c:texture',NS);texture=None;kd=[1,1,1]
@@ -41,7 +42,7 @@ def extract(raw):
    assert all(all(abs(v-1)<1e-8 for v in color) for color in colors),'nonwhite color needs dedup color stream'
    parts.append(part)
   out[model]=parts
- for model,(_,offset) in DOORS.items():
+ for model,(_,offset) in door_specs.items():
   for p in out.pop(model+'_door'):
    for v in p['vertices']:
     for i in range(3):v[i]+=offset[i]
