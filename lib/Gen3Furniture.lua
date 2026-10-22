@@ -106,7 +106,9 @@ local function recipeActive(r)
  return Hoenn.active()==(r.family=='rse')
 end
 local PCFrames=V and V.require('Gen3PublicPCFrames')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3PublicPCFrames.lua')
+local Truck=V and V.require('Gen3TruckCargo')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3TruckCargo.lua')
 local function matched(mid,expected,r)
+ if Truck.matches(r,mid,expected)then return true end
  if PCFrames.matches(r,mid,expected)then return true end
  return (r.kind=='escalator' and r.family~='rse' and Center.canonical(mid) or mid)==expected
 end
@@ -149,6 +151,7 @@ function M.extract(cells,onlyKind)
       or (r.blockedRows and r.blockedRows[dy] and n.collision~=nil and n.collision~=7)
       or (collisionRows and collisionRows[dy] and collisionRows[dy][dx]~=nil and n.collision~=nil and n.collision~=collisionRows[dy][dx]) then match=false else parts[#parts+1]=n end
     end end
+    if match and not Truck.footprint(r,cells,c.cx,c.cy)then match=false end
     if match then
      local p={recipe=r,cx=c.cx,cy=c.cy,pair=c.pair,ts=c.ts,w=#r.rows[1]*16,d=#r.rows*16}
      -- Retain the actual native powered drawing for missing-source/native
