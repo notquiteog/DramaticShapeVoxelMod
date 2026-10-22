@@ -57,17 +57,71 @@ def rural(m):
         out.extend([[[lo+(p[0]-7)/4*(hi-lo),(p[1]-.25)*.5,8+(p[2]+351)*.5]+p[3:]for p in t]for t in rail])
     return dict(parts=[part('source_posts_and_repeating_rail','assets/scenery/oras-fences/chip_steps01.png',out)],anchors={}),dict(sourcePostTriangles=23,sourceRailTriangles=4,closedPostTriangles=na+nb,closedRailTriangles=nr,repeatWidth=16,height=10.25,sourcePostScale=.5,processing='Uniform source posts at native centers4/12; only straight rail span length fits each native repeat; original cross sections/UVs retained. No source shadow sheets or baked vertex RGB.')
 
-def convert(model_path,textures_path,decoder_path,output):
+def box_pixels(texture,length):
+    # Extrude the actual source cutout, not an opaque rectangle/card. Each
+    # visible source pixel has its front/rear and exposed hole-edge faces.
+    w,h=texture.width,texture.height;rgba=texture.rgba;out=[]
+    def on(x,y):return 0<=x<w and 0<=y<h and rgba[(y*w+x)*4+3]>0
+    for y in range(h):
+      for x in range(w):
+        if not on(x,y):continue
+        xa,xb=x/32*16,min((x+1)/32*16,length)
+        if xa>=length:continue
+        ya,yb=10-y/32*7,10-(y+1)/32*7
+        ua,ub=x/32,min((x+1)/32,length/16);va,vb=1-y/32,1-(y+1)/32
+        front=[[xa,ya,.06,ua,va],[xb,ya,.06,ub,va],[xb,yb,.06,ub,vb],[xa,yb,.06,ua,vb]]
+        rear=[[xa,ya,-.06,ua,va],[xa,yb,-.06,ua,vb],[xb,yb,-.06,ub,vb],[xb,ya,-.06,ub,va]]
+        faces=[front,rear]
+        if not on(x-1,y):faces.append([rear[0],front[0],front[3],rear[1]])
+        if not on(x+1,y)or xb==length:faces.append([front[1],rear[3],rear[2],front[2]])
+        if not on(x,y-1):faces.append([rear[0],rear[3],front[1],front[0]])
+        if not on(x,y+1):faces.append([front[3],front[2],rear[2],rear[1]])
+        for fi,q in enumerate(faces):
+            if fi>=2:q=[p[:3]+[(x+.5)/32,1-(y+.5)/32]for p in q]
+            out.extend([[q[0],q[1],q[2]],[q[0],q[2],q[3]]])
+    return out
+
+def ornate(m,texture):
+    need(m.name=='world04_02_04','unexpected Rustboro source')
+    a,b=m.submeshes[13:15]
+    need(a.material=='chip_saku02'and b.material=='chip_saku02b'and len(a.triangles)==1080 and len(b.triangles)==200,'Rustboro source topology changed')
+    x0=24.224000930786133;x1=42.2239990234375;z0=-192.5800018310547
+    base,nb=primitive(a,308,312,((x0,0.,z0-4),(x1,0.,z0-4)))
+    top,nt=primitive(a,312,316,((x0,20.,z0-2),(x1,20.,z0-2)))
+    post,np=primitive(a,330,336)
+    # Independent lattice positions/UV prove the exact 18x14 original panel.
+    need(all(abs(p[2]-z0)<1e-5 for t in b.triangles[54:56]for i in t for p in[b.positions[i]]),'source panel is not the reviewed plane')
+    result={}
+    for length in(6,8,12,14,16):
+        structural=[]
+        for tris in(base,top):
+            for t in tris:
+                structural.append([[((p[0]-x0)/(x1-x0))*length,p[1]*.5,(p[2]-z0)*.5]+p[3:]for p in t])
+        for center in(.5,length-.5):
+            structural.extend([[[center+(p[0]-x0)*.5,p[1]*.5,(p[2]-z0)*.5]+p[3:]for p in t]for t in post])
+        result['oras_rustboro_fence_'+str(length)]=dict(parts=[part('source_closed_frame','assets/scenery/oras-fences/chip_saku02.png',structural),part('source_oval_lattice_closed_pixel_edges','assets/scenery/oras-fences/chip_saku02b.png',box_pixels(texture,length))],anchors={'center':[length/2,0,0]})
+    return result,dict(model='a/0/3/9 GR0032 slot1 world04_02_04',physicalFrameMaterial='chip_saku02',originalPanelMaterial='chip_saku02b',sourcePanelTriangles=2,sourceFrameTriangles=14,closedPrimitiveTriangles=nb+nt+np,sourcePostScale=.5,height=11,sourceOpaqueLatticePixels=sum(v>0 for v in texture.rgba[3::4]),latticeThickness=.12,processing='Original source physical plinth/top/posts retained and closed with source edge paint. Only straight frame span adapts to native repeat. Exact source32x32 oval lattice extruded with actual transparent holes, closed front/rear/hole edges, original UV paint; no shadow sheets or baked vertex RGB.')
+
+def convert(model_path,textures_path,decoder_path,output,ornate_path=None):
     load,textures,png=decoder(decoder_path);raw=model_path.read_bytes();txraw=textures_path.read_bytes();models=load(raw)
-    need(len(models)==1,'unexpected rural model count');data,proof=rural(models[0]);tx={t.name:t for t in textures(txraw)}
+    need(len(models)==1,'unexpected rural model count');data,proof=rural(models[0]);definitions={'oras_rural_fence':data};tx={t.name:t for t in textures(txraw)}
     folder=output/'assets/scenery/oras-fences';folder.mkdir(parents=True,exist_ok=True)
     t=tx['chip_steps01'];need((t.width,t.height)==(128,128)and set(t.rgba[3::4])=={255},'rural source texture changed')
     blob=png(t.rgba,t.width,t.height);(folder/'chip_steps01.png').write_bytes(blob)
+    if ornate_path:
+        extra,ornate_proof=ornate(load(ornate_path.read_bytes())[0],tx['chip_saku02b']);definitions.update(extra)
+        ornate_proof['modelBchSha256']=hashlib.sha256(ornate_path.read_bytes()).hexdigest()
+        for name in('chip_saku02','chip_saku02b'):
+            t2=tx[name];(folder/(name+'.png')).write_bytes(png(t2.rgba,t2.width,t2.height))
+        need(set(tx['chip_saku02b'].rgba[3::4])=={0,255},'unreviewed source lattice alpha')
     report=dict(source='User-supplied Pokemon Alpha Sapphire RomFS',originalGameArt='Nintendo / Creatures / GAME FREAK',rural=dict(model='a/0/3/9 GR0042 slot1 world04_03_07 chip_steps01a',textures='a/0/1/4 AD0011 slot11 chip_steps01',modelBchSha256=hashlib.sha256(raw).hexdigest(),textureBchSha256=hashlib.sha256(txraw).hexdigest(),textureRgbaSha256=hashlib.sha256(t.rgba).hexdigest(),**proof))
-    (output/'lib/ImportedFenceData.lua').write_text('-- Genuine ORAS physical fence modules; tools/import_oras_fences.py.\nreturn '+lua({'oras_rural_fence':data})+'\n')
+    if ornate_path:report['rustboro']=ornate_proof
+    report['nativeGroundProof']={'editions':['ruby','sapphire','emerald'],'general149FirstFourEntries':[8194,8195,8195,8194],'general1AllEntries':[8194,8195,8195,8194,0,0,0,0],'processing':'149 first four tile entries byte-identical to clean General1. Rustboro uses separately audited exact source quadrant donors, preserving paving/grass corners.'}
+    (output/'lib/ImportedFenceData.lua').write_text('-- Genuine ORAS physical fence modules; tools/import_oras_fences.py.\nreturn '+lua(definitions)+'\n')
     (folder/'provenance.json').write_text(json.dumps(report,indent=2)+'\n');return report
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for n in('model','textures','decoder','output'):p.add_argument('--'+n,type=Path,required=True)
-    x=p.parse_args();print(json.dumps(convert(x.model,x.textures,x.decoder,x.output),indent=2))
+    p.add_argument('--ornate-model',type=Path)
+    x=p.parse_args();print(json.dumps(convert(x.model,x.textures,x.decoder,x.output,x.ornate_model),indent=2))
