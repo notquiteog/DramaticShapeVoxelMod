@@ -4,6 +4,33 @@ local V=...
 local Budget=V and V.require('BuildBudget') or {tick=function()end,check=function()end}
 local M={}
 local Architecture=V and V.require('ArchitecturalDetails') or dofile('lib/ArchitecturalDetails.lua')
+-- Native corridor drawings have explicit ground identities. A walkable
+-- neighbor may be a path edge or a street-lamp tile, not a clean underlay.
+-- Keep Route104's lawn separate from Rustboro paving despite their shared pair.
+local hoennGrounds={
+ ['general__petalburg']={
+  littleroot_player_house={1,0x22a,0x229},littleroot_rival_house={1,0x228,0x22b},birch_lab={1,0x226,0x227},
+  oldale_house={1,0x284,0x286},oldale_mart={1,0x60,0x43},oldale_center={1,0x60,0x63},
+  petalburg_city_mart={1,0x60,0x43},petalburg_city_center={1,0x60,0x63},petalburg_city_gym={1,0x1c8,0x1cc},
+  petalburg_city_wide_home={1,0x20,0x22},petalburg_city_home={1,0x20,0x22},
+ },
+ ['general__rustboro']={
+  route104_briney_house={1,0x280,0x284},route104_pretty_petal_shop={1,0x260,0x265},
+  rustboro_small_tan={0x2bb,0x240,0x243},rustboro_wide_tan={0x2bb,0x240,0x243},rustboro_east_tan={0x2bb,0x240,0x243},
+  rustboro_south_tan={0x2bb,0x240,0x243},rustboro_white_small={0x2bb,0x21c,0x21e},
+  rustboro_white_tall={0x2bb,0x21c,0x21e},rustboro_white_thin={0x2bb,0x21c,0x21e},
+  rustboro_devon_corporation={0x2bb,0x2c4,0x2c3},rustboro_city_center={0x2bb,0x266,0x27e},
+  rustboro_city_mart={0x2bb,0x266,0x27f},rustboro_city_gym={0x2bb,0x2d8,0x2da},
+ },
+}
+local function hoennGround(g)
+ local r=g.custom;local pair=hoennGrounds[g.pair]
+ local spec=r and r.family=='rse'and pair and pair[r.name]
+ local last=g.rows and g.rows[#g.rows]
+ -- Confirm the actual lower-corner drawing as well as its pair/family name.
+ -- A third-party recipe reusing a label is not proof of the same source art.
+ if spec and last and last[1]==spec[2]and last[#last]==spec[3]then return spec[1]end
+end
 local function claim(cells,g,rows)
  local parts={}
  for dy,row in ipairs(rows)do for dx,mid in ipairs(row)do
@@ -128,6 +155,7 @@ function M.prepare(cells,gyms,families)
  -- This also supplies raised foundations: original facade/roof pixels must
  -- never be stretched down the retaining face below a building.
  for _,g in ipairs(out)do
+  local fixed=hoennGround(g);g.sourceGround=fixed
   local candidates={}
   -- These exact native lower corner tiles include the lawn around the
   -- chamfered foundation. A road nearby must not replace that original lawn.
@@ -137,7 +165,7 @@ function M.prepare(cells,gyms,families)
   local service=g.custom and (g.custom.centerRoof or g.custom.martRoof)
   for yy=g.cy-2,g.cy+g.depth+1 do for xx=g.cx-2,g.cx+g.width+1 do
    local c=cells[xx..':'..yy]
-   if c and c.pair==g.pair and not c.civic and c.collision==0 and c.shape and c.shape.kind=='flat'
+   if not fixed and c and c.pair==g.pair and not c.civic and c.collision==0 and c.shape and c.shape.kind=='flat'
     and (service or c.shape.reviewedSurface or c.mid==1 or g.custom and g.custom.groundCandidates and g.custom.groundCandidates[c.mid]) then
     -- Unclassified flat tiles can contain decorative artwork. Only the
     -- previously reviewed service assemblies accept their local floor set.
@@ -151,7 +179,8 @@ function M.prepare(cells,gyms,families)
     local d=(xx-c.cx)^2+(yy-c.cy)^2
     if not distance or d<distance then best,distance=c,d end
    end
-   if best then g.grounds[xx..':'..yy]=best.mid end
+   if fixed then g.grounds[xx..':'..yy]=fixed
+   elseif best then g.grounds[xx..':'..yy]=best.mid end
   end end
  end
  return out
