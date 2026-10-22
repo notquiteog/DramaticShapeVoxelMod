@@ -113,7 +113,6 @@ function M.nativeRequired(game)
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
 local function releaseGeometry(cache)
- V.require('Gen3TruckCargo').clear()
  for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').release(center)end
  if cache.grassModels then V.require('GrassModels').releaseBatches(cache.grassModels)end
  if cache.sceneryModels then V.require('SceneryModels').releaseBatches(cache.sceneryModels)end
@@ -418,7 +417,10 @@ local function build(req,cache,previous)
   local uv=uvFor(ts,c.mid)
   local column=c.column
   local starts={#b.v,#b.rv,#b.pv,#b.wv,#wood,#leaf,#hedges,#b.gv}
-  if V.require('Gen3Bridges').replacesTop(c)then
+  local truckFloor=V.require('Gen3TruckCargo').floor(c)
+  if truckFloor then
+   plane(b.gv,b.gi,x,z,uvFor(ts,truckFloor)or uv)
+  elseif V.require('Gen3Bridges').replacesTop(c)then
    -- The source drawing bakes ocean into its plank gaps and fringe.
    -- Closed timber boards and the planned ocean replace that whole plane.
   elseif c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
@@ -1017,6 +1019,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  local spr=Sprites.getDraw(gid);if not spr then return end
  -- View-relative artwork keeps the actor facing its world heading while the
  -- camera turns; this changes the sampled frame, never the entity direction.
+ local worldFacing=facing
  facing=V.require('Gen3Integration').worldDirection(facing,-(cam.level>=6 and cam.yaw or 0))
  local frame,mirror=Sprites.pose(spr,facing,phase,flip,opts)
  local q=spr.quads[frame];if not q then return end
@@ -1046,6 +1049,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  local contact=cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]
  if contact and contact.prop then floor=contact.prop.groundHeight or floor end
  local height=floor+(opts.lift or 0)
+ if V.require('Gen3Boats').draw(gid,x,z+(opts.depthOffset or 0),height,worldFacing,draw,reflectPlane)then return end
  if V.require('Gen3TruckCargo').draw(gid,x,z+(opts.depthOffset or 0),height,spr,frame,draw,reflectPlane)then return end
  if V.require('NativeItemPokeballs').draw(gid,x,z+(opts.depthOffset or 0),height,draw,reflectPlane)then return end
  if V.require('NativeLegendarySapling').draw(gid,x,z,height,spr.image,draw,reflectPlane)then return end
@@ -1452,8 +1456,9 @@ function M.performanceSnapshot()
   scenery={placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),pewterMuseum=#(cache.importedPewterMuseum or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
-function M.invalidate()V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
+function M.invalidate()V.require('Gen3TruckCargo').clear();V.require('Gen3Boats').clear();V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
 function M.release()
+ V.require('Gen3TruckCargo').clear();V.require('Gen3Boats').clear()
  V.require('Gen3SeaRocks').clearGeometry()
  V.require('Gen3Hedges').release()
  V.require("NativeLegendaryTower").clear()
