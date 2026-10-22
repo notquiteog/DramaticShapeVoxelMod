@@ -1,3 +1,13 @@
+# Native XD setting parity — 2026-10-22
+
+Gen3's model consumer existed but its XD model preference was never registered
+in the native settings adapter. All five native editions now expose the same
+live OFF/ON control under POKEMON ART; the shared catalog includes it for all
+three generations. Missing/unvalidated packs still retain selected sprites.
+Five native0.3.95 option/persistence/gate checks and five focused Lua suites pass.
+No pack readiness, complete XD animation, phone or full parity claim follows.
+See docs/XD_OPTION_PARITY_2026-10-22.md. Model coverage remains separately owned.
+
 # Crystal mobile world framing — 2026-10-22
 
 Confirmed reserved-playfield cropping and Gen2 high-DPI presentation mismatch.

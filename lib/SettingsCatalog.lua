@@ -1,6 +1,7 @@
 -- Declaration inventory. Per-generation consumers/status live in OptionSupport;
 -- declaring a setting or listing a row is never evidence that it works.
 return {
+ {key="xdModels",label="XD POKEMON MODELS",module="XDModels"},
  {key="itemBall",label="ITEM BALL",module="ItemPokeballs"},
  {key="kfpHorizon",label="KFP HORIZON",module="KantoFirstPerson"},
  {key="kfpSky",label="KFP SKY",module="KantoFirstPerson"},

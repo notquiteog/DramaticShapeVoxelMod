@@ -3,6 +3,16 @@
     "1": [
       {
         "generation": 1,
+        "key": "xdModels",
+        "label": "XD POKEMON MODELS",
+        "module": "XDModels",
+        "status": "partial",
+        "consumer": "lib/XDModels.lua; lib/StadiumModels.lua; lib/Gen3XDActors.lua",
+        "detail": "Shared OFF/ON preference is editable in every native menu. A locally imported renderReady pack is required; absent, unvalidated, missing species/shiny/form records retain selected sprites. Multi-layer materials, paired GB actors and complete animation/import acceptance remain unfinished; menu availability is not model parity.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
         "key": "itemBall",
         "label": "ITEM BALL",
         "module": "ItemPokeballs",
@@ -857,8 +867,8 @@
         "label": "HUD COLOR",
         "module": "UiBackplates",
         "status": "provider",
-        "consumer": "lib/ModernBattleUI.lua; lib/UiBackplates.lua",
-        "detail": "Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.",
+        "consumer": "lib/BattleTheme.lua; lib/UiBackplates.lua",
+        "detail": "Native HUD ink uses the shared COLOR/INVERTED setting. Semantic combat-card providers receive optional hudColor per draw; current Modern UI honors header ink/shadow without changing rail, HP or gender colors. Older independent providers may retain their own palette.",
         "verification": "source audit"
       },
       {
@@ -1233,6 +1243,16 @@
       }
     ],
     "2": [
+      {
+        "generation": 2,
+        "key": "xdModels",
+        "label": "XD POKEMON MODELS",
+        "module": "XDModels",
+        "status": "partial",
+        "consumer": "lib/XDModels.lua; lib/StadiumModels.lua; lib/Gen3XDActors.lua",
+        "detail": "Shared OFF/ON preference is editable in every native menu. A locally imported renderReady pack is required; absent, unvalidated, missing species/shiny/form records retain selected sprites. Multi-layer materials, paired GB actors and complete animation/import acceptance remain unfinished; menu availability is not model parity.",
+        "verification": "source audit"
+      },
       {
         "generation": 2,
         "key": "itemBall",
@@ -2089,8 +2109,8 @@
         "label": "HUD COLOR",
         "module": "UiBackplates",
         "status": "provider",
-        "consumer": "lib/ModernBattleUI.lua; lib/Gen2BattleUI.lua",
-        "detail": "Like Gen1, optional Modern Pokemon UI owns styling. Without a provider the native UI remains unchanged.",
+        "consumer": "lib/BattleTheme.lua; lib/UiBackplates.lua",
+        "detail": "Native HUD ink uses the shared COLOR/INVERTED setting. Semantic combat-card providers receive optional hudColor per draw; current Modern UI honors header ink/shadow without changing rail, HP or gender colors. Older independent providers may retain their own palette.",
         "verification": "source audit"
       },
       {
@@ -2465,6 +2485,16 @@
       }
     ],
     "3": [
+      {
+        "generation": 3,
+        "key": "xdModels",
+        "label": "XD POKEMON MODELS",
+        "module": "XDModels",
+        "status": "partial",
+        "consumer": "lib/XDModels.lua; lib/StadiumModels.lua; lib/Gen3XDActors.lua",
+        "detail": "Shared OFF/ON preference is editable in every native menu. A locally imported renderReady pack is required; absent, unvalidated, missing species/shiny/form records retain selected sprites. Multi-layer materials, paired GB actors and complete animation/import acceptance remain unfinished; menu availability is not model parity.",
+        "verification": "source audit"
+      },
       {
         "generation": 3,
         "key": "itemBall",
@@ -3321,8 +3351,8 @@
         "label": "HUD COLOR",
         "module": "UiBackplates",
         "status": "provider",
-        "consumer": "lib/ModernBattleUI.lua; lib/UiBackplates.lua",
-        "detail": "Saved keys retained. Styling is opt-in through optional Modern Pokemon UI; absent/disabled provider preserves native UI. The world renderer needs no UI companion.",
+        "consumer": "lib/BattleTheme.lua; lib/UiBackplates.lua",
+        "detail": "Native HUD ink uses the shared COLOR/INVERTED setting. Semantic combat-card providers receive optional hudColor per draw; current Modern UI honors header ink/shadow without changing rail, HP or gender colors. Older independent providers may retain their own palette.",
         "verification": "source audit"
       },
       {
@@ -3342,7 +3372,7 @@
         "module": "InterfaceSprites",
         "status": "partial",
         "consumer": "lib/NativeInterfaceArt.lua; lib/NativeCrystalArt.lua; lib/NativeScriptedArt.lua; lib/NativePokeblockArt.lua; lib/NativeJumpArt.lua; lib/NativeStarterArt.lua; lib/NativeIndexedHatchArt.lua; lib/NativePcAssets.lua",
-        "detail": "Native Summary/Pokedex, PC box/party hovered portraits with native mosaic/effect layers, evolution, Hall-of-Fame, all five trade scenes, Hoenn PokeNav condition/ribbon portraits and Emerald Factory rental/swap portraits consume animation-wide FIT/FULL with mon/shiny context. FireRed/LeafGreen/Emerald revealed hatchlings also consume selected art; native egg shells, Spinda PID spots and Deoxys edition forms remain original. Crystal frames are prepared from owned CPU assets before fitting. Scripted MonPic windows and Hoenn contest entry pictures consume selected art with native cached frames/transforms restored after draws and correct packed OT/shiny identity. Hoenn Pokeblock selection/feed pictures retain cached source identity through native cursor slides and affine feeding animation, with native consumption/stat updates unchanged. Hoenn credit slides consume selected pictures with native Dex PID/shiny arguments, scale and fades retained. Ruby/Sapphire hatch consumes selected 64x64 binary-alpha frames with at most15 opaque RGB5 colors through its original indexed PPU, retaining transferred native fades and restoring OAM/palette after draws. Oversized, translucent, richer-color and special-form frames retain native art. Pokemon Jump participant pictures consume selected frames through a temporary per-player draw cache, retaining native PID/shiny identity and movement. Hoenn starter previews consume selected frames before the original fade, retaining native affine/timing/choice behavior and expanding only the FULL viewport. Missing Hoenn art stays native (bundled Crystal covers only species1-251). Dodrio custom-pose sprites and FireRed/LeafGreen dedicated credit poses remain native.",
+        "detail": "Native Summary/Pokedex, PC box/party hovered portraits with native mosaic/effect layers, evolution, Hall-of-Fame, all five trade scenes, Hoenn PokeNav condition/ribbon portraits and Emerald Factory rental/swap portraits consume animation-wide FIT/FULL with mon/shiny context. FireRed/LeafGreen/Emerald revealed hatchlings also consume selected art; native egg shells, Spinda PID spots and Deoxys edition forms remain original. Crystal frames are prepared from owned CPU assets before fitting. Scripted MonPic windows and Hoenn contest entry pictures consume selected art with native cached frames/transforms restored after draws and correct packed OT/shiny identity. Hoenn Pokeblock selection/feed pictures retain cached source identity through native cursor slides and affine feeding animation, with native consumption/stat updates unchanged. Hoenn credit slides consume selected pictures with native Dex PID/shiny arguments, scale and fades retained. Ruby/Sapphire hatch consumes selected 64x64 binary-alpha frames quantized to at most15 opaque RGB5 colors through its original indexed PPU, retaining transferred native fades and restoring OAM/palette after draws. Oversized, translucent and special-form frames retain native art. Pokemon Jump participant pictures consume selected frames through a temporary per-player draw cache, retaining native PID/shiny identity and movement. Hoenn starter previews consume selected frames before the original fade, retaining native affine/timing/choice behavior and expanding only the FULL viewport. Missing Hoenn art stays native (bundled Crystal covers only species1-251). Dodrio custom-pose sprites and FireRed/LeafGreen dedicated credit poses remain native.",
         "verification": "source audit"
       },
       {
@@ -3352,7 +3382,7 @@
         "module": "InterfaceSprites",
         "status": "partial",
         "consumer": "lib/NativeInterfaceArt.lua; lib/NativeCrystalArt.lua; lib/NativeScriptedArt.lua; lib/NativePokeblockArt.lua; lib/NativeJumpArt.lua; lib/NativeStarterArt.lua; lib/NativeIndexedHatchArt.lua; lib/NativePcAssets.lua",
-        "detail": "Native Summary/Pokedex, PC box/party hovered portraits with native mosaic/effect layers, evolution, Hall-of-Fame, all five trade scenes, Hoenn PokeNav condition/ribbon portraits and Emerald Factory rental/swap portraits consume animation-wide FIT/FULL with mon/shiny context. FireRed/LeafGreen/Emerald revealed hatchlings also consume selected art; native egg shells, Spinda PID spots and Deoxys edition forms remain original. Crystal frames are prepared from owned CPU assets before fitting. Scripted MonPic windows and Hoenn contest entry pictures consume selected art with native cached frames/transforms restored after draws and correct packed OT/shiny identity. Hoenn Pokeblock selection/feed pictures retain cached source identity through native cursor slides and affine feeding animation, with native consumption/stat updates unchanged. Hoenn credit slides consume selected pictures with native Dex PID/shiny arguments, scale and fades retained. Ruby/Sapphire hatch consumes selected 64x64 binary-alpha frames with at most15 opaque RGB5 colors through its original indexed PPU, retaining transferred native fades and restoring OAM/palette after draws. Oversized, translucent, richer-color and special-form frames retain native art. Pokemon Jump participant pictures consume selected frames through a temporary per-player draw cache, retaining native PID/shiny identity and movement. Hoenn starter previews consume selected frames before the original fade, retaining native affine/timing/choice behavior and expanding only the FULL viewport. Missing Hoenn art stays native (bundled Crystal covers only species1-251). Dodrio custom-pose sprites and FireRed/LeafGreen dedicated credit poses remain native.",
+        "detail": "Native Summary/Pokedex, PC box/party hovered portraits with native mosaic/effect layers, evolution, Hall-of-Fame, all five trade scenes, Hoenn PokeNav condition/ribbon portraits and Emerald Factory rental/swap portraits consume animation-wide FIT/FULL with mon/shiny context. FireRed/LeafGreen/Emerald revealed hatchlings also consume selected art; native egg shells, Spinda PID spots and Deoxys edition forms remain original. Crystal frames are prepared from owned CPU assets before fitting. Scripted MonPic windows and Hoenn contest entry pictures consume selected art with native cached frames/transforms restored after draws and correct packed OT/shiny identity. Hoenn Pokeblock selection/feed pictures retain cached source identity through native cursor slides and affine feeding animation, with native consumption/stat updates unchanged. Hoenn credit slides consume selected pictures with native Dex PID/shiny arguments, scale and fades retained. Ruby/Sapphire hatch consumes selected 64x64 binary-alpha frames quantized to at most15 opaque RGB5 colors through its original indexed PPU, retaining transferred native fades and restoring OAM/palette after draws. Oversized, translucent and special-form frames retain native art. Pokemon Jump participant pictures consume selected frames through a temporary per-player draw cache, retaining native PID/shiny identity and movement. Hoenn starter previews consume selected frames before the original fade, retaining native affine/timing/choice behavior and expanding only the FULL viewport. Missing Hoenn art stays native (bundled Crystal covers only species1-251). Dodrio custom-pose sprites and FireRed/LeafGreen dedicated credit poses remain native.",
         "verification": "source audit"
       },
       {
