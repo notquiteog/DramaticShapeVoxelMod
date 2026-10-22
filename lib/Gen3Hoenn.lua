@@ -27,8 +27,8 @@ function M.recipeActive(r)
  return M.active()==(r.family=='rse')
 end
 local trees={}
-for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1e4,0x1e5,0x1e6,0x1e7}do trees[id]=true end
-local roots={[0x1dc]=true,[0x1e4]=true,[0x1e6]=true}
+for _,id in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1de,0x1df,0x1e4,0x1e5,0x1e6,0x1e7,0x1f2,0x1f3}do trees[id]=true end
+local roots={[0x1dc]=true,[0x1de]=true,[0x1e4]=true,[0x1e6]=true,[0x1f3]=true}
 -- Fallarbor/Route 114 brown rock bands, also used by the Fossil Maniac's
 -- tunnel. Sand, rock-on-sand decorations and the blank border stay separate.
 local fallarborWalls={ [0x268]=true,[0x269]=true,[0x26a]=true,
@@ -72,17 +72,40 @@ function M.emeraldSurface(primary,mid,collision)
   return {kind='rock',ground=0x2d,height=6,wetRock=true,waterline=.05}
  end
 end
+-- Original cap projections on walkable cliff-foot grass. The actual cliff
+-- above remains its own 3D surface; never plant on these walking cells. Require
+-- the matching blocked tree body below, including native connected-map joins.
+function M.prepareTreeCaps(cells)
+ if not M.active()then return 0 end
+ local count=0
+ local roundBody={[0x1d4]=true,[0x1d5]=true,[0x1d6]=true,[0x1d7]=true}
+ local pineBody={[0x16]=true,[0x17]=true,[0x1f4]=true,[0x1f5]=true}
+ for _,c in pairs(cells)do
+  local round=c.mid==0x1e8 or c.mid==0x1e9
+  local pine=c.mid==0x1fc or c.mid==0x1fd
+  if c.primary=='general'and c.collision==0 and not(c.boundary or c.prop or c.civic or c.stageHidden)and(round or pine)then
+   local below=cells[c.cx..':'..(c.cy+1)]
+   if below and below.primary=='general'and below.collision==7 and not(below.boundary or below.prop or below.civic or below.stageHidden)
+    and below.shape and below.shape.kind=='tree'and not(below.shape.treePalette or below.shape.importedTreeModel)and(round and roundBody[below.mid]or pine and pineBody[below.mid])then
+    c.shape={kind='tree',root=false,ground=1,treeFamily=round and'round'or'conifer',projectedTreeCap=true}
+    count=count+1
+   end
+  end
+ end
+ return count
+end
 -- Complete Mossdeep tree drawings. Composite cliff artwork uses the native
 -- floor elevations and stone retaining faces, not an extra raised column.
 function M.prepareTrees(cells)
- if rubySapphire() then return end
+ local projected=M.prepareTreeCaps(cells)
+ if rubySapphire() then return projected end
  local rows={{0x302,0x303,0x304},{0x30a,0x30b,0x30c},{0x312,0x313,0x314}}
  local variants={
   {rows=rows},
   {rows={{0x2f2,0x2f3,0x2f4},{0x301,0x30b,0x305},{0x312,0x313,0x314}},northCliff=true},
   {rows={{0x2fa,0x2fb,0x304},{0x30a,0x30b,0x30c},{0x312,0x313,0x314}},cornerCliff=true},
  }
- local count=0
+ local count=projected
  for _,root in pairs(cells)do
   if root.primary=='general' and root.secondary=='mossdeep' and root.mid==0x313 and root.collision==7 then
    local x,y=root.cx-1,root.cy-2
@@ -162,7 +185,7 @@ function M.emeraldShape(primary,secondary,mid,behavior,collision)
   if band then local out={};for k,v in pairs(band)do out[k]=v end;return out end
   if trees[mid]then return {kind='tree',ground=1,root=roots[mid],anchorX=16,anchorZ=8,treeRows=treeRows,treeFamily='round',treeTrim=0}end
   -- One-cell round trees packed into dense Hoenn forest walls.
-  if collision==7 and (mid==0x16 or mid==0x17)then
+  if collision==7 and (mid==0x16 or mid==0x17 or mid==0x1f4 or mid==0x1f5)then
    return {kind='tree',ground=1,root=true,anchorX=8,anchorZ=8,treeRows={{mid}},treeFamily='round',treeTrim=0}
   end
   -- A walkable cell carries only the projected crown of the tree whose

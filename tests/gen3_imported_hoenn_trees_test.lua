@@ -154,3 +154,58 @@ cells['3:3'].collision=7;cells['3:3'].boundary=nil;assert(M.placements(root,cell
 cells['3:3'].collision=0;assert(not M.placements(root,cells,{region='hoenn'}),'walking native join accepted')
 cells['3:3'].collision=nil;cells['3:3'].boundary='water';assert(not M.placements(root,cells,{region='hoenn'}),'water boundary became tree')
 print('PASS full forest shallow body, blocked native joins and walking/water standdown')
+
+-- A forest boundary has explicit blocked ownership, not fabricated native
+-- permission. Full crown cells retain the same packed source models.
+for _,depth in ipairs{16,32}do
+ local c,cells=fixture(depth)
+ for _,q in pairs(cells)do q.collision=nil;q.boundary='forest' end
+ local p=assert(M.placements(c,cells,{region='hoenn'}));assert(#p==depth/16)
+ for _,q in pairs(cells)do assert(q.collision==nil and q.boundary=='forest')end
+ local top=cells['2:3'];top.boundary='water';assert(not M.placements(c,cells,{region='hoenn'}))
+end
+-- Each accepted whole-crown cell has its own native ground datum. This exact
+-- blocked six-pixel step must neither flatten trees nor move native floors.
+local c,cells=fixture(32);local top=cells['2:3'];top.region=c.region
+for _,q in pairs(cells)do q.floor={layer=3}end
+top.base=10
+assert(M.multilevelPineOwner(c,cells,{region='hoenn'}))
+local p=assert(M.placements(c,cells,{region='hoenn'}));assert(#p==2 and p[1].y==10 and p[2].y==4)
+local fit=assert(S.fit(M.model,p[1].fit));assert(math.abs(p[1].treeInfo.height-fit.bounds[5]-6)<1e-6)
+assert(top.base==10 and c.base==4 and top.floor.layer==3)
+local trunk={cx=2,cy=5,mid=0x16,primary=c.primary,pair=c.pair,secondary=c.secondary,base=4,collision=7,region=c.region,
+ shape={kind='tree',root=true,treeFamily='round',treeBounds={32,80,48,96}}}
+cells['2:5']=trunk
+p=assert(M.placements(c,cells,{region='hoenn'}));assert(#p==2 and p[2].model==M.foregroundModel and p[2].y==4)
+assert(#assert(M.placements(trunk,cells,{region='hoenn'}))==0,'stepped front crown/trunk double planted')
+for _,mutate in ipairs{
+ function()top.base=16 end,
+ function()top.floor.layer=4 end,
+ function()top.region={}end,
+ function()top.collision=0 end,
+ function()top.shape.root=true end,
+ function()top.boundary='forest';top.collision=nil end,
+}do
+ local r,cs=fixture(32);local a=cs['2:3'];a.region=r.region;a.base=10;a.floor={layer=0};r.floor={layer=3}
+ local savedTop=top;top=a;mutate();assert(not M.multilevelPineOwner(r,cs,{region='hoenn'}),'unreviewed pine terrain accepted');top=savedTop
+end
+print('PASS synthetic forest crowns, exact native stepped pine grounds, atomic foreground ownership and strict mixed-ground guards')
+
+-- Reviewed Route104 C6/016 native front tree: crown projects over the lower
+-- terrain band, but its original trunk remains grounded on the upper band.
+local root,cs=fixture(16);root.floor={layer=0}
+local lower={cx=2,cy=4,mid=0x16,primary=root.primary,pair=root.pair,secondary=root.secondary,base=10,collision=7,region=root.region,floor={layer=0},
+ shape={kind='tree',root=true,treeFamily='round',treeBounds={32,64,48,80}}}
+cs['2:4']=lower
+local plan=assert(M.placements(root,cs,{region='hoenn'}))
+assert(#plan==1 and plan[1].model==M.foregroundModel and plan[1].y==10 and #plan[1].sources==2)
+assert(plan[1].treeInfo.height==plan[1].sourceTreeInfos[lower].height+6)
+assert(#assert(M.placements(lower,cs,{region='hoenn'}))==0)
+assert(root.base==4 and lower.base==10 and root.collision==7 and lower.collision==7)
+for _,change in ipairs{
+ {'base',16},{'base',-2},{'mid',0x17},{'collision',0},{'boundary','forest'},{'region',{}},
+}do local field,value=change[1],change[2];local old=lower[field];lower[field]=value
+ local p=assert(M.placements(root,cs,{region='hoenn'}));assert(p[1].model==M.model and not p[1].sources,'unreviewed stepped front tree merged');lower[field]=old
+end
+lower.floor.layer=3;assert(M.placements(root,cs,{region='hoenn'})[1].model==M.model)
+print('PASS exact native C6/016 six-pixel front-tree join, actual trunk datum and foreign/unsupported-step standdown')

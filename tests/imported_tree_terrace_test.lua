@@ -47,3 +47,23 @@ print('PASS complete round-tree six-pixel terrace, source/native immutability, a
 local stats=S.stats();assert(stats.models>0 and stats.textures==0 and stats.textureBytes==0 and stats.failedImages==0)
 local count=stats.models;stats.models=0;assert(S.stats().models==count,'resource diagnostics mutate live accounting')
 print('PASS isolated read-only scenery resource accounting')
+
+-- The three remaining Route115 coastal owners have exactly two ground bands
+-- separated by12px, with the same complete tree art and low trunk support.
+local root,cells=fixture('EM');cells['14:73'].base=12;cells['14:74'].base=12
+assert(H.wholeRoundSlope(root,cells))
+local list=T.gen3Placements(cells,{region='hoenn'});assert(#list==1 and list[1].y==0 and list[1].model=='oras_route104_broadleaf')
+cells['14:73'].base=18;cells['14:74'].base=18;assert(not H.wholeRoundSlope(root,cells),'arbitrary terrain span accepted')
+print('PASS exact native twelve-pixel coastal tree owner; unchanged low trunk support; arbitrary spans rejected')
+
+local root,cells=fixture('EM');cells['13:73'].base=12;cells['14:74'].base=12
+assert(not H.wholeRoundSlope(root,cells),'unreviewed twelve-pixel diagonal accepted')
+root,cells=fixture('EM');cells['13:73'].base=12;cells['13:74'].base=12;cells['14:73'].base=0;cells['14:74'].base=0
+assert(not H.wholeRoundSlope(root,cells),'unsupported high-left trunk layout accepted')
+
+root,cells=fixture('EM');cells['14:73'].floor.layer=3;cells['14:74'].floor.layer=3
+assert(H.wholeRoundSlope(root,cells),'native blocked layer3 six-pixel owner rejected')
+assert(#T.gen3Placements(cells,{region='hoenn'})==1)
+cells['14:73'].base=12;cells['14:74'].base=12
+assert(not H.wholeRoundSlope(root,cells),'unreviewed layer3 twelve-pixel owner accepted')
+print('PASS native blocked layer3 six-pixel tree ownership; twelve-pixel guard remains narrow')

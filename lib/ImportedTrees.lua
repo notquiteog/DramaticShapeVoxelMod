@@ -51,7 +51,8 @@ local function ownerBounds(c,cells,options)
   if math.abs((q.base or 0)-(c.base or 0))>=.01 then
    if slope==nil then
     local adapter=hoenn and c.primary=='general'and V.require('Gen3ImportedHoennTrees')
-    slope=adapter and adapter.wholeRoundSlope and adapter.wholeRoundSlope(c,cells,options)or false
+    slope=adapter and(adapter.wholeRoundSlope and adapter.wholeRoundSlope(c,cells,options)
+     or adapter.multilevelPineOwner and adapter.multilevelPineOwner(c,cells,options))or false
    end
    if not slope then return end
   end

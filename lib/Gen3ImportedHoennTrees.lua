@@ -4,8 +4,8 @@ local V=...
 local Models=V.require('SceneryModels')
 local M={model='oras_evergreen_tree',shallowModel='oras_route104_broadleaf_shallow',foregroundModel='oras_evergreen_foreground',compactModel='oras_compact_broadleaf',narrowModel='oras_compact_broadleaf_narrow'}
 local crowns={[0xe]=true,[0xf]=true,[0xc6]=true,[0xc7]=true,[0xce]=true}
-local trunks={[0x16]=true,[0x17]=true}
-local round={};for _,mid in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1e4,0x1e5,0x1e6,0x1e7}do round[mid]=true end
+local trunks={[0x16]=true,[0x17]=true,[0x1f4]=true,[0x1f5]=true}
+local round={};for _,mid in ipairs{0x1ce,0x1cf,0x1d4,0x1d5,0x1d6,0x1d7,0x1dc,0x1dd,0x1de,0x1df,0x1e4,0x1e5,0x1e6,0x1e7,0x1f2,0x1f3}do round[mid]=true end
 M.shallowSource={model='oras_route104_broadleaf',scale={1,1,.5},rotations={0,2}}
 M.foregroundSource={model=M.model,scale={1,1,2},rotations={0,2}}
 M.compactSource={model='oras_route104_broadleaf',canopyLift=.20,canopyHeightScale=1.25,trunkHeightScale=1.25,narrowCanopyDepthScale=2}
@@ -81,7 +81,7 @@ function M.policy(id)
  if id==M.shallowModel then return{minWidth=31.9,minDepth=15.9,minHeight=27.5}end
  if id==M.foregroundModel then return{minWidth=15.9,minDepth=31.9,minHeight=18}end
 end
--- A native blocked crown can straddle one authored six-pixel terrace step.
+-- A native blocked crown can straddle reviewed six/twelve-pixel terrace steps.
 -- This is still one complete 2x2 tree, not four independent ground owners.
 -- Only the reviewed round-tree drawing is accepted; native floor heights stay
 -- intact and the original trunk/root remains the source model's ground datum.
@@ -96,19 +96,24 @@ function M.wholeRoundSlope(c,cells,options)
  local a,ar,base,br=cells[x..':'..y],cells[(x+1)..':'..y],cells[x..':'..(y+1)],cells[(x+1)..':'..(y+1)]
  if not(a and ar and base==c and br and(a.mid==0x1d4 or a.mid==0x1d6)
   and(ar.mid==0x1d5 or ar.mid==0x1d7)
-  and(c.mid==0x1dc and br.mid==0x1dd or c.mid==0x1e6 and br.mid==0x1e7))then return false end
- local low,high=math.huge,-math.huge
+  and((c.mid==0x1dc and br.mid==0x1dd or c.mid==0x1de and br.mid==0x1df)or c.mid==0x1e6 and(br.mid==0x1e7 or br.mid==0x1f2)or c.mid==0x1f3 and br.mid==0x1e5))then return false end
+ local low,high,allZero=math.huge,-math.huge,true
  for _,q in ipairs{a,ar,base,br}do local shape=q.shape
   if not(q.primary=='general'and q.pair==c.pair and q.secondary==c.secondary and q.region==c.region
    and q.collision==7 and not(q.boundary or q.prop or q.civic or q.stageHidden)
-   and q.floor and q.floor.layer==0 and shape and shape.kind=='tree'and shape.treeFamily=='round'
+   and q.floor and(q.floor.layer==0 or q.floor.layer==3)and shape and shape.kind=='tree'and shape.treeFamily=='round'
    and shape.treeBounds==b and shape.root==(q==c)and not(shape.treePalette or shape.importedTreeModel)and finite(q.base))then return false end
-  low,high=math.min(low,q.base),math.max(high,q.base)
+  low,high=math.min(low,q.base),math.max(high,q.base);allZero=allZero and q.floor.layer==0
  end
  for _,q in ipairs{a,ar,base,br}do
   if math.abs(q.base-low)>.01 and math.abs(q.base-high)>.01 then return false end
  end
- return high-low>0.01 and math.abs(high-low-6)<.01
+ local span=high-low
+ if math.abs(span-6)<.01 then return true end
+ -- The verified coastal12px owners have their trunk on the low left band
+ -- and both right-hand cells on the upper terrace; never guess other layouts.
+ return allZero and math.abs(span-12)<.01 and math.abs(a.base-c.base)<.01
+  and math.abs(ar.base-br.base)<.01 and math.abs(br.base-c.base-12)<.01
 end
 local function bounds(c,w,d)
  local b=c and c.shape and c.shape.treeBounds
@@ -117,7 +122,7 @@ local function bounds(c,w,d)
  if b[3]-b[1]~=w or d and b[4]-b[2]~=d then return end
  return b
 end
-local function validOwner(c,cells,b,accepted,family,allowForest)
+local function validOwner(c,cells,b,accepted,family,allowForest,allowLevels)
  if not finite(c.base or 0)then return end
  for y=b[2]/16,b[4]/16-1 do for x=b[1]/16,b[3]/16-1 do
   local q=cells[x..':'..y];local s=q and q.shape
@@ -125,8 +130,22 @@ local function validOwner(c,cells,b,accepted,family,allowForest)
    and((q.collision==7 and not q.boundary)or(allowForest and q.collision==nil and q.boundary=='forest'))
    and not(q.prop or q.civic or q.stageHidden)
    and s and s.kind=='tree'and s.treeFamily==family and not(s.treePalette or s.importedTreeModel)and s.treeBounds==b
-   and finite(q.base or 0)and math.abs((q.base or 0)-(c.base or 0))<.01)then return end
+   and finite(q.base or 0)and(allowLevels or math.abs((q.base or 0)-(c.base or 0))<.01))then return end
  end end;return true
+end
+-- Each accepted narrow source cell is one whole evergreen crown. A packed
+-- two-row owner can therefore retain two distinct native ground heights rather
+-- than flattening either tree or rejecting both at an authored terrace step.
+function M.multilevelPineOwner(c,cells,options)
+ local b=bounds(c,16,32)
+ if not(b and c.shape.treeFamily=='conifer'and M.select(c,options)==M.model
+  and validOwner(c,cells,b,crowns,'conifer',false,true))then return false end
+ local low,high=math.huge,-math.huge
+ for y=b[2]/16,b[4]/16-1 do local q=cells[(b[1]/16)..':'..y]
+  if not(q.floor and(q.floor.layer==0 or q.floor.layer==3)and q.region==c.region and q.shape.root==(q==c))then return false end
+  low,high=math.min(low,q.base),math.max(high,q.base)
+ end
+ return math.abs(high-low-6)<.01
 end
 local function ownerRoot(q,cells)
  local b=q and q.shape and q.shape.treeBounds;if not b then return end
@@ -139,11 +158,20 @@ end
 local function foreground(c,cells,options)
  local b=bounds(c,16)
  if not(b and (b[4]-b[2]==16 or b[4]-b[2]==32)and c.shape.treeFamily=='conifer'and M.select(c,options)
-  and validOwner(c,cells,b,crowns,'conifer'))then return end
+  and validOwner(c,cells,b,crowns,'conifer',true,M.multilevelPineOwner(c,cells,options)))then return end
  local q=cells[(b[1]/16)..':'..(b[4]/16)];local root=ownerRoot(q,cells);local tb=bounds(root,16,16)
+ local front=cells[(b[1]/16)..':'..(b[4]/16-1)]
+ -- Route104's exact C6/016 front tree crosses a six-pixel terrace. Its
+ -- original lower trunk owns the ground datum; never plant a second tree on
+ -- that lower body or move either native floor to match the other cell.
+ local stepped=tb and b[4]-b[2]==16 and c.mid==0xc6 and root.mid==0x16
+  and c.collision==7 and root.collision==7 and not(c.boundary or root.boundary)
+  and c.region==root.region and c.floor and c.floor.layer==0 and root.floor and root.floor.layer==0
+  and math.abs((root.base or 0)-(front.base or 0)-6)<.01
  if not(tb and tb[1]==b[1]and tb[2]==b[4]and trunks[root.mid]and root.shape.treeFamily=='round'
   and M.select(root,options)and root.pair==c.pair and root.secondary==c.secondary
-  and math.abs((root.base or 0)-(c.base or 0))<.01 and validOwner(root,cells,tb,trunks,'round'))then return end
+  and(math.abs((root.base or 0)-(front.base or 0))<.01 or stepped)
+  and validOwner(root,cells,tb,trunks,'round',true))then return end
  return root,b[4]/16-1
 end
 function M.placements(c,cells,options)
@@ -182,13 +210,14 @@ function M.placements(c,cells,options)
    and above.shape and above.shape.kind=='tree'and not above.shape.root and not above.shape.treeBounds)then return end
  end
  local accepted=shallow and round or trunk and trunks or crowns
- if not validOwner(c,cells,b,accepted,c.shape.treeFamily,shallow)then return end
+ local varying=not(shallow or trunk)and M.multilevelPineOwner(c,cells,options)
+ if not validOwner(c,cells,b,accepted,c.shape.treeFamily,true,varying)then return end
  if not M.register(model)then return end
  local lower,frontY
  if not(shallow or trunk)then lower,frontY=foreground(c,cells,options)end
  if lower and not M.register(M.foregroundModel)then return end
  local list={};local union={math.huge,math.huge,-math.huge,-math.huge}
- local info={height=0,bounds=union}
+ local info={height=0,bounds=union,canopyBottom=math.huge}
  for y=b[2]/16,b[4]/16-1 do
   local x=b[1]/16
   local merged=lower and y==frontY;local entryModel=merged and M.foregroundModel or model
@@ -199,10 +228,14 @@ function M.placements(c,cells,options)
   local wx,wz=x*16,y*16
   union[1],union[2]=math.min(union[1],wx+f.bounds[1]),math.min(union[2],wz+f.bounds[3])
   union[3],union[4]=math.max(union[3],wx+f.bounds[4]),math.max(union[4],wz+f.bounds[6])
-  info.height=math.max(info.height,f.bounds[5]);info.canopyBottom=f.anchors.canopyBottom and f.anchors.canopyBottom[2]or nil
+  local ground=not(shallow or trunk)and cells[x..':'..y].base or c.base or 0
+  if merged then ground=lower.base or 0 end
+  local lift=ground-(c.base or 0)
+  info.height=math.max(info.height,f.bounds[5]+lift)
+  if f.anchors.canopyBottom then info.canopyBottom=math.min(info.canopyBottom,f.anchors.canopyBottom[2]+lift)end
   local trunkInfo=merged and{height=f.bounds[5],canopyBottom=f.anchors.canopyBottom and f.anchors.canopyBottom[2]or nil,
    bounds={wx+f.bounds[1],wz+f.bounds[3],wx+f.bounds[4],wz+f.bounds[6]}}or nil
-  list[#list+1]={model=entryModel,x=wx,y=c.base or 0,z=wz,fit=fit,source=c,treeInfo=info,
+  list[#list+1]={model=entryModel,x=wx,y=ground,z=wz,fit=fit,source=c,treeInfo=info,
    sources=merged and{c,lower}or nil,sourceTreeInfos=merged and{[c]=info,[lower]=trunkInfo}or nil}
  end
  return list
