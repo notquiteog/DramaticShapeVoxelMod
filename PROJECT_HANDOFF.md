@@ -7,8 +7,9 @@ share opaque/depth/shadow drawing; cached meshes release with their Center.
 Atomic failure retains the complete native building. Official0.3.95 native QA:
 all46 Hoenn Center placements; actual entry/return in allR/S/E Oldale Centers,
 Emerald Pacifidlog and Battle Frontier; source closed/half/open, first/side/rear,
-missing-texture and flat2D captures inspected.390/0/58 source suites and525
-production LuaJIT compilations pass. Published-package checks belong to the
+missing-texture and flat2D captures inspected. Initial390/0/58 source checks
+pass; final merged checks use the updated effect-pool fixture and526 production
+LuaJIT compilations. Published-package checks belong to the
 release record. See docs/ORAS_CENTER_DOORS_2026-10-22.md.
 
 Broader tree/style/building batch remains separately committed in the resource

@@ -13,7 +13,7 @@ module('battle_transition',{isActive=function()return battle end})
 local P={bind=function()end,resolve=function()return{}end,supports=function()return true end}
 -- Only nativeRequired is exercised: GPU/model dependencies are not invoked.
 -- Keep the effect classifiers real so newly supported effects are checked.
-local deps={Gen3SceneCache=dofile('lib/Gen3SceneCache.lua'),Gen3ScreenEffects=dofile('lib/Gen3ScreenEffects.lua'),Gen3Tilesets=P,Gen3GroundEffects=dofile('lib/Gen3GroundEffects.lua'),Gen3EmoteCards=dofile('lib/Gen3EmoteCards.lua'),SceneStream={new=function()return{}end}}
+local deps={EffectMeshPool=dofile('lib/EffectMeshPool.lua'),Gen3SceneCache=dofile('lib/Gen3SceneCache.lua'),Gen3ScreenEffects=dofile('lib/Gen3ScreenEffects.lua'),Gen3Tilesets=P,Gen3GroundEffects=dofile('lib/Gen3GroundEffects.lua'),Gen3EmoteCards=dofile('lib/Gen3EmoteCards.lua'),SceneStream={new=function()return{}end}}
 local Scene=assert(loadfile('lib/Gen3Scene.lua'))({require=function(n)return deps[n]or{}end})
 local g={session={},data={maps={}}}
 assert(not Scene.nativeRequired(g))

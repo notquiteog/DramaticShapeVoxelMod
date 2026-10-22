@@ -85,8 +85,10 @@ provide the unobscured source comparison. No engine callback/timing was replaced
 First-person front, left/right, rear and destination interiors were inspected
 for all five fixtures. Emerald additionally verifies native-model fallback when
 the new PNGs are missing and unchanged flat2D. Default actors/flowers and native
-UI remain untouched.390 suites pass,0 fail,58 explicitly skip unavailable
-external fixtures;525 production Lua files compile with native LuaJIT2.1.
+UI remain untouched. Initial390 suites pass,0 fail,58 explicitly skip unavailable
+external fixtures. The final merged snapshot includes the concurrent main XD and
+streaming/effect-cache fixes; its escalator fixture now loads the actual pool
+module.526 production Lua files compile with native LuaJIT2.1.
 The SDK test harness combines official0.3.95 modules with historical test-only
 helpers missing from the official release. Physical phones are untested.
 
