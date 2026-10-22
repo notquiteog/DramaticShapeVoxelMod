@@ -29,5 +29,20 @@ begin();fail=true;assert(not pcall(Ball.draw));assert(M.owner(st)==nil);fail=fal
 begin();Ball.reset();draw(nil)
 -- An already-active unobserved epoch cannot acquire ownership mid-animation.
 busy=true;Ball.start(2,17,29,4);draw(nil)
+-- Engines with a public exact-owner draw seam can resolve overlapping releases.
+local current
+Ball.currentParticleOwner=function()return current end
+local function owned(id)return{state=st,id=id,actor=actors[id],mon=actors[id].mon}end
+begin(0);Ball.start(1,17,29,4)
+for id=0,3 do current=owned(id);draw(id)end
+current=nil;draw(nil) -- Anonymous effects are never assigned to the last actor.
+begin(0);current=owned(1);current.state={};draw(nil)
+current=owned(1);current.actor={mon=actors[1].mon};draw(nil)
+current=owned(1);current.mon={};draw(nil)
+current=owned(1);current.id=4;draw(nil)
+current=owned(1);on=false;draw(nil);on=true
+current=nil;draw(0) -- Exclusive legacy epoch still works with anonymous output.
+Ball.currentParticleOwner=function()error('unavailable')end;draw(nil)
+Ball.currentParticleOwner=nil;draw(0)
 undo();assert(Ball.draw==original and M.owner(st)==nil);assert(originalCalls>8)
 print('PASS exclusive public release epoch, overlap/anonymous/stale/OFF/error/native-return fallbacks')
