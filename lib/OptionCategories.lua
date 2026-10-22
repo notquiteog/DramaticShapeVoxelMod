@@ -21,7 +21,7 @@ M.legendary={
 M.ordinary={
  row('world','WORLD','fireredCamera movementMode grid curve worldFill water daytime invertY weather tiltshift kfpHorizon kfpSky kfpBirds kfpGroundBirds kfpAircraft kfpRainbows fpceiling fpheadroom fpcutaway kfpInteriorDressing kfpJump kfpHeadBob kfpDoorstep kfpAmbience kfpRainSound kfpFootsteps kfpDoorSounds kfpGrassSeeds kfpGrassRustle kfpShoreFoam kfpRoomDust kfpChimneySmoke kfpLeafFall kfpVines kfpWetGround kfpUmbrellas'),
  row('performance','PERFORMANCE','renderDistance ramPrecacheMb shadowQuality aa spatialUpscale'),
- row('pokemon','POKEMON ART','interfaceSprites interfaceScaling battleArt trainerArtSet playerArtSet playerAnimatedSet frontAnimatedSet backAnimatedSet duplicateFix playerView frontFlip spritePack full_body_backs crystalFront crystalTrainers crystalPlayerSprite crystalBattlePic crystalAnimations'),
+ row('pokemon','POKEMON ART','xdModels interfaceSprites interfaceScaling battleArt trainerArtSet playerArtSet playerAnimatedSet frontAnimatedSet backAnimatedSet duplicateFix playerView frontFlip spritePack full_body_backs crystalFront crystalTrainers crystalPlayerSprite crystalBattlePic crystalAnimations'),
  row('battle','BATTLE SCENE','battles hudScale backPlacement spriteLight battleUi hudColor arenaFill stadiumCircle backdropOffset bossBg textboxFill modernBattleUI'),
 }
 M.all={};M.byKey={}

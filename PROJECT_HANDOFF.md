@@ -13,8 +13,28 @@ release record. See docs/ORAS_CENTER_DOORS_2026-10-22.md.
 
 Broader tree/style/building batch remains separately committed in the resource
 integration worktree pending native completion; it is not included in this
-focused hotfix. Concurrent primary-checkout cache/performance and XD material
-work must be preserved independently.
+focused hotfix. Concurrent main XD option/material commits are retained.
+Primary-checkout cache/performance work remains independent and must be preserved.
+# XD material and animation correctness — 2026-10-22
+
+Shared consumer respects material/vertex color and alpha, unlit surface shade,
+source sampler state and primary attack clip selection. Converter revision3
+retains material/UV-only durations. Six converter/two preparation tests plus
+material/pose/sampler and GBA actor tests pass; three native Pikachu orbit
+captures inspected. Existing454-model source inventory confirms affected fields.
+Pack readiness stays false: multi-layer/shiny/particles/sub-animation, paired GB
+ownership and cross-platform battle/import acceptance remain outstanding.
+See docs/XD_IMPORT_STATUS.md. Scenery and streaming changes untouched.
+
+# Native XD setting parity — 2026-10-22
+
+Gen3's model consumer existed but its XD model preference was never registered
+in the native settings adapter. All five native editions now expose the same
+live OFF/ON control under POKEMON ART; the shared catalog includes it for all
+three generations. Missing/unvalidated packs still retain selected sprites.
+Five native0.3.95 option/persistence/gate checks and five focused Lua suites pass.
+No pack readiness, complete XD animation, phone or full parity claim follows.
+See docs/XD_OPTION_PARITY_2026-10-22.md. Model coverage remains separately owned.
 
 # Crystal mobile world framing — 2026-10-22
 

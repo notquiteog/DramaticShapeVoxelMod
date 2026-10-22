@@ -27,6 +27,17 @@ class Conversion(unittest.TestCase):
         self.assertEqual(runtime['particles'], [5])
         self.assertEqual(source['bone_animations'], [3])
 
+    def test_material_only_and_longer_uv_duration(self):
+        uv = N(translation_u=[key(0, 0), key(80, 1)])
+        material = N(alpha=[key(0, 1), key(40, 0)], texture_uv_tracks=[uv])
+        clip = N(tracks=[], material_tracks=[material])
+        self.assertEqual(xd.clip_duration(clip), 80)
+        clip.tracks = [N(end_frame=100)]
+        self.assertEqual(xd.clip_duration(clip), 100)
+        uv.translation_u.append(key(float('nan'), 1))
+        with self.assertRaises(ValueError):
+            xd.clip_duration(clip)
+
     def test_channels(self):
         self.assertEqual(xd.sample([], 4, 7), 7)
         keys = [key(2, 1), key(6, 5)]
