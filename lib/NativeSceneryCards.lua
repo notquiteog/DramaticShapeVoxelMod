@@ -109,6 +109,11 @@ function M.prepareCivic(g,cells,options)
 end
 function M.prepareFurniture(p,cells,options)
  if not p or p.stageHidden or not p.recipe or p.recipe.noGround then return nil,'native furniture card unsupported'end
+ local r=p.recipe;local design=tostring(r.design or'')
+ local mounted=r.wallMounted or(r.base or 0)>0 or(r.depth or 99)<=2
+  or design:find('picture',1,true)or design:find('window',1,true)or design:find('clock',1,true)
+ local explicit=options and(options.mask or options.background or options.backgroundMids and #options.backgroundMids>0)
+ if mounted and not explicit then return nil,'native wall furniture requires a reviewed background mask'end
  local Furniture=V and V.require('Gen3Furniture')or dofile('lib/Gen3Furniture.lua')
  return M.prepare({owner=p,rows=p.recipe.rows,ts=p.ts,cx=p.cx,cy=p.cy,base=p.groundHeight,
   owns=function(c)return c.prop==p end,groundAt=Furniture.groundAt},cells,options)

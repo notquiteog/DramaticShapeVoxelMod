@@ -52,6 +52,8 @@ check(C.doorSurface(m,0,2).vertices[1][3]<48);check(C.doorSurface(m,1,1).vertice
 check(C.doorSurface(m,2,0,{height=16}).vertices[1][3]<16)
 local p={cx=3,cy=4,ts=ts,recipe={rows=g.rows,ground=1}};for _,c in pairs(cells)do c.civic=nil;c.prop=p end
 check(C.prepareFurniture(p,cells)~=nil);p.recipe.noGround=true;check(not C.prepareFurniture(p,cells),'floor opening folded upright');p.recipe.noGround=nil
+p.recipe.base=12;check(not C.prepareFurniture(p,cells),'wallpaper silently became a furniture silhouette')
+check(C.prepareFurniture(p,cells,{backgroundMids={1}})~=nil,'reviewed wall-background policy ignored');p.recipe.base=nil
 for _,c in pairs(cells)do c.prop=nil end
 cell.shape={kind='sign',ground=1};check(C.prepareCell(cell,cells)~=nil)
 cell.prop={};check(not C.prepareCell(cell,cells),'grouped drawing emitted twice');cell.prop=nil
