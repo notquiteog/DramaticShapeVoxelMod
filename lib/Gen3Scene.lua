@@ -113,6 +113,7 @@ function M.nativeRequired(game)
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
 local function releaseGeometry(cache)
+ V.require('Gen3TruckCargo').clear()
  for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').release(center)end
  if cache.grassModels then V.require('GrassModels').releaseBatches(cache.grassModels)end
  if cache.sceneryModels then V.require('SceneryModels').releaseBatches(cache.sceneryModels)end
@@ -120,6 +121,7 @@ local function releaseGeometry(cache)
  for _,part in ipairs(cache.bankModels or{})do if part.mesh then part.mesh:release()end end
  for _,part in ipairs(cache.parts or {})do
   if part.under then part.under:release() end
+  if part.nativeGround then part.nativeGround:release() end
   if part.roof then part.roof:release() end
   if part.plants then part.plants:release() end
   if part.water then part.water:release() end
@@ -351,6 +353,7 @@ local function build(req,cache,previous)
    if c.cx>=r.x and c.cy>=r.y and c.cx<r.x+r.w and c.cy<r.y+r.h then c.region=r;break end
   end
  end
+ M.dockCellCount=V.require('Gen3Bridges').prepareDocks(cells)
  cache.wetRockCells,cache.waterField=NativeWater.bind(cells,{regions=regions,
   region=V.require('Gen3Hoenn').active()and'hoenn'or'kanto',outdoor=Pairs.outdoor,tick=Budget.tick})
  cache.waterOptions={nativeWater=true}
@@ -411,11 +414,14 @@ local function build(req,cache,previous)
   Budget.tick()
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
   local b=batches[c.pair]
-  if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},roofMids={}};batches[c.pair]=b end
+  if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},gv={},gi={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
-  local starts={#b.v,#b.rv,#b.pv,#b.wv,#wood,#leaf,#hedges}
-  if c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
+  local starts={#b.v,#b.rv,#b.pv,#b.wv,#wood,#leaf,#hedges,#b.gv}
+  if V.require('Gen3Bridges').replacesTop(c)then
+   -- The source drawing bakes ocean into its plank gaps and fringe.
+   -- Closed timber boards and the planned ocean replace that whole plane.
+  elseif c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
   elseif c.researchFloor then
@@ -429,7 +435,8 @@ local function build(req,cache,previous)
   elseif c.nativeLamp then
    plane(b.v,b.i,x,z,uvFor(ts,c.nativeLampGround or V.require('Gen3NativeLamps').ground) or uv)
   elseif c.civic then
-   plane(b.v,b.i,x,z,uvFor(ts,Civic.ground(c)) or uv)
+   if Civic.underOnly(c)then plane(b.gv,b.gi,x,z,uvFor(ts,Civic.ground(c))or uv)
+   else plane(b.v,b.i,x,z,uvFor(ts,Civic.ground(c))or uv)end
   elseif c.bridge and c.bridge.edge then
    plane(b.v,b.i,x,z,uvFor(ts,1)or uv)
   elseif shape.kind=='water' then
@@ -624,8 +631,13 @@ local function build(req,cache,previous)
   Elevation.lift(b.v,starts[1],base);Elevation.lift(b.rv,starts[2],base)
   Elevation.lift(b.pv,starts[3],base);Elevation.lift(b.wv,starts[4],base)
   Elevation.lift(wood,starts[5],base);Elevation.lift(leaf,starts[6],base)
-  Elevation.lift(hedges,starts[7],base)
+  Elevation.lift(hedges,starts[7],base);Elevation.lift(b.gv,starts[8],base)
   if c.bridge then V.require('Gen3Bridges').append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
+  local waterTs,waterMid,waterHeight=V.require('Gen3Bridges').water(c,NativeWater.surface)
+  if waterTs then
+   NativeWater.note(b,waterMid)
+   plane(b.wv,b.wi,x,z,uvFor(waterTs,waterMid),waterHeight)
+  end
   local face,indices=V.require('Gen3SceneryModels').face(c,uv)
   if face then local offset=#b.v
    for _,p in ipairs(face)do b.v[#b.v+1]=p end
@@ -824,7 +836,7 @@ local function build(req,cache,previous)
    part[name]=mesh
    Budget.check()
   end
-  upload('under',b.v,b.i);upload('roof',b.rv,b.ri)
+  upload('under',b.v,b.i);upload('nativeGround',b.gv,b.gi);upload('roof',b.rv,b.ri)
   upload('plants',b.pv,b.pi,R.TREE_FORMAT)
   part.waterMid=NativeWater.dominant(b.waterMids)
   part.waters={};local levels={}
@@ -906,7 +918,7 @@ local function prepare(game,vw,vh,cam)
  -- map after EVERY slice, including suspended scans of connected tilesets.
  Tiles.get(req.def.midLayout.pair)
  M.prepares=stream.stats.started;M.builds=stream.stats.completed;M.cacheHits=stream.stats.hits
- for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','treeFootprints','gymCount','civicCount','stairCount','chimneyCount','propCount','bridgeCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
+ for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','treeFootprints','gymCount','civicCount','stairCount','chimneyCount','propCount','bridgeCount','dockCellCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
  return true
 end
 local function terrain(draw)
@@ -923,6 +935,9 @@ local function terrain(draw)
   local ts=Tiles._pairs[p.pair]
   if ts then
    draw(p.under,ts.image)
+   -- Reviewed building-header floors contain clean native terrain below a
+   -- separate roof layer. Keep that roof off the ground in every draw pass.
+   if p.nativeGround then draw(p.nativeGround,ts.image)end
    -- A metatile's visible roof/sign artwork may live entirely in BG2.
    -- Apply both native layers to the SAME shaped surface, not just the floor.
    if ts.overImage then draw(p.under,ts.overImage) end
@@ -1031,6 +1046,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  local contact=cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]
  if contact and contact.prop then floor=contact.prop.groundHeight or floor end
  local height=floor+(opts.lift or 0)
+ if V.require('Gen3TruckCargo').draw(gid,x,z+(opts.depthOffset or 0),height,spr,frame,draw,reflectPlane)then return end
  if V.require('NativeItemPokeballs').draw(gid,x,z+(opts.depthOffset or 0),height,draw,reflectPlane)then return end
  if V.require('NativeLegendarySapling').draw(gid,x,z,height,spr.image,draw,reflectPlane)then return end
  if draw~=Shadow.draw and not reflectPlane and (opts.depthOffset or 0)==0 then
