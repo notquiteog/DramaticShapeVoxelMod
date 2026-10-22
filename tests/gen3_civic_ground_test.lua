@@ -12,7 +12,8 @@ local nativeRecipes=H.exteriorRecipes
 H.exteriorRecipes=function()local r,seen={},{};for _,a in ipairs(nativeRecipes())do r[#r+1]=a;seen[a.name]=true end;for _,a in ipairs(V.require('Gen3ImportedHoenn').recipes)do if not seen[a.name]then r[#r+1]=a end end;return r end
 local rural={littleroot_player_house=true,littleroot_rival_house=true,birch_lab=true,oldale_house=true,oldale_mart=true,oldale_center=true,petalburg_city_mart=true,petalburg_city_center=true,petalburg_city_gym=true,petalburg_city_wide_home=true,petalburg_city_home=true,route104_briney_house=true,route104_pretty_petal_shop=true}
 local urban={rustboro_small_tan=true,rustboro_wide_tan=true,rustboro_east_tan=true,rustboro_south_tan=true,rustboro_white_small=true,rustboro_white_tall=true,rustboro_white_thin=true,rustboro_devon_corporation=true,rustboro_city_center=true,rustboro_city_mart=true,rustboro_city_gym=true}
-local cleanHeaders={oldale_center=4,oldale_mart=3,petalburg_city_center=4,rustboro_city_center=4,rustboro_city_mart=4}
+local coastal={dewford_town_home=true,dewford_town_south_home=true,dewford_town_hall=true,dewford_town_center=true}
+local cleanHeaders={oldale_center=4,oldale_mart=3,petalburg_city_center=4,rustboro_city_center=4,rustboro_city_mart=4,dewford_town_home=2,dewford_town_south_home=4,dewford_town_center=4}
 local function fixture(r)
  local cells={};local h,w=#r.rows,#r.rows[1]
  local door=1;for _,o in ipairs(r.openings or{})do if o.door then door=math.floor((o[1]+o[3])/32);break end end
@@ -31,10 +32,10 @@ end
 local checked=0
 for _,ed in ipairs{'emerald','ruby','sapphire'}do
  edition=ed;local families=H.exteriorRecipes();local seen={}
- for _,r in ipairs(families)do if rural[r.name]or urban[r.name]then
+ for _,r in ipairs(families)do if rural[r.name]or urban[r.name]or coastal[r.name]then
   seen[r.name]=true;local cells=fixture(r);local before={};for k,c in pairs(cells)do before[k]={c.mid,c.collision,c.base,c.shape}end
   local out=Civic.prepare(cells,{},{});assert(#out==1,r.name..' native drawing did not match')
-  local g=out[1];local expected=rural[r.name]and 1 or 0x2bb
+  local g=out[1];local expected=rural[r.name]and 1 or coastal[r.name]and 0x124 or 0x2bb
   assert(g.sourceGround==expected,r.name..' source family fell back to proximity')
   for _,c in pairs(cells)do
    if c.civic then local clean=c.cy==0 and c.cx<(cleanHeaders[r.name]or 0);local want=(clean or g.custom.preserveWalkableFloor and c.collision==0)and c.mid or expected;assert(Civic.ground(c)==want,r.name..' lost clean source underlay or copied decorative/body artwork');assert(Civic.underOnly(c)==clean,r.name..' roof-header floor must draw under atlas exactly once')end

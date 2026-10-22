@@ -24,6 +24,10 @@ local hoennGrounds={
   rustboro_devon_corporation={0x2bb,0x2c4,0x2c3},rustboro_city_center={0x2bb,0x266,0x27e},
   rustboro_city_mart={0x2bb,0x266,0x27f},rustboro_city_gym={0x2bb,0x2d8,0x2da},
  },
+ ['general__dewford']={
+  dewford_town_home={0x124,0x216,0x217},dewford_town_south_home={0x124,0x216,0x217},
+  dewford_town_hall={0x124,0x216,0x217},dewford_town_center={0x124,0x209,0x20a},
+ },
 }
 local function hoennGround(g)
  local r=g.custom;local pair=hoennGrounds[g.pair]
@@ -43,6 +47,11 @@ local hoennUnderlays={
  petalburg_city_center={0x48,0x49,0x4a,0x4b},
  rustboro_city_center={0x256,0x25e,0x25f,0x257},
  rustboro_city_mart={0x325,0x267,0x267,0x326},
+ -- Only clean sand backgrounds qualify. North212/218 also contain tree
+ -- bases, which must not become flat graphics on the exposed sand floor.
+ dewford_town_home={0x20b,0x20c},
+ dewford_town_south_home={0x20b,0x20c,0x20c,0x20d},
+ dewford_town_center={0x203,0x204,0x205,0x206},
 }
 local function claim(cells,g,rows)
  local parts={}
