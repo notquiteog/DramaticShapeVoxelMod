@@ -73,3 +73,14 @@ assert(G.resolve(cells,c)==nil and G.ground(cells,c)==1,'FRLG sign behavior chan
 c.shape.hoenn=true;c.mid=0x34d;c.shape.kind='fence'
 assert(G.resolve(cells,c)==nil,'unreviewed fence family was inferred')
 print('PASS source prop ground: five native RSE Rustboro signs, grass, alternating phase, material junctions, edge/source ownership and no mutation')
+
+local sand={{0x124,0},{0x124,0},{0x124,0},{0x124,0},{0x124,0},{0x124,0}}
+for _,edition in ipairs{'emerald','ruby','sapphire'}do
+ local field,c=fixture(10,10,sand,{})
+ c.pair='general__dewford'
+ for _,n in pairs(field)do n.pair=c.pair;if n~=c then n.behavior=33 end end
+ assert(G.infer(field,c)==0x124,'Dewford sand rejected for '..edition)
+ for _,n in pairs(field)do if n~=c then n.mid=0x125 end end
+ assert(not G.infer(field,c),'unreviewed special sand drawing borrowed')
+end
+print('PASS reviewed RSE plain-sand sign strips without unsafe behavior broadening')

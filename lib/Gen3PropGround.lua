@@ -35,9 +35,13 @@ local function region(c)
  return r and(r.mapId or r.def and r.def.id)
 end
 local function floor(c,n)
+ -- Native RSE General124 is clean sand (behavior SAND/33), not an
+ -- interaction or animation tile. Its original texture continues under
+ -- board-only signs just like plain NORMAL ground; all strip guards remain.
+ local plainSand=n and n.mid==0x124 and n.behavior==33 and c.shape and c.shape.hoenn
  if not(n and n.pair==c.pair and n.collision==0 and n.shape and n.shape.kind=='flat'
   and not(n.boundary or n.stageHidden or n.prop or n.civic or n.stairs or n.gym or n.column)
-  and (n.behavior==nil or n.behavior==0))then return end
+  and (n.behavior==nil or n.behavior==0 or plainSand))then return end
  if math.abs((n.base or 0)-(c.base or 0))>.01 then return end
  local a,b=region(c),region(n)
  if a and b and a~=b then return end

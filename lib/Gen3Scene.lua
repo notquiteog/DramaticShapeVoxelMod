@@ -114,6 +114,7 @@ function M.nativeRequired(game)
 end
 local function releaseGeometry(cache)
  for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').release(center)end
+ for _,house in ipairs(cache.importedHoenn or{})do V.require('Gen3DewfordDoors').release(house)end
  if cache.grassModels then V.require('GrassModels').releaseBatches(cache.grassModels)end
  if cache.sceneryModels then V.require('SceneryModels').releaseBatches(cache.sceneryModels)end
  if cache.importedTrees then V.require('SceneryModels').releaseBatches(cache.importedTrees)end
@@ -983,6 +984,7 @@ local function terrain(draw)
  V.require('SceneryDraw').opaque(cache.sceneryModels,draw,original==Shadow.draw)
  local doorAnim=require('src.core.game3.doors').getActiveAnim()
  for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').draw(center,doorAnim,draw)end
+ for _,house in ipairs(cache.importedHoenn or{})do V.require('Gen3DewfordDoors').draw(house,doorAnim,draw)end
 end
 local function waterMeshes()
  return NativeWater.sync(cache.waterDraws or{},Tiles._pairs)
@@ -1162,13 +1164,16 @@ local function fieldEffects(draw,cam)
  end end
  V.require('Gen3EmoteCards').draw(fx,cam,M.groundAt,effect)
  V.require('Gen3GroundEffects').draw(fx,M.groundAt,effect,cam)
- local doors=require('src.core.game3.doors');local a=doors._activeAnim
+ local doors=require('src.core.game3.doors');local a=doors.getActiveAnim()
  if a then
   local surface,sourceDoor
   for _,g in ipairs(cache.importedCenters or{})do
    if g.importedCenterDoors and a.x==g.cx+1 and a.y==g.cy+3 then sourceDoor=true;break end
    surface=V.require('Gen3ImportedCenters').doorSurface(g,a.x,a.y)
    if surface then break end
+  end
+  for _,house in ipairs(cache.importedHoenn or{})do
+   if V.require('Gen3DewfordDoors').ownsDoor(house,a.x,a.y)then sourceDoor=true;break end
   end
   for _,entry in ipairs{{'Gen3ImportedPewterMuseum',cache.importedPewterMuseum},{'Gen3ImportedViridianHouses',cache.importedViridianHouses},{'Gen3ImportedKantoCenters',cache.importedKantoCenters},{'Gen3ImportedKanto',cache.importedKanto},{'Gen3ImportedHoenn',cache.importedHoenn}}do
    if surface then break end
