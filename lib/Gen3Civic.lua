@@ -33,6 +33,17 @@ local function hoennGround(g)
  -- A third-party recipe reusing a label is not proof of the same source art.
  if spec and last and last[1]==spec[2]and last[#last]==spec[3]then return spec[1]end
 end
+-- Reviewed NORMAL-layer roof overhangs whose under atlas contains only native
+-- terrain. Exact source MID at each column matters: nearby roof tiles can have
+-- tree crowns or building pixels in their bottom layer. Coordinates are zero
+-- based. Oldale Mart285 and Petalburg Mart's entire header are not clean.
+local hoennUnderlays={
+ oldale_center={0x48,0x49,0x282,0x283},
+ oldale_mart={0x28,0x29,0x29},
+ petalburg_city_center={0x48,0x49,0x4a,0x4b},
+ rustboro_city_center={0x256,0x25e,0x25f,0x257},
+ rustboro_city_mart={0x325,0x267,0x267,0x326},
+}
 local function claim(cells,g,rows)
  local parts={}
  for dy,row in ipairs(rows)do for dx,mid in ipairs(row)do
@@ -158,6 +169,11 @@ function M.prepare(cells,gyms,families)
  -- never be stretched down the retaining face below a building.
  for _,g in ipairs(out)do
   local fixed=hoennGround(g);g.sourceGround=fixed
+  g.sourceUnderlays={}
+  local under=fixed and g.ts and g.ts.layered and hoennUnderlays[g.custom.name]
+  for x,mid in ipairs(under or{})do
+   if g.rows[1][x]==mid then g.sourceUnderlays[(g.cx+x-1)..':'..g.cy]=mid end
+  end
   local candidates={}
   -- These exact native lower corner tiles include the lawn around the
   -- chamfered foundation. A road nearby must not replace that original lawn.
@@ -194,6 +210,8 @@ function M.ground(c)
  if c.civic.nativeLawn then return 1 end
  if c.civic.custom and c.civic.custom.ground then return c.civic.custom.ground end
  if c.civic.custom and c.civic.custom.preserveWalkableFloor and c.collision==0 then return c.mid end
+ local under=c.civic.sourceUnderlays and c.civic.sourceUnderlays[c.cx..':'..c.cy]
+ if under==c.mid then return c.mid end
  return c.civic.grounds and c.civic.grounds[c.cx..':'..c.cy]
   or (c.civic.variant=='saffron' and 0x2E5 or 1)
 end
