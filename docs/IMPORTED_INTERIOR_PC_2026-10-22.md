@@ -66,3 +66,16 @@ eligibility evidence, not a claim that every matching map was visually reviewed.
 Parent integration owns the in-game captures, all-map inventory, native approach
 and interaction tests, source-missing fallback, standalone packaging and final
 acceptance. This source preview does not claim those checks or phone testing.
+
+## Native powered frames
+
+Official 0.3.95 `pc_anim` uses FRLG public-PC body `62` OFF / `63` ON.
+The official RSE native PC adapter resolves `METATILE_Building_PC_Off/On`
+through edition constants: `4` OFF / `5` ON in R/S/E. Complete Center recipes
+accept only those scoped body aliases. Actual native cells and recipe tables
+remain untouched, and native fallback source crops use the live powered frame.
+The imported public PC remains present through the native flicker/menu/off
+sequence. Bedroom/lab machines and unrelated uses of these IDs are not aliased.
+The all-five edition extraction/fallback regression and imported eligibility
+test cover repeated OFF/ON/OFF transitions; parent owns real native interaction
+captures for this follow-up.
