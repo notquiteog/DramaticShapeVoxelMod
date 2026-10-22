@@ -25,6 +25,7 @@ local function dewford(g)
  local n=g.custom and g.custom.name
  return n=='dewford_town_home' or n=='dewford_town_south_home'
 end
+local function lavaridge(g)return g.custom and g.custom.name=='lavaridge_town_home'end
 -- Regional adaptation shortens only the plain central wall/roof bay between
 -- the two side-window assemblies. Front fixtures and rear facade are rigid;
 -- all source UVs/colors remain unchanged. This is applied to a private copy.
@@ -53,6 +54,7 @@ function M.register(id)
  registered[id]=true;return true
 end
 function M.eligible(g,cells)
+ if lavaridge(g)then return V.require('Gen3ImportedLavaridge').eligible(g,cells)end
  if dewford(g)then return V.require('Gen3ImportedDewford').eligible(g,cells)end
  local r=g.custom and recipes[g.custom.name]
  if not(r and g.custom.family=='rse')or g.pair~=r.pair or g.kind~='house'
@@ -67,6 +69,7 @@ function M.eligible(g,cells)
  return true
 end
 function M.build(g,cells,newMesh,parts)
+ if lavaridge(g)then return V.require('Gen3ImportedLavaridge').build(g,cells,newMesh,parts)end
  if dewford(g)then return V.require('Gen3ImportedDewford').build(g,cells,newMesh,parts)end
  if not M.eligible(g,cells)then return false end
  local shop=g.custom.name=='route104_pretty_petal_shop';local id=shop and M.shopId or M.id
@@ -91,6 +94,8 @@ function M.build(g,cells,newMesh,parts)
  return true
 end
 function M.doorSurface(g,tx,ty)
+ local id=g.importedHoenn and g.importedHoenn.model
+ if id=='oras_lavaridge_herb_shop_native' or id=='oras_lavaridge_home_native'then return V.require('Gen3ImportedLavaridge').doorSurface(g,tx,ty)end
  if g.importedHoenn and g.importedHoenn.model=='oras_dewford_narrow_house'then return V.require('Gen3ImportedDewford').doorSurface(g,tx,ty)end
  if not g.importedHoenn or tx~=g.cx+2 or ty~=g.cy+3 then return end
  local fit=g.importedHoenn;local a=fit.anchors.door;local top=fit.anchors.doorTop
