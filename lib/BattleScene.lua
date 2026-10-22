@@ -1435,6 +1435,7 @@ function BattleScene.render(state, arena, textures, token, battle, drawActors,
   -- and this staged battle shot. Reading the setting through Voxel3D leaves
   -- the player's choice untouched.
   local out = nil
+  Voxel3D.weatherFog = V.require("Weather").fogStrength(host)
   Voxel3D.fog = battleFog or V.require("Gen2Boundary").haze({map=host,neighbors=neighbors},cx,cy,VoxelScene.skyColor(host,1))
   local ok, err = pcall(function()
     -- its own canvas slot: this renders at the window's pixel size and the

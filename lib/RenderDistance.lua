@@ -80,10 +80,10 @@ end
 -- Reserve one build chunk so stepping does not expose a hard cutoff.
 function RenderDistance.haze(color,extent,origin,bounds)
  if not RenderDistance.radius() and bounds and origin then
-  return {color=color,start=.55,density=16,heightK=0,origin=origin,bounds=bounds}
+  return {color=color,start=.85,density=40,heightK=0,origin=origin,bounds=bounds}
  end
  local radius=RenderDistance.radius() or extent or 1536
  local edge=math.max(96,radius-96)
- return {color=color,start=edge*.48,density=7/(edge*.52),heightK=0,origin=origin}
+ return {color=color,start=edge*.75,density=7/(edge*.25),heightK=0,origin=origin}
 end
 return RenderDistance
