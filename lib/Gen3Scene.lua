@@ -466,7 +466,7 @@ local function build(req,cache,previous)
     plane(b.v,b.i,x,z,uvFor(ts,V.require('Gen3Furniture').groundAt(c)) or uvFor(ts,1) or uv)
    end
   elseif shape.kind=='tree' then
-   plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)
+   plane(b.v,b.i,x,z,uvFor(ts,V.require('Gen3GrassModels').ground(c)) or uv)
    if shape.root and not c.stageHidden then
     if c.importedTree then
      local t=c.importedTree;local b=t.bounds

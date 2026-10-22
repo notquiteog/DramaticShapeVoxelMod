@@ -37,3 +37,19 @@ for _,c in pairs(cells)do assert(c.mid==7 and c.shape.kind~='model','native sour
 cells.b.shape.grassModel='third_party_tuft'
 assert(G.placements(cells)[1].model=='third_party_tuft','extension recipe lost')
 print('Gen3 imported grass: native predicates, local levels, opt-out/fallback and immediate Cut pass')
+
+-- A source tree-tip projection must not erase encounter grass models. Native
+-- permission/source MID and non-root tree ownership stay unchanged.
+local cap=cell(6,2,'tree',{primary='general',mid=0x1c6,collision=24})
+cap.shape={kind='tree',root=false,projectedTreeCap=true,ground=0xd}
+local caps={cap=cap}
+assert(#G.placements(caps)==1 and G.ground(cap)==0xd)
+failure=true;assert(not G.build(caps,function()end,{}));assert(G.ground(cap)==0xd)
+failure=false;assert(G.build(caps,function()end,{}));assert(cap.importedGrass and G.ground(cap)==1)
+assert(cap.mid==0x1c6 and cap.collision==24 and cap.shape.root==false and cap.shape.ground==0xd)
+cap.mid=0x1c7;assert(#G.placements(caps)==1)
+cap.mid=0x1e8;assert(#G.placements(caps)==0 and G.ground(cap)==0xd)
+cap.mid=0x1c6;cap.collision=0;assert(#G.placements(caps)==0)
+cap.collision=24;cap.primary='building';assert(#G.placements(caps)==0)
+cap.primary='general';cap.stageHidden=true;assert(#G.placements(caps)==0)
+print('PASS original encounter grass under reviewed tree tips, clean ground only after successful model upload, native ownership and failure fallback')

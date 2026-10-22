@@ -4,11 +4,21 @@ local V=...
 local Models=V.require('GrassModels')
 local M={}
 local okStyles,Styles=pcall(V.require,'VisualStyles')
+-- These native encounter-grass cells also contain a projected tree tip. The
+-- tree adapter removes the tip, but the walkable grass still needs its model.
+local function grassCap(c)
+ return c.primary=='general'and(c.mid==0x1c6 or c.mid==0x1c7)
+  and c.collision==24 and c.shape.projectedTreeCap==true and c.shape.ground==0xd
+end
+function M.ground(c)
+ if c.importedGrass and grassCap(c)then return 1 end
+ return c.shape.ground
+end
 function M.placements(cells)
  local list={}
  if okStyles and not Styles.modern('props')then return list end
  for _,c in pairs(cells)do
-  if c.shape.kind=='grass'and not(c.stageHidden or c.boundary)and c.collision~=7 then
+  if(c.shape.kind=='grass'or grassCap(c))and not(c.stageHidden or c.boundary)and c.collision~=7 then
    list[#list+1]={model=c.shape.grassModel or'oras_green',extent=16,
     rotation=(c.cx+c.cy*3)%4,x=c.cx*16,y=c.base or 0,z=c.cy*16,source=c}
   end

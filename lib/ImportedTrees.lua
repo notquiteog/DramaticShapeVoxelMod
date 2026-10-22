@@ -95,7 +95,28 @@ function M.buildGen3(cells,newMesh,parts,options)
  if Models.retryImages then local seen={};for _,p in ipairs(list)do
   if not seen[p.model]then Models.retryImages(p.model);seen[p.model]=true end
  end end
- local out,err=Models.buildBatches(list,newMesh,{parts=parts})
+ -- FAR/FULL connected-map forests can exceed one scenery upload's placement
+ -- bound. Keep every upload bounded, but commit native replacement ownership
+ -- only after the entire forest succeeds. The destination remains scene-owned
+ -- throughout cooperative yields/cancellation.
+ parts=parts or{}
+ local out,err
+ local limit=Models.limits and Models.limits.placements or 4096
+ if #list<=limit then out,err=Models.buildBatches(list,newMesh,{parts=parts})
+ else
+  local first=#parts+1
+  for start=1,#list,limit do
+   local chunk={}
+   for i=start,math.min(start+limit-1,#list)do chunk[#chunk+1]=list[i]end
+   out,err=Models.buildBatches(chunk,newMesh,{parts=parts})
+   if not out then
+    -- buildBatches already unwinds its own failed chunk. Release previous
+    -- successful chunks from this invocation, preserving older caller parts.
+    for i=#parts,first,-1 do Models.releaseBatches({parts[i]});parts[i]=nil end
+    break
+   end
+  end
+ end
  if out then for _,p in ipairs(list)do
   p.source.importedTree=p.treeInfo
   for _,source in ipairs(p.sources or{})do
