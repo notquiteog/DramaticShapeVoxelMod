@@ -1,3 +1,13 @@
+# User-requested test prerelease1.57.4 — 2026-10-22
+
+Package the pushed a72dee0 source snapshot for user testing, with version/docs
+only added. Explicit user request overrides the previous hold on publishing
+pending visual work; GitHub must mark this release prerelease.406 source suites
+pass,58 external fixtures skip,540 production LuaJIT files compile. Source-model
+and style native visual acceptance is still pending. Agents now independently
+fix dock water datum, dock geometry and truck cargo; root reproduces the native
+Route115→Rustboro tree fallback. Those fixes are not in this test snapshot.
+
 # Consolidated unreleased source snapshot — 2026-10-22
 
 User requested every pending change committed and pushed to main. Consolidates
