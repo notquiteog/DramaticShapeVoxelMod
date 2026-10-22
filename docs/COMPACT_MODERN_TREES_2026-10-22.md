@@ -57,9 +57,10 @@ manifold edges, unchanged source texture/UV/RGBA/index arrays, native data
 immutability and atomic asset failure are tested. No165FPS/mobile or complete
 all-map acceptance claim is made.
 
-Three complete12px terrain-span owners remain under review. Separate native
-cliff/tree composite drawings1F2/1F3 do not all belong to TreeFootprints and can
-still leave painted foliage on the ground. The445/448 figure counts recognized
-tree owners, not every source pixel. That composite/terrain work remains needed
-before claiming the whole area uses Modern geometry. Evidence/census paths are
-reported to the parent task; captures and imported native assets stay outside Git.
+The subsequent source-vocabulary batch resolves the three complete12px owners
+and the actual RSE curved lower halves DE/DF/F2/F3. Source inspection corrected
+the preliminary cliff-composite inference for F2/F3: those RSE tiles are pure
+tree art; the numbered FRLG Viridian F2 cliff rule is a separate source family.
+See HOENN_TREE_VOCABULARY_2026-10-22.md for the subsequent native counts and
+remaining source-pixel limits. The445/448 figure above is the historical compact
+batch result, not a claim that every source pixel was already handled.
