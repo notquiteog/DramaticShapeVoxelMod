@@ -1,77 +1,33 @@
 {
-  "asset": 293549,
-  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/293549/",
-  "title": "Pokémon Center (standard)",
+  "asset": 592881,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592881/",
+  "title": "Viridian City",
   "game": "Pokémon HeartGold / SoulSilver",
-  "author": "Cheesy Mac n Cheese",
-  "submitted": "2015-08-23",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
   "originalGameArt": "Nintendo / Creatures / GAME FREAK",
-  "archiveSha256": "f1609b7494d56c65c89b82b8cb2b81ff9eae6ee6fc677e60b2f2966a6b481fe2",
-  "sourceFile": "Pokémon Center/Pokémon Center.obj",
-  "sourceModelSha256": "da7fea43e63b136916568847c2e650fde4bd9a9519665e9b3a1a44ce357ccf37",
-  "sourceMaterialSha256": "9245fd01889ce99ac9c93352316c9b2f8adcb837682302ddbfc2a64e4777e1d2",
-  "containerRepairs": [
-    {
-      "centralName": "Pokémon Center/gs_pc_a.png",
-      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f67735f70635f612e706e67",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center/gs_pc_a_.png",
-      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f67735f70635f615f2e706e67",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center/gs_pc_b.png",
-      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f67735f70635f622e706e67",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center/h_kage.png",
-      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f685f6b6167652e706e67",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center/Pokémon Center.mtl",
-      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f506f6b2c6d6f6e2043656e7465722e6d746c",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center/Pokémon Center.obj",
-      "localNameBytes": "506f6b2c6d6f6e2043656e7465722f506f6b2c6d6f6e2043656e7465722e6f626a",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center (Violet City and Ecruteak City)/gs_pc_a.png",
-      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f67735f70635f612e706e67",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center (Violet City and Ecruteak City)/gs_pc_a_.png",
-      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f67735f70635f615f2e706e67",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center (Violet City and Ecruteak City)/gs_pc_b.png",
-      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f67735f70635f622e706e67",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center (Violet City and Ecruteak City)/h_kage.png",
-      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f685f6b6167652e706e67",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center (Violet City and Ecruteak City)/Pokémon Center (Ecruteak City).mtl",
-      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f506f6b826d6f6e2043656e7465722028456372757465616b2043697479292e6d746c",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    },
-    {
-      "centralName": "Pokémon Center (Violet City and Ecruteak City)/Pokémon Center (Ecruteak City).obj",
-      "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f506f6b826d6f6e2043656e7465722028456372757465616b2043697479292e6f626a",
-      "repair": "Central-directory name retained; compressed stream and CRC verified."
-    }
-  ],
+  "archiveSha256": "969737481ce8e8e55887ffdd612f5ff96b8a19e8430f7433078d24ef444b918e",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Viridian City/Viridian City.dae",
+  "sourceModelSha256": "704ce4c6e39d630cbb2e55036ef3755c1ee482cb7156fd3ca4868bb80fb01433",
+  "selectedNewerSource": {
+    "asset": 592881,
+    "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592881/",
+    "title": "Viridian City",
+    "author": "Kuramapika1",
+    "submitted": "2026-09-01",
+    "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Viridian City/Viridian City.dae",
+    "archiveSha256": "969737481ce8e8e55887ffdd612f5ff96b8a19e8430f7433078d24ef444b918e",
+    "sourceModelSha256": "704ce4c6e39d630cbb2e55036ef3755c1ee482cb7156fd3ca4868bb80fb01433",
+    "bodyGeometry": "pc_011-mesh",
+    "doorGeometry": "p_door_023-mesh",
+    "doorOffset": [
+      0,
+      0.50001,
+      26
+    ],
+    "comparison": "Same256body triangles/bounds as older standard OBJ; newer scene supplies its original separate2-triangle door."
+  },
+  "containerRepairs": [],
   "closure": "Authored stepped rear wall follows original outer wall/partition ends; rear soffit joins existing roof; thin closed foundation0.05below source shadow datum. Original front/door recess/roof retained.",
   "sourceRepairs": [],
   "normalization": {
@@ -108,56 +64,64 @@
   ],
   "textures": {
     "gs_pc_b.png": {
-      "sha256": "f2a58b0694fb5403dedba39205970c8924611fa65c94fba84749b1c78782ad30",
-      "bytes": 188
+      "sha256": "8a0151ad7aeadd5a2308086ba599fa18c8336bb898ee26f910555b41b4d20fdf",
+      "bytes": 130
     },
     "h_kage.png": {
-      "sha256": "67db103a7b625b50c0ba0c424fd76a6ddeac3b76590b07aa37521a1a9dfde45f",
-      "bytes": 164
-    },
-    "gs_pc_a_.png": {
-      "sha256": "90b4e7ff7c62eeb653498083f85b043da1235b2a7f4f1eecf3499a0d337b0a09",
-      "bytes": 699
+      "sha256": "ae1cd3dbd43a0a6923f9e7004703abf3665e3b3e33062fae531d9617ec3a9698",
+      "bytes": 84
     },
     "gs_pc_a.png": {
-      "sha256": "90b4e7ff7c62eeb653498083f85b043da1235b2a7f4f1eecf3499a0d337b0a09",
-      "bytes": 699
+      "sha256": "3135d0d9bbd09ee52c28d8c8730de03100309c2976fbcbea1b32f4327f200986",
+      "bytes": 772
+    },
+    "pc_door.png": {
+      "sha256": "5b5a4ba064cd7530257302e4e2eeb1c3ffc97204ba97e1ea90937891b4f4ddf4",
+      "bytes": 138
     }
   },
-  "originalTriangles": 256,
-  "processedTriangles": 324,
+  "originalTriangles": 258,
+  "processedTriangles": 326,
   "parts": [
     {
-      "name": "polygon0",
-      "material": "gs_pc_b",
+      "name": "pc_011-mesh:gs_pc_b_020-material",
+      "material": "gs_pc_b_020-material",
       "role": "structure",
       "opacity": 1.0,
       "authored": false,
       "triangles": 12
     },
     {
-      "name": "polygon1",
-      "material": "h_kage",
+      "name": "pc_011-mesh:h_kage_214-material",
+      "material": "h_kage_214-material",
       "role": "ground_shadow",
       "opacity": 0.2903226,
       "authored": false,
       "triangles": 16
     },
     {
-      "name": "polygon2",
-      "material": "gs_pc_a_",
+      "name": "pc_011-mesh:gs_pc_a__020-material",
+      "material": "gs_pc_a__020-material",
       "role": "structure",
       "opacity": 1.0,
       "authored": false,
       "triangles": 12
     },
     {
-      "name": "polygon3",
+      "name": "pc_011-mesh:gs_pc_a_020-material",
       "material": "gs_pc_a",
       "role": "structure",
       "opacity": 1.0,
       "authored": false,
       "triangles": 216
+    },
+    {
+      "name": "p_door_023-mesh:pc_door_020-material",
+      "material": "pc_door_020-material",
+      "role": "source_door",
+      "opacity": 0.8709677,
+      "authored": false,
+      "triangles": 2
     },
     {
       "name": "authored_stepped_rear_wall",
@@ -183,5 +147,78 @@
       "authored": true,
       "triangles": 34
     }
-  ]
+  ],
+  "comparisonSource": {
+    "asset": 293549,
+    "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/293549/",
+    "title": "Pokémon Center (standard)",
+    "author": "Cheesy Mac n Cheese",
+    "submitted": "2015-08-23",
+    "archiveSha256": "f1609b7494d56c65c89b82b8cb2b81ff9eae6ee6fc677e60b2f2966a6b481fe2",
+    "sourceFile": "Pokémon Center/Pokémon Center.obj",
+    "sourceModelSha256": "da7fea43e63b136916568847c2e650fde4bd9a9519665e9b3a1a44ce357ccf37",
+    "sourceMaterialSha256": "9245fd01889ce99ac9c93352316c9b2f8adcb837682302ddbfc2a64e4777e1d2",
+    "containerRepairs": [
+      {
+        "centralName": "Pokémon Center/gs_pc_a.png",
+        "localNameBytes": "506f6b2c6d6f6e2043656e7465722f67735f70635f612e706e67",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center/gs_pc_a_.png",
+        "localNameBytes": "506f6b2c6d6f6e2043656e7465722f67735f70635f615f2e706e67",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center/gs_pc_b.png",
+        "localNameBytes": "506f6b2c6d6f6e2043656e7465722f67735f70635f622e706e67",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center/h_kage.png",
+        "localNameBytes": "506f6b2c6d6f6e2043656e7465722f685f6b6167652e706e67",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center/Pokémon Center.mtl",
+        "localNameBytes": "506f6b2c6d6f6e2043656e7465722f506f6b2c6d6f6e2043656e7465722e6d746c",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center/Pokémon Center.obj",
+        "localNameBytes": "506f6b2c6d6f6e2043656e7465722f506f6b2c6d6f6e2043656e7465722e6f626a",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center (Violet City and Ecruteak City)/gs_pc_a.png",
+        "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f67735f70635f612e706e67",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center (Violet City and Ecruteak City)/gs_pc_a_.png",
+        "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f67735f70635f615f2e706e67",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center (Violet City and Ecruteak City)/gs_pc_b.png",
+        "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f67735f70635f622e706e67",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center (Violet City and Ecruteak City)/h_kage.png",
+        "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f685f6b6167652e706e67",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center (Violet City and Ecruteak City)/Pokémon Center (Ecruteak City).mtl",
+        "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f506f6b826d6f6e2043656e7465722028456372757465616b2043697479292e6d746c",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      },
+      {
+        "centralName": "Pokémon Center (Violet City and Ecruteak City)/Pokémon Center (Ecruteak City).obj",
+        "localNameBytes": "506f6b826d6f6e2043656e746572202856696f6c6574204369747920616e6420456372757465616b2043697479292f506f6b826d6f6e2043656e7465722028456372757465616b2043697479292e6f626a",
+        "repair": "Central-directory name retained; compressed stream and CRC verified."
+      }
+    ]
+  }
 }

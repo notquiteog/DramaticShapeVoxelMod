@@ -23,13 +23,13 @@ assert(not C.build(g,cells,function()error('unexpected upload without PNG')end,{
 local old=S.buildBatches;S.buildBatches=function(placements,_,opts)
  local p=assert(placements[1]);local parts,fit=assert(S.vertices(p.model,p.fit));assert(p.y==3)
  assert(math.abs(fit.anchors.door[1]-40)<1e-6 and math.abs(fit.anchors.door[3]-51)<1e-6)
- local shade,foundation=false,false
+ local shade,foundation,sourceDoor=false,false,false
  for _,part in ipairs(parts)do
   shade=shade or part.alphaMode=='blend' and math.abs(part.opacity-.2903226)<1e-6
-  foundation=foundation or part.name=='authored_closed_foundation'
+  foundation=foundation or part.name=='authored_closed_foundation';sourceDoor=sourceDoor or part.role=='source_door'
   for _,v in ipairs(part.vertices)do assert(v[1]>=.25-1e-6 and v[1]<=79.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=63.75+1e-6 and v[2]>=0)end
  end
- assert(shade and foundation);assert(fit.bounds[4]-fit.bounds[1]>74,'source footprint shrank')
+ assert(shade and foundation and sourceDoor);assert(fit.bounds[4]-fit.bounds[1]>74,'source footprint shrank')
  return opts.parts
 end
 for _,args in ipairs{{4},{5},{5,{0x2fc,0x2fd,0x2fe,0x306,0x2ff}}}do
