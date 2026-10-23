@@ -1,4 +1,4 @@
-# Depth/fence/foliage release1.57.7 — 2026-10-23
+# Depth/fence/foliage release1.57.8 — 2026-10-23
 
 Explicit building contact-ring recess prevents coplanar ground closures while
 preserving portals, upper geometry and native floors. Authentic ORAS rails now
