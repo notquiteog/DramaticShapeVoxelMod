@@ -1,3 +1,14 @@
+# Streaming/parity release1.57.7 — 2026-10-23
+
+Keep model coverage with the separate owner. Shared tree anchor normalization
+now yields every2048 vertices, preserving source data. Gen3 moving-window cache
+keys retain the validated content snapshot, avoiding repeated sorting/allocation
+while still detecting edits and provider changes. Parity worker62ae6982 adds
+native Gen1/2 XD attack categories and reliable failed-model sprite fallback.
+Latest official engine is0.3.95; native QA uses its source with LÖVE11.5 shell
+from0.3.89 and isolated profiles. See docs/STREAM_PARITY_2026-10-23.md for limits
+and final packaged checks. Full165FPS, completeXD/mobile parity remain unfinished.
+
 # XD move category and failure isolation — 2026-10-23
 
 GB model animation now receives native move categories instead of selecting
