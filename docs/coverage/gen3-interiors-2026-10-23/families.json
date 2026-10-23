@@ -6287,7 +6287,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_china_cupboard"
+      ]
     },
     "hoenn_home_wallpaper": {
       "design": "em_home_wallpaper",
@@ -14345,7 +14347,7 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 91,
+      "candidateFurniture": 115,
       "furniture": 1830,
       "maps": 519,
       "nativeWallFinishRooms": 79,
@@ -14366,14 +14368,14 @@
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 93,
+      "candidateFurniture": 118,
       "furniture": 1210,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 93,
+      "candidateFurniture": 118,
       "furniture": 1210,
       "maps": 395,
       "nativeWallFinishRooms": 84,

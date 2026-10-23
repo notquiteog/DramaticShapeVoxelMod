@@ -12,6 +12,7 @@ dataFiles.oras_oldale_checked_table='ImportedOldaleFurnitureData'
 dataFiles.oras_oldale_neighbor_table='ImportedOldaleFurnitureData'
 dataFiles.oras_oldale_refrigerator='ImportedOldaleFridgeData'
 dataFiles.bdsp_galactic_server='ImportedInstitutionServerData'
+dataFiles.oras_oldale_china_cupboard='ImportedOldaleCupboardData'
 -- Complete public-PC and genuine TV drawings include the wall above and
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
@@ -39,6 +40,9 @@ local families={
  hoenn_home_fridge={pair='building__generic_building',family='rse',design='em_home_fridge',
   rows={{0x278},{0x280},{0x288}},collisionRows={{7},{7},{0}},
   model='oras_oldale_refrigerator',fitWidth=16,fitDepth=16,fitHeight=32,rotation=1,groundInset=.025},
+ hoenn_home_tv={pair='building__generic_building',family='rse',design='em_home_tv',
+  rows={{0x286,0x287},{0x28e,0x28f},{0x296,0x297}},collisionRows={{7,7},{7,7},{0,0}},
+  model='oras_oldale_china_cupboard',fitWidth=32,fitDepth=16,fitHeight=32,groundInset=.025},
  hoenn_home_table_plain={pair='building__generic_building',family='rse',design='em_home_table',
   rows={{0x24a,0x24b},{0x252,0x253}},collisionRows={{7,7},{7,7}},
   model='oras_oldale_neighbor_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0,groundInset=.025},

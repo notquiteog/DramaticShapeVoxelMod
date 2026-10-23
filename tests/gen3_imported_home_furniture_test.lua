@@ -8,12 +8,14 @@ V.require=function(name)
  if name=='Gen3PublicPCFrames'then return dofile('lib/Gen3PublicPCFrames.lua')end
  if name=='ImportedInstitutionServerData'then return dofile('lib/ImportedInstitutionServerData.lua')end
  if name=='ImportedOldaleFridgeData'then return dofile('lib/ImportedOldaleFridgeData.lua')end
+ if name=='ImportedOldaleCupboardData'then return dofile('lib/ImportedOldaleCupboardData.lua')end
  if name=='ImportedHomeFurnitureData'then return dofile('lib/ImportedHomeFurnitureData.lua')end
  if name=='ImportedOldaleFurnitureData'then return dofile('lib/ImportedOldaleFurnitureData.lua')end
  error(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='hoenn_home_tv',pair='building__generic_building',design='em_home_tv',rows={{0x286,0x287},{0x28e,0x28f},{0x296,0x297}},coll={{7,7},{7,7},{0,0}},x=0,z=0,id='oras_oldale_china_cupboard',fit={32,16,1}},
  {name='birch_server',pair='building__lab',design='em_lab_server',rows={{0x216},{0x21e},{0x292}},coll={{0},{7},{0}},x=5,z=0,id='bdsp_galactic_server',fit={16,16,1}},
  {name='lab_server',family=false,pair='oak_lab',design='fr_lab_server',rows={{0x29d},{0x2ad},{0x2b5}},coll={{7},{7},{0}},x=5,z=0,id='bdsp_galactic_server',fit={16,16,1}},
  {name='silph_server',family=false,pair='building__rom_082d4ecc',design='fr_native_rack',rows={{0x37d},{0x385},{0x37e}},coll={{7},{7},{0}},x=5,z=0,id='bdsp_galactic_server',fit={16,16,1}},
