@@ -97,3 +97,10 @@ Official0.3.95 native R/S/E checks verify all nine notices upload exactly eight
 below-floor cap vertices, while the original notice minimum stays at zero;
 source/permission/height guards and atomic failed-upload fallback still pass.
 Final native Scene visual/interaction acceptance remains separate.
+
+Shared contact-ring follow-up: Gym/Mart bodies now use `groundInset=.05`;
+only sourceY0 vertices recess. Original body placement, upper geometry and
+portal anchors stay at their exact source/native base. Gym doorY0 vertices use
+the same inset; upper door vertices remain exact. All nine Gym and nine corridor
+Mart native0.3.95 upload/state/rollback fixtures pass after this change. Notice
+and Oldale home cap-only uploads remain separate and are not inset twice.
