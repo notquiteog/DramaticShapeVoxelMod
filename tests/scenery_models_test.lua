@@ -30,6 +30,16 @@ local function png(w,h)return '\137PNG\13\10\26\10'..string.char(0,0,0,13)..'IHD
 assert(S.register('third_party:house',def,{read=function()return png(8,8)end}));def.parts[1].vertices[1][1]=-999
 local parts,fit=S.vertices('third_party:house',{width=16,depth=16,padding=0,anchor='door',targetX=8,targetZ=12})
 assert(parts and fit.anchors.door[1]==8 and fit.anchors.door[3]==12,'authored portal anchor not aligned')
+local recessed,recessFit=S.vertices('third_party:house',{width=16,depth=16,padding=0,anchor='door',targetX=8,targetZ=12,groundInset=.05})
+assert(recessed~=parts and recessFit.bounds[2]==-.05 and recessFit.anchors.door[2]==fit.anchors.door[2])
+for i,v in ipairs(recessed[1].vertices)do
+ local original=parts[1].vertices[i]
+ assert(v[1]==original[1]and v[3]==original[3]and v[4]==original[4]and v[5]==original[5])
+ assert(v[2]==(original[2]==0 and -.05 or original[2]),'only contact ring may move')
+end
+assert(S.vertices('third_party:house',{width=16,depth=16,padding=0,anchor='door',targetX=8,targetZ=12})==parts,'ground inset poisoned default prototype')
+assert(not S.fit('third_party:house',{width=16,depth=16,groundInset=-1}))
+assert(not S.fit('third_party:house',{width=16,depth=16,groundInset=.26}))
 local lab=assert(S.fit('hgss_oaks_lab',{width=48,depth=32,anchor='door',targetX=24,targetZ=25}));assert(lab.anchors.door[1]==24 and lab.anchors.door[3]==25,'asymmetric source shadow defeated center doorway alignment')
 assert(not S.fit('third_party:house',{width=16,depth=16,anchor='door',targetX=0,targetZ=16}),'out-of-footprint door accepted')
 assert(not S.register('third_party:house',def,{read=function()end}));assert(not S.register('bad',{parts={}},{read=function()end}))

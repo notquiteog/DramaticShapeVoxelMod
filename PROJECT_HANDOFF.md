@@ -1,3 +1,15 @@
+# Depth/fence/foliage release1.57.7 — 2026-10-23
+
+Explicit building contact-ring recess prevents coplanar ground closures while
+preserving portals, upper geometry and native floors. Authentic ORAS rails now
+cover21 native RSE families/196EM195RU195SA cells, with exact native-ground
+proof and edition-specific retained leaf masks. Hoenn evergreen canopy paint
+now harmonizes its genuine ORAS source with darker broadleaf foliage; other
+regions stay isolated. Native0.3.95 five-game streaming/map-hash checks pass;
+front/first/rotated contact and interior captures inspected. Full coverage is
+still in progress; three workers continue exterior/interior source families.
+See docs/DEPTH_FENCES_FOLIAGE_2026-10-23.md for scope and evidence limits.
+
 # User-requested consolidated release1.57.6 — 2026-10-22
 
 User requests prompt commit/push/main/release of all current work. The Route103

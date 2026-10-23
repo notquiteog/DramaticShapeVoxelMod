@@ -22,7 +22,7 @@ end
 function M.build(g,cells,newMesh,parts)
  if not M.eligible(g,cells)then return false end
  local ok,err=M.register();if not ok then return false,err end
- local fit={width=80,depth=48,padding=.25,anchor='door',targetX=24,targetZ=35.4}
+ local fit={groundInset=.05,width=80,depth=48,padding=.25,anchor='door',targetX=24,targetZ=35.4}
  local p={model=M.id,x=g.cx*16,y=g.groundHeight or 0,z=(g.cy+1)*16,fit=fit}
  local result,why=Models.buildBatches({p},newMesh,{parts=parts});if not result then return false,why end
  g.importedViridianHouse=assert(Models.fit(M.id,fit));return true

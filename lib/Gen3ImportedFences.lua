@@ -17,9 +17,11 @@ function M.eligible(c)
  if not c or c.boundary or c.prop or c.civic or c.stairs or c.stageHidden
   or not(c.ts and c.ts.layered)or c.collision~=7 or c.primary~='general'then return end
  local shape=Families.shape(c.primary,c.secondary,c.mid,c.behavior,c.collision)
+ if not(c.shape and shape and c.shape.nativeFence==shape.nativeFence)then return end
  if shape and shape.nativeFence=='rural149'then return 'oras_rural_fence'end
  if shape and shape.nativeFence=='rustboro'then
   for _,q in ipairs(Families.ground[c.mid])do if not(c.ts.midToSlot and c.ts.midToSlot[q[1]])then return end end
+  if Families.plants[c.mid]and not c.ts.midToSlot[c.mid]then return end
   return 'oras_rustboro_fence'
  end
 end
@@ -63,6 +65,17 @@ function M.appendFloor(c,emit,uvFor)
   end
   local x,z=c.cx*16+(n-1)%2*8,c.cy*16+math.floor((n-1)/2)*8
   quads[#quads+1]={{{x,0,z},{x+8,0,z},{x+8,0,z+8},{x,0,z+8}},{at(0,0),at(1,0),at(1,1),at(0,1)}}
+ end
+ if Families.plants[c.mid]then
+  local uv=uvFor(c.ts,c.mid);if not uv then return false end
+  local du,dv=uv[2][1]-uv[1][1],uv[4][2]-uv[1][2]
+  for _,row in ipairs(Families.plantRows(c))do
+   local x,z,w=row[1],row[2],row[3]
+   local l,r=uv[1][1]+du*x/16,uv[1][1]+du*(x+w)/16
+   local t,b=uv[1][2]+dv*z/16,uv[1][2]+dv*(z+1)/16
+   x,z=x+c.cx*16,z+c.cy*16
+   quads[#quads+1]={{{x,.025,z},{x+w,.025,z},{x+w,.025,z+1},{x,.025,z+1}},{{l,t},{r,t},{r,b},{l,b}}}
+  end
  end
  for _,q in ipairs(quads)do emit(q[1],q[2],1)end
  return true
