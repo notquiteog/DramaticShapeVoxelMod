@@ -16,6 +16,19 @@
     1,
     13.9385
   ],
+  "nativeDoorPose": {
+    "hinge": [
+      2,
+      1,
+      13.9385
+    ],
+    "degrees": [
+      0,
+      -45,
+      -90
+    ],
+    "adaptation": "Authored inward pose around original right rear edge, opposite original left handle; native frames and timing retained. Not an extracted HGSS track."
+  },
   "containerRepairs": [],
   "normalization": {
     "sourceBounds": [

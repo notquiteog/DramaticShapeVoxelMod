@@ -10,7 +10,7 @@ local geometries={};for state=0,2 do
  for _,p in ipairs(geometries[state])do n=n+#p.indices/3;for _,v in ipairs(p.vertices)do assert(v[1]>=128.25 and v[1]<=207.75 and v[3]>=448.25 and v[3]<=495.75 and v[2]>=3)end end
  assert(n==8,'retain all original source door triangles')
 end
-assert(geometries[0][1].vertices[1][1]~=geometries[2][1].vertices[1][1],'source panel must open')
+local moved=false;for i,a in ipairs(geometries[0][1].vertices)do local b=geometries[2][1].vertices[i];moved=moved or math.abs(a[1]-b[1])+math.abs(a[3]-b[3])>1e-6 end;assert(moved,'source panel must open around its fixed hinge')
 assert(not D.geometry(g,fit,3));g.pair='other';assert(not D.geometry(g,fit,0));g.pair='pewter_outdoor'
 assert(not D.build(g,fit,function()error('no upload with missing image')end));assert(not g.importedPewterDoors)
 local live,released=0,0;S.image=function()return {}end

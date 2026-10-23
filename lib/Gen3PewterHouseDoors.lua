@@ -14,7 +14,7 @@ end
 function M.geometry(g,fit,state)
  if not(g and g.family=='pewter_house'and g.pair=='pewter_outdoor'and g.width==5 and g.depth==3 and not g.stageHidden and fit and fit.width==80 and fit.depth==48 and fit.scale>0)then return nil,'unreviewed Pewter doorway'end
  if state~=0 and state~=1 and state~=2 then return nil,'invalid native door frame'end
- local d=source();local h=d.anchors.doorHinge;local angle=state*math.pi/4;local c,s=math.cos(angle),math.sin(angle);local out={}
+ local d=source();local h=d.anchors.doorHinge;local angle=-state*math.pi/4;local c,s=math.cos(angle),math.sin(angle);local out={}
  for i,p in ipairs(d.doorParts)do
   local vertices={}
   for _,v in ipairs(p.vertices)do

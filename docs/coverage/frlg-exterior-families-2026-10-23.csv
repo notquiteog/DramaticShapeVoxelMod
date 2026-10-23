@@ -51,7 +51,7 @@ firered,silph_co,2,0,0,FR_SAFFRON_CITY|FR_SAFFRON_CITY_CONNECTION,,Matching regi
 firered,vermilion_club,1,0,0,FR_VERMILION_CITY,,Matching regional source selection and complete native adapter pending.
 firered,vermilion_shed,1,0,0,FR_VERMILION_CITY,,Matching regional source selection and complete native adapter pending.
 firered,vermilion_shed_wide,1,0,0,FR_VERMILION_CITY,,Matching regional source selection and complete native adapter pending.
-firered,viridian_flower_house,1,0,0,FR_VIRIDIAN_CITY,,Matching regional source selection and complete native adapter pending.
+firered,viridian_flower_house,1,1,1,FR_VIRIDIAN_CITY,hgss_viridian_flower_house,
 firered,viridian_house,1,1,0,FR_VIRIDIAN_CITY,hgss_viridian_house,
 leafgreen,celadon_department_store,1,0,0,FR_CELADON_CITY,,Matching regional source selection and complete native adapter pending.
 leafgreen,celadon_short_block,1,0,0,FR_CELADON_CITY,,Matching regional source selection and complete native adapter pending.
@@ -105,5 +105,5 @@ leafgreen,silph_co,2,0,0,FR_SAFFRON_CITY|FR_SAFFRON_CITY_CONNECTION,,Matching re
 leafgreen,vermilion_club,1,0,0,FR_VERMILION_CITY,,Matching regional source selection and complete native adapter pending.
 leafgreen,vermilion_shed,1,0,0,FR_VERMILION_CITY,,Matching regional source selection and complete native adapter pending.
 leafgreen,vermilion_shed_wide,1,0,0,FR_VERMILION_CITY,,Matching regional source selection and complete native adapter pending.
-leafgreen,viridian_flower_house,1,0,0,FR_VIRIDIAN_CITY,,Matching regional source selection and complete native adapter pending.
+leafgreen,viridian_flower_house,1,1,1,FR_VIRIDIAN_CITY,hgss_viridian_flower_house,
 leafgreen,viridian_house,1,1,0,FR_VIRIDIAN_CITY,hgss_viridian_house,
