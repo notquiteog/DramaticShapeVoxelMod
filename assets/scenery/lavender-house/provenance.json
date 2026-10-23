@@ -1,0 +1,133 @@
+{
+  "asset": 592838,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592838/",
+  "title": "Lavender Town ordinary house",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "6ed6f6344bc73f602e8ccda34d09e1c98eab0a37fef53644bad3568aebe1f246",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Lavender Town/Lavender Town.dae",
+  "sourceModelSha256": "4894171bc9d730da51e19dda942f98173e0617f0fd432645cba6bdbdfd29f9d5",
+  "geometry": "si_h01-mesh",
+  "doorGeometry": "si_door1-mesh",
+  "doorOffset": [
+    4.1182,
+    -0.29492,
+    9.5752
+  ],
+  "nativeDoorPose": {
+    "hinge": [
+      4.13870781,
+      0.83008,
+      9.56055157
+    ],
+    "degrees": [
+      0,
+      -45,
+      -90
+    ],
+    "adaptation": "Authored inward pose around original right rear edge, opposite original left handle; native timing retained. Not an extracted HGSS track."
+  },
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -31.86133,
+      0.8,
+      -24.08984,
+      29.86133,
+      45.96484,
+      18.67774
+    ],
+    "sourceOrigin": [
+      -1.0,
+      0.8,
+      -2.7060499999999994
+    ],
+    "sourceUnitSpan": 61.72266,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.3464495859381303,
+      0.5,
+      0.7317383923505566,
+      0.3464495859381303
+    ]
+  },
+  "originalBounds": [
+    -31.86133,
+    0.8300781,
+    -24.08984,
+    33.20508,
+    45.96484,
+    26.56445
+  ],
+  "originalTriangles": 117,
+  "processedTriangles": 117,
+  "closure": "Measured rear wall, rear roof fascia, flat soffit and recessed contact cap. Original front, side columns, inset window, flat roof and separate door retained. Source shading excluded; renderer owns lighting.",
+  "textures": {
+    "si_mado.1.png": {
+      "sha256": "bd9aa4a34682c781a13871148ee9bc64b032e0bdfa1d15c2714118adb564f407",
+      "bytes": 157
+    },
+    "si_h01.png": {
+      "sha256": "e0d42241ec2472a3f947115340adc37ae683a89f2083ac9bb0bc4e70fdc3bde5",
+      "bytes": 637
+    },
+    "si_door1.png": {
+      "sha256": "3b31e48779b5368ccdae9c87d5f9a4c9261bdec10099e77ff964b16056a160d5",
+      "bytes": 356
+    }
+  },
+  "parts": [
+    {
+      "name": "si_h01-mesh:light1-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "si_h01-mesh:lambert5_007-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 91
+    },
+    {
+      "name": "si_door1-mesh:si_door1_lm1-material",
+      "role": "source_door",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "authored_rear_wall",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_roof_fascia",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_roof_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 10
+    }
+  ]
+}

@@ -2,9 +2,9 @@
 
 The native audit enumerates **426 maps per edition**, including **76 outdoor
 maps**, **132 detected civic assemblies**, and **54 distinct civic families**.
-It separately records **26 source-eligible assemblies** and **106 unmatched
-assemblies per edition**. Nine families have at least one eligible source adapter;
-45 families still have none. The Gym family is partial:2 of11 assemblies per
+It separately records **28 source-eligible assemblies** and **104 unmatched
+assemblies per edition**. Ten families have at least one eligible source adapter;
+44 families still have none. The Gym family is partial:2 of11 assemblies per
 edition have matching sources. These are
 assembly counts, not percentages of whole-game completion.
 
@@ -16,7 +16,7 @@ outdoor classification. Every detected assembly has its native drawing hash,
 source archive/model/provenance hashes where available, exact coordinates,
 source eligibility and separate rendered acceptance. The inspected batches accept
 the two Pewter houses, Viridian/Pewter Gyms, Viridian flower-house exterior and
-three Pallet buildings per edition (8 placements). Historical acceptance of the other source
+three Pallet buildings and two Lavender ordinary houses per edition (10 placements). Historical acceptance of the other source
 families is deliberately not inferred from an eligibility census.
 
 There are also **6346 unclassified blocked outdoor cells per edition**. This
@@ -123,3 +123,8 @@ fit. An explicit faithful aperture/sign adaptation or better matching source is
 required; the whole source is not blindly placed. The public catalog returned
 HTTP403 during source discovery; existing downloaded regional archives remain
 available, so local regional work can continue.
+
+Lavender ordinary houses at(8,8)/(3,13) now have matching HGSS source and native
+acceptance; see `docs/LAVENDER_HOUSES_2026-10-23.md`. A third native house at(8,13)
+has an unmatched Name Rater header variant omitted by the old civic recipe. It
+remains an explicit discovery gap, not evidence of complete Lavender coverage.

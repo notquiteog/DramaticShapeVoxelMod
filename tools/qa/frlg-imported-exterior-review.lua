@@ -1,16 +1,21 @@
 -- Isolated native source/door/footprint review for new FR/LG regional exteriors.
--- QA_FAMILY=houses|gyms|viridian_flowers; QA_UTIL names the external engine frame-driver helper.
+-- QA_FAMILY=houses|gyms|viridian_flowers|lavender; QA_UTIL names the external engine frame-driver helper.
 return function(game)
- local family=os.getenv('QA_FAMILY')or'gyms';assert(family=='gyms'or family=='houses'or family=='viridian_flowers')
- local gym=family=='gyms';local flowers=family=='viridian_flowers';local fixtures=flowers and{{'FR_VIRIDIAN_CITY',24,15}}or gym and{{'FR_PEWTER_CITY',12,12},{'FR_VIRIDIAN_CITY',33,6}}or{{'FR_PEWTER_CITY',8,28},{'FR_PEWTER_CITY',32,9}}
- local doorX,doorY=gym and 3 or 1,gym and 4 or flowers and 3 or 2
+ local family=os.getenv('QA_FAMILY')or'gyms'
+ local configs={
+  gyms={fixtures={{'FR_PEWTER_CITY',12,12},{'FR_VIRIDIAN_CITY',33,6}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/',right=9},
+  houses={fixtures={{'FR_PEWTER_CITY',8,28},{'FR_PEWTER_CITY',32,9}},doorX=1,doorY=2,stat='pewterHouses',source='^assets/scenery/pewter%-house/'},
+  viridian_flowers={fixtures={{'FR_VIRIDIAN_CITY',24,15}},doorX=1,doorY=3,stat='viridianFlowerHouses',source='^assets/scenery/viridian%-house/'},
+  lavender={fixtures={{'FR_LAVENDER_TOWN',8,8},{'FR_LAVENDER_TOWN',3,13}},doorX=2,doorY=3,stat='lavenderHouses',source='^assets/scenery/lavender%-house/'},
+ }
+ local config=assert(configs[family],'unreviewed source family');local fixtures=config.fixtures;local doorX,doorY=config.doorX,config.doorY
  assert(love.filesystem.getIdentity():match('%-qa$'))
  local U=dofile(assert(os.getenv('QA_UTIL'),'QA_UTIL must name the external engine frame-driver helper'))
  local edition=require('src.core.GameVersion').get();assert(edition=='firered'or edition=='leafgreen')
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
  local C,S=V.require('Gen3Integration'),V.require('Gen3Scene');local Map,P=require('src.core.game3.map'),require('src.core.game3.player')
  local dir=os.getenv('SHOT_DIR');local json=require('src.link.Json');local out={};local missing=os.getenv('QA_MISSING_ASSETS')=='1'
- if missing then local read=V.mod.read;V.mod.read=function(self,path)if path:match(flowers and'^assets/scenery/viridian%-house/'or gym and'^assets/scenery/hgss%-kanto%-gyms/'or'^assets/scenery/pewter%-house/')then return nil end;return read(self,path)end end
+ if missing then local read=V.mod.read;V.mod.read=function(self,path)if path:match(config.source)then return nil end;return read(self,path)end end
  game:_handleBootAction({action='new_game',start={map='FR_PEWTER_CITY',x=10,y=32,facing='up'}})
  V.require('RenderDistance').setting:sync(16);V.require('DayNight').setting:sync('day');V.require('RenderDistance').haze=function()return nil end
  local function settle()
@@ -26,9 +31,9 @@ return function(game)
  for index,q in ipairs(fixtures)do
   local map,cx,cy=q[1],q[2],q[3];C.setLevel(0,game);assert(Map.load(nil,game,map,{x=cx+doorX,y=cy+doorY+2,facing='up'}));game.input:reset();local before=hash(Map.currentDef())
   C.yaw=0;C.pitch=math.rad(8);C.setLevel(3,game);settle()
-  local n=S.performanceSnapshot().scenery[flowers and'viridianFlowerHouses'or gym and'hgssGyms'or'pewterHouses'];assert(missing and n==0 or not missing and n>0,'source/fallback mismatch')
+  local n=S.performanceSnapshot().scenery[config.stat];assert(missing and n==0 or not missing and n>0,'source/fallback mismatch')
   shot(index..'-modern')
-  if os.getenv('QA_QUICK')~='1'then for _,v in ipairs{{'front',cx+doorX,cy+doorY+2,0},{'left',cx-3,cy+2,math.pi/2},{'right',cx+(gym and 9 or 7),cy+2,-math.pi/2},{'rear',cx+doorX,cy-2,math.pi}}do
+  if os.getenv('QA_QUICK')~='1'then for _,v in ipairs{{'front',cx+doorX,cy+doorY+2,0},{'left',cx-3,cy+2,math.pi/2},{'right',cx+(config.right or 7),cy+2,-math.pi/2},{'rear',cx+doorX,cy-2,math.pi}}do
    P.reset(v[2],v[3],'up');C.yaw=v[4];C.setLevel(6,game);settle();shot(index..'-'..v[1])
   end end
   C.yaw=0;C.setLevel(3,game);P.reset(cx+doorX,cy+doorY+1,'up');game.input:reset();settle()
