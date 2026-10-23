@@ -1,0 +1,174 @@
+{
+  "asset": 592881,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592881/",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "969737481ce8e8e55887ffdd612f5ff96b8a19e8430f7433078d24ef444b918e",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Viridian City/Viridian City.dae",
+  "sourceModelSha256": "704ce4c6e39d630cbb2e55036ef3755c1ee482cb7156fd3ca4868bb80fb01433",
+  "geometry": "fs_006-mesh",
+  "doorGeometry": "p_door_020-mesh",
+  "originalDoorOffset": [
+    -9,
+    0.5,
+    13
+  ],
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -32.0,
+      1.95,
+      -29.0,
+      34.0,
+      76.0,
+      21.55664
+    ],
+    "sourceOrigin": [
+      1.0,
+      1.95,
+      -3.721679999999999
+    ],
+    "sourceUnitSpan": 66.0,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.3830048484848485,
+      0.5,
+      1.1219696969696968,
+      0.3830048484848485
+    ]
+  },
+  "originalBounds": [
+    -34.0,
+    1.5,
+    -29.0,
+    58.13183,
+    76.0,
+    22.0
+  ],
+  "originalTriangles": 154,
+  "processedTriangles": 190,
+  "vertexLightingRemoved": [
+    {
+      "source": "fs_006-mesh-colors-colors",
+      "neutralGrayVertices": 18,
+      "originalRGBA": [
+        0.7098039,
+        0.7098039,
+        0.7098039,
+        1
+      ],
+      "processedRGBA": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "reason": "Six fascia triangles carry baked directional neutral-gray light; renderer owns live lighting."
+    }
+  ],
+  "authoredRearRoofUV": {
+    "u": 0.3125,
+    "vBottom": 0.234375,
+    "vTop": 0.015625,
+    "reason": "Continue the original front fascia blue/orange bands around the measured rear cut, without changing any source UV."
+  },
+  "nativeAdaptation": {
+    "body": "Reflect unlettered symmetric structural body about sourceX1 to exchange doorway/window bays; reverse triangle order to retain outward orientation. Roof and wall proportions retained.",
+    "window": "Translate original2 window faces−26X without reflecting image/UV orientation.",
+    "door": "Translate complete original panel+20X without reflecting original handle/UVs.",
+    "sign": "Translate original complete sign−56X,+5Z; source glyph/UVs/height/shape unchanged. It remains freestanding, forward of the wall and inside native blocked bounds."
+  },
+  "closure": "Measured rear siding/roof cuts/soffit, recessed body/pole undersides,1-source-unit neck continuing original pole to board bottom; source roof/window/sign/door retained, source shadow overlays excluded.",
+  "textures": {
+    "gs_fs_a.png": {
+      "sha256": "ad6d76c07cec380039880a2fb666611502ec5a0fb25d06e3c815f884bf8fc030",
+      "bytes": 906
+    },
+    "pc_door.png": {
+      "sha256": "5b5a4ba064cd7530257302e4e2eeb1c3ffc97204ba97e1ea90937891b4f4ddf4",
+      "bytes": 138
+    }
+  },
+  "parts": [
+    {
+      "name": "fs_006-mesh:fs_a__011-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 22
+    },
+    {
+      "name": "fs_006-mesh:fs_ax_013-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "fs_006-mesh:fs_a_013-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 94
+    },
+    {
+      "name": "fs_006-mesh:fs_ay_013-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 12
+    },
+    {
+      "name": "p_door_020-mesh:pc_door_020-material",
+      "role": "source_door",
+      "opacity": 0.8709677,
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_wall",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_rear_roof_returns",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_roof_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 16
+    },
+    {
+      "name": "authored_sign_foot",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 10
+    },
+    {
+      "name": "authored_sign_neck",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 8
+    }
+  ]
+}

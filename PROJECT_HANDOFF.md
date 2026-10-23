@@ -1,3 +1,19 @@
+# FR/LG shared HGSS Mart source batch — 2026-10-23
+
+Standalone dispatcher adds `hgssMarts`; production Scene integration remains
+parent-owned. Authentic HGSS structural/window/door/sign adaptation fills the
+native right-door Mart footprint, with closed rear/soffit/foundation and explicit
+contact-ring inset. Exact native hashes and all24 placements pass on official
+v0.3.95 Linux/LÖVE11.5, with22 real entry/return pairs; Saffron connection has
+no warp. Disposable Four Island/Viridian story flags are documented. LG missing
+PNG fallback passes all12. Source/native front/side/rear/door captures inspected;
+focused LuaJIT tests and deterministic source conversion pass. Source eligibility
+is12 Marts per edition; only10 are rendered accepted, because both Saffron
+placements need parent-owned native yellow paving. Canonical per-edition census:
+426 maps,133 assemblies,73 eligible,50 accepted,60 unmatched,6324 unclassified
+blocked cells. No whole-game or production-package acceptance is claimed.
+See docs/HGSS_MARTS_2026-10-23.md and canonical JSONL for exact evidence/gaps.
+
 # Depth/fence/foliage release1.57.7 — 2026-10-23
 
 Explicit building contact-ring recess prevents coplanar ground closures while

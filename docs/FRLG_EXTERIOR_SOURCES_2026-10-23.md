@@ -2,9 +2,9 @@
 
 The native audit enumerates **426 maps per edition**, including **76 outdoor
 maps**, **133 detected civic assemblies**, and **55 distinct civic families**.
-It separately records **61 source-eligible assemblies** and **72 unmatched
-assemblies per edition**. Fifteen families have at least one eligible source adapter;
-40 families still have none. The Gym family is partial:7 of11 assemblies per
+It separately records **73 source-eligible assemblies** and **60 unmatched
+assemblies per edition**. Sixteen families have at least one eligible source adapter;
+39 families still have none. The Gym family is partial:7 of11 assemblies per
 edition have matching sources. These are
 assembly counts, not percentages of whole-game completion.
 
@@ -15,11 +15,11 @@ metatile/collision/elevation SHA256, pair, dimensions, map type and explicit
 outdoor classification. Every detected assembly has its native drawing hash,
 source archive/model/provenance hashes where available, exact coordinates,
 source eligibility and separate rendered acceptance. The inspected batches accept
-40 placements per edition: two Pewter houses, Viridian/Pewter Gyms, Viridian
+50 placements per edition: two Pewter houses, Viridian/Pewter Gyms, Viridian
 flower-house exterior, three Pallet buildings, two Lavender ordinary houses and
 the Name Rater tent, plus22 ordinary/tall Saffron blocks across the actual city
 and connection maps, the Saffron Gym plus its closed connection projection, and five plain Celadon
-balcony blocks. Historical acceptance of other source families is not
+balcony blocks, plus ten Marts. Historical acceptance of other source families is not
 inferred from an eligibility census.
 
 There are also **6324 unclassified blocked outdoor cells per edition**. This
@@ -117,15 +117,13 @@ The table lists every unmatched family and map. The regional Viridian and Pewter
 see `HGSS_KANTO_GYMS_2026-10-23.md`. The native flower-house variant is recorded
 in `VIRIDIAN_FLOWER_HOUSE_2026-10-23.md`. Other Gym locations remain unmatched.
 
-The twelve Mart drawings per edition include eleven real entrances and one
-Saffron connection projection whose original door permission is blocked. The
-local newer HGSS Viridian Mart has a left entrance and tall freestanding east
-sign. Uniformly aligning it to FR/LG's right native entrance constrains its
-physical body to about22px inside the64px native width. That is an inadequate
-fit. An explicit faithful aperture/sign adaptation or better matching source is
-required; the whole source is not blindly placed. The public catalog returned
-HTTP403 during source discovery; existing downloaded regional archives remain
-available, so local regional work can continue.
+The twelve detected Mart drawings now have a guarded source adapter with an
+explicit native portal/sign adaptation, preserving original dimensions, UVs and
+native footprints. All11 real entrances/returns per edition pass; ten drawings
+per edition are accepted. The two Saffron copies retain a shared grass-versus-
+street donor gap. See `HGSS_MARTS_2026-10-23.md`. Regional source downloads still
+need normal browser verification where Cloudflare blocks access; downloaded
+local sources remain usable.
 
 Lavender ordinary houses at(8,8)/(3,13) now have matching HGSS source and native
 acceptance; see `docs/LAVENDER_HOUSES_2026-10-23.md`. The distinct Name Rater header

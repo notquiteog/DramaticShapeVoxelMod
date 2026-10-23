@@ -3,6 +3,7 @@
 local V=...
 local M={}
 local specs={
+ {kind='hgssMarts',building='Gen3ImportedHGSSMarts',doors='Gen3HGSSMartDoors',marker='importedHGSSMart'},
  {kind='celadonBlocks',building='Gen3ImportedCeladonBlocks',marker='importedCeladonBlock'},
  {kind='saffronDojo',building='Gen3ImportedSaffronDojo',doors='Gen3SaffronDojoEntrance',marker='importedSaffronDojo'},
  {kind='saffronBlocks',building='Gen3ImportedSaffronBlocks',marker='importedSaffronBlock'},

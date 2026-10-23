@@ -3,6 +3,7 @@
 import argparse,collections,csv,hashlib,json
 from pathlib import Path
 SOURCES={
+ 'hgss_kanto_mart':'assets/scenery/hgss-mart/provenance.json',
  'hgss_celadon_balcony_block':'assets/scenery/celadon-blocks/provenance.json',
  'hgss_saffron_dojo':'assets/scenery/saffron-dojo/provenance.json',
  'hgss_saffron_gym':'assets/scenery/hgss-kanto-gyms/hgss_saffron_gym/provenance.json',
@@ -33,10 +34,10 @@ def summarize(paths,output,accepted):
    for g in r['civics']:
     model=g['modernEligible'];accepted_key=(r['edition'],r['map'],g['x'],g['y'])
     q={**g,'source':sources[model]if model else None,'renderedAccepted':accepted_key in accepted}
-    q['gap']=None if model else('HGSS Mart left entrance and tall east sign cannot substantially fill native64px body while preserving native right entrance; adapter pending.'if g['family']=='mart'else'Matching regional source selection and complete native adapter pending.')
+    q['gap']=None if model else('Matching complete native Mart location/drawing/permission adapter pending.'if g['family']=='mart'else'Matching regional source selection and complete native adapter pending.')
     candidate=next((c for c in candidates if c['map']==r['map']and c['x']==g['x']and c['y']==g['y']),None)
     if candidate and not model:q['sourceCandidate']=candidate;q['gap']=candidate['gap']
-    q['renderedGap']=None if not model or q['renderedAccepted']else('Native building/warp review passed; shared native-ground donor assessment pending.'if model in('hgss_cerulean_gym','hgss_saffron_dojo')else'Native rendered review not recorded.')
+    q['renderedGap']=None if not model or q['renderedAccepted']else('Native building/warp review passed; shared native-ground donor assessment pending.'if model in('hgss_cerulean_gym','hgss_saffron_dojo')or model=='hgss_kanto_mart'and r['map']in('FR_SAFFRON_CITY','FR_SAFFRON_CITY_CONNECTION')else'Native rendered review not recorded.')
     civics.append(q);families[(r['edition'],g['family'])].append((r['map'],q))
    row={k:r[k]for k in['edition','map','mapType','outdoor','pair','width','height','supported','nativeHash','unclassifiedBlockedCells']}
    row.update(scope='exterior_buildings_only',runtime='v0.3.95',inventoryOnly=True,assemblies=civics,modernEligible=sum(bool(g['modernEligible'])for g in civics),renderedAccepted=sum(g['renderedAccepted']for g in civics),unmatchedAssemblies=sum(not g['modernEligible']for g in civics))
@@ -56,5 +57,8 @@ if __name__=='__main__':
  accepted=set()
  for path in a.accepted:
   for r in json.loads(path.read_text()):
-   assert not r.get('missingAssets')and r.get('renderedVerified')is not False and(r.get('returned')or r.get('nonEnterable')and r.get('renderedVerified'));accepted.add((r['edition'],r['map'],r['x'],r['y']))
+   assert not r.get('missingAssets'),'fallback cannot be rendered acceptance'
+   if r.get('renderedVerified')is False:continue
+   assert r.get('returned')or r.get('nonEnterable')and r.get('renderedVerified')
+   accepted.add((r['edition'],r['map'],r['x'],r['y']))
  summarize(a.ledgers,a.output,accepted)
