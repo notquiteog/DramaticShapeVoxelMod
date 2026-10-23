@@ -33,7 +33,7 @@ collision, models, lighting strength, resolution settings or gameplay changed.
 41 focused suites passed after integration, plus the workers' exact shadow,
 water-uniform and terrain tests. The terrain oracle checks19,200 emitted
 vertex/UV values, and a5929-cell tree fixture yields186times with identical
-placements. All1396 repository Lua files compiled under LuaJIT.
+placements. All1398 repository Lua files compiled under LuaJIT.
 
 A native Emerald Route104 capture compared culling enabled/disabled in four
 camera directions at1280x720: all RGBA bytes matched each time. Inspected the
@@ -72,4 +72,13 @@ units. Do not hide stalls with stale geometry, lower-quality shadows or missing
 objects. No Android/iOS hardware performance or full-world visual certification.
 XD readiness and unrelated feature parity are not certified by this batch.
 
-Final package checks are recorded below after packaging.
+## Final package verification
+
+The installable1.57.8 package passed load/update/render with all seven mods in
+Red, Blue, Yellow, Gold, Silver, Crystal, FireRed, LeafGreen, Ruby, Sapphire and
+Emerald. All593 packaged production Lua files compile. Native forest-to-lab and
+first-person checks also passed in all six Gen1/2 editions at1280x720; inspected
+Gold's rendered lab view. These are bounded rendering checks, not comprehensive
+playthroughs or FPS certification. Processes exited normally and user saves were
+untouched. Only documentation changed after those package checks; final packaged
+production bytes were compared against the tested archive before publication.
