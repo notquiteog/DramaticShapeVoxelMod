@@ -1,3 +1,15 @@
+# Rendering optimization1.57.8 — 2026-10-23
+
+Current batch shares live GPU prototypes, culls only proven offscreen Gen3 main
+geometry/water, retains full shadow coverage, reduces shared shadow/effect/water
+work, slices tree/elevation preparation and preserves exact terrain/light output.
+See docs/RENDER_OPTIMIZATION_2026-10-23.md for measurements and remaining limits.
+All41 focused integration suites pass; all1396 Lua files compile. Native four-view
+culling equivalence and five running connections pass on engine0.3.95. Warm battle
+frames remain below6ms in the fixture; cold FRLG entries still reach166–184ms.
+This is NOT full165FPS completion or physical mobile certification. Model coverage
+remains with the other owner. Final package verification follows below.
+
 # Streaming/parity release1.57.7 — 2026-10-23
 
 Keep model coverage with the separate owner. Shared tree anchor normalization
