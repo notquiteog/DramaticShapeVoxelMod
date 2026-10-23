@@ -28,8 +28,12 @@ love={graphics={getSupported=function()return {instancing=true}end,
   if failDraw and bound.usage=='dynamic'then error('dynamic submission failed')end
   draws[#draws+1]={rows=copy(bound.rows),count=count}
  end}}
+local plain=assert(M.new(mesh,{{0,0,0},{10,0,0}}))
+assert(plain._positions==nil,'ordinary instances paid visibility snapshot allocation')
+assert(M.visible(plain,C.prepare(Mat.identity()),{-.1,-.1,-.1,.1,.1,.1})==plain)
+plain:release()
 local positions={{0,0,0},{10,0,0},{-.75,0,0},{-10,0,0}}
-local b=assert(M.new(mesh,positions));positions[1][1]=999 -- ownership snapshot
+local b=assert(M.new(mesh,positions,true));positions[1][1]=999 -- ownership snapshot
 local bounds={-.1,-.1,-.1,.1,.1,.1}
 local p=C.prepare(Mat.identity())
 local view=M.visible(b,p,bounds)
@@ -54,7 +58,7 @@ local empty=M.visible(b,C.prepare(shifted),bounds);assert(empty==view and empty.
 local nd=#draws;M.draw(empty,shader);assert(#draws==nd)
 M.visible(b,p,bounds);assert(view.count==2)
 -- A second base sharing this prototype owns independent placement buffers.
-local other=assert(M.new(mesh,{{0,0,0},{20,0,0}}))
+local other=assert(M.new(mesh,{{0,0,0},{20,0,0}},true))
 local otherView=M.visible(other,p,bounds)
 M.draw(otherView,shader);M.draw(b,shader);M.draw(view,shader)
 assert(draws[#draws].rows[2][1]==-.75)
@@ -62,7 +66,7 @@ other:release();assert(bound==view.offsets,'releasing another scene detached thi
 b:release();assert(not bound)
 
 for _,failure in ipairs({'allocation','upload','attribute','draw'})do
- local base=assert(M.new(mesh,{{0,0,0},{10,0,0}}))
+ local base=assert(M.new(mesh,{{0,0,0},{10,0,0}},true))
  failNew=failure=='allocation';failUpload=failure=='upload';failDraw=failure=='draw'
  failAttach=failure=='attribute'
  local result=M.visible(base,p,bounds)
@@ -73,7 +77,7 @@ for _,failure in ipairs({'allocation','upload','attribute','draw'})do
  M.draw(base,shader);assert(draws[#draws].count==2 and uniform==0)
  base:release()
 end
-local base=assert(M.new(mesh,{{0,0,0},{10,0,0}}))
+local base=assert(M.new(mesh,{{0,0,0},{10,0,0}},true))
 local liveView=M.visible(base,p,bounds);M.draw(liveView,shader)
 shifted[4]=-10;failUpload=true
 assert(M.visible(base,C.prepare(shifted),bounds)==base,'failed update kept stale visible subset')
