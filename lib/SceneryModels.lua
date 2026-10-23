@@ -116,6 +116,8 @@ end
 -- anchor name plus targetX/targetZ, and fail if it would cross the bounds.
 function M.fit(id,opts)
  local d=definitions[id];if not d then return nil,'unknown scenery model'end;opts=opts or{}
+ local inset=opts.groundInset or 0
+ if not finite(inset)or inset<0 or inset>.25 then return nil,'invalid ground contact inset'end
  local w,z=opts.width,opts.depth;local pad=opts.padding==nil and .25 or opts.padding;local r=opts.rotation or 0
  if not(finite(w)and finite(z)and finite(pad))or w<=0 or z<=0 or w>4096 or z>4096 or pad<0 or w<=2*pad or z<=2*pad then return nil,'invalid blocked scenery rectangle'end
  if not finite(r)or r%1~=0 then return nil,'scenery rotation must be a quarter turn'end;r=r%4
@@ -137,18 +139,21 @@ function M.fit(id,opts)
  end
  if a*scale+tx<pad-1e-6 or c*scale+tx>w-pad+1e-6 or b*scale+tz<pad-1e-6 or e*scale+tz>z-pad+1e-6 then return nil,'authored anchor exceeds blocked footprint'end
  local anchors={};for name,p in pairs(d.anchors)do local x,y=rotate(p[1],p[3],r);anchors[name]={x*scale+tx,p[2]*scale,y*scale+tz}end
- return{scale=scale,rotation=r,x=tx,z=tz,width=w,depth=z,anchors=anchors,bounds={a*scale+tx,0,b*scale+tz,c*scale+tx,d.bounds[5]*scale,e*scale+tz}}
+ return{groundInset=inset,scale=scale,rotation=r,x=tx,z=tz,width=w,depth=z,anchors=anchors,bounds={a*scale+tx,-inset,b*scale+tz,c*scale+tx,d.bounds[5]*scale,e*scale+tz}}
 end
+-- A building adapter may recess its contact ring beneath native ground. Only
+-- source Y0 vertices move, consistently across parts; portals, upper geometry,
+-- UVs and shared third-party definitions retain their original positions.
 -- Immutable, shared CPU prototypes; caller never mutates these arrays.
 function M.vertices(id,opts)
  local fit,err=M.fit(id,opts);if not fit then return nil,err end
- local k=table.concat({id,fit.rotation,fit.scale,fit.x,fit.z},':');if variants[k]then return variants[k],fit end
+ local k=table.concat({id,fit.rotation,fit.scale,fit.x,fit.z,fit.groundInset},':');if variants[k]then return variants[k],fit end
  local d=definitions[id];local parts={}
  for i,p in ipairs(d.parts)do
   local q={vertices={},indices=p.indices,texture=p.texture,wrapS=p.wrapS,wrapT=p.wrapT,opacity=p.opacity,role=p.role,alphaMode=p.alphaMode,name=p.name,material=p.material,diffuse=p.diffuse,lightingOnly=p.lightingOnly,vertexColorRole=p.vertexColorRole}
   q.format=p.colors and M.COLOR_FORMAT or nil
   for j,v in ipairs(p.vertices)do
-   local x,z=rotate(v[1],v[3],fit.rotation);local row={x*fit.scale+fit.x,v[2]*fit.scale,z*fit.scale+fit.z,v[4],v[5],v[6]}
+   local x,z=rotate(v[1],v[3],fit.rotation);local row={x*fit.scale+fit.x,(fit.groundInset>0 and math.abs(v[2])<1e-7 and -fit.groundInset or v[2]*fit.scale),z*fit.scale+fit.z,v[4],v[5],v[6]}
    if p.colors then for _,n in ipairs(p.colors[j])do row[#row+1]=n end end
    q.vertices[j]=row
   end
@@ -217,7 +222,7 @@ function M.buildBatches(placements,newMesh,options)
  for _,p in ipairs(placements)do
   if type(p)~='table'or not(finite(p.x)and finite(p.y)and finite(p.z))then return nil,'invalid scenery placement'end
   local parts,fit=M.vertices(p.model,p.fit);if not parts then return nil,fit end
-  local key=table.concat({p.model,fit.rotation,fit.scale,fit.x,fit.z},':')
+  local key=table.concat({p.model,fit.rotation,fit.scale,fit.x,fit.z,fit.groundInset},':')
   if not groups[key]then
    workBytes=workBytes+parts.bytes;if workBytes>M.limits.cachedBytes then return nil,'scenery batch byte budget exceeded'end
    workVertices=workVertices+parts.count;if workVertices>M.limits.cachedVertices then return nil,'scenery batch prototype budget exceeded'end

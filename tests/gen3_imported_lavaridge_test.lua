@@ -26,7 +26,7 @@ for _,ed in ipairs{'RU','SA','EM'}do for _,west in ipairs{true,false}do
   for i,part in ipairs(parts)do for j,v in ipairs(part.vertices)do
    local old=source.parts[i].vertices[j]
    assert(v[1]>=.25-1e-6 and v[1]<=63.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=47.75+1e-6,'walkable cell overlap')
-   assert(math.abs((v[1]-fit.x)/fit.scale-old[1])<1e-6 and math.abs(v[2]/fit.scale-old[2])<1e-6)
+   assert(math.abs((v[1]-fit.x)/fit.scale-old[1])<1e-6 and math.abs(v[2]-(math.abs(old[2])<1e-7 and -.05 or old[2]*fit.scale))<1e-6)
    assert(math.abs((v[3]-fit.z)/fit.scale-L.depthShift(old[3],source.nativeDepthBays))<1e-6)
    assert(v[4]==old[4]and v[5]==old[5]and v[6]==old[6]);assert(v[7]==1 and v[8]==1 and v[9]==1 and v[10]==source.parts[i].colors[j][4])
   end end

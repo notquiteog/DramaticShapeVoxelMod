@@ -1,846 +1,4 @@
 {
-  "ruby": {
-    "status": "PASS exact native source-ground preservation",
-    "ruralUnderEntries": [
-      8194,
-      8195,
-      8195,
-      8194
-    ],
-    "ruralCleanDonor": 1,
-    "rustboro": [
-      {
-        "mid": 702,
-        "donors": [
-          [
-            699,
-            0
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            699,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
-        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
-      },
-      {
-        "mid": 703,
-        "donors": [
-          [
-            699,
-            0
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            699,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
-        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
-      },
-      {
-        "mid": 717,
-        "donors": [
-          [
-            699,
-            0
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            699,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
-        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
-      },
-      {
-        "mid": 725,
-        "donors": [
-          [
-            699,
-            0
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            699,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
-        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
-      },
-      {
-        "mid": 745,
-        "donors": [
-          [
-            699,
-            0
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            699,
-            1
-          ]
-        ],
-        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
-        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
-      },
-      {
-        "mid": 748,
-        "donors": [
-          [
-            707,
-            0
-          ],
-          [
-            700,
-            3
-          ],
-          [
-            701,
-            2
-          ],
-          [
-            700,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "e95fe64977a73f7cdedcfc5166215627b8a76bde58606dd6fc4b4f6b9068f4ca",
-        "reconstructedRgbaSha256": "e95fe64977a73f7cdedcfc5166215627b8a76bde58606dd6fc4b4f6b9068f4ca"
-      },
-      {
-        "mid": 764,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            753,
-            2
-          ],
-          [
-            752,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "b639ad75964079909152214ccabe3926f6067edc4ae3e3dbc324102bf68d44de",
-        "reconstructedRgbaSha256": "b639ad75964079909152214ccabe3926f6067edc4ae3e3dbc324102bf68d44de"
-      },
-      {
-        "mid": 789,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            1
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
-        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
-      },
-      {
-        "mid": 792,
-        "donors": [
-          [
-            736,
-            0
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            736,
-            2
-          ],
-          [
-            699,
-            0
-          ]
-        ],
-        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
-        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
-      },
-      {
-        "mid": 793,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            1
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
-        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
-      },
-      {
-        "mid": 794,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            1
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
-        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
-      },
-      {
-        "mid": 795,
-        "donors": [
-          [
-            1,
-            0
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            1,
-            0
-          ]
-        ],
-        "sourceUnderRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414",
-        "reconstructedRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414"
-      },
-      {
-        "mid": 797,
-        "donors": [
-          [
-            736,
-            0
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            736,
-            2
-          ],
-          [
-            699,
-            0
-          ]
-        ],
-        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
-        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
-      },
-      {
-        "mid": 800,
-        "donors": [
-          [
-            736,
-            0
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            736,
-            2
-          ],
-          [
-            752,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "1df5f21fe357b904b9b6c5be4471f99f33da59fd7150d8181e72f218fd82a8d6",
-        "reconstructedRgbaSha256": "1df5f21fe357b904b9b6c5be4471f99f33da59fd7150d8181e72f218fd82a8d6"
-      },
-      {
-        "mid": 801,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            1
-          ],
-          [
-            753,
-            2
-          ],
-          [
-            738,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb",
-        "reconstructedRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb"
-      },
-      {
-        "mid": 812,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            1
-          ],
-          [
-            753,
-            2
-          ],
-          [
-            738,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb",
-        "reconstructedRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb"
-      },
-      {
-        "mid": 813,
-        "donors": [
-          [
-            736,
-            0
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            736,
-            2
-          ],
-          [
-            699,
-            0
-          ]
-        ],
-        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
-        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
-      }
-    ],
-    "maps": [
-      {
-        "map": "RustboroCity",
-        "fenceCells": 145,
-        "nativeGridSha256": "a518ddb4493d2f3c1bc96962c27611d2d7f1bfb7b12faeaa9014b42a76099dde"
-      },
-      {
-        "map": "Route104",
-        "fenceCells": 19,
-        "nativeGridSha256": "4dcbb4276d1010228e45ebe2dd1e3c9c2bd5843ba127ae108968c646d41f4329"
-      },
-      {
-        "map": "PetalburgWoods",
-        "fenceCells": 12,
-        "nativeGridSha256": "053fc2e64d7065edaf0bfaa4b7504fef15ad808dc458f8b937cb3a2604495442"
-      }
-    ],
-    "totalReviewedFenceCells": 176
-  },
-  "sapphire": {
-    "status": "PASS exact native source-ground preservation",
-    "ruralUnderEntries": [
-      8194,
-      8195,
-      8195,
-      8194
-    ],
-    "ruralCleanDonor": 1,
-    "rustboro": [
-      {
-        "mid": 702,
-        "donors": [
-          [
-            699,
-            0
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            699,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
-        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
-      },
-      {
-        "mid": 703,
-        "donors": [
-          [
-            699,
-            0
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            699,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
-        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
-      },
-      {
-        "mid": 717,
-        "donors": [
-          [
-            699,
-            0
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            699,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
-        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
-      },
-      {
-        "mid": 725,
-        "donors": [
-          [
-            699,
-            0
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            699,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
-        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
-      },
-      {
-        "mid": 745,
-        "donors": [
-          [
-            699,
-            0
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            699,
-            1
-          ]
-        ],
-        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
-        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
-      },
-      {
-        "mid": 748,
-        "donors": [
-          [
-            707,
-            0
-          ],
-          [
-            700,
-            3
-          ],
-          [
-            701,
-            2
-          ],
-          [
-            700,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "e95fe64977a73f7cdedcfc5166215627b8a76bde58606dd6fc4b4f6b9068f4ca",
-        "reconstructedRgbaSha256": "e95fe64977a73f7cdedcfc5166215627b8a76bde58606dd6fc4b4f6b9068f4ca"
-      },
-      {
-        "mid": 764,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            753,
-            2
-          ],
-          [
-            752,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "b639ad75964079909152214ccabe3926f6067edc4ae3e3dbc324102bf68d44de",
-        "reconstructedRgbaSha256": "b639ad75964079909152214ccabe3926f6067edc4ae3e3dbc324102bf68d44de"
-      },
-      {
-        "mid": 789,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            1
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
-        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
-      },
-      {
-        "mid": 792,
-        "donors": [
-          [
-            736,
-            0
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            736,
-            2
-          ],
-          [
-            699,
-            0
-          ]
-        ],
-        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
-        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
-      },
-      {
-        "mid": 793,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            1
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
-        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
-      },
-      {
-        "mid": 794,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            1
-          ],
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
-        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
-      },
-      {
-        "mid": 795,
-        "donors": [
-          [
-            1,
-            0
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            1,
-            1
-          ],
-          [
-            1,
-            0
-          ]
-        ],
-        "sourceUnderRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414",
-        "reconstructedRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414"
-      },
-      {
-        "mid": 797,
-        "donors": [
-          [
-            736,
-            0
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            736,
-            2
-          ],
-          [
-            699,
-            0
-          ]
-        ],
-        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
-        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
-      },
-      {
-        "mid": 800,
-        "donors": [
-          [
-            736,
-            0
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            736,
-            2
-          ],
-          [
-            752,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "1df5f21fe357b904b9b6c5be4471f99f33da59fd7150d8181e72f218fd82a8d6",
-        "reconstructedRgbaSha256": "1df5f21fe357b904b9b6c5be4471f99f33da59fd7150d8181e72f218fd82a8d6"
-      },
-      {
-        "mid": 801,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            1
-          ],
-          [
-            753,
-            2
-          ],
-          [
-            738,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb",
-        "reconstructedRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb"
-      },
-      {
-        "mid": 812,
-        "donors": [
-          [
-            699,
-            1
-          ],
-          [
-            738,
-            1
-          ],
-          [
-            753,
-            2
-          ],
-          [
-            738,
-            3
-          ]
-        ],
-        "sourceUnderRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb",
-        "reconstructedRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb"
-      },
-      {
-        "mid": 813,
-        "donors": [
-          [
-            736,
-            0
-          ],
-          [
-            699,
-            2
-          ],
-          [
-            736,
-            2
-          ],
-          [
-            699,
-            0
-          ]
-        ],
-        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
-        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
-      }
-    ],
-    "maps": [
-      {
-        "map": "RustboroCity",
-        "fenceCells": 145,
-        "nativeGridSha256": "a518ddb4493d2f3c1bc96962c27611d2d7f1bfb7b12faeaa9014b42a76099dde"
-      },
-      {
-        "map": "Route104",
-        "fenceCells": 19,
-        "nativeGridSha256": "4dcbb4276d1010228e45ebe2dd1e3c9c2bd5843ba127ae108968c646d41f4329"
-      },
-      {
-        "map": "PetalburgWoods",
-        "fenceCells": 12,
-        "nativeGridSha256": "053fc2e64d7065edaf0bfaa4b7504fef15ad808dc458f8b937cb3a2604495442"
-      }
-    ],
-    "totalReviewedFenceCells": 176
-  },
   "emerald": {
     "status": "PASS exact native source-ground preservation",
     "ruralUnderEntries": [
@@ -851,6 +9,29 @@
     ],
     "ruralCleanDonor": 1,
     "rustboro": [
+      {
+        "mid": 695,
+        "donors": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "a008c589f163dfb60f97c880cce3f945b62174ba3bd09605237b1e314bb3ebc7",
+        "reconstructedRgbaSha256": "a008c589f163dfb60f97c880cce3f945b62174ba3bd09605237b1e314bb3ebc7"
+      },
       {
         "mid": 702,
         "donors": [
@@ -1243,10 +424,11 @@
         "reconstructedRgbaSha256": "04b57e80716d8f4b66fc74786b792f58a07059ce6a4d34c14ade7f8fc8566ce1"
       }
     ],
+    "borderPlantMasks": "originalCC/CD opaque pixels retained exactly",
     "maps": [
       {
         "map": "RustboroCity",
-        "fenceCells": 146,
+        "fenceCells": 165,
         "nativeGridSha256": "5d1838e9e5c8f8a3bd519b0f7adaf1f01ef556deb9f8d5b46ec5996b26d51c4d"
       },
       {
@@ -1260,6 +442,896 @@
         "nativeGridSha256": "053fc2e64d7065edaf0bfaa4b7504fef15ad808dc458f8b937cb3a2604495442"
       }
     ],
-    "totalReviewedFenceCells": 177
+    "totalReviewedFenceCells": 196
+  },
+  "ruby": {
+    "status": "PASS exact native source-ground preservation",
+    "ruralUnderEntries": [
+      8194,
+      8195,
+      8195,
+      8194
+    ],
+    "ruralCleanDonor": 1,
+    "rustboro": [
+      {
+        "mid": 695,
+        "donors": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414",
+        "reconstructedRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414"
+      },
+      {
+        "mid": 702,
+        "donors": [
+          [
+            699,
+            0
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            699,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
+        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
+      },
+      {
+        "mid": 703,
+        "donors": [
+          [
+            699,
+            0
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            699,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
+        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
+      },
+      {
+        "mid": 717,
+        "donors": [
+          [
+            699,
+            0
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            699,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
+        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
+      },
+      {
+        "mid": 725,
+        "donors": [
+          [
+            699,
+            0
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            699,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
+        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
+      },
+      {
+        "mid": 745,
+        "donors": [
+          [
+            699,
+            0
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            699,
+            1
+          ]
+        ],
+        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
+        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
+      },
+      {
+        "mid": 748,
+        "donors": [
+          [
+            707,
+            0
+          ],
+          [
+            700,
+            3
+          ],
+          [
+            701,
+            2
+          ],
+          [
+            700,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "e95fe64977a73f7cdedcfc5166215627b8a76bde58606dd6fc4b4f6b9068f4ca",
+        "reconstructedRgbaSha256": "e95fe64977a73f7cdedcfc5166215627b8a76bde58606dd6fc4b4f6b9068f4ca"
+      },
+      {
+        "mid": 764,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            753,
+            2
+          ],
+          [
+            752,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "b639ad75964079909152214ccabe3926f6067edc4ae3e3dbc324102bf68d44de",
+        "reconstructedRgbaSha256": "b639ad75964079909152214ccabe3926f6067edc4ae3e3dbc324102bf68d44de"
+      },
+      {
+        "mid": 789,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            1
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
+        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
+      },
+      {
+        "mid": 792,
+        "donors": [
+          [
+            736,
+            0
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            736,
+            2
+          ],
+          [
+            699,
+            0
+          ]
+        ],
+        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
+        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
+      },
+      {
+        "mid": 793,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            1
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
+        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
+      },
+      {
+        "mid": 794,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            1
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
+        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
+      },
+      {
+        "mid": 795,
+        "donors": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "sourceUnderRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414",
+        "reconstructedRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414"
+      },
+      {
+        "mid": 797,
+        "donors": [
+          [
+            736,
+            0
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            736,
+            2
+          ],
+          [
+            699,
+            0
+          ]
+        ],
+        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
+        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
+      },
+      {
+        "mid": 800,
+        "donors": [
+          [
+            736,
+            0
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            736,
+            2
+          ],
+          [
+            752,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "1df5f21fe357b904b9b6c5be4471f99f33da59fd7150d8181e72f218fd82a8d6",
+        "reconstructedRgbaSha256": "1df5f21fe357b904b9b6c5be4471f99f33da59fd7150d8181e72f218fd82a8d6"
+      },
+      {
+        "mid": 801,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            1
+          ],
+          [
+            753,
+            2
+          ],
+          [
+            738,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb",
+        "reconstructedRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb"
+      },
+      {
+        "mid": 812,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            1
+          ],
+          [
+            753,
+            2
+          ],
+          [
+            738,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb",
+        "reconstructedRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb"
+      },
+      {
+        "mid": 813,
+        "donors": [
+          [
+            736,
+            0
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            736,
+            2
+          ],
+          [
+            699,
+            0
+          ]
+        ],
+        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
+        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
+      }
+    ],
+    "borderPlantMasks": "originalCC/CD opaque pixels retained exactly",
+    "maps": [
+      {
+        "map": "RustboroCity",
+        "fenceCells": 164,
+        "nativeGridSha256": "a518ddb4493d2f3c1bc96962c27611d2d7f1bfb7b12faeaa9014b42a76099dde"
+      },
+      {
+        "map": "Route104",
+        "fenceCells": 19,
+        "nativeGridSha256": "4dcbb4276d1010228e45ebe2dd1e3c9c2bd5843ba127ae108968c646d41f4329"
+      },
+      {
+        "map": "PetalburgWoods",
+        "fenceCells": 12,
+        "nativeGridSha256": "053fc2e64d7065edaf0bfaa4b7504fef15ad808dc458f8b937cb3a2604495442"
+      }
+    ],
+    "totalReviewedFenceCells": 195
+  },
+  "sapphire": {
+    "status": "PASS exact native source-ground preservation",
+    "ruralUnderEntries": [
+      8194,
+      8195,
+      8195,
+      8194
+    ],
+    "ruralCleanDonor": 1,
+    "rustboro": [
+      {
+        "mid": 695,
+        "donors": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414",
+        "reconstructedRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414"
+      },
+      {
+        "mid": 702,
+        "donors": [
+          [
+            699,
+            0
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            699,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
+        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
+      },
+      {
+        "mid": 703,
+        "donors": [
+          [
+            699,
+            0
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            699,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
+        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
+      },
+      {
+        "mid": 717,
+        "donors": [
+          [
+            699,
+            0
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            699,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
+        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
+      },
+      {
+        "mid": 725,
+        "donors": [
+          [
+            699,
+            0
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            699,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
+        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
+      },
+      {
+        "mid": 745,
+        "donors": [
+          [
+            699,
+            0
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            699,
+            1
+          ]
+        ],
+        "sourceUnderRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067",
+        "reconstructedRgbaSha256": "fb87cab15cd3c1fa3a7f4a7fad100f66a4c116889e820149431b5a82e95e8067"
+      },
+      {
+        "mid": 748,
+        "donors": [
+          [
+            707,
+            0
+          ],
+          [
+            700,
+            3
+          ],
+          [
+            701,
+            2
+          ],
+          [
+            700,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "e95fe64977a73f7cdedcfc5166215627b8a76bde58606dd6fc4b4f6b9068f4ca",
+        "reconstructedRgbaSha256": "e95fe64977a73f7cdedcfc5166215627b8a76bde58606dd6fc4b4f6b9068f4ca"
+      },
+      {
+        "mid": 764,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            753,
+            2
+          ],
+          [
+            752,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "b639ad75964079909152214ccabe3926f6067edc4ae3e3dbc324102bf68d44de",
+        "reconstructedRgbaSha256": "b639ad75964079909152214ccabe3926f6067edc4ae3e3dbc324102bf68d44de"
+      },
+      {
+        "mid": 789,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            1
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
+        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
+      },
+      {
+        "mid": 792,
+        "donors": [
+          [
+            736,
+            0
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            736,
+            2
+          ],
+          [
+            699,
+            0
+          ]
+        ],
+        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
+        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
+      },
+      {
+        "mid": 793,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            1
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
+        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
+      },
+      {
+        "mid": 794,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            1
+          ],
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae",
+        "reconstructedRgbaSha256": "16f269839d0e7a0224bed0a67bad625401f8aea94603979719bfe7c447727dae"
+      },
+      {
+        "mid": 795,
+        "donors": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "sourceUnderRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414",
+        "reconstructedRgbaSha256": "09d430184416faf3a0fbb58a57d0437c4cda9dd302c4d6dd633b68560939b414"
+      },
+      {
+        "mid": 797,
+        "donors": [
+          [
+            736,
+            0
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            736,
+            2
+          ],
+          [
+            699,
+            0
+          ]
+        ],
+        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
+        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
+      },
+      {
+        "mid": 800,
+        "donors": [
+          [
+            736,
+            0
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            736,
+            2
+          ],
+          [
+            752,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "1df5f21fe357b904b9b6c5be4471f99f33da59fd7150d8181e72f218fd82a8d6",
+        "reconstructedRgbaSha256": "1df5f21fe357b904b9b6c5be4471f99f33da59fd7150d8181e72f218fd82a8d6"
+      },
+      {
+        "mid": 801,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            1
+          ],
+          [
+            753,
+            2
+          ],
+          [
+            738,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb",
+        "reconstructedRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb"
+      },
+      {
+        "mid": 812,
+        "donors": [
+          [
+            699,
+            1
+          ],
+          [
+            738,
+            1
+          ],
+          [
+            753,
+            2
+          ],
+          [
+            738,
+            3
+          ]
+        ],
+        "sourceUnderRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb",
+        "reconstructedRgbaSha256": "66ae918243761fb70a9c2301fdd0d0f0d73bb4242c68e11900fd50c6842b1feb"
+      },
+      {
+        "mid": 813,
+        "donors": [
+          [
+            736,
+            0
+          ],
+          [
+            699,
+            2
+          ],
+          [
+            736,
+            2
+          ],
+          [
+            699,
+            0
+          ]
+        ],
+        "sourceUnderRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978",
+        "reconstructedRgbaSha256": "a31b1cf9fbcfa8ae045fce2c00061a93b2a06fd653e6346a077e85c82f336978"
+      }
+    ],
+    "borderPlantMasks": "originalCC/CD opaque pixels retained exactly",
+    "maps": [
+      {
+        "map": "RustboroCity",
+        "fenceCells": 164,
+        "nativeGridSha256": "a518ddb4493d2f3c1bc96962c27611d2d7f1bfb7b12faeaa9014b42a76099dde"
+      },
+      {
+        "map": "Route104",
+        "fenceCells": 19,
+        "nativeGridSha256": "4dcbb4276d1010228e45ebe2dd1e3c9c2bd5843ba127ae108968c646d41f4329"
+      },
+      {
+        "map": "PetalburgWoods",
+        "fenceCells": 12,
+        "nativeGridSha256": "053fc2e64d7065edaf0bfaa4b7504fef15ad808dc458f8b937cb3a2604495442"
+      }
+    ],
+    "totalReviewedFenceCells": 195
   }
 }
