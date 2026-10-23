@@ -950,6 +950,9 @@ local framePlanes
 local Cull=V.require('FrustumCull')
 local function terrain(draw)
  local original=draw
+ local lightPlanes=original==Shadow.draw and Shadow.frustum()or nil
+ local passPlanes=framePlanes
+ if original==Shadow.draw then passPlanes=lightPlanes end
  -- Surface detail is a color-pass uniform, never used by the depth shader.
  -- Resolve the setting once per pass, not once per mesh in large forests.
  if original~=Shadow.draw then
@@ -1010,13 +1013,13 @@ local function terrain(draw)
  for _,part in ipairs(cache.grassModels or{})do if part.count>0 then draw(part.mesh,part.image)end end
  for _,part in ipairs(cache.bankModels or{})do draw(part.mesh,part.image)end
  for _,part in ipairs(cache.importedTrees or{})do
-  if part.count>0 and (original==Shadow.draw or Cull.visible(framePlanes,part.bounds))then
+  if part.count>0 and Cull.visible(passPlanes,part.bounds)then
    local batch=part.mesh
-   if original~=Shadow.draw then batch=V.require('ModelInstances').visible(batch,framePlanes,part.localBounds)end
+   batch=V.require('ModelInstances').visible(batch,passPlanes,part.localBounds,original==Shadow.draw and 'shadow'or nil)
    if type(batch)~='table'or batch.count~=0 then draw(batch,part.image)end
   end
  end
- V.require('SceneryDraw').opaque(cache.sceneryModels,draw,original==Shadow.draw,framePlanes)
+ V.require('SceneryDraw').opaque(cache.sceneryModels,draw,original==Shadow.draw,framePlanes,lightPlanes)
  local doorAnim=require('src.core.game3.doors').getActiveAnim()
  for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').draw(center,doorAnim,draw)end
  for _,house in ipairs(cache.importedHoenn or{})do V.require('Gen3DewfordDoors').draw(house,doorAnim,draw)end
@@ -1024,7 +1027,7 @@ end
 local function waterMeshes()
  return NativeWater.sync(cache.waterDraws or{},Tiles._pairs)
 end
-local reflectPlane
+local reflectPlane,actorPlanes
 local dustMesh,dustImage
 local function rideDust(game,cam)
  local exports=game and game.mods and game.mods.exports
@@ -1060,11 +1063,12 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  facing=V.require('Gen3Integration').worldDirection(facing,-(cam.level>=6 and cam.yaw or 0))
  local frame,mirror=Sprites.pose(spr,facing,phase,flip,opts)
  local q=spr.quads[frame];if not q then return end
+ local qx,qy,qw,qh=q:getViewport()
  local padding=SpriteAnchor.framePadding(spr,frame)
  local key=tostring(spr)..':'..tostring(spr.image)..':'..frame..':'..tostring(mirror)..':'..padding
  local mesh=spriteMeshes[key]
  if not mesh then
-  local qx,qy,qw,qh=q:getViewport();local iw,ih=spr.image:getDimensions()
+  local iw,ih=spr.image:getDimensions()
   local l,r=qx/iw,(qx+qw)/iw;if mirror then l,r=r,l end
   local v,i={},{}
   -- Shift in local card space so lean, free-camera yaw and reflection all
@@ -1103,7 +1107,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  local model=reflectPlane and Mat.mul(Mat.translate(x+8,height,z+8+(opts.depthOffset or 0)),pose) or base
  if reflectPlane then model=Mat.mul(model,Mat.scale(1,-1,1))end
  if draw==Shadow.draw then draw(mesh,spr.image,caster)
- else draw(mesh,spr.image,model,nil,caster) end
+ elseif V.require('SpriteFrustum').visible(model,qw,qh,padding,actorPlanes)then draw(mesh,spr.image,model,nil,caster) end
 end
 function M.groundAt(x,z,layer)
  local water=NativeWater.at(cache.waterField,x,z,layer)
@@ -1117,6 +1121,9 @@ function M.groundAt(x,z,layer)
  return 0
 end
 local function actors(game,cam,draw)
+ -- Reflection uses a different current VP; never reuse main-camera planes.
+ actorPlanes=nil
+ if draw~=Shadow.draw and R.curveK==0 then actorPlanes=Cull.prepare(R.vp)end
  if cam.replay then
   local frame=cam.replay.frame
   for _,a in ipairs(frame.actors or {})do
@@ -1409,6 +1416,7 @@ function M.draw(game,vw,vh,cam)
  else
   R.battleOcclusion(nil)
   local options=cache.waterOptions
+  options.frustum=framePlanes
   options.underColor,options.underDepth=nil,nil
   local visibleWater=false
   for _,group in ipairs(cache.waterLevels or{})do

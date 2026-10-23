@@ -28,3 +28,8 @@ assert(#calls==3 and calls[1][1]=='edge'and calls[2][1]=='unknown'and calls[3][1
 calls={};D.opaque(clipped,draw,true,planes);assert(#calls==4,'offscreen shadow caster culled')
 calls={};D.opaque(clipped,draw,false,nil);assert(#calls==4,'absent/curved camera failed open')
 print('PASS physical main-pass culling preserves edge, unknown bounds, billboards and all shadow casters')
+
+-- Only explicitly supplied light-space planes may reject a physical caster.
+calls={};D.opaque(clipped,draw,true,nil,planes)
+assert(#calls==3 and calls[1][1]=='edge'and calls[2][1]=='unknown'and calls[3][1]=='billboard')
+print('PASS explicit light frustum preserves unknown/deformed casters')

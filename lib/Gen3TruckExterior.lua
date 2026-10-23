@@ -30,6 +30,9 @@ local function prepare()
  parts=result;M.lastError=nil;return parts
 end
 function M.draw(gid,x,z,height,spr,frame,draw,reflection)
+ -- Most actors never use this provider. Reject before querying map state or
+ -- allocating a protected closure in every main/reflection/shadow pass.
+ if tonumber(gid)~=94 then return false end
  local ok,result=pcall(function()
   if not V.require('VisualStyles').modern('props')or not M.eligible(gid,require('src.core.GameVersion').get(),
    require('src.core.game3.map').currentDef(),spr,frame)then return false end

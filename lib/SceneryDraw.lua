@@ -13,9 +13,13 @@ local function partDraw(p,draw)
  R.canopyFacing=before
  if not ok then error(err,0)end
 end
-function M.opaque(parts,draw,shadow,planes)
+function M.opaque(parts,draw,shadow,planes,lightPlanes)
+ -- Light planes are explicit: a caller passing camera planes must never
+ -- accidentally drop an off-camera caster. Unknown/deformed parts fail open.
+ local passPlanes=planes
+ if shadow then passPlanes=lightPlanes end
  for _,p in ipairs(parts or{})do
-  if p.count>0 and not blended(p) and not(shadow and p.role=='ground_shadow')and(shadow or visible(p,planes))then partDraw(p,draw)end
+  if p.count>0 and not blended(p) and not(shadow and p.role=='ground_shadow')and visible(p,passPlanes)then partDraw(p,draw)end
  end
 end
 function M.blended(parts,draw,eye,planes)
