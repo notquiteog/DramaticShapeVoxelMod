@@ -1,3 +1,19 @@
+# Focused Museum staircase release1.57.11 — 2026-10-23
+
+User requests Kanto World fix the Museum staircase and then release. Focused
+stair commit e9fdfe43 is integrated independently of the pending regional model
+queue. Pewter's exact approach row now has solid shallow steps meeting the
+existing1.0125px source threshold, native stone paint and one exposed surface
+per area. Native support/collision/warps and source building/door anchors remain
+unchanged. Generic semantic terraces emit exposed union faces. Worker official
+0.3.96 FR/LG fresh-import main/staff entry+return and rendered views pass; final
+combined ZIP evidence is recorded in release notes. All589 production Lua files
+compile; source suite final summary is in the release notes. Two inherited stale
+isolated test fixtures now include ActorFrameCache and current legacy aliases.
+Concurrent committed main through0c918826 retained; working edits untouched.
+Other regional worker batches remain queued and full-game coverage incomplete.
+See docs/PEWTER_MUSEUM_STAIRS_2026-10-23.md.
+
 # Full render-distance optimization — 2026-10-23
 
 User target explicitly includes FULL at1440p while moving. Not achieved;
