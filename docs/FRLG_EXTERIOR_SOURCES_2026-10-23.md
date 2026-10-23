@@ -2,9 +2,9 @@
 
 The native audit enumerates **426 maps per edition**, including **76 outdoor
 maps**, **133 detected civic assemblies**, and **55 distinct civic families**.
-It separately records **54 source-eligible assemblies** and **79 unmatched
+It separately records **56 source-eligible assemblies** and **77 unmatched
 assemblies per edition**. Thirteen families have at least one eligible source adapter;
-42 families still have none. The Gym family is partial:5 of11 assemblies per
+42 families still have none. The Gym family is partial:7 of11 assemblies per
 edition have matching sources. These are
 assembly counts, not percentages of whole-game completion.
 
@@ -139,5 +139,8 @@ yellow path). Its `renderedAccepted` stays false until that assessment resolves;
 
 Saffron ordinary/tall nonenterable blocks now retain their matching regional
 source models; see `SAFFRON_BLOCKS_2026-10-23.md`. Low/enterable Saffron houses,
-Silph Co. and Fighting Dojo remain distinct unmatched source drawings. The
+Silph Co. remains a distinct unmatched source drawing. The genuine Fighting
+Dojo source now passes native geometry/entry checks but remains unaccepted
+pending its shared sand/grass-versus-street ground donor; see
+`SAFFRON_DOJO_2026-10-23.md`. The
 Saffron Gym and its closed connection projection now have matching sources.

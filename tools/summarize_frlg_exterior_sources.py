@@ -3,6 +3,7 @@
 import argparse,collections,csv,hashlib,json
 from pathlib import Path
 SOURCES={
+ 'hgss_saffron_dojo':'assets/scenery/saffron-dojo/provenance.json',
  'hgss_saffron_gym':'assets/scenery/hgss-kanto-gyms/hgss_saffron_gym/provenance.json',
  'hgss_saffron_ordinary_block':'assets/scenery/saffron-blocks/hgss_saffron_ordinary_block/provenance.json',
  'hgss_saffron_tall_block':'assets/scenery/saffron-blocks/hgss_saffron_tall_block/provenance.json',
@@ -31,7 +32,7 @@ def summarize(paths,output,accepted):
     model=g['modernEligible'];accepted_key=(r['edition'],r['map'],g['x'],g['y'])
     q={**g,'source':sources[model]if model else None,'renderedAccepted':accepted_key in accepted}
     q['gap']=None if model else('HGSS Mart left entrance and tall east sign cannot substantially fill native64px body while preserving native right entrance; adapter pending.'if g['family']=='mart'else'Matching regional source selection and complete native adapter pending.')
-    q['renderedGap']=None if not model or q['renderedAccepted']else('Native building/warp review passed; shared native-ground donor assessment pending.'if model=='hgss_cerulean_gym'else'Native rendered review not recorded.')
+    q['renderedGap']=None if not model or q['renderedAccepted']else('Native building/warp review passed; shared native-ground donor assessment pending.'if model in('hgss_cerulean_gym','hgss_saffron_dojo')else'Native rendered review not recorded.')
     civics.append(q);families[(r['edition'],g['family'])].append((r['map'],q))
    row={k:r[k]for k in['edition','map','mapType','outdoor','pair','width','height','supported','nativeHash','unclassifiedBlockedCells']}
    row.update(scope='exterior_buildings_only',runtime='v0.3.95',inventoryOnly=True,assemblies=civics,modernEligible=sum(bool(g['modernEligible'])for g in civics),renderedAccepted=sum(g['renderedAccepted']for g in civics),unmatchedAssemblies=sum(not g['modernEligible']for g in civics))
@@ -51,5 +52,5 @@ if __name__=='__main__':
  accepted=set()
  for path in a.accepted:
   for r in json.loads(path.read_text()):
-   assert not r.get('missingAssets')and(r.get('returned')or r.get('nonEnterable')and r.get('renderedVerified'));accepted.add((r['edition'],r['map'],r['x'],r['y']))
+   assert not r.get('missingAssets')and r.get('renderedVerified')is not False and(r.get('returned')or r.get('nonEnterable')and r.get('renderedVerified'));accepted.add((r['edition'],r['map'],r['x'],r['y']))
  summarize(a.ledgers,a.output,accepted)
