@@ -1,3 +1,12 @@
+# Native fallback archive-box ceiling correction — 2026-10-23
+
+The six RSE Birch-lab fallback archive boxes now fit uniformly around their
+fixed shelf support: top31.6 below the native32 ceiling instead of35. Exact box
+union preserves zero coplanar contact faces. Shelf/floor/room/native cells stay
+unchanged. Six missing-source native0.3.96 placements and three room overviews
+reviewed; geometry/atomic-fallback suites pass. See
+docs/NATIVE_ARCHIVE_BOX_CEILING_2026-10-23.md. Other room families continue.
+
 # Original freestanding lab case / native0.3.96 census — 2026-10-23
 
 Six RSE Birch-lab common/end owners now use the complete original ORAS

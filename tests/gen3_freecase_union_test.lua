@@ -22,8 +22,11 @@ local p,emit=model();local count=0
 assert(Designed.append({cx=0,cy=0,w=32,d=48,recipe={design='em_lab_free_books',joinedBoxes=true,groundInset=.025}},
  function(sx,sy,w,h,a,b,c,d)emit({a,b,c,d},uv)end,
  function()error('unjoined native box emission escaped')end,function()return uv end,emit))
-for _,v in ipairs(p.vertices)do assert(v[1]>=1-1e-7 and v[1]<=31+1e-7 and v[2]>=-.025-1e-7 and v[2]<=35+1e-7 and v[3]>=17-1e-7 and v[3]<=47.3+1e-7);if v[2]==-.025 then count=count+1 end end
+for _,v in ipairs(p.vertices)do assert(v[1]>=1-1e-7 and v[1]<=31+1e-7 and v[2]>=-.025-1e-7 and v[2]<=31.6+1e-7 and v[3]>=17-1e-7 and v[3]<=47.3+1e-7);if v[2]==-.025 then count=count+1 end end
 assert(count>0);check({parts={p}},#p.indices/3)
+local archiveLo,archiveHi={math.huge,math.huge,math.huge},{-math.huge,-math.huge,-math.huge}
+for _,v in ipairs(p.vertices)do if v[2]>26.5 then for k=1,3 do archiveLo[k]=math.min(archiveLo[k],v[k]);archiveHi[k]=math.max(archiveHi[k],v[k])end end end
+assert(math.abs(archiveHi[2]-31.6)<1e-7 and archiveLo[2]>26.5 and math.abs(archiveHi[1]-archiveLo[1]-6.6)<1e-7 and math.abs(archiveHi[3]-archiveLo[3]-7.8)<1e-7,'independent archive fit lost uniform proportions or crossed native ceiling')
 local old,oldEmit=model()
 assert(Designed.append({cx=0,cy=0,w=32,d=48,recipe={design='em_lab_free_books',groundInset=.025}},
  function(sx,sy,w,h,a,b,c,d)oldEmit({a,b,c,d},uv)end,
