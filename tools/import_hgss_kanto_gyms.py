@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regional HGSS Viridian/Pewter/Cerulean Gym sources. No automatic native placement."""
+"""Regional HGSS Viridian/Pewter/Cerulean/Saffron Gym sources. No automatic native placement."""
 import argparse,copy,hashlib,json
 from pathlib import Path,PurePosixPath
 from import_hgss_center import archive_items
@@ -10,6 +10,7 @@ from scenery_closures import hull
 SPECS={
  'hgss_viridian_gym':(592881,'to_gym_001-mesh','gym_door_007-mesh',[-.0508,-1.24609,22.8867],'to_gym_b.png'),
  'hgss_pewter_gym':(592849,'nbc_gym_001-mesh','gym_door_005-mesh',[.0059,-.67383,22.88672],'nbc_gym_b.png'),
+ 'hgss_saffron_gym':(592877,'ya_gym-mesh','gym_door_006-mesh',[.0059,-.67383,22.8867],'ya_gym_b.png'),
  'hgss_cerulean_gym':(592833,'ha_gym-mesh','gym_door_001-mesh',[-.05078,-.67383,22.88672],'ha_gym_b.png'),
 }
 def repair_rear_tower_uvs(parts):

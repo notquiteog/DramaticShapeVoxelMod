@@ -3,6 +3,7 @@
 import argparse,collections,csv,hashlib,json
 from pathlib import Path
 SOURCES={
+ 'hgss_saffron_gym':'assets/scenery/hgss-kanto-gyms/hgss_saffron_gym/provenance.json',
  'hgss_saffron_ordinary_block':'assets/scenery/saffron-blocks/hgss_saffron_ordinary_block/provenance.json',
  'hgss_saffron_tall_block':'assets/scenery/saffron-blocks/hgss_saffron_tall_block/provenance.json',
  'hgss_cerulean_gym':'assets/scenery/hgss-kanto-gyms/hgss_cerulean_gym/provenance.json',

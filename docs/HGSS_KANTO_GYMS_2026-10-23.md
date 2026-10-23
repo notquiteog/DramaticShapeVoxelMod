@@ -1,4 +1,4 @@
-# Source-matched Viridian/Pewter/Cerulean Gyms — 2026-10-23
+# Source-matched Viridian/Pewter/Cerulean/Saffron Gyms — 2026-10-23
 
 The initial two genuine regional sources are `to_gym_001-mesh` with
 `gym_door_007-mesh` from [HGSS Viridian City](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592881/),
@@ -137,3 +137,54 @@ Its metadata includes an explicit `renderedGap`. The source census now records30
 eligible/103 unmatched recognized assemblies per edition, with11 inspected;
 Gym source coverage is3/11 drawings and accepted Gym coverage remains2/11.
 These are inventory counts, not a game-completion percentage.
+
+
+## Saffron Gym and closed connection projection
+
+The subsequent regional source is `ya_gym-mesh` with `gym_door_006-mesh` from
+[HGSS Saffron City592877](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592877/),
+also Kuramapika1, September1,2026. Its own original purple trim/badge, orange
+entrance columns, brown roof, paired glass panels, source UVs and PNG bytes
+remain. The same measured closed rear/belt/roof/soffit/foundation and two-face
+rear-tower UV repair apply because the physical source topology matches the
+other three regional Gyms. Original285 triangles include11 excluded shadow
+triangles; the final328 preserve all274 physical source triangles and add54
+closure triangles. Deterministic conversion reproduces all four models and
+provenance, with no changes to the previous three outputs.
+
+The exact7×5 native drawing on canonical pair `general__rom_082d4b9c` has an
+all-blocked roof header and distinct facade/corner metatiles. The adapter checks
+actual region identity and local coordinates: `FR_SAFFRON_CITY` at(43,8), or
+`FR_SAFFRON_CITY_CONNECTION` at(33,1). Only the city has native door permission113;
+the actual connection projection has permission7 and no warp. That closed
+projection renders its original source panels closed. The distinct6×5 Fighting
+Dojo is rejected. Header, native paving, blocked body union, ground datum and
+all collision/elevation/warp data remain unchanged. Source/door triangle clipping
+passes at the same X56/Z49 native entrance anchor; the shared contact-ring
+inset does not move the building or source door.
+
+Latest official release was checked before this batch: v0.3.95, using its
+Linux source/LÖVE11.5 shell, Mesa llvmpipe, isolated FR/LG QA profiles and no
+companions. Both city Gyms passed original held-input door frames0/1/2, entry to
+`FR_SAFFRON_CITY_GYM` and native return; native hashes remained identical. Both
+actual connection copies built this source with hashes unchanged; they have no
+entry/return claim. Missing-source-image LeafGreen retained native city entry/
+return and closed connection fallback. Original/closed seven-direction views,
+native overviews and front/right/left-quarter/rear-contact views were inspected.
+The broad rear view is obstructed by native forest, so the rear-contact camera
+uses the original blocked roof-header tile; this is a disposable QA camera
+fixture, not a change to walking collision. Full rear/roof closure is additionally
+visible in the independent closed-source viewer. No ground/closure flicker was
+observed. Drivers emitted PASS; shell shutdown remains1.
+
+The disposable fixture sets the official `FLAG_HIDE_SAFFRON_ROCKETS` (0x3E)
+through the public script flag API before loading Saffron, so the normal story
+NPC does not obstruct the doorway. It never saves this synthetic progress or
+changes production story logic. `QA_FAMILY=saffron_gym` in the reusable driver
+covers both actual maps and asserts the exact source built at each coordinate.
+The connection record explicitly marks `nonEnterable`, with no false warp test.
+The final ledger now records54 source eligible/35 inspected accepted/79 unmatched
+assemblies per edition. Gym source coverage is5/11 drawings; accepted Gym
+coverage is4/11, with Cerulean pending its separate shared-ground assessment.
+Other Gym sources, native low/enterable Saffron houses and Silph Co. remain gaps.
+No production Scene hook changes are required: dispatcher kind remains `hgssGyms`.

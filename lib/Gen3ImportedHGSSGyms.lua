@@ -1,4 +1,4 @@
--- Regional HGSS Viridian/Pewter/Cerulean Gyms. Native exact drawings and permission
+-- Regional HGSS Viridian/Pewter/Cerulean/Saffron Gyms. Native exact drawings and permission
 -- masks own eligibility; the source doorway stays inside its native warp tile.
 local V=...
 local Models=V.require('SceneryModels')
@@ -6,6 +6,7 @@ local M={}
 local specs={
  viridian_outdoor={id='hgss_viridian_gym',width=6,rows={{685,686,686,686,686,687},{321,322,322,322,322,323},{329,330,330,330,330,331},{336,337,338,339,340,342},{344,345,346,347,348,350}}},
  pewter_outdoor={id='hgss_pewter_gym',width=7,rows={{313,314,314,314,314,314,315},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{336,337,338,339,340,341,342},{344,345,346,347,348,349,350}}},
+ ['general__rom_082d4b9c']={id='hgss_saffron_gym',width=7,headerBlocked=true,nativePlacement=true,rows={{768,769,770,769,770,769,771},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{773,337,338,339,340,341,342},{784,785,786,347,787,788,789}}},
  ['general__rom_082d4af4']={id='hgss_cerulean_gym',width=7,headerLastBlocked=true,rows={{313,314,314,314,314,314,315},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{336,337,338,339,340,341,342},{344,345,346,347,348,349,350}}},
 }
 function M.selection(g)return g and specs[g.pair]end
@@ -17,10 +18,17 @@ end
 function M.eligible(g,cells)
  local spec=M.selection(g)
  if not(spec and g.kind=='gym'and g.width==spec.width and g.depth==5 and not g.stageHidden)then return false end
+ local closed=false
+ if spec.nativePlacement then
+  local c=cells[g.cx..':'..g.cy];local r=c and c.region;local id=r and r.def and r.def.id
+  local x,y=g.cx-(r and r.x or 0),g.cy-(r and r.y or 0)
+  if not(id=='FR_SAFFRON_CITY'and x==43 and y==8 or id=='FR_SAFFRON_CITY_CONNECTION'and x==33 and y==1)then return false end
+  closed=id=='FR_SAFFRON_CITY_CONNECTION'
+ end
  local base
  for y,row in ipairs(spec.rows)do for x,mid in ipairs(row)do
   local c=cells[(g.cx+x-1)..':'..(g.cy+y-1)]
-  local permission=y==1 and(spec.headerLastBlocked and x==spec.width and 7 or 0)or y==5 and(x>=3 and x<=5 and(x==4 and 0x71 or 7)or 0)or 7
+  local permission=y==1 and((spec.headerBlocked or spec.headerLastBlocked and x==spec.width)and 7 or 0)or y==5 and(x>=3 and x<=5 and(x==4 and(not closed and 0x71 or 7)or 7)or 0)or 7
   if not(c and c.civic==g and c.pair==g.pair and c.mid==mid and c.collision==permission and not(c.boundary or c.stageHidden or c.prop))then return false end
   if y>1 and permission~=0 then if base==nil then base=c.base or 0 elseif math.abs((c.base or 0)-base)>.001 then return false end end
  end end
