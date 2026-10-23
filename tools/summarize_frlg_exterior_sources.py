@@ -3,6 +3,7 @@
 import argparse,collections,csv,hashlib,json
 from pathlib import Path
 SOURCES={
+ 'hgss_celadon_balcony_block':'assets/scenery/celadon-blocks/provenance.json',
  'hgss_saffron_dojo':'assets/scenery/saffron-dojo/provenance.json',
  'hgss_saffron_gym':'assets/scenery/hgss-kanto-gyms/hgss_saffron_gym/provenance.json',
  'hgss_saffron_ordinary_block':'assets/scenery/saffron-blocks/hgss_saffron_ordinary_block/provenance.json',
@@ -23,6 +24,7 @@ def summarize(paths,output,accepted):
  root=Path(__file__).resolve().parents[1];sources={}
  for key,path in SOURCES.items():
   p=root/path;d=json.loads(p.read_text());sources[key]={k:d[k]for k in['sourcePage','archiveSha256']};sources[key]['modelSha256']=d.get('sourceModelSha256',d.get('sourceDaeSha256'));sources[key]['provenanceSha256']=hashlib.sha256(p.read_bytes()).hexdigest()
+ candidates=json.loads((root/'docs/coverage/frlg-exterior-candidates-2026-10-23.json').read_text())['candidates']
  counts=collections.defaultdict(lambda:collections.Counter());families=collections.defaultdict(list);rows=[]
  for path in paths:
   for line in path.read_text().splitlines():
@@ -32,6 +34,8 @@ def summarize(paths,output,accepted):
     model=g['modernEligible'];accepted_key=(r['edition'],r['map'],g['x'],g['y'])
     q={**g,'source':sources[model]if model else None,'renderedAccepted':accepted_key in accepted}
     q['gap']=None if model else('HGSS Mart left entrance and tall east sign cannot substantially fill native64px body while preserving native right entrance; adapter pending.'if g['family']=='mart'else'Matching regional source selection and complete native adapter pending.')
+    candidate=next((c for c in candidates if c['map']==r['map']and c['x']==g['x']and c['y']==g['y']),None)
+    if candidate and not model:q['sourceCandidate']=candidate;q['gap']=candidate['gap']
     q['renderedGap']=None if not model or q['renderedAccepted']else('Native building/warp review passed; shared native-ground donor assessment pending.'if model in('hgss_cerulean_gym','hgss_saffron_dojo')else'Native rendered review not recorded.')
     civics.append(q);families[(r['edition'],g['family'])].append((r['map'],q))
    row={k:r[k]for k in['edition','map','mapType','outdoor','pair','width','height','supported','nativeHash','unclassifiedBlockedCells']}

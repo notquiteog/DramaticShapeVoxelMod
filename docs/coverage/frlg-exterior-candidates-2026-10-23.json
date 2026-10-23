@@ -1,0 +1,46 @@
+{
+  "scope": "exterior_buildings_only",
+  "runtime": "v0.3.95",
+  "candidates": [
+    {
+      "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592831/",
+      "archiveSha256": "f2289da05c3190d9b21940b88f66233fc6b106198ab922aa64261384ed4b483f",
+      "sourceModelSha256": "4a391a04af9bbad3391a35b8dd2bbe9cdda3800ff6626be0639e31ca7eab2d75",
+      "geometry": "ta_gym-mesh",
+      "doorGeometry": "gym_door_002-mesh",
+      "doorOffset": [
+        0.0059,
+        -0.67383,
+        22.8867
+      ],
+      "model": "hgss_celadon_gym",
+      "processedModelSha256": "732ff76b2de4deaa535925c3632dfcfc0a72b28b48abfd67b183ec2d6467bf30",
+      "map": "FR_CELADON_CITY",
+      "pair": "general__rom_082d4b3c",
+      "x": 8,
+      "y": 26,
+      "nativeWidth": 128,
+      "uniformSourceFitWidth": 79.764887080457,
+      "fit": {
+        "width": 128,
+        "depth": 64,
+        "padding": 0.25,
+        "anchor": "door",
+        "targetX": 56,
+        "targetZ": 49,
+        "groundInset": 0.05
+      },
+      "fitBounds": [
+        16.248610950143,
+        -0.05,
+        0.25,
+        96.0134980306,
+        42.783818801498,
+        50.789146677496
+      ],
+      "modernEligible": false,
+      "renderedAccepted": false,
+      "gap": "Available genuine ta_gym-mesh fits only79.76 of128px native width at the original doorway; native walkable roof header prevents expanding the body backward. A matching footprint adapter is pending without stretching/trimming source geometry."
+    }
+  ]
+}

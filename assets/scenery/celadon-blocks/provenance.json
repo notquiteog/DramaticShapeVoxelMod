@@ -1,0 +1,124 @@
+{
+  "asset": 592831,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592831/",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "f2289da05c3190d9b21940b88f66233fc6b106198ab922aa64261384ed4b483f",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Celadon City/Celadon City.dae",
+  "sourceModelSha256": "4a391a04af9bbad3391a35b8dd2bbe9cdda3800ff6626be0639e31ca7eab2d75",
+  "geometry": "ta_h02-mesh",
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -31.62891,
+      3.867969,
+      -24.57422,
+      31.62891,
+      75.64063,
+      28.94531
+    ],
+    "sourceOrigin": [
+      0.0,
+      3.867969,
+      2.1855449999999994
+    ],
+    "sourceUnitSpan": 63.25782,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.4230269870191543,
+      0.5,
+      1.1346053499788642,
+      0.4230269870191543
+    ]
+  },
+  "originalBounds": [
+    -32.15625,
+    2.0,
+    -28.50781,
+    36.23047,
+    75.64063,
+    28.96094
+  ],
+  "originalTriangles": 179,
+  "processedTriangles": 218,
+  "entrance": "Original nonenterable two-storey balcony block; no doorway or roof vent invented.",
+  "closure": "Measured rear siding/chamfers/barrel cut/eave return, eave and balcony undersides, recessed foundation. Original physical geometry, balconies/windows/roof, UVs and PNG bytes retained; source shadow triangles excluded.",
+  "textures": {
+    "h_mado.png": {
+      "sha256": "ddf8daca4b57e903f962c663f89f06be6d43ca5f29459d0094b4b8140514601f",
+      "bytes": 187
+    },
+    "ta_h02.png": {
+      "sha256": "cf430612b577f425061aac7c1001f793f1d4a82ca3e1d2c105d5d7ee77b26156",
+      "bytes": 392
+    }
+  },
+  "parts": [
+    {
+      "name": "ta_h02-mesh:h_mado_lm1_003-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "ta_h02-mesh:lambert2_055-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 158
+    },
+    {
+      "name": "authored_rear_siding",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_rear_chamfer_returns",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_rear_barrel_cut",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 5
+    },
+    {
+      "name": "authored_rear_eave_return",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 8
+    },
+    {
+      "name": "authored_eave_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 5
+    },
+    {
+      "name": "authored_balcony_undersides",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 22
+    }
+  ]
+}

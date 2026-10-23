@@ -2,9 +2,9 @@
 
 The native audit enumerates **426 maps per edition**, including **76 outdoor
 maps**, **133 detected civic assemblies**, and **55 distinct civic families**.
-It separately records **56 source-eligible assemblies** and **77 unmatched
-assemblies per edition**. Thirteen families have at least one eligible source adapter;
-42 families still have none. The Gym family is partial:7 of11 assemblies per
+It separately records **61 source-eligible assemblies** and **72 unmatched
+assemblies per edition**. Fifteen families have at least one eligible source adapter;
+40 families still have none. The Gym family is partial:7 of11 assemblies per
 edition have matching sources. These are
 assembly counts, not percentages of whole-game completion.
 
@@ -15,13 +15,14 @@ metatile/collision/elevation SHA256, pair, dimensions, map type and explicit
 outdoor classification. Every detected assembly has its native drawing hash,
 source archive/model/provenance hashes where available, exact coordinates,
 source eligibility and separate rendered acceptance. The inspected batches accept
-35 placements per edition: two Pewter houses, Viridian/Pewter Gyms, Viridian
+40 placements per edition: two Pewter houses, Viridian/Pewter Gyms, Viridian
 flower-house exterior, three Pallet buildings, two Lavender ordinary houses and
 the Name Rater tent, plus22 ordinary/tall Saffron blocks across the actual city
-and connection maps, and the Saffron Gym plus its closed connection projection. Historical acceptance of other source families is not
+and connection maps, the Saffron Gym plus its closed connection projection, and five plain Celadon
+balcony blocks. Historical acceptance of other source families is not
 inferred from an eligibility census.
 
-There are also **6332 unclassified blocked outdoor cells per edition**. This
+There are also **6324 unclassified blocked outdoor cells per edition**. This
 includes terrain and boundaries; it is not a count of missing buildings. The
 civic census cannot prove the absence of additional source assemblies there.
 Maps without detected civics remain inventory records, not completeness claims.
@@ -144,3 +145,8 @@ Dojo source now passes native geometry/entry checks but remains unaccepted
 pending its shared sand/grass-versus-street ground donor; see
 `SAFFRON_DOJO_2026-10-23.md`. The
 Saffron Gym and its closed connection projection now have matching sources.
+
+Celadon plain block variants now have matching source and native acceptance; see
+`CELADON_BLOCKS_2026-10-23.md`. Available-but-rejected source candidates carry
+explicit archive/model hashes and measured fit gaps in
+`docs/coverage/frlg-exterior-candidates-2026-10-23.json` and the canonical map rows.
