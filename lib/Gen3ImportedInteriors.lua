@@ -22,16 +22,16 @@ local families={
  neighbor_living_television={pair='house',design='fr_living_tv',rows={{0x2d},{0x35},{0x3d}},model='oras_home_tv',cabinet=6,note=true},
  hoenn_start_dining_table={pair='building__brendans_mays_house',family='rse',design='em_start_table',
   rows={{0x21a,0x21b},{0x222,0x223},{0x22a,0x22b}},collisionRows={{7,7},{7,7},{0,0}},
-  model='oras_littleroot_dining_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0},
+  model='oras_littleroot_dining_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0,groundInset=.025},
  hoenn_start_fridge={pair='building__brendans_mays_house',family='rse',design='em_start_fridge',
   rows={{0x230},{0x238}},collisionRows={{7},{7}},
-  model='oras_littleroot_fridge',fitWidth=16,fitDepth=16,fitHeight=32},
+  model='oras_littleroot_fridge',fitWidth=16,fitDepth=16,fitHeight=32,groundInset=.025},
  hoenn_home_table_yellow={pair='building__generic_building',family='rse',design='em_home_table',
   rows={{0x248,0x249},{0x250,0x251}},collisionRows={{7,7},{7,7}},
-  model='oras_oldale_checked_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0},
+  model='oras_oldale_checked_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0,groundInset=.025},
  hoenn_home_table_plain={pair='building__generic_building',family='rse',design='em_home_table',
   rows={{0x24a,0x24b},{0x252,0x253}},collisionRows={{7,7},{7,7}},
-  model='oras_oldale_neighbor_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0},
+  model='oras_oldale_neighbor_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0,groundInset=.025},
 }
 function M.register(id)
  id=id or M.id
@@ -85,7 +85,7 @@ function M.placements(cells)
    elseif M.eligible(p,cells)then
     local f=families[p.recipe.name]
     list[#list+1]={model=f.model or M.id,x=p.cx*16,y=(p.groundHeight or 0)+(f.cabinet or 0),z=(p.cy+(f.zRows or 1))*16,
-     fit={width=f.fitWidth or 16,depth=f.fitDepth or 16,height=f.fitHeight or(f.model and 17 or 24),padding=.25},source=p}
+     fit={width=f.fitWidth or 16,depth=f.fitDepth or 16,height=f.fitHeight or(f.model and 17 or 24),padding=.25,groundInset=f.groundInset},source=p}
    end
   end
  end

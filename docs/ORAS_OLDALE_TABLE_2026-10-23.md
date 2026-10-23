@@ -52,3 +52,9 @@ closes the secret stair at (3,0) and (3,1), changing metatiles 0x203→0x28d and
 0x219→0x295 (the latter also changes collision 0x72→7). This occurs at camera
 level 0 before modern meshing. Those live engine changes are recorded separately
 from the static adapter census; the mod preserves the post-script layout.
+
+Both table variants use a 0.025-native-pixel contact recess for source Y0
+vertices only. The original upper geometry and native floor stay unchanged.
+All 13 Ruby checked-table and 13 Sapphire plain-table rooms were rendered again
+after this change; representative first-person contacts were inspected. Tests
+compare every recessed and ordinary vertex and require exact upper equality.

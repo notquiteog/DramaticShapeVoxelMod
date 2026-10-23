@@ -37,3 +37,9 @@ The adapter test checks exact source identity, every native permission/height
 guard and atomic upload failure. The importer compiles with Python; all changed
 Lua files compile with LuaJIT. These checks do not imply complete interior
 coverage; the five-edition census remains the inventory of outstanding families.
+
+The shared contact fit now recesses only source Y0 vertices by 0.025 native
+pixels. All upper vertices remain byte-for-byte equal to the ordinary fit.
+This separates underside/leg contact faces from the unchanged native floor.
+Native Emerald first-floor overviews and four walkable table views were repeated
+on 0.3.95 after the contact change; the source placement/hash checks still pass.
