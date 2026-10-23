@@ -10,9 +10,9 @@ the Linux shell returned 1 on shutdown. No clean process-exit claim is made.
 
 | Edition | Maps | Framed non-cave rooms | Native wall finish rooms | Extracted furniture | Modern placement candidates |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Emerald | 519 | 301 | 79 | 1830 | 77 |
-| Ruby | 395 | 231 | 84 | 1210 | 79 |
-| Sapphire | 395 | 231 | 84 | 1210 | 79 |
+| Emerald | 519 | 301 | 79 | 1830 | 90 |
+| Ruby | 395 | 231 | 84 | 1210 | 92 |
+| Sapphire | 395 | 231 | 84 | 1210 | 92 |
 | FireRed | 426 | 253 | 65 | 2937 | 28 |
 | LeafGreen | 426 | 253 | 65 | 2937 | 28 |
 
@@ -24,14 +24,14 @@ candidates and edition/map occurrences. These are identifiers and counts only;
 no ROM data, raw pixels, model archives, caches or captures are included.
 
 The refreshed census includes the verified Littleroot table/refrigerator and
-both Oldale table adapters. Separate
+both Oldale table adapters, and all 39 generic-home refrigerators. Separate
 [accepted-furniture.jsonl](coverage/gen3-interiors-2026-10-23/accepted-furniture.jsonl)
-records 88 visually accepted component placements across 83 native RSE maps,
+records 127 visually accepted component placements across 83 native RSE maps,
 with exact family, model ID, cell and unchanged live native hash. Its acceptance
 scope is the named furniture component only. Complete-map acceptance remains
 false; the remaining furniture and room source gaps are still outstanding.
 
-All four physical source models now opt into the shared 0.025-pixel contact
+All five physical source models now opt into the shared 0.025-pixel contact
 recess. Only source Y0 vertices move below the floor; every upper vertex and
 all native floor/wall/gameplay cells remain identical. CPU checks compare both
 fits, and native 0.3.95 checks repeat both Emerald starting houses, all 13 Ruby
