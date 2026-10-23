@@ -28,11 +28,11 @@ end
 function M.build(g,cells,newMesh,parts)
  if not M.eligible(g,cells)then return false end
  local id=families[g.custom.name].id;local ok,err=M.register(id);if not ok then return false,err end
- local fit={width=64,depth=48,padding=.25,anchor='door',targetX=24,targetZ=44.5}
+ local fit={groundInset=.05,width=64,depth=48,padding=.25,anchor='door',targetX=24,targetZ=44.5}
  local source,placed=Models.vertices(id,fit);if not source then return false,placed end
  local safe,why=V.require('Gen3ImportedGyms').clearance(g,cells,source);if not safe then return false,why end;placed.model=id
  local doors=V.require('Gen3MartDoors');local cache,reason=doors.build(g,placed,newMesh,cells);if not cache then return false,reason end
- local result,message=Models.buildBatches({{model=id,x=g.cx*16,y=(g.groundHeight or 0)-.05,z=(g.cy+1)*16,fit=fit}},newMesh,{parts=parts})
+ local result,message=Models.buildBatches({{model=id,x=g.cx*16,y=g.groundHeight or 0,z=(g.cy+1)*16,fit=fit}},newMesh,{parts=parts})
  if not result then doors.release(g);return false,message end
  g.importedHoenn=placed;doors.commit(g);return true
 end

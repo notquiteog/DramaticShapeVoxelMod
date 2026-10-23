@@ -27,7 +27,7 @@ function M.geometry(g,fit,state)
  for i,source in ipairs(d.parts)do
   local vertices={}
   for _,v in ipairs(d.poses[state+1][i])do
-   vertices[#vertices+1]={g.cx*16+v[1]*fit.scale+fit.x,(g.groundHeight or 0)-.05+v[2]*fit.scale,(g.cy+1)*16+v[3]*fit.scale+fit.z,v[4],v[5],1}
+   vertices[#vertices+1]={g.cx*16+v[1]*fit.scale+fit.x,(g.groundHeight or 0)+(math.abs(v[2])<1e-7 and -(fit.groundInset or 0)or v[2]*fit.scale),(g.cy+1)*16+v[3]*fit.scale+fit.z,v[4],v[5],1}
   end
   parts[i]={vertices=vertices,indices=source.indices,texture=source.texture}
  end
