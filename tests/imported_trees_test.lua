@@ -10,7 +10,7 @@ function Models.buildBatches(list,upload,opts)
  if not success then return nil,'missing texture'end
  return opts.parts
 end
-local modules={SceneryModels=Models,TreePresentation={voxel=function()return art=='modeled'end},CommunityVisuals={
+local modules={BuildBudget={check=function()end},SceneryModels=Models,TreePresentation={voxel=function()return art=='modeled'end},CommunityVisuals={
  customTrees=function()return custom end,customForest=function()return forest end,customSafari=function()return safari end}}
 local T=assert(loadfile('lib/ImportedTrees.lua'))({require=function(name)return assert(modules[name],name)end})
 local function fixture(w,d,id,family)
