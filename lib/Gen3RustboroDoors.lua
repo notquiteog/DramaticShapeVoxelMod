@@ -3,7 +3,8 @@
 local V=...
 local Models,Budget=V.require('SceneryModels'),V.require('BuildBudget')
 local M={id='oras_rustboro_home_doors'}
-local families={oras_rustboro_cutters={5,'rustboro_small_tan'},oras_rustboro_house1={5,'rustboro_white_small'},oras_rustboro_house2={5,'rustboro_white_small'},oras_rustboro_school={7,'rustboro_east_tan'}}
+local families={oras_rustboro_cutters={5,'rustboro_small_tan',5,2},oras_rustboro_house1={5,'rustboro_white_small',5,2},oras_rustboro_house2={5,'rustboro_white_small',5,2},oras_rustboro_school={7,'rustboro_east_tan',5,3},oras_rustboro_flat1={9,'rustboro_wide_tan',6,4},oras_rustboro_house3={6,'rustboro_south_tan',5,2}}
+local function family(g)return g and g.importedHoenn and families[g.importedHoenn.model]end
 local function finite(n)return type(n)=='number'and n==n and math.abs(n)<math.huge end
 local function source()
  local ok,d=pcall(V.require,'ImportedRustboroHomesData')
@@ -20,9 +21,9 @@ end
 function M.geometry(g,fit,state)
  local d,err=source();if not d then return nil,err end
  local family=fit and families[fit.model]
- if not(family and g and g.kind=='urban_house'and g.width==family[1]and g.depth==5 and g.custom and g.custom.family=='rse'and g.custom.name==family[2]
+ if not(family and g and g.kind=='urban_house'and g.width==family[1]and g.depth==family[3] and g.custom and g.custom.family=='rse'and g.custom.name==family[2]
   and not g.stageHidden and fit
-  and fit.width==g.width*16 and fit.depth==64 and finite(fit.scale)and fit.scale>0)then return nil,'unreviewed Rustboro doorway'end
+  and fit.width==g.width*16 and fit.depth==(g.depth-1)*16 and finite(fit.scale)and fit.scale>0)then return nil,'unreviewed Rustboro doorway'end
  if state~=0 and state~=1 and state~=2 then return nil,'invalid Rustboro door state'end
  local parts={}
  for i,source in ipairs(d.parts)do
@@ -74,10 +75,11 @@ function M.commit(g)
  return g and g.importedRustboroDoors
 end
 function M.ownsDoor(g,x,y)
- return g and g.importedRustboroDoors~=nil and x==g.cx+(g.width==7 and 3 or 2) and y==g.cy+4 or false
+ local f=family(g);return f and g.importedRustboroDoors~=nil and x==g.cx+f[4]and y==g.cy+f[3]-1 or false
 end
 function M.state(g,anim)
- if not(anim and anim.x==g.cx+(g.width==7 and 3 or 2) and anim.y==g.cy+4)then return 0 end
+ local f=family(g)
+ if not(f and anim and anim.x==g.cx+f[4]and anim.y==g.cy+f[3]-1)then return 0 end
  local frame=tonumber(anim.frame)or 0;if not finite(frame)then return 0 end
  return math.max(0,math.min(2,math.floor(frame)))
 end

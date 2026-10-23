@@ -1,3 +1,15 @@
+# Original Rustboro flat/southern-home continuation — 2026-10-23
+
+Flat1 and House3 extend the authentic Rustboro source family to six variants.
+Source36 coplanar window returns clip to their exposed strips; prior four arrays
+and BM13 poses remain exact. Official0.3.95 native18 uploads/door/cap checks and
+18 actual R/S/E entries/returns pass; Emerald six-door missing-source fallback
+passes. Native hashes unchanged; contact captures inspected from walkable cells.
+Live controller interference was isolated through the QA engine config before
+acceptance. Flat2 is source-located but its native-anchor fit fills only35% of
+the blocked drawing, so remains fallback. Devon/tower continue next. See
+[batch evidence](docs/ORAS_RUSTBORO_FLATS_2026-10-23.md).
+
 # Original Rustboro home/school source batch — 2026-10-23
 
 Four own ORAS Rustboro variants and BM13 original hinges now dispatch through

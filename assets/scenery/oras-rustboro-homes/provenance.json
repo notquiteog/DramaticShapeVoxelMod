@@ -10,6 +10,7 @@
         "chip_mado": 24
       },
       "undersideTriangles": 14,
+      "coplanarReturnTrianglesClipped": 0,
       "sourceOrigin": [
         315,
         0.25,
@@ -28,6 +29,7 @@
         "chip_mado": 24
       },
       "undersideTriangles": 14,
+      "coplanarReturnTrianglesClipped": 0,
       "sourceOrigin": [
         207,
         0.25,
@@ -46,6 +48,7 @@
         "chip_mado": 24
       },
       "undersideTriangles": 14,
+      "coplanarReturnTrianglesClipped": 0,
       "sourceOrigin": [
         207,
         0.25,
@@ -65,6 +68,7 @@
         "chip_mado": 24
       },
       "undersideTriangles": 18,
+      "coplanarReturnTrianglesClipped": 4,
       "sourceOrigin": [
         45,
         0,
@@ -72,6 +76,45 @@
       ],
       "originalZoneDestination": 289,
       "sourceBchSha256": "25c35a9b173563023a966347bc96876502641e04d13eabd25b8c0905f3ff43da",
+      "originalHorizontalGroundFaces": 0
+    },
+    "flat1": {
+      "gr": 33,
+      "model": "world04_03_04",
+      "sourceTrianglesByMaterial": {
+        "kanazumi_komono": 628,
+        "kanazumi_komono_alpha06": 40,
+        "kanazumi_house13": 786,
+        "chip_mado": 132
+      },
+      "undersideTriangles": 20,
+      "coplanarReturnTrianglesClipped": 36,
+      "sourceOrigin": [
+        -315,
+        0,
+        297
+      ],
+      "originalZoneDestination": 297,
+      "sourceBchSha256": "25c35a9b173563023a966347bc96876502641e04d13eabd25b8c0905f3ff43da",
+      "originalHorizontalGroundFaces": 0
+    },
+    "house3": {
+      "gr": 38,
+      "model": "world04_03_05",
+      "sourceTrianglesByMaterial": {
+        "kanazumi_house13": 338,
+        "kanazumi_komono": 252,
+        "chip_mado": 24
+      },
+      "undersideTriangles": 14,
+      "coplanarReturnTrianglesClipped": 0,
+      "sourceOrigin": [
+        9,
+        0.25,
+        27
+      ],
+      "originalZoneDestination": 294,
+      "sourceBchSha256": "af181da08320eb8c79f36116e406fba104dcb596e2beaf5f8e0ce048b3f19363",
       "originalHorizontalGroundFaces": 0
     }
   },
@@ -123,10 +166,35 @@
         3681
       ],
       "destination": 289
+    },
+    "flat1": {
+      "zone": 16,
+      "bodyGr": 33,
+      "objectGr": 33,
+      "bm": 13,
+      "world": [
+        2205,
+        0,
+        3537
+      ],
+      "destination": 297
+    },
+    "house3": {
+      "zone": 16,
+      "bodyGr": 38,
+      "objectGr": 38,
+      "bm": 13,
+      "world": [
+        2529,
+        0,
+        3987
+      ],
+      "destination": 294
     }
   },
   "schoolPhysicalAlpha06Triangles": 8,
   "schoolCoplanarWindowReturnTrianglesClipped": 4,
+  "flat1CoplanarWindowReturnTrianglesClipped": 36,
   "doorTopCapNativeInset": 0.05,
   "normalizationSpan": 131.0,
   "door": "BM0013 c104_bm_door01",
@@ -183,5 +251,5 @@
     "door": "4540f6fc2e198068b0ea96823d1e22618625b560fe9af34fe00a9d65de1187e2",
     "animation": "403efcbd5e621ef34d0c6ccf8826f66dfc07ec8dadf6098ac1871d1c92f4d03e"
   },
-  "processing": "Original physical geometry/UVs/indices independently checked. Source exposure RGB and24 nonphysical light faces omitted. No source ground/fences; original bottom rim closed and recessed at upload, portals fixed. Four school return triangles are clipped to the exposed strip to remove original coplanar column overlap; door top-cap contact vertices recess .05 native units under their original lintel at upload."
+  "processing": "Original physical geometry/UVs/indices independently checked. Source exposure RGB and24 nonphysical light faces omitted. No source ground/fences; original bottom rim closed and recessed at upload, portals fixed. Four school and36 Flat1 return triangles are clipped to the exposed strip to remove original coplanar column overlap; door top-cap contact vertices recess .05 native units under their original lintel at upload."
 }
