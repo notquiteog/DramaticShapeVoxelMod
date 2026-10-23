@@ -3,6 +3,7 @@ local F=dofile('lib/Gen3Furniture.lua')
 local modules={SceneryModelData={},ModelInstances={},BuildBudget={check=function()end},Gen3PublicPCFrames=dofile('lib/Gen3PublicPCFrames.lua'),ImportedInteriorBedData=dofile('lib/ImportedInteriorBedData.lua')}
 local V={mod={read=function(path)local f=assert(io.open(path,'rb'));local s=f:read('*a');f:close();return s end}}
 V.require=function(n)return assert(modules[n],n)end
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local I=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 assert(I.register(I.bedId));assert(S.info(I.bedId).parts==3)

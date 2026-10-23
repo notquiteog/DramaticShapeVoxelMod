@@ -5,6 +5,7 @@ local instanced=true;local allocated={}
 local function object()local o={release=function(self)assert(not self.released);self.released=true end,setTexture=function(self,t)self.image=t end};allocated[#allocated+1]=o;return o end
 local modules={SceneryModelData=Data,ImportedTreeData=Tree,BuildBudget={check=function()end},ModelInstances={new=function(mesh,pos)if not instanced then return end;local o=object();o.instanceMesh,o.positions=mesh,pos;return o end}}
 local V={require=function(n)return assert(modules[n],n)end,mod={read=function(_,path)local f=assert(io.open(path,'rb'));local b=f:read('*a');f:close();return b end}}
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V)
 local id='oras_route104_broadleaf';local info=assert(S.info(id));assert(info.parts==5 and info.anchors.canopyBottom[2]>0)
 for r=0,3 do

@@ -1,5 +1,6 @@
 local modules={SceneryModelData={},ModelInstances={},BuildBudget={check=function()end},ImportedHoennShopData=dofile('lib/ImportedHoennShopData.lua'),ImportedHoennFlowerData=dofile('lib/ImportedHoennFlowerData.lua')}
 local V={mod={read=function()return nil end},require=function(n)return assert(modules[n],n)end}
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local C=assert(loadfile('lib/Gen3ImportedFlowerCards.lua'))(V);modules.Gen3ImportedFlowerCards=C
 local F=assert(loadfile('lib/Gen3ImportedFlowers.lua'))(V);modules.Gen3ImportedFlowers=F

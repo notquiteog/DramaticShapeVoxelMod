@@ -342,6 +342,14 @@ function M.draws(parts)
   local group=byHeight[water.height]
   if not group then group={height=water.height};byHeight[water.height]=group;levels[#levels+1]=group end
   group[#group+1]=d
+  -- A level can use several tilesets. Union every physical sheet; missing
+  -- metadata fails open rather than accidentally hiding a provider's water.
+  if water.bounds and not group.unbounded then
+   local b=group.bounds
+   if not b then b={unpack(water.bounds)};group.bounds=b else
+    for k=1,3 do b[k]=math.min(b[k],water.bounds[k]);b[k+3]=math.max(b[k+3],water.bounds[k+3])end
+   end
+  else group.bounds=nil;group.unbounded=true end
  end end
  table.sort(levels,function(a,b)return a.height<b.height end)
  return out,levels

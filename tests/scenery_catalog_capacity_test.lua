@@ -1,5 +1,5 @@
 local V={require=function(n)
- if n=='ModelInstances'then return{}elseif n=='BuildBudget'then return{check=function()end}elseif n=='SceneryModelData'then return{}end;error(n)
+ if n=='SharedModelMesh'then return assert(loadfile('lib/SharedModelMesh.lua'))()elseif n=='ModelInstances'then return{}elseif n=='BuildBudget'then return{check=function()end}elseif n=='SceneryModelData'then return{}end;error(n)
 end}
 local S=assert(loadfile('lib/SceneryModels.lua'))(V)
 local function png(w,h)local function u(n)return string.char(math.floor(n/16777216)%256,math.floor(n/65536)%256,math.floor(n/256)%256,n%256)end;return '\137PNG\13\10\26\10'..u(13)..'IHDR'..u(w)..u(h)end

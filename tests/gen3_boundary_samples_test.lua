@@ -34,3 +34,21 @@ assert(B.regions(primary,world,'FR_ROUTE_2')==regions,'unchanged map identities 
 local changed=B.regions(primary,world,'FR_ROUTE_2_ALIAS')
 assert(changed~=regions and changed[1].mapId=='FR_ROUTE_2_ALIAS','map identity change reused stale owner metadata')
 print('PASS connected owner map identities without native def.id and stable identity-aware region reuse')
+
+local function changedRegions(message)
+ local next=B.regions(primary,world,'FR_ROUTE_2_ALIAS')
+ assert(next~=changed,message);changed=next
+ return next
+end
+world[1].ox=11;assert(changedRegions('mutable offset ignored')[2].x==11)
+neighbor.midLayout.width=7;assert(changedRegions('mutable dimensions ignored')[2].w==7)
+local replacement={midLayout=neighbor.midLayout};world[1].def=replacement
+assert(changedRegions('definition replaced with same layout ignored')[2].def==replacement)
+primary.midLayout.height=12;assert(changedRegions('primary dimensions ignored')[1].h==12)
+B.clear();changedRegions('clear retained cache')
+collectgarbage('collect');collectgarbage('stop')
+local before=collectgarbage('count')
+for _=1,10000 do assert(B.regions(primary,world,'FR_ROUTE_2_ALIAS')==changed)end
+local allocated=collectgarbage('count')-before;collectgarbage('restart')
+assert(allocated<32,'unchanged regions allocated per-frame fingerprints: '..allocated)
+print('PASS mutable boundary invalidation and allocation-free warm lookups')

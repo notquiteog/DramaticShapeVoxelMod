@@ -92,6 +92,14 @@ before=#meshes;cancelled=0
 result,reason=G.buildBatches(many,upload,{cancelled=function()cancelled=cancelled+1;return cancelled>=260 end})
 assert(not result and reason:find('cancelled'))
 for i=before+1,#meshes do assert(meshes[i].released,'cancelled chunked fallback leaked GPU resource')end
+instancing=true
+local left=assert(G.buildBatches(placements,upload));local beforeShared=#meshes
+local right=assert(G.buildBatches(placements,upload))
+assert(left[1].model==right[1].model and left[1].mesh~=right[1].mesh,'adjacent scenes did not share prototype with separate placements')
+assert(#meshes-beforeShared==#right,'repeated scene uploaded model instead of only instance offsets')
+local shared=right[1].model
+G.releaseBatches(left);assert(not shared.released,'old map evicted live destination model')
+G.releaseBatches(right);assert(shared.released,'unused shared prototype leaked')
 failUpload=true;assert(not G.buildBatches(placements,upload),'upload failure did not preserve native fallback')
 assert(not G.buildBatches({{model='oras_green',extent=8,x=0,y=0/0,z=0}},upload))
 assert(not G.buildBatches({{model='oras_green',extent=8,x=0,y=0}},upload))

@@ -2,6 +2,7 @@ local data=dofile('lib/ImportedInteriorData.lua')
 local V={mod={read=function(path)local f=io.open(path,'rb');if not f then return end;local s=f:read('*a');f:close();return s end}}
 local modules={SceneryModelData={},ModelInstances={},BuildBudget={check=function()end}}
 V.require=function(name)return assert(modules[name],name)end
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V)
 assert(S.register('oras_center_pc',data.oras_center_pc,{read=V.mod.read}))
 local info=S.info('oras_center_pc');assert(info.parts==4)
