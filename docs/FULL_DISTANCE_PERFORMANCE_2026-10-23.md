@@ -33,3 +33,12 @@ renders compare byte-identically with culling disabled/enabled; the resulting
 scene image was inspected. Source fixture/output lives in
 .scratch/perf-full-20261023. Real saves untouched. Physical mobile, all-game
 FULL performance, and full feature parity are not certified.
+
+Follow-up: render-scoped native actor preparation caches pose/padding/ground and
+base/caster matrices, preserving every provider draw and per-pass reflection.
+Four cached/uncached native views are byte-identical; preparation calls fall
+49–61% in the inspected fixture. No end-to-end FPS gain is certified by this.
+Merged independent model history throughf24ff378 in c67a1ec9. Combined1459Lua
+files compile and47focused suites pass. Repeated merged four-view actor-cache
+comparison passes; the merged capture was inspected. Model coverage belongs to
+its separate owner and this optimization does not certify its completeness.
