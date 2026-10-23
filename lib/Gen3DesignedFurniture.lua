@@ -221,7 +221,8 @@ function M.append(p,source,box,sample,emit)
   return y
  end
  local function point(a)return {a[1]+x,height(a[2]),a[3]+z}end
- return Geometry.draw(p.recipe.design,{
+ local joined=p.recipe.joinedBoxes and{}or nil
+ local result=Geometry.draw(p.recipe.design,{
   sample=sample,recipe=p.recipe,width=p.w,height=p.d,
   face=function(vertices,uv,shade)
    local points={};for i,a in ipairs(vertices)do points[i]=point(a)end
@@ -229,9 +230,15 @@ function M.append(p,source,box,sample,emit)
   end,
   box=function(l,b,n,r,h,s,uv)
    b,h=height(b),height(h)
+   if joined then joined[#joined+1]={lo={l+x,b,n+z},hi={r+x,h,s+z},uv=uv};return end
    box(l+x,b,n+z,r+x,h,s+z,uv)
    emit({{l+x,b,s+z},{r+x,b,s+z},{r+x,b,n+z},{l+x,b,n+z}},uv,.65)
   end,
   source=function(sx,sy,w,h,a,b,c,d)source(sx,sy,w,h,point(a),point(b),point(c),point(d))end})
+ if joined then
+  local union=V and V.require('Gen3BoxUnion')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3BoxUnion.lua')
+  union.append(joined,emit)
+ end
+ return result
 end
 return M

@@ -36,6 +36,7 @@ for i,a in ipairs(triangles)do for j=i+1,#triangles do local b=triangles[j]
 end end
 assert(#triangles==expected)
 end
+if ...=='helper'then return check end
 for _,q in ipairs{
  {'lib/ImportedBirchBookcaseData.lua','oras_birch_bookcase',412},
  {'lib/ImportedFlowerBookcaseData.lua','oras_flower_bookcase',620},

@@ -6731,4 +6731,15 @@ native entries/six overviews and nine source angles inspected; all 12 final
 missing-PNG fallback pass. Six focused suites and byte-identical regeneration
 pass. Full census 2161 hashes/families/prior candidates unchanged, 2041 candidates,
 1996 accepted components on 261 maps; whole-map false. See
- docs/ORAS_BIRCH_BOOKCASE_2026-10-23.md. Scene stays root-owned; free cases next.
+docs/ORAS_BIRCH_BOOKCASE_2026-10-23.md. Scene stays root-owned; free cases next.
+
+Native free-case fallback fix: only birch_free_books/birch_free_books_end opt
+into exact box union and Y0 contact recess. Original shelf/frame/box/lid shared
+faces overlapped; all internal/duplicate coplanar faces now removed while
+original UVs/upper dimensions/native cells stay fixed. Regression reproduces
+old overlap, proves zero coplanar faces plus exact union surface areas. Six
+focused suites pass; all six RSE native fixtures reviewed close/far/overview,
+hashes unchanged. Separate accepted-native-fixes.jsonl records this native-only
+scope. Existing archive-box top35 still clips room ceiling32; source case/box
+assembly is in progress. No new source-coverage acceptance. See
+docs/NATIVE_LAB_CASE_UNION_2026-10-23.md. Scene remains root-owned.
