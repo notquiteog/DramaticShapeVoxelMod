@@ -97,6 +97,10 @@ end
 -- operation. Only a completely built replacement hides the old tree model.
 function M.buildGen3(cells,newMesh,parts,options)
  local list=M.gen3Placements(cells,options)
+ if options and options.region=='hoenn'then
+  local ok,palette=pcall(V.require,'HoennTreePalette')
+  if ok and palette.prepare then palette.prepare(list)end
+ end
  local Models=V.require('SceneryModels')
  if Models.retryImages then local seen={};for _,p in ipairs(list)do
   if not seen[p.model]then Models.retryImages(p.model);seen[p.model]=true end

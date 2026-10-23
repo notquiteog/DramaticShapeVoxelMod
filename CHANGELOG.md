@@ -1,4 +1,4 @@
-## 1.57.8 — Measured rendering and streaming optimization
+## 1.57.9 — Measured rendering and streaming optimization
 
 - Share live GPU scenery prototypes between overlapping scenes, with explicit
   leases and complete cancellation/failure cleanup; no idle GPU cache.
@@ -14,6 +14,12 @@
 
 Measured 1440p warm overworld work improves, but cold crossings and the steady
 165 FPS target remain unresolved. See docs/RENDER_OPTIMIZATION_2026-10-23.md.
+
+## 1.57.8 — 2026-10-23
+
+- Recess building contact rings beneath native ground to prevent coplanar closure artifacts, preserving doors and native tiles.
+- Add authentic ORAS rural/Rustboro fences across21 reviewed native families and preserve exact edition-specific ground/foliage.
+- Harmonize genuine ORAS evergreen foliage within Hoenn, preserving source geometry and other regions.
 
 ## 1.57.7 — Streaming preparation and XD fallback
 

@@ -55,7 +55,7 @@ function M.build(g,cells,newMesh,parts)
  -- Shorten two empty side-wall bays4sourceunits each, preserving the full
  -- windows, corner posts, front portal and vent pipe as rigid assemblies.
  -- Every vertex stays in the three native blocked body rows.
- local fit={width=64,depth=48,padding=.25,anchor='door',targetX=24,targetZ=39.05}
+ local fit={groundInset=.05,width=64,depth=48,padding=.25,anchor='door',targetX=24,targetZ=39.05}
  local result,why=Models.buildBatches({{model=id,x=g.cx*16,y=g.groundHeight or 0,z=(g.cy+1)*16,fit=fit}},newMesh,{parts=parts})
  if not result then return false,why end
  g.importedHoenn=assert(Models.fit(id,fit));g.importedHoenn.model=id

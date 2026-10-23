@@ -20,7 +20,7 @@ local old=S.buildBatches;S.buildBatches=function(placements,_,opts)
  for _,part in ipairs(parts)do
   door=door or part.role=='source_door';shade=shade or part.alphaMode=='blend' and math.abs(part.opacity-.2903226)<1e-6
   gables=gables or part.name=='authored_side_gables';foundation=foundation or part.name=='authored_closed_foundation'
-  for _,v in ipairs(part.vertices)do assert(v[1]>=.25-1e-6 and v[1]<=79.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=47.75+1e-6 and v[2]>=0)end
+  for _,v in ipairs(part.vertices)do assert(v[1]>=.25-1e-6 and v[1]<=79.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=47.75+1e-6 and v[2]>=-.05)end
  end
  assert(door and shade and gables and foundation)
  assert(f.bounds[4]-f.bounds[1]>64 and f.bounds[6]-f.bounds[3]>47)

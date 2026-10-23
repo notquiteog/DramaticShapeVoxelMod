@@ -1,3 +1,8 @@
+# Combined optimization/model release1.57.9 — 2026-10-23
+
+Merged remote model work83f1d36a with optimization work0ef5b831. Preserve both
+contact-inset geometry and cached-fit separation; final combined tests below.
+
 # Rendering optimization1.57.8 — 2026-10-23
 
 Current batch shares live GPU prototypes, culls only proven offscreen Gen3 main
@@ -11,6 +16,23 @@ This is NOT full165FPS completion or physical mobile certification. Model covera
 remains with the other owner. Final1.57.8 package passed seven-mod load/render in
 all11games and forest/lab/first-person checks in all6GB/GBC editions. All593
 packaged Lua files compile. Documentation-only follow-up preserves tested code.
+
+# Depth/fence/foliage release1.57.8 — 2026-10-23
+
+Explicit building contact-ring recess prevents coplanar ground closures while
+preserving portals, upper geometry and native floors. Authentic ORAS rails now
+cover21 native RSE families/196EM195RU195SA cells, with exact native-ground
+proof and edition-specific retained leaf masks. Hoenn evergreen canopy paint
+now harmonizes its genuine ORAS source with darker broadleaf foliage; other
+regions stay isolated. Native0.3.95 five-game streaming/map-hash checks pass;
+front/first/rotated contact and interior captures inspected. Full coverage is
+still in progress; three workers continue exterior/interior source families.
+See docs/DEPTH_FENCES_FOLIAGE_2026-10-23.md for scope and evidence limits.
+Combined source verification:432 suites pass,0 fail,58 external skips;562
+production LuaJIT files compile. Exact package Emerald/FireRed contact smoke
+passes with native hashes unchanged and no renderer recovery. Concurrent
+committed performance history through91b89ba3 is merged; active primary-working-
+tree edits stay untouched. Release package receives a final FAR64 route smoke.
 
 # Streaming/parity release1.57.7 — 2026-10-23
 
