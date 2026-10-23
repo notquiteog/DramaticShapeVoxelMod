@@ -1,6 +1,7 @@
 local source=dofile('lib/ImportedHoennShopData.lua').oras_route104_pretty_petal_shop
 local modules={SceneryModelData={},ImportedHoennShopData={oras_route104_pretty_petal_shop=source},ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 modules.Gen3ImportedFlowerCards=assert(loadfile('lib/Gen3ImportedFlowerCards.lua'))(V)
 modules.Gen3ImportedFlowers=assert(loadfile('lib/Gen3ImportedFlowers.lua'))(V)

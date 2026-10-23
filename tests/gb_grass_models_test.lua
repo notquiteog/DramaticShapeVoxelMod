@@ -114,12 +114,15 @@ assert(not M.takeJobFailure(c.id));M.invalidate(c.id)
 local d={id='CANCEL',def={width=1,height=1},tileset={id='TEST'}}
 forceYield=true;checks=0;local start=#meshes
 M.request(d,false,nil,false);M.pump();local first=#meshes;assert(first>=start+2)
-M.request(d,true,nil,true);M.pump();local second=#meshes;assert(second>=first+2)
+M.request(d,true,nil,true);M.pump();local second=#meshes;assert(second==first+1,'BODY should upload only offsets for the live FULL prototype')
 assert(M.cancelSpeculative(d.id,false))
-for i=start+1,first do assert(meshes[i].released,'cancelled FULL leaked uploaded grass')end
+for i=start+1,first do
+ local prototype=meshes[i].vertices[1] and meshes[i].vertices[1][4]~=nil
+ assert(meshes[i].released~=prototype,'FULL cancellation must release offsets but retain BODY prototype')
+end
 for i=first+1,second do assert(not meshes[i].released,'FULL cancellation released pending BODY')end
 M.invalidate(d.id)
-for i=first+1,second do assert(meshes[i].released,'invalidation leaked pending BODY')end
+for i=start+1,second do assert(meshes[i].released,'invalidation leaked final shared prototype or pending BODY')end
 assert(not texture.released,'per-scene cleanup freed shared imported material')
 -- Bank sidecars own their own mesh, and the complete explicit water policy
 -- must invalidate them even when ordinary -2 water answers are identical.

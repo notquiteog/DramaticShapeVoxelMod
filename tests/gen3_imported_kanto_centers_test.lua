@@ -1,5 +1,6 @@
 local modules={SceneryModelData=dofile('lib/SceneryModelData.lua'),HGSSCenterData=dofile('lib/HGSSCenterData.lua'),ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local C=assert(loadfile('lib/Gen3ImportedKantoCenters.lua'))(V)
 local function fixture(depth,header)

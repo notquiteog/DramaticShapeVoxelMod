@@ -46,6 +46,7 @@ function M.context()return Map.currentDef()end
 local cache,foliage,bark,spriteMeshes={ },nil,nil,{}
 local savedCanvas,saved=false,false
 local quadIndices={1,2,3,1,3,4}
+local cardinalDirections={{-1,0},{1,0},{0,-1},{0,1}}
 local function quad(v,i,p,uv,shade,anchor)
  Budget.tick()
  local base=#v
@@ -410,6 +411,7 @@ local function build(req,cache,previous)
  cache.bankModels={};cache.bankFaceCount=0
  local bankBatches={}
  local batches={};local wood,wi,leaf,li,hedges,hi={},{},{},{},{},{}
+ local starts={}
  for _,c in pairs(cells)do
   Budget.tick()
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
@@ -417,7 +419,8 @@ local function build(req,cache,previous)
   if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},gv={},gi={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
-  local starts={#b.v,#b.rv,#b.pv,#b.wv,#wood,#leaf,#hedges,#b.gv}
+  starts[1],starts[2],starts[3],starts[4]=#b.v,#b.rv,#b.pv,#b.wv
+  starts[5],starts[6],starts[7],starts[8]=#wood,#leaf,#hedges,#b.gv
   local truckFloor=V.require('Gen3TruckCargo').floor(c)
   if truckFloor then
    plane(b.gv,b.gi,x,z,uvFor(ts,truckFloor)or uv)
@@ -631,10 +634,12 @@ local function build(req,cache,previous)
   local base=c.base or 0
   -- Terrain already owns absolute cap/retaining-face heights.
   if shape.kind=='cliff' or shape.kind=='caveWall' then base=0 end
+  if base~=0 then
   Elevation.lift(b.v,starts[1],base);Elevation.lift(b.rv,starts[2],base)
   Elevation.lift(b.pv,starts[3],base);Elevation.lift(b.wv,starts[4],base)
   Elevation.lift(wood,starts[5],base);Elevation.lift(leaf,starts[6],base)
   Elevation.lift(hedges,starts[7],base);Elevation.lift(b.gv,starts[8],base)
+  end
   if c.bridge then V.require('Gen3Bridges').append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
   local waterTs,waterMid,waterHeight=V.require('Gen3Bridges').water(c,NativeWater.surface)
   if waterTs then
@@ -671,7 +676,7 @@ local function build(req,cache,previous)
     water and NativeWater.surface(c,u.layer)or u.height+base-c.floor.height)
   end
   if shape.kind~='cliff' and shape.kind~='caveWall' and shape.kind~='water' and not c.stairs and shape.kind~='steps' then
-   for _,d in ipairs({{-1,0},{1,0},{0,-1},{0,1}})do
+   for _,d in ipairs(cardinalDirections)do
     local n=cells[(c.cx+d[1])..':'..(c.cy+d[2])]
     if n and n.shape.kind~='cliff' and n.shape.kind~='caveWall' and n.shape.kind~='steps' and not n.stairs then
      local low=n.base or 0
@@ -847,11 +852,17 @@ local function build(req,cache,previous)
    local h=b.wv[j][2];local group=levels[h]
    if not group then group={v={},i={}};levels[h]=group end
    local base=#group.v
-   for k=0,3 do group.v[#group.v+1]=b.wv[j+k]end
+   group.bounds=group.bounds or{math.huge,h,math.huge,-math.huge,h,-math.huge}
+   local bounds=group.bounds
+   for k=0,3 do
+    local vertex=b.wv[j+k];group.v[#group.v+1]=vertex
+    bounds[1],bounds[3]=math.min(bounds[1],vertex[1]),math.min(bounds[3],vertex[3])
+    bounds[4],bounds[6]=math.max(bounds[4],vertex[1]),math.max(bounds[6],vertex[3])
+   end
    for _,k in ipairs(quadIndices)do group.i[#group.i+1]=base+k end
   end
   for h,g in pairs(levels)do
-   local mesh=assert(R.newMesh(g.v,g.i));part.waters[#part.waters+1]={mesh=mesh,height=h};Budget.check()
+   local mesh=assert(R.newMesh(g.v,g.i));part.waters[#part.waters+1]={mesh=mesh,height=h,bounds=g.bounds};Budget.check()
   end
  end
  cache.rockInstances={}
@@ -924,14 +935,21 @@ local function prepare(game,vw,vh,cam)
  for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','treeFootprints','gymCount','civicCount','stairCount','chimneyCount','propCount','bridgeCount','dockCellCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
  return true
 end
+local framePlanes
+local Cull=V.require('FrustumCull')
 local function terrain(draw)
  local original=draw
- local function draw(...)
-  local previous=R.surfaceDetail
-  R.surfaceDetail=TreeStyle.surfaces:get()=='detailed'
-  local ok,err=pcall(original,...)
-  R.surfaceDetail=previous
-  if not ok then error(err,0)end
+ -- Surface detail is a color-pass uniform, never used by the depth shader.
+ -- Resolve the setting once per pass, not once per mesh in large forests.
+ if original~=Shadow.draw then
+  local detailed=TreeStyle.surfaces:get()=='detailed'
+  draw=function(...)
+   local previous=R.surfaceDetail
+   R.surfaceDetail=detailed
+   local ok,err=pcall(original,...)
+   R.surfaceDetail=previous
+   if not ok then error(err,0)end
+  end
  end
  for _,p in ipairs(cache.parts)do
   -- Always bind the current native image: animations and palette updates stay live.
@@ -980,8 +998,14 @@ local function terrain(draw)
  for _,batch in ipairs(cache.treeInstances or {})do draw(batch,V.require('NativeTreeArt').image())end
  for _,part in ipairs(cache.grassModels or{})do if part.count>0 then draw(part.mesh,part.image)end end
  for _,part in ipairs(cache.bankModels or{})do draw(part.mesh,part.image)end
- for _,part in ipairs(cache.importedTrees or{})do if part.count>0 then draw(part.mesh,part.image)end end
- V.require('SceneryDraw').opaque(cache.sceneryModels,draw,original==Shadow.draw)
+ for _,part in ipairs(cache.importedTrees or{})do
+  if part.count>0 and (original==Shadow.draw or Cull.visible(framePlanes,part.bounds))then
+   local batch=part.mesh
+   if original~=Shadow.draw then batch=V.require('ModelInstances').visible(batch,framePlanes,part.localBounds)end
+   if type(batch)~='table'or batch.count~=0 then draw(batch,part.image)end
+  end
+ end
+ V.require('SceneryDraw').opaque(cache.sceneryModels,draw,original==Shadow.draw,framePlanes)
  local doorAnim=require('src.core.game3.doors').getActiveAnim()
  for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').draw(center,doorAnim,draw)end
  for _,house in ipairs(cache.importedHoenn or{})do V.require('Gen3DewfordDoors').draw(house,doorAnim,draw)end
@@ -1344,6 +1368,7 @@ function M.draw(game,vw,vh,cam)
  R.glassMask=nil;R.glassNight=not indoor and V.require('DayNight').windowLight() or 0
  R.buildingLightField=not indoor and cache.lightField or nil
  if not R.beginScene(renderWidth,renderHeight,cx,cz,vw,vh,background,'firered') then M.restore();return false end
+ framePlanes=R.curveK==0 and Cull.prepare(R.vp) or nil
  if cam.actors then
   local p=cam.actors.points
   local function row(id)
@@ -1374,10 +1399,14 @@ function M.draw(game,vw,vh,cam)
   R.battleOcclusion(nil)
   local options=cache.waterOptions
   options.underColor,options.underDepth=nil,nil
-  if #water>0 and cache.wetRockCells>0 and V.require('Water').level()>=2 then
+  local visibleWater=false
+  for _,group in ipairs(cache.waterLevels or{})do
+   if Cull.visible(framePlanes,group.bounds)then visibleWater=true;break end
+  end
+  if visibleWater and cache.wetRockCells>0 and V.require('Water').level()>=2 then
    options.underColor,options.underDepth=R.captureUnderwater(true)
   end
-  for _,group in ipairs(cache.waterLevels or{})do
+  for _,group in ipairs(cache.waterLevels or{})do if Cull.visible(framePlanes,group.bounds)then
    local h=group.height
    options.plane=h
    V.require('WaterSurfacePass').draw(group,function()actors(game,cam,R.draw)end,function()
@@ -1386,7 +1415,7 @@ function M.draw(game,vw,vh,cam)
     reflectPlane=nil
     if not ok then error(err,0)end
    end,options)
-  end
+  end end
   if not cam.replay then V.require('Gen3ScreenEffects').background(require('src.core.game3.field_effects'),renderWidth,renderHeight)end
   actors(game,cam,R.draw)
   local rainProps=V.require('KfpRainProps')
@@ -1412,7 +1441,7 @@ function M.draw(game,vw,vh,cam)
   if not cam.replay then rideDust(game,cam);fieldEffects(R.draw,cam)end
  end
  R.battleOcclusion(nil)
- if not plate then V.require('SceneryDraw').blended(cache.sceneryModels,R.draw,R.eye)end
+ if not plate then V.require('SceneryDraw').blended(cache.sceneryModels,R.draw,R.eye,framePlanes)end
  if not plate then
   local wet=V.require('KfpWetGround')
   if not cam.battle and not cam.replay and wet.setting:get()~='off'then

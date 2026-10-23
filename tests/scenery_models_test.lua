@@ -2,7 +2,7 @@ local Data=assert(loadfile('lib/SceneryModelData.lua'))()
 local instances=true;local onBudget;local released=0;local allocations=0;local failAt
 local function object()return{setTexture=function(self,i)self.image=i end,release=function(self)self.released=true;released=released+1 end}end
 local I={new=function(mesh,positions)if not instances then return nil end;local b=object();b.instanceMesh=mesh;b.positions=positions;return b end}
-local V={require=function(n)if n=='ModelInstances'then return I elseif n=='BuildBudget'then return{check=function()if onBudget then onBudget()end end}elseif n=='SceneryModelData'then return Data end;error(n)end,mod={read=function(_,path)local f=assert(io.open(path,'rb'));local b=f:read('*a');f:close();return b end}}
+local V={require=function(n)if n=='SharedModelMesh'then return dofile('lib/SharedModelMesh.lua')elseif n=='ModelInstances'then return I elseif n=='BuildBudget'then return{check=function()if onBudget then onBudget()end end}elseif n=='SceneryModelData'then return Data end;error(n)end,mod={read=function(_,path)local f=assert(io.open(path,'rb'));local b=f:read('*a');f:close();return b end}}
 local S=assert(loadfile('lib/SceneryModels.lua'))(V)
 for id,d in pairs(Data)do
  local info=assert(S.info(id));assert(info.parts==#d.parts and info.vertices>0)
@@ -36,6 +36,14 @@ assert(not S.register('third_party:house',def,{read=function()end}));assert(not 
 love={filesystem={newFileData=function(bytes)return{bytes=bytes,release=function()end}end},graphics={newImage=function(file)allocations=allocations+1;if failAt and allocations==failAt then error('image failure')end;local o=object();function o:getDimensions()return 8,8 end;function o:setFilter()end;function o:setWrap()end;return o end}}
 local function upload(vertices,indices)local o=object();o.vertices=vertices;o.indices=indices;return o end
 local placements={{model='third_party:house',x=0,y=2,z=0,fit={width=16,depth=16}},{model='third_party:house',x=16,y=4,z=0,fit={width=16,depth=16}}}
+local originalVertices=S.vertices;local fits=0
+S.vertices=function(...)fits=fits+1;return originalVertices(...)end
+local repeated={}
+for i=1,1000 do repeated[i]={model='third_party:house',x=i*16,y=0,z=0,fit={width=16,depth=16}}end
+local many=assert(S.buildBatches(repeated,upload));assert(fits==1,'identical tree placements refitted per instance');S.releaseBatches(many)
+fits=0;repeated[500].fit.rotation=1
+many=assert(S.buildBatches(repeated,upload));assert(fits==3,'changed fit reused stale geometry');S.releaseBatches(many)
+S.vertices=originalVertices
 local batches=assert(S.buildBatches(placements,upload));assert(#batches==1 and batches[1].instanced and batches[1].count==2 and allocations==1);S.releaseBatches(batches)
 instances=false;batches=assert(S.buildBatches(placements,upload));assert(not batches[1].instanced and #batches[1].mesh.vertices==6 and #batches[1].mesh.indices==6);assert(batches[1].mesh.vertices[1][2]==2 and batches[1].mesh.vertices[4][1]==16.25);S.releaseBatches(batches)
 local count=0;local partial,err=S.buildBatches(placements,function(...)count=count+1;if count==2 then error('upload failure')end;return upload(...)end);assert(not partial and err:find('upload failure',1,true),'partial upload failed to fall back')
