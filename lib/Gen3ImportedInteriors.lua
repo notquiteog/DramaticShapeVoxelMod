@@ -5,7 +5,8 @@ local Models=V.require('SceneryModels')
 local PCFrames=V.require('Gen3PublicPCFrames')
 local M={id='oras_center_pc',tvId='oras_home_tv',bedId='oras_comfortable_bed'}
 local registered={}
-local dataFiles={oras_center_pc='ImportedInteriorData',oras_home_tv='ImportedInteriorTVData',oras_comfortable_bed='ImportedInteriorBedData'}
+local dataFiles={
+ oras_trick_house_floor_cushion='ImportedTrickCushionData',oras_center_pc='ImportedInteriorData',oras_home_tv='ImportedInteriorTVData',oras_comfortable_bed='ImportedInteriorBedData'}
 dataFiles.oras_littleroot_dining_table='ImportedHomeFurnitureData'
 dataFiles.oras_littleroot_fridge='ImportedHomeFurnitureData'
 dataFiles.oras_oldale_checked_table='ImportedOldaleFurnitureData'
@@ -22,6 +23,8 @@ dataFiles.oras_birch_freestanding_case='ImportedBirchFreecaseData'
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
+ hoenn_home_cushion={pair='building__generic_building',family='rse',design='em_home_cushion',rows={{0x244}},collisionRows={{0}},
+  model='oras_trick_house_floor_cushion',fitWidth=16,fitDepth=16,fitHeight=4,zRows=0,groundInset=.025},
  birch_free_books={pair='building__lab',family='rse',design='em_lab_free_books',rows={{0x224,0x225},{0x22c,0x22d},{0x234,0x235}},collisionRows={{0,0},{7,7},{7,7}},
   model='oras_birch_freestanding_case',fitWidth=32,fitDepth=32,fitHeight=32,groundInset=.025},
  birch_free_books_end={pair='building__lab',family='rse',design='em_lab_free_books',rows={{0x236,0x237},{0x22c,0x22d},{0x234,0x235}},collisionRows={{0,0},{7,7},{7,7}},

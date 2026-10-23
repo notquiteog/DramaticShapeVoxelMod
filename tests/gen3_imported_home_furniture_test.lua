@@ -13,6 +13,7 @@ V.require=function(name)
  if name=='ImportedPyreMemorialData'then return dofile('lib/ImportedPyreMemorialData.lua')end
  if name=='ImportedFlowerBookcaseData'then return dofile('lib/ImportedFlowerBookcaseData.lua')end
  if name=='ImportedBirchBookcaseData'then return dofile('lib/ImportedBirchBookcaseData.lua')end
+ if name=='ImportedTrickCushionData'then return dofile('lib/ImportedTrickCushionData.lua')end
  if name=='ImportedBirchFreecaseData'then return dofile('lib/ImportedBirchFreecaseData.lua')end
  if name=='ImportedHomeFurnitureData'then return dofile('lib/ImportedHomeFurnitureData.lua')end
  if name=='ImportedOldaleFurnitureData'then return dofile('lib/ImportedOldaleFurnitureData.lua')end
@@ -20,6 +21,7 @@ V.require=function(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='hoenn_home_cushion',pair='building__generic_building',design='em_home_cushion',rows={{0x244}},coll={{0}},x=3,z=3,id='oras_trick_house_floor_cushion',fit={16,16,0},height=4},
  {name='birch_free_books',pair='building__lab',design='em_lab_free_books',rows={{0x224,0x225},{0x22c,0x22d},{0x234,0x235}},coll={{0,0},{7,7},{7,7}},x=0,z=5,id='oras_birch_freestanding_case',fit={32,32,1}},
  {name='birch_free_books_end',pair='building__lab',design='em_lab_free_books',rows={{0x236,0x237},{0x22c,0x22d},{0x234,0x235}},coll={{0,0},{7,7},{7,7}},x=2,z=5,id='oras_birch_freestanding_case',fit={32,32,1}},
  {name='birch_books',pair='building__lab',design='em_lab_books',rows={{0x210,0x211},{0x218,0x219},{0x220,0x221}},coll={{7,7},{7,7},{7,0}},x=0,z=0,id='oras_birch_bookcase',fit={32,16,1}},

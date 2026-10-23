@@ -1,3 +1,15 @@
+# Original floor cushion family — 2026-10-23
+
+All54 Emerald native floor cushions on13 rooms use the matching original ORAS
+Trick House source:128 original+14 exact underside triangles, original PNG/UV,
+source proportions, one walkable cell, .025 bottom-only recess and no coplanar
+planes. Native0.3.96 all-owner front/available-side/room views and nine source
+angles reviewed; all54 missing-PNG fallback checks pass. Every raw census hash
+unchanged; two native entry-script deltas match before/source/fallback runs.
+Five-game candidates2101; accepted source components2056/274maps. Every whole
+map stays unaccepted; remaining furniture and room families continue. See
+docs/ORAS_FLOOR_CUSHIONS_2026-10-23.md.
+
 # Native fallback archive-box ceiling correction — 2026-10-23
 
 The six RSE Birch-lab fallback archive boxes now fit uniformly around their

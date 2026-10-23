@@ -5121,7 +5121,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_trick_house_floor_cushion"
+      ]
     },
     "hoenn_home_fortree_appliance": {
       "design": "em_home_appliance",
@@ -14463,7 +14465,7 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 411,
+      "candidateFurniture": 465,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
