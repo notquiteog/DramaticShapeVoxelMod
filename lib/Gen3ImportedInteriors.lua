@@ -16,10 +16,13 @@ dataFiles.oras_oldale_china_cupboard='ImportedOldaleCupboardData'
 dataFiles.oras_oldale_kitchen_sink='ImportedOldaleSinkData'
 dataFiles.oras_pyre_memorial='ImportedPyreMemorialData'
 dataFiles.oras_flower_bookcase='ImportedFlowerBookcaseData'
+dataFiles.oras_birch_bookcase='ImportedBirchBookcaseData'
 -- Complete public-PC and genuine TV drawings include the wall above and
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
+ birch_books={pair='building__lab',family='rse',design='em_lab_books',rows={{0x210,0x211},{0x218,0x219},{0x220,0x221}},collisionRows={{7,7},{7,7},{7,0}},
+  model='oras_birch_bookcase',fitWidth=32,fitDepth=16,fitHeight=32,groundInset=.025},
  hoenn_home_small_books={pair='building__generic_building',family='rse',design='em_home_books',rows={{0x26e,0x26f},{0x276,0x277},{0x27e,0x27f}},collisionRows={{7,7},{7,7},{0,0}},
   model='oras_flower_bookcase',fitWidth=32,fitDepth=16,fitHeight=32,rotation=3,groundInset=.025},
  hoenn_home_books={pair='building__generic_building',family='rse',design='em_home_books',rows={{0x279,0x27a},{0x281,0x282},{0x289,0x28a}},collisionRows={{7,7},{7,7},{0,0}},

@@ -12,12 +12,14 @@ V.require=function(name)
  if name=='ImportedOldaleSinkData'then return dofile('lib/ImportedOldaleSinkData.lua')end
  if name=='ImportedPyreMemorialData'then return dofile('lib/ImportedPyreMemorialData.lua')end
  if name=='ImportedFlowerBookcaseData'then return dofile('lib/ImportedFlowerBookcaseData.lua')end
+ if name=='ImportedBirchBookcaseData'then return dofile('lib/ImportedBirchBookcaseData.lua')end
  if name=='ImportedHomeFurnitureData'then return dofile('lib/ImportedHomeFurnitureData.lua')end
  if name=='ImportedOldaleFurnitureData'then return dofile('lib/ImportedOldaleFurnitureData.lua')end
  error(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='birch_books',pair='building__lab',design='em_lab_books',rows={{0x210,0x211},{0x218,0x219},{0x220,0x221}},coll={{7,7},{7,7},{7,0}},x=0,z=0,id='oras_birch_bookcase',fit={32,16,1}},
  {name='hoenn_home_small_books',pair='building__generic_building',design='em_home_books',rows={{0x26e,0x26f},{0x276,0x277},{0x27e,0x27f}},coll={{7,7},{7,7},{0,0}},x=4,z=0,id='oras_flower_bookcase',fit={32,16,1},rotation=3},
  {name='hoenn_home_books',pair='building__generic_building',design='em_home_books',rows={{0x279,0x27a},{0x281,0x282},{0x289,0x28a}},coll={{7,7},{7,7},{0,0}},x=2,z=0,id='oras_flower_bookcase',fit={32,16,1},rotation=3},
  {name='hoenn_pyre_memorial_wall_shadow',primary='general',mapId='EM_MT_PYRE_1F',pair='general__facility',design='fr_tower_grave',rows={{0x326}},coll={{7}},x=9,z=7,id='oras_pyre_memorial',fit={16,16,0},height=17},

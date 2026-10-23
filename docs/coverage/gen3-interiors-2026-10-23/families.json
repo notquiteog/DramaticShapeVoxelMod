@@ -28,7 +28,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_birch_bookcase"
+      ]
     },
     "birch_computer": {
       "design": "em_lab_computer",
@@ -14457,7 +14459,7 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 405,
+      "candidateFurniture": 409,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
@@ -14478,14 +14480,14 @@
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 414,
+      "candidateFurniture": 418,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 414,
+      "candidateFurniture": 418,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,

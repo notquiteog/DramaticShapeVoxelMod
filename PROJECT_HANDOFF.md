@@ -6719,3 +6719,16 @@ entry-script closure is recorded separately and untouched. Three focused
 source/identity suites pass. Five-edition census hashes/families unchanged,
 2029 candidates, 1984 accepted components/258 maps, whole-map false. Original
 bookcase source now has 50 accepted placements. Room-boundary work continues.
+
+Original ORAS Birch lab case now covers all twelve Birch/Lanette wall cases
+(E4/R4/S4). Complete original case, two bins, two shelves and fifteen books:
+310 original +102 exact closure triangles. Source vertex RGBA lighting removed;
+one three-book group separates 0.06 source units to eliminate five original
+coplanar slivers. Exact tilted/collinear source rims retained; no duplicate
+shelf-back/end caps. Closed books, bins and outer case pass edge-owner tests,
+all fourteen source models pass coplanar geometry tests. All 12 final individual
+native entries/six overviews and nine source angles inspected; all 12 final
+missing-PNG fallback pass. Six focused suites and byte-identical regeneration
+pass. Full census 2161 hashes/families/prior candidates unchanged, 2041 candidates,
+1996 accepted components on 261 maps; whole-map false. See
+ docs/ORAS_BIRCH_BOOKCASE_2026-10-23.md. Scene stays root-owned; free cases next.
