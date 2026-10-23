@@ -18,6 +18,7 @@ V.require=function(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='hoenn_home_small_books',pair='building__generic_building',design='em_home_books',rows={{0x26e,0x26f},{0x276,0x277},{0x27e,0x27f}},coll={{7,7},{7,7},{0,0}},x=4,z=0,id='oras_flower_bookcase',fit={32,16,1},rotation=3},
  {name='hoenn_home_books',pair='building__generic_building',design='em_home_books',rows={{0x279,0x27a},{0x281,0x282},{0x289,0x28a}},coll={{7,7},{7,7},{0,0}},x=2,z=0,id='oras_flower_bookcase',fit={32,16,1},rotation=3},
  {name='hoenn_pyre_memorial_wall_shadow',primary='general',mapId='EM_MT_PYRE_1F',pair='general__facility',design='fr_tower_grave',rows={{0x326}},coll={{7}},x=9,z=7,id='oras_pyre_memorial',fit={16,16,0},height=17},
  {name='rs_pyre_memorial_wall_shadow',primary='general',mapId='RU_MT_PYRE_1F',pair='general__facility',design='fr_tower_grave',rows={{0x326}},coll={{7}},x=9,z=7,id='oras_pyre_memorial',fit={16,16,0},height=17},

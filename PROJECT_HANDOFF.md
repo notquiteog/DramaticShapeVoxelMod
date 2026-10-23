@@ -6710,3 +6710,12 @@ positive-area coplanar intersections; regeneration byte-identical. Full census
 2161 hashes/family counts unchanged, 2012 candidates, 1967 accepted components
 on 258 maps, whole-map false. docs/ORAS_FLOWER_BOOKCASE_2026-10-23.md. Separate
 small-bookcase native family and room framing remain pending. Scene root-owned.
+
+Separate small-bookcase continuation verified all E5/R6/S6 locations with the
+same original bookcase source. Exact separate native art/collision guard;
+all 17 before-images, first-person entries and room overviews inspected.
+Missing-PNG fallback passes all 17; Ruby/Sapphire Game Corner's native two-cell
+entry-script closure is recorded separately and untouched. Three focused
+source/identity suites pass. Five-edition census hashes/families unchanged,
+2029 candidates, 1984 accepted components/258 maps, whole-map false. Original
+bookcase source now has 50 accepted placements. Room-boundary work continues.

@@ -10,9 +10,9 @@ the Linux shell returned 1 on shutdown. No clean process-exit claim is made.
 
 | Edition | Maps | Framed non-cave rooms | Native wall finish rooms | Extracted furniture | Modern placement candidates |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Emerald | 519 | 301 | 79 | 2091 | 400 |
-| Ruby | 395 | 231 | 84 | 1476 | 408 |
-| Sapphire | 395 | 231 | 84 | 1476 | 408 |
+| Emerald | 519 | 301 | 79 | 2091 | 405 |
+| Ruby | 395 | 231 | 84 | 1476 | 414 |
+| Sapphire | 395 | 231 | 84 | 1476 | 414 |
 | FireRed | 426 | 253 | 65 | 2937 | 398 |
 | LeafGreen | 426 | 253 | 65 | 2937 | 398 |
 
@@ -24,7 +24,7 @@ candidates and edition/map occurrences. These are identifiers and counts only;
 no ROM data, raw pixels, model archives, caches or captures are included.
 JSON object keys are canonicalized recursively so repeated censuses do not
 reorder unchanged native room metadata. All 2161 native hashes are unchanged;
-the latest batch adds 33 genuine bookcase candidates on 33 RSE maps.
+the latest batch adds 17 separate small-bookcase candidates on 17 RSE maps.
 All furniture-family counts and previous source candidates remain unchanged.
 
 The refreshed census includes the verified Littleroot table/refrigerator and
@@ -34,10 +34,10 @@ the genuine ORAS china cupboard at all 74 matching RSE locations,
 the original Oldale sink/worktop at all 39 matching RSE locations,
 and the genuine Mt. Pyre memorial at 682 common Pokémon Tower grave locations and all 793 complete common/wall-shadow
 graves on the 18 RSE Mt. Pyre floors, plus the original Flower Shop bookcase
-at all 33 matching generic-home bookcases.
+at all 50 matching common and small generic-home bookcases.
 The latest full census retains all 2161 native map entries. Separate
 [accepted-furniture.jsonl](coverage/gen3-interiors-2026-10-23/accepted-furniture.jsonl)
-records 1967 visually accepted component placements across 258 native maps in
+records 1984 visually accepted component placements across 258 native maps in
 all five editions, with exact family, model ID, cell and unchanged live native hash. Its acceptance
 scope is the named furniture component only. Complete-map acceptance remains
 false; the remaining furniture and room source gaps are still outstanding.

@@ -5771,7 +5771,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_flower_bookcase"
+      ]
     },
     "hoenn_home_small_tv": {
       "design": "em_home_small_tv",
@@ -14455,7 +14457,7 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 400,
+      "candidateFurniture": 405,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
@@ -14476,14 +14478,14 @@
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 408,
+      "candidateFurniture": 414,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 408,
+      "candidateFurniture": 414,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,

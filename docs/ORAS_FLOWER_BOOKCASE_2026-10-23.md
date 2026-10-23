@@ -48,3 +48,25 @@ missing-PNG fallback; a representative native fallback overview was inspected.
 Ten focused suites pass. Native drivers emitted PASS; Linux shell shutdown
 returned 1. Evidence is component-scoped, with no whole-room/game acceptance.
 Raw sources, native pixels, profiles and captures remain outside the repository.
+
+
+## Separate small-bookcase continuation
+
+The separate native `hoenn_home_small_books` family is now verified at all
+17 locations (Emerald5/Ruby6/Sapphire6), bringing this source to 50 accepted
+placements. Matching requires its own exact six-cell drawing
+`26e/26f,276/277,27e/27f` with collision rows `7/7,7/7,0/0` in the original
+generic-building pair. The source model, textures, fit and closure geometry
+are unchanged from the first batch.
+
+Official latest 0.3.95 was checked again before the continuation. All 17 native
+before-images, first-person source entries and modern room overviews were
+inspected. All 17 rooms also pass missing-PNG fallback; representative Emerald
+and Game Corner fallback overviews were inspected. Both Ruby and Sapphire
+Game Corner entry scripts replace the two hidden-stair cells with the native
+closed-door drawing. Their live hashes/deltas are recorded separately; the
+renderer changes none of those native cells. Three focused source/identity
+suites pass. The refreshed full five-edition census retains all 2161 hashes,
+all furniture-family counts and every previous candidate. Only these 17 source
+owners are added: 2029 candidates, 1984 accepted components across 258 maps,
+complete-map acceptance false. Driver PASS/shutdown-status1 limits still apply.
