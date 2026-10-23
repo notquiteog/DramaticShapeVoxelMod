@@ -1,4 +1,4 @@
-local released={};local adapters={};local doors={};local modules={SceneryModels={releaseBatches=function(parts)for _,p in ipairs(parts)do released[p]=true end end},Gen3ImportedGymNotices={build=function(c,n,p)return p,nil,3 end,floor=function(c)return c.notice end}}
+local released={};local adapters={};local doors={};local modules={SceneryModels={releaseBatches=function(parts)for _,p in ipairs(parts)do released[p]=true end end},Gen3ImportedGymNotices={build=function(c,n,p)return p,nil,3 end,floor=function(c)return c.notice end,ownsProp=function(p)return p.notice==true end}}
 local definitions={{'petalburg_city_gym','Gen3ImportedGyms','Gen3GymDoors','importedGymDoors','oras_hoenn_gym'},{'oldale_mart','Gen3ImportedMarts','Gen3MartDoors','importedMartDoors','oras_oldale_mart'},{'oldale_house','Gen3ImportedOldaleHomes','Gen3OldaleDoors','importedOldaleDoors','oras_oldale_home_northwest'}}
 local fault
 for _,f in ipairs(definitions)do
@@ -22,5 +22,6 @@ for _,f in ipairs(definitions)do
  end;fault=nil
 end
 assert(not M.build({custom={family='rse',name='unreviewed'}},{},function()end,{}))
+assert(M.ownsProp({notice=true})and not M.ownsProp({}))
 local parts={};local result,err,n=M.prepare({},function()end,parts);assert(result==parts and n==3 and M.ground({notice=1})==1)
 print('PASS reviewed Hoenn dispatch, closed/animated door ownership, exact release, exception/incomplete/source-failure atomic rollback and paired notice API')

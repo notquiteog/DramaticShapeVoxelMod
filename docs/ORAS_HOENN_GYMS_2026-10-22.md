@@ -104,3 +104,23 @@ portal anchors stay at their exact source/native base. Gym doorY0 vertices use
 the same inset; upper door vertices remain exact. All nine Gym and nine corridor
 Mart native0.3.95 upload/state/rollback fixtures pass after this change. Notice
 and Oldale home cap-only uploads remain separate and are not inset twice.
+
+## Actual Petalburg Scene ownership correction
+
+The integrated0.3.95 Scene already claims Petalburg130/131 as the native
+`hoenn_field_gym_notice` two-row prop before preparing modern notices. Simplified
+source-cell fixtures missed that owner and therefore previously passed while the
+real Scene reported zero modern Petalburg notices. Actual Scene cell inspection
+reproduced this in an isolated engine/profile.
+
+The adapter now permits only that exact shared16×32 legacy owner, original
+recipe/rows/pair/variant, location and source signatures. All other prop owners,
+mismatched top/bottom owners, changed width or hidden legacy props are rejected.
+Only successful complete source upload marks the old prop. The facade's new
+`ownsProp(p)` lets Scene suppress that exact legacy geometry after success.
+Native ownership and fallback source data remain intact. Actual integrated Scene
+preparation now reports one notice in each R/S/E Petalburg, with source/owner
+rejection and failed-upload marker rollback passing. Reusable driver:
+`tools/qa/hoenn-petalburg-notice-owner.lua`. Final combined visual acceptance
+requires the Scene props loop to use `ownsProp`; source-count success alone does
+not prove that duplicate legacy geometry has been suppressed.
