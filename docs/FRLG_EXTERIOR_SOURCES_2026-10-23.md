@@ -15,8 +15,8 @@ metatile/collision/elevation SHA256, pair, dimensions, map type and explicit
 outdoor classification. Every detected assembly has its native drawing hash,
 source archive/model/provenance hashes where available, exact coordinates,
 source eligibility and separate rendered acceptance. The inspected batches accept
-the two Pewter houses, Viridian/Pewter Gyms and Viridian flower-house exterior
-per edition. Historical acceptance of the other source
+the two Pewter houses, Viridian/Pewter Gyms, Viridian flower-house exterior and
+three Pallet buildings per edition (8 placements). Historical acceptance of the other source
 families is deliberately not inferred from an eligibility census.
 
 There are also **6346 unclassified blocked outdoor cells per edition**. This
