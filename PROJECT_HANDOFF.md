@@ -1,5 +1,18 @@
 # Portable API3 migration — 2026-10-23
 
+Final release verification: all seven immutable release ZIPs pass **88/88**
+native checks on official0.3.96: each standalone across all11editions, then all
+seven together across all11. Actual edition-native options screens open; owned
+GBA pages render readable fonts, and exercised removed-API reports are empty.
+The matrix caught and resolved Skies/Ride private menu wrappers conflicting with
+public pages on FRLG. Source/public asset/cache, canonical battle/party, storage,
+source-only encounter and native lifecycle focused checks are documented per mod.
+Release versions: BattleArt1.57.12, Skies1.15.4, Ride0.5.7, Doubles0.14.8,
+Online0.11.4, Wilds2.6.9, ModernUI0.4.6. Stable releases attach package SHA-256
+and api3-verification.json. This verifies API boundaries/load/menu/render paths;
+full scenery coverage and every multiplayer/gameplay path remain unclaimed.
+This final handoff is not part of the install ZIP; packaged bytes are unchanged.
+
 Current user priority is migrating all seven ecosystem mods to latest official
 Gen1Recomp0.3.96 PortableAPI3, with native boundary/standalone checks. Scenery
 worker histories remain separate and paused at clean checkpoints. Battle Art
@@ -11,7 +24,7 @@ screen artwork; advanced renderer/native readers still require declared internal
 457 source suites PASS,0fail,58external-fixture skips against exact official.96SDK;
 591 production LuaJIT files compile. Native Crystal/Emerald first API3 field/menu
 checks pass with empty removed-API reports. All11 cache seeds are current. Final
-seven-mod standalone/combined artifact matrix remains to be recorded with release.
+seven-mod standalone/combined artifact matrix passes88/88; see the attached release report.
 See docs/API3_MIGRATION_2026-10-23.md; no full-feature/scenery-completion claim.
 
 # Focused Museum staircase release1.57.11 — 2026-10-23
