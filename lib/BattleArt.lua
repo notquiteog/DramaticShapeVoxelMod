@@ -118,7 +118,7 @@ end
 -- in the new schema. If the old front/back choices disagreed, MODDED wins: it
 -- is the only migration that does not silently take a user's modded art away.
 function BattleArt.migrateDuplicateSetting(game)
-  game = game or require("src.core.Game")
+  game = game or(V.mod and V.mod.game)or require("src.core.Game")
   local loader = game and game.mods
   local buckets = loader and loader.modOptions
   local bucket = buckets and buckets[(V.mod and V.mod.id)

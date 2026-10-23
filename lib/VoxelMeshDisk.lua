@@ -268,6 +268,7 @@ local function legacyKey(name)
 end
 
 local function persistenceFilesystem()
+  if V.mod and V.mod.cache then return nil end
   local fs
   pcall(function() fs = love and love.filesystem end)
   if fs then return fs end
@@ -362,6 +363,17 @@ end
 local storageRoundTrips
 
 local function bindStorage(game)
+  local cache=V.mod and V.mod.cache
+  if cache then
+    local version=require('src.core.GameVersion').get()
+    local primary=V.require('InstallCache').new(cache,version)
+    if not primary then return false end
+    storage=primary;backendKind='install-cache';Disk.DIRECTORY=LOGICAL_DIRECTORY
+    return storageRoundTrips(storage)
+  end
+  -- Legacy tests/older engines retain their original adapter. API3 never
+  -- fabricates a playthrough to use save storage as installation storage.
+  if V.mod and type(V.mod.supports)=='function'then return false end
   local api = V.mod and V.mod.storage
   if not api or type(api.list) ~= "function" then return false end
   local version = game and game.save and game.save.version
@@ -1748,6 +1760,10 @@ function Disk.writePrecacheFailureLog(rows)
     diskLog("voxel precache failure: %s", line)
   end
   lines[#lines + 1] = ""
+  if V.mod and V.mod.cache then
+    local ok,wrote=pcall(V.mod.cache.write,V.mod.cache,'diagnostics/precache-failures.tsv',table.concat(lines,'\n'))
+    return ok and wrote==true,'diagnostics/precache-failures.tsv'
+  end
   local fs = persistenceFilesystem()
   if not (fs and fs.write and fs.createDirectory) then return false end
   local ok = pcall(function()

@@ -1,3 +1,19 @@
+# Portable API3 migration — 2026-10-23
+
+Current user priority is migrating all seven ecosystem mods to latest official
+Gen1Recomp0.3.96 PortableAPI3, with native boundary/standalone checks. Scenery
+worker histories remain separate and paused at clean checkpoints. Battle Art
+now declaresAPI3/minengine0.3.96, uses publicmod.game, canonical Crystal patches,
+public option hooks/registered GBA pages, optional suppression registration,
+owned installation-cache/index and diagnostic writes, scoped asset info and
+public ambient update/quit hooks. Native GBA fonts decorate only the registered
+screen artwork; advanced renderer/native readers still require declared internals.
+457 source suites PASS,0fail,58external-fixture skips against exact official.96SDK;
+591 production LuaJIT files compile. Native Crystal/Emerald first API3 field/menu
+checks pass with empty removed-API reports. All11 cache seeds are current. Final
+seven-mod standalone/combined artifact matrix remains to be recorded with release.
+See docs/API3_MIGRATION_2026-10-23.md; no full-feature/scenery-completion claim.
+
 # Focused Museum staircase release1.57.11 — 2026-10-23
 
 User requests Kanto World fix the Museum staircase and then release. Focused

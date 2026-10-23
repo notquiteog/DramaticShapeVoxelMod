@@ -22,7 +22,7 @@ local ledger, ledgerLoaded = {}, false
 -- allowing current sandboxed engines (where love.filesystem raises on access)
 -- to keep the same information in memory for the session.
 local legacyFilesystem
-pcall(function() legacyFilesystem = love and love.filesystem end)
+if not(V.mod and V.mod.cache)then pcall(function()legacyFilesystem=love and love.filesystem end)end
 
 StaticGeometry.EXCLUSION_FILE =
   "mod-derived/BATTLE_ART_VOXEL_FORK/static-cache-exclusions.tsv"
@@ -78,9 +78,12 @@ end
 local function loadLedger()
   if ledgerLoaded then return end
   ledgerLoaded = true
+  local cache=V.mod and V.mod.cache
   local fs = legacyFilesystem
-  if not (fs and fs.read) then return end
-  local ok, text = pcall(fs.read, StaticGeometry.EXCLUSION_FILE)
+  if not cache and not(fs and fs.read)then return end
+  local ok,text
+  if cache then ok,text=pcall(cache.read,cache,'diagnostics/static-cache-exclusions.tsv')
+  else ok,text=pcall(fs.read,StaticGeometry.EXCLUSION_FILE)end
   if not ok or type(text) ~= "string" then return end
   for line in text:gmatch("[^\r\n]+") do
     if line:sub(1, 1) ~= "#" and line ~= "map\tkind\tasset\tdetail" then
@@ -91,7 +94,8 @@ end
 
 local function writeLedger()
   local fs = legacyFilesystem
-  if not (fs and fs.write and fs.createDirectory) then return false end
+  local cache=V.mod and V.mod.cache
+  if not cache and not(fs and fs.write and fs.createDirectory)then return false end
   local rows = {}
   for line in pairs(ledger) do rows[#rows + 1] = line end
   table.sort(rows)
@@ -103,6 +107,7 @@ local function writeLedger()
     table.concat(rows, "\n"),
     "",
   }, "\n")
+  if cache then local ok,wrote=pcall(cache.write,cache,'diagnostics/static-cache-exclusions.tsv',text);return ok and wrote==true end
   local ok = pcall(function()
     assert(fs.createDirectory("mod-derived/BATTLE_ART_VOXEL_FORK"))
     assert(fs.write(StaticGeometry.EXCLUSION_FILE, text))
