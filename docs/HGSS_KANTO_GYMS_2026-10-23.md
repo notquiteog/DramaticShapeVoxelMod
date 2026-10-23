@@ -68,9 +68,9 @@ native warps. Drivers emitted PASS; shell shutdown returned1, not process0.
 The reusable driver is `tools/qa/frlg-imported-exterior-review.lua`, with
 `QA_FAMILY=gyms|houses`, an explicitly supplied `QA_UTIL` helper and a disposable
 identity ending `-qa`. `QA_QUICK=1` omits side/rear camera inspection only;
-`QA_MISSING_ASSETS=1` exercises source failure. The current per-map source ledger
-records25 eligible and107 unmatched assemblies per edition, with4 inspected
-placements per edition. It remains an inventory, not whole-game acceptance.
+`QA_MISSING_ASSETS=1` exercises source failure. At the end of this Gym batch the per-map source ledger
+recorded25 eligible and107 unmatched assemblies per edition, with4 inspected
+placements per edition. Later batches update the canonical ledger. It remains an inventory, not whole-game acceptance.
 
 Production Scene remains parent-owned; native QA used a scratch overlay. Hooks:
 

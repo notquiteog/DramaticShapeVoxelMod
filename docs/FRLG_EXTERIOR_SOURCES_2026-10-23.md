@@ -2,9 +2,9 @@
 
 The native audit enumerates **426 maps per edition**, including **76 outdoor
 maps**, **132 detected civic assemblies**, and **54 distinct civic families**.
-It separately records **25 source-eligible assemblies** and **107 unmatched
-assemblies per edition**. Eight families have at least one eligible source adapter;
-46 families still have none. The Gym family is partial:2 of11 assemblies per
+It separately records **26 source-eligible assemblies** and **106 unmatched
+assemblies per edition**. Nine families have at least one eligible source adapter;
+45 families still have none. The Gym family is partial:2 of11 assemblies per
 edition have matching sources. These are
 assembly counts, not percentages of whole-game completion.
 
@@ -15,7 +15,8 @@ metatile/collision/elevation SHA256, pair, dimensions, map type and explicit
 outdoor classification. Every detected assembly has its native drawing hash,
 source archive/model/provenance hashes where available, exact coordinates,
 source eligibility and separate rendered acceptance. The inspected batches accept
-the two Pewter houses and the Viridian/Pewter Gyms per edition. Historical acceptance of the other source
+the two Pewter houses, Viridian/Pewter Gyms and Viridian flower-house exterior
+per edition. Historical acceptance of the other source
 families is deliberately not inferred from an eligibility census.
 
 There are also **6346 unclassified blocked outdoor cells per edition**. This
@@ -110,7 +111,8 @@ and the parent combined production Scene remain separate acceptance work.
 ## Exact next gaps
 
 The table lists every unmatched family and map. The regional Viridian and Pewter Gyms now have guarded, inspected adapters;
-see `HGSS_KANTO_GYMS_2026-10-23.md`. Other Gym locations remain unmatched.
+see `HGSS_KANTO_GYMS_2026-10-23.md`. The native flower-house variant is recorded
+in `VIRIDIAN_FLOWER_HOUSE_2026-10-23.md`. Other Gym locations remain unmatched.
 
 The twelve Mart drawings per edition include eleven real entrances and one
 Saffron connection projection whose original door permission is blocked. The
