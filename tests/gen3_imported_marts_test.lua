@@ -14,7 +14,7 @@ for _,ed in ipairs{'EM_','RU_','SA_'}do for _,f in ipairs(fixtures)do
  local rows=f[8]
  local region={x=0,y=0,def={id=ed..f[2]}};local g={cx=f[4],cy=f[5],kind='mart',width=4,depth=4,pair=f[6],groundHeight=0,custom={family='rse',name=f[1]}};local cells={}
  for y=0,3 do for x=0,3 do cells[(g.cx+x)..':'..(g.cy+y)]={civic=g,region=region,pair=g.pair,base=0,mid=rows[y+1][x+1],collision=y==0 and f[7][x+1]or(y==3 and x==1 and 113 or 7)}end end
- assert(M.eligible(g,cells));local parts={};local ok,err=M.build(g,cells,mesh,parts);assert(ok,err);assert(g.importedHoenn.model==f[3] and #parts==2 and #g.importedMartDoors.parts==6)
+ assert(M.eligible(g,cells));local parts={};local ok,err=M.build(g,cells,mesh,parts);assert(ok,err);assert(g.importedHoenn.model==f[3] and #parts==3 and #g.importedMartDoors.parts==6)
  local fit=g.importedHoenn;assert(math.abs(fit.anchors.door[1]-24)<1e-6 and math.abs(fit.anchors.door[3]-44.5)<1e-6)
  assert(fit.bounds[4]-fit.bounds[1]>51 and fit.bounds[6]-fit.bounds[3]>46)
  for state=0,2 do local tris=0;for _,p in ipairs(assert(D.geometry(g,fit,state)))do tris=tris+#p.indices/3 end;assert(tris==43)end

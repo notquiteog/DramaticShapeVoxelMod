@@ -34,6 +34,35 @@
     }
   },
   "bodySourceTriangles": 703,
+  "rearClosures": {
+    "oras_oldale_mart": {
+      "authoredRearTriangles": 227,
+      "profileBands": 94,
+      "sourcePaintTexel": [
+        0.041015625,
+        0.62890625
+      ],
+      "insetSourceUnits": 0.1
+    },
+    "oras_petalburg_mart": {
+      "authoredRearTriangles": 229,
+      "profileBands": 95,
+      "sourcePaintTexel": [
+        0.041015625,
+        0.62890625
+      ],
+      "insetSourceUnits": 0.1
+    },
+    "oras_rustboro_mart": {
+      "authoredRearTriangles": 229,
+      "profileBands": 95,
+      "sourcePaintTexel": [
+        0.041015625,
+        0.62890625
+      ],
+      "insetSourceUnits": 0.1
+    }
+  },
   "undersideTriangles": 17,
   "doorSourceTriangles": 43,
   "sourceBounds": [

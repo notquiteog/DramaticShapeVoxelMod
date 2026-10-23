@@ -30,7 +30,7 @@ for _,ed in ipairs{'EM_','RU_','SA_'}do for _,f in ipairs(fixtures)do
  local rows=f[8]
  local region={x=0,y=0,def={id=ed..f[2]}};local g={cx=f[4],cy=f[5],kind='urban_house',width=f[9],depth=f[12]or 5,pair=f[6],groundHeight=0,custom={family='rse',name=f[1]}};local cells={}
  for y=0,g.depth-1 do for x=0,g.width-1 do cells[(g.cx+x)..':'..(g.cy+y)]={civic=g,region=region,pair=g.pair,base=0,mid=rows[y+1][x+1],collision=y==0 and f[7][x+1]or(y==g.depth-1 and x==f[10] and 113 or 7)}end end
- assert(M.eligible(g,cells));local parts={};local ok,err=M.build(g,cells,mesh,parts);assert(ok,err);assert(g.importedHoenn.model==f[3] and #parts==f[11] and #g.importedRustboroDoors.parts==6)
+ assert(M.eligible(g,cells));local parts={};local ok,err=M.build(g,cells,mesh,parts);assert(ok,err);assert(g.importedHoenn.model==f[3] and #parts==f[11]+1 and #g.importedRustboroDoors.parts==6)
  local blend=0;for _,part in ipairs(parts)do if part.opacity<1 then assert(part.opacity==.6 and part.alphaMode=='blend');blend=blend+1 end end;assert(blend==(f[11]==5 and 1 or 0))
  local fit=g.importedHoenn;assert(math.abs(fit.anchors.door[1]-(f[10]*16+8))<1e-6 and math.abs(fit.anchors.door[3]-((g.depth-1)*16-10))<1e-6)
  assert(fit.bounds[4]-fit.bounds[1]>70 and fit.bounds[6]-fit.bounds[3]>61)

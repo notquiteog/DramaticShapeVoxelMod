@@ -1,5 +1,10 @@
 # Own ORAS Rustboro homes and school
 
+Rear-review correction: original source backs were open; previous rear views
+showed front/interior backfaces. Rear acceptance is superseded by the explicit
+[rear closure correction](ORAS_REAR_CLOSURES_2026-10-23.md). Existing source
+identity, native door, footprint and contact-ring results remain valid.
+
 The dispatcher now supplies original, separate Cutters' house, House1, House2
 and school models. The native indexed Rustboro map was rendered and inspected
 before adaptation. Native warp destinations identify their purposes. Source

@@ -7,6 +7,7 @@ from pathlib import Path
 from oras_scenery_source import decoder,need
 from import_oras_grass import lua
 from import_oras_center_doors import mul,sample
+from oras_rear_closure import close_rear
 
 def convert(root,decoder_path,nitrogen_path,output):
  load,load_textures,png=decoder(decoder_path);sys.path.insert(0,str(nitrogen_path));from nitrogen.platforms.ctr.bch import open_bch
@@ -52,8 +53,9 @@ def convert(root,decoder_path,nitrogen_path,output):
    else:raise ValueError('cannot close exact source house rim')
   ii.extend([i+1 for i in loop]);parts.append(dict(body,name='authored_closed_underside',vertices=bottom,indices=ii))
   for p in parts:p['vertices']=[norm(v)for v in p['vertices']]
+  rear,rearproof=close_rear(parts,'t102_01',[220.5/256,16.5/128],span);parts.append(rear)
   data['oras_oldale_home_'+side]=dict(parts=parts,anchors={'door':norm([135.676,0,192.094]),'doorLeft':norm([123.676,0,192.094]),'doorRight':norm([147.676,0,192.094]),'doorTop':norm([135.676,45.62,192.094])})
-  reports[side]=dict(sourcePhysicalTriangles=count,sourceTrianglesByPart=[len(p['indices'])//3 for p in parts],sourceWorldOffset=[dx,0,dz],selection='Own complete source triangles inside actual house region, never clipped or substituted',sourceWindowDetails='Actual southeast14-triangle or northwest6-triangle source glass retained')
+  reports[side]=dict(sourcePhysicalTriangles=count,rearClosure=rearproof,sourceTrianglesByPart=[len(p['indices'])//3 for p in parts],sourceWorldOffset=[dx,0,dz],selection='Own complete source triangles inside actual house region, never clipped or substituted',sourceWindowDetails='Actual southeast14-triangle or northwest6-triangle source glass retained')
  # Independent rigid bind and original -80degree Y hinge track.
  rawdoor=(root/'mapprops-nitrogen/3/0003/000.bch').read_bytes();dm=load(rawdoor)[0];di=open_bch(rawdoor).models[0];need(dm.name=='t102_bm_door01','unexpected Oldale door')
  worlds=[];errors={}

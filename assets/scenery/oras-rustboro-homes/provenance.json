@@ -18,7 +18,16 @@
       ],
       "originalZoneDestination": 300,
       "sourceBchSha256": "f663164b454bd305b648bae5e59dac9e659fbcad319d62ca7deeccb18ecf95c2",
-      "originalHorizontalGroundFaces": 0
+      "originalHorizontalGroundFaces": 0,
+      "rearClosure": {
+        "authoredRearTriangles": 30,
+        "profileBands": 7,
+        "sourcePaintTexel": [
+          0.07421875,
+          0.62890625
+        ],
+        "insetSourceUnits": 0.1
+      }
     },
     "house1": {
       "gr": 33,
@@ -37,7 +46,16 @@
       ],
       "originalZoneDestination": 296,
       "sourceBchSha256": "25c35a9b173563023a966347bc96876502641e04d13eabd25b8c0905f3ff43da",
-      "originalHorizontalGroundFaces": 0
+      "originalHorizontalGroundFaces": 0,
+      "rearClosure": {
+        "authoredRearTriangles": 30,
+        "profileBands": 7,
+        "sourcePaintTexel": [
+          0.07421875,
+          0.62890625
+        ],
+        "insetSourceUnits": 0.1
+      }
     },
     "house2": {
       "gr": 33,
@@ -56,7 +74,16 @@
       ],
       "originalZoneDestination": 295,
       "sourceBchSha256": "25c35a9b173563023a966347bc96876502641e04d13eabd25b8c0905f3ff43da",
-      "originalHorizontalGroundFaces": 0
+      "originalHorizontalGroundFaces": 0,
+      "rearClosure": {
+        "authoredRearTriangles": 30,
+        "profileBands": 7,
+        "sourcePaintTexel": [
+          0.07421875,
+          0.62890625
+        ],
+        "insetSourceUnits": 0.1
+      }
     },
     "school": {
       "gr": 33,
@@ -76,7 +103,16 @@
       ],
       "originalZoneDestination": 289,
       "sourceBchSha256": "25c35a9b173563023a966347bc96876502641e04d13eabd25b8c0905f3ff43da",
-      "originalHorizontalGroundFaces": 0
+      "originalHorizontalGroundFaces": 0,
+      "rearClosure": {
+        "authoredRearTriangles": 34,
+        "profileBands": 7,
+        "sourcePaintTexel": [
+          0.07421875,
+          0.62890625
+        ],
+        "insetSourceUnits": 0.1
+      }
     },
     "flat1": {
       "gr": 33,
@@ -96,7 +132,16 @@
       ],
       "originalZoneDestination": 297,
       "sourceBchSha256": "25c35a9b173563023a966347bc96876502641e04d13eabd25b8c0905f3ff43da",
-      "originalHorizontalGroundFaces": 0
+      "originalHorizontalGroundFaces": 0,
+      "rearClosure": {
+        "authoredRearTriangles": 465,
+        "profileBands": 15,
+        "sourcePaintTexel": [
+          0.07421875,
+          0.62890625
+        ],
+        "insetSourceUnits": 0.1
+      }
     },
     "house3": {
       "gr": 38,
@@ -115,7 +160,16 @@
       ],
       "originalZoneDestination": 294,
       "sourceBchSha256": "af181da08320eb8c79f36116e406fba104dcb596e2beaf5f8e0ce048b3f19363",
-      "originalHorizontalGroundFaces": 0
+      "originalHorizontalGroundFaces": 0,
+      "rearClosure": {
+        "authoredRearTriangles": 30,
+        "profileBands": 7,
+        "sourcePaintTexel": [
+          0.07421875,
+          0.62890625
+        ],
+        "insetSourceUnits": 0.1
+      }
     }
   },
   "sourcePortals": {

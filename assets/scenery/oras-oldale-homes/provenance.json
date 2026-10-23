@@ -4,10 +4,20 @@
   "variants": {
     "southeast": {
       "sourcePhysicalTriangles": 1038,
+      "rearClosure": {
+        "authoredRearTriangles": 149,
+        "profileBands": 59,
+        "sourcePaintTexel": [
+          0.861328125,
+          0.12890625
+        ],
+        "insetSourceUnits": 0.1
+      },
       "sourceTrianglesByPart": [
         1024,
         14,
-        26
+        26,
+        149
       ],
       "sourceWorldOffset": [
         0,
@@ -19,10 +29,20 @@
     },
     "northwest": {
       "sourcePhysicalTriangles": 1030,
+      "rearClosure": {
+        "authoredRearTriangles": 147,
+        "profileBands": 59,
+        "sourcePaintTexel": [
+          0.861328125,
+          0.12890625
+        ],
+        "insetSourceUnits": 0.1
+      },
       "sourceTrianglesByPart": [
         1024,
         6,
-        26
+        26,
+        147
       ],
       "sourceWorldOffset": [
         -270,

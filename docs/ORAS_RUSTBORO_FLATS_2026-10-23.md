@@ -1,5 +1,10 @@
 # Original Rustboro Flat1 and southern home
 
+Rear-review correction: original source backs were open; previous rear views
+showed front/interior backfaces. Rear acceptance is superseded by the explicit
+[rear closure correction](ORAS_REAR_CLOSURES_2026-10-23.md). Existing source
+identity, native door, footprint and contact-ring results remain valid.
+
 Two more actual town sources extend the existing Rustboro dispatcher. Original
 ZO16 portal records and GR object instances bind Flat1 to BM13 at(2205,3537),
 destinationZO297, and southern House3 at(2529,3987), destinationZO294. Their own

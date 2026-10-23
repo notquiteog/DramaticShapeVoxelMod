@@ -1,3 +1,15 @@
+# Correct original ORAS open backs — 2026-10-23
+
+Fifteen owned Gym/Mart/Oldale/Petalburg/Rustboro source bodies now append actual
+rear closures from their original side profiles and paint. Earlier rear views
+were misread through open source backs; rear acceptance is withdrawn and
+superseded by135 real-source rays, unchanged bounds/source arrays and zero new
+coplanar overlap across113,442 candidate pairs. All51 native R/S/E placements
+pass with unchanged layout hashes and zero streaming recovery. Existing native door/collision/contact
+checks remain valid. No new family/map coverage is claimed. See
+[correction evidence](docs/ORAS_REAR_CLOSURES_2026-10-23.md). Oldale southeast
+source glass-return overlap is separately queued for immediate cleanup.
+
 # Original Rustboro flat/southern-home continuation — 2026-10-23
 
 Flat1 and House3 extend the authentic Rustboro source family to six variants.

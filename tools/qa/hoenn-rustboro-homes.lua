@@ -23,7 +23,7 @@ return function(game)
    if #v==f[5]and #i==(f[5]-2)*3 then for _,p in ipairs(v)do assert(math.abs(p[2]+.05)<1e-8);capCount=capCount+1 end end
    return V.require('Voxel3D').newMesh(v,i,format)
   end
-  local result,err=M.build(g,cells,upload,parts);assert(result,err);assert(capCount==f[5] and #parts==f[7] and g.importedRustboroDoors and #g.importedRustboroDoors.parts==6)
+  local result,err=M.build(g,cells,upload,parts);assert(result,err);assert(capCount==f[5] and #parts==f[7]+1 and g.importedRustboroDoors and #g.importedRustboroDoors.parts==6)
   local blend=0;for _,part in ipairs(parts)do if part.opacity<1 then assert(part.opacity==.6 and part.alphaMode=='blend');blend=blend+1 end end;assert(blend==(f[7]==5 and 1 or 0))
   assert(M.kind(g)=='rustboroHomes'and M.ownsDoor(g,g.cx+f[6],g.cy+g.depth-1));local D=M;for state=0,2 do local draws=0;D.draw(g,{x=g.cx+f[6],y=g.cy+g.depth-1,frame=state},function()draws=draws+1 end);assert(draws==2)end
   D.release(g);V.require('SceneryModels').releaseBatches(parts);g.importedHoenn=nil
