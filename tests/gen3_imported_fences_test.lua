@@ -52,6 +52,16 @@ local Q={require=function(n)
 end}
 local Real=assert(loadfile('lib/SceneryModels.lua'))(Q)
 for id,data in pairs(V.require('ImportedFenceData'))do assert(Real.register(id,data,{read=function()end}))end
+-- Every physical source primitive and every extruded opaque lattice hole is
+-- closed by geometry: each undirected positional edge has exactly two faces.
+for _,data in pairs(V.require('ImportedFenceData'))do for _,p in ipairs(data.parts)do
+ local edges={};local function point(v)return string.format('%.5f/%.5f/%.5f',v[1]+0,v[2]+0,v[3]+0)end
+ for i=1,#p.indices,3 do for n=0,2 do
+  local a,b=point(p.vertices[p.indices[i+n]]),point(p.vertices[p.indices[i+(n+1)%3]])
+  local key=a<b and a..':'..b or b..':'..a;edges[key]=(edges[key]or 0)+1
+ end end
+ for _,n in pairs(edges)do assert(n==2,'open physical fence edge')end
+end end
 for _,p in ipairs(M.placements(ornate))do
  local verts,fit=assert(Real.vertices(p.model,p.fit));assert(math.abs(fit.bounds[5]-11)<1e-5,'corner fitting shrank height')
  for _,part in ipairs(verts)do for _,v in ipairs(part.vertices)do assert(v[1]>=-1e-5 and v[1]<=16.00001 and v[3]>=-1e-5 and v[3]<=16.00001,'fence crossed walking bounds')end end
