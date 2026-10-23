@@ -1,3 +1,16 @@
+# Original Rustboro home/school source batch — 2026-10-23
+
+Four own ORAS Rustboro variants and BM13 original hinges now dispatch through
+Gen3ModernHoennBuildings (`kind=rustboroHomes`). Native12 R/S/E source/door/cap/
+rollback checks pass on official0.3.95; source all-angle renders inspected.
+Exact native map art/warps and original ZO16/GR object placements bind ownership.
+Only Y0 rings/closures recess; no source ground planes or native warp changes.
+Actual latest-parent Scene activates all four;12 R/S/E entry/return tests and
+four missing-source native fallbacks pass. Inspected contact views are clean;
+some sides remain tree-obscured. No whole-map acceptance claim. Remaining Rustboro
+flats, southern home, tower and Devon continue next. See
+[batch evidence](docs/ORAS_RUSTBORO_HOMES_2026-10-23.md).
+
 # Depth/fence/foliage release1.57.7 — 2026-10-23
 
 Explicit building contact-ring recess prevents coplanar ground closures while
