@@ -15,12 +15,13 @@ metatile/collision/elevation SHA256, pair, dimensions, map type and explicit
 outdoor classification. Every detected assembly has its native drawing hash,
 source archive/model/provenance hashes where available, exact coordinates,
 source eligibility and separate rendered acceptance. The inspected batches accept
-66 placements per edition: two Pewter houses, Viridian/Pewter Gyms, Viridian
+67 placements per edition: two Pewter houses, Viridian/Pewter Gyms, Viridian
 flower-house exterior, three Pallet buildings, two Lavender ordinary houses and
 the Name Rater tent, plus22 ordinary/tall Saffron blocks across the actual city
 and connection maps, the Saffron Gym plus its closed connection projection, and five plain Celadon
-balcony blocks, ten Marts and16 standard Centers. Historical acceptance of other source families is not
-inferred from an eligibility census.
+balcony blocks, ten Marts,16 standard Centers and the ordinary Viridian house. Historical acceptance of other source families is not
+inferred from an eligibility census. The ordinary Viridian source door and shared
+closed-panel repair are recorded in `VIRIDIAN_SOURCE_DOORS_2026-10-23.md`.
 
 There are also **6324 unclassified blocked outdoor cells per edition**. This
 includes terrain and boundaries; it is not a count of missing buildings. The

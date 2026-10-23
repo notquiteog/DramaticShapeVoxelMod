@@ -1,4 +1,4 @@
--- Original HGSS Viridian flower-house door mesh; native FR/LG frames drive an authored inward
+-- Original HGSS Viridian ordinary/flower-house door mesh; native FR/LG frames drive an authored inward
 -- hinge transform. This is a placement adaptation, not an extracted HGSS track.
 local V=...
 local Models,Budget=V.require('SceneryModels'),V.require('BuildBudget')
@@ -16,7 +16,7 @@ function M.register()
  return Models.register(M.id,{parts=parts},{read=function(path)return V.mod:read(path)end})
 end
 function M.geometry(g,fit,state)
- if not(g and g.family=='viridian_flower_house'and g.pair=='viridian_outdoor'and g.width==5 and g.depth==5 and not g.stageHidden and fit and fit.width==80 and fit.depth==48 and fit.scale>0)then return nil,'unreviewed Viridian flower-house doorway'end
+ if not(g and (g.family=='viridian_flower_house'and g.depth==5 or g.family=='viridian_house'and g.depth==4)and g.pair=='viridian_outdoor'and g.width==5 and not g.stageHidden and fit and fit.width==80 and fit.depth==48 and fit.scale>0)then return nil,'unreviewed Viridian flower-house doorway'end
  if state~=0 and state~=1 and state~=2 then return nil,'invalid native door frame'end
  local d=source();local h=d.anchors.doorHinge;local angle=-state*math.pi/4;local c,s=math.cos(angle),math.sin(angle);local out={}
  for i,p in ipairs(d.doorParts)do

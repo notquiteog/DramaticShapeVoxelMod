@@ -3,6 +3,7 @@
 return function(game)
  local family=os.getenv('QA_FAMILY')or'gyms'
  local configs={
+  viridian_plain={fixtures={{'FR_VIRIDIAN_CITY',24,8}},adapter='Gen3ImportedViridianHouses',model='hgss_viridian_house',doorX=1,doorY=3,stat='viridianHouses',source='^assets/scenery/viridian%-house/',right=7},
   marts_story={fixtures={{'FR_FOUR_ISLAND',20,23},{'FR_VIRIDIAN_CITY',34,16}},adapter='Gen3ImportedHGSSMarts',model='hgss_kanto_mart',doorX=2,doorY=3,stat='hgssMarts',source='^assets/scenery/hgss%-mart/',right=6,left={-1,4,math.pi/4},rear={2,-3,math.pi}},
   marts={fixtures={{'FR_CERULEAN_CITY',27,25},{'FR_CINNABAR_ISLAND',17,8},{'FR_FOUR_ISLAND',20,23},{'FR_FUCHSIA_CITY',9,12},{'FR_LAVENDER_TOWN',18,12},{'FR_PEWTER_CITY',26,15},{'FR_SAFFRON_CITY',38,18},{'FR_SAFFRON_CITY_CONNECTION',28,11},{'FR_SIX_ISLAND',18,8},{'FR_THREE_ISLAND',16,9},{'FR_VERMILION_CITY',27,14},{'FR_VIRIDIAN_CITY',34,16}},adapter='Gen3ImportedHGSSMarts',model='hgss_kanto_mart',doorX=2,doorY=3,stat='hgssMarts',source='^assets/scenery/hgss%-mart/',right=6,left={-1,4,math.pi/4},rear={2,-3,math.pi}},
   marts_pilot={fixtures={{'FR_PEWTER_CITY',26,15},{'FR_SAFFRON_CITY',38,18},{'FR_SAFFRON_CITY_CONNECTION',28,11}},adapter='Gen3ImportedHGSSMarts',model='hgss_kanto_mart',doorX=2,doorY=3,stat='hgssMarts',source='^assets/scenery/hgss%-mart/',right=6,left={-1,4,math.pi/4},rear={2,-3,math.pi}},
@@ -12,7 +13,7 @@ return function(game)
   gyms_all={fixtures={{'FR_PEWTER_CITY',12,12},{'FR_VIRIDIAN_CITY',33,6},{'FR_CERULEAN_CITY',28,17}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/',right=9},
   cerulean_gym={fixtures={{'FR_CERULEAN_CITY',28,17}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/hgss_cerulean_gym/',right=9},
   houses={fixtures={{'FR_PEWTER_CITY',8,28},{'FR_PEWTER_CITY',32,9}},doorX=1,doorY=2,stat='pewterHouses',source='^assets/scenery/pewter%-house/'},
-  viridian_flowers={fixtures={{'FR_VIRIDIAN_CITY',24,15}},doorX=1,doorY=3,stat='viridianFlowerHouses',source='^assets/scenery/viridian%-house/'},
+  viridian_flowers={adapter='Gen3ImportedViridianFlowerHouses',model='hgss_viridian_flower_house',fixtures={{'FR_VIRIDIAN_CITY',24,15}},doorX=1,doorY=3,stat='viridianFlowerHouses',source='^assets/scenery/viridian%-house/'},
   lavender={fixtures={{'FR_LAVENDER_TOWN',8,8},{'FR_LAVENDER_TOWN',3,13}},doorX=2,doorY=3,stat='lavenderHouses',source='^assets/scenery/lavender%-house/'},
   name_rater={fixtures={{'FR_LAVENDER_TOWN',8,13}},doorX=2,doorY=3,stat='lavenderNameRater',source='^assets/scenery/lavender%-name%-rater/',left={-1,4,math.pi/4},rear={6,-1,-3*math.pi/4}},
  }
@@ -22,7 +23,7 @@ return function(game)
  local edition=require('src.core.GameVersion').get();assert(edition=='firered'or edition=='leafgreen')
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
  local C,S=V.require('Gen3Integration'),V.require('Gen3Scene');local Map,P=require('src.core.game3.map'),require('src.core.game3.player')
- local observed={};local adapter=V.require(config.adapter or(family=='saffron_dojo'and'Gen3ImportedSaffronDojo'or'Gen3ImportedHGSSGyms'));local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=(g.importedHGSSGym or g.importedSaffronDojo or g.importedHGSSMart).model end;return ok,why end
+ local observed={};local adapter=V.require(config.adapter or(family=='saffron_dojo'and'Gen3ImportedSaffronDojo'or'Gen3ImportedHGSSGyms'));local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=(g.importedHGSSGym or g.importedSaffronDojo or g.importedHGSSMart or g.importedViridianHouse or g.importedViridianFlowerHouse).model end;return ok,why end
  local dir=os.getenv('SHOT_DIR');local json=require('src.link.Json');local out={};local missing=os.getenv('QA_MISSING_ASSETS')=='1'
  if missing then local read=V.mod.read;V.mod.read=function(self,path)if path:match(config.source)then return nil end;return read(self,path)end end
  game:_handleBootAction({action='new_game',start={map='FR_PEWTER_CITY',x=10,y=32,facing='up'}})
@@ -60,7 +61,7 @@ return function(game)
   assert(Map.currentDef().id==map,'native return failed');settle();U.wait(90);shot(index..'-returned');assert(hash(Map.currentDef())==before,'native layout mutated')
   else for _,w in ipairs(Map.currentDef().warps or{})do assert(not(w.x==cx+doorX and w.y==cy+doorY),'projection has an unexpected native warp')end;assert(hash(Map.currentDef())==before,'native projection mutated')end
   C.setLevel(0,game);U.wait(15);shot(index..'-native')
-  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,nativeHash=before,destination=destination,returned=map~='FR_SAFFRON_CITY_CONNECTION',nonEnterable=map=='FR_SAFFRON_CITY_CONNECTION',renderedVerified=not missing and not pendingGround,renderedGap=pendingGround and'Shared native-ground donor assessment pending.'or nil,missingAssets=missing}
+  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,sourceModel=config.model,nativeHash=before,destination=destination,returned=map~='FR_SAFFRON_CITY_CONNECTION',nonEnterable=map=='FR_SAFFRON_CITY_CONNECTION',renderedVerified=not missing and not pendingGround,renderedGap=pendingGround and'Shared native-ground donor assessment pending.'or nil,missingAssets=missing}
   local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close()
  end end
  local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close();print('[FRLG IMPORTED EXTERIORS] PASS',family,#out)

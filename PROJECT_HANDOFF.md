@@ -1,3 +1,19 @@
+# Viridian original source doors and ordinary-house acceptance — 2026-10-23
+
+Ordinary native house(24,8) now uses its genuine inward source panel without a
+static duplicate/native-card overlay. The shared ordinary/flower door gains its
+missing back/underside from measured bounds and original brown side paint;
+original8 triangles/UVs/PNGs unchanged,12 triangles form a closed panel. Native
+0.3.95 FR/LG both houses:4 placements/4 real entry-return pairs, unchanged native
+hashes, source/full opening/contact/native2D views inspected. LG ordinary missing
+PNG source+entry-return fallback passes; deterministic six-file conversion and
+focused LuaJIT topology/clearance/lifecycle checks pass. Native HD2D flower cards
+stay unchanged. Canonical75 eligible/67 accepted/58 unmatched/6324 unclassified
+blocked cells per edition; seven shared-ground gaps remain. Production Scene
+must route existing ordinary groups through Gen3ViridianFlowerHouseDoors, or
+consolidate new dispatcher viridianHouses. No Scene edits or package acceptance.
+See docs/VIRIDIAN_SOURCE_DOORS_2026-10-23.md. Museum rendered review is next.
+
 # FR/LG original Center sliding doors and native census — 2026-10-23
 
 Static HGSS Centers no longer retain duplicate glass beneath native animation

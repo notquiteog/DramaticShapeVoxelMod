@@ -50,8 +50,8 @@
     28.0
   ],
   "originalTriangles": 240,
-  "processedTriangles": 274,
-  "authoredClosure": "Measured rear wall, side gable cuts, roof soffit and foundation0.05below original shadow. Source roof/chimney/entrance/fixtures unchanged.",
+  "processedTriangles": 278,
+  "authoredClosure": "Measured rear wall, side gable cuts, roof soffit and foundation0.05below original shadow. Original eight door triangles stay unchanged; measured back/underside continue source neutral brown side paint. Source roof/chimney/entrance/fixtures unchanged.",
   "textures": {
     "h_mado.png": {
       "sha256": "ddf8daca4b57e903f962c663f89f06be6d43ca5f29459d0094b4b8140514601f",
@@ -140,6 +140,13 @@
       "opacity": 1.0,
       "authored": true,
       "triangles": 10
+    },
+    {
+      "name": "authored_door_back_underside",
+      "role": "source_door",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
     }
   ]
 }
