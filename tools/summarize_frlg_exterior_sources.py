@@ -3,6 +3,7 @@
 import argparse,collections,csv,hashlib,json
 from pathlib import Path
 SOURCES={
+ 'hgss_cerulean_gym':'assets/scenery/hgss-kanto-gyms/hgss_cerulean_gym/provenance.json',
  'hgss_lavender_name_rater':'assets/scenery/lavender-name-rater/provenance.json',
  'hgss_lavender_house':'assets/scenery/lavender-house/provenance.json',
  'hgss_viridian_flower_house':'assets/scenery/viridian-house/provenance.json',
@@ -27,6 +28,7 @@ def summarize(paths,output,accepted):
     model=g['modernEligible'];accepted_key=(r['edition'],r['map'],g['x'],g['y'])
     q={**g,'source':sources[model]if model else None,'renderedAccepted':accepted_key in accepted}
     q['gap']=None if model else('HGSS Mart left entrance and tall east sign cannot substantially fill native64px body while preserving native right entrance; adapter pending.'if g['family']=='mart'else'Matching regional source selection and complete native adapter pending.')
+    q['renderedGap']=None if not model or q['renderedAccepted']else('Native building/warp review passed; shared native-ground donor assessment pending.'if model=='hgss_cerulean_gym'else'Native rendered review not recorded.')
     civics.append(q);families[(r['edition'],g['family'])].append((r['map'],q))
    row={k:r[k]for k in['edition','map','mapType','outdoor','pair','width','height','supported','nativeHash','unclassifiedBlockedCells']}
    row.update(scope='exterior_buildings_only',runtime='v0.3.95',inventoryOnly=True,assemblies=civics,modernEligible=sum(bool(g['modernEligible'])for g in civics),renderedAccepted=sum(g['renderedAccepted']for g in civics),unmatchedAssemblies=sum(not g['modernEligible']for g in civics))
@@ -37,9 +39,9 @@ def summarize(paths,output,accepted):
  with(output/'frlg-exterior-sources-2026-10-23.jsonl').open('w')as f:
   for r in sorted(rows,key=lambda r:(r['edition'],r['map'])):f.write(json.dumps(r,separators=(',',':'),sort_keys=True)+'\n')
  with(output/'frlg-exterior-families-2026-10-23.csv').open('w')as f:
-  w=csv.writer(f,lineterminator="\n");w.writerow(['edition','family','assemblies','modern_eligible','rendered_accepted','maps','source_models','gap'])
+  w=csv.writer(f,lineterminator="\n");w.writerow(['edition','family','assemblies','modern_eligible','rendered_accepted','maps','source_models','gap','rendered_gap'])
   for(ed,family),values in sorted(families.items()):
-   w.writerow([ed,family,len(values),sum(bool(g['modernEligible'])for _,g in values),sum(g['renderedAccepted']for _,g in values),'|'.join(sorted({m for m,_ in values})),'|'.join(sorted({g['modernEligible']for _,g in values if g['modernEligible']})),'|'.join(sorted({g['gap']for _,g in values if g['gap']}))])
+   w.writerow([ed,family,len(values),sum(bool(g['modernEligible'])for _,g in values),sum(g['renderedAccepted']for _,g in values),'|'.join(sorted({m for m,_ in values})),'|'.join(sorted({g['modernEligible']for _,g in values if g['modernEligible']})),'|'.join(sorted({g['gap']for _,g in values if g['gap']})),'|'.join(sorted({g['renderedGap']for _,g in values if g['renderedGap']}))])
  print(json.dumps(counts,sort_keys=True))
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('ledgers',type=Path,nargs='+');p.add_argument('--output',type=Path,default=Path('docs/coverage'));p.add_argument('--accepted',type=Path,nargs='*',default=[]);a=p.parse_args()

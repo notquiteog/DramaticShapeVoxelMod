@@ -1,9 +1,11 @@
 -- Isolated native source/door/footprint review for new FR/LG regional exteriors.
--- QA_FAMILY=houses|gyms|viridian_flowers|lavender|name_rater; QA_UTIL names the external engine frame-driver helper.
+-- QA_FAMILY=houses|gyms|gyms_all|viridian_flowers|lavender|name_rater|cerulean_gym; QA_UTIL names the external engine frame-driver helper.
 return function(game)
  local family=os.getenv('QA_FAMILY')or'gyms'
  local configs={
   gyms={fixtures={{'FR_PEWTER_CITY',12,12},{'FR_VIRIDIAN_CITY',33,6}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/',right=9},
+  gyms_all={fixtures={{'FR_PEWTER_CITY',12,12},{'FR_VIRIDIAN_CITY',33,6},{'FR_CERULEAN_CITY',28,17}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/',right=9},
+  cerulean_gym={fixtures={{'FR_CERULEAN_CITY',28,17}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/hgss_cerulean_gym/',right=9},
   houses={fixtures={{'FR_PEWTER_CITY',8,28},{'FR_PEWTER_CITY',32,9}},doorX=1,doorY=2,stat='pewterHouses',source='^assets/scenery/pewter%-house/'},
   viridian_flowers={fixtures={{'FR_VIRIDIAN_CITY',24,15}},doorX=1,doorY=3,stat='viridianFlowerHouses',source='^assets/scenery/viridian%-house/'},
   lavender={fixtures={{'FR_LAVENDER_TOWN',8,8},{'FR_LAVENDER_TOWN',3,13}},doorX=2,doorY=3,stat='lavenderHouses',source='^assets/scenery/lavender%-house/'},

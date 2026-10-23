@@ -1,6 +1,6 @@
-# Source-matched Viridian/Pewter Gyms — 2026-10-23
+# Source-matched Viridian/Pewter/Cerulean Gyms — 2026-10-23
 
-The two genuine regional sources are `to_gym_001-mesh` with
+The initial two genuine regional sources are `to_gym_001-mesh` with
 `gym_door_007-mesh` from [HGSS Viridian City](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592881/),
 and `nbc_gym_001-mesh` with `gym_door_005-mesh` from
 [HGSS Pewter City](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592849/).
@@ -40,7 +40,7 @@ open animation frames.
 
 ## Building/ground contact
 
-Both new Gym fits and the new Pewter-house fit explicitly use
+The Gym fits and Pewter-house fit explicitly use
 `groundInset=.05`, provided by shared commit0fb2b673. This moves only the
 source Y0 contact-ring vertices below native ground, including the matching
 edges across source parts. Anchors, physical upper geometry, UVs and the native
@@ -95,3 +95,45 @@ Gyms. `build` returns `true,kind` only after the selected child completes;
 `release`, `ownsDoor`, optional `doorSurface` and `chimney` route only active
 imported groups. Unknown drawings and failed uploads retain native fallback.
 This dispatcher adds no Scene, companion or engine callback dependency.
+
+
+## Cerulean source and rear UV repair
+
+The subsequent batch adds `ha_gym-mesh` with `gym_door_001-mesh` from
+[HGSS Cerulean City592833](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592833/),
+also Kuramapika1, September1,2026. Its actual blue Water-type badge and all source
+geometry/PNG bytes remain original. The exact7×5 native drawing includes a
+blocked northeast header cell; the guard retains that permission instead of
+assuming the entire header is walkable. The same original paired-panel poses,
+blocked-triangle clearance and explicit ground contact inset apply.
+
+All three source Gyms contained a separate exporter UV defect on their existing
+raised-tower rear quad: two triangles mapped the entire facade atlas, producing
+orange/gray vertical strips on the back. Those two original faces now sample the
+original neutral gray wall strip (`kn_gym_a.png`, U25.5/32,V0.5). Positions and all
+other UVs remain unchanged; no texture bytes are edited. Converter provenance
+records exact repaired source triangle indices. Before/after source and native
+rear captures show a continuous gray wall instead of the atlas projection.
+
+Both editions passed native Cerulean Gym entry and return. Both existing cities
+were rechecked in both editions after the UV repair, including rear/ground
+contacts, original door states and actual entry/return. LeafGreen with Cerulean
+PNG sources masked retained native source/fallback entry and return. Source and
+processed seven-direction captures, native front/left/right/rear/2D views and
+closure contacts were inspected. Latest official runtime was checked again:
+v0.3.95 with official Linux LÖVE11.5 shell, isolated profiles and Mesa llvmpipe;
+explicit drivers pass, while shell shutdown returns1. New focused assertions
+verify both original rear triangles retain the neutral wall paint.
+
+The reusable `QA_FAMILY=gyms_all` reviews all three cities; `cerulean_gym` targets
+only the new source. The dispatcher remains `hgssGyms`; no new Scene API is
+required. Deterministic conversion recreates the three models and provenance.
+
+Cerulean's shared Civic underlay currently shows yellow path between columns
+where native2D shows lawn. The building batch does not change shared floor
+selection. Native ground/collision hashes are unchanged, but Cerulean rendered
+acceptance is conservatively **pending** that shared native-ground donor review.
+Its metadata includes an explicit `renderedGap`. The source census now records30
+eligible/103 unmatched recognized assemblies per edition, with11 inspected;
+Gym source coverage is3/11 drawings and accepted Gym coverage remains2/11.
+These are inventory counts, not a game-completion percentage.

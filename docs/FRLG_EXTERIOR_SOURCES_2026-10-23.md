@@ -2,9 +2,9 @@
 
 The native audit enumerates **426 maps per edition**, including **76 outdoor
 maps**, **133 detected civic assemblies**, and **55 distinct civic families**.
-It separately records **29 source-eligible assemblies** and **104 unmatched
+It separately records **30 source-eligible assemblies** and **103 unmatched
 assemblies per edition**. Eleven families have at least one eligible source adapter;
-44 families still have none. The Gym family is partial:2 of11 assemblies per
+44 families still have none. The Gym family is partial:3 of11 assemblies per
 edition have matching sources. These are
 assembly counts, not percentages of whole-game completion.
 
@@ -130,3 +130,8 @@ acceptance; see `docs/LAVENDER_HOUSES_2026-10-23.md`. The distinct Name Rater he
 at(8,13), omitted by the old recipe, is now classified and uses its actual HGSS
 tent: see `docs/LAVENDER_NAME_RATER_2026-10-23.md`. Its new assembly increases the
 census denominator; Tower/Mart and further unclassified cells remain source gaps.
+
+Cerulean Gym now has a matching regional HGSS source and passed native model/door
+review, but its shared floor donor is under review (native lawn versus current
+yellow path). Its `renderedAccepted` stays false until that assessment resolves;
+`renderedGap`/`rendered_gap` distinguish this from unavailable source families.
