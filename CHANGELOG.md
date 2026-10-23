@@ -1,3 +1,9 @@
+## 1.57.12 — Portable API3 (2026-10-23)
+
+Move to Portable API3 public game, options/screens, asset access and owned installation caches. Fix canonical Crystal sprite records, optional HUD suppression ownership and ambient lifecycle. Native renderer gaps retain declared engine internals.
+
+Requires Gen1Recomp 0.3.96 or newer. No companion mod is required.
+
 ## 1.57.10 — 2026-10-23
 
 - Activate reviewed original ORAS Hoenn Gyms, notices, regional Marts and Oldale/Petalburg homes with native source doors.
