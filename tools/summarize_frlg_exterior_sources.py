@@ -3,6 +3,8 @@
 import argparse,collections,csv,hashlib,json
 from pathlib import Path
 SOURCES={
+ 'hgss_viridian_gym':'assets/scenery/hgss-kanto-gyms/hgss_viridian_gym/provenance.json',
+ 'hgss_pewter_gym':'assets/scenery/hgss-kanto-gyms/hgss_pewter_gym/provenance.json',
  'hgss_kanto_center':'assets/scenery/hgss-center/provenance.json',
  'hgss_pewter_museum':'assets/scenery/pewter-museum/provenance.json',
  'hgss_viridian_house':'assets/scenery/viridian-house/provenance.json',

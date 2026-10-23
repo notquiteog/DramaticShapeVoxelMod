@@ -23,7 +23,7 @@ end
 function M.build(g,cells,newMesh,parts)
  if not M.eligible(g,cells)then return false end
  local ok,err=M.register();if not ok then return false,err end
- local fit={width=80,depth=48,padding=.25,anchor='door',targetX=24,targetZ=40}
+ local fit={width=80,depth=48,padding=.25,groundInset=.05,anchor='door',targetX=24,targetZ=40}
  local fitted,fitError=Models.fit(M.id,fit);if not fitted then return false,fitError end
  local doors=V.require('Gen3PewterHouseDoors');local ready,doorError=doors.build(g,fitted,newMesh);if not ready then return false,doorError end
  local p={model=M.id,x=g.cx*16,y=g.groundHeight or 0,z=g.cy*16,fit=fit}
