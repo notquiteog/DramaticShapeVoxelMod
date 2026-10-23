@@ -44,5 +44,6 @@ end
 function M.prepare(cells,newMesh,parts)
  return V.require('Gen3ImportedGymNotices').build(cells,newMesh,parts)
 end
+function M.ownsProp(p)return V.require('Gen3ImportedGymNotices').ownsProp(p)end
 function M.ground(c)return V.require('Gen3ImportedGymNotices').floor(c)end
 return M
