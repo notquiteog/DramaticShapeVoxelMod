@@ -17,7 +17,7 @@ for _,r in ipairs(F.recipes)do if r.design then
   elseif r.design=='fr_mart_cooler' then
    for _,v in ipairs(q)do assert(v[3]>=19 and v[3]<=32,'cabinet pushes through the north wall or into the aisle')end
   end
-  count=count+1;for i,p in ipairs(q)do assert(p[1]==p[1] and p[2]>=0);hi=math.max(hi,p[2]);assert(uv[i][1]>=0 and uv[i][1]<=1 and uv[i][2]>=0 and uv[i][2]<=1,'UV '..r.name)end
+  count=count+1;for i,p in ipairs(q)do assert(p[1]==p[1] and p[2]>=-(r.groundInset or 0));hi=math.max(hi,p[2]);assert(uv[i][1]>=0 and uv[i][1]<=1 and uv[i][2]>=0 and uv[i][2]<=1,'UV '..r.name)end
  end,function()return{{0,0},{1,0},{1,1},{0,1}}end)
  if r.design=='em_start_seat_pad' or r.design=='fr_daycare_cushion' or r.design=='fr_home_seat' or r.design=='fr_school_seat' or r.design=='em_lab_seat_pad' or r.design=='fr_lab_exit_mat' or r.design=='fr_route_seat' or r.design=='fr_route_exit_mat' then assert(count>=7 and hi<1,'walkable seating must stay flush')
  elseif r.design=='fr_saffron_telepad' then assert(count>=7 and hi<.5,'teleport pad must stay flush')

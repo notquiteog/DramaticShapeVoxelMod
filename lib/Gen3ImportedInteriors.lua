@@ -19,6 +19,14 @@ dataFiles.oras_pyre_memorial='ImportedPyreMemorialData'
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
+ hoenn_pyre_memorial={pair='general__facility',primary='general',family='rse',mapPattern='_MT_PYRE_[1-6]F$',design='fr_tower_grave',rows={{0x2ee}},collisionRows={{7}},
+  model='oras_pyre_memorial',fitWidth=16,fitDepth=16,fitHeight=17,zRows=0,groundInset=.025},
+ rs_pyre_memorial={pair='general__facility',primary='general',family='rse',mapPattern='_MT_PYRE_[1-6]F$',design='fr_tower_grave',rows={{0x2ee}},collisionRows={{7}},
+  model='oras_pyre_memorial',fitWidth=16,fitDepth=16,fitHeight=17,zRows=0,groundInset=.025},
+ hoenn_pyre_memorial_wall_shadow={pair='general__facility',primary='general',family='rse',mapPattern='_MT_PYRE_[1-6]F$',design='fr_tower_grave',rows={{0x326}},collisionRows={{7}},
+  model='oras_pyre_memorial',fitWidth=16,fitDepth=16,fitHeight=17,zRows=0,groundInset=.025},
+ rs_pyre_memorial_wall_shadow={pair='general__facility',primary='general',family='rse',mapPattern='_MT_PYRE_[1-6]F$',design='fr_tower_grave',rows={{0x326}},collisionRows={{7}},
+  model='oras_pyre_memorial',fitWidth=16,fitDepth=16,fitHeight=17,zRows=0,groundInset=.025},
  tower_grave_657={pair='building__rom_082d4efc',design='fr_tower_grave',rows={{0x291}},collisionRows={{7}},
   model='oras_pyre_memorial',fitWidth=16,fitDepth=16,fitHeight=17,zRows=0,groundInset=.025},
  hoenn_center_pc={pair='building__pokemon_center',family='rse',design='fr_center_pc',rows={{0x20c},{4},{0x224}},groundInset=.025},
@@ -87,10 +95,11 @@ function M.eligible(p,cells)
     elseif row==2 then collision=c.collision==7 or f.model==nil and c.collision==0x93
     else collision=c.collision==(row==1 and 7 or 0)end
    end
-   if not c or c.prop~=p or c.pair~=f.pair or c.primary~='building'
+   if not c or c.prop~=p or c.pair~=f.pair or c.primary~=(f.primary or'building')
     or not PCFrames.matches(r,c.mid,expected)or not collision
     or f.model=='oras_home_tv'and row==2 and c.behavior~=0x86
     or c.boundary or c.stageHidden or c.stairs or c.civic then return false end
+   if f.mapPattern then local id=c.mapId or c.region and c.region.mapId;if type(id)~='string'or not id:match(f.mapPattern)then return false end end
    if base==nil then base=c.base or 0 elseif math.abs((c.base or 0)-base)>.001 then return false end
   end
  end

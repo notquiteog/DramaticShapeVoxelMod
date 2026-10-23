@@ -88,6 +88,8 @@ for _,r in ipairs(Tower.recipes)do recipes[#recipes+1]=r end
 Designed.install(recipes)
 local Hoenn=V and V.require('Gen3Hoenn') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3Hoenn.lua')
 for _,r in ipairs(Hoenn.recipes)do recipes[#recipes+1]=r end
+local Memorials=V and V.require('Gen3MemorialFurniture')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3MemorialFurniture.lua')
+for _,r in ipairs(Memorials)do recipes[#recipes+1]=r end
 local Kanto=V and V.require('Gen3KantoHomes')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3KantoHomes.lua')
 Kanto.install(recipes)
 local RS=V and V.require('Gen3RubySapphire') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3RubySapphire.lua')

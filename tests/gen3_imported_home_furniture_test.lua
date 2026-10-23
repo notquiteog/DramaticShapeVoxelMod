@@ -17,6 +17,10 @@ V.require=function(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='hoenn_pyre_memorial_wall_shadow',primary='general',mapId='EM_MT_PYRE_1F',pair='general__facility',design='fr_tower_grave',rows={{0x326}},coll={{7}},x=9,z=7,id='oras_pyre_memorial',fit={16,16,0},height=17},
+ {name='rs_pyre_memorial_wall_shadow',primary='general',mapId='RU_MT_PYRE_1F',pair='general__facility',design='fr_tower_grave',rows={{0x326}},coll={{7}},x=9,z=7,id='oras_pyre_memorial',fit={16,16,0},height=17},
+ {name='hoenn_pyre_memorial',primary='general',mapId='EM_MT_PYRE_1F',pair='general__facility',design='fr_tower_grave',rows={{0x2ee}},coll={{7}},x=10,z=3,id='oras_pyre_memorial',fit={16,16,0},height=17},
+ {name='rs_pyre_memorial',primary='general',mapId='RU_MT_PYRE_1F',pair='general__facility',design='fr_tower_grave',rows={{0x2ee}},coll={{7}},x=10,z=3,id='oras_pyre_memorial',fit={16,16,0},height=17},
  {name='tower_grave_657',family=false,pair='building__rom_082d4efc',design='fr_tower_grave',rows={{0x291}},coll={{7}},x=3,z=5,id='oras_pyre_memorial',fit={16,16,0},height=17},
  {name='hoenn_home_sink',pair='building__generic_building',design='em_home_sink',rows={{0x26c,0x26d},{0x274,0x275}},coll={{7,7},{0,0}},x=8,z=1,id='oras_oldale_kitchen_sink',fit={32,16,0},rotation=1},
  {name='hoenn_home_tv',pair='building__generic_building',design='em_home_tv',rows={{0x286,0x287},{0x28e,0x28f},{0x296,0x297}},coll={{7,7},{7,7},{0,0}},x=0,z=0,id='oras_oldale_china_cupboard',fit={32,16,1}},
@@ -36,7 +40,7 @@ for _,q in ipairs(fixtures)do
  local p={cx=q.x,cy=q.z,w=#q.rows[1]*16,d=#q.rows*16,pair=pair,groundHeight=8,
   recipe={name=q.name,design=q.design,family=q.family~=false and'rse'or nil,rows=q.rows}}
  for y,row in ipairs(q.rows)do for x,mid in ipairs(row)do
-  cells[(q.x+x-1)..':'..(q.z+y-1)]={cx=q.x+x-1,cy=q.z+y-1,mid=mid,collision=q.coll[y][x],base=8,primary='building',pair=pair,prop=p}
+  cells[(q.x+x-1)..':'..(q.z+y-1)]={cx=q.x+x-1,cy=q.z+y-1,mid=mid,collision=q.coll[y][x],base=8,primary=q.primary or'building',region={mapId=q.mapId},pair=pair,prop=p}
  end end
  assert(M.eligible(p,cells));local count=0;for _ in pairs(cells)do count=count+1 end
  local list=M.placements(cells);assert(#list==1 and list[1].model==q.id)
@@ -50,6 +54,7 @@ for _,q in ipairs(fixtures)do
   assert(not M.eligible(p,cells),'unreviewed source accepted '..key);last[key]=original
  end
  for _,key in ipairs{'stageHidden','stairs','civic','boundary'}do last[key]=true;assert(not M.eligible(p,cells),key);last[key]=nil end
+ if q.mapId then local old=last.region;last.region={mapId='EM_MOSSDEEP_CITY_SPACE_CENTER_1F'};assert(not M.eligible(p,cells),'foreign room accepted');last.region=old end
  local original=p.recipe.design;p.recipe.design='unrelated';assert(not M.eligible(p,cells));p.recipe.design=original
  available=false;local result,err,n=M.build(cells,function()end,{})
  assert(not result and err and n==0 and not p.importedInterior,'failed source upload hid complete native furniture')

@@ -52,3 +52,6 @@ contains 1141 accepted placements across 240 maps. Raw archives/scenes,
 native pixels, caches and captures are excluded. RSE Mt. Pyre still lacks
 furniture extraction; its art audit is a separate next family, not coverage
 inherited from this Kanto batch.
+
+The later [RSE continuation](RSE_PYRE_MEMORIALS_2026-10-23.md) separately verifies
+all 793 complete common and wall-shadow graves across the 18 Mt. Pyre floors.

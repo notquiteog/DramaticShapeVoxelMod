@@ -6686,3 +6686,14 @@ remains root-owned. See docs/IMPORTED_INTERIOR_CONTACTS_2026-10-23.md,
 docs/ORAS_CHINA_CUPBOARD_2026-10-23.md and docs/ORAS_KITCHEN_SINK_2026-10-23.md.
 The cemetery evidence/occlusion limits are in docs/ORAS_PYRE_MEMORIAL_2026-10-23.md.
 Remaining room/furniture coverage is still in progress; no full-game claim.
+
+RSE continuation: exact common and wall-shadow grave drawings now use the
+original Mt. Pyre memorial at all 793 locations on 18 floors (E261/R266/S266).
+All individual contact sheets and final room overviews inspected on official
+0.3.95; 13 native direct-LOS occlusions per edition recorded in the component
+ledger. Missing-PNG Emerald/FireRed floors pass; native fallback grave bottoms
+now share the cap-only contact recess, all upper geometry unchanged. Eleven
+focused suites pass. Full census: 2161 unchanged hashes, all prior families
+unchanged, 1979 candidates, 1934 accepted components on 258 maps. Whole-map
+acceptance false; irregular Mt. Pyre floor/wall framing remains outstanding.
+Details: docs/RSE_PYRE_MEMORIALS_2026-10-23.md. Scene and release stay root-owned.
