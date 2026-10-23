@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export genuine ORAS Oldale Poké Mart and original BM0009 sliding-door poses.
+"""Export genuine ORAS Oldale/Petalburg/Rustboro Marts and original BM0009 sliding-door poses.
 External decoders and supplied RomFS paths are explicit; raw game files stay out.
 """
 import argparse,hashlib,json,math,sys
@@ -48,6 +48,19 @@ def convert(root,decoder_path,nitrogen_path,output):
  # source for Petalburg/Rustboro or claim a universal shared model.
  comparisons={'8':'distinct original topology/UV; separate adaptation required','38':'distinct source positions/UV; separate adaptation required'}
  data=dict(parts=parts,anchors={'door':norm([117,.5295029878616333,-92.4347992017865]),'doorLeft':norm([103,.5295029878616333,-92.4347992017865]),'doorRight':norm([131,.5295029878616333,-92.4347992017865]),'doorTop':norm([117,45.52950298786163,-92.4347992017865])})
+ bodydata={'oras_oldale_mart':data};variants={}
+ for town,gr,ad,dx,dz in [('petalburg',8,9,126,-162),('rustboro',38,11,-342,126)]:
+  rawvariant=(root/f'mapgr-nitrogen/9/{gr:04d}/001.bch').read_bytes();vm=load(rawvariant)[0];sub=next(q for q in vm.submeshes if q.material=='friendlyshop');ni=open_bch(rawvariant).models[0].meshes[vm.submeshes.index(sub)]
+  need(ni.positions==sub.positions and ni.texcoords==sub.uv0 and ni.submeshes[0].indices==[v for t in sub.triangles for v in t],'independent town Mart geometry differs')
+  actualtextures={t.name:t for t in load_textures((root/f'mapart-nitrogen/4/{ad:04d}/011.bch').read_bytes())};textureName=next(a.base_color_texture for a in vm.materials if a.name==sub.material)
+  need(actualtextures[textureName].rgba==textures[textureName].rgba,'distinct town Mart pixels need separate resource')
+  vp=dict(p,vertices=[[v[0]-dx,v[1],v[2]-dz,uv[0],1-uv[1],1.]for v,uv in zip(sub.positions,sub.uv0)],indices=[i+1 for t in sub.triangles for i in t]);bottom=[]
+  for x,z in rim:
+   v=next((v for v in vp['vertices']if abs(v[0]-x)<.0004 and abs(v[1])<.0001 and abs(v[2]-z)<.0004),None);need(v is not None,'town Mart exact bottom rim changed');bottom.append(v[:])
+  vc=dict(cap,vertices=bottom)
+  for q in [vp,vc]:q['vertices']=[norm(v)for v in q['vertices']]
+  bodydata['oras_'+town+'_mart']=dict(parts=[vp,vc],anchors=data['anchors'])
+  variants[town]=dict(gr=gr,area=ad,model=vm.name,sourceTriangles=len(sub.triangles),sourceVertices=len(sub.positions),sourceBchSha256=hashlib.sha256(rawvariant).hexdigest(),originalWorldOffset=[dx,0,dz],textureRgbaSha256=hashlib.sha256(actualtextures[textureName].rgba).hexdigest(),processing='Own original vertex/index/UV arrays independently verified; only exact world translation and common uniform normalization applied. Own19 source bottom-rim vertices close underside.')
  # Genuine single sliding panel: all43 physical triangles share move bone5.
  rawdoor=(root/'mapprops-nitrogen/3/0009/000.bch').read_bytes();dm=load(rawdoor)[0];di=open_bch(rawdoor).models[0];need(dm.name=='com_bm_fsdoor01','unexpected Mart door')
  worlds=[];errors={}
@@ -79,8 +92,8 @@ def convert(root,decoder_path,nitrogen_path,output):
    poses[state].append(rows)
   dp['vertices']=poses[0][-1];dparts.append(dp)
  door=dict(id='oras_hoenn_mart_doors',parts=dparts,poses=poses)
- (output/'lib/ImportedHoennMartData.lua').write_text('-- Genuine ORAS Oldale Mart and single sliding panel; tools/import_oras_marts.py.\nreturn '+lua({'oras_oldale_mart':data,'door':door})+'\n')
- report=dict(source='User-supplied Alpha Sapphire RomFS; Oldale exterior family',body='GR0004 world01_02_02 friendlyshop',matchingTownMaximumErrors=comparisons,bodySourceTriangles=703,undersideTriangles=len(ii)//3,doorSourceTriangles=43,sourceBounds=bounds,normalizationOrigin=origin,normalizationSpan=span,door='BM0009 com_bm_fsdoor01',animationSamples=[0,2.5,5],sourceXSamples=[sample(track,f)for f in [0,2.5,5]],movingInverseBindMaximumError=errors['move'],textures=treport,sha256={'body':hashlib.sha256(raw).hexdigest(),'door':hashlib.sha256(rawdoor).hexdigest(),'animation':hashlib.sha256(anim).hexdigest()},processing='Original positions/UVs/triangles independently compared to Nitrogen. Source vertex exposure RGB and24 nonphysical light triangles omitted. Exact source bottom rim closed beneath building; all physical source triangles and original texture paint retained. No native collision/scripts/warps changed.')
+ (output/'lib/ImportedHoennMartData.lua').write_text('-- Genuine own-source ORAS corridor Marts and single sliding panel; tools/import_oras_marts.py.\nreturn '+lua(dict(bodydata,door=door))+'\n')
+ report=dict(source='User-supplied Alpha Sapphire RomFS; own Oldale/Petalburg/Rustboro source variants',body='GR0004 world01_02_02 friendlyshop',townVariants=variants,bodySourceTriangles=703,undersideTriangles=len(ii)//3,doorSourceTriangles=43,sourceBounds=bounds,normalizationOrigin=origin,normalizationSpan=span,door='BM0009 com_bm_fsdoor01',animationSamples=[0,2.5,5],sourceXSamples=[sample(track,f)for f in [0,2.5,5]],movingInverseBindMaximumError=errors['move'],textures=treport,sha256={'body':hashlib.sha256(raw).hexdigest(),'door':hashlib.sha256(rawdoor).hexdigest(),'animation':hashlib.sha256(anim).hexdigest()},processing='Original positions/UVs/triangles independently compared to Nitrogen. Source vertex exposure RGB and24 nonphysical light triangles omitted. Exact source bottom rim closed beneath building; all physical source triangles and original texture paint retained. No native collision/scripts/warps changed.')
  (folder/'provenance.json').write_text(json.dumps(report,indent=2)+'\n');return report
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__)

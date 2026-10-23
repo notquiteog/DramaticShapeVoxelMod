@@ -1,9 +1,37 @@
 {
-  "source": "User-supplied Alpha Sapphire RomFS; Oldale exterior family",
+  "source": "User-supplied Alpha Sapphire RomFS; own Oldale/Petalburg/Rustboro source variants",
   "body": "GR0004 world01_02_02 friendlyshop",
-  "matchingTownMaximumErrors": {
-    "8": "distinct original topology/UV; separate adaptation required",
-    "38": "distinct source positions/UV; separate adaptation required"
+  "townVariants": {
+    "petalburg": {
+      "gr": 8,
+      "area": 9,
+      "model": "world02_02_03",
+      "sourceTriangles": 703,
+      "sourceVertices": 808,
+      "sourceBchSha256": "b008075154a17ea5d0fb5ed89262e448289f1196cd6d2cdc5a955914aa6b47e9",
+      "originalWorldOffset": [
+        126,
+        0,
+        -162
+      ],
+      "textureRgbaSha256": "50860208bc87e7493c6991d54c37dc373e0b5d084f54f777efaaf3b6cc497da9",
+      "processing": "Own original vertex/index/UV arrays independently verified; only exact world translation and common uniform normalization applied. Own19 source bottom-rim vertices close underside."
+    },
+    "rustboro": {
+      "gr": 38,
+      "area": 11,
+      "model": "world04_03_05",
+      "sourceTriangles": 703,
+      "sourceVertices": 809,
+      "sourceBchSha256": "af181da08320eb8c79f36116e406fba104dcb596e2beaf5f8e0ce048b3f19363",
+      "originalWorldOffset": [
+        -342,
+        0,
+        126
+      ],
+      "textureRgbaSha256": "50860208bc87e7493c6991d54c37dc373e0b5d084f54f777efaaf3b6cc497da9",
+      "processing": "Own original vertex/index/UV arrays independently verified; only exact world translation and common uniform normalization applied. Own19 source bottom-rim vertices close underside."
+    }
   },
   "bodySourceTriangles": 703,
   "undersideTriangles": 17,

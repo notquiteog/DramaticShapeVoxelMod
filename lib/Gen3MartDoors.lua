@@ -3,7 +3,7 @@
 local V=...
 local Models,Budget=V.require('SceneryModels'),V.require('BuildBudget')
 local M={id='oras_hoenn_mart_doors'}
-local families={oldale_mart=true}
+local families={oldale_mart='oras_oldale_mart',petalburg_city_mart='oras_petalburg_mart',rustboro_city_mart='oras_rustboro_mart'}
 local function finite(n)return type(n)=='number'and n==n and math.abs(n)<math.huge end
 local function source()
  local ok,d=pcall(V.require,'ImportedHoennMartData')
@@ -20,7 +20,7 @@ end
 function M.geometry(g,fit,state)
  local d,err=source();if not d then return nil,err end
  if not(g and g.kind=='mart'and g.width==4 and g.depth==4 and g.custom and g.custom.family=='rse'
-  and families[g.custom.name]and not g.stageHidden and fit and fit.model=='oras_oldale_mart'
+  and families[g.custom.name]and not g.stageHidden and fit and fit.model==families[g.custom.name]
   and fit.width==64 and fit.depth==48 and finite(fit.scale)and fit.scale>0)then return nil,'unreviewed Mart doorway'end
  if state~=0 and state~=1 and state~=2 then return nil,'invalid Mart door state'end
  local parts={}

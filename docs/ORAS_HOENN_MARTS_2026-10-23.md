@@ -1,4 +1,4 @@
-# Authentic ORAS Oldale Mart source and guarded adapter
+# Authentic ORAS corridor Marts and guarded adapters
 
 Original GR0004 `world01_02_02` supplies703 physical source triangles and its
 original `friendry_01` texture. The nineteen original bottom-rim vertices form
@@ -16,17 +16,20 @@ geometry comparison and stored moving inverse bind checks pass.
 
 Other towns must not inherit this source automatically. GR0008 Petalburg has
 different original topology/UVs; GR0038 Rustboro differs in original positions
-and UVs. They require their own actual variants and review. The current adapter
-only accepts the exact three native R/S/E Oldale placements and native MIDs,
+and UVs. Both actual variants are now separately exported from their original GR0008 and
+GR0038 arrays, retaining each topology/UV/vertex detail. Native AD0009/0011
+textures were independently compared to their own source pixels before sharing
+identical processed PNGs. The current adapter accepts only the exact nine native
+R/S/E Oldale/Petalburg/Rustboro placements and native MIDs,
 permissions, owner, level and region. Uniform fitting leaves the original
 walkable rear drawing row clear; triangle clipping rejects source faces spanning
 walking cells. The original entrance remains x+1/y+3. Body and door use the same
 base, with the closed underside0.05units below native ground.
 
 Latest official release rechecked2026-10-23: Gen1Recomp0.3.95. Actual R/S/E native
-Oldale source drawings were inspected. Isolated official Linux native QA uploaded
+Oldale/Petalburg/Rustboro source drawings were inspected. Isolated official Linux native QA uploaded
 the body and all source door states, checked their counts and atomic failed-upload
-rollback in all three editions. Lua regression also checks exact native anchor,
+rollback in all nine town/edition candidates. Lua regression also checks exact native anchor,
 source closures, rejected native cells and missing-source fallback. Reusable
 native driver: `tools/qa/hoenn-oldale-mart.lua`.
 
