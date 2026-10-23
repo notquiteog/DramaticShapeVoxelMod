@@ -14,7 +14,7 @@ function M.available()
  local supported=love.graphics.getSupported and love.graphics.getSupported()
  return not supported or supported.instancing~=false
 end
-function M.new(mesh,positions)
+function M.new(mesh,positions,withVisibility)
  if not M.available() or not mesh or not mesh.attachAttribute or not mesh.detachAttribute or #positions==0 then return end
  local ok,offsets=pcall(love.graphics.newMesh,{{'VertexInstanceOffset','float',3}},positions,'points','static')
  if not ok then return end
@@ -22,8 +22,12 @@ function M.new(mesh,positions)
  ok=pcall(mesh.attachAttribute,mesh,'VertexInstanceOffset',offsets,'perinstance')
  if not ok then offsets:release();return end
  mesh:detachAttribute('VertexInstanceOffset')
- local owned={}
- for i,p in ipairs(positions)do owned[i]={p[1],p[2],p[3]}end
+ -- Only physical scenery opting into camera filtering needs a CPU snapshot.
+ local owned
+ if withVisibility then
+  owned={}
+  for i,p in ipairs(positions)do owned[i]={p[1],p[2],p[3]}end
+ end
  local batch={instanceMesh=mesh,offsets=offsets,count=#positions,_positions=owned}
  function batch:release()
   local view=self._visible
