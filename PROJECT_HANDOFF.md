@@ -1,3 +1,7 @@
+### 2026-10-23 shared model actor replacement identity
+- GB Stadium/XD and native GBA XD consumers now include the underlying Pokémon object in live and failed actor identity. A same-species switch using a reused battler wrapper resets animation state instead of inheriting the previous actor's pose or failed-load cache. Stable failed actors still avoid per-frame retries.
+- Focused LuaJIT tests pass: XD GBA actor lifecycle, Stadium bridge (29 checks), XD identity, XD materials. This is lifecycle verification, not a visual or production-ready XD claim; the validated-pack gate remains unchanged.
+
 # Native style settings and parity audit — 2026-10-23
 
 Fixed eight missing Gen3 visual-style controls: shared schema/live settings,

@@ -80,11 +80,11 @@ local function releaseActor(actor)
 end
 
 local function failActor(actor)
-  local battler, dex, variant, provider, form = actor.battler, actor.dex, actor.variant, actor.provider, actor.form
+  local battler, mon, dex, variant, provider, form = actor.battler, actor.mon, actor.dex, actor.variant, actor.provider, actor.form
   releaseActor(actor)
   actor.provider=provider
-  actor.failedBattler, actor.failedDex, actor.failedVariant, actor.failedForm =
-    battler, dex, variant, form
+  actor.failedBattler, actor.failedMon, actor.failedDex, actor.failedVariant, actor.failedForm =
+    battler, mon, dex, variant, form
 end
 
 function StadiumModels.release()
@@ -137,17 +137,18 @@ local function syncSide(battle, side)
   local api = connect()
   if actor.provider ~= api then releaseActor(actor);actor.provider=api end
   local battler = battle and battle[side]
+  local mon = battler and battler.mon
   local dex = dexFor(battle, battler)
   local variant = BattleArt.isShiny(battler) and "shiny" or "normal"
   local form = api and api.formFor and api.formFor(battler,dex)or nil
-  if actor.instance and actor.battler == battler and actor.dex == dex
+  if actor.instance and actor.battler == battler and actor.mon == mon and actor.dex == dex
       and actor.variant == variant and actor.form == form then return actor end
-  if actor.failedBattler == battler and actor.failedDex == dex
+  if actor.failedBattler == battler and actor.failedMon == mon and actor.failedDex == dex
       and actor.failedVariant == variant and actor.failedForm == form then return actor end
 
   releaseActor(actor)
   actor.provider=api
-  actor.battler, actor.dex, actor.variant, actor.form = battler, dex, variant, form
+  actor.battler, actor.mon, actor.dex, actor.variant, actor.form = battler, mon, dex, variant, form
   if not (battler and dex) then return actor end
 
   if not api then return actor end
@@ -160,8 +161,8 @@ local function syncSide(battle, side)
   })
   if not called then err, instance = instance, nil end
   if type(instance) ~= "table" then
-    actor.failedBattler, actor.failedDex, actor.failedVariant, actor.failedForm =
-      battler, dex, variant, form
+    actor.failedBattler, actor.failedMon, actor.failedDex, actor.failedVariant, actor.failedForm =
+      battler, mon, dex, variant, form
     warnOnce(("load:%s:%d:%s"):format(side, dex, variant),
       ("Stadium 2 %s model %03d (%s) unavailable: %s; using Battle Art")
         :format(side, dex, variant, tostring(err)))
@@ -224,6 +225,7 @@ end
 local function updatePresentation(battle, side, actor)
   if not actor.instance then return end
   local battler = battle and battle[side]
+  local mon = battler and battler.mon
   local grow = battler and safeCall(battle, "growInScale", battler) or nil
   if grow and not actor.lastGrow then playContext(actor, "entrance", false) end
   actor.lastGrow = grow and true or false
@@ -308,6 +310,7 @@ local function modelMatrix(arena, groundY, battle, side, actor, metrics)
   local worldHeight = math.max(5, math.min(18,
     14 * math.sqrt(metrics.height / (metrics.units == 'meters' and 1 or 52.25))))
   local battler = battle and battle[side]
+  local mon = battler and battler.mon
   local grow = battler and safeCall(battle, "growInScale", battler) or 1
   grow = tonumber(grow) or 1
   local plasma=battle and battle.legendaryQ57 and battle.legendaryQ57[side]

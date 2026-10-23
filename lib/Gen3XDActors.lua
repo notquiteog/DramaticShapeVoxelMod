@@ -71,11 +71,11 @@ function M.prepare(frame)
   local p=Anim.present(id)
   local form=pack.formFor and pack.formFor(b,dex,p)or nil
   local e=held[id]
-  if e and(e.battler~=b or e.dex~=dex or e.variant~=variant or e.form~=form)then release(id);e=nil end
+  if e and(e.battler~=b or e.mon~=mon or e.dex~=dex or e.variant~=variant or e.form~=form)then release(id);e=nil end
   if not e and b and dex then
    local ok,instance=pcall(pack.newInstance,dex,variant,{form=form})
    if not ok then instance=nil end
-   e={battler=b,dex=dex,variant=variant,form=form,instance=instance}
+   e={battler=b,mon=mon,dex=dex,variant=variant,form=form,instance=instance}
    held[id]=e
   end
   local card=frame.byId[id]

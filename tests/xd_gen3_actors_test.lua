@@ -69,4 +69,16 @@ for _,case in ipairs({'metrics','update','context','draw'})do
  for id=0,2 do assert(not M.draw(frame,frame.byId[id]),'failed '..case..' suppressed native fallback')end
 end
 M.clear()
+fault=nil
+M.prepare(frame)
+local before,oldReleased=made,released
+st.battlers[0].mon={}
+M.prepare(frame)
+assert(made==before+1 and released==oldReleased+1,'same-species replacement retained old actor pose')
+st.battlers[3].mon={}
+M.prepare(frame)
+assert(made==before+2,'replacement inherited previous failed model cache')
+M.prepare(frame)
+assert(made==before+2,'replacement failure retried every frame')
+M.clear()
 print('XD GBA actor lifecycle passed')
