@@ -1,3 +1,19 @@
+# Genuine Saffron Copycat source and native acceptance — 2026-10-23
+
+Exact Copycat city/connection placements now use real HGSS ybc_mmc plus its
+separately instanced ybc_dor1 panel, verified by original source scene matrices.
+Rear barrel/gable/curved soffit/foundation and full panel returns close measured
+cuts; original physical triangles/UV/PNG bytes retained, source shadows excluded.
+Native0.3.96 FR/LG:4 reviewed placements,2 real entry-return pairs,2 explicit
+nonenterable projections. Native hashes/contact/door poses inspected; LG missing
+PNG fallback passes. Native hide flag0x3e only in disposable fixture; no save.
+Focused LuaJIT native/triangle/pose/atomic-failure/dispatcher tests,589-file compile
+and7 deterministic outputs pass. Canonical per edition77 eligible/70 accepted/
+56 unmatched/6324 unclassified blocked cells; Mr Psychic remains unmatched.
+Production Scene hook: dispatcher saffronCopycat, full draw/release/ownsDoor route.
+No production Scene changes or combined-package claim. See
+`docs/SAFFRON_COPYCAT_SOURCE_2026-10-23.md`. Continuing matching Mr Psychic source.
+
 # Museum rendered coverage accepted after solid stairs — 2026-10-23
 
 Queued regional census now records Museum renderedAccepted=true on official0.3.96
