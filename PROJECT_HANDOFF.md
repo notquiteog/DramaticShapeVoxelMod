@@ -1,7 +1,8 @@
 # Combined optimization/model release1.57.9 — 2026-10-23
 
 Merged remote model work83f1d36a with optimization work0ef5b831. Preserve both
-contact-inset geometry and cached-fit separation; final combined tests below.
+contact-inset geometry and cached-fit separation.43combined suites pass;1404Lua
+files compile. Combined native package results belong in the1.57.9release notes.
 
 # Rendering optimization1.57.8 — 2026-10-23
 

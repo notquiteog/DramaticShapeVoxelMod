@@ -82,3 +82,14 @@ Gold's rendered lab view. These are bounded rendering checks, not comprehensive
 playthroughs or FPS certification. Processes exited normally and user saves were
 untouched. Only documentation changed after those package checks; final packaged
 production bytes were compared against the tested archive before publication.
+
+## Concurrent model integration
+
+Before publication, remote main83f1d36a added source-fence/building-contact work.
+Merged it into1.57.9 rather than replacing either contributor's changes. The
+cached-fit key and its input snapshot now both include groundInset; regression
+coverage proves distinct contact rings retain distinct meshes and culling bounds.
+43combined suites pass and all1404repository Lua files compile. The timing table
+above describes the optimization candidate before this model merge; do not label
+it as a fresh measurement of the changed model scene. Final combined package
+runtime results are recorded in the GitHub release notes.
