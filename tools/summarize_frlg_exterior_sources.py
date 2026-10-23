@@ -3,6 +3,8 @@
 import argparse,collections,csv,hashlib,json
 from pathlib import Path
 SOURCES={
+ 'hgss_saffron_ordinary_block':'assets/scenery/saffron-blocks/hgss_saffron_ordinary_block/provenance.json',
+ 'hgss_saffron_tall_block':'assets/scenery/saffron-blocks/hgss_saffron_tall_block/provenance.json',
  'hgss_cerulean_gym':'assets/scenery/hgss-kanto-gyms/hgss_cerulean_gym/provenance.json',
  'hgss_lavender_name_rater':'assets/scenery/lavender-name-rater/provenance.json',
  'hgss_lavender_house':'assets/scenery/lavender-house/provenance.json',
@@ -48,5 +50,5 @@ if __name__=='__main__':
  accepted=set()
  for path in a.accepted:
   for r in json.loads(path.read_text()):
-   assert r.get('returned')and not r.get('missingAssets');accepted.add((r['edition'],r['map'],r['x'],r['y']))
+   assert not r.get('missingAssets')and(r.get('returned')or r.get('nonEnterable')and r.get('renderedVerified'));accepted.add((r['edition'],r['map'],r['x'],r['y']))
  summarize(a.ledgers,a.output,accepted)

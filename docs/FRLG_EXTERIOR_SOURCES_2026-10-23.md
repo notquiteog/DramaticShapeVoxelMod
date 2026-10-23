@@ -2,9 +2,9 @@
 
 The native audit enumerates **426 maps per edition**, including **76 outdoor
 maps**, **133 detected civic assemblies**, and **55 distinct civic families**.
-It separately records **30 source-eligible assemblies** and **103 unmatched
-assemblies per edition**. Eleven families have at least one eligible source adapter;
-44 families still have none. The Gym family is partial:3 of11 assemblies per
+It separately records **52 source-eligible assemblies** and **81 unmatched
+assemblies per edition**. Thirteen families have at least one eligible source adapter;
+42 families still have none. The Gym family is partial:3 of11 assemblies per
 edition have matching sources. These are
 assembly counts, not percentages of whole-game completion.
 
@@ -15,9 +15,10 @@ metatile/collision/elevation SHA256, pair, dimensions, map type and explicit
 outdoor classification. Every detected assembly has its native drawing hash,
 source archive/model/provenance hashes where available, exact coordinates,
 source eligibility and separate rendered acceptance. The inspected batches accept
-11 placements per edition: two Pewter houses, Viridian/Pewter Gyms, Viridian
+33 placements per edition: two Pewter houses, Viridian/Pewter Gyms, Viridian
 flower-house exterior, three Pallet buildings, two Lavender ordinary houses and
-the Name Rater tent. Historical acceptance of other source families is not
+the Name Rater tent, plus22 ordinary/tall Saffron blocks across the actual city
+and connection maps. Historical acceptance of other source families is not
 inferred from an eligibility census.
 
 There are also **6332 unclassified blocked outdoor cells per edition**. This
@@ -135,3 +136,7 @@ Cerulean Gym now has a matching regional HGSS source and passed native model/doo
 review, but its shared floor donor is under review (native lawn versus current
 yellow path). Its `renderedAccepted` stays false until that assessment resolves;
 `renderedGap`/`rendered_gap` distinguish this from unavailable source families.
+
+Saffron ordinary/tall nonenterable blocks now retain their matching regional
+source models; see `SAFFRON_BLOCKS_2026-10-23.md`. Low/enterable Saffron houses,
+Silph Co., the Gym and Fighting Dojo remain distinct unmatched families.
