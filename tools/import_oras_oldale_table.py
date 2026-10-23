@@ -41,32 +41,48 @@ def solid_cloth(part,thickness):
     return [back,rim]
 
 
-def convert(model_path,texture_path,decoder_path,nitrogen_path,output):
+def convert(model_path,texture_path,decoder_path,nitrogen_path,output,neighbor_path=None):
     load,load_textures,png=decoder(decoder_path);raw=model_path.read_bytes();blob=texture_path.read_bytes();m=load(raw)[0]
     need(m.name=='t102r0101_00_00'and not m.bones,'unreviewed original Oldale house')
     sys.path.insert(0,str(nitrogen_path));from nitrogen.platforms.ctr.bch import open_bch
-    original=open_bch(raw).models[0];bank={t.name:t for t in load_textures(blob)};parts=[];proof={};textures={}
+    original=open_bch(raw).models[0];bank={t.name:t for t in load_textures(blob)};textures={}
     folder=output/'assets/scenery/oras-oldale-table';folder.mkdir(parents=True,exist_ok=True)
-    for index,material,triangles in [(13,'t102_table01',236),(14,'t102_table01_o',84)]:
-        s=m.submeshes[index];n=original.meshes[index]
-        need(s.material==material and len(s.triangles)==triangles,'reviewed source component changed')
-        need(s.positions==n.positions and s.uv0==n.texcoords,'independent source positions/UV differ')
-        need(len(n.submeshes)==1 and [i for tri in s.triangles for i in tri]==n.submeshes[0].indices,'independent source indices differ')
-        mat=next(mat for mat in m.materials if mat.name==material);need(mat.base_color_texture==material,'source material binding changed')
-        part=source_part(s,'assets/scenery/oras-oldale-table/'+material+'.png');parts.append(part)
-        if index==13:
-            parts.extend(close_rims(part,[12,8,8]+[4]*8,(24,24)))
-        else:
-            parts.extend(solid_cloth(part,.12))
-        t=bank[material];need(collections.Counter(t.rgba[3::4])==({255:4096}if index==13 else{255:3840,0:256}),'unreviewed source table alpha')
-        content=png(t.rgba,t.width,t.height);(folder/(material+'.png')).write_bytes(content)
-        textures[material]=dict(size=[t.width,t.height],rgbaSha256=hashlib.sha256(t.rgba).hexdigest(),pngSha256=hashlib.sha256(content).hexdigest())
-    model,meta=normalized(parts);data={'oras_oldale_checked_table':model}
+    def build(model,independent,neighbor=False):
+        parts=[];body_index,cloth_index=(15,16)if neighbor else(13,14)
+        cloth=model.submeshes[cloth_index]
+        lo=[min(v[k]for v in cloth.positions)for k in range(3)];hi=[max(v[k]for v in cloth.positions)for k in range(3)]
+        for index,material,triangles in [(body_index,'t102_table01',472 if neighbor else 236),(cloth_index,'t102_table01_o',84)]:
+            s=model.submeshes[index];n=independent.meshes[index];body=index==body_index
+            need(s.material==material and len(s.triangles)==triangles,'reviewed source component changed')
+            need(s.positions==n.positions and s.uv0==n.texcoords,'independent source positions/UV differ')
+            need(len(n.submeshes)==1 and [i for tri in s.triangles for i in tri]==n.submeshes[0].indices,'independent source indices differ')
+            mat=next(mat for mat in model.materials if mat.name==material);need(mat.base_color_texture==material,'source material binding changed')
+            # The second house batches its wall table and dining table into
+            # one mesh. Only the dining table under the original cloth fits
+            # the native furniture identity; do not import the extra desk.
+            selected=[tri for tri in s.triangles if all(lo[0]-.01<=s.positions[n][0]<=hi[0]+.01 and lo[2]-.01<=s.positions[n][2]<=hi[2]+.01 for n in tri)]if neighbor and body else s.triangles
+            need(len(selected)==(236 if body else 84),'reviewed dining table selection changed')
+            part=source_part(s,'assets/scenery/oras-oldale-table/'+material+'.png',selected);parts.append(part)
+            if body:parts.extend(close_rims(part,[12,8,8]+[4]*8,(24,24)))
+            else:parts.extend(solid_cloth(part,.12))
+            t=bank[material];need(collections.Counter(t.rgba[3::4])==({255:4096}if body else{255:3840,0:256}),'unreviewed source table alpha')
+            content=png(t.rgba,t.width,t.height);(folder/(material+'.png')).write_bytes(content)
+            textures[material]=dict(size=[t.width,t.height],rgbaSha256=hashlib.sha256(t.rgba).hexdigest(),pngSha256=hashlib.sha256(content).hexdigest())
+        return normalized(parts)
+    model,meta=build(m,original);data={'oras_oldale_checked_table':model};neighbor_proof=None
+    if neighbor_path is not None:
+        neighbor_raw=neighbor_path.read_bytes();neighbor=load(neighbor_raw)[0]
+        need(neighbor.name=='t102r0201_00_00'and not neighbor.bones,'unreviewed original neighbor house')
+        data['oras_oldale_neighbor_table'],neighbor_meta=build(neighbor,open_bch(neighbor_raw).models[0],True)
+        neighbor_proof=dict(nativeLink='ZO231 -> AD115 -> MM172 -> GR514',model=neighbor.name,
+            modelBchSha256=hashlib.sha256(neighbor_raw).hexdigest(),**neighbor_meta,
+            sourceDiningTableTriangles=320,authoredClosureTriangles=168,
+            selection='Original main dining table and complete cloth only; separate wall table excluded.')
     (output/'lib/ImportedOldaleFurnitureData.lua').write_text('-- Genuine ORAS Oldale table; generated by tools/import_oras_oldale_table.py.\nreturn '+lua(data)+'\n')
     report=dict(source='User-supplied Pokemon Alpha Sapphire RomFS',originalGameArt='Nintendo / Creatures / GAME FREAK',
         nativeLink='ZO230 -> AD115 -> MM171 -> GR513',model=m.name,
         modelBchSha256=hashlib.sha256(raw).hexdigest(),textureBchSha256=hashlib.sha256(blob).hexdigest(),textures=textures,**meta,
-        originalTriangles=320,authoredClosureTriangles=168,
+        originalTriangles=320,authoredClosureTriangles=168,neighbor=neighbor_proof,
         independentValidation='Original selected positions, UV0 and triangle indices agree with Nitrogen. Source is unskinned.',
         processing='Original table body and complete checked cloth retained. Source table/leg rims closed independently. Cloth gets a 0.12-source-unit inner surface and thin boundary rim rather than a solid slab below the hanging fabric. Source vertex RGB is white; source shadows, floor and lights excluded. Uniform native footprint fit; original texture RGBA/UV unchanged.')
     (folder/'provenance.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -76,5 +92,6 @@ def convert(model_path,texture_path,decoder_path,nitrogen_path,output):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for n in ['model','textures','decoder','nitrogen','output']:p.add_argument(n,type=Path)
+    p.add_argument('--neighbor-model',type=Path)
     a=p.parse_args()
-    for name,m in convert(a.model,a.textures,a.decoder,a.nitrogen,a.output).items():print(name,sum(len(p['indices'])//3 for p in m['parts']))
+    for name,m in convert(a.model,a.textures,a.decoder,a.nitrogen,a.output,a.neighbor_model).items():print(name,sum(len(p['indices'])//3 for p in m['parts']))

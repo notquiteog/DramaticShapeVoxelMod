@@ -39,6 +39,28 @@
   "uniformDivisor": 37.297393798828125,
   "originalTriangles": 320,
   "authoredClosureTriangles": 168,
+  "neighbor": {
+    "nativeLink": "ZO231 -> AD115 -> MM172 -> GR514",
+    "model": "t102r0201_00_00",
+    "modelBchSha256": "7d3e0888474ef65d6fcb0c41568e9fc3849600e1b17ebfe1a182afd10fc5d5dc",
+    "sourceBounds": [
+      -144.64869689941406,
+      1.0,
+      -234.6488037109375,
+      -107.35130310058594,
+      18.0,
+      -197.3509979248047
+    ],
+    "origin": [
+      -126.0,
+      1.0,
+      -215.9999008178711
+    ],
+    "uniformDivisor": 37.297393798828125,
+    "sourceDiningTableTriangles": 320,
+    "authoredClosureTriangles": 168,
+    "selection": "Original main dining table and complete cloth only; separate wall table excluded."
+  },
   "independentValidation": "Original selected positions, UV0 and triangle indices agree with Nitrogen. Source is unskinned.",
   "processing": "Original table body and complete checked cloth retained. Source table/leg rims closed independently. Cloth gets a 0.12-source-unit inner surface and thin boundary rim rather than a solid slab below the hanging fabric. Source vertex RGB is white; source shadows, floor and lights excluded. Uniform native footprint fit; original texture RGBA/UV unchanged."
 }

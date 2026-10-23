@@ -6,6 +6,7 @@ V.require=function(name)return assert(modules[name],name)end
 local S=assert(loadfile('lib/SceneryModels.lua'))(V)
 local expected={oras_littleroot_dining_table={100,190,32,32},oras_littleroot_fridge={92,106,16,16}}
 expected.oras_oldale_checked_table={236,488,32,32}
+expected.oras_oldale_neighbor_table={236,488,32,32}
 for name,q in pairs(expected)do
  local m=assert(data[name]);local n=0;local edges={};local faces={}
  assert(#m.parts[1].indices/3==q[1],'source triangles changed')
@@ -31,7 +32,9 @@ for name,q in pairs(expected)do
  end end
  assert(fit.bounds[4]-fit.bounds[1]>q[3]*.9,'source proportions underfill blocked footprint')
 end
-local cloth=data.oras_oldale_checked_table.parts[13];local back=data.oras_oldale_checked_table.parts[14]
-assert(cloth.name=='source_t102_table01_o' and back.name=='authored_original_cloth_inner_surface')
-for i,v in ipairs(cloth.vertices)do local q=back.vertices[i];local d=math.sqrt((v[1]-q[1])^2+(v[2]-q[2])^2+(v[3]-q[3])^2);assert(d>.003 and d<.0033,'cloth inner surface became coplanar or distorted')end
+for _,id in ipairs{'oras_oldale_checked_table','oras_oldale_neighbor_table'}do
+ local cloth=data[id].parts[13];local back=data[id].parts[14]
+ assert(cloth.name=='source_t102_table01_o' and back.name=='authored_original_cloth_inner_surface')
+ for i,v in ipairs(cloth.vertices)do local q=back.vertices[i];local d=math.sqrt((v[1]-q[1])^2+(v[2]-q[2])^2+(v[3]-q[3])^2);assert(d>.003 and d<.0033,'cloth inner surface became coplanar or distorted')end
+end
 print('PASS original ORAS home source topology, closed undersides, renderer-owned vertex lighting and uniform native-footprint fit')

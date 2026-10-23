@@ -15,6 +15,7 @@ local fixtures={
  {name='hoenn_start_dining_table',design='em_start_table',rows={{0x21a,0x21b},{0x222,0x223},{0x22a,0x22b}},coll={{7,7},{7,7},{0,0}},x=3,z=6,id='oras_littleroot_dining_table',fit={32,32,0}},
  {name='hoenn_start_fridge',design='em_start_fridge',rows={{0x230},{0x238}},coll={{7},{7}},x=0,z=1,id='oras_littleroot_fridge',fit={16,16,1}},
  {name='hoenn_home_table_yellow',pair='building__generic_building',design='em_home_table',rows={{0x248,0x249},{0x250,0x251}},coll={{7,7},{7,7}},x=3,z=4,id='oras_oldale_checked_table',fit={32,32,0}},
+ {name='hoenn_home_table_plain',pair='building__generic_building',design='em_home_table',rows={{0x24a,0x24b},{0x252,0x253}},coll={{7,7},{7,7}},x=4,z=3,id='oras_oldale_neighbor_table',fit={32,32,0}},
 }
 for _,q in ipairs(fixtures)do
  local cells={};local pair=q.pair or'building__brendans_mays_house'

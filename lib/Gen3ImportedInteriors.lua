@@ -9,6 +9,7 @@ local dataFiles={oras_center_pc='ImportedInteriorData',oras_home_tv='ImportedInt
 dataFiles.oras_littleroot_dining_table='ImportedHomeFurnitureData'
 dataFiles.oras_littleroot_fridge='ImportedHomeFurnitureData'
 dataFiles.oras_oldale_checked_table='ImportedOldaleFurnitureData'
+dataFiles.oras_oldale_neighbor_table='ImportedOldaleFurnitureData'
 -- Complete public-PC and genuine TV drawings include the wall above and
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
@@ -28,6 +29,9 @@ local families={
  hoenn_home_table_yellow={pair='building__generic_building',family='rse',design='em_home_table',
   rows={{0x248,0x249},{0x250,0x251}},collisionRows={{7,7},{7,7}},
   model='oras_oldale_checked_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0},
+ hoenn_home_table_plain={pair='building__generic_building',family='rse',design='em_home_table',
+  rows={{0x24a,0x24b},{0x252,0x253}},collisionRows={{7,7},{7,7}},
+  model='oras_oldale_neighbor_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0},
 }
 function M.register(id)
  id=id or M.id
