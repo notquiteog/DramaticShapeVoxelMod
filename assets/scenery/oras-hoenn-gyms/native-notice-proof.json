@@ -1,0 +1,431 @@
+{
+  "emerald": {
+    "status": "PASS exact source underlayer and native hard-blocked notice body",
+    "placements": [
+      {
+        "map": "PetalburgCity",
+        "pair": "general__petalburg",
+        "x": 17,
+        "y": 10,
+        "top": 304,
+        "bottom": 305,
+        "ground": 1,
+        "underEntries": [
+          8194,
+          8195,
+          8195,
+          8194
+        ],
+        "signatures": {
+          "under": {
+            "304": {
+              "adler32": 2493525241,
+              "sha256": "45ae8f7dd2f4da176b132d8da2ace1d8f64b7fc053aaaa34aa2135c9a8197b5f"
+            },
+            "305": {
+              "adler32": 57153983,
+              "sha256": "11aeec3529cea0fec0ab4e6dfc5f95a881d2a8f102de5336f8d0ce7b15b6df35"
+            },
+            "1": {
+              "adler32": 2493525241,
+              "sha256": "45ae8f7dd2f4da176b132d8da2ace1d8f64b7fc053aaaa34aa2135c9a8197b5f"
+            }
+          },
+          "over": {
+            "304": {
+              "adler32": 2628716491,
+              "sha256": "2423a0195e7b9e4de239e7649a03e25a07411f2257bd08f9c0f2d34898843603"
+            },
+            "305": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            },
+            "1": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            }
+          }
+        },
+        "nativeGridSha256": "7650c43cd3a8a235c102e647f3937fd42c75cdb14fd264b3bc46b85f2385d3fd"
+      },
+      {
+        "map": "DewfordTown",
+        "pair": "general__dewford",
+        "x": 11,
+        "y": 16,
+        "top": 520,
+        "bottom": 528,
+        "ground": 289,
+        "underEntries": [
+          20744,
+          20760,
+          20760,
+          20744
+        ],
+        "signatures": {
+          "under": {
+            "520": {
+              "adler32": 877157383,
+              "sha256": "0b2105b1c528b5face4a7f6462fe167dac06772485ddfb5e676a0ba772e4927c"
+            },
+            "528": {
+              "adler32": 1926570453,
+              "sha256": "d9e7c5a3b601a03f266fd80c881a3ea33c8354c4a30a9e9d1a5c9b99113e8542"
+            },
+            "289": {
+              "adler32": 877157383,
+              "sha256": "0b2105b1c528b5face4a7f6462fe167dac06772485ddfb5e676a0ba772e4927c"
+            }
+          },
+          "over": {
+            "520": {
+              "adler32": 2628716491,
+              "sha256": "2423a0195e7b9e4de239e7649a03e25a07411f2257bd08f9c0f2d34898843603"
+            },
+            "528": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            },
+            "289": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            }
+          }
+        },
+        "nativeGridSha256": "f99942a2f630ca1fc16d7d84f7f831485934962c4477e8b1fa88cfbe30c61f74"
+      },
+      {
+        "map": "RustboroCity",
+        "pair": "general__rustboro",
+        "x": 23,
+        "y": 19,
+        "top": 716,
+        "bottom": 724,
+        "ground": 699,
+        "underEntries": [
+          33505,
+          33504,
+          33506,
+          33504
+        ],
+        "signatures": {
+          "under": {
+            "716": {
+              "adler32": 2465497755,
+              "sha256": "250476b7e16beb81448595ad28fce58f0627964958152719f59938e58a280681"
+            },
+            "724": {
+              "adler32": 1862019192,
+              "sha256": "91e8363aad32c1f2900495bb9da27aaf5c0ba3eae73e6b0e87e85a06a542ab80"
+            },
+            "699": {
+              "adler32": 2465497755,
+              "sha256": "250476b7e16beb81448595ad28fce58f0627964958152719f59938e58a280681"
+            }
+          },
+          "over": {
+            "716": {
+              "adler32": 2628716491,
+              "sha256": "2423a0195e7b9e4de239e7649a03e25a07411f2257bd08f9c0f2d34898843603"
+            },
+            "724": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            },
+            "699": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            }
+          }
+        },
+        "nativeGridSha256": "5d1838e9e5c8f8a3bd519b0f7adaf1f01ef556deb9f8d5b46ec5996b26d51c4d"
+      }
+    ]
+  },
+  "ruby": {
+    "status": "PASS exact source underlayer and native hard-blocked notice body",
+    "placements": [
+      {
+        "map": "PetalburgCity",
+        "pair": "general__petalburg",
+        "x": 17,
+        "y": 10,
+        "top": 304,
+        "bottom": 305,
+        "ground": 1,
+        "underEntries": [
+          8194,
+          8195,
+          8195,
+          8194
+        ],
+        "signatures": {
+          "under": {
+            "304": {
+              "adler32": 2585406725,
+              "sha256": "b51ec236abbfb740010646fdc2b7e057c47ae543509d4f0dfc42de020b8f19bc"
+            },
+            "305": {
+              "adler32": 54925760,
+              "sha256": "7acb480ae5b6e11c60ccb88c2736edbfba964774dd22c1692c52016dde87b10c"
+            },
+            "1": {
+              "adler32": 2585406725,
+              "sha256": "b51ec236abbfb740010646fdc2b7e057c47ae543509d4f0dfc42de020b8f19bc"
+            }
+          },
+          "over": {
+            "304": {
+              "adler32": 2628716491,
+              "sha256": "2423a0195e7b9e4de239e7649a03e25a07411f2257bd08f9c0f2d34898843603"
+            },
+            "305": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            },
+            "1": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            }
+          }
+        },
+        "nativeGridSha256": "7650c43cd3a8a235c102e647f3937fd42c75cdb14fd264b3bc46b85f2385d3fd"
+      },
+      {
+        "map": "DewfordTown",
+        "pair": "general__dewford",
+        "x": 11,
+        "y": 16,
+        "top": 520,
+        "bottom": 528,
+        "ground": 289,
+        "underEntries": [
+          20744,
+          20760,
+          20760,
+          20744
+        ],
+        "signatures": {
+          "under": {
+            "520": {
+              "adler32": 912022539,
+              "sha256": "069d7726c113b1e783d044e6a594f2f890ba721256392ccb3a9fe2774f67d63c"
+            },
+            "528": {
+              "adler32": 1923162580,
+              "sha256": "3417ae4d160374974fdc4de3b557c5b4207f87cb10c27185bc59604418cd5de6"
+            },
+            "289": {
+              "adler32": 912022539,
+              "sha256": "069d7726c113b1e783d044e6a594f2f890ba721256392ccb3a9fe2774f67d63c"
+            }
+          },
+          "over": {
+            "520": {
+              "adler32": 2628716491,
+              "sha256": "2423a0195e7b9e4de239e7649a03e25a07411f2257bd08f9c0f2d34898843603"
+            },
+            "528": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            },
+            "289": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            }
+          }
+        },
+        "nativeGridSha256": "f99942a2f630ca1fc16d7d84f7f831485934962c4477e8b1fa88cfbe30c61f74"
+      },
+      {
+        "map": "RustboroCity",
+        "pair": "general__rustboro",
+        "x": 23,
+        "y": 19,
+        "top": 716,
+        "bottom": 724,
+        "ground": 699,
+        "underEntries": [
+          33505,
+          33504,
+          33506,
+          33504
+        ],
+        "signatures": {
+          "under": {
+            "716": {
+              "adler32": 2961867482,
+              "sha256": "bf225a2728136302e19dd396a57f87caa2d93101bfd1050d4e73384ebd49b747"
+            },
+            "724": {
+              "adler32": 1963665545,
+              "sha256": "99dd83c9012fc1832f3d7202239ef117143b23e81d63cd429a798bb3d1052e62"
+            },
+            "699": {
+              "adler32": 2961867482,
+              "sha256": "bf225a2728136302e19dd396a57f87caa2d93101bfd1050d4e73384ebd49b747"
+            }
+          },
+          "over": {
+            "716": {
+              "adler32": 2628716491,
+              "sha256": "2423a0195e7b9e4de239e7649a03e25a07411f2257bd08f9c0f2d34898843603"
+            },
+            "724": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            },
+            "699": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            }
+          }
+        },
+        "nativeGridSha256": "a518ddb4493d2f3c1bc96962c27611d2d7f1bfb7b12faeaa9014b42a76099dde"
+      }
+    ]
+  },
+  "sapphire": {
+    "status": "PASS exact source underlayer and native hard-blocked notice body",
+    "placements": [
+      {
+        "map": "PetalburgCity",
+        "pair": "general__petalburg",
+        "x": 17,
+        "y": 10,
+        "top": 304,
+        "bottom": 305,
+        "ground": 1,
+        "underEntries": [
+          8194,
+          8195,
+          8195,
+          8194
+        ],
+        "signatures": {
+          "under": {
+            "304": {
+              "adler32": 2585406725,
+              "sha256": "b51ec236abbfb740010646fdc2b7e057c47ae543509d4f0dfc42de020b8f19bc"
+            },
+            "305": {
+              "adler32": 54925760,
+              "sha256": "7acb480ae5b6e11c60ccb88c2736edbfba964774dd22c1692c52016dde87b10c"
+            },
+            "1": {
+              "adler32": 2585406725,
+              "sha256": "b51ec236abbfb740010646fdc2b7e057c47ae543509d4f0dfc42de020b8f19bc"
+            }
+          },
+          "over": {
+            "304": {
+              "adler32": 2628716491,
+              "sha256": "2423a0195e7b9e4de239e7649a03e25a07411f2257bd08f9c0f2d34898843603"
+            },
+            "305": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            },
+            "1": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            }
+          }
+        },
+        "nativeGridSha256": "7650c43cd3a8a235c102e647f3937fd42c75cdb14fd264b3bc46b85f2385d3fd"
+      },
+      {
+        "map": "DewfordTown",
+        "pair": "general__dewford",
+        "x": 11,
+        "y": 16,
+        "top": 520,
+        "bottom": 528,
+        "ground": 289,
+        "underEntries": [
+          20744,
+          20760,
+          20760,
+          20744
+        ],
+        "signatures": {
+          "under": {
+            "520": {
+              "adler32": 912022539,
+              "sha256": "069d7726c113b1e783d044e6a594f2f890ba721256392ccb3a9fe2774f67d63c"
+            },
+            "528": {
+              "adler32": 1923162580,
+              "sha256": "3417ae4d160374974fdc4de3b557c5b4207f87cb10c27185bc59604418cd5de6"
+            },
+            "289": {
+              "adler32": 912022539,
+              "sha256": "069d7726c113b1e783d044e6a594f2f890ba721256392ccb3a9fe2774f67d63c"
+            }
+          },
+          "over": {
+            "520": {
+              "adler32": 2628716491,
+              "sha256": "2423a0195e7b9e4de239e7649a03e25a07411f2257bd08f9c0f2d34898843603"
+            },
+            "528": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            },
+            "289": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            }
+          }
+        },
+        "nativeGridSha256": "f99942a2f630ca1fc16d7d84f7f831485934962c4477e8b1fa88cfbe30c61f74"
+      },
+      {
+        "map": "RustboroCity",
+        "pair": "general__rustboro",
+        "x": 23,
+        "y": 19,
+        "top": 716,
+        "bottom": 724,
+        "ground": 699,
+        "underEntries": [
+          33505,
+          33504,
+          33506,
+          33504
+        ],
+        "signatures": {
+          "under": {
+            "716": {
+              "adler32": 2961867482,
+              "sha256": "bf225a2728136302e19dd396a57f87caa2d93101bfd1050d4e73384ebd49b747"
+            },
+            "724": {
+              "adler32": 1963665545,
+              "sha256": "99dd83c9012fc1832f3d7202239ef117143b23e81d63cd429a798bb3d1052e62"
+            },
+            "699": {
+              "adler32": 2961867482,
+              "sha256": "bf225a2728136302e19dd396a57f87caa2d93101bfd1050d4e73384ebd49b747"
+            }
+          },
+          "over": {
+            "716": {
+              "adler32": 2628716491,
+              "sha256": "2423a0195e7b9e4de239e7649a03e25a07411f2257bd08f9c0f2d34898843603"
+            },
+            "724": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            },
+            "699": {
+              "adler32": 16777217,
+              "sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1"
+            }
+          }
+        },
+        "nativeGridSha256": "a518ddb4493d2f3c1bc96962c27611d2d7f1bfb7b12faeaa9014b42a76099dde"
+      }
+    ]
+  }
+}

@@ -65,3 +65,35 @@ front, sides, rear and underside were rendered and inspected. Final post-Scene
 native front/first/side/rear and actual entry/return in R/S/E are still pending;
 this source snapshot is not a claim that modern Gyms/notices are active in the
 published build. Final native notice two-row art/floor guards remain pending.
+
+## Paired native notice adapter — 2026-10-23
+
+`Gen3ImportedGymNotices` now recognizes the exact two native drawing cells and
+original indexed-art identities in all nine R/S/E corridor placements. Source
+metatile entries prove that Petalburg130/131 contain grass1 underneath,
+Dewford208/210 contain sand121, and Rustboro2CC/2D4 contain paving2BB. This is
+not inferred from neighboring tiles. `native-notice-proof.json` records both
+edition-specific native indexed signatures and original grid hashes; the
+read-only `tools/audit_gen3_gym_notices.py` reproduces it from imported caches.
+The real source notice fits wholly within the blocked lower16×16 footprint.
+Only successful complete mesh upload marks both drawing cells for replacement;
+any source, ownership, permission, height or upload failure keeps native art.
+
+Latest official release rechecked on2026-10-23: v0.3.95. Isolated official Linux
+shell/native engine verified all nine placements with actual imported tilesets,
+GPU mesh upload, wrong-source/permission/height rejection and atomic failed-upload
+rollback. Reusable driver: `tools/qa/hoenn-gym-notices.lua`. This verifies the
+adapter and resource lifecycle, not final Scene drawing or user interaction.
+Parent Scene must call build before terrain under modern props, then draw the
+returned batches normally and use `floor(c)` for both marked cells instead of
+the full original art. The pre-existing Gym body/hinged doors still need parent
+Scene integration and final native exterior/entry/return inspection.
+
+Notice ground-overlap correction: only the two authored horizontal leg-bottom
+caps upload0.05units below the original native floor. All191 original triangles,
+source legs, fit bounds and original ground anchor are unchanged. Original cap
+metadata is retained; the adapter copies only the uploaded eight cap vertices.
+Official0.3.95 native R/S/E checks verify all nine notices upload exactly eight
+below-floor cap vertices, while the original notice minimum stays at zero;
+source/permission/height guards and atomic failed-upload fallback still pass.
+Final native Scene visual/interaction acceptance remains separate.
