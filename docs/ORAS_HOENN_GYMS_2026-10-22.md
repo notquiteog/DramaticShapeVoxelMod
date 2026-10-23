@@ -88,3 +88,12 @@ Parent Scene must call build before terrain under modern props, then draw the
 returned batches normally and use `floor(c)` for both marked cells instead of
 the full original art. The pre-existing Gym body/hinged doors still need parent
 Scene integration and final native exterior/entry/return inspection.
+
+Notice ground-overlap correction: only the two authored horizontal leg-bottom
+caps upload0.05units below the original native floor. All191 original triangles,
+source legs, fit bounds and original ground anchor are unchanged. Original cap
+metadata is retained; the adapter copies only the uploaded eight cap vertices.
+Official0.3.95 native R/S/E checks verify all nine notices upload exactly eight
+below-floor cap vertices, while the original notice minimum stays at zero;
+source/permission/height guards and atomic failed-upload fallback still pass.
+Final native Scene visual/interaction acceptance remains separate.

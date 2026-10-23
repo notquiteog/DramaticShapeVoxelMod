@@ -49,7 +49,16 @@ end
 function M.build(cells,newMesh,parts)
  local list=M.placements(cells);if #list==0 then return parts,nil,0 end
  local ok,err=V.require('Gen3ImportedGyms').register(M.id);if not ok then return nil,err,0 end
- local result,why=Models.buildBatches(list,newMesh,{parts=parts})
+ -- Only the authored horizontal leg-bottom caps overlap native floor. Move
+ -- those uploaded closure faces below ground; original legs, source body,
+ -- fit bounds and ground anchors remain exact. Nothing else is translated.
+ local function upload(vertices,indices,format)
+  local caps=#vertices==8 and #indices==12
+  if caps then for _,v in ipairs(vertices)do if math.abs(v[2])>1e-8 then caps=false;break end end end
+  if caps then local copy={};for i,v in ipairs(vertices)do copy[i]={unpack(v)};copy[i][2]=v[2]-.05 end;vertices=copy end
+  return newMesh(vertices,indices,format)
+ end
+ local result,why=Models.buildBatches(list,upload,{parts=parts})
  if result then for _,p in ipairs(list)do p.source.importedGymNotice=p.ground;p.top.importedGymNotice=p.ground end end
  return result,why,result and #list or 0
 end

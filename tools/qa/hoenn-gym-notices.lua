@@ -19,7 +19,13 @@ return function(game)
   old=top.base;top.base=old+1;assert(#notices.placements(cells)==0);top.base=old
   old=c.mid;c.mid=0;assert(#notices.placements(cells)==0);c.mid=old
   old=ts.idxBlob;ts.idxBlob=nil;assert(#notices.placements(cells)==0);ts.idxBlob=old
-  local parts={};local result,err,n=notices.build(cells,V.require('Voxel3D').newMesh,parts);assert(result,err);assert(n==1 and #parts==2 and c.importedGymNotice and top.importedGymNotice)
+  local parts={};local capCount=0
+  local function upload(vertices,indices,format)
+   if #vertices==8 and #indices==12 then for _,v in ipairs(vertices)do assert(math.abs(v[2]+.05)<1e-8,'notice cap overlaps floor');capCount=capCount+1 end
+   else local minY=math.huge;for _,v in ipairs(vertices)do minY=math.min(minY,v[2])end;assert(math.abs(minY)<1e-8,'original notice moved')end
+   return V.require('Voxel3D').newMesh(vertices,indices,format)
+  end
+  local result,err,n=notices.build(cells,upload,parts);assert(result,err);assert(capCount==8 and n==1 and #parts==2 and c.importedGymNotice and top.importedGymNotice)
   V.require('SceneryModels').releaseBatches(parts)
   c.importedGymNotice=nil;top.importedGymNotice=nil
   result=notices.build(cells,function()return nil end,{});assert(not result and not c.importedGymNotice and not top.importedGymNotice)
