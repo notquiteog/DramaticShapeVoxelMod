@@ -1052,15 +1052,19 @@ local function rideDust(game,cam)
   end
  end
 end
-local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
+local actorFrames=V.require('ActorFrameCache').new()
+local function prepareActor(row,gid,x,z,facing,phase,flip,level,cameraYaw,explicitFrame,bow,fieldMove,upright,depthOffset,lift,elevation,fishing,fishFrame,fieldMoveFrame,running)
+ local opts=row.opts or{};row.opts=opts
+ opts.frame,opts.bow,opts.fieldMove,opts.upright=explicitFrame,bow,fieldMove,upright
+ opts.depthOffset,opts.lift,opts.elevation=depthOffset,lift,elevation
+ opts.fishing,opts.fishFrame,opts.fieldMoveFrame,opts.running=fishing,fishFrame,fieldMoveFrame,running
  -- Neighbor snapshots may cover much farther than the rendered terrain.
  -- Do not leave those actors floating in the sky beyond its visible edge.
  if not (cache.cells and cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]) then return end
  local spr=Sprites.getDraw(gid);if not spr then return end
  -- View-relative artwork keeps the actor facing its world heading while the
  -- camera turns; this changes the sampled frame, never the entity direction.
- local worldFacing=facing
- facing=V.require('Gen3Integration').worldDirection(facing,-(cam.level>=6 and cam.yaw or 0))
+ facing=V.require('Gen3Integration').worldDirection(facing,-(level>=6 and cameraYaw or 0))
  local frame,mirror=Sprites.pose(spr,facing,phase,flip,opts)
  local q=spr.quads[frame];if not q then return end
  local qx,qy,qw,qh=q:getViewport()
@@ -1076,7 +1080,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
   quad(v,i,{{-qw/2,qh-padding,0},{qw/2,qh-padding,0},{qw/2,-padding,0},{-qw/2,-padding,0}},{{l,qy/ih},{r,qy/ih},{r,(qy+qh)/ih},{l,(qy+qh)/ih}})
   mesh=R.newMesh(v,i);spriteMeshes[key]=mesh
  end
- local yaw=cam.level>=6 and -cam.yaw or 0
+ local yaw=level>=6 and -cameraYaw or 0
  -- The character stands at the CENTRE of the cell they occupy, (x+8, z+8),
  -- matching the GB billboards (Mat4.billboard places a card on px+8/py+8 and
  -- Gen 1/2 ground contact runs through the same point). The old z+16 sat the
@@ -1090,6 +1094,23 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  local contact=cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]
  if contact and contact.prop then floor=contact.prop.groundHeight or floor end
  local height=floor+(opts.lift or 0)
+ local pose=Mat.rotateY(yaw)
+ local base=Mat.mul(Mat.translate(x+8,height,z+8+(opts.depthOffset or 0)),pose)
+ -- Use the shared GB actor contact correction. Terrain retains its full
+ -- acne margin; the visible lookup must use the identical snugged caster.
+ local caster=Shadow.snug(base)
+ row.spr,row.frame,row.mesh,row.qw,row.qh,row.padding=spr,frame,mesh,qw,qh,padding
+ row.floor,row.height,row.pose,row.base,row.caster=floor,height,pose,base,caster
+ return true
+end
+local function actor(gid,x,z,facing,phase,flip,opts,cam,draw,identity)
+ local row=actorFrames:get(identity,prepareActor,gid,x,z,facing,phase,flip,cam.level,cam.yaw,
+  opts.frame,opts.bow,opts.fieldMove,opts.upright,opts.depthOffset,opts.lift,opts.elevation,
+  opts.fishing,opts.fishFrame,opts.fieldMoveFrame,opts.running)
+ if not row then return end
+ local spr,frame,mesh,qw,qh,padding=row.spr,row.frame,row.mesh,row.qw,row.qh,row.padding
+ local floor,height,pose,base,caster=row.floor,row.height,row.pose,row.base,row.caster
+ local worldFacing=facing
  if V.require('Gen3Boats').draw(gid,x,z+(opts.depthOffset or 0),height,worldFacing,draw,reflectPlane)then return end
  if V.require('Gen3TruckExterior').draw(gid,x,z+(opts.depthOffset or 0),height,spr,frame,draw,reflectPlane)then return end
  if V.require('Gen3TruckCargo').draw(gid,x,z+(opts.depthOffset or 0),height,spr,frame,draw,reflectPlane)then return end
@@ -1098,11 +1119,6 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  if draw~=Shadow.draw and not reflectPlane and (opts.depthOffset or 0)==0 then
   V.require("ActorContact").draw(x+8,z+8,floor,height-floor,spr.width)
  end
- local pose=Mat.rotateY(yaw)
- local base=Mat.mul(Mat.translate(x+8,height,z+8+(opts.depthOffset or 0)),pose)
- -- Use the shared GB actor contact correction. Terrain retains its full
- -- acne margin; the visible lookup must use the identical snugged caster.
- local caster=Shadow.snug(base)
  if reflectPlane then height=2*reflectPlane-height+V.require('Water').CAST_RAISE end
  local model=reflectPlane and Mat.mul(Mat.translate(x+8,height,z+8+(opts.depthOffset or 0)),pose) or base
  if reflectPlane then model=Mat.mul(model,Mat.scale(1,-1,1))end
@@ -1131,7 +1147,7 @@ local function actors(game,cam,draw)
     local support,offset=Furniture.support(cache.cells,a.graphicsId,a.x,a.y,(a.walkPhase or 0)==0)
     local z=a.id==255 and frame.y or a.y
     actor(a.graphicsId,a.x,z,a.facing,a.walkPhase,a.stepFlip,
-     {frame=a.frame,bow=a.bow,fieldMove=a.fieldMove,depthOffset=offset or 0,lift=support+(z-a.y)},cam,draw)
+     {frame=a.frame,bow=a.bow,fieldMove=a.fieldMove,depthOffset=offset or 0,lift=support+(z-a.y)},cam,draw,a)
    end
   end
   return
@@ -1143,7 +1159,7 @@ local function actors(game,cam,draw)
   local support,depthOffset=Furniture.support(cache.cells,gid,eo.px or eo.cellX*16,eo.py or eo.cellY*16,not eo.moving)
   actor(gid,(eo.px or eo.cellX*16)+(eo.raiseX or 0),eo.py or eo.cellY*16,
    eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,
-   {elevation=eo.currentElevation,bow=(eo.bowFrames or 0)>0 or eo.raiseHand,frame=eo.customFrame,upright=tonumber(gid)==92 or tonumber(gid)==94,depthOffset=depthOffset or 0,lift=support-(eo.raiseY or 0)},cam,draw)
+   {elevation=eo.currentElevation,bow=(eo.bowFrames or 0)>0 or eo.raiseHand,frame=eo.customFrame,upright=tonumber(gid)==92 or tonumber(gid)==94,depthOffset=depthOffset or 0,lift=support-(eo.raiseY or 0)},cam,draw,eo)
  end
  -- Connected maps use the engine's ghost snapshots; never advance those
  -- actors here (doing that per render would reintroduce fast wandering NPCs).
@@ -1155,7 +1171,7 @@ local function actors(game,cam,draw)
     for _,eo in ipairs(live)do
      actor(eo.graphicsId or (eo.def and (eo.def.graphicsId or eo.def.graphics)),
       (eo.px or eo.cellX*16)+entry.ox*16,(eo.py or eo.cellY*16)+entry.oy*16,
-      eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,{elevation=eo.currentElevation},cam,draw)
+      eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,{elevation=eo.currentElevation},cam,draw,eo)
     end
    else
     local event=space and space.bundle and space.bundle.events and space.bundle.events[entry.id]
@@ -1166,7 +1182,7 @@ local function actors(game,cam,draw)
      local visible=not obj.flag or obj.flag==0 or (space and space.objectVisible and space.objectVisible(obj))
      if visible and (not bounds or (x>=0 and y>=0 and x<bounds.w and y<bounds.h)) then
       actor(obj.graphicsId or obj.graphics,(entry.ox+x)*16,(entry.oy+y)*16,
-       tostring(obj.facing or 'down'):lower(),0,false,{},cam,draw)
+       tostring(obj.facing or 'down'):lower(),0,false,{},cam,draw,obj)
      end
     end
    end
@@ -1175,7 +1191,7 @@ local function actors(game,cam,draw)
  if (draw==Shadow.draw or V.require('Gen3CameraRig').showsPlayer(cam))and Player.isVisible() then
   actor(Sprites.playerGraphicsId(game),(Player.px or 0)+(Player.spriteXOffset or 0),Player.py or 0,
    Player.facing,Player.walkPhase(),Player.drawFlip(),
-   {elevation=Player.currentElevation,fieldMove=(Player.fieldMoveAnim or 0)>0,lift=SpriteAnchor.playerLift(Player)},cam,draw)
+   {elevation=Player.currentElevation,fieldMove=(Player.fieldMoveAnim or 0)>0,lift=SpriteAnchor.playerLift(Player)},cam,draw,Player)
  end
 end
 -- Project the engine-owned door/healing frames into the existing 3D room.
@@ -1260,6 +1276,7 @@ local function fieldEffects(draw,cam)
  end
 end
 function M.restore()
+ actorFrames:clear()
  R.battleOcclusion(nil)
  R.fog=nil
  R.interior=nil
@@ -1272,6 +1289,7 @@ function M.restore()
 end
 function M.draw(game,vw,vh,cam)
  if not prepare(game,vw,vh,cam) then return false end
+ actorFrames:begin()
  materials()
  -- Script camera panning belongs to the flat renderer. It must not move the
  -- first-person eye or pull the user's orbit away during dialogue/replays.
@@ -1511,8 +1529,9 @@ function M.performanceSnapshot()
   scenery={placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),pewterMuseum=#(cache.importedPewterMuseum or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
-function M.invalidate()V.require('Gen3TruckCargo').clear();V.require('Gen3TruckExterior').clear();V.require('Gen3Boats').clear();V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
+function M.invalidate()actorFrames:clear();V.require('Gen3TruckCargo').clear();V.require('Gen3TruckExterior').clear();V.require('Gen3Boats').clear();V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
 function M.release()
+ actorFrames:clear()
  V.require('Gen3TruckCargo').clear();V.require('Gen3Boats').clear()
  V.require('Gen3TruckExterior').clear()
  V.require('Gen3SeaRocks').clearGeometry()
