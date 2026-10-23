@@ -1,3 +1,16 @@
+# Original freestanding lab case / native0.3.96 census — 2026-10-23
+
+Six RSE Birch-lab common/end owners now use the complete original ORAS
+44-book double-bay case plus independently fitted original taped carton.
+Exact original-rim closures and within-bay book-group X repairs remove source
+coplanar overlaps; no duplicate carton base, upper geometry below room ceiling,
+cap-only .025 contact recess. All six native0.3.96 source/fallback placements,
+nine source views and geometric tests pass. Five-game2161-map census rerun on
+0.3.96 with genuine fresh FRLG cache140: every native hash unchanged.2047 source
+candidates and2002 historically accepted components on261 maps; whole-map
+acceptance stays false. Other room/furniture families and native fallback
+archive-box ceiling clip remain pending. See docs/ORAS_BIRCH_FREECASE_2026-10-23.md.
+
 # Depth/fence/foliage release1.57.7 — 2026-10-23
 
 Explicit building contact-ring recess prevents coplanar ground closures while

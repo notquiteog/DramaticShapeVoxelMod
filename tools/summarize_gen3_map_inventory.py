@@ -8,7 +8,7 @@ from pathlib import Path
 EDITIONS = ('emerald', 'ruby', 'sapphire', 'firered', 'leafgreen')
 
 
-def summarize(inputs, output):
+def summarize(inputs, output, engine="0.3.95"):
     rows = []
     families = {}
     totals = {}
@@ -48,7 +48,7 @@ def summarize(inputs, output):
         totals[edition] = dict(total)
     output.mkdir(parents=True, exist_ok=True)
     (output/'maps.jsonl').write_text(''.join(json.dumps(r, separators=(',', ':'), sort_keys=True)+'\n' for r in rows))
-    summary = dict(schema=1, engine='0.3.95', evidence='native adapter census',
+    summary = dict(schema=1, engine=engine, evidence='native adapter census',
         renderedAccepted=False, totals=totals,
         limitations=['Candidate placement is not proof of successful texture/mesh upload or rendered acceptance.',
             'Furniture extraction does not prove every native object was recognized.',
@@ -62,5 +62,6 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('inputs', nargs=5, type=Path, metavar='EDITION_JSONL')
     p.add_argument('--output', required=True, type=Path)
+    p.add_argument('--engine', default='0.3.95', help='Exact runtime used for this census')
     args = p.parse_args()
-    summarize(args.inputs, args.output)
+    summarize(args.inputs, args.output, args.engine)

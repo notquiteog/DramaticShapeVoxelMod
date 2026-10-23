@@ -1,5 +1,5 @@
 {
-  "engine": "0.3.95",
+  "engine": "0.3.96",
   "evidence": "native adapter census",
   "families": {
     "birch_books": {
@@ -173,7 +173,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_birch_freestanding_case"
+      ]
     },
     "birch_free_books_end": {
       "design": "em_lab_free_books",
@@ -198,7 +200,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_birch_freestanding_case"
+      ]
     },
     "birch_machine": {
       "design": null,
@@ -14459,7 +14463,7 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 409,
+      "candidateFurniture": 411,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
@@ -14480,14 +14484,14 @@
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 418,
+      "candidateFurniture": 420,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 418,
+      "candidateFurniture": 420,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
