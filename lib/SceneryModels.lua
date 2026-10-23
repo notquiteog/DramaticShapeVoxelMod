@@ -3,7 +3,9 @@
 local V=...
 local Instances=V.require('ModelInstances')
 local Budget=V.require('BuildBudget')
-local M={limits={models=64,parts=32,vertices=32768,indices=98304,variants=32,cachedVertices=262144,catalogVertices=262144,textures=64,textureBytes=8388608,placements=4096,fallbackVertices=262144,catalogBytes=10485760,cachedBytes=10485760}}
+-- Many small regional sources must fit without relaxing byte/vertex ceilings.
+-- A native four-town tour already needs more than64 texture/sampler entries.
+local M={limits={models=256,parts=32,vertices=32768,indices=98304,variants=32,cachedVertices=262144,catalogVertices=262144,textures=256,textureBytes=8388608,placements=4096,fallbackVertices=262144,catalogBytes=10485760,cachedBytes=10485760}}
 -- Explicit format avoids confusing source RGBA with the existing tree anchors.
 M.COLOR_FORMAT={{"VertexPosition","float",3},{"VertexTexCoord","float",2},{"VertexShade","float",1},{"VertexColor","float",4}}
 local definitions,images,failed,variants,order={},{},{},{},{}
