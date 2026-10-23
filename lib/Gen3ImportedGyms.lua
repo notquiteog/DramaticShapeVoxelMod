@@ -65,13 +65,13 @@ end
 function M.build(g,cells,newMesh,parts)
  if not M.eligible(g,cells)then return false end
  local ok,err=M.register();if not ok then return false,err end
- local fit={width=96,depth=64,padding=.25,anchor='door',targetX=56,targetZ=54}
+ local fit={groundInset=.05,width=96,depth=64,padding=.25,anchor='door',targetX=56,targetZ=54}
  local source,placed=Models.vertices(M.id,fit);if not source then return false,placed end
  local safe,why=M.clearance(g,cells,source);if not safe then return false,why end;placed.model=M.id
  local doors=V.require('Gen3GymDoors');local cache,reason=doors.build(g,placed,newMesh,cells)
  if not cache then return false,reason end
- local result,message=Models.buildBatches({{model=M.id,x=g.cx*16,y=(g.groundHeight or 0)-.05,z=(g.cy+1)*16,fit=fit}},newMesh,{parts=parts})
+ local result,message=Models.buildBatches({{model=M.id,x=g.cx*16,y=g.groundHeight or 0,z=(g.cy+1)*16,fit=fit}},newMesh,{parts=parts})
  if not result then doors.release(g);return false,message end
- g.importedHoenn=placed;g.importedGymY=(g.groundHeight or 0)-.05;doors.commit(g);return true
+ g.importedHoenn=placed;g.importedGymY=g.groundHeight or 0;doors.commit(g);return true
 end
 return M

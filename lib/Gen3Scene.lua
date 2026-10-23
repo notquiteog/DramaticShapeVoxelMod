@@ -114,6 +114,7 @@ function M.nativeRequired(game)
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
 local function releaseGeometry(cache)
+ for _,entry in ipairs(cache.importedModern or{})do V.require(entry.adapter).release(entry.group)end
  for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').release(center)end
  for _,house in ipairs(cache.importedHoenn or{})do V.require('Gen3DewfordDoors').release(house)end
  if cache.grassModels then V.require('GrassModels').releaseBatches(cache.grassModels)end
@@ -123,6 +124,7 @@ local function releaseGeometry(cache)
  for _,part in ipairs(cache.parts or {})do
   if part.under then part.under:release() end
   if part.nativeGround then part.nativeGround:release() end
+  if part.homeStairs then part.homeStairs:release()end
   if part.roof then part.roof:release() end
   if part.plants then part.plants:release() end
   if part.water then part.water:release() end
@@ -294,8 +296,10 @@ local function build(req,cache,previous)
    if V.require('Gen3ServiceRooms').replacesFloor(c,plan)then c.serviceRoomFloor=plan.floor end
   end
  end
+ cache.homeStairProfile=nil
  if roomProfile and roomProfile.homeFinish then
   local home=roomProfile.homeFinish
+  if home.stairs then cache.homeStairProfile=roomProfile end
   cache.flatNativeWalls=true;cache.northWallFront=home.north+.04;cache.furnitureRecesses={}
   for _,p in ipairs(props)do p.homeWall=cache.northWallFront end
   if home.kanto then
@@ -303,7 +307,7 @@ local function build(req,cache,previous)
    home.outline={{b[1],b[2]},{b[3],b[2]},{b[3],b[4]},{b[1],b[4]}}
    for _,c in pairs(cells)do if c.cy<=1 and c.cy>=0 and c.cx*16>=b[1]and c.cx*16<b[3]then c.kantoHomeFloor=home.floor end end
   end
-  for _,c in pairs(cells)do if c.stairs then c.stairs.homeWall=cache.northWallFront end end
+  for _,c in pairs(cells)do if c.stairs then c.stairs.homeWall=cache.northWallFront;c.stairs.homeWallPlane=home.north end end
   local origin=cells['0:0']
   if origin then Interior.setWallpaper(roomProfile,V.require('Gen3RoomWallpaper').material({id=def.id,voxelWallpaper=home.wall},origin.ts))end
  end
@@ -407,6 +411,11 @@ local function build(req,cache,previous)
   local _,fenceError,fenceCount=V.require('Gen3ImportedFences').build(cells,R.newMesh,cache.sceneryModels)
   cache.importedFenceError,cache.importedFenceCount=fenceError,fenceError and 0 or fenceCount
  end
+ cache.importedGymNoticeError,cache.importedGymNoticeCount=nil,0
+ if Styles.modern('props')then
+  local _,err,n=V.require('Gen3ModernHoennBuildings').prepare(cells,R.newMesh,cache.sceneryModels)
+  cache.importedGymNoticeError,cache.importedGymNoticeCount=err,err and 0 or n
+ end
  local interiorError,interiorCount=nil,0
  if Styles.modern('interiors')then local _;_,interiorError,interiorCount=V.require('Gen3ImportedInteriors').build(cells,R.newMesh,cache.sceneryModels)end
  cache.importedInteriorCount,cache.importedInteriorError=interiorCount,interiorError
@@ -421,11 +430,11 @@ local function build(req,cache,previous)
   Budget.tick()
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
   local b=batches[c.pair]
-  if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},gv={},gi={},roofMids={}};batches[c.pair]=b end
+  if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},gv={},gi={},sv={},si={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
   starts[1],starts[2],starts[3],starts[4]=#b.v,#b.rv,#b.pv,#b.wv
-  starts[5],starts[6],starts[7],starts[8]=#wood,#leaf,#hedges,#b.gv
+  starts[5],starts[6],starts[7],starts[8],starts[9]=#wood,#leaf,#hedges,#b.gv,#b.sv
   local truckFloor=V.require('Gen3TruckCargo').floor(c)
   if truckFloor then
    plane(b.gv,b.gi,x,z,uvFor(ts,truckFloor)or uv)
@@ -434,7 +443,18 @@ local function build(req,cache,previous)
    -- Closed timber boards and the planned ocean replace that whole plane.
   elseif c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
-   Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
+   Stairs.append(c,function(p,t,shade)
+    local well=false
+    if cache.homeStairProfile and c.stairs and c.stairs.r.design=='hoenn_house'and c.stairs.homeWallPlane then
+     local openings=cache.homeStairProfile.doorways and cache.homeStairProfile.doorways[1]or{}
+     for _,opening in ipairs(openings)do
+      local inside=true
+      for _,v in ipairs(p)do if v[1]<opening[1]-1e-7 or v[1]>opening[2]+1e-7 then inside=false;break end end
+      if inside then well=true;break end
+     end
+    end
+    quad(well and b.sv or b.v,well and b.si or b.i,p,t,shade)
+   end,uvFor)
   elseif c.researchFloor then
    V.require('Gen3ServiceRooms').floor(c,cache.researchRoom,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.researchFloor)or uv)
   elseif c.kantoHomeFloor then
@@ -443,6 +463,8 @@ local function build(req,cache,previous)
    V.require('Gen3ServiceRooms').floor(c,cache.serviceRoom,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.serviceRoomFloor)or uv)
   elseif c.institutionWallFloor then
    plane(b.v,b.i,x,z,uvFor(ts,c.institutionWallFloor)or uv)
+  elseif c.importedGymNotice then
+   plane(b.gv,b.gi,x,z,uvFor(ts,V.require('Gen3ModernHoennBuildings').ground(c))or uv)
   elseif c.nativeLamp then
    plane(b.v,b.i,x,z,uvFor(ts,c.nativeLampGround or V.require('Gen3NativeLamps').ground) or uv)
   elseif c.civic then
@@ -553,29 +575,34 @@ local function build(req,cache,previous)
    plane(b.v,b.i,x,z,uvFor(ts,column.ground or shape.ground) or uv)
    if not column.stageHidden then
    if shape.kind=='wall' or shape.kind=='roomWall' then
+    local function wallFace(q,t,shade)
+     local function emit(v,uv,s)quad(b.v,b.i,v,uv,s)end
+     if cache.homeStairProfile then return V.require('Gen3HomeRooms').stairWallFace(cache.homeStairProfile,q,t,shade,emit)end
+     return emit(q,t,shade)
+    end
     local row=c.cy-(column.first+column.roofs)
     local step=column.height/column.walls
     local top=column.height-row*step
     local portal=c.gym and (c.cx==c.gym.cx+3 or c.cx==c.gym.cx+4)
     local front=column.front+(portal and 4 or 0)
-    quad(b.v,b.i,{{x,top,front},{x+16,top,front},{x+16,top-step,front},{x,top-step,front}},uv,cache.flatNativeWalls and -1 or 1)
+    wallFace({{x,top,front},{x+16,top,front},{x+16,top-step,front},{x,top-step,front}},uv,cache.flatNativeWalls and -1 or 1)
     if portal then
      local u,t=uv[1][1]+(uv[2][1]-uv[1][1])*.12,uv[1][2]+(uv[3][2]-uv[1][2])*.12
      local trim=swatch(ts,u,t)
-     if row==0 then quad(b.v,b.i,{{x,top,column.front},{x+16,top,column.front},{x+16,top,front},{x,top,front}},trim,.9)end
+     if row==0 then wallFace({{x,top,column.front},{x+16,top,column.front},{x+16,top,front},{x,top,front}},trim,.9)end
      local side=c.cx==c.gym.cx+3 and x or x+16
-     quad(b.v,b.i,{{side,top,column.front},{side,top,front},{side,top-step,front},{side,top-step,column.front}},trim,.8)
+     wallFace({{side,top,column.front},{side,top,front},{side,top-step,front},{side,top-step,column.front}},trim,.8)
     end
     if column.indoor then
      local u,t=(uv[1][1]+uv[2][1])*.5,uv[1][2]
      local solid=swatch(ts,u,t)
      for _,dx in ipairs({-1,1})do
       if Roof.sideVisible(cells,c,dx)then local sx=dx<0 and x or x+16
-       quad(b.v,b.i,{{sx,top,column.back},{sx,top,column.front},{sx,top-step,column.front},{sx,top-step,column.back}},solid,.82)
+       wallFace({{sx,top,column.back},{sx,top,column.front},{sx,top-step,column.front},{sx,top-step,column.back}},solid,.82)
       end
      end
-     if row==0 then quad(b.v,b.i,{{x,column.height,column.back},{x+16,column.height,column.back},{x+16,column.height,column.front},{x,column.height,column.front}},solid)end
-     quad(b.v,b.i,{{x+16,top,column.back},{x,top,column.back},{x,top-step,column.back},{x+16,top-step,column.back}},solid,.7)
+     if row==0 then wallFace({{x,column.height,column.back},{x+16,column.height,column.back},{x+16,column.height,column.front},{x,column.height,column.front}},solid)end
+     wallFace({{x+16,top,column.back},{x,top,column.back},{x,top-step,column.back},{x+16,top-step,column.back}},solid,.7)
     end
    else
     b.roofMids[c.roofMid or c.mid]=true
@@ -649,7 +676,7 @@ local function build(req,cache,previous)
   Elevation.lift(b.v,starts[1],base);Elevation.lift(b.rv,starts[2],base)
   Elevation.lift(b.pv,starts[3],base);Elevation.lift(b.wv,starts[4],base)
   Elevation.lift(wood,starts[5],base);Elevation.lift(leaf,starts[6],base)
-  Elevation.lift(hedges,starts[7],base);Elevation.lift(b.gv,starts[8],base)
+  Elevation.lift(hedges,starts[7],base);Elevation.lift(b.gv,starts[8],base);Elevation.lift(b.sv,starts[9],base)
   end
   if c.bridge then V.require('Gen3Bridges').append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
   local waterTs,waterMid,waterHeight=V.require('Gen3Bridges').water(c,NativeWater.surface)
@@ -755,7 +782,7 @@ local function build(req,cache,previous)
  end end
  local modelCache=V.require('NativeGeometryCache')
  modelCache.prepare(req.game,regions)
- for _,p in ipairs(props)do if not p.stageHidden then
+ for _,p in ipairs(props)do if not p.stageHidden and not V.require('Gen3ModernHoennBuildings').ownsProp(p)then
   local b=batches[p.pair]
   local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout
@@ -773,6 +800,7 @@ local function build(req,cache,previous)
   end)
   Elevation.lift(b.v,start,p.groundHeight or 0);Elevation.lift(b.pv,plantStart,p.groundHeight or 0)
  end end
+ cache.importedModern={};cache.modernBuildingCounts={}
  cache.civics={};cache.importedCenters={};cache.importedKantoCenters={};cache.importedPewterMuseum={};cache.importedViridianHouses={};M.legendaryBuildingCount=0
  for _,g in ipairs(civics)do if not g.stageHidden and not g.importedKanto then
   local nativeKit=Styles.modern('buildings')and V.require('NativeLegendaryBuildings').build(g,def,cells)
@@ -795,13 +823,33 @@ local function build(req,cache,previous)
     local outlet=adapter.chimney(g);if outlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=outlet end
    end
   end
+  if not imported and Styles.modern('buildings')then
+   for _,name in ipairs{'Gen3ModernKantoBuildings','Gen3ModernHoennBuildings'}do
+    local adapter=V.require(name)
+    local entry={adapter=name,group=g};cache.importedModern[#cache.importedModern+1]=entry
+    local built,kind=adapter.build(g,cells,R.newMesh,cache.sceneryModels)
+    if built then
+     imported=true;kind=(adapter.kind and adapter.kind(g))or kind or
+      (g.custom.name:find('gym',1,true)and 'hoennGyms'or g.custom.name:find('mart',1,true)and 'hoennMarts'or 'oldaleHomes')
+     cache.modernBuildingCounts[kind]=(cache.modernBuildingCounts[kind]or 0)+1
+     if adapter.chimney then local outlet=adapter.chimney(g);if outlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=outlet end end
+     break
+    else cache.importedModern[#cache.importedModern]=nil end
+   end
+  end
   if not imported then
    imported=Styles.modern('buildings')and V.require('Gen3ImportedHoenn').build(g,cells,R.newMesh,cache.sceneryModels)
    if imported then cache.importedHoenn[#cache.importedHoenn+1]=g end
   end
   if not imported then
   local vertices,indices={},{}
-  modelCache.append(def.id or req.mapId,g,Civic.append,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
+  modelCache.append(def.id or req.mapId,g,Civic.append,function(v,t,shade)
+   -- Native-art fallback structures need the same contact ownership as the
+   -- imported bodies. Keep original floor/doors above; bury only their Y0 ring.
+   local contact={}
+   for i,p in ipairs(v)do contact[i]={p[1],math.abs(p[2])<1e-7 and -.05 or p[2],p[3]}end
+   quad(vertices,indices,contact,t,shade)
+  end)
   if g.chimneyOutlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=g.chimneyOutlet end
   Elevation.lift(vertices,0,g.groundHeight or 0)
   local part={placement=g};cache.civics[#cache.civics+1]=part
@@ -855,7 +903,7 @@ local function build(req,cache,previous)
    part[name]=mesh
    Budget.check()
   end
-  upload('under',b.v,b.i);upload('nativeGround',b.gv,b.gi);upload('roof',b.rv,b.ri)
+  upload('under',b.v,b.i);upload('nativeGround',b.gv,b.gi);upload('homeStairs',b.sv,b.si);upload('roof',b.rv,b.ri)
   upload('plants',b.pv,b.pi,R.TREE_FORMAT)
   part.waterMid=NativeWater.dominant(b.waterMids)
   part.waters={};local levels={}
@@ -973,6 +1021,17 @@ local function terrain(draw)
    -- Reviewed building-header floors contain clean native terrain below a
    -- separate roof layer. Keep that roof off the ground in every draw pass.
    if p.nativeGround then draw(p.nativeGround,ts.image)end
+   if p.homeStairs then
+    -- Only reviewed stair-bay geometry may enter the actual wall opening.
+    -- Side floor strips and every unrelated mesh retain normal room clipping.
+    R.interiorClip(false)
+    local ok,err=pcall(function()
+     draw(p.homeStairs,ts.image)
+     if ts.overImage then draw(p.homeStairs,ts.overImage)end
+    end)
+    R.interiorClip(true)
+    if not ok then error(err,0)end
+   end
    -- A metatile's visible roof/sign artwork may live entirely in BG2.
    -- Apply both native layers to the SAME shaped surface, not just the floor.
    if ts.overImage then draw(p.under,ts.overImage) end
@@ -1021,6 +1080,7 @@ local function terrain(draw)
  end
  V.require('SceneryDraw').opaque(cache.sceneryModels,draw,original==Shadow.draw,framePlanes,lightPlanes)
  local doorAnim=require('src.core.game3.doors').getActiveAnim()
+ for _,entry in ipairs(cache.importedModern or{})do V.require(entry.adapter).draw(entry.group,doorAnim,draw)end
  for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').draw(center,doorAnim,draw)end
  for _,house in ipairs(cache.importedHoenn or{})do V.require('Gen3DewfordDoors').draw(house,doorAnim,draw)end
 end
@@ -1226,6 +1286,11 @@ local function fieldEffects(draw,cam)
  local doors=require('src.core.game3.doors');local a=doors.getActiveAnim()
  if a then
   local surface,sourceDoor
+  for _,entry in ipairs(cache.importedModern or{})do
+   local adapter=V.require(entry.adapter)
+   if adapter.ownsDoor(entry.group,a.x,a.y)then sourceDoor=true;break end
+   if adapter.doorSurface then surface=adapter.doorSurface(entry.group,a.x,a.y);if surface then break end end
+  end
   for _,g in ipairs(cache.importedCenters or{})do
    if g.importedCenterDoors and a.x==g.cx+1 and a.y==g.cy+3 then sourceDoor=true;break end
    surface=V.require('Gen3ImportedCenters').doorSurface(g,a.x,a.y)
@@ -1526,7 +1591,14 @@ function M.performanceSnapshot()
   grass={placements=cache.grassModelCount or 0,batches=#(cache.grassModels or{}),error=cache.grassModelError},
   importedTrees={placements=cache.importedTreeCount or 0,batches=#(cache.importedTrees or{}),error=cache.importedTreeError},
   fences={placements=cache.importedFenceCount or 0,error=cache.importedFenceError},
-  scenery={placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),pewterMuseum=#(cache.importedPewterMuseum or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
+  scenery={viridianFlowerHouses=cache.modernBuildingCounts and cache.modernBuildingCounts.viridianFlowerHouses or 0,
+   pewterHouses=cache.modernBuildingCounts and cache.modernBuildingCounts.pewterHouses or 0,
+   hgssGyms=cache.modernBuildingCounts and cache.modernBuildingCounts.hgssGyms or 0,
+   hoennGyms=cache.modernBuildingCounts and cache.modernBuildingCounts.hoennGyms or 0,
+   hoennMarts=cache.modernBuildingCounts and cache.modernBuildingCounts.hoennMarts or 0,
+   petalburgHomes=cache.modernBuildingCounts and cache.modernBuildingCounts.petalburgHomes or 0,
+   oldaleHomes=cache.modernBuildingCounts and cache.modernBuildingCounts.oldaleHomes or 0,
+   gymNotices=cache.importedGymNoticeCount or 0,placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),pewterMuseum=#(cache.importedPewterMuseum or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
 function M.invalidate()actorFrames:clear();V.require('Gen3TruckCargo').clear();V.require('Gen3TruckExterior').clear();V.require('Gen3Boats').clear();V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
