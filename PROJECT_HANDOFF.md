@@ -6737,3 +6737,18 @@ collapse back into separate holes. Overhead CPU regression passes; updated074
 - Interior source inventory is `docs/KFP_INTERIOR_AUDIT.md`; cf9d364 completes original large-room pendant spacing and stair/exit exclusions. Unit PASS plus inspected075 Brendan house/Oldale Center AIRY/TALL/rotating cutaway captures at `.scratch/kfp-capture-20261011/interior-grid075`. No overlapping shell, closed warp slab or random floor spikes were imported.
 - Full capture flow now verified for native and optional modeled balls using the real `BattleBridge.startWild` caller: throw → catch → Pokédex → nickname prompt → real naming screen Start/A → fade → rendered voxel overworld. Native inventory consumed, party grows1→2, Battle inactive, Gen3Capture pending cleared, Gen3Integration active. Inspected final075 frames `.scratch/kfp-capture-20261011/{native-bridge075,modeled-bridge075}/final.png`; both show the field again. Reusable fixture `tests/drivers/gen3_capture_flow.lua`. Both isolated runtimes finished; user saves untouched.
 - Earlier black final snapshots came from the scratch fixture using low-level Battle.start without BattleBridge's native return/fade callback, not a mod defect. That verification gap is closed; no capture gameplay/physics changes were made for it.
+
+# Focused Museum staircase correction — 2026-10-23
+
+Supersedes the earlier Museum stair diagnosis above: native approach
+(16..18,7), MIDs2ba/2bb/2bc, is ordinary flat behavior0, not semantic steps.
+Gen3Stairs now claims that exact complete approach below the native Museum and
+replaces facade-bearing paint with two closed shallow stone steps meeting the
+existing source threshold1.0125px; source/door/native floor and warps unchanged.
+Generic semantic terraces separately emit only exposed union faces, retaining
+rise/direction. Native official0.3.96 FR/LG front/side/rotated/first-person and
+both real Museum main/staff entry-return checks pass; original map hashes match.
+Focused LuaJIT geometry/guard tests and39up/34down stair tests pass. No production
+Scene/source-adapter prerequisite. Root cherry-picks only this focused batch and
+owns exact-ZIP shared-terrace/Oak's Lab smoke and release. See
+`docs/PEWTER_MUSEUM_STAIRS_2026-10-23.md`; no whole-game coverage claim.

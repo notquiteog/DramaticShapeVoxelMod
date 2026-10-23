@@ -33,6 +33,26 @@ function M.prepare(cells)
    end
   end end
  end
+ -- The Museum's last native row combines the arch base with two stone
+ -- stair bands. It has ordinary floor behavior, not the semantic stair rise.
+ -- Claim only a complete native Museum and its exact three approach cells.
+ for _,c in ipairs(ordered)do
+  local museum=c.civic
+  if museum and museum.custom and museum.custom.geometry=='pewter_museum'
+   and museum.pair=='pewter_outdoor' and c.cx==museum.cx+4 and c.cy==museum.cy+6 then
+   local group={r={design='pewter_museum_approach'},cx=museum.cx+4,cy=museum.cy+7,cells={},museum=museum}
+   local match=true
+   for x=0,2 do
+    local q=cells[(group.cx+x)..':'..group.cy]
+    local arch=cells[(group.cx+x)..':'..(group.cy-1)]
+    if not q or q.pair~=museum.pair or q.mid~=0x2ba+x or q.collision~=0
+     or q.stairs or q.prop or q.civic or q.boundary or q.shape.kind~='flat'
+     or not arch or arch.civic~=museum or arch.mid~=0x2b2+x then match=false end
+    group.cells[x+1]=q
+   end
+   if match then group.owner=group.cells[1];for _,q in ipairs(group.cells)do q.stairs=group end;count=count+1 end
+  end
+ end
  return count
 end
 -- An emitter with source-pixel materials. Faces remain small enough for the
@@ -69,6 +89,29 @@ function M.append(c,emit,uvFor)
  if g then
   if g.owner~=c then return end
   local r=g.r
+  if r.design=='pewter_museum_approach' then
+   -- Measured existing source threshold: .003962818 * 255.5 = 1.0125.
+   -- Two shallow steps meet it without moving the source/portal or native
+   -- support. The landing reaches the source front two pixels north of this
+   -- row; native facade pixels never become horizontal tread paint.
+   local rise=1.0125;local stone=solid(0x2bb,8,10.5)
+   local tread=solid(0x2bb,8,9.5);local riser=solid(0x2bb,8,11.5)
+   for _,band in ipairs{{-2,8,rise,stone},{8,12,rise,tread},{12,16,rise/2,tread}}do
+    local z0,z1,h,paint=unpack(band)
+    for x=0,47,8 do face({{ox+x,h,oz+z0},{ox+x+8,h,oz+z0},{ox+x+8,h,oz+z1},{ox+x,h,oz+z1}},paint,1)end
+   end
+   for _,step in ipairs{{12,rise/2,rise},{16,0,rise/2}}do
+    local z,low,high=unpack(step)
+    for x=0,47,8 do face({{ox+x,low,oz+z},{ox+x+8,low,oz+z},{ox+x+8,high,oz+z},{ox+x,high,oz+z}},riser,.85)end
+   end
+   for _,band in ipairs{{-2,12,rise},{12,16,rise/2}}do
+    local a,b,h=unpack(band)
+    face({{ox,0,oz+a},{ox,0,oz+b},{ox,h,oz+b},{ox,h,oz+a}},stone,.72)
+    face({{ox+48,0,oz+b},{ox+48,0,oz+a},{ox+48,h,oz+a},{ox+48,h,oz+b}},stone,.8)
+   end
+   face({{ox+48,0,oz-2},{ox,0,oz-2},{ox,rise,oz-2},{ox+48,rise,oz-2}},stone,.7)
+   return
+  end
   if r.design=='hoenn_house' then
    return V.require('Gen3HoennStairs').append(g,emit,uvFor)
   end
@@ -127,13 +170,22 @@ function M.append(c,emit,uvFor)
  end
  local s=c.shape
  if s.kind=='steps' then
-  -- Rock terrace stair bands keep their short native rise, not a full story.
+  -- Emit the exposed union: one top per band, outer cheeks and only the
+  -- visible height difference at each riser. No buried box caps or shared
+  -- half-box walls remain to compete at the same depth.
+  local rise=c.floor and c.floor.high and (c.floor.high-c.floor.low)or 6
+  local reverse=c.floor and c.floor.reverse
+  local function height(n)return rise*(reverse and (n+1)/4 or (1-n/4))end
   for n=0,3 do
-   local rise=c.floor and c.floor.high and (c.floor.high-c.floor.low)or 6
-   local z=n*4;local h=rise*(c.floor and c.floor.reverse and (n+1)/4 or (1-n/4))
+   local z=n*4;local h=height(n);local material=solid(c.mid,8,z+2)
    local uv={tex(c.mid,0,z),tex(c.mid,16,z),tex(c.mid,16,z+4),tex(c.mid,0,z+4)}
-   for x=0,15,8 do box(x,0,z,x+8,h,z+4,solid(c.mid,x+4,z+2))end
    face({{ox,h,oz+z},{ox+16,h,oz+z},{ox+16,h,oz+z+4},{ox,h,oz+z+4}},uv,1)
+   face({{ox,0,oz+z},{ox,0,oz+z+4},{ox,h,oz+z+4},{ox,h,oz+z}},material,.72)
+   face({{ox+16,0,oz+z+4},{ox+16,0,oz+z},{ox+16,h,oz+z},{ox+16,h,oz+z+4}},material,.8)
+   local previous=n==0 and 0 or height(n-1)
+   if h>previous then face({{ox+16,previous,oz+z},{ox,previous,oz+z},{ox,h,oz+z},{ox+16,h,oz+z}},material,.7)end
+   local following=n==3 and 0 or height(n+1)
+   if h>following then face({{ox,following,oz+z+4},{ox+16,following,oz+z+4},{ox+16,h,oz+z+4},{ox,h,oz+z+4}},material,.85)end
   end
  elseif s.kind=='ladder' then
   local down=s.down
