@@ -3,6 +3,86 @@
     "1": [
       {
         "generation": 1,
+        "key": "visualStyleBuildings",
+        "label": "BUILDING STYLE",
+        "module": "VisualStyles",
+        "status": "missing",
+        "consumer": false,
+        "detail": "Preference registration and persistence exist, but no complete native category-style renderer is wired in this generation. Existing native geometry/sprites remain; this is not a functioning style replacement.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
+        "key": "visualStyleTrees",
+        "label": "TREE STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/Gen3Scene.lua; lib/TreePresentation.lua; lib/ImportedTrees.lua",
+        "detail": "Shared independent MODERN 3D/NATIVE VOXEL/HD2D preferences are exposed and saved across native engines, with scene/shadow invalidation. Implemented consumers retain safe original-art fallback. Native category/family geometry and card coverage remain incomplete; menu presence does not establish all-model parity.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
+        "key": "visualStyleFlowers",
+        "label": "FLOWER STYLE",
+        "module": "VisualStyles",
+        "status": "missing",
+        "consumer": false,
+        "detail": "Preference registration and persistence exist, but no complete native category-style renderer is wired in this generation. Existing native geometry/sprites remain; this is not a functioning style replacement.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
+        "key": "visualStyleProps",
+        "label": "PROP STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/Gen3Scene.lua; lib/TreePresentation.lua; lib/ImportedTrees.lua",
+        "detail": "Shared independent MODERN 3D/NATIVE VOXEL/HD2D preferences are exposed and saved across native engines, with scene/shadow invalidation. Implemented consumers retain safe original-art fallback. Native category/family geometry and card coverage remain incomplete; menu presence does not establish all-model parity.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
+        "key": "visualStyleInteriors",
+        "label": "INTERIOR STYLE",
+        "module": "VisualStyles",
+        "status": "missing",
+        "consumer": false,
+        "detail": "Preference registration and persistence exist, but no complete native category-style renderer is wired in this generation. Existing native geometry/sprites remain; this is not a functioning style replacement.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
+        "key": "visualStyleTerrain",
+        "label": "TERRAIN STYLE",
+        "module": "VisualStyles",
+        "status": "missing",
+        "consumer": false,
+        "detail": "Preference exists; no terrain renderer consumes this three-way choice. Gen2 uses it only to gate the detailed-texture menu. Existing terrain controls continue independently.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
+        "key": "visualStylePokemon",
+        "label": "POKEMON STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/CharacterRenderers.lua; lib/StadiumModels.lua; lib/Gen3XDActors.lua",
+        "detail": "Shared independent actor styles default to original sprites. Optional model consumers honor MODERN selection and relinquish ownership for native voxel/HD2D choices. Matching all-species/trainer model assets and native actor consumers remain incomplete; XD packs remain gated until validated.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
+        "key": "visualStyleCharacters",
+        "label": "CHARACTER STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/CharacterRenderers.lua; lib/StadiumModels.lua; lib/Gen3XDActors.lua",
+        "detail": "Shared independent actor styles default to original sprites. Optional model consumers honor MODERN selection and relinquish ownership for native voxel/HD2D choices. Matching all-species/trainer model assets and native actor consumers remain incomplete; XD packs remain gated until validated.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 1,
         "key": "xdModels",
         "label": "XD POKEMON MODELS",
         "module": "XDModels",
@@ -1245,6 +1325,86 @@
     "2": [
       {
         "generation": 2,
+        "key": "visualStyleBuildings",
+        "label": "BUILDING STYLE",
+        "module": "VisualStyles",
+        "status": "missing",
+        "consumer": false,
+        "detail": "Preference registration and persistence exist, but no complete native category-style renderer is wired in this generation. Existing native geometry/sprites remain; this is not a functioning style replacement.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
+        "key": "visualStyleTrees",
+        "label": "TREE STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/Gen3Scene.lua; lib/TreePresentation.lua; lib/ImportedTrees.lua",
+        "detail": "Shared independent MODERN 3D/NATIVE VOXEL/HD2D preferences are exposed and saved across native engines, with scene/shadow invalidation. Implemented consumers retain safe original-art fallback. Native category/family geometry and card coverage remain incomplete; menu presence does not establish all-model parity.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
+        "key": "visualStyleFlowers",
+        "label": "FLOWER STYLE",
+        "module": "VisualStyles",
+        "status": "missing",
+        "consumer": false,
+        "detail": "Preference registration and persistence exist, but no complete native category-style renderer is wired in this generation. Existing native geometry/sprites remain; this is not a functioning style replacement.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
+        "key": "visualStyleProps",
+        "label": "PROP STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/Gen3Scene.lua; lib/TreePresentation.lua; lib/ImportedTrees.lua",
+        "detail": "Shared independent MODERN 3D/NATIVE VOXEL/HD2D preferences are exposed and saved across native engines, with scene/shadow invalidation. Implemented consumers retain safe original-art fallback. Native category/family geometry and card coverage remain incomplete; menu presence does not establish all-model parity.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
+        "key": "visualStyleInteriors",
+        "label": "INTERIOR STYLE",
+        "module": "VisualStyles",
+        "status": "missing",
+        "consumer": false,
+        "detail": "Preference registration and persistence exist, but no complete native category-style renderer is wired in this generation. Existing native geometry/sprites remain; this is not a functioning style replacement.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
+        "key": "visualStyleTerrain",
+        "label": "TERRAIN STYLE",
+        "module": "VisualStyles",
+        "status": "missing",
+        "consumer": false,
+        "detail": "Preference exists; no terrain renderer consumes this three-way choice. Gen2 uses it only to gate the detailed-texture menu. Existing terrain controls continue independently.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
+        "key": "visualStylePokemon",
+        "label": "POKEMON STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/CharacterRenderers.lua; lib/StadiumModels.lua; lib/Gen3XDActors.lua",
+        "detail": "Shared independent actor styles default to original sprites. Optional model consumers honor MODERN selection and relinquish ownership for native voxel/HD2D choices. Matching all-species/trainer model assets and native actor consumers remain incomplete; XD packs remain gated until validated.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
+        "key": "visualStyleCharacters",
+        "label": "CHARACTER STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/CharacterRenderers.lua; lib/StadiumModels.lua; lib/Gen3XDActors.lua",
+        "detail": "Shared independent actor styles default to original sprites. Optional model consumers honor MODERN selection and relinquish ownership for native voxel/HD2D choices. Matching all-species/trainer model assets and native actor consumers remain incomplete; XD packs remain gated until validated.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 2,
         "key": "xdModels",
         "label": "XD POKEMON MODELS",
         "module": "XDModels",
@@ -1528,9 +1688,9 @@
         "key": "sceneryProps",
         "label": "ROCKS & PLANTS",
         "module": "TreePresentation",
-        "status": "implemented",
-        "consumer": "lib/TreePresentation.lua; lib/NativeTreeArt.lua; lib/Gen2Rocks.lua; lib/Gen2VoxelRock.lua; lib/Gen3Cave.lua; lib/Gen3Outdoor.lua",
-        "detail": "Native solid rocks/bushes or source-art cutouts. Terrain/collision unchanged; actors, grass and flowers remain sprites.",
+        "status": "alias",
+        "consumer": "lib/TreePresentation.lua; lib/VisualStyles.lua",
+        "detail": "New TREE STYLE and PROP STYLE preferences take precedence. Legacy TREE ART, TREE TRUNKS and ROCKS & PLANTS choices remain saved, but the new style policy overrides their presentation decisions; they are not independent working style controls while VisualStyles is present.",
         "verification": "source audit"
       },
       {
@@ -2098,9 +2258,9 @@
         "key": "hdTreeTrunks",
         "label": "TREE TRUNKS",
         "module": "TreePresentation",
-        "status": "implemented",
-        "consumer": "lib/TreePresentation.lua; lib/ChunkMesher.lua",
-        "detail": "Native scenery rebuilds on option changes.",
+        "status": "alias",
+        "consumer": "lib/TreePresentation.lua; lib/VisualStyles.lua",
+        "detail": "New TREE STYLE and PROP STYLE preferences take precedence. Legacy TREE ART, TREE TRUNKS and ROCKS & PLANTS choices remain saved, but the new style policy overrides their presentation decisions; they are not independent working style controls while VisualStyles is present.",
         "verification": "source audit"
       },
       {
@@ -2458,9 +2618,9 @@
         "key": "treeArtwork",
         "label": "TREE ART",
         "module": "TreePresentation",
-        "status": "implemented",
-        "consumer": "lib/TreePresentation.lua; lib/ChunkMesher.lua",
-        "detail": "Native scenery rebuilds on option changes.",
+        "status": "alias",
+        "consumer": "lib/TreePresentation.lua; lib/VisualStyles.lua",
+        "detail": "New TREE STYLE and PROP STYLE preferences take precedence. Legacy TREE ART, TREE TRUNKS and ROCKS & PLANTS choices remain saved, but the new style policy overrides their presentation decisions; they are not independent working style controls while VisualStyles is present.",
         "verification": "source audit"
       },
       {
@@ -2485,6 +2645,86 @@
       }
     ],
     "3": [
+      {
+        "generation": 3,
+        "key": "visualStyleBuildings",
+        "label": "BUILDING STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/Gen3Scene.lua; lib/TreePresentation.lua; lib/ImportedTrees.lua",
+        "detail": "Shared independent MODERN 3D/NATIVE VOXEL/HD2D preferences are exposed and saved across native engines, with scene/shadow invalidation. Implemented consumers retain safe original-art fallback. Native category/family geometry and card coverage remain incomplete; menu presence does not establish all-model parity.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 3,
+        "key": "visualStyleTrees",
+        "label": "TREE STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/Gen3Scene.lua; lib/TreePresentation.lua; lib/ImportedTrees.lua",
+        "detail": "Shared independent MODERN 3D/NATIVE VOXEL/HD2D preferences are exposed and saved across native engines, with scene/shadow invalidation. Implemented consumers retain safe original-art fallback. Native category/family geometry and card coverage remain incomplete; menu presence does not establish all-model parity.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 3,
+        "key": "visualStyleFlowers",
+        "label": "FLOWER STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/Gen3Scene.lua; lib/TreePresentation.lua; lib/ImportedTrees.lua",
+        "detail": "Shared independent MODERN 3D/NATIVE VOXEL/HD2D preferences are exposed and saved across native engines, with scene/shadow invalidation. Implemented consumers retain safe original-art fallback. Native category/family geometry and card coverage remain incomplete; menu presence does not establish all-model parity.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 3,
+        "key": "visualStyleProps",
+        "label": "PROP STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/Gen3Scene.lua; lib/TreePresentation.lua; lib/ImportedTrees.lua",
+        "detail": "Shared independent MODERN 3D/NATIVE VOXEL/HD2D preferences are exposed and saved across native engines, with scene/shadow invalidation. Implemented consumers retain safe original-art fallback. Native category/family geometry and card coverage remain incomplete; menu presence does not establish all-model parity.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 3,
+        "key": "visualStyleInteriors",
+        "label": "INTERIOR STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/Gen3Scene.lua; lib/TreePresentation.lua; lib/ImportedTrees.lua",
+        "detail": "Shared independent MODERN 3D/NATIVE VOXEL/HD2D preferences are exposed and saved across native engines, with scene/shadow invalidation. Implemented consumers retain safe original-art fallback. Native category/family geometry and card coverage remain incomplete; menu presence does not establish all-model parity.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 3,
+        "key": "visualStyleTerrain",
+        "label": "TERRAIN STYLE",
+        "module": "VisualStyles",
+        "status": "missing",
+        "consumer": false,
+        "detail": "Preference exists; no terrain renderer consumes this three-way choice. Gen2 uses it only to gate the detailed-texture menu. Existing terrain controls continue independently.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 3,
+        "key": "visualStylePokemon",
+        "label": "POKEMON STYLE",
+        "module": "VisualStyles",
+        "status": "partial",
+        "consumer": "lib/VisualStyles.lua; lib/CharacterRenderers.lua; lib/StadiumModels.lua; lib/Gen3XDActors.lua",
+        "detail": "Shared independent actor styles default to original sprites. Optional model consumers honor MODERN selection and relinquish ownership for native voxel/HD2D choices. Matching all-species/trainer model assets and native actor consumers remain incomplete; XD packs remain gated until validated.",
+        "verification": "source audit"
+      },
+      {
+        "generation": 3,
+        "key": "visualStyleCharacters",
+        "label": "CHARACTER STYLE",
+        "module": "VisualStyles",
+        "status": "missing",
+        "consumer": false,
+        "detail": "Preference exists, but the shared GB CharacterRenderers style contract has no native Gen3 field-character consumer. Original native actors remain.",
+        "verification": "source audit"
+      },
       {
         "generation": 3,
         "key": "xdModels",
@@ -2770,9 +3010,9 @@
         "key": "sceneryProps",
         "label": "ROCKS & PLANTS",
         "module": "TreePresentation",
-        "status": "implemented",
-        "consumer": "lib/TreePresentation.lua; lib/NativeTreeArt.lua; lib/Gen2Rocks.lua; lib/Gen2VoxelRock.lua; lib/Gen3Cave.lua; lib/Gen3Outdoor.lua",
-        "detail": "Native solid rocks/bushes or source-art cutouts. Terrain/collision unchanged; actors, grass and flowers remain sprites.",
+        "status": "alias",
+        "consumer": "lib/TreePresentation.lua; lib/VisualStyles.lua",
+        "detail": "New TREE STYLE and PROP STYLE preferences take precedence. Legacy TREE ART, TREE TRUNKS and ROCKS & PLANTS choices remain saved, but the new style policy overrides their presentation decisions; they are not independent working style controls while VisualStyles is present.",
         "verification": "source audit"
       },
       {
@@ -3340,9 +3580,9 @@
         "key": "hdTreeTrunks",
         "label": "TREE TRUNKS",
         "module": "TreePresentation",
-        "status": "implemented",
-        "consumer": "lib/Gen3Scene.lua; lib/TreePresentation.lua",
-        "detail": "Native tree material/geometry selection with live rebuild.",
+        "status": "alias",
+        "consumer": "lib/TreePresentation.lua; lib/VisualStyles.lua",
+        "detail": "New TREE STYLE and PROP STYLE preferences take precedence. Legacy TREE ART, TREE TRUNKS and ROCKS & PLANTS choices remain saved, but the new style policy overrides their presentation decisions; they are not independent working style controls while VisualStyles is present.",
         "verification": "source audit"
       },
       {
@@ -3700,9 +3940,9 @@
         "key": "treeArtwork",
         "label": "TREE ART",
         "module": "TreePresentation",
-        "status": "implemented",
-        "consumer": "lib/Gen3Scene.lua; lib/TreePresentation.lua",
-        "detail": "Native tree material/geometry selection with live rebuild.",
+        "status": "alias",
+        "consumer": "lib/TreePresentation.lua; lib/VisualStyles.lua",
+        "detail": "New TREE STYLE and PROP STYLE preferences take precedence. Legacy TREE ART, TREE TRUNKS and ROCKS & PLANTS choices remain saved, but the new style policy overrides their presentation decisions; they are not independent working style controls while VisualStyles is present.",
         "verification": "source audit"
       },
       {

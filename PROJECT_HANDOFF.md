@@ -1,3 +1,12 @@
+# Native style settings and parity audit — 2026-10-23
+
+Fixed eight missing Gen3 visual-style controls: shared schema/live settings,
+public export, categories and scene/shadow invalidation. Five native0.3.95
+control/persistence/invalidation checks and four Lua suites pass. Reconciled
+132-option catalogs now explicitly include missing style consumers and legacy
+style aliases. Full parity is NOT complete; see docs/PARITY_AUDIT_2026-10-23.md.
+No model coverage, renderer optimization or version changes in this batch.
+
 # Combined optimization/model release1.57.9 — 2026-10-23
 
 Merged remote model work83f1d36a with optimization work0ef5b831. Preserve both
