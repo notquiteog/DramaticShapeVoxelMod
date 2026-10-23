@@ -1,4 +1,4 @@
-##1.57.8 — 2026-10-23
+## 1.57.8 — 2026-10-23
 
 - Recess building contact rings beneath native ground to prevent coplanar closure artifacts, preserving doors and native tiles.
 - Add authentic ORAS rural/Rustboro fences across21 reviewed native families and preserve exact edition-specific ground/foliage.

@@ -9,6 +9,11 @@ regions stay isolated. Native0.3.95 five-game streaming/map-hash checks pass;
 front/first/rotated contact and interior captures inspected. Full coverage is
 still in progress; three workers continue exterior/interior source families.
 See docs/DEPTH_FENCES_FOLIAGE_2026-10-23.md for scope and evidence limits.
+Combined source verification:432 suites pass,0 fail,58 external skips;562
+production LuaJIT files compile. Exact package Emerald/FireRed contact smoke
+passes with native hashes unchanged and no renderer recovery. Concurrent
+committed performance history through91b89ba3 is merged; active primary-working-
+tree edits stay untouched. Release package receives a final FAR64 route smoke.
 
 # Streaming/parity release1.57.7 — 2026-10-23
 
