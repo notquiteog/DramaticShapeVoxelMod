@@ -401,6 +401,11 @@ local function build(req,cache,previous)
  local scenery,sceneryError,sceneryCount=V.require('Gen3SceneryModels').build(cells,R.newMesh,cache.sceneryModels)
  cache.sceneryModels=scenery or cache.sceneryModels;cache.sceneryModelCount=scenery and sceneryCount or 0
  cache.sceneryModelError=sceneryError
+ cache.importedFenceError,cache.importedFenceCount=nil,0
+ if Styles.modern('props')then
+  local _,fenceError,fenceCount=V.require('Gen3ImportedFences').build(cells,R.newMesh,cache.sceneryModels)
+  cache.importedFenceError,cache.importedFenceCount=fenceError,fenceError and 0 or fenceCount
+ end
  local interiorError,interiorCount=nil,0
  if Styles.modern('interiors')then local _;_,interiorError,interiorCount=V.require('Gen3ImportedInteriors').build(cells,R.newMesh,cache.sceneryModels)end
  cache.importedInteriorCount,cache.importedInteriorError=interiorCount,interiorError
@@ -440,6 +445,12 @@ local function build(req,cache,previous)
   elseif c.civic then
    if Civic.underOnly(c)then plane(b.gv,b.gi,x,z,uvFor(ts,Civic.ground(c))or uv)
    else plane(b.v,b.i,x,z,uvFor(ts,Civic.ground(c))or uv)end
+  elseif c.importedFence then
+   local fences=V.require('Gen3ImportedFences')
+   if not(fences.appendFloor and fences.appendFloor(c,function(v,t,shade)quad(b.gv,b.gi,v,t,shade)end,uvFor))then
+    if fences.underOnly(c)then plane(b.gv,b.gi,x,z,uvFor(ts,fences.floor(c))or uv)
+    else plane(b.v,b.i,x,z,uvFor(ts,fences.floor(c))or uv)end
+   end
   elseif c.bridge and c.bridge.edge then
    plane(b.v,b.i,x,z,uvFor(ts,1)or uv)
   elseif shape.kind=='water' then
@@ -1459,6 +1470,7 @@ function M.performanceSnapshot()
   water={wetRockCells=cache.wetRockCells or 0,draws=#(cache.waterDraws or{}),levels=#(cache.waterLevels or{}),banks=cache.bankFaceCount or 0},
   grass={placements=cache.grassModelCount or 0,batches=#(cache.grassModels or{}),error=cache.grassModelError},
   importedTrees={placements=cache.importedTreeCount or 0,batches=#(cache.importedTrees or{}),error=cache.importedTreeError},
+  fences={placements=cache.importedFenceCount or 0,error=cache.importedFenceError},
   scenery={placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),pewterMuseum=#(cache.importedPewterMuseum or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
