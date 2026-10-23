@@ -1,0 +1,69 @@
+{
+  "source": "User-supplied Alpha Sapphire RomFS; Oldale exterior family",
+  "body": "GR0004 world01_02_02 friendlyshop",
+  "matchingTownMaximumErrors": {
+    "8": "distinct original topology/UV; separate adaptation required",
+    "38": "distinct source positions/UV; separate adaptation required"
+  },
+  "bodySourceTriangles": 703,
+  "undersideTriangles": 17,
+  "doorSourceTriangles": 43,
+  "sourceBounds": [
+    74.18917083740234,
+    0.0,
+    -180.10899353027344,
+    177.81100463867188,
+    77.16940307617188,
+    -86.4520263671875
+  ],
+  "normalizationOrigin": [
+    126.00008773803711,
+    0.0,
+    -133.28050994873047
+  ],
+  "normalizationSpan": 103.62183380126953,
+  "door": "BM0009 com_bm_fsdoor01",
+  "animationSamples": [
+    0,
+    2.5,
+    5
+  ],
+  "sourceXSamples": [
+    13.99993896484375,
+    27.499969482421875,
+    41.0
+  ],
+  "movingInverseBindMaximumError": 0.0,
+  "textures": {
+    "friendry_01": {
+      "size": [
+        256,
+        128
+      ],
+      "rgbaSha256": "50860208bc87e7493c6991d54c37dc373e0b5d084f54f777efaaf3b6cc497da9",
+      "pngSha256": "fb06b6dcf2d1b73a15194f95d0a7156917daebb5d00cc0d01a27c91fff611ae2"
+    },
+    "fs_door_02": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "6c3d5010aa90a9b414fe9ba3033d6084cdb9255e1d615bdcadeb51b8b40782de",
+      "pngSha256": "a62860c6ab222750ff9ef395277107e83b9f27a997456d567fb3003bb25f6151"
+    },
+    "fs_door_01": {
+      "size": [
+        32,
+        32
+      ],
+      "rgbaSha256": "245eebaf051bd3533cccf66d453cf8366093d319624e2bc235d8f6ec8d14d376",
+      "pngSha256": "b7d9d8d189a8c6724808dedbfca72af7e51b5cd500638613a8a281b54326aa47"
+    }
+  },
+  "sha256": {
+    "body": "ee734f69a72adfcd9915f2d6734895d264b1de444a7e4545e182bac8a6454d6f",
+    "door": "074c7e7d41d567d31eb1f238e040c3d797303d3778dfb26e53d81b43db811bf6",
+    "animation": "ad890fe9148c6777341f974c1c85bafe0134e0aac7d9c53f3eeaec87a0931fb3"
+  },
+  "processing": "Original positions/UVs/triangles independently compared to Nitrogen. Source vertex exposure RGB and24 nonphysical light triangles omitted. Exact source bottom rim closed beneath building; all physical source triangles and original texture paint retained. No native collision/scripts/warps changed."
+}
