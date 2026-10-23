@@ -7,7 +7,7 @@ from pathlib import Path
 from oras_scenery_source import decoder,need
 from import_oras_grass import lua
 from import_oras_center_doors import mul,sample
-from oras_rear_closure import close_rear
+from oras_rear_closure import close_rear,_subtract
 
 def convert(root,decoder_path,nitrogen_path,output):
  load,load_textures,png=decoder(decoder_path);sys.path.insert(0,str(nitrogen_path));from nitrogen.platforms.ctr.bch import open_bch
@@ -39,6 +39,27 @@ def convert(root,decoder_path,nitrogen_path,output):
    name=next(a.base_color_texture for a in model.materials if a.name==sub.material)
    parts.append(dict(name=sub.material,texture=texture(name,11),vertices=vs,indices=[remap[i]for t in selected for i in t],role='structure',alphaMode='cutout',opacity=1.,wrapS='repeat',wrapT='repeat'));count+=len(selected)
   need(len(parts)==2 and count in [1030,1038],f'unexpected original house pieces {side} {len(parts)} {count}')
+  glass_cleanup=0
+  if side=='southeast':
+   # Own source bow-window top/bottom return triangles fold across one another.
+   # Retain their union and original affine paint; remove only double-covered
+   # planar area from the second triangle of each reviewed pair.
+   glass=next(p for p in parts if p['name']=='chip_mado');need(len(glass['indices'])==42,'southeast glass topology changed')
+   original=list(glass['indices']);replacement={}
+   for target,covered in[(9,8),(13,12)]:
+    rows=[glass['vertices'][i-1]for i in original[target*3:target*3+3]];cut=[glass['vertices'][i-1]for i in original[covered*3:covered*3+3]]
+    need(max(v[1]for v in rows+cut)-min(v[1]for v in rows+cut)<1e-6,'reviewed glass return plane changed')
+    poly=[[v[0],v[2]]for v in rows];clip=[[v[0],v[2]]for v in cut];remaining=_subtract(poly,clip);need(len(remaining)==1,'glass return subtraction changed')
+    clean=[]
+    for v in remaining[0]:
+     if not clean or max(abs(a-b)for a,b in zip(v,clean[-1]))>1e-7:clean.append(v)
+    if len(clean)>1 and max(abs(a-b)for a,b in zip(clean[0],clean[-1]))<1e-7:clean.pop()
+    need(len(clean)==3,'glass return should retain one exposed triangle');a,b,c=poly;den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]);ids=[]
+    for x,z in clean:
+     u=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(z-c[1]))/den;v=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(z-c[1]))/den
+     row=[sum(w*q[k]for w,q in zip([u,v,1-u-v],rows))for k in range(6)];glass['vertices'].append(row);ids.append(len(glass['vertices']))
+    replacement[target]=ids;glass_cleanup+=1
+   glass['indices']=[idx for at in range(14)for idx in replacement.get(at,original[at*3:at*3+3])]
   body=parts[0];bottom=[]
   for x,z in rim:
    v=next((v for v in body['vertices']if abs(v[0]-x)<.0006 and abs(v[1])<.0001 and abs(v[2]-z)<.0007),None);need(v is not None,'original house rim changed');row=v[:];row[3:5]=[220.5/256,16.5/128];bottom.append(row)
@@ -55,7 +76,7 @@ def convert(root,decoder_path,nitrogen_path,output):
   for p in parts:p['vertices']=[norm(v)for v in p['vertices']]
   rear,rearproof=close_rear(parts,'t102_01',[220.5/256,16.5/128],span);parts.append(rear)
   data['oras_oldale_home_'+side]=dict(parts=parts,anchors={'door':norm([135.676,0,192.094]),'doorLeft':norm([123.676,0,192.094]),'doorRight':norm([147.676,0,192.094]),'doorTop':norm([135.676,45.62,192.094])})
-  reports[side]=dict(sourcePhysicalTriangles=count,rearClosure=rearproof,sourceTrianglesByPart=[len(p['indices'])//3 for p in parts],sourceWorldOffset=[dx,0,dz],selection='Own complete source triangles inside actual house region, never clipped or substituted',sourceWindowDetails='Actual southeast14-triangle or northwest6-triangle source glass retained')
+  reports[side]=dict(sourcePhysicalTriangles=count,coplanarGlassReturnTrianglesClipped=glass_cleanup,rearClosure=rearproof,sourceTrianglesByPart=[len(p['indices'])//3 for p in parts],sourceWorldOffset=[dx,0,dz],selection='Own complete source triangles inside actual house region, never clipped or substituted',sourceWindowDetails='Actual southeast14-triangle or northwest6-triangle source glass retained')
  # Independent rigid bind and original -80degree Y hinge track.
  rawdoor=(root/'mapprops-nitrogen/3/0003/000.bch').read_bytes();dm=load(rawdoor)[0];di=open_bch(rawdoor).models[0];need(dm.name=='t102_bm_door01','unexpected Oldale door')
  worlds=[];errors={}
@@ -86,7 +107,7 @@ def convert(root,decoder_path,nitrogen_path,output):
   dparts.append(dict(name=sub.material,texture=texture(next(a.base_color_texture for a in dm.materials if a.name==sub.material),1),vertices=poses[0][-1],indices=[v+1 for t in sub.triangles for v in t],role='source_oldale_door',alphaMode='cutout',opacity=1.,wrapS='repeat',wrapT='repeat'))
  data['door']=dict(id='oras_oldale_home_doors',parts=dparts,poses=poses)
  (output/'lib/ImportedOldaleHomesData.lua').write_text('-- Own authentic ORAS Oldale home variants+hinged source door; tools/import_oras_oldale_homes.py.\nreturn '+lua(data)+'\n')
- report=dict(source='User-supplied Alpha Sapphire RomFS',body='GR0004 world01_02_02 t102_01/chip_mado',variants=reports,door='BM0003 t102_bm_door01',doorPhysicalTriangles=84,doorAnglesRadians=angles,movingInverseBindMaximumError=max(errors[b]for b in ['t102_bm_door01','anim_door']),sourceNormalizationOrigin=origin,sourceNormalizationSpan=span,doorAlignment=dict(closedOriginalRight=right,originalOpeningRight=147.676,instanceX=offsetX,instanceZ=192.094),textures=textures,sha256=dict(body=hashlib.sha256(raw).hexdigest(),door=hashlib.sha256(rawdoor).hexdigest(),animation=hashlib.sha256(anim).hexdigest()),processing='Exact original body and door positions/UVs/triangles independently checked with Nitrogen. Source exposure RGB and24 nonphysical light-effect triangles omitted. Each own house variant retains every source fixture and its own front/side glass. Exact source bottom rim closes below floor at upload using one reviewed solid original foundation texel; original source body has no horizontal y0 floor triangles. No source terrain, fences, sprites or flowers included.')
+ report=dict(source='User-supplied Alpha Sapphire RomFS',body='GR0004 world01_02_02 t102_01/chip_mado',variants=reports,door='BM0003 t102_bm_door01',doorPhysicalTriangles=84,doorAnglesRadians=angles,movingInverseBindMaximumError=max(errors[b]for b in ['t102_bm_door01','anim_door']),sourceNormalizationOrigin=origin,sourceNormalizationSpan=span,doorAlignment=dict(closedOriginalRight=right,originalOpeningRight=147.676,instanceX=offsetX,instanceZ=192.094),textures=textures,sha256=dict(body=hashlib.sha256(raw).hexdigest(),door=hashlib.sha256(rawdoor).hexdigest(),animation=hashlib.sha256(anim).hexdigest()),processing='Original body and door positions/UVs/triangles independently checked with Nitrogen. Two southeast glass return triangles retain only their exposed area using interpolated original UVs, eliminating original planar overlap without changing the union silhouette. Source exposure RGB and24 nonphysical light-effect triangles omitted. Each own house variant retains every source fixture and its own front/side glass. Exact source bottom rim closes below floor at upload using one reviewed solid original foundation texel; original source body has no horizontal y0 floor triangles. No source terrain, fences, sprites or flowers included.')
  (folder/'provenance.json').write_text(json.dumps(report,indent=2)+'\n');return report
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__)

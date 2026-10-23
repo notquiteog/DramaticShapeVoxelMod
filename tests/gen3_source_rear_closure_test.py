@@ -45,7 +45,7 @@ for name,model in models.items():
   for i,a in enumerate(group):
    for b in group[i+1:]:
     if b[0]-a[0]>1e-6:break
-    if 'authored_closed_rear'not in[a[1],b[1]]:continue
+    if 'authored_closed_rear'not in[a[1],b[1]]and not('oldale_home'in name and a[1]==b[1]=='chip_mado'):continue
     pairs+=1;assert overlap(a[2],b[2])<1e-8,(name,'coplanar rear overlap',a[1],b[1])
 assert len(models)==15
 print('PASS15 real source rear closures,',rays,'rear rays, unchanged bounds,',pairs,'coplanar pairs checked')

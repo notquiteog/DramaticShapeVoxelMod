@@ -1,3 +1,12 @@
+# Remove original Oldale glass-return overlap — 2026-10-23
+
+Two southeast source-glass triangles lose only the area shared with their
+neighbor, preserving the union silhouette and interpolated source paint. The
+northwest house,14 physical southeast glass triangles, rear closure and native
+portal/ground remain fixed. Actual-source coplanar checks and official0.3.95
+six R/S/E native house placements pass; views inspected. See
+[correction evidence](docs/ORAS_REAR_CLOSURES_2026-10-23.md). Devon continues.
+
 # Correct original ORAS open backs — 2026-10-23
 
 Fifteen owned Gym/Mart/Oldale/Petalburg/Rustboro source bodies now append actual
@@ -8,7 +17,7 @@ coplanar overlap across113,442 candidate pairs. All51 native R/S/E placements
 pass with unchanged layout hashes and zero streaming recovery. Existing native door/collision/contact
 checks remain valid. No new family/map coverage is claimed. See
 [correction evidence](docs/ORAS_REAR_CLOSURES_2026-10-23.md). Oldale southeast
-source glass-return overlap is separately queued for immediate cleanup.
+source glass-return overlap is addressed by the follow-up above.
 
 # Original Rustboro flat/southern-home continuation — 2026-10-23
 

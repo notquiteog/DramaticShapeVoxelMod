@@ -8,6 +8,7 @@ return function(game)
  {'PETALBURG_CITY',24,9,'hoennMarts',1,3,4},{'RUSTBORO_CITY',15,42,'hoennMarts',1,3,4},
  {'PETALBURG_CITY',12,4,'hoennGyms',3,4,6},{'DEWFORD_TOWN',5,13,'hoennGyms',3,4,6},{'RUSTBORO_CITY',24,15,'hoennGyms',3,4,6},
  {'RUSTBORO_CITY',7,34,'rustboroHomes',2,4,5},{'RUSTBORO_CITY',31,15,'rustboroHomes',2,4,5},{'RUSTBORO_CITY',28,24,'rustboroHomes',2,4,5},{'RUSTBORO_CITY',24,30,'rustboroHomes',3,4,7},{'RUSTBORO_CITY',9,25,'rustboroHomes',4,5,9},{'RUSTBORO_CITY',24,42,'rustboroHomes',2,4,6}}
+ if os.getenv('QA_OLDALE_ONLY')=='1'then fixtures={fixtures[1],fixtures[2]}end
  local doorX,doorY=2,4
  assert(love.filesystem.getIdentity():match('%-qa$'))
  assert(not love.joystick or love.joystick.getJoystickCount()==0,'isolate physical controller input before automated QA')

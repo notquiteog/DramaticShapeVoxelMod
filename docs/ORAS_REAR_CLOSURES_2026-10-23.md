@@ -45,7 +45,13 @@ candidate39EM/38RU/38SA of244 recognized civic placements, with129 missing.
 Source eligibility does not mean whole-map native acceptance. Devon, Rustboro
 Flat2/tower and the other regional families remain in the source queue.
 
-Separate existing-source issue found during this audit: two pairs of Oldale
-southeast glass top/bottom return triangles have coplanar overlap. This is not
-introduced by the new rear part; targeted cleanup continues next. There is no
-global no-z-fighting acceptance claim for every remaining source family.
+The follow-up Oldale glass audit removes two pre-existing source overlaps:
+southeast bow-window return triangles9/8 and13/12 (zero-based). Only the shared
+area is subtracted from the second triangle of each pair. Original affine UVs
+are interpolated at the cut; the union silhouette and14 physical glass triangles
+remain. The northwest house is untouched. The actual-data coplanar test now
+also checks original Oldale glass returns (113,452 total candidates), with zero
+overlapping area. Official0.3.95 native6 R/S/E house placements pass the same
+source ownership, native hash and streaming checks. Front/glass, available
+sides, rear and ground contacts were inspected. This specific fix does not
+establish global no-z-fighting acceptance for other unreviewed source families.
