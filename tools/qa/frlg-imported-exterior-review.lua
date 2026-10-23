@@ -3,6 +3,7 @@
 return function(game)
  local family=os.getenv('QA_FAMILY')or'gyms'
  local configs={
+  museum={pendingGround=true,fixtures={{'FR_PEWTER_CITY',12,0,5,6},{'FR_PEWTER_CITY',12,0,13,4}},adapter='Gen3ImportedPewterMuseum',model='hgss_pewter_museum',doorX=5,doorY=6,stat='pewterMuseum',source='^assets/scenery/pewter%-museum/',right=17,left={-2,4,math.pi/2},rear={8,-2,math.pi}},
   viridian_plain={fixtures={{'FR_VIRIDIAN_CITY',24,8}},adapter='Gen3ImportedViridianHouses',model='hgss_viridian_house',doorX=1,doorY=3,stat='viridianHouses',source='^assets/scenery/viridian%-house/',right=7},
   marts_story={fixtures={{'FR_FOUR_ISLAND',20,23},{'FR_VIRIDIAN_CITY',34,16}},adapter='Gen3ImportedHGSSMarts',model='hgss_kanto_mart',doorX=2,doorY=3,stat='hgssMarts',source='^assets/scenery/hgss%-mart/',right=6,left={-1,4,math.pi/4},rear={2,-3,math.pi}},
   marts={fixtures={{'FR_CERULEAN_CITY',27,25},{'FR_CINNABAR_ISLAND',17,8},{'FR_FOUR_ISLAND',20,23},{'FR_FUCHSIA_CITY',9,12},{'FR_LAVENDER_TOWN',18,12},{'FR_PEWTER_CITY',26,15},{'FR_SAFFRON_CITY',38,18},{'FR_SAFFRON_CITY_CONNECTION',28,11},{'FR_SIX_ISLAND',18,8},{'FR_THREE_ISLAND',16,9},{'FR_VERMILION_CITY',27,14},{'FR_VIRIDIAN_CITY',34,16}},adapter='Gen3ImportedHGSSMarts',model='hgss_kanto_mart',doorX=2,doorY=3,stat='hgssMarts',source='^assets/scenery/hgss%-mart/',right=6,left={-1,4,math.pi/4},rear={2,-3,math.pi}},
@@ -23,7 +24,7 @@ return function(game)
  local edition=require('src.core.GameVersion').get();assert(edition=='firered'or edition=='leafgreen')
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
  local C,S=V.require('Gen3Integration'),V.require('Gen3Scene');local Map,P=require('src.core.game3.map'),require('src.core.game3.player')
- local observed={};local adapter=V.require(config.adapter or(family=='saffron_dojo'and'Gen3ImportedSaffronDojo'or'Gen3ImportedHGSSGyms'));local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=(g.importedHGSSGym or g.importedSaffronDojo or g.importedHGSSMart or g.importedViridianHouse or g.importedViridianFlowerHouse).model end;return ok,why end
+ local observed={};local adapter=V.require(config.adapter or(family=='saffron_dojo'and'Gen3ImportedSaffronDojo'or'Gen3ImportedHGSSGyms'));local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=(g.importedHGSSGym or g.importedSaffronDojo or g.importedHGSSMart or g.importedViridianHouse or g.importedViridianFlowerHouse or g.importedPewterMuseum).model end;return ok,why end
  local dir=os.getenv('SHOT_DIR');local json=require('src.link.Json');local out={};local missing=os.getenv('QA_MISSING_ASSETS')=='1'
  if missing then local read=V.mod.read;V.mod.read=function(self,path)if path:match(config.source)then return nil end;return read(self,path)end end
  game:_handleBootAction({action='new_game',start={map='FR_PEWTER_CITY',x=10,y=32,facing='up'}})
@@ -41,14 +42,14 @@ return function(game)
  local function shot(n)assert(U.shot(game,dir..'/'..n..'.png'))end
  local function hash(d)local a={};for y=0,d.height-1 do for x=0,d.width-1 do local c=d.midLayout:cellAt(x,y);a[#a+1]=table.concat({c.mid,c.coll,c.elev},':')end end;return love.data.encode('string','hex',love.data.hash('sha256',table.concat(a,';')))end
  for index,q in ipairs(fixtures)do if index>=tonumber(os.getenv('QA_START')or'1')and(not os.getenv('QA_INDEX')or index==tonumber(os.getenv('QA_INDEX')))then
-  local map,cx,cy=q[1],q[2],q[3];local pendingGround=config.pendingGround or(config.model=='hgss_kanto_mart'and(map=='FR_SAFFRON_CITY'or map=='FR_SAFFRON_CITY_CONNECTION'));C.setLevel(0,game);assert(Map.load(nil,game,map,{x=cx+doorX,y=cy+doorY+2,facing='up'}));game.input:reset();local before=hash(Map.currentDef())
+  local map,cx,cy=q[1],q[2],q[3];local doorX,doorY=q[4]or config.doorX,q[5]or config.doorY;local pendingGround=config.pendingGround or(config.model=='hgss_kanto_mart'and(map=='FR_SAFFRON_CITY'or map=='FR_SAFFRON_CITY_CONNECTION'));C.setLevel(0,game);assert(Map.load(nil,game,map,{x=cx+doorX,y=cy+doorY+2,facing='up'}));game.input:reset();local before=hash(Map.currentDef())
   C.yaw=0;C.pitch=math.rad(8);C.setLevel(3,game);settle()
   local n=S.performanceSnapshot().scenery[config.stat];if family=='saffron_dojo'and not missing and n==0 then for yy=cy,cy+4 do local row={}for xx=cx,cx+5 do local c=Map.currentDef().midLayout:cellAt(xx,yy);row[#row+1]={c.mid,c.coll,c.elev}end;print('[DOJO FAILED ROW]',yy,json.encode(row))end end;assert(missing and n==0 or not missing and n>0,'source/fallback mismatch')
   if family=='saffron_gym'or family=='saffron_dojo'or config.model then local model=observed[map..':'..cx..':'..cy];assert(missing and not model or not missing and model==(config.model or(family=='saffron_dojo'and'hgss_saffron_dojo'or'hgss_saffron_gym')),'exact regional source placement absent')end
   shot(index..'-modern')
   local left,rear=config.left or{-3,2,math.pi/2},config.rear or{doorX,-2,math.pi}
   if os.getenv('QA_QUICK')~='1'then for _,v in ipairs{{'front',cx+doorX,cy+doorY+2,0},{'left',cx+left[1],cy+left[2],left[3]},{'right',cx+(config.right or 7),cy+2,-math.pi/2},{'rear',cx+rear[1],cy+rear[2],rear[3]}}do
-   P.reset(v[2],v[3],'up');C.yaw=v[4];C.setLevel(6,game);settle();shot(index..'-'..v[1])
+   if v[2]>=0 and v[2]<Map.currentDef().width and v[3]>=0 and v[3]<Map.currentDef().height then P.reset(v[2],v[3],'up');C.yaw=v[4];C.setLevel(6,game);settle();shot(index..'-'..v[1])else print('[FRLG VIEW OUTSIDE NATIVE BOUNDS]',map,v[1])end
   end end
   local destination
   if map~='FR_SAFFRON_CITY_CONNECTION'then
@@ -61,7 +62,7 @@ return function(game)
   assert(Map.currentDef().id==map,'native return failed');settle();U.wait(90);shot(index..'-returned');assert(hash(Map.currentDef())==before,'native layout mutated')
   else for _,w in ipairs(Map.currentDef().warps or{})do assert(not(w.x==cx+doorX and w.y==cy+doorY),'projection has an unexpected native warp')end;assert(hash(Map.currentDef())==before,'native projection mutated')end
   C.setLevel(0,game);U.wait(15);shot(index..'-native')
-  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,sourceModel=config.model,nativeHash=before,destination=destination,returned=map~='FR_SAFFRON_CITY_CONNECTION',nonEnterable=map=='FR_SAFFRON_CITY_CONNECTION',renderedVerified=not missing and not pendingGround,renderedGap=pendingGround and'Shared native-ground donor assessment pending.'or nil,missingAssets=missing}
+  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,runtime='v'..require('src.core.Version').engine,doorX=doorX,doorY=doorY,sourceModel=not missing and config.model or nil,nativeHash=before,destination=destination,returned=map~='FR_SAFFRON_CITY_CONNECTION',nonEnterable=map=='FR_SAFFRON_CITY_CONNECTION',renderedVerified=not missing and not pendingGround,renderedGap=pendingGround and'Shared native-ground donor assessment pending.'or nil,missingAssets=missing}
   local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close()
  end end
  local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close();print('[FRLG IMPORTED EXTERIORS] PASS',family,#out)

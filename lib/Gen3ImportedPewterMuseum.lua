@@ -35,13 +35,23 @@ function M.register()
  local ok,err=Models.register(M.id,V.require('PewterMuseumData')[M.id],{read=function(path)return V.mod:read(path)end})
  if ok then registered=true end;return ok,err
 end
+-- Museum geometry starts at the claimed header row. Rebase only the
+-- shared clipper's virtual+1 body origin; native cells remain unchanged.
+function M.clearance(g,cells,parts)
+ local mask=setmetatable({},{__index=function(_,k)
+  local x,y=k:match('^(-?%d+):(-?%d+)$');return x and cells[x..':'..(tonumber(y)-1)]or nil
+ end})
+ return V.require('Gen3ImportedGyms').clearance(g,mask,parts)
+end
 function M.build(g,cells,newMesh,parts)
  if not M.eligible(g,cells)then return false end
  local ok,err=M.register();if not ok then return false,err end
  local fit={groundInset=.05,width=256,depth=112,padding=.25,anchor='door',targetX=88,targetZ=110}
+ local geometry,why=Models.vertices(M.id,fit);if not geometry then return false,why end
+ local safe,why=M.clearance(g,cells,geometry);if not safe then return false,why end
  local p={model=M.id,x=g.cx*16,y=g.groundHeight or 0,z=g.cy*16,fit=fit}
  local result,why=Models.buildBatches({p},newMesh,{parts=parts});if not result then return false,why end
- g.importedPewterMuseum=assert(Models.fit(M.id,fit));return true
+ g.importedPewterMuseum=assert(Models.fit(M.id,fit));g.importedPewterMuseum.model=M.id;return true
 end
 function M.doorSurface(g,tx,ty)
  local f=g.importedPewterMuseum;if not f then return end

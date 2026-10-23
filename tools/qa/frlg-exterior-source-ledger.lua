@@ -43,7 +43,7 @@ return function(game)
   local trees={}
   local treeSources={};for _,p in ipairs(trees)do for _,c in ipairs(p.sources or{p.source})do treeSources[c]=true end end
   local interior=V.require('Gen3ImportedInteriors').placements(cells)
-  local row={edition=edition,map=id,mapType=def.mapType,pair=layout.pair,width=def.width,height=def.height,
+  local row={runtime='v'..require('src.core.Version').engine,edition=edition,map=id,mapType=def.mapType,pair=layout.pair,width=def.width,height=def.height,
    outdoor=Pairs.outdoor(def),supported=Pairs.supports(def,spec),civics={},furniture={},kinds={},unimportedTreeOwners={},signGrounds={},
    adapterOnly=true,renderedAcceptance=false,unclassifiedBlockedCells=0,importableTreePlacements=#trees,importableFurniture=#interior}
   local seenTrees={}

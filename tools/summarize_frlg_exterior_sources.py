@@ -25,6 +25,8 @@ def summarize(paths,output,accepted):
  root=Path(__file__).resolve().parents[1];sources={}
  for key,path in SOURCES.items():
   p=root/path;d=json.loads(p.read_text());sources[key]={k:d[k]for k in['sourcePage','archiveSha256']};sources[key]['modelSha256']=d.get('sourceModelSha256',d.get('sourceDaeSha256'));sources[key]['provenanceSha256']=hashlib.sha256(p.read_bytes()).hexdigest()
+ review_path=root/'docs/coverage/frlg-native-exterior-reviews-2026-10-23.json'
+ reviews=json.loads(review_path.read_text())['reviews']if review_path.exists()else[]
  candidates=json.loads((root/'docs/coverage/frlg-exterior-candidates-2026-10-23.json').read_text())['candidates']
  counts=collections.defaultdict(lambda:collections.Counter());families=collections.defaultdict(list);rows=[]
  for path in paths:
@@ -33,7 +35,9 @@ def summarize(paths,output,accepted):
    civics=[]
    for g in r['civics']:
     model=g['modernEligible'];accepted_key=(r['edition'],r['map'],g['x'],g['y'])
-    q={**g,'source':sources[model]if model else None,'renderedAccepted':accepted_key in accepted}
+    q={**g,'source':sources[model]if model else None,'renderedAccepted':accepted_key in accepted,'renderedRuntime':accepted.get(accepted_key,{}).get('runtime','v0.3.95')if accepted_key in accepted else None}
+    matched=[v for v in reviews if(v['edition'],v['map'],v['x'],v['y'])==accepted_key and v['nativeHash']==r['nativeHash']and v['sourceModel']==model and v['sourceProvenanceSha256']==sources[model]['provenanceSha256']]
+    if matched:q['nativeReview']={'runtime':matched[0]['runtime'],'sourceFootprintVerified':all(v['sourceFootprintVerified']for v in matched),'portals':[{'x':v['x']+v['doorX'],'y':v['y']+v['doorY'],'destination':v['destination'],'returned':v['returned']}for v in matched]}
     if q['renderedAccepted']:
      proof=accepted[accepted_key];assert model,'accepted source must remain eligible'
      assert proof['nativeHash']==r['nativeHash'],'accepted native map hash changed'
@@ -41,10 +45,10 @@ def summarize(paths,output,accepted):
     q['gap']=None if model else('Matching complete native Mart location/drawing/permission adapter pending.'if g['family']=='mart'else'Matching regional source selection and complete native adapter pending.')
     candidate=next((c for c in candidates if c['map']==r['map']and c['x']==g['x']and c['y']==g['y']),None)
     if candidate and not model:q['sourceCandidate']=candidate;q['gap']=candidate['gap']
-    q['renderedGap']=None if not model or q['renderedAccepted']else('Native building/warp review passed; shared native-ground donor assessment pending.'if model in('hgss_cerulean_gym','hgss_saffron_dojo')or model=='hgss_kanto_center'and r['map']in('FR_SAFFRON_CITY','FR_SAFFRON_CITY_CONNECTION')or model=='hgss_kanto_mart'and r['map']in('FR_SAFFRON_CITY','FR_SAFFRON_CITY_CONNECTION')else'Native rendered review not recorded.')
+    q['renderedGap']=None if not model or q['renderedAccepted']else(matched[0]['renderedGap']if matched else'Native building/warp review passed; shared native-ground donor assessment pending.'if model in('hgss_cerulean_gym','hgss_saffron_dojo')or model=='hgss_kanto_center'and r['map']in('FR_SAFFRON_CITY','FR_SAFFRON_CITY_CONNECTION')or model=='hgss_kanto_mart'and r['map']in('FR_SAFFRON_CITY','FR_SAFFRON_CITY_CONNECTION')else'Native rendered review not recorded.')
     civics.append(q);families[(r['edition'],g['family'])].append((r['map'],q))
    row={k:r[k]for k in['edition','map','mapType','outdoor','pair','width','height','supported','nativeHash','unclassifiedBlockedCells']}
-   row.update(scope='exterior_buildings_only',runtime='v0.3.95',inventoryOnly=True,assemblies=civics,modernEligible=sum(bool(g['modernEligible'])for g in civics),renderedAccepted=sum(g['renderedAccepted']for g in civics),unmatchedAssemblies=sum(not g['modernEligible']for g in civics))
+   row.update(scope='exterior_buildings_only',runtime=r.get('runtime','v0.3.95'),inventoryOnly=True,assemblies=civics,modernEligible=sum(bool(g['modernEligible'])for g in civics),renderedAccepted=sum(g['renderedAccepted']for g in civics),unmatchedAssemblies=sum(not g['modernEligible']for g in civics))
    rows.append(row);counts[r['edition']]['maps']+=1;counts[r['edition']]['outdoor']+=bool(r['outdoor']);counts[r['edition']]['assemblies']+=len(civics);counts[r['edition']]['eligible']+=row['modernEligible'];counts[r['edition']]['accepted']+=row['renderedAccepted'];counts[r['edition']]['unmatched']+=row['unmatchedAssemblies'];counts[r['edition']]['unclassifiedBlockedCells']+=row['unclassifiedBlockedCells']
  assert len({(r['edition'],r['map'])for r in rows})==len(rows),'duplicate native map'
  for ed,summary in counts.items():assert summary['maps']==426,(ed,summary)

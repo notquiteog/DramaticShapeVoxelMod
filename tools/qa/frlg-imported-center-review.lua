@@ -44,7 +44,7 @@ return function(game)
   assert(Map.currentDef().id==map,'native return failed');settle();U.wait(90);shot(index..'-returned');assert(hash(Map.currentDef())==before,'native layout mutated')
   else for _,w in ipairs(Map.currentDef().warps or{})do assert(not(w.x==cx+doorX and w.y==cy+doorY),'projection gained native warp')end;assert(hash(Map.currentDef())==before)end
   C.setLevel(0,game);U.wait(15);shot(index..'-native')
-  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,sourceModel=not missing and'hgss_kanto_center'or nil,nativeHash=before,destination=destination,returned=not projection,nonEnterable=projection,renderedVerified=false,missingAssets=missing}
+  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,runtime='v'..require('src.core.Version').engine,sourceModel=not missing and'hgss_kanto_center'or nil,nativeHash=before,destination=destination,returned=not projection,nonEnterable=projection,renderedVerified=false,missingAssets=missing}
   local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close()
  end end
  local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close();print('[FRLG IMPORTED EXTERIORS] PASS',family,#out)

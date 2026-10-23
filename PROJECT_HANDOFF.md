@@ -1,3 +1,21 @@
+# Museum exact footprint/current-engine review, shared stairs gap — 2026-10-23
+
+Latest official engine became0.3.96; verified official source/shell SHA256 and
+fresh public imports into new isolated profiles produce required cache140.
+Museum main/staff native portals pass both editions and repeat after exact
+projected-triangle/native-mask guard; LG missing-PNG both entries/returns pass.
+Native/source/contact/side/closure captures inspected; all original map hashes,
+source/PNG data and portal fits unchanged. Museum remains renderedAccepted=false:
+shared generic terrace steps project arch artwork onto treads and draw duplicate
+coplanar cap/tread faces. Parent owns Gen3Stairs; preserve native rise and emit
+one clean tread rather than moving source/ground. Canonical inventory now0.3.96,
+while older accepted assemblies explicitly retain renderedRuntime0.3.95. Museum
+nativeReview separately records0.3.96/source-footprint/returned portals/gap.
+Counts unchanged75 eligible/67 accepted/58 unmatched/6324 unclassified blocked
+cells per edition. Exact native guards/adversarial triangle test pass. No Scene
+edits, shared stair fix or production-package acceptance. See
+docs/PEWTER_MUSEUM_NATIVE_REVIEW_2026-10-23.md. Continuing Saffron Copycat source.
+
 # Viridian original source doors and ordinary-house acceptance — 2026-10-23
 
 Ordinary native house(24,8) now uses its genuine inward source panel without a

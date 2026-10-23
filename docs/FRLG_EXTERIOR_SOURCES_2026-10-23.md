@@ -14,7 +14,9 @@ The canonical identifier-only report is
 metatile/collision/elevation SHA256, pair, dimensions, map type and explicit
 outdoor classification. Every detected assembly has its native drawing hash,
 source archive/model/provenance hashes where available, exact coordinates,
-source eligibility and separate rendered acceptance. The inspected batches accept
+source eligibility and separate rendered acceptance. The current inventory is
+v0.3.96; each accepted assembly retains its actual `renderedRuntime` (currently
+v0.3.95). Separate rejected native reviews never promote visual acceptance. The inspected batches accept
 67 placements per edition: two Pewter houses, Viridian/Pewter Gyms, Viridian
 flower-house exterior, three Pallet buildings, two Lavender ordinary houses and
 the Name Rater tent, plus22 ordinary/tall Saffron blocks across the actual city
@@ -114,6 +116,12 @@ verifies every used PNG against the original archive hashes. Physical phones
 and the parent combined production Scene remain separate acceptance work.
 
 ## Exact next gaps
+
+Pewter Museum now passes both native entrances/returns and an exact projected
+triangle/native-mask guard on0.3.96, but remains visually unaccepted: shared
+terrace stairs spread native arch artwork over treads and duplicate coplanar
+caps. See `PEWTER_MUSEUM_NATIVE_REVIEW_2026-10-23.md` and the identifier-only
+`docs/coverage/frlg-native-exterior-reviews-2026-10-23.json`.
 
 The table lists every unmatched family and map. The regional Viridian and Pewter Gyms now have guarded, inspected adapters;
 see `HGSS_KANTO_GYMS_2026-10-23.md`. The native flower-house variant is recorded
