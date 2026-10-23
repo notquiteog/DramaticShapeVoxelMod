@@ -1,6 +1,6 @@
 -- Conservative world AABB rejection for undeformed, identity-model geometry.
--- Opt in only for the current main-pass VP with curve/pull/canopy deformation
--- disabled. Camera rejection must NEVER filter the shadow caster pass.
+-- Use each pass's own VP with curve/pull/canopy deformation disabled. Shadow
+-- rejection requires the LIGHT VP; camera planes must NEVER filter casters.
 local M={}
 local function finite(n)return type(n)=='number'and n==n and math.abs(n)<math.huge end
 

@@ -30,10 +30,13 @@ function M.new(mesh,positions,withVisibility)
  end
  local batch={instanceMesh=mesh,offsets=offsets,count=#positions,_positions=owned}
  function batch:release()
-  local view=self._visible
-  if view and view.offsets then
-   if attached[self.instanceMesh]==view.offsets then detach(self.instanceMesh)end
-   view.offsets:release();view.offsets=nil
+  for _,key in ipairs({'_visible','_shadowVisible'})do
+   local view=self[key]
+   if view and view.offsets then
+    if attached[self.instanceMesh]==view.offsets then detach(self.instanceMesh)end
+    view.offsets:release();view.offsets=nil
+   end
+   self[key]=nil
   end
   if attached[self.instanceMesh]==self.offsets then detach(self.instanceMesh)end
   self.offsets:release()
@@ -41,16 +44,19 @@ function M.new(mesh,positions,withVisibility)
  end
  return batch
 end
--- Optional main-pass subset, owned by the full batch. Shadow draws continue
--- using the full batch. Only callers with undeformed physical bounds opt in.
-function M.visible(batch,planes,localBounds)
- if type(batch)~='table'or not batch._positions or not planes or not localBounds or batch._viewFailed then return batch end
+-- Optional subsets, owned by the full batch. The 'shadow' scope MUST use the
+-- light frustum, never camera planes. Separate buffers retain each pass's
+-- selection without alternating uploads. Only undeformed physical bounds opt in.
+function M.visible(batch,planes,localBounds,scope)
+ local key=scope=='shadow'and '_shadowVisible'or '_visible'
+ local failureKey=scope=='shadow'and '_shadowViewFailed'or '_viewFailed'
+ if type(batch)~='table'or not batch._positions or not planes or not localBounds or batch[failureKey] then return batch end
  Cull=Cull or(V and V.require('FrustumCull'))
  if not Cull then return batch end
- local view=batch._visible
+ local view=batch[key]
  if not view then
-  view={instanceMesh=batch.instanceMesh,count=0,_indices={},_selected={},_rows={},_base=batch}
-  batch._visible=view
+  view={instanceMesh=batch.instanceMesh,count=0,_indices={},_selected={},_rows={},_base=batch,_failureKey=failureKey}
+  batch[key]=view
  end
  local count=0
  for i,p in ipairs(batch._positions)do
@@ -83,7 +89,7 @@ function M.visible(batch,planes,localBounds)
   if view.offsets then
    view.offsets:release();view.offsets=nil
   end
-  batch._viewFailed=true
+  batch[failureKey]=true
   return batch
  end
  for i=1,count do view._indices[i]=view._selected[i]end
@@ -102,7 +108,7 @@ function M.draw(batch,shader)
    local ok=pcall(mesh.attachAttribute,mesh,'VertexInstanceOffset',batch.offsets,'perinstance')
    if not ok then
     pcall(mesh.detachAttribute,mesh,'VertexInstanceOffset');attached[mesh]=nil
-    batch._base._viewFailed=true;return M.draw(batch._base,shader)
+    batch._base[batch._failureKey]=true;return M.draw(batch._base,shader)
    end
   else mesh:attachAttribute('VertexInstanceOffset',batch.offsets,'perinstance')end
   attached[mesh]=batch.offsets
@@ -112,7 +118,7 @@ function M.draw(batch,shader)
  shader:send('sceneryInstances',0)
  if not ok then
   detach(mesh)
-  if batch._base then batch._base._viewFailed=true;return M.draw(batch._base,shader)end
+  if batch._base then batch._base[batch._failureKey]=true;return M.draw(batch._base,shader)end
   error(err,0)
  end
 end

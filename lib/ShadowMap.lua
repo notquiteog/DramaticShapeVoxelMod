@@ -172,6 +172,7 @@ local blank = nil             -- 1x1 stand-in so the sampler is never unbound
 local drawing = false
 local ready = false
 local lastSig = nil
+local lightPlanes
 local prevBlend, prevAlphaMode = nil, nil
 
 local IDENTITY = Mat4.identity()
@@ -370,6 +371,7 @@ end
 -- scene sees no signature and recasts normally into the retained canvas.
 function ShadowMap.discard()
   ready, lastSig = false, nil
+  lightPlanes=nil
 end
 
 -- The direction the light TRAVELS, normalized. The shear is the shadow a
@@ -576,6 +578,7 @@ end
 -- Begin the sun pass. Returns false when it could not start, in which case
 -- the caller must not draw into it or call finish.
 function ShadowMap.begin(cx, cy, vw, vh)
+  lightPlanes=nil
   drawUniforms.reset()
   -- Native adapters can call begin directly without available(). OFF must
   -- skip allocation and submission as well as sampling in the scene shader.
@@ -621,6 +624,15 @@ function ShadowMap.begin(cx, cy, vw, vh)
   drawing = true
   ready = false
   return true
+end
+
+-- Cull only against the light's actual rasterized volume. Main-camera bounds
+-- are invalid here: an offscreen object can still shade visible ground.
+-- Callers opt in only for known physical world bounds without deformation.
+function ShadowMap.frustum()
+  if not drawing then return nil end
+  if not lightPlanes then lightPlanes=V.require('FrustumCull').prepare(ShadowMap.clipVP)end
+  return lightPlanes
 end
 
 -- Match the visible interior bounds for terrain and actor casters.
@@ -670,6 +682,7 @@ end
 function ShadowMap.finish(sig)
   if not drawing then return end
   drawing = false
+  lightPlanes=nil
   love.graphics.setShader()
   love.graphics.setDepthMode()
   love.graphics.setCanvas()
@@ -683,6 +696,7 @@ end
 function ShadowMap.invalidate()
   canvas, canvasRes, blank = nil, 0, nil
   drawing, ready, lastSig = false, false, nil
+  lightPlanes=nil
 end
 
 return ShadowMap

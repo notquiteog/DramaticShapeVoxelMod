@@ -83,6 +83,29 @@ shifted[4]=-10;failUpload=true
 assert(M.visible(base,C.prepare(shifted),bounds)==base,'failed update kept stale visible subset')
 failUpload=false;M.draw(base,shader);assert(draws[#draws].count==2)
 base:release()
+-- Light and camera selections must coexist: offscreen casters remain in the
+-- light view, and unchanged alternating passes must never reupload subsets.
+local both=assert(M.new(mesh,{{0,0,0},{10,0,0},{20,0,0}},true))
+shifted[4]=-10
+local light=C.prepare(shifted)
+local mainView=M.visible(both,p,bounds)
+local lightView=M.visible(both,light,bounds,'shadow')
+assert(mainView~=lightView and mainView.offsets~=lightView.offsets)
+assert(mainView.offsets.rows[1][1]==0 and lightView.offsets.rows[1][1]==10)
+local previousUploads=uploads
+for _=1,30 do
+ assert(M.visible(both,p,bounds)==mainView)
+ M.draw(mainView,shader)
+ assert(M.visible(both,light,bounds,'shadow')==lightView)
+ M.draw(lightView,shader)
+ assert(draws[#draws].rows[1][1]==10,'camera removed offscreen light caster')
+end
+assert(uploads==previousUploads,'alternating passes reuploaded unchanged subsets')
+shifted[4]=-20;failUpload=true
+assert(M.visible(both,C.prepare(shifted),bounds,'shadow')==both)
+failUpload=false
+assert(M.visible(both,p,bounds)==mainView,'failed shadow view disabled working camera view')
+M.draw(mainView,shader);both:release()
 for _,r in ipairs(resources)do assert(r.released,'offset buffer leaked')end
 assert(M.visible(mesh,p,bounds)==mesh,'merged mobile fallback changed')
 print('PASS visible offsets, stable-selection reuse, changing cameras, full shadow batch, scene isolation, allocation/upload/draw failure fallback and cleanup')
