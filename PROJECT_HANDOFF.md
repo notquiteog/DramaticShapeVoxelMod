@@ -1,3 +1,15 @@
+# Museum rendered coverage accepted after solid stairs — 2026-10-23
+
+Queued regional census now records Museum renderedAccepted=true on official0.3.96
+FR/LG: both main/staff native entry-return pairs, source footprint, front/side/
+rotated/first-person solid contact verified after focused e9fdfe43. Corrected
+old diagnosis: approach row7 ordinary behavior0 was unclaimed arch+stair art;
+semantic terrace duplication was a separate shared defect. Canonical per-edition
+counts75 eligible/68 accepted/58 unmatched/6324 unclassified blocked cells; prior
+134 other accepted assemblies remain explicitly0.3.95 evidence. This metadata
+follow-up is separate from the release's focused staircase cherry-pick. See
+`docs/PEWTER_MUSEUM_NATIVE_REVIEW_2026-10-23.md` and canonical JSONL.
+
 # Museum exact footprint/current-engine review, shared stairs gap — 2026-10-23
 
 Latest official engine became0.3.96; verified official source/shell SHA256 and

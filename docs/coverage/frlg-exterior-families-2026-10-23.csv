@@ -34,7 +34,7 @@ firered,one_island_center,1,0,0,SEVII_ONE_ISLAND,,Matching regional source selec
 firered,one_island_house,1,0,0,SEVII_ONE_ISLAND,,Matching regional source selection and complete native adapter pending.,
 firered,one_island_house_high,1,0,0,SEVII_ONE_ISLAND,,Matching regional source selection and complete native adapter pending.,
 firered,pewter_house,2,2,2,FR_PEWTER_CITY,hgss_pewter_house,,
-firered,pewter_museum,1,1,0,FR_PEWTER_CITY,hgss_pewter_museum,,Native Museum approach maps arch artwork across terrace treads and has duplicate coplanar cap/tread faces in shared Gen3Stairs.
+firered,pewter_museum,1,1,1,FR_PEWTER_CITY,hgss_pewter_museum,,
 firered,route_daycare,1,0,0,FR_ROUTE_5,,Matching regional source selection and complete native adapter pending.,
 firered,route_small_house,1,0,0,FR_ROUTE_2,,Matching regional source selection and complete native adapter pending.,
 firered,saffron_door_house,4,0,0,FR_SAFFRON_CITY|FR_SAFFRON_CITY_CONNECTION,,Matching regional source selection and complete native adapter pending.,
@@ -89,7 +89,7 @@ leafgreen,one_island_center,1,0,0,SEVII_ONE_ISLAND,,Matching regional source sel
 leafgreen,one_island_house,1,0,0,SEVII_ONE_ISLAND,,Matching regional source selection and complete native adapter pending.,
 leafgreen,one_island_house_high,1,0,0,SEVII_ONE_ISLAND,,Matching regional source selection and complete native adapter pending.,
 leafgreen,pewter_house,2,2,2,FR_PEWTER_CITY,hgss_pewter_house,,
-leafgreen,pewter_museum,1,1,0,FR_PEWTER_CITY,hgss_pewter_museum,,Native Museum approach maps arch artwork across terrace treads and has duplicate coplanar cap/tread faces in shared Gen3Stairs.
+leafgreen,pewter_museum,1,1,1,FR_PEWTER_CITY,hgss_pewter_museum,,
 leafgreen,route_daycare,1,0,0,FR_ROUTE_5,,Matching regional source selection and complete native adapter pending.,
 leafgreen,route_small_house,1,0,0,FR_ROUTE_2,,Matching regional source selection and complete native adapter pending.,
 leafgreen,saffron_door_house,4,0,0,FR_SAFFRON_CITY|FR_SAFFRON_CITY_CONNECTION,,Matching regional source selection and complete native adapter pending.,

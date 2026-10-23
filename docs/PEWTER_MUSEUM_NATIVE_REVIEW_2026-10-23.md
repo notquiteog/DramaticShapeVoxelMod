@@ -1,6 +1,6 @@
 # Pewter Museum native source review — 2026-10-23
 
-The existing genuine HGSS Museum adaptation remains source eligible, with **rendered acceptance false**. Its main and staff entrances pass native entry/return checks; shared terrace-step artwork/geometry still prevents visual acceptance. This batch does not change shared stairs, native ground, source geometry, textures or door anchors.
+The genuine HGSS Museum is now source eligible and rendered accepted on official0.3.96 FR/LG after focused staircase correction `e9fdfe43`. Main and staff native entry/return checks pass. Exact source geometry, PNGs and portal anchors remain unchanged; the original footprint guard belongs to the queued regional batch. See [solid approach correction](PEWTER_MUSEUM_STAIRS_2026-10-23.md).
 
 ## Current-engine evidence
 
@@ -16,10 +16,10 @@ Native source overviews, both entrance contacts/animations where native frames e
 
 Focused LuaJIT checks pass for complete drawing/ownership/permission/base guards, both portals, exact projected-triangle safety, existing measured closure/alpha and missing-image fallback.
 
-## Shared approach gap
+## Corrected approach diagnosis and acceptance
 
-Museum approach MIDs0x2b2/0x2b3/0x2b4 include arch/door artwork above their native stair strip. Shared `Gen3Stairs.append` treats them as generic terrace steps and remaps each complete tile over four tread bands, visibly spreading facade artwork under the genuine source entrance. Its generic `box()` emits top faces, then the terrace branch emits another textured tread at exactly the same height. This is a static coplanarity finding as well as a captured artwork defect; temporal flicker was not separately measured.
+The approach is native row7, MIDs0x2ba/0x2bb/0x2bc, behavior0 and flat native support. Earlier row6 MIDs0x2b2/0x2b3/0x2b4 are the arch base already claimed by the civic building. Contrary to the earlier diagnosis, the Museum did not enter the generic semantic stair branch. The whole unclaimed row7 tile projected its upper arch pixels onto the ground. The generic branch independently did have duplicate cap and hidden box faces, now corrected with exposed union surfaces.
 
-Parent-owned shared stairs must preserve the actual rise/collision while selecting clean native tread material and emitting one surface per tread. Moving the Museum/portal, flattening its source arch or hiding the original ground would not satisfy that requirement. Metadata records this exact gap rather than accepting the source merely because entry and footprint checks pass.
+Exact Museum approach ownership now supplies two solid shallow steps and a closed landing using original plain lower-band stone paint. Its top meets the existing1.0125px source threshold without moving the building/portal or native floor support. Front, side, rotated and first-person captures were inspected; both actual main/staff entry-return pairs repeat in FR/LG with unchanged native map hashes. Museum is rendered accepted on0.3.96.
 
-The canonical852-map inventory is refreshed on v0.3.96. Existing134 accepted assemblies retain explicit `renderedRuntime=v0.3.95`, so their older visual evidence is never relabeled. The Museum's separate `nativeReview` records v0.3.96, both returned portals, source/provenance hashes and a verified source footprint; `renderedAccepted` remains false. Per-edition totals stay426 maps/76 outdoors/133 assemblies/55 families,75 source eligible/67 rendered accepted/58 unmatched/6324 unclassified blocked cells. Seven other shared-ground gaps remain. Physical phones, production Scene and the combined package are separate parent work; no whole-game coverage is claimed.
+The canonical852-map inventory is0.3.96. Existing134 other accepted assemblies retain explicit `renderedRuntime=v0.3.95`, so older visual evidence is not relabeled. Museum `nativeReview` records0.3.96, both returned portals, source/provenance hashes, verified source footprint and corrected solid stair contact. Per-edition totals:426 maps/76 outdoors/133 assemblies/55 families,75 source eligible/**68 rendered accepted**/58 unmatched/6324 unclassified blocked cells. Seven other shared-ground gaps remain. Physical phones, production Scene and combined package verification remain separate release-owner work; no whole-game coverage is claimed.

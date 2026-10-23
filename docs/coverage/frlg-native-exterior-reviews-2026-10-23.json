@@ -14,11 +14,12 @@
       "nativeHash": "6d5257d9c36f01ec29c51b70c740f85e58966e947cb3680f5bce1a93e7f45b9f",
       "destination": "FR_PEWTER_CITY_MUSEUM_1F",
       "returned": true,
-      "renderedGap": "Native Museum approach maps arch artwork across terrace treads and has duplicate coplanar cap/tread faces in shared Gen3Stairs.",
       "sourceFootprintVerified": true,
-      "renderedAccepted": false,
+      "renderedAccepted": true,
       "sourceProvenanceSha256": "6b86bd2450d8e32255f8a32a45b62b3ef1b8973801780999237e2c94cf18018a",
-      "sourceModelSha256": "f0f0baace0f8de7bb18e126027ae8a051bf15aa6c34e5ba1162f972d2a711665"
+      "sourceModelSha256": "f0f0baace0f8de7bb18e126027ae8a051bf15aa6c34e5ba1162f972d2a711665",
+      "stairReview": "Two closed shallow stone treads meet existing 1.0125px source threshold; exact three native approach cells retain ground support/warps. Front/rotated/first-person and both portal roundtrips inspected on v0.3.96.",
+      "implementationCommit": "e9fdfe43"
     },
     {
       "edition": "firered",
@@ -32,11 +33,12 @@
       "nativeHash": "6d5257d9c36f01ec29c51b70c740f85e58966e947cb3680f5bce1a93e7f45b9f",
       "destination": "FR_PEWTER_CITY_MUSEUM_1F",
       "returned": true,
-      "renderedGap": "Native Museum approach maps arch artwork across terrace treads and has duplicate coplanar cap/tread faces in shared Gen3Stairs.",
       "sourceFootprintVerified": true,
-      "renderedAccepted": false,
+      "renderedAccepted": true,
       "sourceProvenanceSha256": "6b86bd2450d8e32255f8a32a45b62b3ef1b8973801780999237e2c94cf18018a",
-      "sourceModelSha256": "f0f0baace0f8de7bb18e126027ae8a051bf15aa6c34e5ba1162f972d2a711665"
+      "sourceModelSha256": "f0f0baace0f8de7bb18e126027ae8a051bf15aa6c34e5ba1162f972d2a711665",
+      "stairReview": "Two closed shallow stone treads meet existing 1.0125px source threshold; exact three native approach cells retain ground support/warps. Front/rotated/first-person and both portal roundtrips inspected on v0.3.96.",
+      "implementationCommit": "e9fdfe43"
     },
     {
       "edition": "leafgreen",
@@ -50,11 +52,12 @@
       "nativeHash": "6d5257d9c36f01ec29c51b70c740f85e58966e947cb3680f5bce1a93e7f45b9f",
       "destination": "FR_PEWTER_CITY_MUSEUM_1F",
       "returned": true,
-      "renderedGap": "Native Museum approach maps arch artwork across terrace treads and has duplicate coplanar cap/tread faces in shared Gen3Stairs.",
       "sourceFootprintVerified": true,
-      "renderedAccepted": false,
+      "renderedAccepted": true,
       "sourceProvenanceSha256": "6b86bd2450d8e32255f8a32a45b62b3ef1b8973801780999237e2c94cf18018a",
-      "sourceModelSha256": "f0f0baace0f8de7bb18e126027ae8a051bf15aa6c34e5ba1162f972d2a711665"
+      "sourceModelSha256": "f0f0baace0f8de7bb18e126027ae8a051bf15aa6c34e5ba1162f972d2a711665",
+      "stairReview": "Two closed shallow stone treads meet existing 1.0125px source threshold; exact three native approach cells retain ground support/warps. Front/rotated/first-person and both portal roundtrips inspected on v0.3.96.",
+      "implementationCommit": "e9fdfe43"
     },
     {
       "edition": "leafgreen",
@@ -68,11 +71,12 @@
       "nativeHash": "6d5257d9c36f01ec29c51b70c740f85e58966e947cb3680f5bce1a93e7f45b9f",
       "destination": "FR_PEWTER_CITY_MUSEUM_1F",
       "returned": true,
-      "renderedGap": "Native Museum approach maps arch artwork across terrace treads and has duplicate coplanar cap/tread faces in shared Gen3Stairs.",
       "sourceFootprintVerified": true,
-      "renderedAccepted": false,
+      "renderedAccepted": true,
       "sourceProvenanceSha256": "6b86bd2450d8e32255f8a32a45b62b3ef1b8973801780999237e2c94cf18018a",
-      "sourceModelSha256": "f0f0baace0f8de7bb18e126027ae8a051bf15aa6c34e5ba1162f972d2a711665"
+      "sourceModelSha256": "f0f0baace0f8de7bb18e126027ae8a051bf15aa6c34e5ba1162f972d2a711665",
+      "stairReview": "Two closed shallow stone treads meet existing 1.0125px source threshold; exact three native approach cells retain ground support/warps. Front/rotated/first-person and both portal roundtrips inspected on v0.3.96.",
+      "implementationCommit": "e9fdfe43"
     }
   ]
 }
