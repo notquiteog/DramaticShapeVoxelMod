@@ -16,12 +16,12 @@ dataFiles.bdsp_galactic_server='ImportedInstitutionServerData'
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
- hoenn_center_pc={pair='building__pokemon_center',family='rse',design='fr_center_pc',rows={{0x20c},{4},{0x224}}},
- center_terminal={pair='network',design='fr_center_pc',rows={{0x285},{0x62},{0x295}}},
- hoenn_home_small_tv={pair='building__generic_building',family='rse',design='em_home_small_tv',rows={{0x230},{0x21e},{0x238}},model='oras_home_tv',cabinet=6},
- living_television={pair='player_house',design='fr_living_tv',rows={{0x2d},{0x35},{0x3d}},model='oras_home_tv',cabinet=6,note=true},
- hoenn_home_bed={pair='building__generic_building',family='rse',design='em_home_bed',rows={{0x25a,0x25b},{0x262,0x263}},model='oras_comfortable_bed',blocked=true,fitWidth=32,fitDepth=32,fitHeight=18,zRows=0},
- neighbor_living_television={pair='house',design='fr_living_tv',rows={{0x2d},{0x35},{0x3d}},model='oras_home_tv',cabinet=6,note=true},
+ hoenn_center_pc={pair='building__pokemon_center',family='rse',design='fr_center_pc',rows={{0x20c},{4},{0x224}},groundInset=.025},
+ center_terminal={pair='network',design='fr_center_pc',rows={{0x285},{0x62},{0x295}},groundInset=.025},
+ hoenn_home_small_tv={pair='building__generic_building',family='rse',design='em_home_small_tv',rows={{0x230},{0x21e},{0x238}},model='oras_home_tv',cabinet=6,groundInset=.025},
+ living_television={pair='player_house',design='fr_living_tv',rows={{0x2d},{0x35},{0x3d}},model='oras_home_tv',cabinet=6,note=true,groundInset=.025},
+ hoenn_home_bed={pair='building__generic_building',family='rse',design='em_home_bed',rows={{0x25a,0x25b},{0x262,0x263}},model='oras_comfortable_bed',blocked=true,fitWidth=32,fitDepth=32,fitHeight=18,zRows=0,groundInset=.025},
+ neighbor_living_television={pair='house',design='fr_living_tv',rows={{0x2d},{0x35},{0x3d}},model='oras_home_tv',cabinet=6,note=true,groundInset=.025},
  hoenn_start_dining_table={pair='building__brendans_mays_house',family='rse',design='em_start_table',
   rows={{0x21a,0x21b},{0x222,0x223},{0x22a,0x22b}},collisionRows={{7,7},{7,7},{0,0}},
   model='oras_littleroot_dining_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0,groundInset=.025},
