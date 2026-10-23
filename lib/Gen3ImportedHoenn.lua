@@ -77,7 +77,7 @@ function M.build(g,cells,newMesh,parts)
  -- The rear drawing row contains walkable cells. Every mesh remains in
  -- the three solid body rows (80x48 house or96x48 shop). Uniform scaling
  -- follows the documented shop bay adaptation; entrance X stays native.
- local fit={width=g.width*16,depth=48,padding=.25,anchor='door',targetX=40,targetZ=shop and 39.8 or 38}
+ local fit={groundInset=.05,width=g.width*16,depth=48,padding=.25,anchor='door',targetX=40,targetZ=shop and 39.8 or 38}
  local placement={model=id,x=g.cx*16,y=g.groundHeight or 0,z=(g.cy+1)*16,fit=fit}
  local first=#parts+1
  local result,why=Models.buildBatches({placement},newMesh,{parts=parts})

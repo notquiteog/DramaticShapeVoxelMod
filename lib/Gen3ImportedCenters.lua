@@ -47,7 +47,7 @@ end
 function M.build(g,cells,newMesh,parts)
  if not M.eligible(g,cells)then return false end
  local ok,err=M.register();if not ok then return false,err end
- local fit={width=64,depth=48,padding=.25,anchor='door',targetX=24,targetZ=47}
+ local fit={groundInset=.05,width=64,depth=48,padding=.25,anchor='door',targetX=24,targetZ=47}
  local fitted,fitError=Models.fit(M.id,fit);if not fitted then return false,fitError end
  local doors=V.require('Gen3CenterDoors');g.importedCenter=nil
  local ready,doorError=doors.build(g,fitted,newMesh)

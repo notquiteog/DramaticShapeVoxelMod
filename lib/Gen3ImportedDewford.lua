@@ -36,7 +36,7 @@ function M.build(g,cells,newMesh,parts)
  -- Preserve the entire source object, including ridge knobs and overhangs.
  -- The first native art row contains walkable cells; the whole mesh remains
  -- inside the three solid rows. Both original narrow homes share this shape.
- local fit={width=64,depth=48,padding=.25,anchor='door',targetX=24,targetZ=43.05}
+ local fit={groundInset=.05,width=64,depth=48,padding=.25,anchor='door',targetX=24,targetZ=43.05}
  local placed=assert(Models.fit(M.id,fit));placed.model=M.id
  local doors=V.require('Gen3DewfordDoors')
  local door,doorError=doors.build(g,placed,newMesh)

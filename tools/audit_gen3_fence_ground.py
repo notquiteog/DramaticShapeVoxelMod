@@ -32,7 +32,22 @@ def proof(root, families):
     text=families.read_text().split('M.ground={',1)[1].split('\n}',1)[0];rows={}
     for mid,body in re.findall(r'\[(0x[0-9a-f]+)\]=\{(.*)\}',text):
         rows[int(mid,16)]=[(int(m,0),int(q))for m,q in re.findall(r'\{(0x[0-9a-f]+|[0-9]+),([0-3])\}',body)]
-    assert len(rows)==17,'expected17 ornate source families'
+    assert len(rows)==18,'expected18 ornate source families'
+    # Border overlays retain precisely the original opaque leaf pixels, while
+    # the rail and its painted shadow are replaced independently.
+    plant_name='M.plantsRS={' if any(x in str(root) for x in ('ruby','sapphire')) else 'M.plants={'
+    plant_text=families.read_text().split(plant_name,1)[1].split('\n}',1)[0]
+    plants={int(mid,16):[(int(x),int(y),int(w))for x,y,w in re.findall(r'\{([0-9]+),([0-9]+),([0-9]+)\}',body)]
+            for mid,body in re.findall(r'\[(0x[0-9a-f]+)\]=\{(.*)\}',plant_text)}
+    for mid,tile,dx,slot in ((0x337,0xcc,8,7),(0x33e,0xcc,8,7),(0x33f,0xcd,0,6)):
+        assert entries(mid)[:2]==entries(1)[:2]
+        assert entries(mid)[slot]==0x2000+tile,'original leaf overlay changed'
+        original=set()
+        for y in range(8):
+            for x in range(8):
+                if tiles[tile*32+y*4+x//2]>>(4*(x%2))&15:original.add((x+dx,y+8))
+        retained={(x+i,y)for x,y,width in plants[mid]for i in range(width)}
+        assert original==retained,'native leaf overlay mask changed'
     ground=[]
     for mid,row in sorted(rows.items()):
         assert len(row)==4;original=pixels(mid);reconstructed=[]
@@ -47,10 +62,10 @@ def proof(root, families):
         h=json.loads(hp.read_text())
         if h.get('id')not in('RustboroCity','Route104','PetalburgWoods'):continue
         raw=(hp.parent/'grid.bin').read_bytes();values=struct.unpack('<'+'H'*(len(raw)//2),raw)
-        cells=[v for v in values if v&1023==0x149 or h['id']=='RustboroCity'and v&1023 in rows]
+        cells=[v for v in values if v&1023==0x149 or h['id']=='RustboroCity'and(v&1023 in rows or v&1023 in plants)]
         assert all(v>>10&3==1 for v in cells),'fence is not native hard-blocked'
         count+=len(cells);grids.append(dict(map=h['id'],fenceCells=len(cells),nativeGridSha256=hashlib.sha256(raw).hexdigest()))
-    return dict(status='PASS exact native source-ground preservation',ruralUnderEntries=list(entries(0x149)[:4]),ruralCleanDonor=1,rustboro=ground,maps=grids,totalReviewedFenceCells=count)
+    return dict(status='PASS exact native source-ground preservation',ruralUnderEntries=list(entries(0x149)[:4]),ruralCleanDonor=1,rustboro=ground,borderPlantMasks='originalCC/CD opaque pixels retained exactly',maps=grids,totalReviewedFenceCells=count)
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('gba_root',type=Path);p.add_argument('--families',type=Path,default=Path('lib/Gen3FenceFamilies.lua'))
