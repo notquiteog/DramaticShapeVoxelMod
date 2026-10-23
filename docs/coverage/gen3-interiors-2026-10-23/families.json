@@ -4868,7 +4868,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_flower_bookcase"
+      ]
     },
     "hoenn_home_chair_555": {
       "design": "em_start_seat_pad",
@@ -14453,7 +14455,7 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 389,
+      "candidateFurniture": 400,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
@@ -14474,14 +14476,14 @@
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 397,
+      "candidateFurniture": 408,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 397,
+      "candidateFurniture": 408,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,

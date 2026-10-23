@@ -15,10 +15,13 @@ dataFiles.bdsp_galactic_server='ImportedInstitutionServerData'
 dataFiles.oras_oldale_china_cupboard='ImportedOldaleCupboardData'
 dataFiles.oras_oldale_kitchen_sink='ImportedOldaleSinkData'
 dataFiles.oras_pyre_memorial='ImportedPyreMemorialData'
+dataFiles.oras_flower_bookcase='ImportedFlowerBookcaseData'
 -- Complete public-PC and genuine TV drawings include the wall above and
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
+ hoenn_home_books={pair='building__generic_building',family='rse',design='em_home_books',rows={{0x279,0x27a},{0x281,0x282},{0x289,0x28a}},collisionRows={{7,7},{7,7},{0,0}},
+  model='oras_flower_bookcase',fitWidth=32,fitDepth=16,fitHeight=32,rotation=3,groundInset=.025},
  hoenn_pyre_memorial={pair='general__facility',primary='general',family='rse',mapPattern='_MT_PYRE_[1-6]F$',design='fr_tower_grave',rows={{0x2ee}},collisionRows={{7}},
   model='oras_pyre_memorial',fitWidth=16,fitDepth=16,fitHeight=17,zRows=0,groundInset=.025},
  rs_pyre_memorial={pair='general__facility',primary='general',family='rse',mapPattern='_MT_PYRE_[1-6]F$',design='fr_tower_grave',rows={{0x2ee}},collisionRows={{7}},

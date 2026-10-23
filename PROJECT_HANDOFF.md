@@ -6697,3 +6697,16 @@ focused suites pass. Full census: 2161 unchanged hashes, all prior families
 unchanged, 1979 candidates, 1934 accepted components on 258 maps. Whole-map
 acceptance false; irregular Mt. Pyre floor/wall framing remains outstanding.
 Details: docs/RSE_PYRE_MEMORIALS_2026-10-23.md. Scene and release stay root-owned.
+
+Original ORAS Flower Shop open bookcase: all 33 common generic-home bookcases
+(E11/R11/S11), original case plus twenty books. Original flat per-book pigments
+replace vertex lighting. Exact book rims, exposed undersides and foot bottoms
+closed, buried caps omitted; four tiny original top-joint coplanar slivers
+removed at their source rim. 476 original +144 authored triangles, separate
+wood/book closures, source proportions and native apron retained. All 33 native
+first-person/overview entries and nine source views inspected; E11 missing-PNG
+fallback pass. Ten focused suites pass, all thirteen source models have zero
+positive-area coplanar intersections; regeneration byte-identical. Full census
+2161 hashes/family counts unchanged, 2012 candidates, 1967 accepted components
+on 258 maps, whole-map false. docs/ORAS_FLOWER_BOOKCASE_2026-10-23.md. Separate
+small-bookcase native family and room framing remain pending. Scene root-owned.
