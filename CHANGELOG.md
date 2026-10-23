@@ -1,3 +1,16 @@
+## 1.57.7 — Streaming preparation and XD fallback
+
+- Reuse validated Gen3 world fingerprints while render windows move; native
+  edits and provider changes still invalidate immediately.
+- Slice large tree vertex normalization across cooperative build frames in
+  the shared renderer, retaining exact vertex data.
+- Route Gen1/2 XD physical/special attacks using native move categories.
+- Preserve sprites on failed XD metrics, updates or draws and avoid repeated
+  failed-instance allocations. XD readiness remains gated.
+
+Cold transition stalls and physical mobile verification remain outstanding;
+this release does not certify 165 FPS or complete XD parity.
+
 ## 1.57.6 — Large forests and missing grass
 
 Bound native tree uploads instead of falling back for the entire forest above

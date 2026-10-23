@@ -4,7 +4,7 @@ local texture={getWrap=function()return wrapS,wrapT end,setWrap=function(_,s,t)w
  getFilter=function()return filterMin,filterMag,aniso end,setFilter=function(_,a,b,c)filterMin,filterMag,aniso=a,b,c end}
 love={graphics={newMesh=function(_,vertices)return {setVertices=function()end,release=function()end}end},
  data={decompress=function(_,_,bytes)return bytes end,unpack=function()return 1,0,0,0,0,1,0,0,0,0,1,0 end}}
-local M=assert(loadfile('lib/XDModelInstance.lua'))({})
+local M=assert(loadfile('lib/XDModelInstance.lua'))({require=function(name)assert(name=='XDMoveContext');return {resolve=function(m)return m.category end}end})
 local function make(source,alpha,light)
  local material={diffuse_color={.2,.3,.4},alpha=.6,color_source=source,alpha_source=alpha,lighting=light,
  texture_layers={{image={path='skin.png'},interpolation='Linear',wrap_s='CLAMP',wrap_t='MIRROR'}}}
@@ -31,6 +31,7 @@ local ok=pcall(a.drawWith,a,function()
  error('draw failure')
 end,{})
 assert(not ok and wrapS=='repeat'and wrapT=='clamp'and filterMin=='nearest'and filterMag=='linear'and aniso==2,'shared texture sampler leaked')
+assert(a:playMove(1,false,{category='idle'})and a.context=='idle','resolved move context ignored')
 local b=make('VERTEX','VERTEX','UNLIT');v=b.meshes[1].vertices[1]
 assert(v[7]==.5 and v[10]==.5,'vertex source multiplied by material')
 local c=make('BOTH','BOTH','UNLIT');v=c.meshes[1].vertices[1]

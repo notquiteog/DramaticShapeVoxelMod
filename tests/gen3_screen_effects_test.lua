@@ -18,3 +18,8 @@ love.graphics.circle=function(mode,x,y,r)assert(mode=='line'and x==640 and y==36
 assert(M.supports('sweet_scent')and M.draw(canvas,{{kind='sweet_scent',radius=30,timer=5,maxDur=60}}))
 assert(#circles==2 and circles[1]==135 and circles[2]==45 and depth==0,'native scent circle scale/center changed')
 print('PASS native full-world flash/scent layers, framebuffer dimensions and state restoration')
+assert(M.alpha(nil)==0 and not M.draw(canvas,nil))
+love.graphics.rectangle=function()drawn=drawn+1 end
+circles={}
+assert(M.draw(canvas,{{kind='sweet_scent',radius='bad'},{kind='flash',alpha=.5},{kind='sweet_scent',radius=30},{kind='sweet_scent',radius=40}}))
+assert(#circles==4 and circles[1]==135 and circles[3]==180 and depth==0,'mixed effects dropped or reordered rings')

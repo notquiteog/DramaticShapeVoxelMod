@@ -10,6 +10,26 @@ front/first/rotated contact and interior captures inspected. Full coverage is
 still in progress; three workers continue exterior/interior source families.
 See docs/DEPTH_FENCES_FOLIAGE_2026-10-23.md for scope and evidence limits.
 
+# Streaming/parity release1.57.7 — 2026-10-23
+
+Keep model coverage with the separate owner. Shared tree anchor normalization
+now yields every2048 vertices, preserving source data. Gen3 moving-window cache
+keys retain the validated content snapshot, avoiding repeated sorting/allocation
+while still detecting edits and provider changes. Parity worker62ae6982 adds
+native Gen1/2 XD attack categories and reliable failed-model sprite fallback.
+Latest official engine is0.3.95; native QA uses its source with LÖVE11.5 shell
+from0.3.89 and isolated profiles. See docs/STREAM_PARITY_2026-10-23.md for limits
+and final packaged checks. Full165FPS, completeXD/mobile parity remain unfinished.
+
+# XD move category and failure isolation — 2026-10-23
+
+GB model animation now receives native move categories instead of selecting
+Physical for every XD attack. GBA bad metrics/update/clip/draw retain sprites
+and cache failure to prevent per-frame reconstruction; shared GB providers also
+honor explicit update failure. Four focused Lua suites pass (24 Stadium bridge
+checks). No model readiness, native visual or phone certification. See
+`docs/XD_IMPORT_STATUS.md`; scenery/streaming/version files untouched.
+
 # User-requested consolidated release1.57.6 — 2026-10-22
 
 User requests prompt commit/push/main/release of all current work. The Route103
