@@ -1,0 +1,97 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO223 -> AD112 -> MM164 -> GR506",
+  "model": "t101r0101_00_00",
+  "modelBchSha256": "93cc8f8b58347689dbcf948f1f715d64aa90d0eb5c5a2fb0e5cc529db106ed51",
+  "textureBchSha256": "61a2bf2ae88e767f515df27d058bfd581915b6aabce32f9bec10f1587568f5a9",
+  "textures": {
+    "books02": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "ae410ca95ec12be60589f494df58848fbf099e38c32c3de3627b61379dcaadbf",
+      "pngSha256": "62618b0a9624bd66b7ce23bf08f8bd57f6982f6d59e12bcdafbdca312f5ea143"
+    },
+    "table01": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "9750fda6f4cd2aadb103dee5e23ce89c668d0f305f0b0a12f5e6b8f914aa5416",
+      "pngSha256": "c234bc1fcf5f538f67a7967f5f63fbe6f3083e68d4d9ab61dd0f8551c8697945"
+    },
+    "ref01": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "7914f7232d7773f12d625b1677b06c86f583dafc111c44c565f44244cbfaff45",
+      "pngSha256": "02849e6d65e680f1ac7a092b569065caab833af1e8af3cd3fb052e1df70d58f7"
+    }
+  },
+  "components": {
+    "oras_littleroot_dining_table": {
+      "sourceBounds": [
+        -198.0,
+        0.0,
+        -90.0,
+        -162.0,
+        19.767900466918945,
+        -54.0
+      ],
+      "origin": [
+        -180.0,
+        0.0,
+        -72.0
+      ],
+      "uniformDivisor": 36.0,
+      "sourceMaterial": "table01",
+      "sourceSubmesh": 18,
+      "sourceTriangles": 100,
+      "closureTriangles": 52,
+      "reviewedRimSizes": [
+        20,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "sourceBookTriangles": 28,
+      "bookClosureTriangles": 10,
+      "bookRimSizes": [
+        10
+      ]
+    },
+    "oras_littleroot_fridge": {
+      "sourceBounds": [
+        -252.0,
+        0.5396980047225952,
+        -252.0,
+        -234.0,
+        39.4015998840332,
+        -234.0
+      ],
+      "origin": [
+        -243.0,
+        0.5396980047225952,
+        -243.0
+      ],
+      "uniformDivisor": 18.0,
+      "sourceMaterial": "ref01",
+      "sourceSubmesh": 8,
+      "sourceTriangles": 92,
+      "closureTriangles": 14,
+      "reviewedRimSizes": [
+        14
+      ]
+    }
+  },
+  "independentValidation": "Every selected position, UV0 and triangle index agrees with Nitrogen; room is unskinned.",
+  "processing": "Original geometry, source texture RGBA and UVs retained. Only separately identified underside/leg rim closures added. Source vertex RGB is white to remove baked lighting; renderer owns lighting and shadows. Uniform normalization; native adapter preserves proportions and blocked footprints. Room, floor, shadow and light meshes excluded."
+}
