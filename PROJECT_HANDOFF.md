@@ -1,4 +1,4 @@
-# Regional building/interior integration1.57.9 — 2026-10-23
+# Regional building/interior integration1.57.10 — 2026-10-23
 
 Production Scene now activates both reviewed regional dispatchers: ORAS Hoenn
 Gyms/notices/Marts/Oldale homes and HGSS Kanto Gyms/Pewter homes, with original
@@ -15,6 +15,26 @@ home entries pass; source workers additionally inspect both Kanto editions.
 performance history through6f48a7b3 retained; active working-tree edits untouched.
 Whole-game/map/interior coverage remains incomplete and workers continue.
 See docs/REGIONAL_BUILDING_INTEGRATION_2026-10-23.md for scope and evidence.
+
+# Combined optimization/model release1.57.9 — 2026-10-23
+
+Merged remote model work83f1d36a with optimization work0ef5b831. Preserve both
+contact-inset geometry and cached-fit separation.43combined suites pass;1404Lua
+files compile. Combined native package results belong in the1.57.9release notes.
+
+# Rendering optimization1.57.8 — 2026-10-23
+
+Current batch shares live GPU prototypes, culls only proven offscreen Gen3 main
+geometry/water, retains full shadow coverage, reduces shared shadow/effect/water
+work, slices tree/elevation preparation and preserves exact terrain/light output.
+See docs/RENDER_OPTIMIZATION_2026-10-23.md for measurements and remaining limits.
+All41 focused integration suites pass; all1398 Lua files compile. Native four-view
+culling equivalence and five running connections pass on engine0.3.95. Warm battle
+frames remain below6ms in the fixture; cold FRLG entries still reach166–184ms.
+This is NOT full165FPS completion or physical mobile certification. Model coverage
+remains with the other owner. Final1.57.8 package passed seven-mod load/render in
+all11games and forest/lab/first-person checks in all6GB/GBC editions. All593
+packaged Lua files compile. Documentation-only follow-up preserves tested code.
 
 # Depth/fence/foliage release1.57.8 — 2026-10-23
 

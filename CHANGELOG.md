@@ -1,9 +1,26 @@
-## 1.57.9 — 2026-10-23
+## 1.57.10 — 2026-10-23
 
 - Activate reviewed original ORAS Hoenn Gyms, notices, regional Marts and Oldale homes with native source doors.
 - Add HGSS Pewter houses and regional Viridian/Pewter Gyms; preserve native entry, collision and ground.
 - Add original ORAS home tables/fridges across88 reviewed component placements, with recessed contact surfaces.
 - Prevent source furniture falling back after touring towns by lifting the small-texture count cap while preserving memory limits.
+
+## 1.57.9 — Measured rendering and streaming optimization
+
+- Share live GPU scenery prototypes between overlapping scenes, with explicit
+  leases and complete cancellation/failure cleanup; no idle GPU cache.
+- Conservatively reject off-camera Gen3 physical scenery, individual tree
+  instances and water passes. Keep all shadow casters, deformed/unknown geometry
+  and unsupported-driver fallbacks. Four native camera views are pixel-identical
+  with this culling enabled or disabled.
+- Reduce shared shadow matrix work, water uniform submissions and effect
+  allocations without changing visual quality or shadow cadence.
+- Avoid scanning unlit building-light voxels; retain exact light texture pixels.
+- Reduce terrain UV construction, repeated model fitting and boundary lookup
+  allocations. Slice tree placement and elevation work during streamed builds.
+
+Measured 1440p warm overworld work improves, but cold crossings and the steady
+165 FPS target remain unresolved. See docs/RENDER_OPTIMIZATION_2026-10-23.md.
 
 ## 1.57.8 — 2026-10-23
 

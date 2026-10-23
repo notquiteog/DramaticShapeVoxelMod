@@ -54,6 +54,11 @@ local many=assert(S.buildBatches(repeated,upload));assert(fits==1,'identical tre
 fits=0;repeated[500].fit.rotation=1
 many=assert(S.buildBatches(repeated,upload));assert(fits==3,'changed fit reused stale geometry');S.releaseBatches(many)
 S.vertices=originalVertices
+local contactPlacements={{model='third_party:house',x=0,y=0,z=0,fit={width=16,depth=16}},
+ {model='third_party:house',x=16,y=0,z=0,fit={width=16,depth=16,groundInset=.05}}}
+local contacts=assert(S.buildBatches(contactPlacements,upload));assert(#contacts==2,'cached fit merged distinct contact recesses')
+local lows={};for _,part in ipairs(contacts)do lows[part.localBounds[2]]=true end
+assert(lows[0]and lows[-.05],'culling bounds lost recessed contact ring');S.releaseBatches(contacts)
 local batches=assert(S.buildBatches(placements,upload));assert(#batches==1 and batches[1].instanced and batches[1].count==2 and allocations==1);S.releaseBatches(batches)
 instances=false;batches=assert(S.buildBatches(placements,upload));assert(not batches[1].instanced and #batches[1].mesh.vertices==6 and #batches[1].mesh.indices==6);assert(batches[1].mesh.vertices[1][2]==2 and batches[1].mesh.vertices[4][1]==16.25);S.releaseBatches(batches)
 -- Adjacent equal fits may have different contact-ring policies. The touring

@@ -225,6 +225,7 @@ end
 -- Draw with ModelInstances.draw. Physical alpha/opacity are preserved. Proven
 -- baked shadow overlays never load textures or upload; dynamic shadows own them.
 local fitFields={'groundInset','width','depth','padding','rotation','height','anchor','targetX','targetZ'}
+
 function M.buildBatches(placements,newMesh,options)
  Shared=Shared or V.require('SharedModelMesh')
  if type(placements)~='table'or #placements>M.limits.placements or type(newMesh)~='function'then return nil,'invalid scenery batch'end
@@ -246,6 +247,7 @@ function M.buildBatches(placements,newMesh,options)
    lastId,lastParts,lastKey=p.model,parts,key
    for _,field in ipairs(fitFields)do lastFit[field]=p.fit and p.fit[field]end
   end
+
 
   if not groups[key]then
    workBytes=workBytes+parts.bytes;if workBytes>M.limits.cachedBytes then return nil,'scenery batch byte budget exceeded'end
