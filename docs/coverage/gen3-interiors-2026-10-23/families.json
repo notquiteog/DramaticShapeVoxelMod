@@ -5728,7 +5728,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_kitchen_sink"
+      ]
     },
     "hoenn_home_small_books": {
       "design": "em_home_books",
@@ -14347,7 +14349,7 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 115,
+      "candidateFurniture": 128,
       "furniture": 1830,
       "maps": 519,
       "nativeWallFinishRooms": 79,
@@ -14368,14 +14370,14 @@
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 118,
+      "candidateFurniture": 131,
       "furniture": 1210,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 118,
+      "candidateFurniture": 131,
       "furniture": 1210,
       "maps": 395,
       "nativeWallFinishRooms": 84,
