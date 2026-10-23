@@ -1,8 +1,10 @@
 ## 1.57.10 — 2026-10-23
 
-- Activate reviewed original ORAS Hoenn Gyms, notices, regional Marts and Oldale homes with native source doors.
+- Activate reviewed original ORAS Hoenn Gyms, notices, regional Marts and Oldale/Petalburg homes with native source doors.
 - Add HGSS Pewter houses and regional Viridian/Pewter Gyms; preserve native entry, collision and ground.
-- Add original ORAS home tables/fridges across88 reviewed component placements, with recessed contact surfaces.
+- Add original ORAS home tables/fridges across127 reviewed component placements, with recessed contact surfaces.
+- Fix flush home stair frames, overlapping risers, wall apertures and descending-well margins without changing native warps.
+- Preserve native HD2D flowers around the regional Viridian School model.
 - Prevent source furniture falling back after touring towns by lifting the small-texture count cap while preserving memory limits.
 
 ## 1.57.9 — Measured rendering and streaming optimization

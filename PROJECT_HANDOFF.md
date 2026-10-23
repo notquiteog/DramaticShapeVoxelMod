@@ -1,8 +1,8 @@
 # Regional building/interior integration1.57.10 — 2026-10-23
 
 Production Scene now activates both reviewed regional dispatchers: ORAS Hoenn
-Gyms/notices/Marts/Oldale homes and HGSS Kanto Gyms/Pewter homes, with original
-animated source doors. Furniture adds88 reviewed physical placements across83
+Gyms/notices/Marts/Oldale/Petalburg homes and HGSS Kanto Gyms/Pewter homes, with original
+animated source doors. Furniture adds127 reviewed physical placements across83
 RSE maps; the all2161-map ledger distinguishes candidates/components/full rooms.
 The native town tour reproduces64-texture fallback at5.14MB; bounded entry
 counts now256 with8MB texture/10MB catalog/vertex ceilings unchanged. Same RSE
@@ -11,9 +11,14 @@ insets survive the shared prototype and repeated-fit caches. Petalburg's exact
 legacy Gym-notice owner transfers only after successful source upload, preventing
 a duplicate old notice. Native15 Hoenn Mart/home entry+returns and FR Gym/LG
 home entries pass; source workers additionally inspect both Kanto editions.
-446 source suites pass,0 fail,58 external-fixture skips. Concurrent committed
+448 source suites pass,0 fail,58 external-fixture skips. Concurrent committed
 performance history through6f48a7b3 retained; active working-tree edits untouched.
 Whole-game/map/interior coverage remains incomplete and workers continue.
+Flat home stair frames now align to actual wallpaper, with unioned risers,
+closed descending wells and real column apertures. Only reviewed stair-bay
+meshes bypass room clipping;12RSE layouts and ascent/descent verified. Native
+wall/floor heights, bounds and gameplay remain fixed. Viridian School preserves
+native HD2D flower cards; Pallet source doors/tops retain their intended datum.
 See docs/REGIONAL_BUILDING_INTEGRATION_2026-10-23.md for scope and evidence.
 
 # Combined optimization/model release1.57.9 — 2026-10-23
