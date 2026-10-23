@@ -34,8 +34,18 @@
     }
   },
   "bodySourceTriangles": 703,
+  "groundContactSnapToleranceSourceUnits": 0.0001,
   "rearClosures": {
     "oras_oldale_mart": {
+      "authoredRearTriangles": 225,
+      "profileBands": 93,
+      "sourcePaintTexel": [
+        0.041015625,
+        0.62890625
+      ],
+      "insetSourceUnits": 0.1
+    },
+    "oras_petalburg_mart": {
       "authoredRearTriangles": 227,
       "profileBands": 94,
       "sourcePaintTexel": [
@@ -44,18 +54,9 @@
       ],
       "insetSourceUnits": 0.1
     },
-    "oras_petalburg_mart": {
-      "authoredRearTriangles": 229,
-      "profileBands": 95,
-      "sourcePaintTexel": [
-        0.041015625,
-        0.62890625
-      ],
-      "insetSourceUnits": 0.1
-    },
     "oras_rustboro_mart": {
-      "authoredRearTriangles": 229,
-      "profileBands": 95,
+      "authoredRearTriangles": 227,
+      "profileBands": 94,
       "sourcePaintTexel": [
         0.041015625,
         0.62890625
@@ -122,5 +123,5 @@
     "door": "074c7e7d41d567d31eb1f238e040c3d797303d3778dfb26e53d81b43db811bf6",
     "animation": "ad890fe9148c6777341f974c1c85bafe0134e0aac7d9c53f3eeaec87a0931fb3"
   },
-  "processing": "Original positions/UVs/triangles independently compared to Nitrogen. Source vertex exposure RGB and24 nonphysical light triangles omitted. Exact source bottom rim closed beneath building; all physical source triangles and original texture paint retained. No native collision/scripts/warps changed."
+  "processing": "Original positions/UVs/triangles independently compared to Nitrogen. Only source contacts within0.0001 original units of normalized ground snap to exactY0, allowing the existing native ground-ring recess to apply reliably. Source vertex exposure RGB and24 nonphysical light triangles omitted. Exact source bottom rim closed beneath building; all physical source triangles and original texture paint retained. No native collision/scripts/warps changed."
 }

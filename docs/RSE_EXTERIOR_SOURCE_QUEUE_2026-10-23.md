@@ -10,18 +10,18 @@ profile. Recognition itself can miss art families; zero is not an empty-map clai
 
 | Edition | Maps inspected | Recognized civic placements | Modern source candidates |
 | --- | ---: | ---: | ---: |
-| Emerald |227|84|40|
-| Ruby |172|80|39|
-| Sapphire |172|80|39|
+| Emerald |227|84|41|
+| Ruby |172|80|40|
+| Sapphire |172|80|40|
 
 Modern candidates include staged Gym/Mart adapters; source eligibility is not
 Scene activation or native visual acceptance. Native map cells, collision,
 elevation and warp data remain unchanged. Native original art remains fallback.
 
 Current genuine sources cover Hoenn Centers, corridor Gym bodies/doors/notices,
-three own-source corridor Mart variants, Briney/Pretty Petal shop, two own-source Oldale homes, three own-source Petalburg homes, six own-source Rustboro home/flat/school variants and Devon Corporation, two Dewford
+three own-source corridor Mart variants and Slateport's own city Mart, Briney/Pretty Petal shop, two own-source Oldale homes, three own-source Petalburg homes, six own-source Rustboro home/flat/school variants and Devon Corporation, two Dewford
 narrow houses and two Lavaridge source variants. Among the244 recognized civic
-placements,126 still have no matching modern-source candidate. Beyond them,
+placements,123 still have no matching modern-source candidate. Beyond them,
 whole-map review must still inspect unrecognized/dynamic/decorative buildings.
 
 Next actual-source work: remaining Rustboro Flat2 and tower GR0032–0038; remaining named town/route facilities and landmarks. These
@@ -46,7 +46,7 @@ per-placement native gameplay/source checks below.
 The Rustboro additions use12 positive native0.3.95 source/dispatcher checks,
 including original hinge states and cap depth, after the initial whole-map census.
 The subsequent Flat1/House3 additions use six more exact native candidates.
-The running recognized candidate total is118 of244;126 remain without sources.
+The running recognized candidate total is121 of244;123 remain without sources.
 Final integrated visual/gameplay acceptance is tracked independently. See
 ORAS_RUSTBORO_HOMES_2026-10-23.md for the first four families and
 ORAS_RUSTBORO_FLATS_2026-10-23.md for the Flat1/House3 continuation,
@@ -59,3 +59,9 @@ See ORAS_DEVON_CORPORATION_2026-10-23.md. Rear completeness of the owned
 Gym/Mart/Oldale/Petalburg/Rustboro bodies was separately corrected and checked
 with actual-source rays; prior rear-only screenshot interpretation was wrong.
 See ORAS_REAR_CLOSURES_2026-10-23.md for the correction and native evidence.
+
+Slateport Mart adds three positive native candidates with its own GR149
+pc_base body/AD20 paint and original ZO14→266/BM9 portal. Source and actual
+entrance/return evidence is separate from the initial whole-map census. See
+ORAS_SLATEPORT_MART_2026-10-23.md. Current recognized candidate count is121
+of244,123 missing; other unrecognized roofs/facilities still require review.

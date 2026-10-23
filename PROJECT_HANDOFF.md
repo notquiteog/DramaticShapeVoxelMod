@@ -1,3 +1,19 @@
+# Own ORAS Slateport Mart — 2026-10-23
+
+Distinct GR149 pc_base/AD20 paint and original BM9/ZO14→266 slider now route
+through the Hoenn facade as hoennMarts. Exact native4×4 footprint, portal,
+collision and source proportions stay fixed. Rear/underside are closed; no
+source ground plane is copied. The final source audit also corrects Slateport's
+slider side contact and float-quantized ground-ring coordinates in the older
+three Marts. Official0.3.95 twelve native four-Mart source/pose/contact/rollback
+checks, twelve actual entrances/returns and four Emerald missing-source
+fallback entries/returns pass. Source/contact regressions reject both original
+defects. Source all-angle/native contact/front/side/rear views inspected; native
+hashes unchanged and recovery zero. Census candidates now41EM40RU40SA of244,
+123 missing. No whole-map acceptance claim. See
+[batch evidence](docs/ORAS_SLATEPORT_MART_2026-10-23.md). Slateport facilities
+continue next; Rustboro Flat2/tower stay pending fit/full-side source review.
+
 # Original ORAS Devon Corporation — 2026-10-23
 
 Authentic GR33/ZO16/AD11/BM14 Devon now dispatches as rustboroDevon:1597 body

@@ -1,12 +1,12 @@
 local modules={SceneryModelData={},ImportedTreeData={},ImportedHoennMartData=dofile('lib/ImportedHoennMartData.lua'),ModelInstances={new=function()return{release=function()end}end},BuildBudget={check=function()end}}
 local png='\137PNG\13\10\26\10'..string.char(0,0,0,13)..'IHDR'..string.char(0,0,0,8,0,0,0,8)
-local missing=false;local released=0
+local missing=false;local released=0;local caps=0
 local V={mod={read=function()if not missing then return png end end}};V.require=function(n)return assert(modules[n],n)end
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local G=assert(loadfile('lib/Gen3ImportedGyms.lua'))(V);modules.Gen3ImportedGyms=G
 local M=assert(loadfile('lib/Gen3ImportedMarts.lua'))(V);modules.Gen3ImportedMarts=M
 local D=assert(loadfile('lib/Gen3MartDoors.lua'))(V);modules.Gen3MartDoors=D
-local function mesh()return{setTexture=function()end,release=function()released=released+1 end}end
+local function mesh(vertices,indices)if vertices then for _,v in ipairs(vertices)do assert(math.abs(v[2])>.0001,'Mart source contact remains on native ground plane')end end;if vertices and #vertices==19 and #indices==51 then for _,v in ipairs(vertices)do assert(math.abs(v[2]+.05)<1e-8,'quantized Mart contact escaped ground inset')end;caps=caps+1 end;return{setTexture=function()end,release=function()released=released+1 end}end
 love={filesystem={newFileData=function()return{release=function()end}end},graphics={newImage=function()local o=mesh();o.getDimensions=function()return 8,8 end;o.setFilter=function()end;o.setWrap=function()end;return o end}}
 local rows={{0x28,0x29,0x29,0x285},{0x30,0x31,0x32,0x33},{0x38,0x39,0x3a,0x3b},{0x60,0x41,0x42,0x43}}
 local fixtures={{'oldale_mart','OLDALE_TOWN','oras_oldale_mart',13,3,'general__petalburg',{0,0,0,7},rows},{'petalburg_city_mart','PETALBURG_CITY','oras_petalburg_mart',24,9,'general__petalburg',{0,0,7,7},{{0x250,0x251,0x258,0x259},{0x30,0x31,0x32,0x33},{0x38,0x39,0x3a,0x3b},{0x60,0x41,0x42,0x43}}},{'rustboro_city_mart','RUSTBORO_CITY','oras_rustboro_mart',15,42,'general__rustboro',{0,0,0,0},{{0x325,0x267,0x267,0x326},{0x30,0x31,0x32,0x33},{0x38,0x39,0x3a,0x3b},{0x266,0x41,0x42,0x27f}}}}
@@ -23,4 +23,4 @@ for _,ed in ipairs{'EM_','RU_','SA_'}do for _,f in ipairs(fixtures)do
  c.mid=0;assert(not M.eligible(g,cells));c.mid=rows[2][1]
  S.release();missing=true;assert(not M.build(g,cells,mesh,{}));assert(not g.importedHoenn and not g.importedMartDoors);missing=false;S.retryImages(D.id);S.retryImages(f[3])
 end end
-assert(released>0);print('PASS9 guarded original town Mart candidates,703 physical source faces+17 exact underside faces,43-triangle original sliding states, native clearance and atomic rollback')
+assert(released>0 and caps==9);print('PASS9 guarded original town Mart candidates,703 physical source faces+17 exact underside faces,43-triangle original sliding states, native clearance and atomic rollback')

@@ -27,7 +27,13 @@ def convert(root,decoder_path,nitrogen_path,output):
  p=dict(name=s.material,texture=texture(name),vertices=[list(v)+[uv[0],1-uv[1],1.]for v,uv in zip(s.positions,s.uv0)],indices=[i+1 for t in s.triangles for i in t],role='structure',alphaMode='cutout',opacity=1.,wrapS='repeat',wrapT='repeat')
  bounds=[min(v[k]for v in s.positions)for k in range(3)]+[max(v[k]for v in s.positions)for k in range(3)]
  span=bounds[3]-bounds[0];origin=[(bounds[0]+bounds[3])/2,bounds[1],(bounds[2]+bounds[5])/2]
- def norm(v):return[(v[i]-origin[i])/span for i in range(3)]+v[3:]
+ def norm(v):
+  row=[(v[i]-origin[i])/span for i in range(3)]+v[3:]
+  # Float-quantized original Y0 contacts can sit just outside the shared
+  # normalized inset epsilon. Snap that reviewed contact ring only; all upper
+  # coordinates, original UVs, poses and portal anchors retain their values.
+  if abs(row[1]*span)<.0001:row[1]=0.
+  return row
  # Exact original bottom-rim vertices retain every chamfer and portal recess.
  rim=[(88.0529,-178.538),(163.9471,-178.538),(175.751,-165.734),(175.751,-135.006),(175.751,-104.848),(175.02,-103.546),(163.9471,-91.474),(163.122,-91.474),(148.8131,-91.474),(132.289,-91.474),(131,-92.5),(103,-92.5),(101.9237,-91.474),(88.8549,-91.474),(88.0529,-91.474),(77.1013,-103.426),(76.2494,-104.848),(76.2494,-135.006),(76.2494,-165.734)]
  vs=[]
@@ -97,7 +103,7 @@ def convert(root,decoder_path,nitrogen_path,output):
   dp['vertices']=poses[0][-1];dparts.append(dp)
  door=dict(id='oras_hoenn_mart_doors',parts=dparts,poses=poses)
  (output/'lib/ImportedHoennMartData.lua').write_text('-- Genuine own-source ORAS corridor Marts and single sliding panel; tools/import_oras_marts.py.\nreturn '+lua(dict(bodydata,door=door))+'\n')
- report=dict(source='User-supplied Alpha Sapphire RomFS; own Oldale/Petalburg/Rustboro source variants',body='GR0004 world01_02_02 friendlyshop',townVariants=variants,bodySourceTriangles=703,rearClosures=rearproof,undersideTriangles=len(ii)//3,doorSourceTriangles=43,sourceBounds=bounds,normalizationOrigin=origin,normalizationSpan=span,door='BM0009 com_bm_fsdoor01',animationSamples=[0,2.5,5],sourceXSamples=[sample(track,f)for f in [0,2.5,5]],movingInverseBindMaximumError=errors['move'],textures=treport,sha256={'body':hashlib.sha256(raw).hexdigest(),'door':hashlib.sha256(rawdoor).hexdigest(),'animation':hashlib.sha256(anim).hexdigest()},processing='Original positions/UVs/triangles independently compared to Nitrogen. Source vertex exposure RGB and24 nonphysical light triangles omitted. Exact source bottom rim closed beneath building; all physical source triangles and original texture paint retained. No native collision/scripts/warps changed.')
+ report=dict(source='User-supplied Alpha Sapphire RomFS; own Oldale/Petalburg/Rustboro source variants',body='GR0004 world01_02_02 friendlyshop',townVariants=variants,bodySourceTriangles=703,groundContactSnapToleranceSourceUnits=.0001,rearClosures=rearproof,undersideTriangles=len(ii)//3,doorSourceTriangles=43,sourceBounds=bounds,normalizationOrigin=origin,normalizationSpan=span,door='BM0009 com_bm_fsdoor01',animationSamples=[0,2.5,5],sourceXSamples=[sample(track,f)for f in [0,2.5,5]],movingInverseBindMaximumError=errors['move'],textures=treport,sha256={'body':hashlib.sha256(raw).hexdigest(),'door':hashlib.sha256(rawdoor).hexdigest(),'animation':hashlib.sha256(anim).hexdigest()},processing='Original positions/UVs/triangles independently compared to Nitrogen. Only source contacts within0.0001 original units of normalized ground snap to exactY0, allowing the existing native ground-ring recess to apply reliably. Source vertex exposure RGB and24 nonphysical light triangles omitted. Exact source bottom rim closed beneath building; all physical source triangles and original texture paint retained. No native collision/scripts/warps changed.')
  (folder/'provenance.json').write_text(json.dumps(report,indent=2)+'\n');return report
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__)
