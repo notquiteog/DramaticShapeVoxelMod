@@ -11,6 +11,7 @@ dataFiles.oras_littleroot_fridge='ImportedHomeFurnitureData'
 dataFiles.oras_oldale_checked_table='ImportedOldaleFurnitureData'
 dataFiles.oras_oldale_neighbor_table='ImportedOldaleFurnitureData'
 dataFiles.oras_oldale_refrigerator='ImportedOldaleFridgeData'
+dataFiles.bdsp_galactic_server='ImportedInstitutionServerData'
 -- Complete public-PC and genuine TV drawings include the wall above and
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
@@ -30,6 +31,11 @@ local families={
  hoenn_home_table_yellow={pair='building__generic_building',family='rse',design='em_home_table',
   rows={{0x248,0x249},{0x250,0x251}},collisionRows={{7,7},{7,7}},
   model='oras_oldale_checked_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0,groundInset=.025},
+ birch_server={pair='building__lab',family='rse',design='em_lab_server',rows={{0x216},{0x21e},{0x292}},collisionRows={{0},{7},{0}},model='bdsp_galactic_server',fitHeight=32,groundInset=.025},
+ lab_server={pair='oak_lab',design='fr_lab_server',rows={{0x29d},{0x2ad},{0x2b5}},collisionRows={{7},{7},{0}},model='bdsp_galactic_server',fitHeight=32,groundInset=.025},
+ silph_server={pair='building__rom_082d4ecc',design='fr_native_rack',rows={{0x37d},{0x385},{0x37e}},collisionRows={{7},{7},{0}},model='bdsp_galactic_server',fitHeight=32,groundInset=.025},
+ powerplant_server={pair='building__rom_082d4e9c',design='fr_native_rack',rows={{0x308},{0x310},{0x318}},collisionRows={{7},{7},{43}},model='bdsp_galactic_server',fitHeight=32,groundInset=.025},
+ mansion_server={pair='building__rom_082d4f2c',design='fr_native_rack',rows={{0x317},{0x31f},{0x36e}},collisionRows={{7},{7},{43}},model='bdsp_galactic_server',fitHeight=32,groundInset=.025},
  hoenn_home_fridge={pair='building__generic_building',family='rse',design='em_home_fridge',
   rows={{0x278},{0x280},{0x288}},collisionRows={{7},{7},{0}},
   model='oras_oldale_refrigerator',fitWidth=16,fitDepth=16,fitHeight=32,rotation=1,groundInset=.025},

@@ -10,11 +10,11 @@ the Linux shell returned 1 on shutdown. No clean process-exit claim is made.
 
 | Edition | Maps | Framed non-cave rooms | Native wall finish rooms | Extracted furniture | Modern placement candidates |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Emerald | 519 | 301 | 79 | 1830 | 90 |
-| Ruby | 395 | 231 | 84 | 1210 | 92 |
-| Sapphire | 395 | 231 | 84 | 1210 | 92 |
-| FireRed | 426 | 253 | 65 | 2937 | 28 |
-| LeafGreen | 426 | 253 | 65 | 2937 | 28 |
+| Emerald | 519 | 301 | 79 | 1830 | 91 |
+| Ruby | 395 | 231 | 84 | 1210 | 93 |
+| Sapphire | 395 | 231 | 84 | 1210 | 93 |
+| FireRed | 426 | 253 | 65 | 2937 | 57 |
+| LeafGreen | 426 | 253 | 65 | 2937 | 57 |
 
 The ledger is [maps.jsonl](coverage/gen3-interiors-2026-10-23/maps.jsonl).
 It records every map, native pair/header, dimensions, source-layout SHA-256,
@@ -22,16 +22,21 @@ room adapter and extracted furniture families. The companion
 [families.json](coverage/gen3-interiors-2026-10-23/families.json) groups source
 candidates and edition/map occurrences. These are identifiers and counts only;
 no ROM data, raw pixels, model archives, caches or captures are included.
+JSON object keys are canonicalized recursively so repeated censuses do not
+reorder unchanged native room metadata. All 2161 native hashes are unchanged;
+this batch changes source candidates on the 25 server-fixture maps only.
 
 The refreshed census includes the verified Littleroot table/refrigerator and
-both Oldale table adapters, and all 39 generic-home refrigerators. Separate
+both Oldale table adapters, and all 39 generic-home refrigerators,
+and the original BDSP server adapter for all 61 matching institutional racks.
+The latest full census retains all 2161 native map entries. Separate
 [accepted-furniture.jsonl](coverage/gen3-interiors-2026-10-23/accepted-furniture.jsonl)
-records 127 visually accepted component placements across 83 native RSE maps,
-with exact family, model ID, cell and unchanged live native hash. Its acceptance
+records 188 visually accepted component placements across 108 native maps in
+all five editions, with exact family, model ID, cell and unchanged live native hash. Its acceptance
 scope is the named furniture component only. Complete-map acceptance remains
 false; the remaining furniture and room source gaps are still outstanding.
 
-All five physical source models now opt into the shared 0.025-pixel contact
+All six physical source models now opt into the shared 0.025-pixel contact
 recess. Only source Y0 vertices move below the floor; every upper vertex and
 all native floor/wall/gameplay cells remain identical. CPU checks compare both
 fits, and native 0.3.95 checks repeat both Emerald starting houses, all 13 Ruby

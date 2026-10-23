@@ -47,14 +47,14 @@ def summarize(inputs, output):
                 renderedAccepted=False))
         totals[edition] = dict(total)
     output.mkdir(parents=True, exist_ok=True)
-    (output/'maps.jsonl').write_text(''.join(json.dumps(r, separators=(',', ':'))+'\n' for r in rows))
+    (output/'maps.jsonl').write_text(''.join(json.dumps(r, separators=(',', ':'), sort_keys=True)+'\n' for r in rows))
     summary = dict(schema=1, engine='0.3.95', evidence='native adapter census',
         renderedAccepted=False, totals=totals,
         limitations=['Candidate placement is not proof of successful texture/mesh upload or rendered acceptance.',
             'Furniture extraction does not prove every native object was recognized.',
             'Native continuous room finishes are not claims of imported modern room coverage.'],
         families=dict(sorted(families.items())))
-    (output/'families.json').write_text(json.dumps(summary, indent=2)+'\n')
+    (output/'families.json').write_text(json.dumps(summary, indent=2, sort_keys=True)+'\n')
     print(json.dumps(totals, sort_keys=True))
 
 

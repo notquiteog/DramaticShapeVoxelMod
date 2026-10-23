@@ -6,6 +6,7 @@ local V={mod={read=function()end}}
 V.require=function(name)
  if name=='SceneryModels'then return models end
  if name=='Gen3PublicPCFrames'then return dofile('lib/Gen3PublicPCFrames.lua')end
+ if name=='ImportedInstitutionServerData'then return dofile('lib/ImportedInstitutionServerData.lua')end
  if name=='ImportedOldaleFridgeData'then return dofile('lib/ImportedOldaleFridgeData.lua')end
  if name=='ImportedHomeFurnitureData'then return dofile('lib/ImportedHomeFurnitureData.lua')end
  if name=='ImportedOldaleFurnitureData'then return dofile('lib/ImportedOldaleFurnitureData.lua')end
@@ -13,6 +14,11 @@ V.require=function(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='birch_server',pair='building__lab',design='em_lab_server',rows={{0x216},{0x21e},{0x292}},coll={{0},{7},{0}},x=5,z=0,id='bdsp_galactic_server',fit={16,16,1}},
+ {name='lab_server',family=false,pair='oak_lab',design='fr_lab_server',rows={{0x29d},{0x2ad},{0x2b5}},coll={{7},{7},{0}},x=5,z=0,id='bdsp_galactic_server',fit={16,16,1}},
+ {name='silph_server',family=false,pair='building__rom_082d4ecc',design='fr_native_rack',rows={{0x37d},{0x385},{0x37e}},coll={{7},{7},{0}},x=5,z=0,id='bdsp_galactic_server',fit={16,16,1}},
+ {name='powerplant_server',family=false,pair='building__rom_082d4e9c',design='fr_native_rack',rows={{0x308},{0x310},{0x318}},coll={{7},{7},{43}},x=5,z=0,id='bdsp_galactic_server',fit={16,16,1}},
+ {name='mansion_server',family=false,pair='building__rom_082d4f2c',design='fr_native_rack',rows={{0x317},{0x31f},{0x36e}},coll={{7},{7},{43}},x=5,z=0,id='bdsp_galactic_server',fit={16,16,1}},
  {name='hoenn_home_fridge',pair='building__generic_building',design='em_home_fridge',rows={{0x278},{0x280},{0x288}},coll={{7},{7},{0}},x=10,z=0,id='oras_oldale_refrigerator',fit={16,16,1},rotation=1},
  {name='hoenn_start_dining_table',design='em_start_table',rows={{0x21a,0x21b},{0x222,0x223},{0x22a,0x22b}},coll={{7,7},{7,7},{0,0}},x=3,z=6,id='oras_littleroot_dining_table',fit={32,32,0}},
  {name='hoenn_start_fridge',design='em_start_fridge',rows={{0x230},{0x238}},coll={{7},{7}},x=0,z=1,id='oras_littleroot_fridge',fit={16,16,1}},
@@ -22,7 +28,7 @@ local fixtures={
 for _,q in ipairs(fixtures)do
  local cells={};local pair=q.pair or'building__brendans_mays_house'
  local p={cx=q.x,cy=q.z,w=#q.rows[1]*16,d=#q.rows*16,pair=pair,groundHeight=8,
-  recipe={name=q.name,design=q.design,family='rse',rows=q.rows}}
+  recipe={name=q.name,design=q.design,family=q.family~=false and'rse'or nil,rows=q.rows}}
  for y,row in ipairs(q.rows)do for x,mid in ipairs(row)do
   cells[(q.x+x-1)..':'..(q.z+y-1)]={cx=q.x+x-1,cy=q.z+y-1,mid=mid,collision=q.coll[y][x],base=8,primary='building',pair=pair,prop=p}
  end end
