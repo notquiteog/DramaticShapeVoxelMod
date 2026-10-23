@@ -1,3 +1,20 @@
+# Genuine Mr Psychic source/native acceptance, scenery pause — 2026-10-23
+
+Authentic southeast HGSS ybc_h01 plus ybc_dor1_001 now covers only native Mr
+Psychic city/connection drawings. Source scene matrices prove original panel
+placement; measured rear/barrel underside/foundation/panel returns close cuts,
+original physical triangles/UV/PNG bytes remain unchanged, source shadows removed.
+Official0.3.96 FR/LG four placements/two real entry-return pairs/two no-warp
+projections pass; source/native/contact/poses inspected, LG missing PNG fallback
+passes. Native hashes/support/warps unchanged. Focused native/pose/atomic tests,
+Copycat regression,592-file LuaJIT compile and6 deterministic outputs pass.
+Canonical79 eligible/72 accepted/54 unmatched/6324 unclassified blocked cells each
+edition. Adjacent sign49,22 MID2 wrongly selects shared ground1, outside building
+scope, reported to root. Dispatcher saffronPsychic routes lifecycle/ownsDoor;
+no production Scene/package claim. See docs/SAFFRON_PSYCHIC_SOURCE_2026-10-23.md.
+User reprioritized seven-mod0.3.96 API audit; no more scenery work until that task
+is ready. This clean commit closes the current verified source family.
+
 # Genuine Saffron Copycat source and native acceptance — 2026-10-23
 
 Exact Copycat city/connection placements now use real HGSS ybc_mmc plus its

@@ -3,6 +3,7 @@
 local V=...
 local M={}
 local specs={
+ {kind='saffronPsychic',building='Gen3ImportedSaffronPsychic',doors='Gen3SaffronPsychicDoors',marker='importedSaffronPsychic'},
  {kind='saffronCopycat',building='Gen3ImportedSaffronCopycat',doors='Gen3SaffronCopycatDoors',marker='importedSaffronCopycat'},
  {kind='viridianHouses',building='Gen3ImportedViridianHouses',doors='Gen3ViridianFlowerHouseDoors',marker='importedViridianHouse'},
  {kind='kantoCenters',building='Gen3ImportedKantoCenters',doors='Gen3KantoCenterDoors',marker='importedKantoCenter'},

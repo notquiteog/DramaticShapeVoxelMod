@@ -3,6 +3,7 @@
 return function(game)
  local family=os.getenv('QA_FAMILY')or'gyms'
  local configs={
+  psychic={pendingGround=false,fixtures={{'FR_SAFFRON_CITY',46,17},{'FR_SAFFRON_CITY_CONNECTION',36,10}},adapter='Gen3ImportedSaffronPsychic',model='hgss_saffron_psychic',doorX=1,doorY=4,stat='saffronPsychic',source='^assets/scenery/saffron%-psychic/',right=7,left={-2,5,math.pi/4},rear={2,-2,math.pi}},
   copycat={pendingGround=false,fixtures={{'FR_SAFFRON_CITY',21,10},{'FR_SAFFRON_CITY_CONNECTION',11,3}},adapter='Gen3ImportedSaffronCopycat',model='hgss_saffron_copycat',doorX=1,doorY=4,stat='saffronCopycat',source='^assets/scenery/saffron%-copycat/',right=7,left={-2,5,math.pi/4},rear={2,-2,math.pi}},
   museum={pendingGround=true,fixtures={{'FR_PEWTER_CITY',12,0,5,6},{'FR_PEWTER_CITY',12,0,13,4}},adapter='Gen3ImportedPewterMuseum',model='hgss_pewter_museum',doorX=5,doorY=6,stat='pewterMuseum',source='^assets/scenery/pewter%-museum/',right=17,left={-2,4,math.pi/2},rear={8,-2,math.pi}},
   viridian_plain={fixtures={{'FR_VIRIDIAN_CITY',24,8}},adapter='Gen3ImportedViridianHouses',model='hgss_viridian_house',doorX=1,doorY=3,stat='viridianHouses',source='^assets/scenery/viridian%-house/',right=7},
@@ -25,11 +26,11 @@ return function(game)
  local edition=require('src.core.GameVersion').get();assert(edition=='firered'or edition=='leafgreen')
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
  local C,S=V.require('Gen3Integration'),V.require('Gen3Scene');local Map,P=require('src.core.game3.map'),require('src.core.game3.player')
- local observed={};local adapter=V.require(config.adapter or(family=='saffron_dojo'and'Gen3ImportedSaffronDojo'or'Gen3ImportedHGSSGyms'));local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=(g.importedHGSSGym or g.importedSaffronDojo or g.importedHGSSMart or g.importedViridianHouse or g.importedViridianFlowerHouse or g.importedPewterMuseum or g.importedSaffronCopycat).model end;return ok,why end
+ local observed={};local adapter=V.require(config.adapter or(family=='saffron_dojo'and'Gen3ImportedSaffronDojo'or'Gen3ImportedHGSSGyms'));local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=(g.importedHGSSGym or g.importedSaffronDojo or g.importedHGSSMart or g.importedViridianHouse or g.importedViridianFlowerHouse or g.importedPewterMuseum or g.importedSaffronCopycat or g.importedSaffronPsychic).model end;return ok,why end
  local dir=os.getenv('SHOT_DIR');local json=require('src.link.Json');local out={};local missing=os.getenv('QA_MISSING_ASSETS')=='1'
  if missing then local read=V.mod.read;V.mod.read=function(self,path)if path:match(config.source)then return nil end;return read(self,path)end end
  game:_handleBootAction({action='new_game',start={map='FR_PEWTER_CITY',x=10,y=32,facing='up'}})
- if family=='saffron_gym'or family=='saffron_dojo'or family=='copycat'or config.model=='hgss_kanto_mart'then require('src.core.game3.scripting.flags').setFlag(assert(require('src.core.game3.scripting.space').store),nil,0x3E,true)end
+ if family=='saffron_gym'or family=='saffron_dojo'or family=='copycat'or family=='psychic'or config.model=='hgss_kanto_mart'then require('src.core.game3.scripting.flags').setFlag(assert(require('src.core.game3.scripting.space').store),nil,0x3E,true)end
  if config.model=='hgss_kanto_mart'then local F=require('src.core.game3.scripting.flags');local store=assert(require('src.core.game3.scripting.space').store);F.setVar(store,nil,0x4086,1);F.setFlag(store,nil,0x97,true);F.setVar(store,nil,0x4057,1);F.setFlag(store,nil,0x829,true)end
  V.require('RenderDistance').setting:sync(16);V.require('DayNight').setting:sync('day');V.require('RenderDistance').haze=function()return nil end
  local function settle()
