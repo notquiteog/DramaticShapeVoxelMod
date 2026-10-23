@@ -20,7 +20,7 @@ S.buildBatches=function(placements,_,opts)
  for _,part in ipairs(parts)do
   assert(part.role~='source_shading'and part.role~='ground_shadow','baked illumination excluded')
   assert(part.role~='source_door','static door must not remain in body batch');base=base or part.name=='authored_closed_foundation';rear=rear or part.name=='authored_rear_gable';soffit=soffit or part.name=='authored_pitched_roof_soffit'
-  for _,v in ipairs(part.vertices)do assert(v[1]>=.25-1e-6 and v[1]<=79.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=47.75+1e-6 and v[2]>=0)end
+  for _,v in ipairs(part.vertices)do assert(v[1]>=.25-1e-6 and v[1]<=79.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=47.75+1e-6 and v[2]>=-.05-1e-6)end
  end
  assert(base and rear and soffit);return opts.parts
 end

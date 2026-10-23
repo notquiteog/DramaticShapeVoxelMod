@@ -2,9 +2,10 @@
 
 The native audit enumerates **426 maps per edition**, including **76 outdoor
 maps**, **132 detected civic assemblies**, and **54 distinct civic families**.
-It separately records **23 source-eligible assemblies** and **109 unmatched
-assemblies per edition**. Seven families have an eligible source adapter;
-47 families still have no eligible complete modern exterior adapter. These are
+It separately records **25 source-eligible assemblies** and **107 unmatched
+assemblies per edition**. Eight families have at least one eligible source adapter;
+46 families still have none. The Gym family is partial:2 of11 assemblies per
+edition have matching sources. These are
 assembly counts, not percentages of whole-game completion.
 
 The canonical identifier-only report is
@@ -13,8 +14,8 @@ The canonical identifier-only report is
 metatile/collision/elevation SHA256, pair, dimensions, map type and explicit
 outdoor classification. Every detected assembly has its native drawing hash,
 source archive/model/provenance hashes where available, exact coordinates,
-source eligibility and separate rendered acceptance. This batch accepts only
-its two Pewter houses per edition. Historical acceptance of the other source
+source eligibility and separate rendered acceptance. The inspected batches accept
+the two Pewter houses and the Viridian/Pewter Gyms per edition. Historical acceptance of the other source
 families is deliberately not inferred from an eligibility census.
 
 There are also **6346 unclassified blocked outdoor cells per edition**. This
@@ -46,7 +47,10 @@ pitched soffit, front gable returns and foundation. The final179 triangles
 include the separate8-triangle source door. A rear closure offset of0.015
 **source units** covers the original internal portal's coplanar rear face;
 otherwise those faces flicker through each other. This only separates those
-surfaces. The building position, native ground and doorway are not shifted.
+surfaces. The building position, native ground and doorway are not shifted. The explicit
+`groundInset=.05` fit option from shared commit0fb2b673 recesses only source
+Y0 contact-ring vertices below ground. Original anchors, upper surfaces and
+UVs remain unchanged; first-person contact was rechecked in both editions.
 
 `tools/import_pewter_houses.py` reproducibly produces the independent
 `PewterHouseData` module and source/provenance hashes. `Gen3ImportedPewterHouses`
@@ -105,9 +109,8 @@ and the parent combined production Scene remain separate acceptance work.
 
 ## Exact next gaps
 
-The table lists every unmatched family and map. Known local source candidates
-include the regional Viridian and Pewter Gyms. Their irregular native front
-rows require measured body/door clearance before source replacement.
+The table lists every unmatched family and map. The regional Viridian and Pewter Gyms now have guarded, inspected adapters;
+see `HGSS_KANTO_GYMS_2026-10-23.md`. Other Gym locations remain unmatched.
 
 The twelve Mart drawings per edition include eleven real entrances and one
 Saffron connection projection whose original door permission is blocked. The
@@ -117,4 +120,4 @@ physical body to about22px inside the64px native width. That is an inadequate
 fit. An explicit faithful aperture/sign adaptation or better matching source is
 required; the whole source is not blindly placed. The public catalog returned
 HTTP403 during source discovery; existing downloaded regional archives remain
-available, so the local Gym work can continue.
+available, so local regional work can continue.
