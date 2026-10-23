@@ -763,7 +763,7 @@ local function build(req,cache,previous)
  end end
  local modelCache=V.require('NativeGeometryCache')
  modelCache.prepare(req.game,regions)
- for _,p in ipairs(props)do if not p.stageHidden then
+ for _,p in ipairs(props)do if not p.stageHidden and not V.require('Gen3ModernHoennBuildings').ownsProp(p)then
   local b=batches[p.pair]
   local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout

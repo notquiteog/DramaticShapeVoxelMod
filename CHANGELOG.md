@@ -1,3 +1,10 @@
+## 1.57.9 — 2026-10-23
+
+- Activate reviewed original ORAS Hoenn Gyms, notices, regional Marts and Oldale homes with native source doors.
+- Add HGSS Pewter houses and regional Viridian/Pewter Gyms; preserve native entry, collision and ground.
+- Add original ORAS home tables/fridges across88 reviewed component placements, with recessed contact surfaces.
+- Prevent source furniture falling back after touring towns by lifting the small-texture count cap while preserving memory limits.
+
 ## 1.57.8 — 2026-10-23
 
 - Recess building contact rings beneath native ground to prevent coplanar closure artifacts, preserving doors and native tiles.

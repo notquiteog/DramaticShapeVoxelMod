@@ -56,6 +56,17 @@ many=assert(S.buildBatches(repeated,upload));assert(fits==3,'changed fit reused 
 S.vertices=originalVertices
 local batches=assert(S.buildBatches(placements,upload));assert(#batches==1 and batches[1].instanced and batches[1].count==2 and allocations==1);S.releaseBatches(batches)
 instances=false;batches=assert(S.buildBatches(placements,upload));assert(not batches[1].instanced and #batches[1].mesh.vertices==6 and #batches[1].mesh.indices==6);assert(batches[1].mesh.vertices[1][2]==2 and batches[1].mesh.vertices[4][1]==16.25);S.releaseBatches(batches)
+-- Adjacent equal fits may have different contact-ring policies. The touring
+-- fast path must not share either prototype or draw group across that boundary.
+instances=true
+local mixed=assert(S.buildBatches({
+ {model='third_party:house',x=0,y=0,z=0,fit={width=16,depth=16}},
+ {model='third_party:house',x=16,y=0,z=0,fit={width=16,depth=16,groundInset=.05}},
+},upload))
+assert(#mixed==2,'contact inset lost in repeated-fit batch cache')
+local lows={};for _,part in ipairs(mixed)do lows[part.model.vertices[1][2]]=true end
+assert(lows[0]and lows[-.05],'separate contact policies shared one prototype')
+S.releaseBatches(mixed);instances=false
 local count=0;local partial,err=S.buildBatches(placements,function(...)count=count+1;if count==2 then error('upload failure')end;return upload(...)end);assert(not partial and err:find('upload failure',1,true),'partial upload failed to fall back')
 S.release();local before=allocations;failAt=before+1;assert(not S.image('third_party:house','model.png','repeat','repeat'));assert(not S.image('third_party:house','model.png','repeat','repeat')and allocations==before+1,'failed image retried each frame')
 assert(not S.image('third_party:house','../other.png','repeat','repeat'));failAt=nil
