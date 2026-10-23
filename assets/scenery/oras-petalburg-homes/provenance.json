@@ -1,0 +1,114 @@
+{
+  "source": "User-supplied Alpha Sapphire RomFS; authentic own town-home geometry",
+  "variants": {
+    "wide": {
+      "gr": 7,
+      "model": "world02_02_02",
+      "sourceTrianglesByMaterial": {
+        "chip_mado": 28,
+        "touka_house2": 1054,
+        "touka_waku01": 316
+      },
+      "undersideTriangles": 24,
+      "sourceOrigin": [
+        -189,
+        0.5000134110450745,
+        281
+      ],
+      "sourceBchSha256": "71568e6bf1105c2f6a21aea687f536d6b90473749a28ad0020b05edbd09f8fe0",
+      "originalHorizontalGroundFaces": 0
+    },
+    "west": {
+      "gr": 8,
+      "model": "world02_02_03",
+      "sourceTrianglesByMaterial": {
+        "touka_house2": 912,
+        "touka_waku01": 172,
+        "chip_mado": 14
+      },
+      "undersideTriangles": 22,
+      "sourceOrigin": [
+        -117,
+        0.5000134110450745,
+        -7
+      ],
+      "sourceBchSha256": "b008075154a17ea5d0fb5ed89262e448289f1196cd6d2cdc5a955914aa6b47e9",
+      "originalHorizontalGroundFaces": 0
+    },
+    "east": {
+      "gr": 8,
+      "model": "world02_02_03",
+      "sourceTrianglesByMaterial": {
+        "touka_house2": 912,
+        "touka_waku01": 172,
+        "chip_mado": 14
+      },
+      "undersideTriangles": 22,
+      "sourceOrigin": [
+        99,
+        0.5000134110450745,
+        101
+      ],
+      "sourceBchSha256": "b008075154a17ea5d0fb5ed89262e448289f1196cd6d2cdc5a955914aa6b47e9",
+      "originalHorizontalGroundFaces": 0
+    }
+  },
+  "normalizationSpan": 134.0,
+  "door": "BM0004 c101_bm_door01",
+  "doorPhysicalTriangles": 76,
+  "doorAnglesRadians": [
+    0.0,
+    -0.6981316804885864,
+    -1.3962633609771729
+  ],
+  "movingInverseBindMaximumError": 0.0,
+  "doorPanelOriginalRight": 12.018587872385979,
+  "doorAlignmentOffsetX": -0.0185878723859787,
+  "textures": {
+    "11_chip_mado": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "3fb40e5b7db233ddb5287c665cd1f1ec475736180464638bb0249d365e3d8550",
+      "pngSha256": "ed46e7d0907de47c6cd1acd30fdf3e1844a4a831fcfe018320e6781c8fffb00b"
+    },
+    "11_touka_house01": {
+      "size": [
+        256,
+        128
+      ],
+      "rgbaSha256": "94ab4c7cdf3f4d2e5061b25a91d3db4521e95857f1e5d812636bd6fcc355fca7",
+      "pngSha256": "62df60de2064a3634d3cfcc23a2bde5c89fd4b4b8c30747fcdec7d94f33b94bc"
+    },
+    "11_touka_waku01": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "c425b1542dcfc1d9fc8b7e2dd6af6f5deb69fe6bf1ad585352462f34a8165955",
+      "pngSha256": "8764225bf10b9e29d3e941589100d7b2de2d39b2846e5ac428722dac2f35fe86"
+    },
+    "1_touka_door01": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "7d54671120f6878d6f7b9dbd1c6911589170d099863d6b2780c674646de3c4e1",
+      "pngSha256": "f368d96ff3080c6f0c7ec1ea8817917b09292fb4c88348bfb35a345dbf8c1c6c"
+    },
+    "1_c101door_mado": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "3fb40e5b7db233ddb5287c665cd1f1ec475736180464638bb0249d365e3d8550",
+      "pngSha256": "ed46e7d0907de47c6cd1acd30fdf3e1844a4a831fcfe018320e6781c8fffb00b"
+    }
+  },
+  "sha256": {
+    "door": "e57f5bb7922424d6c9536ac34055d8506e4723d5af81d458341266feefc7a849",
+    "animation": "e3bfbb56e06954a6a0f4d76c0c6c34a511be260e634381250b3d4a551c1938fb"
+  },
+  "processing": "Original own-source positions/UVs/triangles independently checked with Nitrogen. No copied terrain/fences or source ground planes. Source exposure RGB and24 nonphysical light faces omitted. Native portal/ground remains fixed; only Y0 contact vertices recess at fit upload."
+}
