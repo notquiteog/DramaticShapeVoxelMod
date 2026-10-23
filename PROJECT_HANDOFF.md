@@ -1,3 +1,15 @@
+# Original ORAS Devon Corporation — 2026-10-23
+
+Authentic GR33/ZO16/AD11/BM14 Devon now dispatches as rustboroDevon:1597 body
+triangles,46 paired-door triangles, exact source rear/underside closures and
+native paired portals. Uniform native fit preserves the walkable front strip.
+Official0.3.95 three native source/cap/pose/rollback cases, six actual R/S/E
+entries/returns and two Emerald missing-source fallback entries pass. Source
+all-angle and native contact/door/side/rear views inspected; native hashes
+unchanged, recovery zero. Census candidates now40EM39RU39SA of244;126 missing.
+No Scene edits or whole-map completion claim. See
+[batch evidence](docs/ORAS_DEVON_CORPORATION_2026-10-23.md). Flat2/tower continue.
+
 # Remove original Oldale glass-return overlap — 2026-10-23
 
 Two southeast source-glass triangles lose only the area shared with their

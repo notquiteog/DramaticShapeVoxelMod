@@ -1,0 +1,98 @@
+{
+  "source": "Supplied Alpha Sapphire RomFS, original Rustboro GR33/ZO16/AD11/BM14",
+  "sourceBchSha256": "25c35a9b173563023a966347bc96876502641e04d13eabd25b8c0905f3ff43da",
+  "normalizationOrigin": [
+    -315.0,
+    0.25,
+    -99.0
+  ],
+  "normalizationSpan": 198.0,
+  "sourceTrianglesByMaterial": {
+    "devon_waku": 876,
+    "devon_corp": 629,
+    "mado_devon1": 92
+  },
+  "undersideTriangles": 37,
+  "rearClosure": {
+    "authoredRearTriangles": 210,
+    "profileBands": 97,
+    "sourcePaintTexel": [
+      0.048828125,
+      0.62890625
+    ],
+    "insetSourceUnits": 0.1
+  },
+  "sourceDoorPlacement": [
+    2205,
+    0,
+    3141
+  ],
+  "originalZoneDestination": 286,
+  "doorPhysicalTriangles": 46,
+  "doorAngles": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      -0.13089969754219055,
+      0.13089969754219055
+    ],
+    [
+      -0.2617993950843811,
+      0.2617993950843811
+    ]
+  ],
+  "movingInverseBindError": 0.0,
+  "textures": {
+    "11_devon_waku01": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "b52f9b93a708239859c528af86f0ad66fcc11f2d3728778464bf9f6c6a6b1242",
+      "pngSha256": "029566abacdf8e62af016aaafd66d52d675fa1ba67569d32535efc9931166d71"
+    },
+    "11_devon_corp01": {
+      "size": [
+        256,
+        128
+      ],
+      "rgbaSha256": "2e7a0a44d1efdb0ce2b7f0c6c47219c8c121b99fe187acf6875591572ec8ff08",
+      "pngSha256": "f0ae275564f9d523da185e26b7110ee03cb0d720deae656e65dfc708f972ce03"
+    },
+    "11_mado_devon": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "3ea29c43cfbc5e5e3b2325c817ed53bbfb4fc71c4a38fedb9c0eb026813b7710",
+      "pngSha256": "bf311bba3556c58e64a3cd51670652e1097f3058716beac3c916f156f3be6490"
+    },
+    "1_devon_door01": {
+      "size": [
+        64,
+        128
+      ],
+      "rgbaSha256": "0766afe2fddb6f5049b6594ef48955507768954b4986e23d171be924c5ed63c6",
+      "pngSha256": "ecb9254c548dba1b555c49de5799a4c17f5dd53e61503661d1e4d0e94012afa3"
+    }
+  },
+  "sha256": {
+    "door": "bf7c26b9b9c7d1695bff7ff25008701d018c57d0a5b678d9f3186c7f35e3fa7d",
+    "animation": "00f6eab03fea20e41c361d0430828334311a51c923afcf911b2b995832f8d798"
+  },
+  "processing": "Original physical positions/UVs/indices independently checked. Source exposure RGB and24 nonphysical light faces omitted. Actual body/pedestal bottoms close without overlap, and rear follows source profiles. No source terrain or fences. Native fit/entry acceptance is separate.",
+  "nativeFit": {
+    "width": 160,
+    "depth": 128,
+    "padding": 4,
+    "doorAnchor": [
+      80,
+      0,
+      118
+    ],
+    "groundInset": 0.05
+  },
+  "doorBottomContactSnapToleranceSourceUnits": 0.0016
+}
