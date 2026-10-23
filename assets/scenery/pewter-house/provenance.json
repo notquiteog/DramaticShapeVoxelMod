@@ -1,0 +1,145 @@
+{
+  "asset": 592849,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592849/",
+  "title": "Pewter City ordinary house",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "bec6dedcd0a5f28375f06b9fdc436c8603b9357c754f77834461db573eee70be",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Pewter City/Pewter City.dae",
+  "sourceModelSha256": "f0f0baace0f8de7bb18e126027ae8a051bf15aa6c34e5ba1162f972d2a711665",
+  "geometry": "nbc_h01_005-mesh",
+  "doorGeometry": "nbc_dr1_005-mesh",
+  "doorOffset": [
+    2,
+    1,
+    13.9385
+  ],
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -33.0,
+      0.95,
+      -24.0,
+      33.67578,
+      64.0,
+      23.0
+    ],
+    "sourceOrigin": [
+      0.3378900000000016,
+      0.95,
+      -0.5
+    ],
+    "sourceUnitSpan": 66.67578,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.35245181983622836,
+      0.5,
+      0.9456207336457105,
+      0.35245181983622836
+    ]
+  },
+  "originalBounds": [
+    -33.0,
+    1.0,
+    -26.0,
+    40.0,
+    64.0,
+    32.0
+  ],
+  "originalTriangles": 160,
+  "processedTriangles": 179,
+  "closure": "Measured rear siding and asymmetric gable, original roof-thickness cuts and pitched soffit, front-gable returns, closed foundation. Original source facade, chimney, windows and recessed door unchanged. The21 original source-shading triangles are excluded from processed geometry; renderer live lighting owns illumination.",
+  "textures": {
+    "h_mado.png": {
+      "sha256": "ddf8daca4b57e903f962c663f89f06be6d43ca5f29459d0094b4b8140514601f",
+      "bytes": 187
+    },
+    "h_in.png": {
+      "sha256": "3142cd93a33fa44fa70b74cdd9ff93fda4501a146a26a1a274a89976f3d3ac12",
+      "bytes": 81
+    },
+    "nbc_h01b.png": {
+      "sha256": "5806383e2d3a8e78af4324eb0c127ce0b2682dcbcad4589be02056ccd618ed94",
+      "bytes": 793
+    },
+    "nbc_h01a.png": {
+      "sha256": "8c5ac1d979d581fa5ca2ade15d0da7401dc5ecf656d0e261d77c96539e1de22f",
+      "bytes": 334
+    }
+  },
+  "parts": [
+    {
+      "name": "nbc_h01_005-mesh:h_mado_019-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 4
+    },
+    {
+      "name": "nbc_h01_005-mesh:h_in_024-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 14
+    },
+    {
+      "name": "nbc_h01_005-mesh:nbc_h01b_003-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 113
+    },
+    {
+      "name": "nbc_dr1_005-mesh:nbc_h01a_003-material",
+      "role": "source_door",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "authored_rear_siding",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_rear_gable",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 3
+    },
+    {
+      "name": "authored_rear_roof_return",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_pitched_roof_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_front_gable_returns",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 7
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 16
+    }
+  ]
+}
