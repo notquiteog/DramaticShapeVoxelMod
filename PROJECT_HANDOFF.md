@@ -1,3 +1,21 @@
+# FR/LG original Center sliding doors and native census — 2026-10-23
+
+Static HGSS Centers no longer retain duplicate glass beneath native animation
+cards. Original glass splits at its UV midpoint into native-frame sliding leaves,
+preserving source plane/height/UVs/opacity; full body/all poses stay on original
+blocked cells. Exact Vermilion water-header and blocked Saffron connection guards
+complete18 detected standard drawings. Official0.3.95 Linux/LÖVE11.5 source
+fixtures cover36 placements/34 real entry-return pairs across FR/LG; LG missing
+PNG fallback passes18. Source topology, native comparisons and contact captures
+inspected; source-alpha Celadon replay, focused LuaJIT tests and immutable native
+hash checks pass. Four/Six Island synthetic Rival flags are documented, never
+saved. Sixteen Centers per edition accepted; both Saffron placements need shared
+native-yellow paving. Canonical census75 eligible/66 accepted/58 unmatched,
+6324 unclassified blocked cells per edition. Source data/PNG bytes unchanged.
+Production Scene is parent-owned: route existing Center groups through new
+Gen3KantoCenterDoors draw/release/ownsDoor, or dispatcher kantoCenters. No release
+or combined-package acceptance is claimed. See docs/HGSS_CENTER_DOORS_2026-10-23.md.
+
 # FR/LG shared HGSS Mart source batch — 2026-10-23
 
 Standalone dispatcher adds `hgssMarts`; production Scene integration remains
