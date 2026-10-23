@@ -1,4 +1,4 @@
--- Genuine ORAS BM0040 paired Oceanic Museum doors, including the idle closed state. The
+-- Genuine ORAS BM0040 paired Oceanic Museum doors, including the native open idle state. The
 -- native engine owns animation frame, sound, player movement and warp timing.
 local V=...
 local Models,Budget=V.require('SceneryModels'),V.require('BuildBudget')

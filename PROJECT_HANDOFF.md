@@ -1,3 +1,16 @@
+# Original ORAS Slateport Harbor — 2026-10-23
+
+Own GR150/AD20/BM93/ZO14→275 Harbor dispatches as hoennHarbors. Includes its
+actual Comb2/t106_02 physical wall layer; source exposure RGB, original PICA
+portal marker and BM light faces omitted. Original paired slider travel and
+native open entrance preserved. Underside/rear closed, contacts−.05; all fitted
+body/leaf states coplanar-zero. Official0.3.95 three final R/S/E source uploads,
+three actual-Scene entries/normal returns and one Emerald missing-source
+return pass; all-angle source/native captures inspected. No Scene edits.
+Candidates43EM42RU42SA of244;117 missing. Shipyard stays fallback due exact
+native foyer(26,37)/portal(26,38) source-fit conflict; no clearance relaxation.
+See [batch evidence](docs/ORAS_SLATEPORT_HARBOR_2026-10-23.md). Regional work continues.
+
 # Original ORAS Oceanic Museum — 2026-10-23
 
 Own GR150/AD20/BM40/ZO14→273 Museum now routes as hoennMuseums. Original1306

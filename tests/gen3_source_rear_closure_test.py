@@ -6,7 +6,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from oras_rear_closure import _clip,_area
 SCRIPT=r'''
 local function j(v)if type(v)=='number'or type(v)=='boolean'then return tostring(v)elseif type(v)=='string'then return string.format('%q',v)elseif type(v)=='table'then local o={};if #v>0 then for _,q in ipairs(v)do o[#o+1]=j(q)end;return'['..table.concat(o,',')..']'else for k,q in pairs(v)do o[#o+1]=j(k)..':'..j(q)end;return'{'..table.concat(o,',')..'}'end end;error(type(v))end
-local out={};for _,n in ipairs{'HoennGym','HoennMart','OldaleHomes','PetalburgHomes','RustboroHomes','RustboroDevon','SlateportMart','SlateportMuseum'}do for k,m in pairs(dofile('lib/Imported'..n..'Data.lua'))do if k:match('^oras_')and not k:match('notice$')then out[k]=m end end end;print(j(out))
+local out={};for _,n in ipairs{'HoennGym','HoennMart','OldaleHomes','PetalburgHomes','RustboroHomes','RustboroDevon','SlateportMart','SlateportMuseum','SlateportHarbor'}do for k,m in pairs(dofile('lib/Imported'..n..'Data.lua'))do if k:match('^oras_')and not k:match('notice$')then out[k]=m end end end;print(j(out))
 '''
 models=json.loads(subprocess.check_output(['luajit','-e',SCRIPT],text=True))
 def triangles(parts):
@@ -47,5 +47,5 @@ for name,model in models.items():
     if b[0]-a[0]>1e-6:break
     if 'authored_closed_rear'not in[a[1],b[1]]and not('oldale_home'in name and a[1]==b[1]=='chip_mado')and not(name=='oras_rustboro_devon'and'authored_closed_underside'in[a[1],b[1]]):continue
     pairs+=1;assert overlap(a[2],b[2])<1e-8,(name,'coplanar rear overlap',a[1],b[1])
-assert len(models)==18
-print('PASS18 real source rear closures,',rays,'rear rays, unchanged bounds,',pairs,'coplanar pairs checked')
+assert len(models)==19
+print('PASS19 real source rear closures,',rays,'rear rays, unchanged bounds,',pairs,'coplanar pairs checked')
