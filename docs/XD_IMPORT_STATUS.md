@@ -157,3 +157,20 @@ all-model battle claim. The model pack gate remains false. Form selection is
 now wired; complete form artwork, shiny filters, multi-layer materials,
 particles, shape/sub-animation composition, GB paired ownership, import UI and
 native battle/mobile acceptance are still outstanding.
+
+## Move categories and failure isolation — 2026-10-23
+
+Gen1/2 now pass native move metadata through the optional model adapter. XD
+resolves the current generation's public damage category instead of always
+playing Physical; other providers can ignore the additional optional argument.
+GBA model metrics, update, clip and drawing failures retain native sprite
+ownership and cache failed actor identity until an actor/form/style change,
+preventing repeated per-frame model construction. Explicit failed updates in
+the shared GB provider also trigger its established native fallback.
+
+Focused LuaJIT tests pass for native category routing, four GBA failure modes
+and retry suppression, model material/context behavior, and24 original Stadium
+bridge checks. These are source/API regression checks; no new GPU or phone
+acceptance claim. Pack validation remains disabled, with the same outstanding
+multi-layer/shiny/particle/sub-animation, paired GB actor and import acceptance
+work documented above.

@@ -1,3 +1,12 @@
+# XD move category and failure isolation — 2026-10-23
+
+GB model animation now receives native move categories instead of selecting
+Physical for every XD attack. GBA bad metrics/update/clip/draw retain sprites
+and cache failure to prevent per-frame reconstruction; shared GB providers also
+honor explicit update failure. Four focused Lua suites pass (24 Stadium bridge
+checks). No model readiness, native visual or phone certification. See
+`docs/XD_IMPORT_STATUS.md`; scenery/streaming/version files untouched.
+
 # User-requested consolidated release1.57.6 — 2026-10-22
 
 User requests prompt commit/push/main/release of all current work. The Route103

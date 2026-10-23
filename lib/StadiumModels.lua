@@ -256,7 +256,7 @@ function StadiumModels.update(battle, dt)
     local actor = actors[side]
     local move = def and tonumber(def.index or def.number)
     local ok = actor.instance and move
-      and safeCall(actor.instance, "playMove", move, false)
+      and safeCall(actor.instance, "playMove", move, false, {definition=def,battle=battle})
     if actor.instance and not ok then playContext(actor, "attack", false) end
     if ok then actor.context = "attack" end
   end
@@ -274,7 +274,7 @@ function StadiumModels.update(battle, dt)
         dynamicObjectEnabled = true,
         dynamicObjectUpdateEnabled = true,
       })
-      if updated == nil and err then
+      if updated == false or (updated == nil and err) then
         warnOnce("update:" .. side,
           ("Stadium 2 %s model update failed: %s; using Battle Art")
             :format(side, tostring(err)))
