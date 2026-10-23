@@ -33,3 +33,12 @@ the continuing queue for exact uncovered native families and placements.
 The six Oldale home candidates were added after the initial571-map pass using
 positive actual0.3.95 native per-placement upload/door/cap/rollback checks in all
 R/S/E. Original per-map grid hashes and recognized counts stay unchanged.
+
+`Gen3ModernHoennBuildings` provides one standalone Scene-facing transaction for
+reviewed Gym/Mart/Oldale homes: build/draw/release/ownsDoor. Its prepare/ground
+functions expose paired notices. A failed or interrupted building upload releases
+only new resources and never claims native-door ownership. Source/dispatcher
+QA passes all24 native R/S/E building candidates with every cached door state,
+resource cleanup and failed-upload rollback on official0.3.95; exception and
+incomplete-provider tests preserve preceding Scene resources. Parent Scene
+activation and final native gameplay/visual checks remain outstanding.
