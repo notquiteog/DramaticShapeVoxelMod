@@ -6673,14 +6673,16 @@ collapse back into separate holes. Overhead CPU regression passes; updated074
 # Interior source worker batches — 2026-10-23
 
 Verified source continuation: 61 BDSP institution racks, 158 legacy PC/TV/bed
-contacts, 74 genuine ORAS china cupboards, and 39 Oldale kitchen units.
-The full census still has 2161 unchanged native hashes; 504 furniture candidates,
-459 accepted components across 228 maps, complete-map acceptance false. Exact
-bed rims replace 7 overlapping old caps; all 11 furniture models pass geometric
+contacts, 74 genuine ORAS china cupboards, 39 Oldale kitchen units, and 682
+common Kanto graves using original Mt. Pyre memorials.
+The census has 2161 unchanged native hashes; 1186 furniture candidates,
+1141 accepted components across 240 maps, complete-map acceptance false. Exact
+bed rims replace 7 overlapping old caps; all 12 furniture models pass geometric
 coplanar-intersection checks. Kitchen undersides exclude the internal base
 footprint instead of duplicating its lid. Native 0.3.95 isolated all-fixture
 captures inspected; missing-PNG fallbacks and focused suites pass. Official
 Linux shell reports PASS then exits 1 on shutdown. Scene/release integration
 remains root-owned. See docs/IMPORTED_INTERIOR_CONTACTS_2026-10-23.md,
 docs/ORAS_CHINA_CUPBOARD_2026-10-23.md and docs/ORAS_KITCHEN_SINK_2026-10-23.md.
+The cemetery evidence/occlusion limits are in docs/ORAS_PYRE_MEMORIAL_2026-10-23.md.
 Remaining room/furniture coverage is still in progress; no full-game claim.

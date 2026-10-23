@@ -13751,7 +13751,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_pyre_memorial"
+      ]
     },
     "tower_grave_659": {
       "design": "fr_tower_grave",
@@ -14356,14 +14358,14 @@
       "rooms": 301
     },
     "firered": {
-      "candidateFurniture": 57,
+      "candidateFurniture": 398,
       "furniture": 2937,
       "maps": 426,
       "nativeWallFinishRooms": 65,
       "rooms": 253
     },
     "leafgreen": {
-      "candidateFurniture": 57,
+      "candidateFurniture": 398,
       "furniture": 2937,
       "maps": 426,
       "nativeWallFinishRooms": 65,

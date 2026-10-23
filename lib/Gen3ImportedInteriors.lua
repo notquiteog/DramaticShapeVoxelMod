@@ -14,10 +14,13 @@ dataFiles.oras_oldale_refrigerator='ImportedOldaleFridgeData'
 dataFiles.bdsp_galactic_server='ImportedInstitutionServerData'
 dataFiles.oras_oldale_china_cupboard='ImportedOldaleCupboardData'
 dataFiles.oras_oldale_kitchen_sink='ImportedOldaleSinkData'
+dataFiles.oras_pyre_memorial='ImportedPyreMemorialData'
 -- Complete public-PC and genuine TV drawings include the wall above and
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
+ tower_grave_657={pair='building__rom_082d4efc',design='fr_tower_grave',rows={{0x291}},collisionRows={{7}},
+  model='oras_pyre_memorial',fitWidth=16,fitDepth=16,fitHeight=17,zRows=0,groundInset=.025},
  hoenn_center_pc={pair='building__pokemon_center',family='rse',design='fr_center_pc',rows={{0x20c},{4},{0x224}},groundInset=.025},
  center_terminal={pair='network',design='fr_center_pc',rows={{0x285},{0x62},{0x295}},groundInset=.025},
  hoenn_home_small_tv={pair='building__generic_building',family='rse',design='em_home_small_tv',rows={{0x230},{0x21e},{0x238}},model='oras_home_tv',cabinet=6,groundInset=.025},
@@ -91,6 +94,7 @@ function M.eligible(p,cells)
    if base==nil then base=c.base or 0 elseif math.abs((c.base or 0)-base)>.001 then return false end
   end
  end
+ if math.abs((base or 0)-(p.groundHeight or 0))>.001 then return false end
  return true
 end
 function M.placements(cells)

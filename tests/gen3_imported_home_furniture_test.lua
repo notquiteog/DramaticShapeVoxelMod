@@ -10,12 +10,14 @@ V.require=function(name)
  if name=='ImportedOldaleFridgeData'then return dofile('lib/ImportedOldaleFridgeData.lua')end
  if name=='ImportedOldaleCupboardData'then return dofile('lib/ImportedOldaleCupboardData.lua')end
  if name=='ImportedOldaleSinkData'then return dofile('lib/ImportedOldaleSinkData.lua')end
+ if name=='ImportedPyreMemorialData'then return dofile('lib/ImportedPyreMemorialData.lua')end
  if name=='ImportedHomeFurnitureData'then return dofile('lib/ImportedHomeFurnitureData.lua')end
  if name=='ImportedOldaleFurnitureData'then return dofile('lib/ImportedOldaleFurnitureData.lua')end
  error(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='tower_grave_657',family=false,pair='building__rom_082d4efc',design='fr_tower_grave',rows={{0x291}},coll={{7}},x=3,z=5,id='oras_pyre_memorial',fit={16,16,0},height=17},
  {name='hoenn_home_sink',pair='building__generic_building',design='em_home_sink',rows={{0x26c,0x26d},{0x274,0x275}},coll={{7,7},{0,0}},x=8,z=1,id='oras_oldale_kitchen_sink',fit={32,16,0},rotation=1},
  {name='hoenn_home_tv',pair='building__generic_building',design='em_home_tv',rows={{0x286,0x287},{0x28e,0x28f},{0x296,0x297}},coll={{7,7},{7,7},{0,0}},x=0,z=0,id='oras_oldale_china_cupboard',fit={32,16,1}},
  {name='birch_server',pair='building__lab',design='em_lab_server',rows={{0x216},{0x21e},{0x292}},coll={{0},{7},{0}},x=5,z=0,id='bdsp_galactic_server',fit={16,16,1}},
@@ -39,7 +41,7 @@ for _,q in ipairs(fixtures)do
  assert(M.eligible(p,cells));local count=0;for _ in pairs(cells)do count=count+1 end
  local list=M.placements(cells);assert(#list==1 and list[1].model==q.id)
  assert(list[1].x==q.x*16 and list[1].z==(q.z+q.fit[3])*16 and list[1].y==8)
- assert(list[1].fit.width==q.fit[1]and list[1].fit.depth==q.fit[2]and list[1].fit.height==32)
+ assert(list[1].fit.width==q.fit[1]and list[1].fit.depth==q.fit[2]and list[1].fit.height==(q.height or 32))
  assert(list[1].fit.rotation==q.rotation,'source front rotation changed')
  assert(list[1].fit.groundInset==.025,'physical source contact became coplanar with native floor')
  local last=cells[(q.x+#q.rows[1]-1)..':'..(q.z+#q.rows-1)]
