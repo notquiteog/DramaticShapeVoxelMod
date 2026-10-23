@@ -8,11 +8,12 @@ V.require=function(name)
  return assert(loadfile('lib/'..name..'.lua'))(V)
 end
 local M=V.require('Gen3ImportedFences')
-local function cell(x)return{cx=x,cy=5,base=8,primary='general',secondary='petalburg',mid=0x149,collision=7,ts={layered=true}}end
+local function cell(x)return{cx=x,cy=5,base=8,primary='general',secondary='petalburg',shape={nativeFence='rural149'},mid=0x149,collision=7,ts={layered=true}}end
 local c=cell(3);local cells={['3:5']=c};assert(M.eligible(c)=='oras_rural_fence')
 for _,k in ipairs{'boundary','prop','civic','stairs','stageHidden'}do c[k]=true;assert(not M.eligible(c),k);c[k]=nil end
 for _,k in ipairs{'mid','collision','primary'}do local v=c[k];c[k]=false;assert(not M.eligible(c),k);c[k]=v end
 c.ts.layered=false;assert(not M.eligible(c));c.ts.layered=true
+c.shape={kind='roof'};assert(not M.eligible(c),'FRLG roof mid149 is not a Hoenn fence');c.shape={nativeFence='rural149'}
 local parts={};local result,err,n=M.build(cells,function()end,parts)
 assert(not result and err and n==0 and not c.importedFence and not M.floor(c),'failed source hid native drawing')
 available=true;result,err,n=M.build(cells,function()end,parts)
@@ -31,20 +32,23 @@ assert(R.ownShape('general','petalburg',0x149,0,7).nativeFence=='rural149')
 assert(not H.emeraldShape('general','petalburg',0x149,0,0).nativeFence)
 local F=V.require('Gen3FenceFamilies');local ornate={}
 for mid,segments in pairs(F.ornate)do
- local q=cell(mid);q.mid=mid;q.secondary='rustboro';q.ts.midToSlot={}
+ local q=cell(mid);q.mid=mid;q.shape={nativeFence='rustboro'};q.secondary='rustboro';q.ts.midToSlot={}
  for _,row in pairs(F.ground)do for _,g in ipairs(row)do q.ts.midToSlot[g[1]]=g[1]end end
+ q.ts.midToSlot[mid]=mid
  assert(M.eligible(q)=='oras_rustboro_fence');ornate[mid..':5']=q
  q.secondary='petalburg';assert(not M.eligible(q),'secondary collision');q.secondary='rustboro'
 end
 available=false;assert(not M.build(ornate,function()end,{}))
 for _,q in pairs(ornate)do assert(not q.importedFence)end
 available=true;local r,e,num=M.build(ornate,function()end,{})
-assert(r and not e and num==17,'unique native cells count')
+assert(r and not e and num==21,'unique native cells count')
 for _,q in pairs(ornate)do
- local quads={};assert(M.appendFloor(q,function(v,uv)quads[#quads+1]={v,uv}end,function()return{{0,0},{1,0},{1,1},{0,1}}end))
- assert(#quads==4);for _,a in ipairs(quads)do for _,v in ipairs(a[1])do assert(v[1]>=q.cx*16 and v[1]<=q.cx*16+16 and v[3]>=80 and v[3]<=96)end end
+ local quads={};local function emit(v,uv)quads[#quads+1]={v,uv}end
+ assert(M.appendFloor(q,emit,function()return{{0,0},{1,0},{1,1},{0,1}}end,emit))
+ assert(#quads==(F.plants[q.mid]and 8 or 4));for i,a in ipairs(quads)do for _,v in ipairs(a[1])do assert(v[1]>=q.cx*16 and v[1]<=q.cx*16+16 and v[3]>=80 and v[3]<=96 and v[2]==(i>4 and .025 or 0))end end
  local count=0;assert(not M.appendFloor(q,function()count=count+1 end,function()return nil end)and count==0,'partial ground must be atomic')
 end
+for _,id in ipairs{'RU_RUSTBORO_CITY','SA_RUSTBORO_CITY'}do local q={mid=0x33f,region={def={id=id}}};assert(#F.plantRows(q)==5)end
 assert(not F.shape('general','rustboro',0x2e8,0,7),'plain pavement corner is not fence')
 -- Real Models validation/fit, independent of the mock GPU batch above.
 local Q={require=function(n)

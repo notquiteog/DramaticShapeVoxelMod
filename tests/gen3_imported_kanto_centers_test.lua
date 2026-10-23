@@ -27,7 +27,7 @@ local old=S.buildBatches;S.buildBatches=function(placements,_,opts)
  for _,part in ipairs(parts)do
   shade=shade or part.alphaMode=='blend' and math.abs(part.opacity-.2903226)<1e-6
   foundation=foundation or part.name=='authored_closed_foundation';sourceDoor=sourceDoor or part.role=='source_door'
-  for _,v in ipairs(part.vertices)do assert(v[1]>=.25-1e-6 and v[1]<=79.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=63.75+1e-6 and v[2]>=0)end
+  for _,v in ipairs(part.vertices)do assert(v[1]>=.25-1e-6 and v[1]<=79.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=63.75+1e-6 and v[2]>=-.05)end
  end
  assert(shade and foundation and sourceDoor);assert(fit.bounds[4]-fit.bounds[1]>74,'source footprint shrank')
  return opts.parts

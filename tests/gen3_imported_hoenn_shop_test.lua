@@ -22,7 +22,7 @@ S.buildBatches=function(placements,_,opts)
  for i,part in ipairs(parts)do for j,v in ipairs(part.vertices)do
   local old=source.parts[i].vertices[j]
   assert(v[1]>=.25-1e-6 and v[1]<=95.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=47.75+1e-6)
-  assert(math.abs((v[1]-fit.x)/fit.scale-old[1])<1e-6 and math.abs(v[2]/fit.scale-old[2])<1e-6)
+  assert(math.abs((v[1]-fit.x)/fit.scale-old[1])<1e-6 and math.abs(v[2]-(math.abs(old[2])<1e-7 and -.05 or old[2]*fit.scale))<1e-6)
   assert(math.abs((v[3]-fit.z)/fit.scale-H.shopDepth(old[3],source.nativeDepthBay))<1e-6)
   assert(v[4]==old[4]and v[5]==old[5]and v[6]==old[6],'source UV/shade changed')
   assert(v[7]==1 and v[8]==1 and v[9]==1 and v[10]==source.parts[i].colors[j][4],'shop lighting retained or alpha lost')
