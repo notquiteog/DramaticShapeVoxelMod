@@ -6,12 +6,14 @@ local V={mod={read=function()end}}
 V.require=function(name)
  if name=='SceneryModels'then return models end
  if name=='Gen3PublicPCFrames'then return dofile('lib/Gen3PublicPCFrames.lua')end
+ if name=='ImportedOldaleFridgeData'then return dofile('lib/ImportedOldaleFridgeData.lua')end
  if name=='ImportedHomeFurnitureData'then return dofile('lib/ImportedHomeFurnitureData.lua')end
  if name=='ImportedOldaleFurnitureData'then return dofile('lib/ImportedOldaleFurnitureData.lua')end
  error(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='hoenn_home_fridge',pair='building__generic_building',design='em_home_fridge',rows={{0x278},{0x280},{0x288}},coll={{7},{7},{0}},x=10,z=0,id='oras_oldale_refrigerator',fit={16,16,1},rotation=1},
  {name='hoenn_start_dining_table',design='em_start_table',rows={{0x21a,0x21b},{0x222,0x223},{0x22a,0x22b}},coll={{7,7},{7,7},{0,0}},x=3,z=6,id='oras_littleroot_dining_table',fit={32,32,0}},
  {name='hoenn_start_fridge',design='em_start_fridge',rows={{0x230},{0x238}},coll={{7},{7}},x=0,z=1,id='oras_littleroot_fridge',fit={16,16,1}},
  {name='hoenn_home_table_yellow',pair='building__generic_building',design='em_home_table',rows={{0x248,0x249},{0x250,0x251}},coll={{7,7},{7,7}},x=3,z=4,id='oras_oldale_checked_table',fit={32,32,0}},
@@ -28,6 +30,7 @@ for _,q in ipairs(fixtures)do
  local list=M.placements(cells);assert(#list==1 and list[1].model==q.id)
  assert(list[1].x==q.x*16 and list[1].z==(q.z+q.fit[3])*16 and list[1].y==8)
  assert(list[1].fit.width==q.fit[1]and list[1].fit.depth==q.fit[2]and list[1].fit.height==32)
+ assert(list[1].fit.rotation==q.rotation,'source front rotation changed')
  assert(list[1].fit.groundInset==.025,'physical source contact became coplanar with native floor')
  local last=cells[(q.x+#q.rows[1]-1)..':'..(q.z+#q.rows-1)]
  for _,key in ipairs{'collision','mid','base','pair','primary','prop'}do

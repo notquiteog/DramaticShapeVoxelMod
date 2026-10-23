@@ -8,21 +8,21 @@
       "maps": 519,
       "rooms": 301,
       "furniture": 1830,
-      "candidateFurniture": 77,
+      "candidateFurniture": 90,
       "nativeWallFinishRooms": 79
     },
     "ruby": {
       "maps": 395,
       "rooms": 231,
       "furniture": 1210,
-      "candidateFurniture": 79,
+      "candidateFurniture": 92,
       "nativeWallFinishRooms": 84
     },
     "sapphire": {
       "maps": 395,
       "rooms": 231,
       "furniture": 1210,
-      "candidateFurniture": 79,
+      "candidateFurniture": 92,
       "nativeWallFinishRooms": 84
     },
     "firered": {
@@ -5303,7 +5303,9 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_refrigerator"
+      ]
     },
     "hoenn_home_kitchen_drawers": {
       "kind": "designed",

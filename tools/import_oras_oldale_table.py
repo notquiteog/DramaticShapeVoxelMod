@@ -7,14 +7,14 @@ from import_oras_grass import lua
 from import_oras_home_furniture import source_part,close_rims,normalized
 
 
-def solid_cloth(part,thickness):
+def solid_cloth(part,thickness,normal_axis=1,expected_rim=12):
     rows=part['vertices'];normals=collections.defaultdict(lambda:[0.,0.,0.]);edges=collections.Counter();direction={}
     key=lambda v:tuple(round(x,4)for x in v[:3])
     for i in range(0,len(part['indices']),3):
         ids=part['indices'][i:i+3];p,q,r=[rows[n-1]for n in ids]
         v=[q[k]-p[k]for k in range(3)];w=[r[k]-p[k]for k in range(3)]
         normal=[v[1]*w[2]-v[2]*w[1],v[2]*w[0]-v[0]*w[2],v[0]*w[1]-v[1]*w[0]]
-        need(normal[1]>0,'source cloth orientation changed')
+        need(normal[normal_axis]>0,'source sheet orientation changed')
         for n in ids:
             at=normals[key(rows[n-1])]
             for k in range(3):at[k]+=normal[k]
@@ -37,7 +37,7 @@ def solid_cloth(part,thickness):
         a,b=direction[edge];start=len(rim['vertices'])
         rim['vertices'].extend([list(rows[b-1]),list(rows[a-1]),list(inner[a-1]),list(inner[b-1])])
         rim['colors'].extend([[1,1,1,1]]*4);rim['indices'].extend(start+n for n in [1,2,3,1,3,4]);count+=1
-    need(count==12,'reviewed original cloth rim changed')
+    need(count==expected_rim,'reviewed original sheet rim changed')
     return [back,rim]
 
 
