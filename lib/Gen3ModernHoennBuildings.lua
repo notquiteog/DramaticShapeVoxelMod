@@ -2,11 +2,12 @@
 -- this facade owns cached door states and exposes one atomic native-fallback API.
 local V=...
 local M={}
-local gyms={adapter='Gen3ImportedGyms',doors='Gen3GymDoors',marker='importedGymDoors',models={oras_hoenn_gym=true}}
-local marts={adapter='Gen3ImportedMarts',doors='Gen3MartDoors',marker='importedMartDoors',models={oras_oldale_mart=true,oras_petalburg_mart=true,oras_rustboro_mart=true}}
-local homes={adapter='Gen3ImportedOldaleHomes',doors='Gen3OldaleDoors',marker='importedOldaleDoors',models={oras_oldale_home_northwest=true,oras_oldale_home_southeast=true}}
+local gyms={kind='hoennGyms',adapter='Gen3ImportedGyms',doors='Gen3GymDoors',marker='importedGymDoors',models={oras_hoenn_gym=true}}
+local marts={kind='hoennMarts',adapter='Gen3ImportedMarts',doors='Gen3MartDoors',marker='importedMartDoors',models={oras_oldale_mart=true,oras_petalburg_mart=true,oras_rustboro_mart=true}}
+local homes={kind='oldaleHomes',adapter='Gen3ImportedOldaleHomes',doors='Gen3OldaleDoors',marker='importedOldaleDoors',models={oras_oldale_home_northwest=true,oras_oldale_home_southeast=true}}
+local petalburg={kind='petalburgHomes',adapter='Gen3ImportedPetalburgHomes',doors='Gen3PetalburgDoors',marker='importedPetalburgDoors',models={oras_petalburg_home_wide=true,oras_petalburg_home_west=true,oras_petalburg_home_east=true}}
 local routes={petalburg_city_gym=gyms,dewford_town_gym=gyms,rustboro_city_gym=gyms,
- oldale_mart=marts,petalburg_city_mart=marts,rustboro_city_mart=marts,oldale_house=homes}
+ oldale_mart=marts,petalburg_city_mart=marts,rustboro_city_mart=marts,oldale_house=homes,petalburg_city_home=petalburg,petalburg_city_wide_home=petalburg}
 local function route(g)
  return g and g.custom and g.custom.family=='rse'and routes[g.custom.name]
 end
@@ -32,6 +33,9 @@ function M.build(g,cells,newMesh,parts)
  end
  g.modernHoennBuilding=g.custom.name
  return true
+end
+function M.kind(g)
+ local r=route(g);return r and g.modernHoennBuilding==g.custom.name and r.kind or nil
 end
 function M.draw(g,anim,draw)
  local r=route(g);if not(r and g.modernHoennBuilding==g.custom.name and g[r.marker])then return false end
