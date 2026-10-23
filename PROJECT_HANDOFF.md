@@ -1,3 +1,16 @@
+# Original ORAS Oceanic Museum — 2026-10-23
+
+Own GR150/AD20/BM40/ZO14→273 Museum now routes as hoennMuseums. Original1306
+body/68 door triangles retain roof/windows/dish/fixtures; underside/rear and
+finite roof-hardware backings close the original open geometry. Meeting leaf
+caps separate0.05 native units per side. Native unanimated0x32a stays visually
+open; original admission uses normal input. Official0.3.95 three R/S/E source
+uploads, six open-idle entrances/returns, two Emerald missing-source returns
+and Ruby walkable rear/roof checks pass. Evidence is tracked in
+[batch evidence](docs/ORAS_OCEANIC_MUSEUM_2026-10-23.md). Original native data
+and model bounds remain fixed; no Scene edit. Candidates42EM41RU41SA of244,
+120 missing. Slateport Shipyard/Harbor and the wider source queue continue.
+
 # Own ORAS Slateport Mart — 2026-10-23
 
 Distinct GR149 pc_base/AD20 paint and original BM9/ZO14→266 slider now route
