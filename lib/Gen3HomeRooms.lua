@@ -38,4 +38,43 @@ function M.attach(p,vertices)
   for _,q in ipairs(vertices)do q[3]=q[3]+shift end
  end
 end
+-- Native header columns have their own front/side/back surfaces in front of
+-- the room shell. Subtract the same stair aperture from every column face;
+-- moving a new frame flush without this cut leaves wallpaper over its trim.
+function M.stairWallFace(profile,q,uv,shade,emit)
+ local doors=profile and profile.homeFinish and profile.homeFinish.stairs and profile.doorways and profile.doorways[1]
+ if not doors or #doors==0 then emit(q,uv,shade);return end
+ local lo,hi={math.huge,math.huge,math.huge},{-math.huge,-math.huge,-math.huge}
+ for _,v in ipairs(q)do for k=1,3 do lo[k]=math.min(lo[k],v[k]);hi[k]=math.max(hi[k],v[k])end end
+ local axes={};for k=1,3 do if hi[k]-lo[k]>1e-7 then axes[#axes+1]=k end end
+ assert(#axes==2,'native wall face must be an axis-aligned quad')
+ local cuts={{lo[1],hi[1]},{lo[2],hi[2]},{lo[3],hi[3]}}
+ local height=math.min(30,profile.height-4)
+ for _,door in ipairs(doors)do for _,x in ipairs(door)do if x>lo[1]and x<hi[1]then cuts[1][#cuts[1]+1]=x end end end
+ if height>lo[2]and height<hi[2]then cuts[2][#cuts[2]+1]=height end
+ for _,a in ipairs(axes)do table.sort(cuts[a])end
+ local a,b=axes[1],axes[2]
+ for i=1,#cuts[a]-1 do for j=1,#cuts[b]-1 do
+  local lower,upper={lo[1],lo[2],lo[3]},{hi[1],hi[2],hi[3]}
+  lower[a],upper[a]=cuts[a][i],cuts[a][i+1];lower[b],upper[b]=cuts[b][j],cuts[b][j+1]
+  local x,y=(lower[1]+upper[1])/2,(lower[2]+upper[2])/2
+  local hole=false
+  for _,door in ipairs(doors)do if x>=door[1]-1e-7 and x<=door[2]+1e-7 and y<height-1e-7 then hole=true;break end end
+  if not hole and upper[a]-lower[a]>1e-7 and upper[b]-lower[b]>1e-7 then
+   local vertices,tex={},{}
+   for _,original in ipairs(q)do
+    local v={lo[1],lo[2],lo[3]}
+    for _,axis in ipairs(axes)do v[axis]=math.abs(original[axis]-lo[axis])<1e-7 and lower[axis]or upper[axis]end
+    local u,t=0,0
+    for k,corner in ipairs(q)do
+     local weight=1
+     for _,axis in ipairs(axes)do local f=(v[axis]-lo[axis])/(hi[axis]-lo[axis]);weight=weight*(math.abs(corner[axis]-lo[axis])<1e-7 and 1-f or f)end
+     u=u+uv[k][1]*weight;t=t+uv[k][2]*weight
+    end
+    vertices[#vertices+1]=v;tex[#tex+1]={u,t}
+   end
+   emit(vertices,tex,shade)
+  end
+ end end
+end
 return M
