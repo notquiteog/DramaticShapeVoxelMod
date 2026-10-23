@@ -22,9 +22,9 @@ firered,cinnabar_mansion,1,0,0,FR_CINNABAR_ISLAND,,Matching regional source sele
 firered,fuchsia_house,2,0,0,FR_FUCHSIA_CITY,,Matching regional source selection and complete native adapter pending.
 firered,fuchsia_safari_house,1,0,0,FR_FUCHSIA_CITY,,Matching regional source selection and complete native adapter pending.
 firered,gym,11,2,2,FR_CELADON_CITY|FR_CERULEAN_CITY|FR_CINNABAR_ISLAND|FR_FUCHSIA_CITY|FR_PEWTER_CITY|FR_SAFFRON_CITY|FR_SAFFRON_CITY_CONNECTION|FR_VERMILION_CITY|FR_VIRIDIAN_CITY,hgss_pewter_gym|hgss_viridian_gym,Matching regional source selection and complete native adapter pending.
-firered,hgss_pallet_oak,1,1,0,FR_PALLET_TOWN,hgss_pallet_oak,
-firered,hgss_pallet_red,1,1,0,FR_PALLET_TOWN,hgss_pallet_red,
-firered,hgss_pallet_rival,1,1,0,FR_PALLET_TOWN,hgss_pallet_rival,
+firered,hgss_pallet_oak,1,1,1,FR_PALLET_TOWN,hgss_pallet_oak,
+firered,hgss_pallet_red,1,1,1,FR_PALLET_TOWN,hgss_pallet_red,
+firered,hgss_pallet_rival,1,1,1,FR_PALLET_TOWN,hgss_pallet_rival,
 firered,indigo_plateau_league,1,0,0,FR_INDIGO_PLATEAU_EXTERIOR,,Matching regional source selection and complete native adapter pending.
 firered,lavender_house,2,0,0,FR_LAVENDER_TOWN,,Matching regional source selection and complete native adapter pending.
 firered,lavender_tower,1,0,0,FR_LAVENDER_TOWN,,Matching regional source selection and complete native adapter pending.
@@ -76,9 +76,9 @@ leafgreen,cinnabar_mansion,1,0,0,FR_CINNABAR_ISLAND,,Matching regional source se
 leafgreen,fuchsia_house,2,0,0,FR_FUCHSIA_CITY,,Matching regional source selection and complete native adapter pending.
 leafgreen,fuchsia_safari_house,1,0,0,FR_FUCHSIA_CITY,,Matching regional source selection and complete native adapter pending.
 leafgreen,gym,11,2,2,FR_CELADON_CITY|FR_CERULEAN_CITY|FR_CINNABAR_ISLAND|FR_FUCHSIA_CITY|FR_PEWTER_CITY|FR_SAFFRON_CITY|FR_SAFFRON_CITY_CONNECTION|FR_VERMILION_CITY|FR_VIRIDIAN_CITY,hgss_pewter_gym|hgss_viridian_gym,Matching regional source selection and complete native adapter pending.
-leafgreen,hgss_pallet_oak,1,1,0,FR_PALLET_TOWN,hgss_pallet_oak,
-leafgreen,hgss_pallet_red,1,1,0,FR_PALLET_TOWN,hgss_pallet_red,
-leafgreen,hgss_pallet_rival,1,1,0,FR_PALLET_TOWN,hgss_pallet_rival,
+leafgreen,hgss_pallet_oak,1,1,1,FR_PALLET_TOWN,hgss_pallet_oak,
+leafgreen,hgss_pallet_red,1,1,1,FR_PALLET_TOWN,hgss_pallet_red,
+leafgreen,hgss_pallet_rival,1,1,1,FR_PALLET_TOWN,hgss_pallet_rival,
 leafgreen,indigo_plateau_league,1,0,0,FR_INDIGO_PLATEAU_EXTERIOR,,Matching regional source selection and complete native adapter pending.
 leafgreen,lavender_house,2,0,0,FR_LAVENDER_TOWN,,Matching regional source selection and complete native adapter pending.
 leafgreen,lavender_tower,1,0,0,FR_LAVENDER_TOWN,,Matching regional source selection and complete native adapter pending.
