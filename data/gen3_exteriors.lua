@@ -171,6 +171,12 @@ return {
 {664,665,666,667,668},
 {672,673,674,675,676},
 }},
+{name='lavender_name_rater',pair='general__rom_082d4b0c',header=2,back=8,roofEnd=40,wallBottom=63,bevel=1,rows={
+{648,641,642,643,652},
+{656,657,657,657,660},
+{664,665,666,667,668},
+{672,673,674,675,676},
+}},
 {name='sevii_house',pair='sevii_outdoor',wallHeight=24,header=3,back=8,roofEnd=48,wallBottom=63,bevel=3,rows={
 {784,786,785,786,787},
 {646,647,670,670,671},

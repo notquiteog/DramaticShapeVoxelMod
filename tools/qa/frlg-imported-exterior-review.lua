@@ -1,5 +1,5 @@
 -- Isolated native source/door/footprint review for new FR/LG regional exteriors.
--- QA_FAMILY=houses|gyms|viridian_flowers|lavender; QA_UTIL names the external engine frame-driver helper.
+-- QA_FAMILY=houses|gyms|viridian_flowers|lavender|name_rater; QA_UTIL names the external engine frame-driver helper.
 return function(game)
  local family=os.getenv('QA_FAMILY')or'gyms'
  local configs={
@@ -7,6 +7,7 @@ return function(game)
   houses={fixtures={{'FR_PEWTER_CITY',8,28},{'FR_PEWTER_CITY',32,9}},doorX=1,doorY=2,stat='pewterHouses',source='^assets/scenery/pewter%-house/'},
   viridian_flowers={fixtures={{'FR_VIRIDIAN_CITY',24,15}},doorX=1,doorY=3,stat='viridianFlowerHouses',source='^assets/scenery/viridian%-house/'},
   lavender={fixtures={{'FR_LAVENDER_TOWN',8,8},{'FR_LAVENDER_TOWN',3,13}},doorX=2,doorY=3,stat='lavenderHouses',source='^assets/scenery/lavender%-house/'},
+  name_rater={fixtures={{'FR_LAVENDER_TOWN',8,13}},doorX=2,doorY=3,stat='lavenderNameRater',source='^assets/scenery/lavender%-name%-rater/',left={-1,4,math.pi/4},rear={6,-1,-3*math.pi/4}},
  }
  local config=assert(configs[family],'unreviewed source family');local fixtures=config.fixtures;local doorX,doorY=config.doorX,config.doorY
  assert(love.filesystem.getIdentity():match('%-qa$'))
@@ -33,7 +34,8 @@ return function(game)
   C.yaw=0;C.pitch=math.rad(8);C.setLevel(3,game);settle()
   local n=S.performanceSnapshot().scenery[config.stat];assert(missing and n==0 or not missing and n>0,'source/fallback mismatch')
   shot(index..'-modern')
-  if os.getenv('QA_QUICK')~='1'then for _,v in ipairs{{'front',cx+doorX,cy+doorY+2,0},{'left',cx-3,cy+2,math.pi/2},{'right',cx+(config.right or 7),cy+2,-math.pi/2},{'rear',cx+doorX,cy-2,math.pi}}do
+  local left,rear=config.left or{-3,2,math.pi/2},config.rear or{doorX,-2,math.pi}
+  if os.getenv('QA_QUICK')~='1'then for _,v in ipairs{{'front',cx+doorX,cy+doorY+2,0},{'left',cx+left[1],cy+left[2],left[3]},{'right',cx+(config.right or 7),cy+2,-math.pi/2},{'rear',cx+rear[1],cy+rear[2],rear[3]}}do
    P.reset(v[2],v[3],'up');C.yaw=v[4];C.setLevel(6,game);settle();shot(index..'-'..v[1])
   end end
   C.yaw=0;C.setLevel(3,game);P.reset(cx+doorX,cy+doorY+1,'up');game.input:reset();settle()

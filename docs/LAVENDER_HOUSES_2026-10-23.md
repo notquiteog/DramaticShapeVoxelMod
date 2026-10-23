@@ -49,7 +49,8 @@ Raw archives, saves, native art and captures remain outside tracked files.
 Canonical inventory remains426 maps/76 outdoors/132 recognized assemblies each
 edition, now28 source-eligible,10 inspected and104 unmatched. Ten of54 recognized
 families have at least one eligible source; the Gym family remains partial.
-A third native Lavender house at(8,13) has a distinct Name Rater header
-`648,641,642,643,652` not recognized by the old civic recipe. It remains an
-explicit discovery/source gap for the next batch, alongside the Tower and Mart.
+The subsequent Name Rater batch classifies the third native house at(8,13),
+whose distinct header `648,641,642,643,652` was absent from the old recipe. Its
+actual HGSS tent is documented in `docs/LAVENDER_NAME_RATER_2026-10-23.md`; the
+Tower and Mart remain gaps. The counts above describe this ordinary-house batch.
 The census does not prove there are no further assemblies in unclassified cells.

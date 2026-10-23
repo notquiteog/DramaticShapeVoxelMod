@@ -3,6 +3,7 @@
 local V=...
 local M={}
 local specs={
+ {kind='lavenderNameRater',building='Gen3ImportedLavenderNameRater',doors='Gen3LavenderTentEntrance',marker='importedLavenderNameRater'},
  {kind='lavenderHouses',building='Gen3ImportedLavenderHouses',doors='Gen3LavenderHouseDoors',marker='importedLavenderHouse'},
  {kind='viridianFlowerHouses',building='Gen3ImportedViridianFlowerHouses',doors='Gen3ViridianFlowerHouseDoors',marker='importedViridianFlowerHouse'},
  {kind='pewterHouses',building='Gen3ImportedPewterHouses',doors='Gen3PewterHouseDoors',marker='importedPewterHouse'},
