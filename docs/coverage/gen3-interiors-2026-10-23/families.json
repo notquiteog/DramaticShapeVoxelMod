@@ -8,21 +8,21 @@
       "maps": 519,
       "rooms": 301,
       "furniture": 1830,
-      "candidateFurniture": 49,
+      "candidateFurniture": 77,
       "nativeWallFinishRooms": 79
     },
     "ruby": {
       "maps": 395,
       "rooms": 231,
       "furniture": 1210,
-      "candidateFurniture": 49,
+      "candidateFurniture": 79,
       "nativeWallFinishRooms": 84
     },
     "sapphire": {
       "maps": 395,
       "rooms": 231,
       "furniture": 1210,
-      "candidateFurniture": 49,
+      "candidateFurniture": 79,
       "nativeWallFinishRooms": 84
     },
     "firered": {
@@ -6113,7 +6113,9 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_neighbor_table"
+      ]
     },
     "hoenn_home_table_rustic": {
       "kind": "designed",
@@ -6213,7 +6215,9 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_checked_table"
+      ]
     },
     "hoenn_home_tunnel_entrance": {
       "kind": "designed",
@@ -8040,7 +8044,9 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_littleroot_dining_table"
+      ]
     },
     "hoenn_start_fridge": {
       "kind": "designed",
@@ -8068,7 +8074,9 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_littleroot_fridge"
+      ]
     },
     "hoenn_start_high_window": {
       "kind": "designed",

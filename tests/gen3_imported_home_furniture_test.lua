@@ -28,6 +28,7 @@ for _,q in ipairs(fixtures)do
  local list=M.placements(cells);assert(#list==1 and list[1].model==q.id)
  assert(list[1].x==q.x*16 and list[1].z==(q.z+q.fit[3])*16 and list[1].y==8)
  assert(list[1].fit.width==q.fit[1]and list[1].fit.depth==q.fit[2]and list[1].fit.height==32)
+ assert(list[1].fit.groundInset==.025,'physical source contact became coplanar with native floor')
  local last=cells[(q.x+#q.rows[1]-1)..':'..(q.z+#q.rows-1)]
  for _,key in ipairs{'collision','mid','base','pair','primary','prop'}do
   local original=last[key];last[key]=key=='base'and 9 or false
