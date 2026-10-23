@@ -92,7 +92,11 @@ for gen=1,3 do
  end
 end
 local rows=Support.rows({{key='aa',type='choice'}},3)
-check(#rows==#catalog-1,'support rows omit the migrated duplicate 3D-BTL alias')
+check(#rows==#catalog-4,'support rows omit migrated battle and legacy scenery aliases')
+local rowKeys={};for _,row in ipairs(rows)do rowKeys[row.key]=true end
+for _,key in ipairs({'fireredBattleStage','treeArtwork','hdTreeTrunks','sceneryProps'})do
+ check(not rowKeys[key],'migrated alias still exposed: '..key)
+end
 check(rows[1].readOnly~=true,'actual control remains editable')
 local unsupported;for _,row in ipairs(rows)do if row.key=='pokeballSuction'then unsupported=row end end
 check(unsupported and unsupported.readOnly and unsupported.supportOnly,'missing adapter is diagnostic, never fake writable control')
