@@ -337,7 +337,7 @@ end
 function M.draws(parts)
  local out,byHeight,levels={},{},{}
  for _,p in ipairs(parts)do for _,water in ipairs(p.waters or{})do
-  local d={water.mesh,nil,nil,water.height,mesh=water.mesh,pair=p.pair,waterMid=p.waterMid}
+  local d={water.mesh,nil,nil,water.height,mesh=water.mesh,pair=p.pair,waterMid=p.waterMid,bounds=water.bounds}
   out[#out+1]=d
   local group=byHeight[water.height]
   if not group then group={height=water.height};byHeight[water.height]=group;levels[#levels+1]=group end
