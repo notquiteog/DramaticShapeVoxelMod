@@ -1,3 +1,13 @@
+# Full render-distance optimization — 2026-10-23
+
+User target explicitly includes FULL at1440p while moving. Not achieved;
+observed Full frame times40–51ms, zero warm rebuilds. Draw submissions reduced,
+light-frustum and water/sprite culling preserve four native camera views exactly.
+See docs/FULL_DISTANCE_PERFORMANCE_2026-10-23.md for measurement caveats.
+Parity worker fixed8Gen3style controls plus same-species actor model reset;
+full parity remains incomplete per docs/PARITY_AUDIT_2026-10-23.md.
+Models remain with the separate owner. Do not report AUTO as FULL evidence.
+
 ### 2026-10-23 shared model actor replacement identity
 - GB Stadium/XD and native GBA XD consumers now include the underlying Pokémon object in live and failed actor identity. A same-species switch using a reused battler wrapper resets animation state instead of inheriting the previous actor's pose or failed-load cache. Stable failed actors still avoid per-frame retries.
 - Focused LuaJIT tests pass: XD GBA actor lifecycle, Stadium bridge (29 checks), XD identity, XD materials. This is lifecycle verification, not a visual or production-ready XD claim; the validated-pack gate remains unchanged.
