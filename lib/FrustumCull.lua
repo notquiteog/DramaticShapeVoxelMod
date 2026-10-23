@@ -27,11 +27,13 @@ end
 -- bounds = {minX,minY,minZ,maxX,maxY,maxZ}, covering ALL placed vertices.
 -- True means draw (including ambiguous/invalid inputs); false proves the box
 -- is wholly outside at least one clip plane. No temporal or visibility cache.
-function M.visible(planes,bounds)
+function M.translated(planes,bounds,dx,dy,dz)
  if not planes or type(bounds)~='table'then return true end
  for i=1,6 do if not finite(bounds[i])then return true end end
+ if not(finite(dx)and finite(dy)and finite(dz))then return true end
  local x,y,z,X,Y,Z=bounds[1],bounds[2],bounds[3],bounds[4],bounds[5],bounds[6]
  if x>X or y>Y or z>Z then return true end
+ x,y,z,X,Y,Z=x+dx,y+dy,z+dz,X+dx,Y+dy,Z+dz
  local ax,ay,az=math.max(math.abs(x),math.abs(X)),math.max(math.abs(y),math.abs(Y)),math.max(math.abs(z),math.abs(Z))
  for _,p in ipairs(planes)do
   local px,py,pz=p[1]>=0 and X or x,p[2]>=0 and Y or y,p[3]>=0 and Z or z
@@ -42,4 +44,5 @@ function M.visible(planes,bounds)
  end
  return true
 end
+function M.visible(planes,bounds)return M.translated(planes,bounds,0,0,0)end
 return M
