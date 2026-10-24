@@ -12,6 +12,9 @@ local locations={
  FR_NAVEL_ROCK_EXTERIOR={{9,8}},
 }
 M.locations=locations
+-- The original script opens this seal as MID838. The public native map
+-- normalizes its live warp to collision113; follow that authoritative cell.
+M.storyLocations={FR_MT_EMBER_EXTERIOR={{42,39,terrainHood=true}}}
 local expectedPairs={
  ["FR_CERULEAN_CITY"]="general__rom_082d4af4",
  ["FR_FIVE_ISLAND_RESORT_GORGEOUS"]="general__rom_082d5064",
@@ -35,6 +38,7 @@ local destinations={
  ["FR_FOUR_ISLAND:38:12"]="FR_FOUR_ISLAND_ICEFALL_CAVE_ENTRANCE",
  ["FR_MT_EMBER_EXTERIOR:14:24"]="FR_MT_EMBER_SUMMIT_PATH_1F",
  ["FR_MT_EMBER_EXTERIOR:39:19"]="FR_MT_EMBER_SUMMIT_PATH_3F",
+ ["FR_MT_EMBER_EXTERIOR:42:39"]="FR_MT_EMBER_RUBY_PATH_1F",
  ["FR_NAVEL_ROCK_EXTERIOR:9:8"]="FR_NAVEL_ROCK_1F",
  ["FR_ROUTE_10:8:19"]="FR_ROCK_TUNNEL_1F",
  ["FR_ROUTE_10:8:57"]="FR_ROCK_TUNNEL_1F",
@@ -63,7 +67,10 @@ function M.prepare(cells,regions)
  local count=0
  for _,r in ipairs(regions)do
   local def=r.def
-  for _,p in ipairs(locations[def.id]or{})do
+  local points={}
+  for _,p in ipairs(locations[def.id]or{})do points[#points+1]=p end
+  for _,p in ipairs(M.storyLocations[def.id]or{})do points[#points+1]=p end
+  for _,p in ipairs(points)do
    local x,y=r.x+p[1],r.y+p[2];local c=cells[x..':'..y]
    local n,w,e,s=cells[x..':'..(y-1)],cells[(x-1)..':'..y],cells[(x+1)..':'..y],cells[x..':'..(y+1)]
    local mid=def.id=='FR_MT_EMBER_EXTERIOR'or def.id=='FR_NAVEL_ROCK_EXTERIOR'
@@ -97,7 +104,7 @@ function M.prepare(cells,regions)
       end
      end
      if valid then c.caveEntrance.height=available
-     elseif def.id=='FR_NAVEL_ROCK_EXTERIOR'then
+     elseif def.id=='FR_NAVEL_ROCK_EXTERIOR'or p.terrainHood then
       -- Its native mixed coastal elevations flatten part of the old mass.
       -- A local one-cell rock hood retains that entire outer perimeter;
       -- neither the outside ground nor surrounding cliffs are raised.

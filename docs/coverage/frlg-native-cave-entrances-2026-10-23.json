@@ -186,8 +186,33 @@
       "scope": "native_art_exterior_geometry",
       "wholeMapCovered": false,
       "nativeHash": "f6c99aed1e55b7557b6f42c6b5c22aef3094a3b018da83cefa6e884df2d94013",
-      "nativeGeometryAccepted": false,
-      "gap": "Native story-sealed grey rock remains closed; opened Ruby Path state reveal pending."
+      "nativeGeometryAccepted": true,
+      "gap": null,
+      "stateReviews": [
+        {
+          "state": "sealed",
+          "nativeDrawing": 857,
+          "nativeCollision": 7,
+          "nativeWalkingBlocked": true,
+          "runtime": "v0.3.96",
+          "geometry": "original native solid cliff; no reveal claim"
+        },
+        {
+          "state": "native_script_opened",
+          "nativeDrawing": 838,
+          "nativeCollision": 113,
+          "nativeElevation": 0,
+          "nativeStateHash": "6f25131ba717b6113caab2db4d83a94005505e92baa45228a2dc075bf39cdabc",
+          "returned": true,
+          "runtime": "v0.3.96",
+          "sourceHashes": {
+            "lib/Gen3Terrain.lua": "0c55aa7c1c5e319d798647dff648ba07822d578c19239b8e15b7f52de45f917f",
+            "lib/Gen3CaveEntrances.lua": "2c956898bf95a2ccf9a7264a6b02dc68475ac1ebf271aeddc18f9809418ff44a",
+            "lib/Gen3RouteGates.lua": "6f8f8c474534a60df3f7da7521d461358019f548de3a4aa61e66a7e20602de33",
+            "lib/Gen3Scene.lua": "309cc38641a5ef05eafca1735bb1392ceb5b769619b03de299bc371b1f01be7a"
+          }
+        }
+      ]
     },
     {
       "nativeCollision": 113,
@@ -985,8 +1010,33 @@
       "scope": "native_art_exterior_geometry",
       "wholeMapCovered": false,
       "nativeHash": "f6c99aed1e55b7557b6f42c6b5c22aef3094a3b018da83cefa6e884df2d94013",
-      "nativeGeometryAccepted": false,
-      "gap": "Native story-sealed grey rock remains closed; opened Ruby Path state reveal pending."
+      "nativeGeometryAccepted": true,
+      "gap": null,
+      "stateReviews": [
+        {
+          "state": "sealed",
+          "nativeDrawing": 857,
+          "nativeCollision": 7,
+          "nativeWalkingBlocked": true,
+          "runtime": "v0.3.96",
+          "geometry": "original native solid cliff; no reveal claim"
+        },
+        {
+          "state": "native_script_opened",
+          "nativeDrawing": 838,
+          "nativeCollision": 113,
+          "nativeElevation": 0,
+          "nativeStateHash": "6f25131ba717b6113caab2db4d83a94005505e92baa45228a2dc075bf39cdabc",
+          "returned": true,
+          "runtime": "v0.3.96",
+          "sourceHashes": {
+            "lib/Gen3RouteGates.lua": "6f8f8c474534a60df3f7da7521d461358019f548de3a4aa61e66a7e20602de33",
+            "lib/Gen3CaveEntrances.lua": "2c956898bf95a2ccf9a7264a6b02dc68475ac1ebf271aeddc18f9809418ff44a",
+            "lib/Gen3Scene.lua": "309cc38641a5ef05eafca1735bb1392ceb5b769619b03de299bc371b1f01be7a",
+            "lib/Gen3Terrain.lua": "0c55aa7c1c5e319d798647dff648ba07822d578c19239b8e15b7f52de45f917f"
+          }
+        }
+      ]
     },
     {
       "nativeCollision": 113,
@@ -1604,5 +1654,7 @@
       },
       "gap": null
     }
-  ]
+  ],
+  "scriptOpenedMouthStatesAcceptedPerEdition": 1,
+  "uniqueEntrancesWithAcceptedNativeGeometryPerEdition": 22
 }

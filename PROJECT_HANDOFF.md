@@ -1,3 +1,17 @@
+# Ruby Path native story-state continuation — 2026-10-23
+
+Exact(42,39) grey reveal now follows original script-opened838/public113/elev0
+state; original857/collision7 seal remains intact. No production flag, floor,
+warp or collision writes. Both FRLG actual opened entry/return and closed native
+bump tests process0, final front/threshold/angled/overview views inspected.
+New native-state guards and existing geometry/coplanar/terrain proof pass;
+existing21 default mouth locations/mesh emission unchanged. Native-art inventory
+now22 unique accepted entrances/edition, eight stone cases still pending plus
+independent summit stair transfer. Default/native-opened map hashes recorded
+separately, actual engine progression retained. Modern source counts unchanged.
+See appended evidence/commands in docs/FRLG_CAVE_REVEALS_2026-10-23.md.
+Continue Dotted Hole/Tanoby sources; root normal-browser Alph592815 requested.
+
 # FRLG native cave reveal checkpoint — 2026-10-23
 
 Original flat169/838 outdoor mouths replaced by exact guarded recessed rock

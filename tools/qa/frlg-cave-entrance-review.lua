@@ -29,7 +29,8 @@ return function(game)
  F.setFlag(store,nil,0x840,true) -- Native National Dex opens the completed Dunsparce Tunnel
  for id=1,767 do F.setTrainerDefeated(store,nil,id,true)end -- own postgame walking fixture; prevent unrelated sight battles
  V.require('RenderDistance').setting:sync(16);V.require('DayNight').setting:sync('day');V.require('RenderDistance').haze=function()return nil end
- local fixtures={};for map,points in pairs(E.locations)do for _,p in ipairs(points)do fixtures[#fixtures+1]={map,p[1],p[2]}end end
+ if os.getenv('QA_STORY')=='ruby_path'then F.setFlag(store,nil,137,true);F.setVar(store,nil,0x4076,4)end
+ local fixtures={};for map,points in pairs(os.getenv('QA_STORY')=='ruby_path'and E.storyLocations or E.locations)do for _,p in ipairs(points)do fixtures[#fixtures+1]={map,p[1],p[2]}end end
  table.sort(fixtures,function(a,b)return a[1]<b[1]or a[1]==b[1]and(a[2]<b[2]or a[2]==b[2]and a[3]<b[3])end)
  local function settle(allowInactive)
   if allowInactive and not C.active then U.wait(10);return end

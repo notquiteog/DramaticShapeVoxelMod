@@ -54,6 +54,19 @@ for _,h in ipairs{12,16,32}do
  assert(backs==6 and ceilings>=6,'recess lacks closed backing/arched underside')
  meshes[#meshes+1]=mesh
 end
+-- Original story-opened Ruby Path uses the public live-warp collision113;
+-- its untouched grey seal remains closed and is never replaced by a hole.
+do
+ local cells,c=fixture(32,23,34)
+ for _,a in pairs(cells)do a.pair='sevii_outdoor';if a.shape.kind=='cliff'then a.mid=857 end end
+ c.mid=838;cells['42:38'].mid=860
+ local r={{x=0,y=0,def={id='FR_MT_EMBER_EXTERIOR',warps={{x=42,y=39,destMap='FR_MT_EMBER_RUBY_PATH_1F'}}}}}
+ assert(E.prepare(cells,r)==1 and c.caveEntrance,'native opened Ruby Path missing')
+ c.caveEntrance=nil;c.mid=857;c.collision=7;c.shape={kind='cliff',height=32}
+ assert(E.prepare(cells,r)==0 and not c.caveEntrance and c.mid==857 and c.collision==7,'sealed Ruby Path was opened')
+ c.mid=838;c.collision=0;c.shape={kind='flat'}
+ assert(E.prepare(cells,r)==0,'unreviewed public warp permission accepted')
+end
 -- Actual rendered terrain edges interpolate their4px grid, rather than
 -- querying a discontinuous cell support profile at arbitrary subgrid points.
 do

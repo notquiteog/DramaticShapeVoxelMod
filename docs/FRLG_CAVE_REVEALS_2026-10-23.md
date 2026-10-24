@@ -78,3 +78,39 @@ Reproduce with `QA_DRIVER=$PWD/tools/qa/frlg-cave-neighbor-gates.lua` and
 `run.py EDITION cave-gate-regression`. Changed Lua compilation and whitespace
 checks pass. No version bump/push;
 root owns integration/release. Remaining stone/closed states are the next task.
+
+
+## Native story-opened Ruby Path continuation
+
+Ruby Path at MtEmber Exterior(42,39) now joins the guarded grey-mouth family
+only after its original script changes the sealed857 rock to838. Original
+[map script](https://github.com/pret/pokefirered/blob/master/data/maps/MtEmber_Exterior/scripts.inc)
+opens it when the One Island Center scene variable reaches4. Although the raw
+script requests collision0, official.96 public map inspection reports the live
+warp as collision113/elevation0; the adapter follows that authoritative native
+cell. No production story flag or collision writes are added.
+
+Both FRLG story-opened states pass actual entry/return and front/threshold/
+angled/overview inspection, process0, unchanged within-state map hash. Both
+original closed states remain857/collision7 solid rock and block the original
+native approach, process0; unoccluded native views inspected. Original Rocket
+hide flag is set only in the isolated QA fixture. The default closed-state
+native inventory hash is distinct from the engine-script-opened state hash;
+this is original progression, not a geometry edit to native data. Geometry and
+all21 existing default-mouth guards remain unchanged; new guard tests reject
+closed rock and unreviewed public permissions. Coplanar/terrain proof still pass.
+
+Native-art inventory now has22 unique reviewed entrances/edition:21 initial
+open mouths plus Ruby Path closed/open states. Eight separate stone entrance
+families remain (Dotted Hole and seven Tanoby shrines), with the independent
+summit stair transfer still outside mouth scope. Modern source-building counts
+remain84 accepted of135 assemblies. Raw and inspected receipts:
+`ruby-path-final-{firered,leafgreen}`; original closed-state evidence:
+`ruby-path-sealed-final-{firered,leafgreen}` in the existing own output tree.
+
+```sh
+QA_STORY=ruby_path QA_DRIVER=$PWD/tools/qa/frlg-cave-entrance-review.lua python3 .scratch/frlg-exteriors/api3-resume/run.py firered ruby-path-final
+QA_DRIVER=$PWD/tools/qa/frlg-ruby-path-sealed.lua python3 .scratch/frlg-exteriors/api3-resume/run.py firered ruby-path-sealed-final
+```
+
+Repeat with LeafGreen. This extends the checkpoint without a version bump.
