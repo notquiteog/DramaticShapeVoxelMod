@@ -1,3 +1,9 @@
+## 2026-10-23 — Seafloor current-room rock/arch consolidation freeze
+
+- Six RSE edition-room fixtures gain1024 native brown rock wall cells/6 boulders. Exact shared-sheet identity/collision guards preserve outdoor/current/Sky Pillar art. Twelve complete north/south arches have16×24 true openings; native north backing cleared, matching explicit outer aperture, flush relief join and contact end-cap ownership. RS south cap variant separate. Scene untouched/no hook.
+- Official .96/API3 standalone final6 rooms/all12 actual native input warps PASS; all first-person directions/room/arch/destination views reviewed, live native cells/elevation/warps unchanged.391 focused and existing cave/shell/Navel/furniture/Meteor suites PASS. All1309 RSE hashes/civics preserved; only these6 map classifications/12 native arch owners added. Imported counts unchanged, whole-map flagsfalse.
+- Evidence `docs/GEN3_SEAFLOOR_ROCKS_2026-10-23.md`, metadata ledgers and reusable QA driver. Frozen for root consolidation: no next scope started. Underwater probe stopped for missing valid dive/walkability fixture; bed/source-column work remains preserved/inactive. No versions/push/releases here.
+
 ## 2026-10-23 — native Emerald Navel Rock volumes and real exit arch
 
 - Exact native pale/dark blocked rock vocabulary raises2169 wall cells/11boulders across20 Emerald Navel maps (18 normal caves, Lugia bottom chamber, shared art on outdoor summit). Walking caps/sky/stairs/ladders/water stay native; summit whole-presentation unaccepted.

@@ -385,6 +385,9 @@ function M.forMap(map,gen)
   end
   for x=0,w-1 do passage(1,x,0,x);passage(3,x,h-1,x)end
   for y=0,h-1 do passage(4,0,y,y);passage(2,w-1,y,y)end
+  if gen==3 then for _,q in ipairs(V.require('Gen3NavelPortal').boundaryPassages(def))do
+   p.passages[q.side][#p.passages[q.side]+1]={q[1],q[2],q[3],q[4]}
+  end end
  end
  if gen~=3 and type(map.tileAt)=='function' and type(map.tileset)=='table' then
   -- The room's foundation used to seal GB stairwells at y=-.25, hiding

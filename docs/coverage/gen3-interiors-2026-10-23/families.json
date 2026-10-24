@@ -7849,6 +7849,76 @@
         "oras_pyre_memorial"
       ]
     },
+    "hoenn_seafloor_north_arch": {
+      "editions": {
+        "emerald": {
+          "count": 2,
+          "maps": [
+            "EM_SEAFLOOR_CAVERN_ROOM6",
+            "EM_SEAFLOOR_CAVERN_ROOM7"
+          ]
+        },
+        "ruby": {
+          "count": 2,
+          "maps": [
+            "RU_SEAFLOOR_CAVERN_ROOM6",
+            "RU_SEAFLOOR_CAVERN_ROOM7"
+          ]
+        },
+        "sapphire": {
+          "count": 2,
+          "maps": [
+            "SA_SEAFLOOR_CAVERN_ROOM6",
+            "SA_SEAFLOOR_CAVERN_ROOM7"
+          ]
+        }
+      },
+      "kind": "cavePortal",
+      "sourceCandidates": []
+    },
+    "hoenn_seafloor_south_arch": {
+      "editions": {
+        "emerald": {
+          "count": 2,
+          "maps": [
+            "EM_SEAFLOOR_CAVERN_ROOM6",
+            "EM_SEAFLOOR_CAVERN_ROOM7"
+          ]
+        },
+        "ruby": {
+          "count": 1,
+          "maps": [
+            "RU_SEAFLOOR_CAVERN_ROOM6"
+          ]
+        },
+        "sapphire": {
+          "count": 1,
+          "maps": [
+            "SA_SEAFLOOR_CAVERN_ROOM6"
+          ]
+        }
+      },
+      "kind": "cavePortal",
+      "sourceCandidates": []
+    },
+    "hoenn_seafloor_south_arch_rs": {
+      "editions": {
+        "ruby": {
+          "count": 1,
+          "maps": [
+            "RU_SEAFLOOR_CAVERN_ROOM7"
+          ]
+        },
+        "sapphire": {
+          "count": 1,
+          "maps": [
+            "SA_SEAFLOOR_CAVERN_ROOM7"
+          ]
+        }
+      },
+      "kind": "cavePortal",
+      "sourceCandidates": []
+    },
     "hoenn_start_bed_left": {
       "design": "em_start_bed",
       "editions": {
@@ -14576,7 +14646,7 @@
     "emerald": {
       "candidateFurniture": 645,
       "candidateNativeFurnitureOwners": 663,
-      "furniture": 2097,
+      "furniture": 2101,
       "maps": 519,
       "nativeWallFinishRooms": 79,
       "rooms": 301
@@ -14600,7 +14670,7 @@
     "ruby": {
       "candidateFurniture": 601,
       "candidateNativeFurnitureOwners": 617,
-      "furniture": 1481,
+      "furniture": 1485,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
@@ -14608,7 +14678,7 @@
     "sapphire": {
       "candidateFurniture": 601,
       "candidateNativeFurnitureOwners": 617,
-      "furniture": 1481,
+      "furniture": 1485,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231

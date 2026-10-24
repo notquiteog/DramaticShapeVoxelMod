@@ -3,6 +3,7 @@ local modules={Gen3Tilesets={resolve=function()return{primary='general',secondar
  Gen3TileShape={of=function()return{kind='flat'}end},
  Gen3Elevation={field=function()return field end},Gen2Elevation={field=function()return field end}}
 package.loaded['src.import.gba.versions']={TILESET_PAIRS={}}
+modules.Gen3NavelPortal=dofile('lib/Gen3NavelPortal.lua')
 package.loaded['src.core.game3.scripting.interaction_scripts']={behaviors={}}
 local M=assert(loadfile('lib/InteriorDiorama.lua'))({require=function(n)return assert(modules[n],n)end})
 for gen=1,3 do
