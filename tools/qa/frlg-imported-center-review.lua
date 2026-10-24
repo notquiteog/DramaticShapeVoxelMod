@@ -9,6 +9,8 @@ return function(game)
  local edition=require('src.core.GameVersion').get();assert(edition=='firered'or edition=='leafgreen')
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
  local C,S=V.require('Gen3Integration'),V.require('Gen3Scene');local Map,P=require('src.core.game3.map'),require('src.core.game3.player')
+ local doorDraws={};local doors=V.require('Gen3KantoCenterDoors');local draw=doors.draw
+ doors.draw=function(g,anim,fn)local ok=draw(g,anim,fn);if ok then doorDraws[Map.currentDef().id..':'..g.cx..':'..g.cy]=true end;return ok end
  local observed={};local adapter=V.require('Gen3ImportedKantoCenters');local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=assert(g.importedKantoCenter).model end;return ok,why end
  local dir=os.getenv('SHOT_DIR');local json=require('src.link.Json');local out={};local missing=os.getenv('QA_MISSING_ASSETS')=='1'
  if missing then local read=V.mod.read;V.mod.read=function(self,path)if path:match('^assets/scenery/hgss%-center/')then return nil end;return read(self,path)end end
@@ -30,6 +32,7 @@ return function(game)
   C.yaw=0;C.pitch=math.rad(8);C.setLevel(3,game);settle()
   local n=S.performanceSnapshot().scenery['kantoCenters'];assert(missing and n==0 or not missing and n>0,'source/fallback mismatch')
   local model=observed[map..':'..cx..':'..cy];assert(missing and not model or not missing and model=='hgss_kanto_center','exact Center source absent')
+  assert(missing or doorDraws[map..':'..cx..':'..cy],'original source door did not reach scene draw')
   shot(index..'-modern')
   if os.getenv('QA_QUICK')~='1'then for _,v in ipairs{{'front',cx+doorX,cy+doorY+2,0},{'left',cx-3,cy+2,math.pi/2},{'right',cx+7,cy+2,-math.pi/2},{'rear',cx+doorX,cy-2,math.pi}}do
    P.reset(v[2],v[3],'up');C.yaw=v[4];C.setLevel(6,game);settle();shot(index..'-'..v[1])

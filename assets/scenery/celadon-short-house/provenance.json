@@ -1,0 +1,102 @@
+{
+  "asset": 592831,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592831/",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "f2289da05c3190d9b21940b88f66233fc6b106198ab922aa64261384ed4b483f",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Celadon City/Celadon City.dae",
+  "sourceModelSha256": "4a391a04af9bbad3391a35b8dd2bbe9cdda3800ff6626be0639e31ca7eab2d75",
+  "geometry": "ta_h01-mesh",
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -35.19922,
+      3.95,
+      -30.40039,
+      35.19922,
+      56.80078,
+      34.0
+    ],
+    "sourceOrigin": [
+      0.0,
+      3.95,
+      1.7998049999999992
+    ],
+    "sourceUnitSpan": 70.39844,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.4573992690747125,
+      0.5,
+      0.7507379424884983,
+      0.4573992690747125
+    ]
+  },
+  "originalBounds": [
+    -37.58008,
+    2.0,
+    -36.76953,
+    44.60742,
+    56.80078,
+    40.96289
+  ],
+  "sourceTriangles": 156,
+  "physicalSourceTriangles": 130,
+  "processedArchitectureTriangles": 140,
+  "hd2dFlowers": {
+    "cards": 8,
+    "sourceTriangles": 24,
+    "projectionPitchDegrees": 30,
+    "sourceUvRetained": true,
+    "originalPngRetained": true
+  },
+  "closure": "Measured asymmetric rear fascia/siding/soffit and recessed underside. Original facade/roof/windows/planter/UVs retained; source shadows omitted. Live leaves/petals separate as flat source cards using native cylindrical billboard shader. No invented portal/sign/vent.",
+  "textures": {
+    "h_mado.png": {
+      "sha256": "ddf8daca4b57e903f962c663f89f06be6d43ca5f29459d0094b4b8140514601f",
+      "bytes": 187
+    },
+    "ta_h01.png": {
+      "sha256": "65c4e93692ac33787f2e2d325f264e32470ec15445f2cc05f469791ac84e8d20",
+      "bytes": 834
+    }
+  },
+  "parts": [
+    {
+      "name": "ta_h01-mesh:h_mado_lm1_002-material",
+      "role": "structure",
+      "authored": false,
+      "triangles": 6
+    },
+    {
+      "name": "ta_h01-mesh:lambert2-material",
+      "role": "structure",
+      "authored": false,
+      "triangles": 100
+    },
+    {
+      "name": "authored_rear_roof_fascia",
+      "role": "structure",
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_roof_soffit",
+      "role": "structure",
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_rear_wall",
+      "role": "structure",
+      "authored": true,
+      "triangles": 8
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "authored": true,
+      "triangles": 16
+    }
+  ]
+}

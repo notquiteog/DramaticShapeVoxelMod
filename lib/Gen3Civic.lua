@@ -38,6 +38,26 @@ local function hoennGround(g)
  -- A third-party recipe reusing a label is not proof of the same source art.
  if spec and last and last[1]==spec[2]and last[#last]==spec[3]then return spec[1]end
 end
+-- Exact Kanto service drawings have native grass/paving at their foundation
+-- corners. Nearby reviewed paths/grass must not replace those original floors.
+local kantoFloors={
+ {pair='general__rom_082d4af4',kind='gym',ground=1,rows={{313,314,314,314,314,314,315},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{336,337,338,339,340,341,342},{344,345,346,347,348,349,350}}},
+ {pair='general__rom_082d4b9c',kind='gym',ground=0x2e5,rows={{816,817,799,817,799,818},{824,825,825,825,825,826},{832,833,833,833,833,834},{821,822,823,811,812,827},{829,830,831,819,820,835}}},
+ {pair='general__rom_082d4b9c',kind='center',ground=0x2e5,rows={{764,765,766,774,767},{72,73,74,75,391},{80,81,82,83,399},{88,89,90,91,407},{735,97,98,390,775}}},
+ {pair='general__rom_082d4b9c',kind='mart',ground=0x2e5,rows={{760,761,762,763},{48,49,50,51},{56,57,58,59},{758,65,98,759}}},
+}
+local function kantoGround(g,cells)
+ for _,spec in ipairs(kantoFloors)do
+  if g.pair==spec.pair and g.kind==spec.kind and g.width==#spec.rows[1]and g.depth==#spec.rows then
+   local match=true
+   for y,row in ipairs(spec.rows)do for x,mid in ipairs(row)do
+    local q=cells[(g.cx+x-1)..':'..(g.cy+y-1)]
+    if not(q and q.civic==g and q.pair==spec.pair and q.mid==mid and not(q.prop or q.stageHidden or q.boundary))then match=false end
+   end end
+   if match then return spec.ground end
+  end
+ end
+end
 -- Reviewed NORMAL-layer roof overhangs whose under atlas contains only native
 -- terrain. Exact source MID at each column matters: nearby roof tiles can have
 -- tree crowns or building pixels in their bottom layer. Coordinates are zero
@@ -62,6 +82,15 @@ local function claim(cells,g,rows)
   if not c or c.pair~=g.pair or c.mid~=mid or c.prop or c.civic then return end
   parts[#parts+1]=c
  end end
+ -- A few native facades continue into one exact cell outside their main
+ -- body rectangle. Validate before claiming anything; dimensions/foundation
+ -- sampling and neighboring terrain/props must retain their original owners.
+ local outside={}
+ for _,q in ipairs(g.custom and g.custom.claimOutside or{})do
+  local c=cells[(g.cx+q[1])..':'..(g.cy+q[2])]
+  if not(c and c.pair==g.pair and c.mid==q[3]and c.collision==q[4]and not(c.prop or c.civic or c.stageHidden or c.boundary))then return end
+  outside[#outside+1]={cell=c,ground=q[5]}
+ end
  g.rows=rows;g.width=#rows[1];g.depth=#rows;g.ts=parts[1].ts
  for _,c in ipairs(parts)do
   local ranges=g.custom and g.custom.claimRanges;local row=ranges and ranges[c.cy-g.cy+1]
@@ -69,6 +98,10 @@ local function claim(cells,g,rows)
  end
  for _,q in ipairs(g.custom and g.custom.claimExtras or {})do
   if q[1]>=0 and q[1]<g.width and q[2]>=0 and q[2]<g.depth then cells[(g.cx+q[1])..':'..(g.cy+q[2])].civic=g end
+ end
+ if #outside>0 then
+  g.outsideGrounds={};g.claimedOutside={}
+  for _,q in ipairs(outside)do local c=q.cell;c.civic=g;g.outsideGrounds[c.cx..':'..c.cy]=q.ground;g.claimedOutside[#g.claimedOutside+1]=c end
  end
  return g
 end
@@ -179,9 +212,9 @@ function M.prepare(cells,gyms,families)
  -- This also supplies raised foundations: original facade/roof pixels must
  -- never be stretched down the retaining face below a building.
  for _,g in ipairs(out)do
-  local fixed=hoennGround(g);g.sourceGround=fixed
+  local fixed=hoennGround(g)or kantoGround(g,cells);g.sourceGround=fixed
   g.sourceUnderlays={}
-  local under=fixed and g.ts and g.ts.layered and hoennUnderlays[g.custom.name]
+  local under=fixed and g.custom and g.ts and g.ts.layered and hoennUnderlays[g.custom.name]
   for x,mid in ipairs(under or{})do
    if g.rows[1][x]==mid then g.sourceUnderlays[(g.cx+x-1)..':'..g.cy]=mid end
   end
@@ -215,6 +248,7 @@ function M.prepare(cells,gyms,families)
  return out
 end
 function M.ground(c)
+ local outside=c.civic.outsideGrounds and c.civic.outsideGrounds[c.cx..':'..c.cy];if outside then return outside end
  for _,q in ipairs(c.civic.custom and c.civic.custom.groundPreserve or {})do
   if c.cx==c.civic.cx+q[1] and c.cy==c.civic.cy+q[2] then return c.mid end
  end

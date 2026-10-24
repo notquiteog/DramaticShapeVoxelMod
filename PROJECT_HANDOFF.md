@@ -1,3 +1,132 @@
+# Hoenn conditional cave checkpoints — 2026-10-23
+
+Separate1317d4dd +d1f1d789 add exact story-open Magma/Altering and eight genuine
+Terra weather locations. Official.96 native2+8 owners and4+16 normal2D/3D
+entry-returns PASS, all closed states/native grids preserved, recovery0.
+Native/front/first/side/rear captures inspected; each new mouth92physical
+triangles, one floor owner,22px recess and zero coplanar overlaps. Altering's
+open drawing is ordinary09f/0a7; speculative shorter profile discarded.
+Reviewed possible placements28EM (eight mutually exclusive weather positions),
+16eachRS. Native-art depth repair, not original ORAS intake or whole-map
+acceptance. Source/resource/sharedScene/package integration remains root-owned.
+Wilds urgent fix0731ac8c was separately accepted/released2.6.10 by root; no
+scenery entered that bug release. Latest released Kanto main1.58.2 merged here,
+all held Littleroot/Shipyard source preserved. Next: distinct white Sootopolis
+facade and water/underwater openings. See the conditional/Terra cave depth docs.
+
+# Verified Kanto release1.58.2 — 2026-10-23
+
+Integrated the verified Kanto chain through52d9bdca: original Cerulean/Celadon
+houses, wider One Island Center, seven exact civic floor selections and the
+standard Center/plain Viridian source-door dispatcher repair. Final native
+source-door checks pass38/38 placements across FR/LG with actual draw asserted;
+original entries/returns and native grids remain intact. Source suite491PASS,
+0fail,58external-fixture skips;646production LuaJIT files compile. Exact ZIP
+compatibility and combined Kanto checks accompany release verification.
+
+Kanto World is active again. User-unlocked normal-browser downloads supplied
+verified Vermilion592879 and Fuchsia592836 archives for further source intake;
+raw archives remain excluded. Hoenn worker owns a separate bounded resource
+lifetime/dedup fix before rural long-tour release; interiors continue independently.
+Current Kanto source ledger has82 eligible/rendered accepted assemblies per
+edition,54 unmatched; complete-game coverage remains unfinished. See
+[Kanto dispatcher evidence](docs/KANTO_SOURCE_DOOR_DISPATCH_2026-10-23.md).
+Standalone/API3 and HD2D actor/flower defaults remain unchanged.
+
+# Source-door dispatcher integrated — 2026-10-23
+
+Standard Kanto Centers/plain Viridian house now use their existing dispatcher
+for original panel draw/animation ownership/chimney/teardown. Only11 stale Scene
+lines removed; production exactly matches the verified candidate. Final native
+.96 current-source38-placement rerun PASS0 across FRLG, actual door draw asserted,
+real entries/returns and blocked projection guards, unchanged native hashes.
+Final overviews/door states and identical-code candidate close views inspected.
+Four focused suites/Scene compile/review-history regression pass. All19/edition
+holds cleared: canonical82 eligible/82 accepted/54 unmatched,136 assemblies;
+whole-game coverage remains incomplete. Details/commands:
+docs/KANTO_SOURCE_DOOR_DISPATCH_2026-10-23.md. Root coordinates1.58.2 release;
+continue source intake without version bumps/pushes.
+
+# Further Celadon source fits held — 2026-10-23
+
+Original HGSS department store has one portal versus native two64px apart;
+anchored source fit79/80×51/52px cannot fill144×144 blocked body. Original HGSS
+Mansion's right-offset portal limits centered native fit73.07×52.86 inside
+112×80 (<44percent area). Native2D/current3D and original source galleries
+inspected on.96; no stretching/duplicated source doors or new acceptance. Exact
+candidate gaps now keyed in canonical ledger; counts/native hashes unchanged.
+See docs/KANTO_LANDMARK_FIT_GAPS_2026-10-23.md. Further regional source ZIPs
+Vermilion592879/Fuchsia592836 remain absent; normal download403/no browser here.
+Root-owned Scene dispatcher fix has complete candidate proof ready separately.
+
+# Exact civic floors; stale Scene door paths held — 2026-10-23
+
+Source-proven native Cerulean Gym lawn and Saffron Dojo/Center/Mart paving now
+require four complete regional drawings in Gen3Civic. All seven FRLG placements
+pass native.96 views/entry/return or no-warp projection with unchanged hashes;
+masked-source fallbacks and Oak's Lab regression pass.19 focused Lua suites,
+actual FR/LG atlas proof and review-history regression pass. Five ground-held
+placements accepted, but visual review found stale Scene direct paths bypassing
+standard Center/plain Viridian door draw/release/ownership. Root Scene remains
+unchanged. Scratch-only removal patch restores all18 Center doors/edition plus
+plain Viridian; native candidate results are separate from production evidence.
+Current canonical per edition82 eligible/63 accepted/54 unmatched,19 explicit
+Scene-door holds;136 assembly denominator unchanged. Later failed review now
+invalidates older acceptance. Root must integrate scratch scene-dispatch.patch
+and replace holds after final source verification. See KANTO_CIVIC_FLOORS_2026-10-23.md.
+Continue missing regional source families; no bump/push/release.
+
+# Wider One Island Center — 2026-10-23
+
+Exact7×6 One Island native Center now reuses genuine closed HGSS Center/sliding
+source door uniformly, full native body guard and unchanged portal/floor. Exact
+outside MID721 pillar projection ownership removes stray flat glyph; original
+collision0 walkability, six-row foundation and neighboring sign/lawn stay fixed.
+Latest official.96 both-edition actual entry/return and projection walking PASS0;
+LG missing-source fallback and both standard Pewter Center regressions PASS0.
+Native hashes unchanged; front/quarter/contact and source states inspected,
+side/rear occlusion limits recorded.18 focused suites/changed compile pass.
+Canonical per edition136 assemblies,82 eligible/75 accepted/54 unmatched;7
+separate ground-review gaps remain. See docs/ONE_ISLAND_CENTER_SOURCE_2026-10-23.md.
+No bump/push/release; continue remaining Kanto source families.
+
+# Exact gate denominator corrected — 2026-10-23
+
+Read-only FRLG ledger now mirrors production RouteGates+exterior recipe order.
+All426 maps/edition native.96 PASS0:3 already-native-modeled Route2 gates were
+previously omitted. Current denominator136, eligible81, accepted74, unmatched55,
+unclassified blocked6232; no geometry or acceptance added. Original HGSS gate
+north/south candidate fits only67.725 of128px native width with full ramps;
+portal/floor fit remains held. Source galleries inspected, exact candidate gaps
+recorded. Supersedes earlier133-denominator summaries; see KANTO_GATE_CENSUS_2026-10-23.md.
+Continuing regional source acquisition/placement; no release/version bump.
+
+# Celadon single-floor original source — 2026-10-23
+
+Genuine ta_h01 closed house now matches exact FRLG Celadon(20,26); original
+asymmetric roof/windows/planter,140 closed architecture triangles and8 HD2D
+source flower groups/24triangles. Full-yaw footprint and zero degenerate or
+positive-area coplanar physical-face proofs pass. Native eastern street/rear
+header walking and neighboring Gym actual entry/return pass both games on.96,
+unchanged map hashes; FR missing-source fallback passes. No native front aisle
+exists (next building startsy30); valid street-facing captures inspected, other
+source sides/underside checked separately.16 focused Lua suites and source/native
+proofs pass. Canonical per edition81 eligible/74 accepted/52 unmatched,7 separate
+ground gaps. See docs/CELADON_SHORT_HOUSE_SOURCE_2026-10-23.md. No release/bump;
+continue gate/missing-source coverage; latest root1.58.1 is separate integration.
+
+# Cerulean closed regional house — 2026-10-23
+
+Original HGSS Cerulean nonenterable house now matches exact FRLG City(31,25).
+Uniform source fit, closed rear/soffit/foundation, source-proven native lawn and
+contact-only recess; no invented portal/sign, native maps unchanged. Official.96
+both-edition real perimeter/blocked-wall walking, inspected views and neighboring
+Mart entry/return PASS0; missing-asset LG fallback PASS0.14 focused Lua suites,
+native grass proofs and deterministic import pass. Canonical per-edition census
+80 eligible/73 rendered accepted/53 unmatched;7 separate ground gaps remain.
+See docs/CERULEAN_CLOSED_HOUSE_SOURCE_2026-10-23.md. No release/version bump;
+continuing next missing family; Silph uniform-fit depth mismatch remains held.
+
 # Hoenn outdoor cave depth checkpoints — 2026-10-23
 
 Primary d5733fa5 +regional ce176889 give actual recessed native-art volumes to

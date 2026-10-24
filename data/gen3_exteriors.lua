@@ -118,7 +118,8 @@ return {
 {756,757,766,758,759},
 {764,765,664,772,767},
 }},
-{kind='center',profile='one_island_center',name='one_island_center',pair='sevii_outdoor',header=4,back=8,roofEnd=64,wallBottom=95,bevel=6,rows={
+-- The original left entrance pillar continues into(13,6), beyond the6-row body.
+{kind='center',profile='one_island_center',claimOutside={{2,6,721,0,16}},name='one_island_center',pair='sevii_outdoor',header=4,back=8,roofEnd=64,wallBottom=95,bevel=6,rows={
 {704,706,706,707,708,708,710},
 {712,714,714,715,716,716,718},
 {720,714,722,723,724,716,726},
@@ -223,7 +224,8 @@ return {
 {688,707,656,708,689,690},
 {696,705,664,701,703,698},
 }},
-{name='cerulean_house_short',pair='general__rom_082d4af4',header=2,back=8,roofEnd=40,wallBottom=63,bevel=3,rows={
+-- Native672..674 roof margins and696 foundation margin are lawn; nearby212/228 are road.
+{name='cerulean_house_short',pair='general__rom_082d4af4',ground=1,header=2,back=8,roofEnd=40,wallBottom=63,bevel=3,rows={
 {672,673,665,673,674},
 {680,681,681,681,682},
 {688,689,689,689,690},

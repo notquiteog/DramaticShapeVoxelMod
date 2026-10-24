@@ -807,21 +807,10 @@ local function build(req,cache,previous)
   if nativeKit then cache.civics[#cache.civics+1]=nativeKit;M.legendaryBuildingCount=M.legendaryBuildingCount+1 else
   local imported=Styles.modern('buildings')and V.require('Gen3ImportedCenters').build(g,cells,R.newMesh,cache.sceneryModels)
   if imported then cache.importedCenters[#cache.importedCenters+1]=g
-  else
-   imported=Styles.modern('buildings')and V.require('Gen3ImportedKantoCenters').build(g,cells,R.newMesh,cache.sceneryModels)
-   if imported then cache.importedKantoCenters[#cache.importedKantoCenters+1]=g end
   end
   if not imported then
    imported=Styles.modern('buildings')and V.require('Gen3ImportedPewterMuseum').build(g,cells,R.newMesh,cache.sceneryModels)
    if imported then cache.importedPewterMuseum[#cache.importedPewterMuseum+1]=g end
-  end
-  if not imported then
-   local adapter=V.require('Gen3ImportedViridianHouses')
-   imported=Styles.modern('buildings')and adapter.build(g,cells,R.newMesh,cache.sceneryModels)
-   if imported then
-    cache.importedViridianHouses[#cache.importedViridianHouses+1]=g
-    local outlet=adapter.chimney(g);if outlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=outlet end
-   end
   end
   if not imported and Styles.modern('buildings')then
    for _,name in ipairs{'Gen3ModernKantoBuildings','Gen3ModernHoennBuildings'}do

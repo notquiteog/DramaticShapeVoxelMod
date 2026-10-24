@@ -3,6 +3,9 @@
 local V=...
 local M={}
 local specs={
+ {kind='oneIslandCenter',building='Gen3ImportedOneIslandCenter',doors='Gen3KantoCenterDoors',marker='importedOneIslandCenter'},
+ {kind='celadonShortHouse',building='Gen3ImportedCeladonShortHouse',marker='importedCeladonShortHouse'},
+ {kind='ceruleanClosedHouse',building='Gen3ImportedCeruleanClosedHouse',marker='importedCeruleanClosedHouse'},
  {kind='saffronPsychic',building='Gen3ImportedSaffronPsychic',doors='Gen3SaffronPsychicDoors',marker='importedSaffronPsychic'},
  {kind='saffronCopycat',building='Gen3ImportedSaffronCopycat',doors='Gen3SaffronCopycatDoors',marker='importedSaffronCopycat'},
  {kind='viridianHouses',building='Gen3ImportedViridianHouses',doors='Gen3ViridianFlowerHouseDoors',marker='importedViridianHouse'},
