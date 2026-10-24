@@ -17,6 +17,13 @@ check(not Profiles.shape('general','mauville',0x219,0,7),'outdoor vocabulary cap
 for _,p in ipairs({{0x2D9,0x2D1},{0x2F8,0x2E8},{0x329,0x321},{0x389,0x381}})do
  local s=assert(Profiles.shape('general','cave',p[1],0,7));check(s.cap==p[2]and s.side==p[1],'native palette crossed')
 end
+for _,mid in ipairs({0x201,0x219,0x229,0x244,0x264,0x26C,0x274})do
+ local r=Profiles.shape('general','meteor_falls',mid,0,7)
+ check(r and r.kind=='caveWall'and r.cap==0x229,'Meteor Falls native rock profile missing')
+ check(not Profiles.shape('general','meteor_falls',mid,8,43),'Meteor walkable cap raised')
+end
+check(Profiles.shape('general','meteor_falls',0x26C,0,7).side==0x26C,'golden column seam recolored')
+check(not Profiles.shape('general','meteor_falls',0x254,0,7),'separate original pillar folded into rock wall')
 local cells={}
 for y=-2,2 do for x=-2,2 do cells[x..':'..y]={cx=x,cy=y,pair='general__cave',secondary='cave',mid=0x211,collision=7,shape=Profiles.shape('general','cave',0x211,8,7)}end end
 local root=cells['0:0'];root.mid=0x202;root.shape=Profiles.shape('general','cave',root.mid,0,7)

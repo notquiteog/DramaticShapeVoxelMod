@@ -1,3 +1,10 @@
+## 2026-10-23 — native rock enclosure and Meteor Falls
+
+- Meteor Falls gains explicit native cap/face rock volume (E violet/RS gold), original terrace/water/bridge/stairs retained. Separate two-cell golden pillars stay unclaimed for next independent fixture model. Source family changes only13 Meteor maps; combined Hoenn cave candidate set129.
+- GBA caves with reviewed wall art use one composed native rock material on a closed faceted outer strip outside native bounds. Exact shared vertices, real merged passage apertures/jambs/lintel/threshold, no stacked-box internal faces; foundation/ceiling ownership separate.
+- Latest official.96/API3 standalone final18 all5 native cases PASS; all4 first-person directions +overview/native inspected; cell/elevation/warp invariance asserted.597 profiles +5532 closed mesh/portal/footprint/surface contracts and enclosure suite PASS. Fresh1309-map Hoenn census preserves native hashes/furniture/civics.
+- Evidence: `docs/GEN3_CAVE_ENCLOSURE_AND_METEOR_2026-10-23.md`, metadata-only Meteor/shell run ledgers. Whole-map flagsfalse. Scene untouched; continuing golden pillars/source interior mouths. No bumps/push/releases.
+
 ## 2026-10-23 — volumetric native Hoenn cave interiors
 
 - Fixed Hoenn cave vocabulary being swallowed by regional flat fallback. Reviewed brown/green/shared alternate/ice art now has native-palette raised rock caps/bevels and independent boulders; enclosed cap boulders no longer carve wells. Cave all-ground quads removed so native floors have one surface owner. Scene untouched, no hook.
