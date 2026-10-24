@@ -153,7 +153,7 @@ function M.extract(cells,onlyKind)
  for _,c in ipairs(ordered)do Budget.tick();if not c.prop and not c.stairs or contextRoots[c.mid]then
   for _,r in ipairs(choices(c.mid))do
    if (not onlyKind or r.kind==onlyKind)and recipeActive(r) and c.primary==(r.primary or 'building') and matched(c.mid,r.rows[1][1],r) and (not r.scopeField or c[r.scopeField]) and (not r.secondary or r.secondary==c.secondary) and (not r.pair or r.pair==c.pair) then
-    local match=true;local parts={};local collisionRows=Research.permissions(r,c.pair)or Kanto.permissions(r,c.pair)
+    local match=true;local parts={};local collisionRows=r.caveInterior and r.collisionRows or Research.permissions(r,c.pair)or Kanto.permissions(r,c.pair)
     for dy,row in ipairs(r.rows)do for dx,mid in ipairs(row)do
      local n=cells[(c.cx+dx-1)..':'..(c.cy+dy-1)]
      local owned=not r.claimCells or r.claimCells[dx..':'..dy]

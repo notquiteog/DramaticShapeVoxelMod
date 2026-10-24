@@ -11,8 +11,13 @@ function M.geometry(p,side,opened)
  local function point(a,y,d)
   return horizontal and{a,y,line+sign*d}or{line+sign*d,y,a}
  end
+ local holes
  local function depth(a,y)
   if a==first or a==last then return 0 end
+  for _,q in ipairs(holes or{})do local high=q[3]+(q[4]or 32)
+   if q[4]and a>=q[1]and a<=q[2]and y>=q[3]and y<=high
+    and(a==q[1]or a==q[2]or y==q[3]or y==high)then return 0 end
+  end
   -- Faceted, shallow stone relief remains entirely outside native floor.
   return .2+((math.floor(a/16)*7+math.floor((y+4)/12)*3+side*5)%5)*.3
  end
@@ -24,12 +29,12 @@ function M.geometry(p,side,opened)
   end
   for _,i in ipairs(#q==3 and{1,2,3}or{1,2,3,1,3,4})do indices[#indices+1]=start+i end
  end
- local holes={}
- for _,q in ipairs(p.passages and p.passages[side]or{})do holes[#holes+1]={q[1],q[2],q[3]}end
+ holes={}
+ for _,q in ipairs(p.passages and p.passages[side]or{})do holes[#holes+1]={q[1],q[2],q[3],q[4]}end
  table.sort(holes,function(a,c)return a[1]<c[1]end)
  local merged={}
  for _,q in ipairs(holes)do local prev=merged[#merged]
-  if prev and prev[3]==q[3]and q[1]<=prev[2]then prev[2]=math.max(prev[2],q[2])else merged[#merged+1]=q end
+  if prev and prev[3]==q[3]and(prev[4]or 32)==(q[4]or 32)and q[1]<=prev[2]then prev[2]=math.max(prev[2],q[2])else merged[#merged+1]=q end
  end
  holes=merged
  local cuts={first,last};for a=first+16,last-1,16 do cuts[#cuts+1]=a end
@@ -38,13 +43,13 @@ function M.geometry(p,side,opened)
  local heights={-4,h}
  if opened then heights={-4,0}else
   for y=0,h-1,12 do heights[#heights+1]=y end
-  for _,q in ipairs(holes)do heights[#heights+1]=q[3];heights[#heights+1]=q[3]+32 end
+  for _,q in ipairs(holes)do heights[#heights+1]=q[3];heights[#heights+1]=q[3]+(q[4]or 32)end
   table.sort(heights)
  end
  for i=1,#cuts-1 do local a,c=cuts[i],cuts[i+1]
   if c>a and a>=first and c<=last then
    for j=1,#heights-1 do local low,high=heights[j],heights[j+1];local void=false
-    for _,q in ipairs(holes)do if(a+c)/2>q[1]and(a+c)/2<q[2]and(low+high)/2>=q[3]and(low+high)/2<q[3]+32 then void=true end end
+    for _,q in ipairs(holes)do if(a+c)/2>q[1]and(a+c)/2<q[2]and(low+high)/2>=q[3]and(low+high)/2<q[3]+(q[4]or 32)then void=true end end
     if high>low and not void then
      face({point(a,low,depth(a,low)),point(c,low,depth(c,low)),point(c,high,depth(c,high)),point(a,high,depth(a,high))})
      face({point(c,low,6),point(a,low,6),point(a,high,6),point(c,high,6)})
@@ -57,7 +62,7 @@ function M.geometry(p,side,opened)
  end
  if not opened then
   for _,q in ipairs(holes)do
-   local low,high=q[3],q[3]+32
+   local low,high=q[3],q[3]+(q[4]or 32)
    for _,a in ipairs({q[1],q[2]})do
     local ys={low,high};for _,y in ipairs(heights)do if y>low and y<high then ys[#ys+1]=y end end;table.sort(ys)
     for j=1,#ys-1 do local l,u=ys[j],ys[j+1]
