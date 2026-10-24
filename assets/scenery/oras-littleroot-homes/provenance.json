@@ -1,0 +1,130 @@
+{
+  "source": "User-supplied ORAS Alpha Sapphire RomFS",
+  "graphics": 6,
+  "zone": 6,
+  "area": 8,
+  "matrix": 1,
+  "staticWorldOrigin": [
+    1800,
+    0,
+    3240
+  ],
+  "normalizationSpan": 112.0,
+  "variants": {
+    "west": {
+      "sourcePhysicalTriangles": {
+        "chip_mado": 4,
+        "t01_01": 1191,
+        "t01_02": 324
+      },
+      "sourceOrigin": [
+        -99.0,
+        0.0,
+        -153.0
+      ],
+      "sourceWorld": [
+        1701.0,
+        0,
+        3087
+      ],
+      "zone": 6,
+      "destination": 223,
+      "undersideTriangles": 4,
+      "rearClosure": {
+        "authoredRearTriangles": 236,
+        "profileBands": 116,
+        "sourcePaintTexel": [
+          0.552734375,
+          0.208984375
+        ],
+        "insetSourceUnits": 0.1
+      },
+      "coplanar": []
+    },
+    "east": {
+      "sourcePhysicalTriangles": {
+        "chip_mado": 4,
+        "t01_01": 1191,
+        "t01_02": 324
+      },
+      "sourceOrigin": [
+        117.0,
+        0.0,
+        -153.0
+      ],
+      "sourceWorld": [
+        1917.0,
+        0,
+        3087
+      ],
+      "zone": 6,
+      "destination": 225,
+      "undersideTriangles": 4,
+      "rearClosure": {
+        "authoredRearTriangles": 236,
+        "profileBands": 116,
+        "sourcePaintTexel": [
+          0.552734375,
+          0.208984375
+        ],
+        "insetSourceUnits": 0.1
+      },
+      "coplanar": []
+    }
+  },
+  "doorPhysicalTriangles": 66,
+  "doorAnglesRadians": [
+    0.0,
+    -0.6981316804885864,
+    -1.3962633609771729
+  ],
+  "movingInverseBindMaximumError": 0.0,
+  "textures": {
+    "11_chip_mado": {
+      "size": [
+        128,
+        64
+      ],
+      "rgbaSha256": "e563d1eeab3932ea092884584fcf9f8a6087b9afd8d852d156b27d4111d4d651",
+      "pngSha256": "6d72fb214c4f29af73bb07ea1cc6c033a57b60198e0074c54a60b96611f0fdda"
+    },
+    "11_t101_01": {
+      "size": [
+        256,
+        256
+      ],
+      "rgbaSha256": "75f1582970e8d9714bbbe0f2ed88108c380d0f67b262f27a031dfc777ae10ee5",
+      "pngSha256": "bc218340f83139d231dd5ec6f30942f91a2d4202a7376b5efbea42c6ffd38202"
+    },
+    "11_t101_02_fix": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "8028195915b40caa96c284c66f4ded88335683fd7644b8fe0ee8cb3ea4bba515",
+      "pngSha256": "b5ec0ffcfb46902c18f7cabf6f835e19a70c878e17ca0fe1e722728684a2dfcc"
+    },
+    "1_t101_door": {
+      "size": [
+        64,
+        128
+      ],
+      "rgbaSha256": "b1662306dd9441f32d3d1249ad018bc62921c265b8775c141bc4c2bcb87e1380",
+      "pngSha256": "f883fcd57a99f991ab05935ad0d4dad68525963b26ed3cb4712318f89883b651"
+    },
+    "1_chip_mado": {
+      "size": [
+        128,
+        64
+      ],
+      "rgbaSha256": "e06aad00cfc2b66a0883d8b681ab7e3efa4a6fe92f1e7ac37e028a84d2867271",
+      "pngSha256": "7c65fc37dbebd00e58ec8726168e85abd66a7374ad63fccf8661b95f2f4cf987"
+    }
+  },
+  "sha256": {
+    "body": "a51c1715932e4ed8a8f96ec99e17a621c812c0723fcfd123e5c763d412d87a5c",
+    "door": "c1df86eb27852c08051f1ddd17b61344d5a4b8785cc44d433004220f0cf7e628",
+    "animation": "f220a6fd9d0dc1dbf377604beddf8ce96e0deb69e28541ccd67dd37d7c33013c"
+  },
+  "processing": "Original positions, UVs, indices and physical alpha independently checked. Source exposure RGB, terrain, vegetation, outdoor mailboxes and nonphysical door light faces omitted. Native ground/portal remains authoritative; source undersides/rears close separately."
+}

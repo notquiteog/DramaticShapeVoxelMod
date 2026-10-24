@@ -1,0 +1,50 @@
+{
+  "source": "User supplied original Alpha Sapphire RomFS",
+  "model": "GR0054 slot1 world06_02_02 submesh3 sidake_house_sidake_waku",
+  "textures": "AD0013 slot11 sidake_waku",
+  "modelSha256": "125dd8e0d31c568420df26ccd471f37862ecf07cca992677c80cb0e865401f36",
+  "textureSha256": "e3b478e160f44f9cc95089ded9e9510535383ba1024d44950ad2a7c1685eb8e4",
+  "sourceScale": 0.5,
+  "originalSourcePostHeights": [
+    21.5,
+    22
+  ],
+  "pickets": [
+    {
+      "sourceTriangles": [
+        446,
+        447,
+        448,
+        449,
+        1904,
+        1905,
+        1906,
+        1907,
+        1908,
+        1909,
+        1910,
+        1911
+      ],
+      "authoredClosureTriangles": 6,
+      "nativeCenter": 3.5
+    },
+    {
+      "sourceTriangles": [
+        904,
+        905,
+        906,
+        907,
+        908,
+        909,
+        910,
+        1900,
+        1901,
+        1902,
+        1903
+      ],
+      "authoredClosureTriangles": 5,
+      "nativeCenter": 11.5
+    }
+  ],
+  "processing": "Original alternating pointed pickets and original paint/UVs. Absent source backs/undersides close using source edge paint. No invented rails, source shadow sheets or baked vertex lighting. Native activation evidence separate."
+}

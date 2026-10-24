@@ -1,3 +1,19 @@
+# Hoenn conditional cave checkpoints — 2026-10-23
+
+Separate1317d4dd +d1f1d789 add exact story-open Magma/Altering and eight genuine
+Terra weather locations. Official.96 native2+8 owners and4+16 normal2D/3D
+entry-returns PASS, all closed states/native grids preserved, recovery0.
+Native/front/first/side/rear captures inspected; each new mouth92physical
+triangles, one floor owner,22px recess and zero coplanar overlaps. Altering's
+open drawing is ordinary09f/0a7; speculative shorter profile discarded.
+Reviewed possible placements28EM (eight mutually exclusive weather positions),
+16eachRS. Native-art depth repair, not original ORAS intake or whole-map
+acceptance. Source/resource/sharedScene/package integration remains root-owned.
+Wilds urgent fix0731ac8c was separately accepted/released2.6.10 by root; no
+scenery entered that bug release. Latest released Kanto main1.58.2 merged here,
+all held Littleroot/Shipyard source preserved. Next: distinct white Sootopolis
+facade and water/underwater openings. See the conditional/Terra cave depth docs.
+
 # Verified Kanto release1.58.2 — 2026-10-23
 
 Integrated the verified Kanto chain through52d9bdca: original Cerulean/Celadon
@@ -111,6 +127,75 @@ native grass proofs and deterministic import pass. Canonical per-edition census
 See docs/CERULEAN_CLOSED_HOUSE_SOURCE_2026-10-23.md. No release/version bump;
 continuing next missing family; Silph uniform-fit depth mismatch remains held.
 
+# Hoenn outdoor cave depth checkpoints — 2026-10-23
+
+Primary d5733fa5 +regional ce176889 give actual recessed native-art volumes to
+18 Emerald/16 Ruby/16 Sapphire outdoor mouths. Final official.96 native all3
+PASS; Rusturf/Fiery/Meteor ×2D/3D six normal entry+returncases each, gridsunchanged,
+recovery0. Thirteen missing khaki blockedwallfamilies now use existing16pxprofile:
+449EM/441RS livecells. Exact finalcode geometry90/92tris, floor1,22pxrecess,
+zero coplanaroverlap; Route115floorcaptriangles selectively removed. Fourrelevant
+suitesPASS. SharedScene/Terrain hook remains root/Kanto-owned; own runtime used
+scratchoverlay only. See docs/HOENN_REGIONAL_CAVE_DEPTH_2026-10-23.md for exactSHA,
+proofpaths and limits. This is native-art geometry repair, NOT original ORAS
+model intake. Test-only da565553 updates queuedMauville/Verdanturf assertions.
+Resource checkpoint3a105d9e remains focused/separate. Raw Shipyard/heldLittleroot
+and scratchMt.Chimney source work preserved. Active nextfamily: conditionalMagma,
+shorterAltering and white/water-facing/underwater mouths; no globalheight changes.
+
+# Shared scenery resource checkpoint — 2026-10-23
+
+Focused3a105d9e shares exact PNG+sampler images and normalized original-definition
+aliases without raising caps; managed batches hold safe image leases. Official.96
+native two uninterrupted tours each PASS EM1526/1526,RU1504/1504,SA1504/1504,
+zero resource/recovery errors; stable5500928texturebytes/189053catalogvertices.
+Actual Scene release reaches0textures/leases and all3 rebuild4/4 source owners.
+Eight relevant suites pass. See docs/SCENERY_RESOURCE_SHARING_2026-10-23.md for
+manual-consumer teardown contract, exact SHA and scratch evidence. Prior rural
+long-tour blocker is resolved in this source checkout; parent still owns exact
+combined/package gate. Held Littleroot houses and inactive Shipyard stay separate.
+Mt.Chimney30cell/sourceGR0289 review remains scratch-only. New active priority:
+Hoenn outdoor cave entrance recess/depth, preserve local heights/native collision;
+interior/Kanto cave owners are separate. No push/version/release performed.
+
+# Original Verdanturf fence checkpoint — 2026-10-23
+
+Exact native General/Mauville34d fixes the previously unreachable Verdanturf
+fallback: four town cells per edition now use original GR0054/AD0013 pointed
+pickets. Preserve exact dense-lawn34e rather than general grass1. Official.96
+native RSE4/4 each plus north/rear/close repeats PASS; missing-PNG EM4 native
+fallback PASS, unchanged native grids/recovery0. Original34-triangle model is
+closed/coplanarzero; independent110visible-pixel donor proof passes all3.
+See docs/ORAS_VERDANTURF_FENCE_2026-10-23.md. Larger shared rural texture-cache
+release gate remains root-owned. Continuing uncovered Lavaridge variants;
+held Littleroot houses/inactive Shipyard remain separate.
+
+# Original Mauville railings checkpoint — 2026-10-23
+
+Actual original GR0739/AD0198 source replaces eleven exact Mauville railing
+families, corrects3.5/11.5 depth axes and adds four previously missed corner
+cells per edition; false building281 excluded. Official.96 native all RSE
+City80→Route11125→Route11727 uninterrupted tours and21-view repeats PASS132/132,
+unchanged grids/recovery0/imageerrors0. Missing-PNG native fallback80 PASS.
+Original8 source primitives closed;11 joined models coplanarzero/nativebounds,
+476 exact alpha texels/UVs verified. Native floor/warp/collision anchors retained.
+See docs/ORAS_MAUVILLE_FENCES_2026-10-23.md. Shared rural long-tour8MiB texture
+cache gate remains root-owned; no limits raised. Next distinct fence families
+remain ongoing. Held Littleroot houses/inactive Shipyard remain separate.
+
+# Rural field-fence source checkpoint — 2026-10-23
+
+Nine exact General families +one reviewed FrontierEast duplicate now use
+closed original ORAS149 source primitives, proper4/12 depth axes and14baseline.
+Actual official.96 fresh-per-map32jobs PASS:EM419/419,RU408/408,SA408/408;
+mapdata unchanged/recovery0. Separate missing-PNG native fallback66cells PASS.
+Real9geometry models closedatomicedges2/coplanarzero/UV/bounds; released31
+Rustboro geometry test remainsPASS. Long tours still hit shared8MiB sourceimage
+cache: Route115 rolls back21, despitefresh11521/21. Root owns resourcefix;
+release blocked pending lifetime/dedup and repeated uninterruptedtour. No budgets
+raised/no live resource eviction. See docs/HOENN_RURAL_FENCES_2026-10-23.md.
+Held Littleroot e1bf4167 and inactive Shipyard WIP remain preserved separately.
+
 # Rustboro fence release1.58.1 — 2026-10-23
 
 Fixes43 missing Emerald fence cells (44 in R/S), reversed depth stripes and the
@@ -150,6 +235,17 @@ corner/contact geometry and final acceptance. R/S own native census also passes2
 Independent source pixel/visible ground witnesses pass in all3editions.
 See [coverage evidence](docs/RUSTBORO_FENCE_COVERAGE_2026-10-23.md).
 Littleroot e1bf4167 remains held for a later model batch; Shipyard WIP preserved.
+
+# Original Littleroot houses checkpoint — 2026-10-23
+
+Both GR6/ZO6/AD8 own houses and original BM2 hinges now dispatch as littlerootHomes.
+Official0.3.96 R/E/S:6 native source uploads/pose/contact/rollback checks,6 real
+entries/normal returns and2 Emerald missing-source fallback entries pass. Native
+hashes unchanged/recovery0; source/native all-angle/contact views inspected.
+Model caps/rears closed, original lintel contact separated locally; fitted all
+poses coplanar-zero. API3/standalone/default HD2D and original portals preserved.
+See [source evidence](docs/ORAS_LITTLEROOT_HOMES_2026-10-23.md). Candidates133/244;
+111 missing, Birch Lab next. Work now prioritizes user's Rustboro fence defect.
 
 # Resumed regional model coverage1.58.0 — 2026-10-23
 

@@ -31,6 +31,27 @@ assert(H.emeraldShape('general','petalburg',0x149,0,7).nativeFence=='rural149')
 assert(R.ownShape('general','petalburg',0x149,0,7).nativeFence=='rural149')
 assert(not H.emeraldShape('general','petalburg',0x149,0,0).nativeFence)
 local F=V.require('Gen3FenceFamilies');local ornate={}
+-- Actual all-outdoor native census: nine white-fence families, no neighboring
+-- gym art or permission relaxation. Every source upload remains atomic.
+assert(F.ruralMid('battle_frontier_outside_east',0x3d7)==0x142)
+assert(not F.ruralMid('rustboro',0x3d7)and not F.ruralMid('mossdeep',0x3d7))
+local rural={}
+for mid in pairs(F.rural)do
+ local q=cell(mid);q.mid=mid;rural[mid]=q
+ assert(H.emeraldShape('general','petalburg',mid,0,7).nativeFence=='rural149')
+ assert(R.ownShape('general','petalburg',mid,0,7).nativeFence=='rural149')
+ assert(not F.shape('general','petalburg',mid,0,0))
+ assert(not F.shape('building','petalburg',mid,0,7))
+end
+for _,mid in ipairs{0x130,0x131,0x132,0x133,0x13b,0x13c,0x143,0x144}do
+ assert(not F.shape('general','petalburg',mid,0,7),'non-fence primary source art')
+end
+available=false;assert(not M.build(rural,function()end,{}))
+for _,q in pairs(rural)do assert(not q.importedFence)end
+available=true;local rp,re,rn=M.build(rural,function()end,{})
+assert(rp and not re and rn==9)
+for _,q in pairs(rural)do assert(M.floor(q)==1 and M.underOnly(q))end
+
 -- Actual Rustboro census regressions: eight art variants account for fifteen
 -- blocked city cells that previously kept flat rails; ordinary paving, roof
 -- tiles and walkable headers must never be recruited by MID adjacency.
@@ -84,8 +105,55 @@ for _,data in pairs(V.require('ImportedFenceData'))do for _,p in ipairs(data.par
  for _,n in pairs(edges)do assert(n==2,'open physical fence edge')end
 end end
 for id,data in pairs(V.require('ImportedFenceJoinedData'))do assert(Real.register(id,data,{read=function()end}))end
+for id,data in pairs(V.require('ImportedRuralFenceData'))do assert(Real.register(id,data,{read=function()end}))end
+for _,p in ipairs(M.placements(rural))do
+ local verts,fit=assert(Real.vertices(p.model,p.fit))
+ assert(math.abs(fit.scale-1)<1e-8 and fit.groundInset==.025 and math.abs(fit.bounds[5]-10.25)<1e-8)
+ for _,part in ipairs(verts)do for _,v in ipairs(part.vertices)do
+  assert(v[1]>=0 and v[1]<=16 and v[3]>=0 and v[3]<=16 and v[2]>=-.025,'rural fence outside native blocked cell')
+ end end
+end
 for _,p in ipairs(M.placements(ornate))do
  local verts,fit=assert(Real.vertices(p.model,p.fit));assert(math.abs(fit.bounds[5]-11)<1e-5,'corner fitting shrank height')
  for _,part in ipairs(verts)do for _,v in ipairs(part.vertices)do assert(v[1]>=-1e-5 and v[1]<=16.00001 and v[3]>=-1e-5 and v[3]<=16.00001,'fence crossed walking bounds')end end
 end
 print('PASS source-failure atomicity, exact RSE fence/blocked guards, original lower layer, elevation and closed native bounds')
+
+-- Mauville actual railing vocabulary includes two previously omitted corners;
+-- 281 is a yellow brick/roof facade and must never become a fence.
+local mauville={}
+for mid in pairs(F.mauville)do
+ local q=cell(mid);q.mid=mid;q.secondary='mauville';q.shape={nativeFence='mauville'};mauville[mid]=q
+ assert(H.emeraldShape('general','mauville',mid,0,7).nativeFence=='mauville')
+ assert(R.ownShape('general','mauville',mid,0,7).nativeFence=='mauville')
+ assert(not F.shape('general','mauville',mid,0,0))
+ q.secondary='rustboro';assert(not M.eligible(q));q.secondary='mauville'
+ assert(M.eligible(q)=='oras_mauville_fence')
+end
+assert(not H.emeraldShape('general','mauville',0x281,0,7).nativeFence)
+assert(H.emeraldShape('general','mauville',0x281,0,7).kind~='fence')
+assert(F.mauville[0x292]and F.mauville[0x2b1])
+available=false;assert(not M.build(mauville,function()end,{}))
+for _,q in pairs(mauville)do assert(not q.importedFence and not M.floor(q))end
+available=true;local mp,me,mn=M.build(mauville,function()end,{})
+assert(mp and not me and mn==11)
+for _,q in pairs(mauville)do assert(M.floor(q)==1 and M.underOnly(q))end
+for _,p in ipairs(M.placements(mauville))do
+ assert(p.model=='oras_mauville_joined_'..p.source.mid and p.fit.groundInset==.025)
+ assert(p.fit.targetX==8 and p.fit.targetZ==8 and p.x==p.source.cx*16 and p.z==p.source.cy*16)
+end
+print('PASS11 exact Mauville native families, false281 exclusion, omitted corners, standalone source rollback and anchored ground contacts')
+-- Actual Verdanturf outdoors use the Mauville pair, not a separate Verdanturf
+-- pair. Its gray posts need the exact dense-lawn34e donor, not general grass1.
+local q=cell(5);q.secondary='mauville';q.mid=0x34d;q.shape={nativeFence='verdanturf'};q.ts.midToSlot={}
+assert(H.emeraldShape('general','mauville',0x34d,0,7).nativeFence=='verdanturf')
+assert(R.ownShape('general','mauville',0x34d,0,7).nativeFence=='verdanturf')
+assert(not F.shape('general','verdanturf',0x34d,0,7))
+assert(not F.shape('general','mauville',0x34d,0,0))
+assert(not M.eligible(q),'missing dense-lawn donor must retain native art')
+q.ts.midToSlot[0x34e]=1;assert(M.eligible(q)=='oras_verdanturf_fence')
+available=false;assert(not M.build({q},function()end,{}));assert(not q.importedFence and not M.floor(q))
+available=true;local vp,ve,vn=M.build({q},function()end,{})
+assert(vp and not ve and vn==1 and M.floor(q)==0x34e and M.underOnly(q))
+assert(M.placements({q})[1].model=='oras_verdanturf_pickets')
+print('PASS Verdanturf actual native pair/grass donor, collision guards, source rollback and anchored pickets')

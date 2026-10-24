@@ -7,7 +7,7 @@ local M={}
 local registered={}
 function M.register(id)
  if registered[id]and Models.info(id)then return true end
- local ok,data=pcall(V.require,id:match('^oras_rustboro_joined_')and'ImportedFenceJoinedData'or'ImportedFenceData')
+ local ok,data=pcall(V.require,id=='oras_verdanturf_pickets'and'ImportedVerdanturfFenceData'or(id:match('^oras_mauville_joined_')and'ImportedMauvilleFenceData'or(id:match('^oras_rural_joined_')and'ImportedRuralFenceData'or(id:match('^oras_rustboro_joined_')and'ImportedFenceJoinedData'or'ImportedFenceData'))))
  if not ok or type(data)~='table'or not data[id]then return nil,'imported fence source unavailable'end
  local success,why=Models.register(id,data[id],{read=function(path)return V.mod:read(path)end})
  if success then registered[id]=true end
@@ -18,6 +18,11 @@ function M.eligible(c)
   or not(c.ts and c.ts.layered)or c.collision~=7 or c.primary~='general'then return end
  local shape=Families.shape(c.primary,c.secondary,c.mid,c.behavior,c.collision)
  if not(c.shape and shape and c.shape.nativeFence==shape.nativeFence)then return end
+ if shape and shape.nativeFence=='verdanturf'then
+  if c.ts.midToSlot and c.ts.midToSlot[0x34e]then return 'oras_verdanturf_fence'end
+  return
+ end
+ if shape and shape.nativeFence=='mauville'then return 'oras_mauville_fence'end
  if shape and shape.nativeFence=='rural149'then return 'oras_rural_fence'end
  if shape and shape.nativeFence=='rustboro'then
   for _,q in ipairs(Families.ground[c.mid])do if not(c.ts.midToSlot and c.ts.midToSlot[q[1]])then return end end
@@ -29,8 +34,14 @@ function M.placements(cells)
  local out={}
  for _,c in pairs(cells)do
   local id=M.eligible(c)
-  if id=='oras_rural_fence'then out[#out+1]={model=id,x=c.cx*16,y=c.base or 0,z=c.cy*16,
-   fit={width=16,depth=16,padding=0},source=c,marker=id}
+  if id=='oras_rural_fence'then out[#out+1]={model='oras_rural_joined_'..Families.ruralMid(c.secondary,c.mid),x=c.cx*16,y=c.base or 0,z=c.cy*16,
+   fit={width=16,depth=16,height=10.25,groundInset=.025,padding=0,anchor='center',targetX=8,targetZ=8},source=c,marker=id}
+  elseif id=='oras_verdanturf_fence'then
+   out[#out+1]={model='oras_verdanturf_pickets',x=c.cx*16,y=c.base or 0,z=c.cy*16,
+    fit={width=16,depth=16,height=11,groundInset=.025,padding=0,anchor='center',targetX=8,targetZ=8},source=c,marker=id}
+  elseif id=='oras_mauville_fence'then
+   out[#out+1]={model='oras_mauville_joined_'..c.mid,x=c.cx*16,y=c.base or 0,z=c.cy*16,
+    fit={width=16,depth=16,height=11,groundInset=.025,padding=0,anchor='center',targetX=8,targetZ=8},source=c,marker=id}
   elseif id then
    out[#out+1]={model='oras_rustboro_joined_'..c.mid,x=c.cx*16,y=c.base or 0,z=c.cy*16,
     fit={width=16,depth=16,height=11,groundInset=.025,padding=0,anchor='center',targetX=8,targetZ=8},source=c,marker=id}
@@ -50,7 +61,8 @@ function M.build(cells,newMesh,parts)
  return result,err,count
 end
 function M.floor(c)
- if c and c.importedFence and M.eligible(c)==c.importedFence then return c.importedFence=='oras_rural_fence'and 1 or c.mid end
+ if c and c.importedFence=='oras_verdanturf_fence'and M.eligible(c)==c.importedFence then return 0x34e end
+ if c and c.importedFence and M.eligible(c)==c.importedFence then return c.importedFence~='oras_rustboro_fence'and 1 or c.mid end
 end
 -- emit receives ordinary four-position quad + exact cropped atlas UVs. The
 -- caller owns elevation lifting, just as for its ordinary terrain plane.

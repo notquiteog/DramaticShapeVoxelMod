@@ -1,0 +1,35 @@
+{
+  "source": "User supplied original Alpha Sapphire RomFS",
+  "model": "GR0739 slot1 c103c_01_02",
+  "materials": [
+    "chip_saku02",
+    "c103_saku"
+  ],
+  "textures": "AD0198 slot11",
+  "modelSha256": "78dcd34de8a13b2a6428c6d20e53af96b030b0b8ccb95d147af6ff0ba4e486d2",
+  "textureSha256": "c961d9297d7afbee9d72407f8b9ef23efc795f45d241070795e0a35699f205d7",
+  "frameSourceTriangles": [
+    0,
+    1,
+    12,
+    13,
+    4,
+    6,
+    8,
+    9,
+    192,
+    193
+  ],
+  "panelSourceTriangles": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "closedBaseTriangles": 8,
+  "closedTopTriangles": 8,
+  "sourceStripDepth": 0.12,
+  "sourceScale": 0.5,
+  "originalOpaquePanelPixels": 476,
+  "status": "Original source primitive export; native activation and acceptance evidence tracked separately in docs/ORAS_MAUVILLE_FENCES_2026-10-23.md."
+}

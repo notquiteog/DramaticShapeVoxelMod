@@ -21,6 +21,16 @@ end
 for _,mid in ipairs({0x277,0x279,0x2fd,0x2c7})do
  assert(S.of('general','fallarbor',mid,0,7).kind=='flat','sand/decorations became rock wall')
 end
+-- Actual.96 native Meteor Falls side/base band, not the mixed grass corners.
+for _,edition in ipairs{'emerald','ruby','sapphire'}do version=edition
+ for _,mid in ipairs{0x23b,0x23d,0x24b,0x24c,0x24d,0x253,0x254,0x255,0x25b,0x25c,0x263,0x264,0x265}do
+  local c=S.of('general','fallarbor',mid,0,7)
+  assert(c.kind=='cliff'and c.height==16 and c.cap==0x241 and c.side==0x243,'reviewed khaki face left flat '..edition..':'..mid)
+  assert(S.of('general','fallarbor',mid,0,0).kind=='flat','walkable stone copy raised')
+  assert(S.of('general','rustboro',mid,0,7).kind~='cliff','regional khaki face leaked to Rustboro')
+ end
+end
+version='emerald'
 local tree=S.of('general','petalburg',0x1dc,0,1)
 assert(#tree.treeRows==2 and #tree.treeRows[1]==2 and tree.treeFamily=='round')
 local count=0
@@ -171,7 +181,7 @@ version='leafgreen';assert(not H.active());assert(S.of('general','pallet_town',0
 print('PASS '..count..' native Hoenn furniture recipes, family isolation and four-cell tree artwork')
 
 version='emerald'
-assert(S.of('general','mauville',0x288,0,7).kind=='fence')
+assert(S.of('general','mauville',0x288,0,7).nativeFence=='mauville','reviewed source rail lost atomic native fallback')
 assert(S.of('general','petalburg',0x288,0,7).kind=='flat','secondary fence alias leaked')
 assert(S.of('general','petalburg',0xc5,0x10,7).kind=='rock','ocean rock swallowed by surfable water')
 assert(S.of('general','petalburg',0xc5,0x10,0).kind=='water','walkable water blocked by scenery')
@@ -184,8 +194,9 @@ local carpet={recipe={ground=1,groundRows={{2,3},{4,5}}},cx=8,cy=9}
 assert(F.groundAt({prop=carpet,cx=9,cy=10})==5,'carpet border lost beneath fixture')
 print('PASS Hoenn scenery scope, water/rock ownership, native ledge directions and carpet underlays')
 
-local fence=S.of('general','verdanturf',0x34d,0,7)
-assert(fence.kind=='fence' and fence.postWidth==5.8 and #fence.rails==1)
+local fence=S.of('general','mauville',0x34d,0,7)
+assert(fence.nativeFence=='verdanturf' and fence.ground==0x34e,'actual Verdanturf source picket/lawn mapping lost')
+assert(S.of('general','verdanturf',0x34d,0,7).kind=='flat','obsolete nonexistent native pair reactivated')
 assert(S.of('general','mossdeep',0x34d,0,7).kind=='flat','Verdanturf fence borrowed another town tile')
 print('PASS '..#H.exteriors..' complete Hoenn exterior patterns and native Verdanturf fence scope')
 
