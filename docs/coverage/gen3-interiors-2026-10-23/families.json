@@ -5404,7 +5404,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_drawer_chest"
+      ]
     },
     "hoenn_home_picture": {
       "design": "em_home_picture",
@@ -14532,8 +14534,8 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 622,
-      "candidateNativeFurnitureOwners": 640,
+      "candidateFurniture": 636,
+      "candidateNativeFurnitureOwners": 654,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
@@ -14556,16 +14558,16 @@
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 577,
-      "candidateNativeFurnitureOwners": 593,
+      "candidateFurniture": 592,
+      "candidateNativeFurnitureOwners": 608,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 577,
-      "candidateNativeFurnitureOwners": 593,
+      "candidateFurniture": 592,
+      "candidateNativeFurnitureOwners": 608,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,

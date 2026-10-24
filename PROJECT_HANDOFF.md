@@ -1,3 +1,10 @@
+## 2026-10-23 — original ORAS three-drawer chests
+
+- Exact Hoenn narrow drawer family: 44 owners/rooms (E14/R15/S15), original GR513/sub11 chest. Three drawers/knobs, sculpted feet, inset base and tilted top retain source proportions/paint. Exact contact unions remove buried faces; final 284 triangles, one blocked cell, walking apron clear, bottom-only .025 recess.
+- Official .96/API3 standalone source + atomic missing-source runs PASS all 44 rooms; all front/whole/side/overview/fallback and nine source angles inspected. All 22 imported source models pass coplanar checks; contact/knob-hole/fit/identity/failure tests, SDK resources and clean regeneration PASS.
+- All 2,161 pristine hashes/families unchanged. Five edition-room native entry scripts change seven cells identically before/source/fallback (Steven's houses and RS Mossdeep Game Corner); no render mutation. Metadata records both pristine/live states.
+- Evidence: `docs/ORAS_OLDALE_DRAWERS_2026-10-23.md`, chest component/run ledgers. Candidates 2,734 pieces / 2,860 native owners (including 84 unaccepted/default-native counter prototypes). Accepted 2,605 components / 280 edition-map pairs, whole-map flags false. Scene untouched; continuing low sideboard/wide drawers, no versions/push/releases.
+
 ## 2026-10-23 — reception source/composite prototype held behind visual gate
 
 - Preserved original GR511 U-counter: 86 selected source triangles, buried base ends clipped, exact exposed union/closed plaque = 160. All 21 source-plane checks, underside/floor areas, every triangular native blocked-footprint grid, composite identity and atomic/default-native standdown tests PASS. Source regeneration byte-identical.
