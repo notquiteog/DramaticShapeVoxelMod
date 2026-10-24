@@ -1,3 +1,19 @@
+# Hoenn outdoor cave depth checkpoints — 2026-10-23
+
+Primary d5733fa5 +regional ce176889 give actual recessed native-art volumes to
+18 Emerald/16 Ruby/16 Sapphire outdoor mouths. Final official.96 native all3
+PASS; Rusturf/Fiery/Meteor ×2D/3D six normal entry+returncases each, gridsunchanged,
+recovery0. Thirteen missing khaki blockedwallfamilies now use existing16pxprofile:
+449EM/441RS livecells. Exact finalcode geometry90/92tris, floor1,22pxrecess,
+zero coplanaroverlap; Route115floorcaptriangles selectively removed. Fourrelevant
+suitesPASS. SharedScene/Terrain hook remains root/Kanto-owned; own runtime used
+scratchoverlay only. See docs/HOENN_REGIONAL_CAVE_DEPTH_2026-10-23.md for exactSHA,
+proofpaths and limits. This is native-art geometry repair, NOT original ORAS
+model intake. Test-only da565553 updates queuedMauville/Verdanturf assertions.
+Resource checkpoint3a105d9e remains focused/separate. Raw Shipyard/heldLittleroot
+and scratchMt.Chimney source work preserved. Active nextfamily: conditionalMagma,
+shorterAltering and white/water-facing/underwater mouths; no globalheight changes.
+
 # Shared scenery resource checkpoint — 2026-10-23
 
 Focused3a105d9e shares exact PNG+sampler images and normalized original-definition
