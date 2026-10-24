@@ -1,3 +1,18 @@
+# Shared scenery resource checkpoint — 2026-10-23
+
+Focused3a105d9e shares exact PNG+sampler images and normalized original-definition
+aliases without raising caps; managed batches hold safe image leases. Official.96
+native two uninterrupted tours each PASS EM1526/1526,RU1504/1504,SA1504/1504,
+zero resource/recovery errors; stable5500928texturebytes/189053catalogvertices.
+Actual Scene release reaches0textures/leases and all3 rebuild4/4 source owners.
+Eight relevant suites pass. See docs/SCENERY_RESOURCE_SHARING_2026-10-23.md for
+manual-consumer teardown contract, exact SHA and scratch evidence. Prior rural
+long-tour blocker is resolved in this source checkout; parent still owns exact
+combined/package gate. Held Littleroot houses and inactive Shipyard stay separate.
+Mt.Chimney30cell/sourceGR0289 review remains scratch-only. New active priority:
+Hoenn outdoor cave entrance recess/depth, preserve local heights/native collision;
+interior/Kanto cave owners are separate. No push/version/release performed.
+
 # Original Verdanturf fence checkpoint — 2026-10-23
 
 Exact native General/Mauville34d fixes the previously unreachable Verdanturf
