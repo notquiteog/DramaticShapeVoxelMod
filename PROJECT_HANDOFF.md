@@ -1,3 +1,16 @@
+# Queued Hoenn exteriors accepted on API3/0.3.96 — 2026-10-23
+
+After merging released main ea14555c, owned standalone .96 QA passes all15 source
+jobs/30 exact Rustboro/Devon/SlateportMart/Museum/Harbor placements, including all
+original cached door states, recessed contacts and failed-upload rollback. All15
+native entry jobs/36 original entrances and normal returns pass across R/E/S,
+with unchanged native grid hashes and zero streaming recovery. Current captured
+contacts/front/side/rear/roof views inspected. Five isolated source fixtures now
+load real SharedModelMesh (15607548). Root combined acceptance remains separate;
+Shipyard stays inactive and original .95 missing-asset gameplay proof stays .95.
+See [current verification](docs/ORAS_QUEUED_EXTERIORS_API3_2026-10-23.md).
+Littleroot GR6/ZO6 own-source houses are now being extracted; no new coverage claimed.
+
 # Portable API3 migration — 2026-10-23
 
 Final release verification: all seven immutable release ZIPs pass **88/88**
