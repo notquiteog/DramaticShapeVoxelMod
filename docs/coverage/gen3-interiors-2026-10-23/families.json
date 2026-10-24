@@ -3528,7 +3528,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_center_bookcase"
+      ]
     },
     "hoenn_center_pc": {
       "design": "fr_center_pc",
@@ -14471,13 +14473,15 @@
   "limitations": [
     "Candidate placement is not proof of successful texture/mesh upload or rendered acceptance.",
     "Furniture extraction does not prove every native object was recognized.",
-    "Native continuous room finishes are not claims of imported modern room coverage."
+    "Native continuous room finishes are not claims of imported modern room coverage.",
+    "Map sourceCandidates count native furniture owners; composite truck owners render several model pieces. sourceCandidatePlacementCount records that exception; candidateFurniture totals count pieces, candidateNativeFurnitureOwners count owners."
   ],
   "renderedAccepted": false,
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 591,
+      "candidateFurniture": 606,
+      "candidateNativeFurnitureOwners": 592,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
@@ -14485,6 +14489,7 @@
     },
     "firered": {
       "candidateFurniture": 438,
+      "candidateNativeFurnitureOwners": 438,
       "furniture": 2937,
       "maps": 426,
       "nativeWallFinishRooms": 65,
@@ -14492,20 +14497,23 @@
     },
     "leafgreen": {
       "candidateFurniture": 438,
+      "candidateNativeFurnitureOwners": 438,
       "furniture": 2937,
       "maps": 426,
       "nativeWallFinishRooms": 65,
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 548,
+      "candidateFurniture": 562,
+      "candidateNativeFurnitureOwners": 548,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 548,
+      "candidateFurniture": 562,
+      "candidateNativeFurnitureOwners": 548,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,

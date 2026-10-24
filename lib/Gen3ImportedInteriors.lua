@@ -18,6 +18,7 @@ dataFiles.oras_oldale_kitchen_sink='ImportedOldaleSinkData'
 dataFiles.oras_oldale_backed_chair='ImportedOldaleChairData'
 dataFiles.oras_center_glass_table='ImportedCenterTableData'
 dataFiles.oras_center_healer='ImportedCenterHealerData'
+dataFiles.oras_center_bookcase='ImportedCenterBookcaseData'
 dataFiles.oras_pyre_memorial='ImportedPyreMemorialData'
 dataFiles.oras_flower_bookcase='ImportedFlowerBookcaseData'
 dataFiles.oras_birch_bookcase='ImportedBirchBookcaseData'
@@ -26,6 +27,9 @@ dataFiles.oras_birch_freestanding_case='ImportedBirchFreecaseData'
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
+ hoenn_center_medicine={pair='building__pokemon_center',family='rse',design='em_center_medicine',
+  rows={{0x269,0x26a},{0x271,0x272},{0x279,0x27a}},collisionRows={{7,7},{7,7},{0,0}},
+  model='oras_center_bookcase',fitWidth=32,fitDepth=16,fitHeight=32,groundInset=.025},
  center_healer={byPair={
   ['building__pokemon_center']={pair='building__pokemon_center',family='rse',kind='centerHealer',rows={{0x222,0x223},{0x22a,0x22b}},collisionRows={{7,7},{7,7}},
    model='oras_center_healer',fitWidth=32,fitDepth=32,fitHeight=28,zRows=0,groundInset=.025},

@@ -1,3 +1,10 @@
+## 2026-10-23 — original ORAS Center bookcases
+
+- Exact Hoenn Center rack: 43 owners/rooms (E15/R14/S14); FRLG has no matching family. Original 202 triangles minus two buried coplanar book-end triangles, plus 24 exposed closures = 224. Source proportions, separate wallpaper, native apron and bottom-only .025 recess retained.
+- Official .96/API3 standalone source and atomic missing-texture runs PASS all 43 rooms; fronts/whole orbits/available sides/overviews and nine source angles inspected. No native hash or entry-script deltas. Twenty-model coplanar checks, exact contact-area/fit/identity/fallback tests and clean importer regeneration PASS.
+- Fresh 2,161-map census adds only 43 placements. Candidates 2,606 model pieces / 2,564 native furniture owners; maps now explicitly record composite truck piece counts. Accepted components 2,561 across 280 edition/map pairs; every whole-map acceptance remains false.
+- Evidence: `docs/ORAS_CENTER_BOOKCASES_2026-10-23.md`, component and bookcase-run ledgers. Scene untouched. Continuing original reception U-counter as one shared fit across its three native owners; no versions/push/releases.
+
 ## 2026-10-23 — original ORAS healers and source animation surfaces
 
 - Exact native healer owners across all five games: 87 rooms (E17/R16/S16/FR19/LG19). Original machine/tray454 triangles +96 exact exposed rim closures; uniform source bounds, contact-only .025 recess, no coplanar overlaps across all 19 source models.
