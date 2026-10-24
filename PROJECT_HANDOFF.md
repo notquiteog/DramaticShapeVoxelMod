@@ -1,3 +1,15 @@
+# Hoenn Sootopolis checkpoint frozen for consolidation — 2026-10-23
+
+Exact white Cave of Origin mouth (31,16) now has locally recessed geometry;
+official .96 all3 editions pass1owner/2normal2D+3D entry-return cycles each,
+unchanged native grids/recovery0. Inspected close/side/rear views and exact
+mesh audit:90EM/92RS triangles, one floor,22px recess, zero coplanar overlaps.
+Local white hood clearance fixes its initial inner-ceiling intrusion without
+changing other profiles or native anchors. Five focused suites pass. Larger
+five-cell native portico remains flat/pending original source; see
+docs/HOENN_SOOTOPOLIS_CAVE_DEPTH_2026-10-23.md. No new scope during root
+consolidation. Inactive Shipyard prototype is preserved separately, not activated.
+
 # Hoenn conditional cave checkpoints — 2026-10-23
 
 Separate1317d4dd +d1f1d789 add exact story-open Magma/Altering and eight genuine

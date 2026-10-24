@@ -30,6 +30,9 @@ def audit(report):
         overlaps=coplanar_overlaps([dict(name=key,vertices=vertices,indices=indices)])
         assert not overlaps,(key,overlaps)
         assert(floor,back,roof)==(1,3,3),(key,floor,back,roof)
+        if owner.get('mid')==0x221:
+            rear=[q['vertices']for q in quads if abs(q['vertices'][0][0]-x-4)<1e-8 and abs(q['vertices'][1][0]-x-12)<1e-8 and abs(q['vertices'][0][2]-z+12)<1e-8 and abs(q['vertices'][2][2]-z+8)<1e-8]
+            assert len(rear)==1 and (rear[0][0][1]+rear[0][2][1])/2>=11,(key,'outer cap crosses inner rear ceiling')
         results.append(dict(map=owner['map'],x=owner['x'],y=owner['y'],triangles=physical,coplanarOverlaps=0,floorOwners=1,recessDepth=22))
     return dict(edition=report['edition'],mouths=len(results),sourceSha256=report['sourceSha256'],results=results)
 

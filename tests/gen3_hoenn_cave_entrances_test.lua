@@ -63,10 +63,19 @@ for _,mutate in ipairs{
 for _,e in ipairs{'ruby','sapphire'}do version=e;local a,r,c,n=fixture();local prefix=(e=='ruby'and'RU_'or'SA_');r[1].def.id=prefix..'ROUTE116';r[1].def.warps[1].destMap=prefix..'RUSTURF_TUNNEL';assert(C.prepare(a,r)==1)end
 version='emerald'
 for _,f in ipairs{{'ROUTE112','lavaridge',11,36,0x25e,0x256,12,0x271,0x274,0,'FIERY_PATH'},
- {'ROUTE114','fallarbor',8,63,0x261,0x259,16,0x241,0x243,7,'METEOR_FALLS_1F_1R'}}do
+ {'ROUTE114','fallarbor',8,63,0x261,0x259,16,0x241,0x243,7,'METEOR_FALLS_1F_1R'},
+ {'SOOTOPOLIS_CITY','sootopolis',31,16,0x221,0x25b,16,0x2d9,0x2e1,7,'CAVE_OF_ORIGIN_ENTRANCE'}}do
  local a,r,c,n=fixture();r[1].x=-f[3];r[1].y=-f[4];r[1].def.id='EM_'..f[1];r[1].def.warps={{x=f[3],y=f[4],destMap='EM_'..f[11]}}
  for _,t in pairs(a)do t.pair='general__'..f[2];if t.shape.kind=='cliff'then t.shape.height=f[7]end end
  c.mid=f[5];n.mid=f[6];n.collision=f[10];assert(C.prepare(a,r)==1,'regional opening rejected')
+ if f[1]=='SOOTOPOLIS_CITY'then
+  -- Emerald's neighboring flat cells can bring the back perimeter to zero.
+  -- The outer cap must still stay ABOVE the 10.5px inner rear ceiling.
+  for _,line in pairs(c.caveEntrance.boundary)do for x in pairs(line)do line[x]=0 end end
+  local rearCap
+  C.append(c,function(v)if v[1][1]==4 and v[2][1]==12 and v[1][3]==-12 and v[3][3]==-8 then rearCap=(v[1][2]+v[3][2])/2 end end,function()return uv end)
+  assert(rearCap and rearCap>=11,'outer rock cap cuts through the native white cave ceiling')
+ end
  local sampled={};C.append(c,function()end,function(_,mid)sampled[mid]=true;return uv end)
  assert(sampled[f[8]]and sampled[f[9]]and not sampled[0x6c]and not sampled[0x71],'regional stone borrowed primary cliff paint')
 end
