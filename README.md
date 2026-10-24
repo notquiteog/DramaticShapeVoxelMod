@@ -1,3 +1,15 @@
+## 1.58.3 — Consolidated models, fences and cave depth
+
+- Merge every active worker checkpoint: original Littleroot homes, rural/Mauville/Verdanturf fences, Vermilion/Fuchsia Gyms and additional source interior furniture.
+- Connect original Center healing machines to native healing-ball animation surfaces.
+- Add guarded cave entrance depth in Kanto/Hoenn and rock volumes, real apertures and original Meteor stalagmites in reviewed Hoenn interiors.
+- Share identical scenery resources with managed image leases and unchanged budgets.
+- Smooth magnified cast-shadow edges with continuous weights at the same nine depth reads and unchanged shadow bias.
+- Preserve native ground, collision, warps, standalone API3 and HD2D character/Pokémon/flower defaults. Unaccepted reception-counter and Shipyard prototypes remain inactive.
+
+This is an incremental coverage release. Whole-game coverage remains unfinished.
+See [consolidation scope](docs/WORKER_CONSOLIDATION_2026-10-23.md).
+
 ## 1.58.0 — Regional source buildings and interiors
 
 - Add source HGSS Lavender, Saffron and Celadon buildings, regional Gyms/Marts,

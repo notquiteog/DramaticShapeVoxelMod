@@ -1,3 +1,16 @@
+# Consolidated worker release 1.58.3 — 2026-10-23
+
+Merged complete Hoenn a260268e, Kanto 82529dee and interiors 6598910f ancestry,
+including inactive prototypes. Root connected the reviewed original healer
+animation surface bridge. Shared soft-shadow filter uses continuous weights
+with unchanged nine reads/bias/contact transforms; native Dotted before/after
+shows real shadows retained without fixed-weight bands. Initial acne diagnosis
+was corrected by depth/ray evidence. Source fixtures now exercise managed image
+leases rather than bypassing the loader. Official engine remains0.3.96.
+Exact-ZIP acceptance and final evidence accompany the release attachment.
+See docs/WORKER_CONSOLIDATION_2026-10-23.md. Whole-game coverage remains unfinished;
+HD2D actor/flower defaults and standalone API3 remain unchanged.
+
 # Hoenn Sootopolis checkpoint frozen for consolidation — 2026-10-23
 
 Exact white Cave of Origin mouth (31,16) now has locally recessed geometry;

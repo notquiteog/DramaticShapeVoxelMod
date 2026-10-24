@@ -73,3 +73,7 @@ Focused geometry/native-art proof, cave coplanar geometry, terrain5043 samples,
 cave profiles, outdoor classification and Scene cache suites pass. Changed Lua
 compiles. No version bump, push or publish; root consolidates release and shared
 shadow fix. New source intake stopped at this committed checkpoint.
+
+## Consolidation follow-up
+
+The initial shared-shadow hold was diagnosed more precisely during integration: public depth samples show genuine cast-shadow edges with quantized PCF weights, rather than overlapping geometry or frontal-slab self-acne. The continuous nine-tap filter and final release verification supersede that hold; see [worker consolidation](WORKER_CONSOLIDATION_2026-10-23.md).

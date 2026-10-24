@@ -250,16 +250,21 @@ local SHADER = [[
     if (edge <= 0.0) return 1.0;
     float z = p.z - sunBias * (1.0 + crystalLight * 0.7);
     if (crystalLight > 0.5) {
-      // A compact tent filter softens the sun's edge while keeping a dark
-      // contact centre. No screen-space blur touches the sprites or UI.
+      // Continuous quadratic weights keep the same nine depth reads but
+      // avoid the old fixed 1/16 steps magnified by first-person views.
+      // This preserves real frame/contact shadows and the existing bias.
+      vec2 f=fract(p.xy/sunTexel)-vec2(0.5);
       float sum = 0.0;
       for (int y = -1; y <= 1; y++) {
+        float sy=0.5+float(y)*f.y;
+        float wy=y==0 ? 0.75-f.y*f.y : 0.5*sy*sy;
         for (int x = -1; x <= 1; x++) {
-          float weight = (x == 0 ? 2.0 : 1.0) * (y == 0 ? 2.0 : 1.0);
-          sum += weight * receiverTap(p,z,sunTexel*vec2(float(x),float(y)),slope);
+          float sx=0.5+float(x)*f.x;
+          float wx=x==0 ? 0.75-f.x*f.x : 0.5*sx*sx;
+          sum += wx*wy*receiverTap(p,z,sunTexel*vec2(float(x),float(y)),slope);
         }
       }
-      return 1.0 - sunDark * edge * (1.0 - sum / 16.0);
+      return 1.0 - sunDark * edge * (1.0 - sum);
     }
     float lit = receiverTap(p,z,sunTexel*vec2(-0.5, -0.5),slope)
               + receiverTap(p,z,sunTexel*vec2( 0.5, -0.5),slope)

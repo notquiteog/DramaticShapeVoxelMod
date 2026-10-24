@@ -2,7 +2,7 @@ local tracked
 local modules={SceneryModelData=dofile('lib/SceneryModelData.lua'),ImportedCenterDoorData=dofile('lib/ImportedCenterDoorData.lua'),ModelInstances={new=function()return nil end},BuildBudget={check=function()end,track=function(o)assert(not tracked);tracked=o end,untrack=function(o)if tracked==o then tracked=nil end end}}
 local V={mod={read=function()return nil end},require=function(n)return assert(modules[n],n)end}
 modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
-local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
+local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S;local loadImage=S.image
 local D=assert(loadfile('lib/Gen3CenterDoors.lua'))(V);modules.Gen3CenterDoors=D
 local C=assert(loadfile('lib/Gen3ImportedCenters.lua'))(V);assert(C.register())
 local g={cx=5,cy=13,width=4,depth=4,kind='center',groundHeight=9,custom={family='rse',centerRoof=true}}
@@ -44,7 +44,13 @@ tracked.release();assert(freed==before+1 and not tracked and not g._importedCent
 -- Door resources are also unwound when the later Center structure fails.
 local cells={};for y=0,3 do for x=0,3 do cells[(g.cx+x)..':'..(g.cy+y)]={civic=g,base=9,collision=y==0 and 0 or(y==3 and x==1 and 113 or 7)}end end
 local prior={mesh={release=function()error('released older scene part')end}};local parts={prior};n=0;before=freed
-S.image=function(id)assert(id==D.id or id==C.id);return image end
+-- Managed batches need the real texture-loader lease bookkeeping; mocking
+-- image() itself would bypass it and never reach the intended upload failure.
+local png=string.char(137)..'PNG'..string.char(13,10,26,10)..string.rep(string.char(0),4)..'IHDR'..string.char(0,0,0,1,0,0,0,1)
+V.mod.read=function()return png end
+image.getDimensions=function()return 1,1 end;image.setFilter=function()end;image.setWrap=function()end
+love={filesystem={newFileData=function()return{}end},graphics={newImage=function()return image end}}
+S.image=loadImage
 local built,err=C.build(g,cells,function(v,i)n=n+1;if n==13 then error('structure upload failed')end;return upload(v,i)end,parts)
 assert(not built and err:find('structure upload failed',1,true)and #parts==1 and parts[1]==prior and freed==before+12 and not tracked and not g.importedCenter and not g.importedCenterDoors)
 -- Missing genuine door texture rejects the whole modern building before any structure upload.

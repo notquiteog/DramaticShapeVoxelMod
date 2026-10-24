@@ -8,12 +8,17 @@ local modules={SceneryModelData={},ImportedTreeData={},ImportedTruckInteriorData
  VisualStyles={modern=function(c)return enabled[c]end},Mat4=dofile('lib/Mat4.lua'),Water={CAST_RAISE=.02}}
 local calls={};local Shadow={snug=function(m)return m end,draw=function(...)calls[#calls+1]={...}end};modules.ShadowMap=Shadow
 modules.Voxel3D={newMesh=function(v,i)uploaded=uploaded+1;return{setTexture=function()end,release=function()released=released+1 end}end}
-local V={mod={read=function()return nil end}}
+-- Use the managed loader so batches own real image leases. Texture absence
+-- is simulated at the provider boundary, with scene-cache teardown on reload.
+local png=string.char(137)..'PNG'..string.char(13,10,26,10)..string.rep(string.char(0),4)..'IHDR'..string.char(0,0,0,1,0,0,0,1)
+image.getDimensions=function()return 1,1 end;image.setFilter=function()end;image.setWrap=function()end;image.release=function()end
+love={filesystem={newFileData=function()return{}end},graphics={newImage=function()return image end}}
+local V={mod={read=function()reads=reads+1;if textureAvailable then return png end end}}
 function V.require(n)
  if modules[n]then return modules[n]end
  local m=assert(loadfile('lib/'..n..'.lua'))(V);modules[n]=m;return m
 end
-local Models=V.require('SceneryModels');Models.image=function()reads=reads+1;if textureAvailable then return image end;return nil,'source missing'end
+local Models=V.require('SceneryModels')
 local Truck=V.require('Gen3TruckCargo');local T=V.require('Gen3ImportedTruckRoom');local I=V.require('Gen3ImportedInteriors')
 local r={name='hoenn_truck_cargo',design='em_truck_cargo',family='rse',primary='general',pair=Truck.pair,rows={
  {0x201,0x202,0x203,0x204,0x205},{0x209,0x20a,0x20b,0x20c,0x208},{0x211,0x212,0x213,0x214,0x210},{0x219,0x21a,0x21b,0x21c,0x218},{0x221,0x222,0x223,0x224,0x220}}}
@@ -42,8 +47,8 @@ local parts,err,count=I.build(cells,modules.Voxel3D.newMesh,{})
 assert(parts and not err and count==15 and p.importedInterior==T.marker)
 for k,c in pairs(cells)do local b=before[k];assert(c.mid==b[1]and c.collision==b[2]and c.base==b[3]and c.prop==b[4],'presentation changed native topology')end
 Models.releaseBatches(parts);p.importedInterior=nil
-textureAvailable=false;parts,err,count=I.build(cells,modules.Voxel3D.newMesh,{})
-assert(not parts and err and count==0 and not p.importedInterior,'partial source replaced complete native fallback');textureAvailable=true
+Models.release();textureAvailable=false;parts,err,count=I.build(cells,modules.Voxel3D.newMesh,{})
+assert(not parts and err and count==0 and not p.importedInterior,'partial source replaced complete native fallback');textureAvailable=true;Models.release()
 for y,mid in ipairs{0x208,0x210,0x218}do cells['4:'..y].mid=mid;cells['4:'..y].collision=0x72;native[y+1][5]=mid end
 assert(T.eligible(p,cells),'native open door lost source cargo')
 for _,key in ipairs{'collision','base','mid','prop'}do
@@ -65,9 +70,9 @@ enabled.props=false;assert(not T.drawCargo(113,0,0,0,spr,0,draw));enabled.props=
 edition='firered';assert(not T.drawCargo(113,0,0,0,spr,0,draw));edition='emerald'
 def.id='EM_LITTLEROOT_TOWN';assert(not T.drawCargo(113,0,0,0,spr,0,draw));def.id='EM_INSIDE_OF_TRUCK'
 enabled.interiors=false;assert(not T.wallpaper()and not T.drawFloor(room,draw));enabled.interiors=true
-T.clear();textureAvailable=false;assert(not T.drawCargo(113,0,0,0,spr,0,draw));local attempts=reads
+T.clear();Models.release();textureAvailable=false;assert(not T.drawCargo(113,0,0,0,spr,0,draw));local attempts=reads
 assert(not T.drawCargo(113,0,0,0,spr,0,draw)and reads==attempts,'missing source retried every actor frame')
-T.clear();textureAvailable=true;assert(T.drawCargo(113,0,0,0,spr,0,draw));T.clear()
+T.clear();Models.release();textureAvailable=true;assert(T.drawCargo(113,0,0,0,spr,0,draw));T.clear()
 local sourceTriangles=0
 for id,model in pairs(source.models)do
  for _,part in ipairs(model.parts)do
