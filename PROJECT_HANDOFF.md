@@ -1,3 +1,15 @@
+# Kanto queued landmarks rechecked on merged API3 — 2026-10-23
+
+Latest official0.3.96 standalone source review after release1.57.12 merge passes
+FR/LG Copycat+Mr Psychic:8 placements,4 real entry-return pairs,4 no-warp
+projections, unchanged native hashes and source panel frames0..2. Inspected
+source/contact/side/rear/first-person captures; original trees partly occlude
+LG connected Copycat rear, identical rear inspected on FR city. Fourteen
+focused suites pass after adding actual SharedModelMesh to9 queued fixtures.
+No production Scene edits or release. See KANTO_API3_SOURCE_RECHECK_2026-10-23.md.
+Continuing original Silph Co. source fit/closure assessment, then next unmatched
+Kanto family; full coverage remains incomplete.
+
 # Kanto source coverage resumed after API3 release — 2026-10-23
 
 Merged release1.57.12 API3/current-engine work into the isolated Kanto source

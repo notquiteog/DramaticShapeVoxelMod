@@ -1,5 +1,6 @@
 local mods={SceneryModelData={},HGSSMartData=dofile('lib/HGSSMartData.lua'),ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(mods[n],n)end
+mods.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);mods.SceneryModels=S;mods.Gen3ImportedGyms=assert(loadfile('lib/Gen3ImportedGyms.lua'))(V)
 local H=assert(loadfile('lib/Gen3ImportedHGSSMarts.lua'))(V);mods.Gen3ImportedHGSSMarts=H;local D=assert(loadfile('lib/Gen3HGSSMartDoors.lua'))(V);mods.Gen3HGSSMartDoors=D
 for _,q in ipairs{{'FR_PEWTER_CITY',26,15,'pewter_outdoor'},{'FR_SAFFRON_CITY',38,18,'general__rom_082d4b9c'},{'FR_SAFFRON_CITY_CONNECTION',28,11,'general__rom_082d4b9c'}}do
