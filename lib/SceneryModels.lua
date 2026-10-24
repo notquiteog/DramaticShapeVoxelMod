@@ -11,13 +11,37 @@ local M={limits={models=256,parts=32,vertices=32768,indices=98304,variants=32,ca
 -- Explicit format avoids confusing source RGBA with the existing tree anchors.
 M.COLOR_FORMAT={{"VertexPosition","float",3},{"VertexTexCoord","float",2},{"VertexShade","float",1},{"VertexColor","float",4}}
 local definitions,images,failed,variants,order={},{},{},{},{}
-local owners,imageSizes={},{}
+local owners,textures={},{}
+local catalogSources=setmetatable({},{__mode='k'})
+local catalogSerial=0
 local cachedVertices,imageBytes,imageCount,registeredVertices,cachedBytes,registeredBytes=0,0,0,0,0,0
 local function finite(n)return type(n)=='number'and n==n and math.abs(n)<math.huge end
 local function path(p)return type(p)=='string'and #p<=240 and not p:find('\\',1,true)and not p:find('..',1,true)and not p:match('^/')and not p:find(':',1,true)end
 local function clone(a)local r={};for i,v in ipairs(a)do r[i]=v end;return r end
 local function rotate(x,z,r)if r==1 then return -z,x elseif r==2 then return -x,-z elseif r==3 then return z,-x end;return x,z end
 local function clearVariants()variants,order={},{};cachedVertices=0;cachedBytes=0 end
+local function equal(a,b)
+ if type(a)~=type(b)then return false end
+ if type(a)~='table'then return a==b end
+ for k,v in pairs(a)do if not equal(v,b[k])then return false end end
+ for k in pairs(b)do if a[k]==nil then return false end end
+ return true
+end
+local catalogFields={'parts','anchors','surfaces','bounds','count','bytes'}
+local function sameDefinition(a,b)
+ for _,k in ipairs(catalogFields)do if not equal(a[k],b[k])then return false end end
+ return true
+end
+local function releaseImage(entry)
+ if entry.refs>0 or entry.live>0 then return end
+ if textures[entry.key]~=entry then return end
+ textures[entry.key]=nil;imageCount=imageCount-1;imageBytes=imageBytes-entry.bytes
+ if entry.image.release then entry.image:release()end
+end
+local function detachImage(key)
+ local entry=images[key];images[key]=nil
+ if entry then entry.refs=entry.refs-1;releaseImage(entry)end
+end
 -- Imported source lighting is replaced by the renderer's live lighting. Source
 -- textures still own paint; explicit color roles distinguish lighting from paint.
 -- Retain source slots/bounds for authored surfaces and exactly stable fitting.
@@ -96,17 +120,34 @@ function M.register(id,def,provider)
  local n=0;for _ in pairs(definitions)do n=n+1 end;if n>=M.limits.models then return nil,'scenery catalog budget exceeded'end
  if type(provider)~='table'or type(provider.read)~='function'then return nil,'scenery provider needs a public byte reader'end
  local d,err=validate(def,id);if not d then return nil,err end
- if registeredBytes+d.bytes>M.limits.catalogBytes then return nil,'scenery catalog byte budget exceeded'end
- if registeredVertices+d.count>M.limits.catalogVertices then return nil,'scenery catalog vertex budget exceeded'end
- d.read=provider.read;definitions[id]=d;registeredVertices=registeredVertices+d.count;registeredBytes=registeredBytes+d.bytes;return true
+ -- Generated regional aliases may point to one source table. Validate/copy
+ -- every registration first: callers can mutate that table, and the ID can
+ -- select a different default color role. Only equal normalized data shares.
+ local candidates=catalogSources[def];local shared
+ for _,entry in ipairs(candidates or{})do if sameDefinition(entry,d)then shared=entry;break end end
+ if not shared then
+  if registeredBytes+d.bytes>M.limits.catalogBytes then return nil,'scenery catalog byte budget exceeded'end
+  if registeredVertices+d.count>M.limits.catalogVertices then return nil,'scenery catalog vertex budget exceeded'end
+  candidates=candidates or{};catalogSources[def]=candidates
+  catalogSerial=catalogSerial+1;d.serial=catalogSerial;d.refs=0;shared=d;candidates[#candidates+1]=d
+  registeredVertices=registeredVertices+d.count;registeredBytes=registeredBytes+d.bytes
+ end
+ local record={read=provider.read,catalog=shared,pool=candidates}
+ for _,k in ipairs(catalogFields)do record[k]=shared[k]end
+ shared.refs=shared.refs+1;definitions[id]=record;return true
 end
 -- Read-only resource accounting for native streaming diagnostics.
 function M.stats()
- local models,failures=0,0
- for _ in pairs(definitions)do models=models+1 end
+ local models,failures,unique=0,0,{}
+ for _,d in pairs(definitions)do models=models+1;unique[d.catalog]=true end
  for _ in pairs(failed)do failures=failures+1 end
- return{models=models,catalogVertices=registeredVertices,catalogBytes=registeredBytes,
+ local catalogModels=0;for _ in pairs(unique)do catalogModels=catalogModels+1 end
+ local aliases,leases,leased=0,0,0
+ for _ in pairs(images)do aliases=aliases+1 end
+ for _,entry in pairs(textures)do leases=leases+entry.live;if entry.live>0 then leased=leased+1 end end
+ return{models=models,catalogModels=catalogModels,catalogVertices=registeredVertices,catalogBytes=registeredBytes,
   textures=imageCount,textureBytes=imageBytes,failedImages=failures,
+  imageAliases=aliases,imageLeases=leases,leasedTextures=leased,
   variants=#order,cachedVertices=cachedVertices,cachedBytes=cachedBytes}
 end
 function M.info(id)
@@ -151,8 +192,9 @@ end
 -- Immutable, shared CPU prototypes; caller never mutates these arrays.
 function M.vertices(id,opts)
  local fit,err=M.fit(id,opts);if not fit then return nil,err end
- local k=table.concat({id,fit.rotation,fit.scale,fit.x,fit.z,fit.groundInset},':');if variants[k]then return variants[k],fit end
- local d=definitions[id];local parts={}
+ local d=definitions[id]
+ local k=table.concat({d.catalog.serial,fit.rotation,fit.scale,fit.x,fit.z,fit.groundInset},':');if variants[k]then return variants[k],fit end
+ local parts={}
  for i,p in ipairs(d.parts)do
   local q={vertices={},indices=p.indices,texture=p.texture,wrapS=p.wrapS,wrapT=p.wrapT,opacity=p.opacity,role=p.role,alphaMode=p.alphaMode,name=p.name,material=p.material,diffuse=p.diffuse,lightingOnly=p.lightingOnly,vertexColorRole=p.vertexColorRole}
   q.format=p.colors and M.COLOR_FORMAT or nil
@@ -185,27 +227,58 @@ function M.surface(id,name,opts)
  return vertices,indices,{nx,s.normal[2],nz}
 end
 
+local function imageKey(id,texture,wrapS,wrapT)return table.concat({id,texture,wrapS,wrapT},':')end
+-- Borrowed, immutable static paint. Manual uploaders release their own meshes
+-- before unregister/reset as before; buildBatches tracks its image leases.
 function M.image(id,texture,wrapS,wrapT)
  local d=definitions[id];if not d then return nil,'unknown scenery model'end
  local allowed=false;for _,p in ipairs(d.parts)do if p.texture==texture and p.wrapS==wrapS and p.wrapT==wrapT then allowed=true;break end end
  if not allowed then return nil,'unregistered scenery texture/sampler'end
- local k=table.concat({id,texture,wrapS,wrapT},':');if images[k]then return images[k]end;if failed[k]then return nil,failed[k]end
+ local k=imageKey(id,texture,wrapS,wrapT);if images[k]then return images[k].image end;if failed[k]then return nil,failed[k]end
  owners[k]=id
- local file,img
+ local file,img,result
  local ok,err=pcall(function()
   assert(love and love.graphics and love.filesystem,'graphics unavailable')
-  assert(imageCount<M.limits.textures,'scenery texture count budget exceeded')
   local bytes=assert(d.read(texture),'scenery texture unavailable');assert(type(bytes)=='string'and #bytes<=4194304,'scenery texture input budget exceeded')
   assert(bytes:sub(1,8)=='\137PNG\13\10\26\10'and bytes:sub(13,16)=='IHDR','processed scenery requires PNG textures')
   local function u32(n)local a,b,c,e=bytes:byte(n,n+3);assert(e,'truncated PNG header');return ((a*256+b)*256+c)*256+e end
-  local pw,ph=u32(17),u32(21);assert(pw>0 and ph>0 and pw<=2048 and ph<=2048 and imageBytes+pw*ph*4<=M.limits.textureBytes,'scenery texture pixel budget exceeded')
+  local pw,ph=u32(17),u32(21);assert(pw>0 and ph>0 and pw<=2048 and ph<=2048,'scenery texture pixel budget exceeded')
+  -- Providers keep separate path authorization/readers. Share only identical
+  -- processed PNG bytes with the same sampler, never a filename alone. Hash
+  -- support is optional; its absence retains the bounded unshared behavior.
+  local key='model:'..k
+  if love.data and love.data.hash then
+   local success,digest=pcall(love.data.hash,'sha256',bytes)
+   if success and type(digest)=='string'and #digest==32 then key='content:'..digest..':'..wrapS..':'..wrapT end
+  end
+  local function attach(entry)
+   assert(definitions[id]==d,'scenery provider unregistered during image load')
+   -- A public reader/uploader may yield; another build can attach this alias.
+   if images[k]then result=images[k].image;return end
+   entry.refs=entry.refs+1;images[k]=entry;result=entry.image
+  end
+  if textures[key]then attach(textures[key]);return end
+  assert(imageCount<M.limits.textures,'scenery texture count budget exceeded')
+  assert(imageBytes+pw*ph*4<=M.limits.textureBytes,'scenery texture pixel budget exceeded')
   file=love.filesystem.newFileData(bytes,texture);img=love.graphics.newImage(file)
-  local w,h=img:getDimensions();assert(w>0 and h>0 and w<=2048 and h<=2048 and imageBytes+w*h*4<=M.limits.textureBytes,'scenery texture pixel budget exceeded')
-  img:setFilter('nearest','nearest');img:setWrap(wrapS,wrapT);imageBytes=imageBytes+w*h*4;imageCount=imageCount+1;images[k]=img;imageSizes[k]=w*h*4
+  local w,h=img:getDimensions();assert(w>0 and h>0 and w<=2048 and h<=2048,'scenery texture pixel budget exceeded')
+  img:setFilter('nearest','nearest');img:setWrap(wrapS,wrapT)
+  assert(definitions[id]==d,'scenery provider unregistered during image load')
+  if textures[key]then local old=img;img=nil;old:release();attach(textures[key]);return end
+  assert(imageCount<M.limits.textures,'scenery texture count budget exceeded')
+  assert(imageBytes+w*h*4<=M.limits.textureBytes,'scenery texture pixel budget exceeded')
+  local entry={key=key,image=img,bytes=w*h*4,refs=0,live=0,release=releaseImage}
+  imageBytes=imageBytes+entry.bytes;imageCount=imageCount+1;textures[key]=entry;img=nil
+  attach(entry)
  end)
  if file and file.release then file:release()end
- if not ok then if img and img.release then img:release()end;failed[k]=tostring(err);return nil,failed[k]end
- return img
+ if not ok then
+  if img and img.release then img:release()end
+  local message=tostring(err)
+  if definitions[id]==d then failed[k]=message end
+  return nil,message
+ end
+ return result
 end
 -- A scene rebuild/provider notification may retry previously missing bytes.
 -- Keep per-frame negative caching and every live scene-owned image intact.
@@ -215,7 +288,12 @@ function M.retryImages(id)
  return true
 end
 local function releaseParts(parts)
- for _,p in ipairs(parts)do if p.mesh and p.mesh.release then p.mesh:release()end;if p.lease then Shared.release(p.lease)elseif p.model and p.model.release then p.model:release()end;p.mesh,p.model,p.lease=nil,nil,nil end
+ for _,p in ipairs(parts)do
+  if p.mesh and p.mesh.release then p.mesh:release()end
+  if p.lease then (p.releaseLease or(Shared or V.require('SharedModelMesh')).release)(p.lease)elseif p.model and p.model.release then p.model:release()end
+  if p.imageLease then local entry=p.imageLease;p.imageLease=nil;entry.live=entry.live-1;entry.release(entry)end
+  p.mesh,p.model,p.lease,p.image,p.releaseLease=nil,nil,nil,nil,nil
+ end
 end
 -- Placements {model,x,y,z,fit={width,depth,...}}. options.parts may be the
 -- scene-owned destination; every part enters it before any resource/yield, so
@@ -274,12 +352,14 @@ function M.buildBatches(placements,newMesh,options)
     end
     part.bounds={lx+l,ly+n,lz+b,hx+r,hy+t,hz+f}
     part.center={x/#g.positions+(l+r)/2,y/#g.positions+(n+t)/2,z/#g.positions+(b+f)/2}
-    part.image=assert(M.image(g.id,p.texture,p.wrapS,p.wrapT),'scenery image unavailable')
+    local image,why=M.image(g.id,p.texture,p.wrapS,p.wrapT);part.image=assert(image,why or'scenery image unavailable')
+    part.imageLease=assert(images[imageKey(g.id,p.texture,p.wrapS,p.wrapT)]);part.imageLease.live=part.imageLease.live+1
     part.model,part.lease=Shared.acquire(p.vertices,p.indices,p.format,newMesh,part.image)
+    part.releaseLease=Shared.release
     assert(part.model,'scenery prototype upload failed');part.model:setTexture(part.image)
     part.mesh=Instances.new(part.model,g.positions,true);part.instanced=part.mesh~=nil
     if not part.mesh then
-     Shared.release(part.lease);part.lease=nil;part.model=nil
+     Shared.release(part.lease);part.lease=nil;part.model=nil;part.releaseLease=nil
      assert(#p.vertices*#g.positions<=M.limits.fallbackVertices,'scenery fallback vertex budget exceeded')
      assert(#p.vertices*#g.positions*(p.format and 40 or 24)<=M.limits.cachedBytes,'scenery fallback byte budget exceeded')
      local verts,indices={},{}
@@ -300,18 +380,23 @@ function M.buildBatches(placements,newMesh,options)
 end
 function M.releaseBatches(parts)releaseParts(parts or{})end
 function M.release()
- for _,image in pairs(images)do if image.release then image:release()end end
- images,failed,owners,imageSizes={},{},{},{};imageBytes,imageCount=0,0;clearVariants()
+ -- Detach cached aliases. Active scene parts retain their image leases until
+ -- their meshes release, including suspended/cancelled builds and providers.
+ for key in pairs(images)do detachImage(key)end
+ failed,owners={},{};clearVariants()
 end
 function M.unregister(id)
- if not definitions[id]then return false end
- -- Only this provider's image ownership is released; other active providers
- -- keep their resources. Its own scene batches must be released first.
+ local d=definitions[id];if not d then return false end
  for key,owner in pairs(owners)do if owner==id then
-  if images[key]then images[key]:release();imageBytes=imageBytes-imageSizes[key];imageCount=imageCount-1 end
-  images[key],imageSizes[key],failed[key],owners[key]=nil,nil,nil,nil
+  detachImage(key);failed[key],owners[key]=nil,nil
  end end
- clearVariants();registeredVertices=registeredVertices-definitions[id].count;registeredBytes=registeredBytes-definitions[id].bytes;definitions[id]=nil;return true
+ clearVariants();definitions[id]=nil
+ local shared=d.catalog;shared.refs=shared.refs-1
+ if shared.refs==0 then
+  registeredVertices=registeredVertices-shared.count;registeredBytes=registeredBytes-shared.bytes
+  for i,entry in ipairs(d.pool)do if entry==shared then table.remove(d.pool,i);break end end
+ end
+ return true
 end
 for id,def in pairs(V.require('SceneryModelData'))do
  assert(M.register(id,def,{read=function(path)return V.mod:read(path)end}))
