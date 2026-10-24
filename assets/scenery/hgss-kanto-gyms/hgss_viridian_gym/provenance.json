@@ -65,6 +65,7 @@
       "reason": "Existing rear tower quad projected the complete facade atlas; continue the original neutral side-wall paint strip. Positions and all other source UVs unchanged."
     }
   ],
+  "contactClosure": "Each authored foundation skirt terminates at the original lower-edge endpoint height, not the former blanket2.4; removes18 positive-area coplanar wall/skirt overlaps without moving original source surfaces/door or the contact datum.",
   "closure": "Measured rear wall/belt/roof returns, both roof soffits, foundation. No source door/window/sign/roof silhouette removed; original source shadow triangles omitted.",
   "nativePlacement": "Gen3ImportedHGSSGyms exact native drawing/permission adapter, with triangle-mask clearance and original paired door geometry; source eligibility and rendered acceptance are tracked separately.",
   "textures": {

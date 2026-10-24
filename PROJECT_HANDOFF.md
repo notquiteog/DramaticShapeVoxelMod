@@ -14,6 +14,59 @@ scenery entered that bug release. Latest released Kanto main1.58.2 merged here,
 all held Littleroot/Shipyard source preserved. Next: distinct white Sootopolis
 facade and water/underwater openings. See the conditional/Terra cave depth docs.
 
+# Ruby Path native story-state continuation — 2026-10-23
+
+Exact(42,39) grey reveal now follows original script-opened838/public113/elev0
+state; original857/collision7 seal remains intact. No production flag, floor,
+warp or collision writes. Both FRLG actual opened entry/return and closed native
+bump tests process0, final front/threshold/angled/overview views inspected.
+New native-state guards and existing geometry/coplanar/terrain proof pass;
+existing21 default mouth locations/mesh emission unchanged. Native-art inventory
+now22 unique accepted entrances/edition, eight stone cases still pending plus
+independent summit stair transfer. Default/native-opened map hashes recorded
+separately, actual engine progression retained. Modern source counts unchanged.
+See appended evidence/commands in docs/FRLG_CAVE_REVEALS_2026-10-23.md.
+Continue Dotted Hole/Tanoby sources; root normal-browser Alph592815 requested.
+
+# FRLG native cave reveal checkpoint — 2026-10-23
+
+Original flat169/838 outdoor mouths replaced by exact guarded recessed rock
+geometry at21 placements/edition. All42 final native.96 entries/returns pass
+process0, full front/threshold/angled/overview views inspected, source hashes
+recorded; all852 map hashes unchanged. Local12/16/32px clearances preserve native
+floors/upper terraces. Navel's one-cell hood preserves interpolated4px terrain
+perimeter; no global wall-height/collision changes. Actual arched underside,
+side reveals and recessed back; regular58tri/irregularhoodCP audits pass with
+no degenerate/positive-area coplanar faces. Native paint, no new textures.
+Scene prepares/draws explicit support and accepts true triangles; protected
+optional Hoenn dispatch/callback matches d5733fa5 contract. Missing module safe.
+
+Prior route2_east_checkpoint was misclassified Diglett north cliff, not a gate;
+removed only that erroneous recipe. Both actual forest gates native entry/return
+and final views pass both editions. Building census now135 assemblies/edition,
+84 source eligible/84 accepted/51 unmatched;6232 blocked gaps unchanged. Cave
+native-art receipts remain separate, not additional modern source coverage.
+Complete31 outdoor-to-underground-type records/edition:21 mouths accepted,
+nine separate story/stone states pending plus one non-mouth summit stair
+transfer. See docs/FRLG_CAVE_REVEALS_2026-10-23.md and exact native-cave catalog.
+No bump/push/release. Next: closed/stone native doorway state families.
+
+# Coastal Gym source checkpoint — 2026-10-23
+
+Original HGSS Vermilion/Fuchsia Gyms now cover both exact native placements in
+FRLG, original regional paint/paired curved doors, measured source proportions,
+complete native guards and source-proven lawn. Also removes18 coplanar authored
+foundation/wall overlaps per six-Gym model by matching measured wall-edge
+heights, preserving original XYZ/UV/PNG/anchors. All six deterministic models
+pass zero-coplanar/nondegenerate proof. Four new native placements plus ten
+existing Gym regressions pass official.96 process0, source-panel draw asserted;
+two paired missing-source fallbacks pass. Real entries/returns/corner walking,
+source galleries and final native views inspected, occlusions documented.
+Fourteen Lua suites and actual native atlas proof pass. Full852 hashes unchanged;
+canonical84 eligible/84 accepted/52 unmatched peredition (136assemblies).
+See docs/VERMILION_FUCHSIA_GYM_SOURCES_2026-10-23.md. This is subsequent to
+released1.58.2, no version bump/push. Next user priority: outdoor cave entrances.
+
 # Verified Kanto release1.58.2 — 2026-10-23
 
 Integrated the verified Kanto chain through52d9bdca: original Cerulean/Celadon

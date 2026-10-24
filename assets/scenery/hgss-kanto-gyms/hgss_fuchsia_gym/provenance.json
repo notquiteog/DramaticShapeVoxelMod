@@ -1,0 +1,182 @@
+{
+  "asset": 592836,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592836/",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Fuchsia City/Fuchsia City.dae",
+  "geometry": "sk_gym_001-mesh",
+  "doorGeometry": "gym_door_003-mesh",
+  "doorOffset": [
+    0.0059,
+    -0.67383,
+    22.8867
+  ],
+  "archiveSha256": "04b3a7057e50d3fd9ae166bc795971971cb477897a73dcc3c16b271158073680",
+  "sourceModelSha256": "2b97cc06c29c0682dcc5f0689aaa22b1465fa317e1ac86ca93302ad6a241a6a9",
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -55.66992,
+      1.604297,
+      -41.39258,
+      56.04883,
+      61.52734,
+      29.39258
+    ],
+    "sourceOrigin": [
+      0.18945500000000237,
+      1.604297,
+      -6.000000000000002
+    ],
+    "sourceUnitSpan": 111.71875,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.3168007160839161,
+      0.5,
+      0.5363740911888112,
+      0.3168007160839161
+    ]
+  },
+  "originalBounds": [
+    -55.66992,
+    1.0,
+    -41.39258,
+    61.84375,
+    61.52734,
+    34.38672
+  ],
+  "originalTriangles": 285,
+  "processedTriangles": 328,
+  "excludedTriangles": 11,
+  "uvRepairs": [
+    {
+      "part": "sk_gym_001-mesh:lambert12_007-material",
+      "sourceTriangleIndices": [
+        41,
+        103
+      ],
+      "paintUV": [
+        0.796875,
+        0.5
+      ],
+      "reason": "Existing rear tower quad projected the complete facade atlas; continue the original neutral side-wall paint strip. Positions and all other source UVs unchanged."
+    }
+  ],
+  "contactClosure": "Each authored foundation skirt terminates at the original lower-edge endpoint height, not the former blanket2.4; removes18 positive-area coplanar wall/skirt overlaps without moving original source surfaces/door or the contact datum.",
+  "closure": "Measured rear wall/belt/roof returns, both roof soffits, foundation. No source door/window/sign/roof silhouette removed; original source shadow triangles omitted.",
+  "nativePlacement": "Gen3ImportedHGSSGyms exact native drawing/permission adapter, with triangle-mask clearance and original paired door geometry; source eligibility and rendered acceptance are tracked separately.",
+  "textures": {
+    "kn_gym_c.png": {
+      "sha256": "f4800e2a09aa7d8c1f537ef586a118217be6eb7cc4ad77e2151cebe384c48315",
+      "bytes": 149
+    },
+    "sk_gym_b.png": {
+      "sha256": "17efae1bd84b576313f3631b4ed75a9b10bfad0ee7a9760563b24d921b2f605f",
+      "bytes": 573
+    },
+    "kn_gym_a.png": {
+      "sha256": "d7693cf924bc9b4ab7cd177506b85b29a45afc9e1863905a545f31aa9849991d",
+      "bytes": 275
+    },
+    "gym_door.png": {
+      "sha256": "33c2a96dbe73a0eec83f3cf84429fbbf29b4b10a3eac81e1b4874b95ef31d6c8",
+      "bytes": 258
+    }
+  },
+  "parts": [
+    {
+      "name": "sk_gym_001-mesh:lambert14_005-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 6
+    },
+    {
+      "name": "sk_gym_001-mesh:lambert15_005-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 14
+    },
+    {
+      "name": "sk_gym_001-mesh:lambert13_007-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 20
+    },
+    {
+      "name": "sk_gym_001-mesh:lambert11_005-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 50
+    },
+    {
+      "name": "sk_gym_001-mesh:lambert5_014-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 54
+    },
+    {
+      "name": "sk_gym_001-mesh:lambert12_007-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 122
+    },
+    {
+      "name": "gym_door_003-mesh:gym_door_010-material",
+      "role": "source_door",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "authored_rear_wall",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_blue_belt",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_roof_return",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_roof_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_entrance_tower_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 34
+    }
+  ]
+}

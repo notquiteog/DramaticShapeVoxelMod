@@ -35,7 +35,8 @@ local header={8,0x287,0x298,0x299,0x287,0x287,0x288,0x289,0x28a,0x287,0x287,0x29
 local def={width=15,height=12,midLayout={midAt=function(_,x,y)return y==0 and header[x+1]or y==11 and 8 or 0x281 end,collAt=function(_,x,y)return(y==0 or y==11)and 7 or y==1 and(x==7 and(changed and 0 or 114)or 7)or 0 end}}
 local plan=assert(R.profile(def,'house'));assert(plan.north<16 and plan.south==176 and plan.northDoorRows==1)
 changed=true;assert(not R.profile(def,'house'),'custom north walking lane enclosed');assert(not R.profile(def,'player_house'),'foreign atlas claimed')
-print('PASS 3 complete native gate exteriors, '..faces..' closed faces, '..drawings..' route fixture drawings and walking-lane/header fallbacks')
+assert(#G.recipes==2,'Diglett cave drawing must not be treated as gate')
+print('PASS 2 complete native gate exteriors, '..faces..' closed faces, '..drawings..' route fixture drawings and walking-lane/header fallbacks')
 package.loaded['src.core.GameVersion']={get=function()return'firered'end}
 local F=V.require('Gen3Furniture')
 for _,r in ipairs(R.recipes)do

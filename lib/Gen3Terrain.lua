@@ -3,7 +3,7 @@
 -- Only reviewed cliff artwork is raised; this is not a collision heightmap.
 local M={}
 local function solid(c)
- if not c or c.shape and (c.shape.kind=='cliff' or c.shape.kind=='caveWall') then return true end
+ if not c or c.caveEntrance or c.shape and (c.shape.kind=='cliff' or c.shape.kind=='caveWall') then return true end
  local g=c.civic
  return g and g.custom and g.custom.geometry=='tower' and c.cy>=g.cy+(g.northRows or 0)
 end
