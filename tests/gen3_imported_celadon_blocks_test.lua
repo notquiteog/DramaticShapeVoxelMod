@@ -1,5 +1,6 @@
 local mods={SceneryModelData={},CeladonBlockData=dofile('lib/CeladonBlockData.lua'),ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(mods[n],n)end
+mods.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);mods.SceneryModels=S;local H=assert(loadfile('lib/Gen3ImportedCeladonBlocks.lua'))(V)
 local rows={celadon_small_block={{749,750,750,758},{736,737,737,740},{744,745,747,748},{752,753,755,756},{760,761,763,764}},celadon_low_roof_block={{729,730,730,774},{736,737,737,740},{744,745,747,748},{752,753,755,756},{760,761,763,764}}}
 for family,drawing in pairs(rows)do

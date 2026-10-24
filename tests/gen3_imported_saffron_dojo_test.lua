@@ -1,5 +1,6 @@
 local mods={SceneryModelData={},SaffronDojoData=dofile('lib/SaffronDojoData.lua'),ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(mods[n],n)end
+mods.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);mods.SceneryModels=S;local G=assert(loadfile('lib/Gen3ImportedGyms.lua'))(V);mods.Gen3ImportedGyms=G
 local H=assert(loadfile('lib/Gen3ImportedSaffronDojo.lua'))(V);local D=dofile('lib/Gen3SaffronDojoEntrance.lua')
 local rows={{816,817,799,817,799,818},{824,825,825,825,825,826},{832,833,833,833,833,834},{821,822,823,811,812,827},{829,830,831,819,820,835}}
