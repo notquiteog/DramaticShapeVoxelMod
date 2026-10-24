@@ -62,6 +62,15 @@ local function claim(cells,g,rows)
   if not c or c.pair~=g.pair or c.mid~=mid or c.prop or c.civic then return end
   parts[#parts+1]=c
  end end
+ -- A few native facades continue into one exact cell outside their main
+ -- body rectangle. Validate before claiming anything; dimensions/foundation
+ -- sampling and neighboring terrain/props must retain their original owners.
+ local outside={}
+ for _,q in ipairs(g.custom and g.custom.claimOutside or{})do
+  local c=cells[(g.cx+q[1])..':'..(g.cy+q[2])]
+  if not(c and c.pair==g.pair and c.mid==q[3]and c.collision==q[4]and not(c.prop or c.civic or c.stageHidden or c.boundary))then return end
+  outside[#outside+1]={cell=c,ground=q[5]}
+ end
  g.rows=rows;g.width=#rows[1];g.depth=#rows;g.ts=parts[1].ts
  for _,c in ipairs(parts)do
   local ranges=g.custom and g.custom.claimRanges;local row=ranges and ranges[c.cy-g.cy+1]
@@ -69,6 +78,10 @@ local function claim(cells,g,rows)
  end
  for _,q in ipairs(g.custom and g.custom.claimExtras or {})do
   if q[1]>=0 and q[1]<g.width and q[2]>=0 and q[2]<g.depth then cells[(g.cx+q[1])..':'..(g.cy+q[2])].civic=g end
+ end
+ if #outside>0 then
+  g.outsideGrounds={};g.claimedOutside={}
+  for _,q in ipairs(outside)do local c=q.cell;c.civic=g;g.outsideGrounds[c.cx..':'..c.cy]=q.ground;g.claimedOutside[#g.claimedOutside+1]=c end
  end
  return g
 end
@@ -215,6 +228,7 @@ function M.prepare(cells,gyms,families)
  return out
 end
 function M.ground(c)
+ local outside=c.civic.outsideGrounds and c.civic.outsideGrounds[c.cx..':'..c.cy];if outside then return outside end
  for _,q in ipairs(c.civic.custom and c.civic.custom.groundPreserve or {})do
   if c.cx==c.civic.cx+q[1] and c.cy==c.civic.cy+q[2] then return c.mid end
  end

@@ -3,6 +3,8 @@
 return function(game)
  local family=os.getenv('QA_FAMILY')or'gyms'
  local configs={
+  center_regression={fixtures={{'FR_PEWTER_CITY',15,21}},adapter='Gen3ImportedKantoCenters',model='hgss_kanto_center',doorX=2,doorY=4,stat='kantoCenters',source='^assets/scenery/hgss%-center/',right=6,left={-1,4,math.pi/2},rear={2,-2,math.pi}},
+  one_island_center={fixtures={{'SEVII_ONE_ISLAND',11,0}},adapter='Gen3ImportedOneIslandCenter',model='hgss_kanto_center',doorX=3,doorY=5,stat='oneIslandCenter',source='^assets/scenery/hgss%-center/',right=8,left={-1,5,math.pi/2},rear={3,0,math.pi}},
   celadon_short={front=4,frontX=4,frontYaw=-math.pi/3,walkWidth=4,noEntrance=true,fixtures={{'FR_CELADON_CITY',20,26}},adapter='Gen3ImportedCeladonShortHouse',model='hgss_celadon_short_house',doorX=1,doorY=3,stat='celadonShortHouse',source='^assets/scenery/celadon%-short%-house/',right=5,left={0,-1,math.pi},rear={2,-2,math.pi}},
   cerulean_closed={noEntrance=true,fixtures={{'FR_CERULEAN_CITY',31,25}},adapter='Gen3ImportedCeruleanClosedHouse',model='hgss_cerulean_closed_house',doorX=2,doorY=3,stat='ceruleanClosedHouse',source='^assets/scenery/cerulean%-closed%-house/',right=6,left={-1,3,math.pi/2},rear={2,-2,math.pi}},
   psychic={pendingGround=false,fixtures={{'FR_SAFFRON_CITY',46,17},{'FR_SAFFRON_CITY_CONNECTION',36,10}},adapter='Gen3ImportedSaffronPsychic',model='hgss_saffron_psychic',doorX=1,doorY=4,stat='saffronPsychic',source='^assets/scenery/saffron%-psychic/',right=7,left={-2,5,math.pi/4},rear={2,-2,math.pi}},
@@ -28,12 +30,13 @@ return function(game)
  local edition=require('src.core.GameVersion').get();assert(edition=='firered'or edition=='leafgreen')
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
  local C,S=V.require('Gen3Integration'),V.require('Gen3Scene');local Map,P=require('src.core.game3.map'),require('src.core.game3.player')
- local observed={};local adapter=V.require(config.adapter or(family=='saffron_dojo'and'Gen3ImportedSaffronDojo'or'Gen3ImportedHGSSGyms'));local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=(g.importedCeladonShortHouse or g.importedCeruleanClosedHouse or g.importedHGSSGym or g.importedSaffronDojo or g.importedHGSSMart or g.importedViridianHouse or g.importedViridianFlowerHouse or g.importedPewterMuseum or g.importedSaffronCopycat or g.importedSaffronPsychic).model end;return ok,why end
+ local observed={};local adapter=V.require(config.adapter or(family=='saffron_dojo'and'Gen3ImportedSaffronDojo'or'Gen3ImportedHGSSGyms'));local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=(g.importedKantoCenter or g.importedOneIslandCenter or g.importedCeladonShortHouse or g.importedCeruleanClosedHouse or g.importedHGSSGym or g.importedSaffronDojo or g.importedHGSSMart or g.importedViridianHouse or g.importedViridianFlowerHouse or g.importedPewterMuseum or g.importedSaffronCopycat or g.importedSaffronPsychic).model end;return ok,why end
  local dir=os.getenv('SHOT_DIR');local json=require('src.link.Json');local out={};local missing=os.getenv('QA_MISSING_ASSETS')=='1'
  if missing then local read=V.mod.read;V.mod.read=function(self,path)if path:match(config.source)then return nil end;return read(self,path)end end
  game:_handleBootAction({action='new_game',start={map='FR_PEWTER_CITY',x=10,y=32,facing='up'}})
  if family=='saffron_gym'or family=='saffron_dojo'or family=='copycat'or family=='psychic'or config.model=='hgss_kanto_mart'then require('src.core.game3.scripting.flags').setFlag(assert(require('src.core.game3.scripting.space').store),nil,0x3E,true)end
  if config.model=='hgss_kanto_mart'then local F=require('src.core.game3.scripting.flags');local store=assert(require('src.core.game3.scripting.space').store);F.setVar(store,nil,0x4086,1);F.setFlag(store,nil,0x97,true);F.setVar(store,nil,0x4057,1);F.setFlag(store,nil,0x829,true)end
+ if family=='one_island_center'then local F=require('src.core.game3.scripting.flags');F.setVar(assert(require('src.core.game3.scripting.space').store),nil,0x4076,3)end -- own post-intro QA fixture; native stage0 starts Bill's mandatory cutscene
  V.require('RenderDistance').setting:sync(16);V.require('DayNight').setting:sync('day');V.require('RenderDistance').haze=function()return nil end
  local function settle()
   local stable,last=0
@@ -100,8 +103,14 @@ return function(game)
    U.hold(game,'down',30);game.input:reset();U.wait(30)
    assert(P.cellX==cx+1 and P.cellY==cy,'native rear wall became walkable');settle();shot(index..'-header-walked')
   end
+  if family=='one_island_center'then
+   C.setLevel(3,game);C.yaw=0;P.reset(cx+3,cy+6,'left');game.input:reset();settle()
+   for _=1,50 do U.hold(game,'left',1);if P.moving then break end end;game.input:reset();U.wait(24)
+   assert(P.cellX==cx+2 and P.cellY==cy+6,'original walkable pillar-projection floor was blocked')
+   settle();shot(index..'-pillar-ground-walked');assert(hash(Map.currentDef())==before,'native projection permissions changed')
+  end
   C.setLevel(0,game);U.wait(15);shot(index..'-native')
-  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,runtime='v'..require('src.core.Version').engine,doorX=doorX,doorY=doorY,sourceModel=not missing and config.model or nil,nativeHash=before,destination=destination,returned=not config.noEntrance and map~='FR_SAFFRON_CITY_CONNECTION',nativeWalkChecked=(family=='cerulean_closed'or family=='celadon_short')or nil,nonEnterable=config.noEntrance==true or map=='FR_SAFFRON_CITY_CONNECTION',renderedVerified=not missing and not pendingGround,renderedGap=pendingGround and'Shared native-ground donor assessment pending.'or nil,missingAssets=missing}
+  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,runtime='v'..require('src.core.Version').engine,doorX=doorX,doorY=doorY,sourceModel=not missing and config.model or nil,nativeHash=before,destination=destination,returned=not config.noEntrance and map~='FR_SAFFRON_CITY_CONNECTION',nativeWalkChecked=(family=='cerulean_closed'or family=='celadon_short'or family=='one_island_center')or nil,nonEnterable=config.noEntrance==true or map=='FR_SAFFRON_CITY_CONNECTION',renderedVerified=not missing and not pendingGround,renderedGap=pendingGround and'Shared native-ground donor assessment pending.'or nil,missingAssets=missing}
   local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close()
  end end
  local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close();assert(#game.mods.errors==0,table.concat(game.mods.errors,'\n'));print('[FRLG IMPORTED EXTERIORS] PASS',family,#out)

@@ -1,3 +1,17 @@
+# Wider One Island Center — 2026-10-23
+
+Exact7×6 One Island native Center now reuses genuine closed HGSS Center/sliding
+source door uniformly, full native body guard and unchanged portal/floor. Exact
+outside MID721 pillar projection ownership removes stray flat glyph; original
+collision0 walkability, six-row foundation and neighboring sign/lawn stay fixed.
+Latest official.96 both-edition actual entry/return and projection walking PASS0;
+LG missing-source fallback and both standard Pewter Center regressions PASS0.
+Native hashes unchanged; front/quarter/contact and source states inspected,
+side/rear occlusion limits recorded.18 focused suites/changed compile pass.
+Canonical per edition136 assemblies,82 eligible/75 accepted/54 unmatched;7
+separate ground-review gaps remain. See docs/ONE_ISLAND_CENTER_SOURCE_2026-10-23.md.
+No bump/push/release; continue remaining Kanto source families.
+
 # Exact gate denominator corrected — 2026-10-23
 
 Read-only FRLG ledger now mirrors production RouteGates+exterior recipe order.

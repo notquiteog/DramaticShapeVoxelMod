@@ -118,7 +118,8 @@ return {
 {756,757,766,758,759},
 {764,765,664,772,767},
 }},
-{kind='center',profile='one_island_center',name='one_island_center',pair='sevii_outdoor',header=4,back=8,roofEnd=64,wallBottom=95,bevel=6,rows={
+-- The original left entrance pillar continues into(13,6), beyond the6-row body.
+{kind='center',profile='one_island_center',claimOutside={{2,6,721,0,16}},name='one_island_center',pair='sevii_outdoor',header=4,back=8,roofEnd=64,wallBottom=95,bevel=6,rows={
 {704,706,706,707,708,708,710},
 {712,714,714,715,716,716,718},
 {720,714,722,723,724,716,726},
