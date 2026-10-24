@@ -5,7 +5,8 @@ fixes opposite-side depth axes and the repeated grass horizontal family.
 Official .96 standalone: 2400 unique city cells,180 eligible/180 built,
 unchanged native grid/recovery0; Gym/south gate front/side captures inspected.
 Focused source atomicity/29-family/ground/bounds test passes. Root owns joined
-corner/contact geometry and final acceptance. R/S parity follows immediately.
+corner/contact geometry and final acceptance. R/S own native census also passes2400/180/180/recovery0; each restores16 cells.
+Independent source pixel/visible ground witnesses pass in all3editions.
 See [coverage evidence](docs/RUSTBORO_FENCE_COVERAGE_2026-10-23.md).
 Littleroot e1bf4167 remains held for a later model batch; Shipyard WIP preserved.
 

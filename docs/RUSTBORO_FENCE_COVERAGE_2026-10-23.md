@@ -41,5 +41,16 @@ This is classification/axis acceptance, not final corner geometry acceptance.
 The original art cheats at some turns (e.g. `337` endpost versus `318` above).
 Joined source posts, small turn seams, source foot/contact alignment and
 coplanar ownership remain in the separate source geometry integration review.
-Ruby/Sapphire native parity is the immediate next check. Full Hoenn map/fence
+Ruby and Sapphire now also pass their own native census: each has 2,400 unique
+city cells, 180 eligible/180 source-built, unchanged grid and recovery zero.
+Their native Gym/south gate captures were inspected. Each has 16 formerly
+omitted cells (one additional `2c7` versus Emerald), so old coverage was 164.
+`tools/audit_hoenn_fence_pixels.py` independently checks each edition's actual
+atlas: all ten reviewed full-depth stripe witnesses, every visible ground
+pixel beneath the eight newly admitted families, original blocked guards,
+exact city census and successful live owners pass. Hidden terrain pixels
+are explicitly not claimed recoverable from an occluding rail sprite.
+Evidence adds `fences-after/source-pixel-proof.json` and the `ruby`/`sapphire`
+native atlas/census/front/side captures. This confirms original R/S art and
+terrain separately rather than inferring parity from Emerald IDs. Full Hoenn map/fence
 coverage remains incomplete; no all-map acceptance is claimed.
