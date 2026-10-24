@@ -1,3 +1,26 @@
+# FRLG native cave reveal checkpoint — 2026-10-23
+
+Original flat169/838 outdoor mouths replaced by exact guarded recessed rock
+geometry at21 placements/edition. All42 final native.96 entries/returns pass
+process0, full front/threshold/angled/overview views inspected, source hashes
+recorded; all852 map hashes unchanged. Local12/16/32px clearances preserve native
+floors/upper terraces. Navel's one-cell hood preserves interpolated4px terrain
+perimeter; no global wall-height/collision changes. Actual arched underside,
+side reveals and recessed back; regular58tri/irregularhoodCP audits pass with
+no degenerate/positive-area coplanar faces. Native paint, no new textures.
+Scene prepares/draws explicit support and accepts true triangles; protected
+optional Hoenn dispatch/callback matches d5733fa5 contract. Missing module safe.
+
+Prior route2_east_checkpoint was misclassified Diglett north cliff, not a gate;
+removed only that erroneous recipe. Both actual forest gates native entry/return
+and final views pass both editions. Building census now135 assemblies/edition,
+84 source eligible/84 accepted/51 unmatched;6232 blocked gaps unchanged. Cave
+native-art receipts remain separate, not additional modern source coverage.
+Complete31 outdoor-to-underground-type records/edition:21 mouths accepted,
+nine separate story/stone states pending plus one non-mouth summit stair
+transfer. See docs/FRLG_CAVE_REVEALS_2026-10-23.md and exact native-cave catalog.
+No bump/push/release. Next: closed/stone native doorway state families.
+
 # Coastal Gym source checkpoint — 2026-10-23
 
 Original HGSS Vermilion/Fuchsia Gyms now cover both exact native placements in

@@ -1,3 +1,10 @@
+> Correction from the later native cave audit: the drawing formerly called
+> `route2_east_checkpoint` is Diglett’s Cave north entrance, whose native warp
+> leads to `FR_DIGLETTS_CAVE_NORTH_ENTRANCE`. That erroneous gate recipe is
+> removed. Only the two forest gate drawings remain in this module; the
+> exterior-building denominator is135 per edition after correction. Historical
+> counts and source-fit proposals below describe the earlier mistaken census.
+
 # Route2 gate census correction and source assessment
 
 The read-only exterior ledger now uses the same standalone recipe order as

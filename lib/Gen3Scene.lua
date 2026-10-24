@@ -46,6 +46,7 @@ function M.context()return Map.currentDef()end
 local cache,foliage,bark,spriteMeshes={ },nil,nil,{}
 local savedCanvas,saved=false,false
 local quadIndices={1,2,3,1,3,4}
+local triangleIndices={1,2,3}
 local cardinalDirections={{-1,0},{1,0},{0,-1},{0,1}}
 local function quad(v,i,p,uv,shade,anchor)
  Budget.tick()
@@ -55,7 +56,7 @@ local function quad(v,i,p,uv,shade,anchor)
   if anchor then vertex[7],vertex[8],vertex[9]=anchor[1],anchor[2],anchor[3]end
   v[#v+1]=vertex
  end
- for _,k in ipairs(quadIndices)do i[#i+1]=base+k end
+ for _,k in ipairs(#p==3 and triangleIndices or quadIndices)do i[#i+1]=base+k end
 end
 local function uvFor(ts,mid)
  local slot=ts.midToSlot[mid];if not slot then return end
@@ -358,6 +359,7 @@ local function build(req,cache,previous)
    if c.cx>=r.x and c.cy>=r.y and c.cx<r.x+r.w and c.cy<r.y+r.h then c.region=r;break end
   end
  end
+ M.caveEntranceCount=V.require('Gen3CaveEntrances').prepare(cells,regions)
  M.dockCellCount=V.require('Gen3Bridges').prepareDocks(cells)
  cache.wetRockCells,cache.waterField=NativeWater.bind(cells,{regions=regions,
   region=V.require('Gen3Hoenn').active()and'hoenn'or'kanto',outdoor=Pairs.outdoor,tick=Budget.tick})
@@ -493,6 +495,8 @@ local function build(req,cache,previous)
    if ground then plane(b.wv,b.wi,x,z,uvFor(ts,ground)or uv,line)
    else plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
    if not c.stageHidden and not V.require('Gen3SeaRocks').queue(c,rockGroups)then V.require('Gen3Cave').rock(c,function(v,t,shade,anchor)quad(anchor and b.pv or b.v,anchor and b.pi or b.i,v,t,shade,anchor)end,uvFor)end
+  elseif c.caveEntrance then
+   V.require('Gen3CaveEntrances').append(c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)
   elseif shape.kind=='cliff' then
    M.cliffCount=M.cliffCount+1
    plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)

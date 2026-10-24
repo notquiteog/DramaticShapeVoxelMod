@@ -23,11 +23,8 @@ for _,v in ipairs{{'forest_south',fore,true},{'forest_north',reverse,false}}do
   forward=v[3],reverse=not v[3],ground=1,preserveWalkableFloor=true,wallSample={24,v[3]and 78 or 94},trimSample=v[3]and{48,85}or{2,85},openings=v[3]and{{48,96,80,112,door=true}}or{},
   claimRanges=not v[3]and{{2,5},{0,7},{0,7},{0,7},{0,7},{0,7},{0,7}}or nil,groundPreserve=not v[3]and{{2,0},{3,0},{4,0},{5,0}}or nil}
 end
--- East Route2 uses the native red-tiled checkpoint, distinct from blue gates.
-local east={{0x68,0x69,0x69,0x69,0x69,0x69,0x69,0x6a},{0x70,0x6b,0x6c,0x6c,0x6c,0x6c,0x6d,0x72},{0x70,0x73,0x71,0x71,0x71,0x71,0x75,0x72},{0x70,0x73,0x71,0x71,0x71,0x71,0x75,0x72},{0x70,0x7b,0x7c,0x7c,0x7c,0x7c,0x7d,0x72},{0x78,0x79,0x79,0x79,0xa9,0x79,0x79,0x7a}}
-local p={};for y=1,6 do p[y]={};for x=1,8 do p[y][x]=y==6 and x==5 and 113 or 7 end end
-M.recipes[#M.recipes+1]={name='route2_east_checkpoint',pair='viridian_outdoor',kind='route_gate',geometry='route_gate',header=6,rows=east,permissions=p,east=true,ground=1,
- wallSample={19,74},trimSample={2,70},openings={{64,80,80,96,door=true}}}
+-- The8x6 brown General drawing formerly called east_checkpoint is Diglett's
+-- Cave north entrance (native warp17,11), not a gate. Terrain/entrance owns it.
 function M.profile(g)
  local d=g.depth*16;return{w=128,h=d,back=0,front=d-1,wall=32,roofEnd=g.custom.east and 64 or 64,wallTop=64,wallBottom=d,
  doorLeft=g.custom.east and 64 or 48,doorRight=80,doorTop=d-16,doorBottom=d,doorHeight=24,bevel=0,projection=0}
