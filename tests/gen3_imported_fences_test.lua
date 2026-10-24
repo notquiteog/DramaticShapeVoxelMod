@@ -31,6 +31,27 @@ assert(H.emeraldShape('general','petalburg',0x149,0,7).nativeFence=='rural149')
 assert(R.ownShape('general','petalburg',0x149,0,7).nativeFence=='rural149')
 assert(not H.emeraldShape('general','petalburg',0x149,0,0).nativeFence)
 local F=V.require('Gen3FenceFamilies');local ornate={}
+-- Actual all-outdoor native census: nine white-fence families, no neighboring
+-- gym art or permission relaxation. Every source upload remains atomic.
+assert(F.ruralMid('battle_frontier_outside_east',0x3d7)==0x142)
+assert(not F.ruralMid('rustboro',0x3d7)and not F.ruralMid('mossdeep',0x3d7))
+local rural={}
+for mid in pairs(F.rural)do
+ local q=cell(mid);q.mid=mid;rural[mid]=q
+ assert(H.emeraldShape('general','petalburg',mid,0,7).nativeFence=='rural149')
+ assert(R.ownShape('general','petalburg',mid,0,7).nativeFence=='rural149')
+ assert(not F.shape('general','petalburg',mid,0,0))
+ assert(not F.shape('building','petalburg',mid,0,7))
+end
+for _,mid in ipairs{0x130,0x131,0x132,0x133,0x13b,0x13c,0x143,0x144}do
+ assert(not F.shape('general','petalburg',mid,0,7),'non-fence primary source art')
+end
+available=false;assert(not M.build(rural,function()end,{}))
+for _,q in pairs(rural)do assert(not q.importedFence)end
+available=true;local rp,re,rn=M.build(rural,function()end,{})
+assert(rp and not re and rn==9)
+for _,q in pairs(rural)do assert(M.floor(q)==1 and M.underOnly(q))end
+
 -- Actual Rustboro census regressions: eight art variants account for fifteen
 -- blocked city cells that previously kept flat rails; ordinary paving, roof
 -- tiles and walkable headers must never be recruited by MID adjacency.
@@ -84,6 +105,14 @@ for _,data in pairs(V.require('ImportedFenceData'))do for _,p in ipairs(data.par
  for _,n in pairs(edges)do assert(n==2,'open physical fence edge')end
 end end
 for id,data in pairs(V.require('ImportedFenceJoinedData'))do assert(Real.register(id,data,{read=function()end}))end
+for id,data in pairs(V.require('ImportedRuralFenceData'))do assert(Real.register(id,data,{read=function()end}))end
+for _,p in ipairs(M.placements(rural))do
+ local verts,fit=assert(Real.vertices(p.model,p.fit))
+ assert(math.abs(fit.scale-1)<1e-8 and fit.groundInset==.025 and math.abs(fit.bounds[5]-10.25)<1e-8)
+ for _,part in ipairs(verts)do for _,v in ipairs(part.vertices)do
+  assert(v[1]>=0 and v[1]<=16 and v[3]>=0 and v[3]<=16 and v[2]>=-.025,'rural fence outside native blocked cell')
+ end end
+end
 for _,p in ipairs(M.placements(ornate))do
  local verts,fit=assert(Real.vertices(p.model,p.fit));assert(math.abs(fit.bounds[5]-11)<1e-5,'corner fitting shrank height')
  for _,part in ipairs(verts)do for _,v in ipairs(part.vertices)do assert(v[1]>=-1e-5 and v[1]<=16.00001 and v[3]>=-1e-5 and v[3]<=16.00001,'fence crossed walking bounds')end end

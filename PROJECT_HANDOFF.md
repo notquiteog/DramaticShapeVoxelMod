@@ -1,3 +1,16 @@
+# Rural field-fence source checkpoint — 2026-10-23
+
+Nine exact General families +one reviewed FrontierEast duplicate now use
+closed original ORAS149 source primitives, proper4/12 depth axes and14baseline.
+Actual official.96 fresh-per-map32jobs PASS:EM419/419,RU408/408,SA408/408;
+mapdata unchanged/recovery0. Separate missing-PNG native fallback66cells PASS.
+Real9geometry models closedatomicedges2/coplanarzero/UV/bounds; released31
+Rustboro geometry test remainsPASS. Long tours still hit shared8MiB sourceimage
+cache: Route115 rolls back21, despitefresh11521/21. Root owns resourcefix;
+release blocked pending lifetime/dedup and repeated uninterruptedtour. No budgets
+raised/no live resource eviction. See docs/HOENN_RURAL_FENCES_2026-10-23.md.
+Held Littleroot e1bf4167 and inactive Shipyard WIP remain preserved separately.
+
 # Rustboro fence release1.58.1 — 2026-10-23
 
 Fixes43 missing Emerald fence cells (44 in R/S), reversed depth stripes and the

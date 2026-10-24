@@ -1,6 +1,42 @@
 -- Explicit R/S/E source-art matches. A failed model upload leaves complete
 -- native art; only a successful adapter owns the clean original lower layer.
 local M={}
+-- Native white field-fence vocabulary, independently inspected in all R/S/E
+-- outdoor layouts. The joined adapter consumes the reviewed corral graphs
+-- below; metadata records original layer placement and post centers.
+-- Post centers use pixel edges. Clean base art for138..142 is exactly MID1;
+-- their complete fence drawing lives in the native over layer.
+M.ruralArt={
+ [0x138]={side='left',corner='top',postX=4,over=true},
+ [0x139]={side='left',cap='top',postX=4,over=true},
+ [0x13a]={side='right',corner='top',postX=12,over=true},
+ [0x140]={side='left',postX=4,over=true},
+ [0x141]={side='right',cap='top',postX=12,over=true},
+ [0x142]={side='right',postX=12,over=true},
+ [0x148]={side='left',corner='bottom',postX=4},
+ [0x149]={horizontal=true},
+ [0x14a]={side='right',corner='bottom',postX=12},
+}
+-- Reviewed native corral graph: posts retain the exact source cross-section;
+-- only straight rails span the original blocked cell between those posts.
+M.rural={
+ [0x138]={runs={{4,14,16,14},{4,14,4,16}},posts={{4,14,0},{12,14,0}}},
+ [0x139]={runs={{4,4,4,16}},posts={{4,4,1},{4,12,1}}},
+ [0x13a]={runs={{0,14,12,14},{12,14,12,16}},posts={{4,14,0},{12,14,0}}},
+ [0x140]={runs={{4,0,4,16}},posts={{4,4,1},{4,12,1}}},
+ [0x141]={runs={{12,4,12,16}},posts={{12,4,1},{12,12,1}}},
+ [0x142]={runs={{12,0,12,16}},posts={{12,4,1},{12,12,1}}},
+ [0x148]={runs={{4,0,4,14},{4,14,16,14}},posts={{4,4,1},{4,14,0},{12,14,0}}},
+ [0x149]={runs={{0,14,16,14}},posts={{4,14,0},{12,14,0}}},
+ [0x14a]={runs={{12,0,12,14},{0,14,12,14}},posts={{12,4,1},{4,14,0},{12,14,0}}},
+}
+-- One reviewed secondary duplicate: exact complete native RGBA match to142,
+-- including its clean grass. Region guard prevents same-MID unrelated art.
+M.ruralAliases={battle_frontier_outside_east={[0x3d7]=0x142}}
+function M.ruralMid(secondary,mid)
+ if M.rural[mid]then return mid end
+ local aliases=M.ruralAliases[secondary];return aliases and aliases[mid]
+end
 -- Length, centerX, centerZ, quarter-turn. All bases remain inside the original
 -- blocked tile. Thin native edge drawings describe actual railing in depth.
 M.ornate={
@@ -25,8 +61,9 @@ M.ornate={
  [0x32c]={{14,3.5,7,1},{6,3,14,0}},
  [0x32d]={{16,11.5,8,1},{6,13,14,0}},
 }
--- Original lower 8px quadrants, proven pixel-identical to these clean native
--- terrain quadrants in each R/S/E cache. Preserve exact mixed paving/grass.
+-- Clean original terrain quadrant donors preserve mixed paving/grass.
+-- The current pixel audit proves all visible non-rail terrain; it does not
+-- infer hidden pixels from a baked fence. Older split-layer proof is historical.
 M.ground={
  [0x2a7]={{0x2bb,0},{0x2bb,1},{0x2bb,2},{0x2bb,3}},
  [0x352]={{0x2e0,0},{0x2e0,1},{0x2e0,2},{0x2bb,0}},
@@ -78,7 +115,7 @@ for mid in pairs(M.plants)do
 end
 function M.shape(primary,secondary,mid,behavior,collision)
  if primary~='general'or collision~=7 then return end
- if mid==0x149 then return{kind='flat',reviewedSurface=true,nativeFence='rural149',ground=1}end
+ if M.ruralMid(secondary,mid)then return{kind='flat',reviewedSurface=true,nativeFence='rural149',ground=1}end
  if secondary=='rustboro'and M.ornate[mid]then
   return{kind='flat',reviewedSurface=true,nativeFence='rustboro',ground=mid}
  end

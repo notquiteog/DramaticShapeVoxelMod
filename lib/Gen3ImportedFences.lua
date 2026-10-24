@@ -7,7 +7,7 @@ local M={}
 local registered={}
 function M.register(id)
  if registered[id]and Models.info(id)then return true end
- local ok,data=pcall(V.require,id:match('^oras_rustboro_joined_')and'ImportedFenceJoinedData'or'ImportedFenceData')
+ local ok,data=pcall(V.require,id:match('^oras_rural_joined_')and'ImportedRuralFenceData'or(id:match('^oras_rustboro_joined_')and'ImportedFenceJoinedData'or'ImportedFenceData'))
  if not ok or type(data)~='table'or not data[id]then return nil,'imported fence source unavailable'end
  local success,why=Models.register(id,data[id],{read=function(path)return V.mod:read(path)end})
  if success then registered[id]=true end
@@ -29,8 +29,8 @@ function M.placements(cells)
  local out={}
  for _,c in pairs(cells)do
   local id=M.eligible(c)
-  if id=='oras_rural_fence'then out[#out+1]={model=id,x=c.cx*16,y=c.base or 0,z=c.cy*16,
-   fit={width=16,depth=16,padding=0},source=c,marker=id}
+  if id=='oras_rural_fence'then out[#out+1]={model='oras_rural_joined_'..Families.ruralMid(c.secondary,c.mid),x=c.cx*16,y=c.base or 0,z=c.cy*16,
+   fit={width=16,depth=16,height=10.25,groundInset=.025,padding=0,anchor='center',targetX=8,targetZ=8},source=c,marker=id}
   elseif id then
    out[#out+1]={model='oras_rustboro_joined_'..c.mid,x=c.cx*16,y=c.base or 0,z=c.cy*16,
     fit={width=16,depth=16,height=11,groundInset=.025,padding=0,anchor='center',targetX=8,targetZ=8},source=c,marker=id}
