@@ -70,5 +70,17 @@ for _,f in ipairs{{'ROUTE112','lavaridge',11,36,0x25e,0x256,12,0x271,0x274,0,'FI
  local sampled={};C.append(c,function()end,function(_,mid)sampled[mid]=true;return uv end)
  assert(sampled[f[8]]and sampled[f[9]]and not sampled[0x6c]and not sampled[0x71],'regional stone borrowed primary cliff paint')
 end
+version='emerald'
+for _,f in ipairs{{'JAGGED_PASS','lavaridge',16,18,0x25e,0x256,0,'MAGMA_HIDEOUT_1F'},
+ {'ROUTE103','petalburg',45,6,0xa7,0x9f,7,'ALTERING_CAVE'}}do
+ local a,r,c,n=fixture();r[1].x=-f[3];r[1].y=-f[4];r[1].def.id='EM_'..f[1];r[1].def.warps={{x=f[3],y=f[4],destMap='EM_'..f[8]}}
+ for _,t in pairs(a)do t.pair='general__'..f[2]end;c.mid=f[5];n.mid=f[6];n.collision=f[7]
+ assert(C.prepare(a,r)==1,'reviewed Emerald mouth rejected')
+ if f[1]=='ROUTE103'then local high=0;local rearHigh=0
+  C.append(c,function(v)for _,p in ipairs(v)do high=math.max(high,p[2]);if p[3]==-10 then rearHigh=math.max(rearHigh,p[2])end end end,function()return uv end)
+  assert(high==25 and rearHigh==10.5,'postgame native two-row drawing must retain ordinary cave proportions')
+ end
+ version='ruby';local b,rr=fixture();rr[1].def.id='RU_'..f[1];assert(C.prepare(b,rr)==0,'Emerald-only mouth leaked to RS');version='emerald'
+end
 version='firered';local a,r=fixture();assert(C.prepare(a,r)==0,'Hoenn profile claimed Kanto')
 print('PASS Hoenn exact cave permissions/warps/blocked reveals, unchanged perimeter, one floor owner, recessed arch/ceiling/back and fail-closed contexts')

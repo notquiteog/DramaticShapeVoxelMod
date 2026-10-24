@@ -3,7 +3,7 @@ return function(game)
  assert(love.filesystem.getIdentity():match('%-qa$'))
  local U=dofile(assert(os.getenv('QA_UTIL')));local edition=require('src.core.GameVersion').get();local pre=assert(({emerald='EM_',ruby='RU_',sapphire='SA_'})[edition])
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib;local C,S=V.require('Gen3Integration'),V.require('Gen3Scene');local A=V.require('Gen3HoennCaveEntrances')
- local Map,P=require('src.core.game3.map'),require('src.core.game3.player');local Warp,Fade,Field=require('src.core.game3.warp'),require('src.ui.game3.fade'),require('src.core.game3.field');local Space=require('src.core.game3.scripting.space')
+ local Map,P=require('src.core.game3.map'),require('src.core.game3.player');local Collision=require('src.core.game3.collision');local Warp,Fade,Field=require('src.core.game3.warp'),require('src.ui.game3.fade'),require('src.core.game3.field');local Space=require('src.core.game3.scripting.space')
  local refs,geometry={},{};local prepare=A.prepare
  A.prepare=function(cells,regions)
   local count=prepare(cells,regions)
@@ -37,7 +37,8 @@ return function(game)
  local out={edition=edition,fixture={FLAG_REGI_DOORS_OPENED=true},entries={},owners={},geometry=geometry,cliffCells={},sourceSha256=love.data.encode('string','hex',love.data.hash('sha256',assert(V.mod:read('lib/Gen3HoennCaveEntrances.lua'))))};local targets={}
  for name,rows in pairs(A.locations)do for _,p in ipairs(rows)do targets[#targets+1]={map=pre..name,x=p[1],y=p[2]}end end
  if edition=='emerald'then for name,rows in pairs(A.emeraldLocations)do for _,p in ipairs(rows)do targets[#targets+1]={map=pre..name,x=p[1],y=p[2]}end end end
- if os.getenv('QA_MAP')then local filtered={};for _,q in ipairs(targets)do if q.map:match(os.getenv('QA_MAP'))then filtered[#filtered+1]=q end end;targets=filtered end
+ local function selected(map,patterns)for pattern in patterns:gmatch('[^|]+')do if map:match(pattern)then return true end end;return false end
+ if os.getenv('QA_MAP')then local filtered={};for _,q in ipairs(targets)do if selected(q.map,os.getenv('QA_MAP'))then filtered[#filtered+1]=q end end;targets=filtered end
  table.sort(targets,function(a,b)return a.map==b.map and a.y<b.y or a.map<b.map end)
  local function shot(name)assert(U.shot(game,assert(os.getenv('SHOT_DIR'))..'/'..name..'.png'))end
  -- Native on-load scripts seal the Regi exteriors before their story flag.
@@ -48,13 +49,33 @@ return function(game)
  C.setLevel(3,game);C.yaw=0;C.pitch=.24;settle();assert(not refs[pre..'ROUTE105:9:20']);assert(hash(closed)==closedHash)
  shot('regi-closed-native-preserved');out.closedRegiPreserved=true
  require('src.core.game3.rse.init').setFlag('FLAG_REGI_DOORS_OPENED',true,game.session)
+ if edition=='emerald'then
+  local R=require('src.core.game3.rse.init')
+  C.setLevel(0,game);R.setVar('VAR_JAGGED_PASS_STATE',0,game.session)
+  assert(Map.load(nil,game,'EM_JAGGED_PASS',{x=16,y=21,facing='up'}));ready()
+  local d=Map.currentDef();local closedMagmaHash=hash(d)
+  assert(d.midLayout:cellAt(16,18).mid==0x274 and d.midLayout:cellAt(16,18).coll==7)
+  C.setLevel(3,game);settle();assert(not refs['EM_JAGGED_PASS:16:18']);assert(hash(d)==closedMagmaHash)
+  shot('magma-closed-native-preserved');out.closedMagmaPreserved=true
+  R.setVar('VAR_JAGGED_PASS_STATE',2,game.session);out.fixture.VAR_JAGGED_PASS_STATE=2
+  R.setFlag('FLAG_HIDE_JAGGED_PASS_MAGMA_GUARD',true,game.session);out.fixture.FLAG_HIDE_JAGGED_PASS_MAGMA_GUARD=true
+  C.setLevel(0,game);R.setFlag('FLAG_SYS_GAME_CLEAR',false,game.session)
+  assert(Map.load(nil,game,'EM_ROUTE103',{x=45,y=7,facing='up'}));ready()
+  local closedAltering=Map.currentDef();local closedAlteringHash=hash(closedAltering)
+  assert(closedAltering.midLayout:cellAt(45,6).mid==0x91 and closedAltering.midLayout:cellAt(45,6).coll==7)
+  C.setLevel(3,game);settle();assert(not refs['EM_ROUTE103:45:6']);assert(hash(closedAltering)==closedAlteringHash)
+  shot('altering-closed-native-preserved');out.closedAlteringPreserved=true
+  R.setFlag('FLAG_SYS_GAME_CLEAR',true,game.session);out.fixture.FLAG_SYS_GAME_CLEAR=true
+
+ end
+
  for _,q in ipairs(targets)do
   local def=assert(game.data.maps[q.map]);local layout=assert(Map.ensureMidLayout(game,q.map,def));local vx,vy
   for _,delta in ipairs{{0,3},{0,2},{1,3},{-1,3},{0,1},{1,2},{-1,2}}do local xx,yy=q.x+delta[1],q.y+delta[2]
-   if xx>=0 and yy>=0 and xx<def.width and yy<def.height and layout:cellAt(xx,yy).coll==0 then vx,vy=xx,yy;break end
+   if xx>=0 and yy>=0 and xx<def.width and yy<def.height and layout:cellAt(xx,yy).coll==0 and not Collision.isWaterOn(def,xx,yy)then vx,vy=xx,yy;break end
   end;assert(vx,'no native walkable cave viewpoint')
   C.setLevel(0,game);assert(Map.load(nil,game,q.map,{x=vx,y=vy,facing='up'}));ready();def=Map.currentDef();assert(def.id==q.map)
-  assert(def.midLayout:cellAt(vx,vy).coll==0,'viewpoint changed native permission');local before=hash(def)
+  assert(def.midLayout:cellAt(vx,vy).coll==0 and Collision.isWalkable(vx,vy)and not require('src.core.game3.objects').blocks(vx,vy),'viewpoint must be native walkable unoccupied land');local before=hash(def)
   if q.map:match('ROUTE114$')or q.map:match('ROUTE115$')then
    local wanted={[0x23b]=true,[0x23d]=true,[0x24b]=true,[0x24c]=true,[0x24d]=true,[0x253]=true,[0x254]=true,[0x255]=true,[0x25b]=true,[0x25c]=true,[0x263]=true,[0x264]=true,[0x265]=true}
    for yy=0,def.height-1 do for xx=0,def.width-1 do local t=def.midLayout:cellAt(xx,yy)
@@ -83,7 +104,10 @@ return function(game)
   assert(before==hash(def),'native MID/collision/elevation mutated')
   print('[HOENN CAVE OWNER]',edition,q.map,q.x,q.y)
  end
- for _,entry in ipairs{{'ROUTE116',47,8,'RUSTURF_TUNNEL'},{'ROUTE112',11,36,'FIERY_PATH'},{'ROUTE114',8,63,'METEOR_FALLS_1F_1R'}}do
+ local entryTargets={{'ROUTE116',47,8,'RUSTURF_TUNNEL'},{'ROUTE112',11,36,'FIERY_PATH'},{'ROUTE114',8,63,'METEOR_FALLS_1F_1R'}}
+ if edition=='emerald'then entryTargets[#entryTargets+1]={'JAGGED_PASS',16,18,'MAGMA_HIDEOUT_1F'};entryTargets[#entryTargets+1]={'ROUTE103',45,6,'ALTERING_CAVE'}end
+ if os.getenv('QA_ENTRY_MAP')then local kept={};for _,entry in ipairs(entryTargets)do if selected(pre..entry[1],os.getenv('QA_ENTRY_MAP'))then kept[#kept+1]=entry end end;entryTargets=kept end
+ for _,entry in ipairs(entryTargets)do
  for _,level in ipairs{0,3}do
   local map,dest=pre..entry[1],pre..entry[4]
   C.setLevel(0,game);assert(Map.load(nil,game,map,{x=entry[2],y=entry[3]+1,facing='up'}));ready();local before=hash(Map.currentDef())
