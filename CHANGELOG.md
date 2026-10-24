@@ -1,3 +1,14 @@
+## 1.58.2 — Kanto buildings, native grounds and source doors
+
+- Add original HGSS Cerulean closed and Celadon short houses, retaining
+  Celadon's source flowers as HD2D cards.
+- Add the wider One Island Center with original sliding doors and the correct
+  native pillar-ground ownership.
+- Correct source-proven lawn/paving beneath seven Kanto civic assemblies.
+- Route standard Centers and plain Viridian houses through the existing modern
+  dispatcher so their original door leaves draw and release correctly.
+- Preserve native collision, portals, standalone API3 and HD2D actor defaults.
+
 ## 1.58.1 — Rustboro fence coverage and alignment
 
 - Replace the missing Rustboro horizontal rails, depth runs and endcaps with
