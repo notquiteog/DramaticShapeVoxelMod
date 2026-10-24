@@ -7,7 +7,23 @@
 -- Meteor Falls 202 treads. Ruby and Sapphire candidates/hashes are identical.
 -- Key: primary__secondary:MID -> Emerald kind. Identifiers only; no pixels.
 return {
- -- cliff: 437 ids (315 hash-identical)
+ -- Official.96 native Meteor Falls exterior review2026-10-23:11 hashes match
+ -- all3;255/263 retain independently inspected RS stone paint variations.
+ ["general__fallarbor:23B"]="cliff",
+ ["general__fallarbor:23D"]="cliff",
+ ["general__fallarbor:24B"]="cliff",
+ ["general__fallarbor:24C"]="cliff",
+ ["general__fallarbor:24D"]="cliff",
+ ["general__fallarbor:253"]="cliff",
+ ["general__fallarbor:254"]="cliff",
+ ["general__fallarbor:255"]="cliff",
+ ["general__fallarbor:25B"]="cliff",
+ ["general__fallarbor:25C"]="cliff",
+ ["general__fallarbor:263"]="cliff",
+ ["general__fallarbor:264"]="cliff",
+ ["general__fallarbor:265"]="cliff",
+ -- Historical generated cliff section:437 IDs (315 hash-identical).
+ -- The independently reviewed.96 additions are listed above.
  ["general__cave:06B"]="cliff",["general__cave:073"]="cliff",["general__cave:074"]="cliff",["general__cave:075"]="cliff",
  ["general__cave:079"]="cliff",["general__cave:07B"]="cliff",["general__cave:07C"]="cliff",["general__cave:07D"]="cliff",
  ["general__cave:089"]="cliff",["general__cave:091"]="cliff",["general__cave:0B4"]="cliff",["general__cave:17A"]="cliff",

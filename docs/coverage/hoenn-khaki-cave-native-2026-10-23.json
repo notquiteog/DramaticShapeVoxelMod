@@ -1,0 +1,170 @@
+{
+  "engine": "0.3.96",
+  "pair": "general__fallarbor",
+  "collision": 7,
+  "height": 16,
+  "cap": 577,
+  "side": 579,
+  "nativeSourceReview": true,
+  "renderedAcceptance": "See regional cave document; hashes/cached census alone are not rendered acceptance.",
+  "families": [
+    {
+      "mid": 571,
+      "hex": "23b",
+      "rgbaSha256": {
+        "emerald": "ef7d46e7459cfa75af68bb560c662b12ca4d197e2110416ad64eb240a841cfb3",
+        "ruby": "ef7d46e7459cfa75af68bb560c662b12ca4d197e2110416ad64eb240a841cfb3",
+        "sapphire": "ef7d46e7459cfa75af68bb560c662b12ca4d197e2110416ad64eb240a841cfb3"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 573,
+      "hex": "23d",
+      "rgbaSha256": {
+        "emerald": "43b22a724cb2d4920ba6e7cfd07ff9a80d3ee510761f4de4827335d3fc25419e",
+        "ruby": "43b22a724cb2d4920ba6e7cfd07ff9a80d3ee510761f4de4827335d3fc25419e",
+        "sapphire": "43b22a724cb2d4920ba6e7cfd07ff9a80d3ee510761f4de4827335d3fc25419e"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 587,
+      "hex": "24b",
+      "rgbaSha256": {
+        "emerald": "be5eae6024944e4f650d245e0b365b375c7be1961c711b84d5539716a6d8d929",
+        "ruby": "be5eae6024944e4f650d245e0b365b375c7be1961c711b84d5539716a6d8d929",
+        "sapphire": "be5eae6024944e4f650d245e0b365b375c7be1961c711b84d5539716a6d8d929"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 588,
+      "hex": "24c",
+      "rgbaSha256": {
+        "emerald": "952b8d7949a289c84b0922ee7ebe4f779a2fd7a1a4c55e1b1c12cd6ad093af3b",
+        "ruby": "952b8d7949a289c84b0922ee7ebe4f779a2fd7a1a4c55e1b1c12cd6ad093af3b",
+        "sapphire": "952b8d7949a289c84b0922ee7ebe4f779a2fd7a1a4c55e1b1c12cd6ad093af3b"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 589,
+      "hex": "24d",
+      "rgbaSha256": {
+        "emerald": "bfa101d86acfc01ff6b0b500f8835dca825e74d41b6ba3ad0bafec6852cc2a0b",
+        "ruby": "bfa101d86acfc01ff6b0b500f8835dca825e74d41b6ba3ad0bafec6852cc2a0b",
+        "sapphire": "bfa101d86acfc01ff6b0b500f8835dca825e74d41b6ba3ad0bafec6852cc2a0b"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 595,
+      "hex": "253",
+      "rgbaSha256": {
+        "emerald": "ef7d46e7459cfa75af68bb560c662b12ca4d197e2110416ad64eb240a841cfb3",
+        "ruby": "ef7d46e7459cfa75af68bb560c662b12ca4d197e2110416ad64eb240a841cfb3",
+        "sapphire": "ef7d46e7459cfa75af68bb560c662b12ca4d197e2110416ad64eb240a841cfb3"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 596,
+      "hex": "254",
+      "rgbaSha256": {
+        "emerald": "43b22a724cb2d4920ba6e7cfd07ff9a80d3ee510761f4de4827335d3fc25419e",
+        "ruby": "43b22a724cb2d4920ba6e7cfd07ff9a80d3ee510761f4de4827335d3fc25419e",
+        "sapphire": "43b22a724cb2d4920ba6e7cfd07ff9a80d3ee510761f4de4827335d3fc25419e"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 597,
+      "hex": "255",
+      "rgbaSha256": {
+        "emerald": "852c2c74a5749b9fd2ea9a680cc2aadf7c2ea1d792f5881d1c1a737453ad0faf",
+        "ruby": "ba8ce73f93fc8e60c6bbeceebe390770c85005db9a45559e74bdf202ff583046",
+        "sapphire": "ba8ce73f93fc8e60c6bbeceebe390770c85005db9a45559e74bdf202ff583046"
+      },
+      "sameArtAcrossEditions": false,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 603,
+      "hex": "25b",
+      "rgbaSha256": {
+        "emerald": "176d51be894f8e42dcc07280d28d726fbe143490acb2cd2b3f45193edfd9bf22",
+        "ruby": "176d51be894f8e42dcc07280d28d726fbe143490acb2cd2b3f45193edfd9bf22",
+        "sapphire": "176d51be894f8e42dcc07280d28d726fbe143490acb2cd2b3f45193edfd9bf22"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 604,
+      "hex": "25c",
+      "rgbaSha256": {
+        "emerald": "228b65d2ca3d99ec5f7898141df67f1994b8ab2fd9daf8d99142e8705d790fb5",
+        "ruby": "228b65d2ca3d99ec5f7898141df67f1994b8ab2fd9daf8d99142e8705d790fb5",
+        "sapphire": "228b65d2ca3d99ec5f7898141df67f1994b8ab2fd9daf8d99142e8705d790fb5"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 611,
+      "hex": "263",
+      "rgbaSha256": {
+        "emerald": "d850dda81bd619ace7a87c9c924f0bd968a3938cc935a26dca19fc02f4f0ccd7",
+        "ruby": "605c627cec3acddcafb99c5634d55e5dbf497cf9b4c27ef3a5c996139501f73f",
+        "sapphire": "605c627cec3acddcafb99c5634d55e5dbf497cf9b4c27ef3a5c996139501f73f"
+      },
+      "sameArtAcrossEditions": false,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 612,
+      "hex": "264",
+      "rgbaSha256": {
+        "emerald": "221b3bc8fdb48e3d9259489c310d425c0c048a9a6b668cfaeb7cffa182af0d5e",
+        "ruby": "221b3bc8fdb48e3d9259489c310d425c0c048a9a6b668cfaeb7cffa182af0d5e",
+        "sapphire": "221b3bc8fdb48e3d9259489c310d425c0c048a9a6b668cfaeb7cffa182af0d5e"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    },
+    {
+      "mid": 613,
+      "hex": "265",
+      "rgbaSha256": {
+        "emerald": "5880dfd234f9973daf3c558ddf2c03f8822fe3a28e2da1bbe10c97f0fe74a460",
+        "ruby": "5880dfd234f9973daf3c558ddf2c03f8822fe3a28e2da1bbe10c97f0fe74a460",
+        "sapphire": "5880dfd234f9973daf3c558ddf2c03f8822fe3a28e2da1bbe10c97f0fe74a460"
+      },
+      "sameArtAcrossEditions": true,
+      "review": "Full native stone side/corner/base art; excludes mixed grass corners/walkable copies. Different255/263 retain each native edition paint."
+    }
+  ],
+  "cachedMapCounts": {
+    "emerald": {
+      "EM_ROUTE113": 0,
+      "EM_ROUTE114": 175,
+      "EM_ROUTE115": 274
+    },
+    "ruby": {
+      "RU_ROUTE114": 174,
+      "RU_ROUTE115": 267
+    },
+    "sapphire": {
+      "SA_ROUTE114": 174,
+      "SA_ROUTE115": 267
+    }
+  }
+}

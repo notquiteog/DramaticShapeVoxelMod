@@ -36,6 +36,20 @@ for _,q in ipairs(quads)do
 end
 assert(floor==1 and back==3 and ceiling==3 and maxY==25,'flat/duplicate floor or incomplete recessed tunnel')
 local header=0;C.append(n,function()header=header+1 end,function()return uv end);assert(header==0,'header duplicated owner geometry')
+-- Route115's native outside corner lowers one cap triangle exactly to floor0.
+-- The floor owns that plane; retain every raised half and its original seam.
+p.boundary[-16][14]=0;p.boundary[-16][16]=0;p.boundary[-12][16]=0
+local groundTriangles=0
+C.append(c,function(v)
+ for _,t in ipairs{{1,2,3},{1,3,4}}do local a,b,d=v[t[1]],v[t[2]],v[t[3]]
+  if a[2]==0 and b[2]==0 and d[2]==0 then
+   local area=math.abs((b[1]-a[1])*(d[3]-a[3])-(b[3]-a[3])*(d[1]-a[1]))
+   if area>1e-8 then groundTriangles=groundTriangles+1 end
+  end
+ end
+end,function()return uv end)
+assert(groundTriangles==2,'zero-height cap still overlaps the native threshold floor')
+
 assert(c.mid==0xa7 and c.collision==113 and n.mid==0x9f and n.collision==7,'native ownership changed gameplay')
 for _,mutate in ipairs{
  function(a)a['0:0'].collision=7 end,function(a)a['0:-1'].mid=0x7c end,
@@ -47,5 +61,14 @@ for _,mutate in ipairs{
  function(a,r)r[1].def.warps={}end,function(a,r)r[1].def.warps[1].destMap='EM_UNREVIEWED'end,function(a)a['0:0'].pair='general__petalburg'end,function(a,r)r[1].def.id='EM_UNREVIEWED'end,
 }do local a,r=fixture();mutate(a,r);assert(C.prepare(a,r)==0 and not a['0:0'].caveEntrance,'unsafe native context accepted')end
 for _,e in ipairs{'ruby','sapphire'}do version=e;local a,r,c,n=fixture();local prefix=(e=='ruby'and'RU_'or'SA_');r[1].def.id=prefix..'ROUTE116';r[1].def.warps[1].destMap=prefix..'RUSTURF_TUNNEL';assert(C.prepare(a,r)==1)end
+version='emerald'
+for _,f in ipairs{{'ROUTE112','lavaridge',11,36,0x25e,0x256,12,0x271,0x274,0,'FIERY_PATH'},
+ {'ROUTE114','fallarbor',8,63,0x261,0x259,16,0x241,0x243,7,'METEOR_FALLS_1F_1R'}}do
+ local a,r,c,n=fixture();r[1].x=-f[3];r[1].y=-f[4];r[1].def.id='EM_'..f[1];r[1].def.warps={{x=f[3],y=f[4],destMap='EM_'..f[11]}}
+ for _,t in pairs(a)do t.pair='general__'..f[2];if t.shape.kind=='cliff'then t.shape.height=f[7]end end
+ c.mid=f[5];n.mid=f[6];n.collision=f[10];assert(C.prepare(a,r)==1,'regional opening rejected')
+ local sampled={};C.append(c,function()end,function(_,mid)sampled[mid]=true;return uv end)
+ assert(sampled[f[8]]and sampled[f[9]]and not sampled[0x6c]and not sampled[0x71],'regional stone borrowed primary cliff paint')
+end
 version='firered';local a,r=fixture();assert(C.prepare(a,r)==0,'Hoenn profile claimed Kanto')
 print('PASS Hoenn exact cave permissions/warps/blocked reveals, unchanged perimeter, one floor owner, recessed arch/ceiling/back and fail-closed contexts')

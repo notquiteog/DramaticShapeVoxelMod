@@ -21,6 +21,16 @@ end
 for _,mid in ipairs({0x277,0x279,0x2fd,0x2c7})do
  assert(S.of('general','fallarbor',mid,0,7).kind=='flat','sand/decorations became rock wall')
 end
+-- Actual.96 native Meteor Falls side/base band, not the mixed grass corners.
+for _,edition in ipairs{'emerald','ruby','sapphire'}do version=edition
+ for _,mid in ipairs{0x23b,0x23d,0x24b,0x24c,0x24d,0x253,0x254,0x255,0x25b,0x25c,0x263,0x264,0x265}do
+  local c=S.of('general','fallarbor',mid,0,7)
+  assert(c.kind=='cliff'and c.height==16 and c.cap==0x241 and c.side==0x243,'reviewed khaki face left flat '..edition..':'..mid)
+  assert(S.of('general','fallarbor',mid,0,0).kind=='flat','walkable stone copy raised')
+  assert(S.of('general','rustboro',mid,0,7).kind~='cliff','regional khaki face leaked to Rustboro')
+ end
+end
+version='emerald'
 local tree=S.of('general','petalburg',0x1dc,0,1)
 assert(#tree.treeRows==2 and #tree.treeRows[1]==2 and tree.treeFamily=='round')
 local count=0

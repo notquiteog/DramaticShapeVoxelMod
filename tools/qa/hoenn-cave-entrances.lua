@@ -34,7 +34,7 @@ return function(game)
   require('src.ui.game3.map_preview_screen').dismiss();require('src.ui.game3.map_name_popup').dismiss();U.wait(3)
  end
  local function hash(d)local a={};for y=0,d.height-1 do for x=0,d.width-1 do local c=d.midLayout:cellAt(x,y);a[#a+1]=table.concat({c.mid,c.coll,c.elev},':')end end;return love.data.encode('string','hex',love.data.hash('sha256',table.concat(a,';')))end
- local out={edition=edition,fixture={FLAG_REGI_DOORS_OPENED=true},entries={},owners={},geometry=geometry,sourceSha256=love.data.encode('string','hex',love.data.hash('sha256',assert(V.mod:read('lib/Gen3HoennCaveEntrances.lua'))))};local targets={}
+ local out={edition=edition,fixture={FLAG_REGI_DOORS_OPENED=true},entries={},owners={},geometry=geometry,cliffCells={},sourceSha256=love.data.encode('string','hex',love.data.hash('sha256',assert(V.mod:read('lib/Gen3HoennCaveEntrances.lua'))))};local targets={}
  for name,rows in pairs(A.locations)do for _,p in ipairs(rows)do targets[#targets+1]={map=pre..name,x=p[1],y=p[2]}end end
  if edition=='emerald'then for name,rows in pairs(A.emeraldLocations)do for _,p in ipairs(rows)do targets[#targets+1]={map=pre..name,x=p[1],y=p[2]}end end end
  if os.getenv('QA_MAP')then local filtered={};for _,q in ipairs(targets)do if q.map:match(os.getenv('QA_MAP'))then filtered[#filtered+1]=q end end;targets=filtered end
@@ -55,8 +55,19 @@ return function(game)
   end;assert(vx,'no native walkable cave viewpoint')
   C.setLevel(0,game);assert(Map.load(nil,game,q.map,{x=vx,y=vy,facing='up'}));ready();def=Map.currentDef();assert(def.id==q.map)
   assert(def.midLayout:cellAt(vx,vy).coll==0,'viewpoint changed native permission');local before=hash(def)
+  if q.map:match('ROUTE114$')or q.map:match('ROUTE115$')then
+   local wanted={[0x23b]=true,[0x23d]=true,[0x24b]=true,[0x24c]=true,[0x24d]=true,[0x253]=true,[0x254]=true,[0x255]=true,[0x25b]=true,[0x25c]=true,[0x263]=true,[0x264]=true,[0x265]=true}
+   for yy=0,def.height-1 do for xx=0,def.width-1 do local t=def.midLayout:cellAt(xx,yy)
+    if wanted[t.mid]then local shape=V.require('Gen3TileShape').of('general','fallarbor',t.mid,nil,t.coll)
+     assert(t.coll~=7 or shape.kind=='cliff'and shape.height==16 and shape.cap==0x241 and shape.side==0x243,'reviewed native rock face remained flat')
+     assert(t.coll~=0 or shape.kind=='flat','walkable rock drawing raised')
+     if t.coll==7 then out.cliffCells[#out.cliffCells+1]={map=q.map,x=xx,y=yy,mid=t.mid}end
+    end
+   end end
+  end
   local name=q.map..'-'..q.x..'-'..q.y
-  if not os.getenv('QA_NO_SHOTS')then shot(name..'-native')end
+  local capture=not os.getenv('QA_NO_SHOTS')or os.getenv('QA_SHOT_MAP')and q.map:match(os.getenv('QA_SHOT_MAP'))
+  if capture then shot(name..'-native')end
   C.setLevel(3,game);C.yaw=0;C.pitch=.24;settle()
   local cell=refs[q.map..':'..q.x..':'..q.y]
   if not cell then
@@ -66,24 +77,27 @@ return function(game)
   assert(cell,'missing native cave owner '..name)
   assert(cell.caveEntrance.owner==cell and cell.caveEntrance.header.caveEntrance==cell.caveEntrance,'incomplete two-row ownership')
   out.owners[#out.owners+1]={map=q.map,x=q.x,y=q.y,mid=cell.mid,header=cell.caveEntrance.header.mid,nativeHash=before}
-  if not os.getenv('QA_NO_SHOTS')then
+  if capture then
    shot(name..'-front');C.setLevel(6,game);U.wait(4);shot(name..'-first');C.setLevel(7,game);C.yaw=math.pi/2;C.pitch=.5;U.wait(4);shot(name..'-side');C.yaw=math.pi;U.wait(4);shot(name..'-rear')
   end
   assert(before==hash(def),'native MID/collision/elevation mutated')
   print('[HOENN CAVE OWNER]',edition,q.map,q.x,q.y)
  end
+ for _,entry in ipairs{{'ROUTE116',47,8,'RUSTURF_TUNNEL'},{'ROUTE112',11,36,'FIERY_PATH'},{'ROUTE114',8,63,'METEOR_FALLS_1F_1R'}}do
  for _,level in ipairs{0,3}do
-  C.setLevel(0,game);assert(Map.load(nil,game,pre..'ROUTE116',{x=47,y=9,facing='up'}));ready();local before=hash(Map.currentDef())
+  local map,dest=pre..entry[1],pre..entry[4]
+  C.setLevel(0,game);assert(Map.load(nil,game,map,{x=entry[2],y=entry[3]+1,facing='up'}));ready();local before=hash(Map.currentDef())
   C.yaw=0;C.pitch=.24;C.setLevel(level,game);if level~=0 then settle()end
-  for _=1,600 do U.hold(game,'up',1);if Map.currentDef().id~=pre..'ROUTE116'then break end end
-  assert(Map.currentDef().id==pre..'RUSTURF_TUNNEL','native cave entry failed');ready()
+  for _=1,900 do U.hold(game,'up',1);if Map.currentDef().id~=map then break end end
+  assert(Map.currentDef().id==dest,'native cave entry failed '..map);ready()
   local y=P.cellY;for _=1,600 do U.hold(game,'up',1);if P.cellY<y then break end end;ready()
-  for _=1,1800 do U.hold(game,'down',1);if Map.currentDef().id==pre..'ROUTE116'and P.cellY>8 and not Warp.isBusy()then break end end
-  assert(Map.currentDef().id==pre..'ROUTE116','native cave return failed');ready()
+  for _=1,1800 do U.hold(game,'down',1);if Map.currentDef().id==map and P.cellY>entry[3]and not Warp.isBusy()then break end end
+  assert(Map.currentDef().id==map,'native cave return failed '..map);ready()
   if level~=0 then settle()end
   assert(before==hash(Map.currentDef()),'native layout changed after cave entry')
-  out.entries[#out.entries+1]={level=level,destination=pre..'RUSTURF_TUNNEL',returned=true,nativeHash=before}
- end
+  out.entries[#out.entries+1]={map=map,level=level,destination=dest,returned=true,nativeHash=before}
+  print('[HOENN CAVE NATIVE ENTRY]',edition,map,dest,level,'returned')
+ end end
  assert(C.recovery.failures==0);out.recovery=0
  local f=assert(io.open(assert(os.getenv('SHOT_DIR'))..'/hoenn-cave-entrances.json','wb'));f:write(require('src.link.Json').encode(out));f:close()
  print('[HOENN CAVE ENTRANCES ACCEPTANCE]',edition,#out.owners,#out.entries,'unchanged-grid',C.recovery.failures)
