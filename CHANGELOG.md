@@ -1,3 +1,13 @@
+## 1.58.1 — Rustboro fence coverage and alignment
+
+- Replace the missing Rustboro horizontal rails, depth runs and endcaps with
+  original ORAS fence geometry in Emerald, Ruby and Sapphire.
+- Align rails to the actual native stripe side, restore the long horizontal
+  grass row and keep the original paving/grass beneath every replacement.
+- Join corner geometry with UV-preserving surface cuts; recess contact caps
+  beneath the native ground without moving the upper rails or collision.
+- Preserve HD2D characters, Pokémon and flower defaults and optional companions.
+
 ## 1.58.0 — Regional source buildings and interiors
 
 - Add source HGSS Lavender, Saffron and Celadon buildings, regional Gyms/Marts,

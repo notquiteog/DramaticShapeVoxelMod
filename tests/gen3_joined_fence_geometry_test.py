@@ -9,7 +9,7 @@ encoder=r'''local function j(v)if type(v)=='number'then return string.format('%.
 # Definitions contain booleans, so cover those explicitly too.
 encoder=encoder.replace("local a={}","if type(v)=='boolean'then return tostring(v)end local a={}")
 models=json.loads(subprocess.check_output(['luajit','-e',encoder],cwd=root));seen=set()
-assert len(models)==29
+assert len(models)==31
 for name,model in models.items():
  key=json.dumps(model,sort_keys=True)
  if key in seen:continue
@@ -22,4 +22,4 @@ a={'name':'first','vertices':[[0,0,0,0,0,1],[2,0,0,1,0,1],[0,0,2,0,1,1]],'indice
 b=dict(a,name='second',vertices=[[.5,0,.5,.25,.25,1],[1.5,0,.5,.75,.25,1],[.5,0,1.5,.25,.75,1]])
 result=clean([a,b]);assert not coplanar_overlaps(result)
 assert len(result)==1 and len(result[0]['indices'])==3,'fully covered duplicate retained'
-print('PASS 29 native families,14 unique joined geometries,zero positive-area coplanar overlaps,UV-preserving cut ownership')
+print('PASS 31 native families,14 unique joined geometries,zero positive-area coplanar overlaps,UV-preserving cut ownership')
