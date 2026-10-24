@@ -1,3 +1,16 @@
+# Original Mauville railings checkpoint — 2026-10-23
+
+Actual original GR0739/AD0198 source replaces eleven exact Mauville railing
+families, corrects3.5/11.5 depth axes and adds four previously missed corner
+cells per edition; false building281 excluded. Official.96 native all RSE
+City80→Route11125→Route11727 uninterrupted tours and21-view repeats PASS132/132,
+unchanged grids/recovery0/imageerrors0. Missing-PNG native fallback80 PASS.
+Original8 source primitives closed;11 joined models coplanarzero/nativebounds,
+476 exact alpha texels/UVs verified. Native floor/warp/collision anchors retained.
+See docs/ORAS_MAUVILLE_FENCES_2026-10-23.md. Shared rural long-tour8MiB texture
+cache gate remains root-owned; no limits raised. Next distinct fence families
+remain ongoing. Held Littleroot houses/inactive Shipyard remain separate.
+
 # Rural field-fence source checkpoint — 2026-10-23
 
 Nine exact General families +one reviewed FrontierEast duplicate now use

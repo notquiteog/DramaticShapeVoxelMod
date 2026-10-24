@@ -118,3 +118,28 @@ for _,p in ipairs(M.placements(ornate))do
  for _,part in ipairs(verts)do for _,v in ipairs(part.vertices)do assert(v[1]>=-1e-5 and v[1]<=16.00001 and v[3]>=-1e-5 and v[3]<=16.00001,'fence crossed walking bounds')end end
 end
 print('PASS source-failure atomicity, exact RSE fence/blocked guards, original lower layer, elevation and closed native bounds')
+
+-- Mauville actual railing vocabulary includes two previously omitted corners;
+-- 281 is a yellow brick/roof facade and must never become a fence.
+local mauville={}
+for mid in pairs(F.mauville)do
+ local q=cell(mid);q.mid=mid;q.secondary='mauville';q.shape={nativeFence='mauville'};mauville[mid]=q
+ assert(H.emeraldShape('general','mauville',mid,0,7).nativeFence=='mauville')
+ assert(R.ownShape('general','mauville',mid,0,7).nativeFence=='mauville')
+ assert(not F.shape('general','mauville',mid,0,0))
+ q.secondary='rustboro';assert(not M.eligible(q));q.secondary='mauville'
+ assert(M.eligible(q)=='oras_mauville_fence')
+end
+assert(not H.emeraldShape('general','mauville',0x281,0,7).nativeFence)
+assert(H.emeraldShape('general','mauville',0x281,0,7).kind~='fence')
+assert(F.mauville[0x292]and F.mauville[0x2b1])
+available=false;assert(not M.build(mauville,function()end,{}))
+for _,q in pairs(mauville)do assert(not q.importedFence and not M.floor(q))end
+available=true;local mp,me,mn=M.build(mauville,function()end,{})
+assert(mp and not me and mn==11)
+for _,q in pairs(mauville)do assert(M.floor(q)==1 and M.underOnly(q))end
+for _,p in ipairs(M.placements(mauville))do
+ assert(p.model=='oras_mauville_joined_'..p.source.mid and p.fit.groundInset==.025)
+ assert(p.fit.targetX==8 and p.fit.targetZ==8 and p.x==p.source.cx*16 and p.z==p.source.cy*16)
+end
+print('PASS11 exact Mauville native families, false281 exclusion, omitted corners, standalone source rollback and anchored ground contacts')

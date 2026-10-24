@@ -37,6 +37,20 @@ function M.ruralMid(secondary,mid)
  if M.rural[mid]then return mid end
  local aliases=M.ruralAliases[secondary];return aliases and aliases[mid]
 end
+-- Mauville's original brown-log vocabulary uses that city's own newer ORAS
+-- metal frame/panel.281 is building art, not a neighboring fence variant.
+M.mauville={
+ [0x273]={{16,3.5,8,1},{12.5,9.75,14,0}},
+ [0x280]={{12.5,9.75,14,0},{2,3.5,15,1}},
+ [0x282]={{11.5,5.75,14,0},{2,11.5,15,1}},
+ [0x288]={{16,3.5,8,1}},[0x28a]={{16,11.5,8,1}},
+ [0x290]={{14,3.5,7,1},{12.5,9.75,14,0}},
+ [0x291]={{16,8,14,0}},
+ [0x292]={{14,11.5,7,1},{11.5,5.75,14,0}},
+ [0x2b1]={{14,11.5,7,1},{4.5,13.75,14,0}},
+ [0x2b2]={{14,3.5,7,1},{3.5,1.75,14,0}},
+ [0x2ba]={{2,3.5,15,1}},
+}
 -- Length, centerX, centerZ, quarter-turn. All bases remain inside the original
 -- blocked tile. Thin native edge drawings describe actual railing in depth.
 M.ornate={
@@ -116,6 +130,9 @@ end
 function M.shape(primary,secondary,mid,behavior,collision)
  if primary~='general'or collision~=7 then return end
  if M.ruralMid(secondary,mid)then return{kind='flat',reviewedSurface=true,nativeFence='rural149',ground=1}end
+ if secondary=='mauville'and M.mauville[mid]then
+  return{kind='flat',reviewedSurface=true,nativeFence='mauville',ground=1}
+ end
  if secondary=='rustboro'and M.ornate[mid]then
   return{kind='flat',reviewedSurface=true,nativeFence='rustboro',ground=mid}
  end
