@@ -1,3 +1,9 @@
+## 2026-10-23 — original ORAS Oldale backed chairs (component scope)
+
+- Replaced three exact RSE chair families with original Oldale chair geometry/UV/texture: 281 owners across 98 edition-room instances (E91/R95/S95). Original proportions, opposite native orientations, uniform one-cell fit and bottom-only .025 contact recess. Exact exposed leg/seat union removes buried overlaps; no Scene/gameplay/default changes.
+- Official .96/API3 standalone source and atomic missing-texture runs PASS all 98 rooms; all owner front/whole and available side views reviewed. All 2,161 native map hashes/furniture-family counts unchanged; only +281 source candidates. Seventeen-source coplanar check and focused data/fit/guard/fallback tests PASS; importer regeneration byte-identical.
+- Evidence: `docs/ORAS_OLDALE_CHAIRS_2026-10-23.md` and component/run ledgers. Candidate count 2,382; accepted components 2,337; every whole-map acceptance remains false. Generic room framing/service furniture still queued. No version/push/release.
+
 # Portable API3 migration — 2026-10-23
 
 Final release verification: all seven immutable release ZIPs pass **88/88**

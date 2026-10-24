@@ -4951,7 +4951,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_backed_chair"
+      ]
     },
     "hoenn_home_chair_556": {
       "design": "em_start_seat_pad",
@@ -5032,7 +5034,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_backed_chair"
+      ]
     },
     "hoenn_home_chair_738": {
       "design": "em_start_seat_pad",
@@ -5096,7 +5100,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_backed_chair"
+      ]
     },
     "hoenn_home_cushion": {
       "design": "em_home_cushion",
@@ -14465,7 +14471,7 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 465,
+      "candidateFurniture": 556,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
@@ -14486,14 +14492,14 @@
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 420,
+      "candidateFurniture": 515,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 420,
+      "candidateFurniture": 515,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,

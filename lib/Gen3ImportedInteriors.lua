@@ -15,6 +15,7 @@ dataFiles.oras_oldale_refrigerator='ImportedOldaleFridgeData'
 dataFiles.bdsp_galactic_server='ImportedInstitutionServerData'
 dataFiles.oras_oldale_china_cupboard='ImportedOldaleCupboardData'
 dataFiles.oras_oldale_kitchen_sink='ImportedOldaleSinkData'
+dataFiles.oras_oldale_backed_chair='ImportedOldaleChairData'
 dataFiles.oras_pyre_memorial='ImportedPyreMemorialData'
 dataFiles.oras_flower_bookcase='ImportedFlowerBookcaseData'
 dataFiles.oras_birch_bookcase='ImportedBirchBookcaseData'
@@ -23,6 +24,12 @@ dataFiles.oras_birch_freestanding_case='ImportedBirchFreecaseData'
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
+ hoenn_home_chair_555={pair='building__generic_building',family='rse',design='em_start_seat_pad',rows={{0x22b}},collisionRows={{0}},
+  model='oras_oldale_backed_chair',fitWidth=16,fitDepth=16,fitHeight=32,zRows=0,rotation=1,groundInset=.025},
+ hoenn_home_chair_556={pair='building__generic_building',family='rse',design='em_start_seat_pad',rows={{0x22c}},collisionRows={{0}},
+  model='oras_oldale_backed_chair',fitWidth=16,fitDepth=16,fitHeight=32,zRows=0,rotation=3,groundInset=.025},
+ hoenn_home_chair_738={pair='building__generic_building',family='rse',design='em_start_seat_pad',rows={{0x2e2}},collisionRows={{0}},
+  model='oras_oldale_backed_chair',fitWidth=16,fitDepth=16,fitHeight=32,zRows=0,rotation=3,groundInset=.025},
  hoenn_home_cushion={pair='building__generic_building',family='rse',design='em_home_cushion',rows={{0x244}},collisionRows={{0}},
   model='oras_trick_house_floor_cushion',fitWidth=16,fitDepth=16,fitHeight=4,zRows=0,groundInset=.025},
  birch_free_books={pair='building__lab',family='rse',design='em_lab_free_books',rows={{0x224,0x225},{0x22c,0x22d},{0x234,0x235}},collisionRows={{0,0},{7,7},{7,7}},

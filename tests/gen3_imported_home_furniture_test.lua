@@ -9,6 +9,7 @@ V.require=function(name)
  if name=='ImportedInstitutionServerData'then return dofile('lib/ImportedInstitutionServerData.lua')end
  if name=='ImportedOldaleFridgeData'then return dofile('lib/ImportedOldaleFridgeData.lua')end
  if name=='ImportedOldaleCupboardData'then return dofile('lib/ImportedOldaleCupboardData.lua')end
+ if name=='ImportedOldaleChairData'then return dofile('lib/ImportedOldaleChairData.lua')end
  if name=='ImportedOldaleSinkData'then return dofile('lib/ImportedOldaleSinkData.lua')end
  if name=='ImportedPyreMemorialData'then return dofile('lib/ImportedPyreMemorialData.lua')end
  if name=='ImportedFlowerBookcaseData'then return dofile('lib/ImportedFlowerBookcaseData.lua')end
@@ -21,6 +22,9 @@ V.require=function(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='hoenn_home_chair_555',pair='building__generic_building',design='em_start_seat_pad',rows={{0x22b}},coll={{0}},x=2,z=4,id='oras_oldale_backed_chair',fit={16,16,0},rotation=1},
+ {name='hoenn_home_chair_556',pair='building__generic_building',design='em_start_seat_pad',rows={{0x22c}},coll={{0}},x=6,z=4,id='oras_oldale_backed_chair',fit={16,16,0},rotation=3},
+ {name='hoenn_home_chair_738',pair='building__generic_building',design='em_start_seat_pad',rows={{0x2e2}},coll={{0}},x=6,z=4,id='oras_oldale_backed_chair',fit={16,16,0},rotation=3},
  {name='hoenn_home_cushion',pair='building__generic_building',design='em_home_cushion',rows={{0x244}},coll={{0}},x=3,z=3,id='oras_trick_house_floor_cushion',fit={16,16,0},height=4},
  {name='birch_free_books',pair='building__lab',design='em_lab_free_books',rows={{0x224,0x225},{0x22c,0x22d},{0x234,0x235}},coll={{0,0},{7,7},{7,7}},x=0,z=5,id='oras_birch_freestanding_case',fit={32,32,1}},
  {name='birch_free_books_end',pair='building__lab',design='em_lab_free_books',rows={{0x236,0x237},{0x22c,0x22d},{0x234,0x235}},coll={{0,0},{7,7},{7,7}},x=2,z=5,id='oras_birch_freestanding_case',fit={32,32,1}},
