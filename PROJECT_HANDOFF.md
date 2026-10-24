@@ -1,3 +1,9 @@
+## 2026-10-23 — native Emerald Navel Rock volumes and real exit arch
+
+- Exact native pale/dark blocked rock vocabulary raises2169 wall cells/11boulders across20 Emerald Navel maps (18 normal caves, Lugia bottom chamber, shared art on outdoor summit). Walking caps/sky/stairs/ladders/water stay native; summit whole-presentation unaccepted.
+- Native exit header is one closed union arch with16×24 actual aperture; no internal/duplicate planes, foot caps only-.025. Actual two-intent native arrow exit toNavel exterior PASS. Scene untouched.
+- Official .96/API3 native final20 maps PASS, all80 first-person directions plus native/modern overviews reviewed, live cells/elevation/warps unchanged.560 focused art/footprint/arch/closed-area-volume contracts and existing cave/shell/furniture/Meteor suites PASS. All519 Emerald native hashes/civics unchanged; one new native arch owner, source candidates/acceptance counts unchanged. Whole-map flagsfalse. Evidence `docs/GEN3_NAVEL_ROCK_VOLUMES_2026-10-23.md` and metadata ledgers. Continuing volcanic/underwater/source-column queues, no versions/push/releases.
+
 ## 2026-10-23 — original Meteor Falls rock spikes
 
 - Complete native `254/25C` gold spike gains independent original ORAS GR260/sub0 component441–460: 20 source +8 exact rear/underside closures, closed edges and zero coplanar overlaps. Uniform one-cell foot, 32px height and bottom-only .025 recess; original native floors/collision/warps/actors stay fixed. Missing PNG keeps closed native-painted volume.

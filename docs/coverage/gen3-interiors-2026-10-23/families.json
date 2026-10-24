@@ -7797,6 +7797,18 @@
       "kind": "designed",
       "sourceCandidates": []
     },
+    "hoenn_navel_exit_arch": {
+      "editions": {
+        "emerald": {
+          "count": 1,
+          "maps": [
+            "EM_NAVEL_ROCK_ENTRANCE"
+          ]
+        }
+      },
+      "kind": "cavePortal",
+      "sourceCandidates": []
+    },
     "hoenn_pyre_memorial": {
       "design": "fr_tower_grave",
       "editions": {
@@ -14564,7 +14576,7 @@
     "emerald": {
       "candidateFurniture": 645,
       "candidateNativeFurnitureOwners": 663,
-      "furniture": 2096,
+      "furniture": 2097,
       "maps": 519,
       "nativeWallFinishRooms": 79,
       "rooms": 301
