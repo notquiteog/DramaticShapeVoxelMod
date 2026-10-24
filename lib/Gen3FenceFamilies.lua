@@ -4,6 +4,7 @@ local M={}
 -- Length, centerX, centerZ, quarter-turn. All bases remain inside the original
 -- blocked tile. Thin native edge drawings describe actual railing in depth.
 M.ornate={
+ [0x2a7]={{16,8,14,0}},[0x352]={{14,7,14,0}},
  -- Full horizontal rails, including the grass variant formerly mistaken for
  -- an L. End posts and actual depth runs are distinct native drawings.
  [0x2b7]={{16,8,14,0}},
@@ -27,6 +28,8 @@ M.ornate={
 -- Original lower 8px quadrants, proven pixel-identical to these clean native
 -- terrain quadrants in each R/S/E cache. Preserve exact mixed paving/grass.
 M.ground={
+ [0x2a7]={{0x2bb,0},{0x2bb,1},{0x2bb,2},{0x2bb,3}},
+ [0x352]={{0x2e0,0},{0x2e0,1},{0x2e0,2},{0x2bb,0}},
  [0x2c6]={{0x2bb,0},{0x2bb,1},{0x2bb,2},{0x2bb,3}},
  [0x2c7]={{0x2bb,0},{0x2bb,1},{0x2bb,2},{0x2bb,3}},
  [0x2dc]={{0x2bd,0},{0x2bb,1},{0x2bd,2},{0x2bd,3}},

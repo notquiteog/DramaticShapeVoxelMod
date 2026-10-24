@@ -34,7 +34,7 @@ local F=V.require('Gen3FenceFamilies');local ornate={}
 -- Actual Rustboro census regressions: eight art variants account for fifteen
 -- blocked city cells that previously kept flat rails; ordinary paving, roof
 -- tiles and walkable headers must never be recruited by MID adjacency.
-for _,mid in ipairs{0x2c6,0x2c7,0x2d7,0x2dc,0x2de,0x2df,0x2e6,0x2e7}do
+for _,mid in ipairs{0x2a7,0x352,0x2c6,0x2c7,0x2d7,0x2dc,0x2de,0x2df,0x2e6,0x2e7}do
  assert(H.emeraldShape('general','rustboro',mid,0,7).nativeFence=='rustboro')
  assert(R.ownShape('general','rustboro',mid,0,7).nativeFence=='rustboro')
  assert(not F.shape('general','rustboro',mid,0,0))
@@ -58,7 +58,7 @@ end
 available=false;assert(not M.build(ornate,function()end,{}))
 for _,q in pairs(ornate)do assert(not q.importedFence)end
 available=true;local r,e,num=M.build(ornate,function()end,{})
-assert(r and not e and num==29,'unique native cells count')
+assert(r and not e and num==31,'unique native cells count')
 for _,q in pairs(ornate)do
  local quads={};local function emit(v,uv)quads[#quads+1]={v,uv}end
  assert(M.appendFloor(q,emit,function()return{{0,0},{1,0},{1,1},{0,1}}end,emit))
