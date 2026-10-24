@@ -83,6 +83,7 @@ for _,data in pairs(V.require('ImportedFenceData'))do for _,p in ipairs(data.par
  end end
  for _,n in pairs(edges)do assert(n==2,'open physical fence edge')end
 end end
+for id,data in pairs(V.require('ImportedFenceJoinedData'))do assert(Real.register(id,data,{read=function()end}))end
 for _,p in ipairs(M.placements(ornate))do
  local verts,fit=assert(Real.vertices(p.model,p.fit));assert(math.abs(fit.bounds[5]-11)<1e-5,'corner fitting shrank height')
  for _,part in ipairs(verts)do for _,v in ipairs(part.vertices)do assert(v[1]>=-1e-5 and v[1]<=16.00001 and v[3]>=-1e-5 and v[3]<=16.00001,'fence crossed walking bounds')end end
