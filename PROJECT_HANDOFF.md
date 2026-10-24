@@ -1,3 +1,10 @@
+## 2026-10-23 — original ORAS healers and source animation surfaces
+
+- Exact native healer owners across all five games: 87 rooms (E17/R16/S16/FR19/LG19). Original machine/tray454 triangles +96 exact exposed rim closures; uniform source bounds, contact-only .025 recess, no coplanar overlaps across all 19 source models.
+- .96/API3 standalone source and missing-source native runs PASS all 87 rooms. Actual native FLDEFF25 shows counts1..6 and completes in every edition, source and fallback; all native map hashes unchanged. Source-derived six-ball layout fits the real raised tray; normal first-person housing occlusion remains physical. Whole-map coverage stays false.
+- Scene remains root-owned/untouched. `Gen3ImportedInteriors.build` requires `{healingSurface=true}` before activating this animated family; unaware consumers keep native healer. Reviewed isolated bridge patch: `docs/integration/gen3-healer-scene.patch`. Source helper + optional native-ball layout tests and clean regeneration PASS.
+- Evidence: `docs/ORAS_CENTER_HEALERS_2026-10-23.md`, source and component/run ledgers. Candidates 2,563; accepted components 2,518 (healers explicitly require reviewed bridge), 280 edition/map pairs. Continuing service furniture/room framing; no version/push/release.
+
 ## 2026-10-23 — original ORAS Center tables across all five GBA games
 
 - Replaced two exact native Center-table families with original glass top/reflection/leg source: 94 owners (E18/R17/S17/FR21/LG21), 87 edition-room instances. Uniform native bounds, bottom-only .025 contact recess and exact leg/underside union; no Scene, floor, actor, healing or gameplay changes.

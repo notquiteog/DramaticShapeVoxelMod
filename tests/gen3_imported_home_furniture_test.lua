@@ -11,6 +11,7 @@ V.require=function(name)
  if name=='ImportedOldaleCupboardData'then return dofile('lib/ImportedOldaleCupboardData.lua')end
  if name=='ImportedOldaleChairData'then return dofile('lib/ImportedOldaleChairData.lua')end
  if name=='ImportedCenterTableData'then return dofile('lib/ImportedCenterTableData.lua')end
+ if name=='ImportedCenterHealerData'then return dofile('lib/ImportedCenterHealerData.lua')end
  if name=='ImportedOldaleSinkData'then return dofile('lib/ImportedOldaleSinkData.lua')end
  if name=='ImportedPyreMemorialData'then return dofile('lib/ImportedPyreMemorialData.lua')end
  if name=='ImportedFlowerBookcaseData'then return dofile('lib/ImportedFlowerBookcaseData.lua')end
@@ -23,6 +24,8 @@ V.require=function(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='center_healer',kind='centerHealer',pair='building__pokemon_center',rows={{0x222,0x223},{0x22a,0x22b}},coll={{7,7},{7,7}},x=5,z=1,id='oras_center_healer',fit={32,32,0},height=28},
+ {name='center_healer',kind='centerHealer',family=false,pair='network',rows={{0x2aa,0x2ab},{0x2b2,0x2b3}},coll={{7,7},{7,7}},x=5,z=1,id='oras_center_healer',fit={32,32,0},height=28},
  {name='hoenn_center_table',kind='centerTable',pair='building__pokemon_center',rows={{0x23d,0x23e},{0x245,0x246}},coll={{7,7},{7,7}},x=11,z=6,id='oras_center_glass_table',fit={32,32,0},height=16},
  {name='center_table',kind='centerTable',family=false,pair='network',rows={{0x29c,0x29d},{0x2a4,0x2a5}},coll={{7,7},{7,7}},x=11,z=6,id='oras_center_glass_table',fit={32,32,0},height=16},
  {name='hoenn_home_chair_555',pair='building__generic_building',design='em_start_seat_pad',rows={{0x22b}},coll={{0}},x=2,z=4,id='oras_oldale_backed_chair',fit={16,16,0},rotation=1},
@@ -74,9 +77,12 @@ for _,q in ipairs(fixtures)do
  if q.mapId then local old=last.region;last.region={mapId='EM_MOSSDEEP_CITY_SPACE_CENTER_1F'};assert(not M.eligible(p,cells),'foreign room accepted');last.region=old end
  local original=p.recipe.design;p.recipe.design='unrelated';assert(not M.eligible(p,cells));p.recipe.design=original
  if q.kind then local old=p.recipe.kind;p.recipe.kind='unrelated';assert(not M.eligible(p,cells),'wrong furniture kind accepted');p.recipe.kind=old end
- available=false;local result,err,n=M.build(cells,function()end,{})
+ local capabilities=q.id=='oras_center_healer'and{healingSurface=true}or nil
+ if capabilities then local original={};local result,err,n=M.build(cells,function()error('unaware renderer uploaded animated source')end,original)
+  assert(result==original and not err and n==0 and not p.importedInterior,'unaware renderer hid native healer')end
+ available=false;local result,err,n=M.build(cells,function()end,{},capabilities)
  assert(not result and err and n==0 and not p.importedInterior,'failed source upload hid complete native furniture')
- available=true;local parts={};result,err,n=M.build(cells,function()end,parts)
+ available=true;local parts={};result,err,n=M.build(cells,function()end,parts,capabilities)
  assert(result==parts and not err and n==1 and p.importedInterior==q.id)
  local after=0;for _ in pairs(cells)do after=after+1 end;assert(count==after)
  for y,row in ipairs(q.rows)do for x,mid in ipairs(row)do local c=cells[(q.x+x-1)..':'..(q.z+y-1)];assert(c.mid==mid and c.collision==q.coll[y][x]and c.prop==p)end end

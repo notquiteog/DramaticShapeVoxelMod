@@ -1,0 +1,25 @@
+--- a/lib/Gen3Scene.lua
++++ b/lib/Gen3Scene.lua
+@@ -417,7 +417,7 @@
+   cache.importedGymNoticeError,cache.importedGymNoticeCount=err,err and 0 or n
+  end
+  local interiorError,interiorCount=nil,0
+- if Styles.modern('interiors')then local _;_,interiorError,interiorCount=V.require('Gen3ImportedInteriors').build(cells,R.newMesh,cache.sceneryModels)end
++ if Styles.modern('interiors')then local _;_,interiorError,interiorCount=V.require('Gen3ImportedInteriors').build(cells,R.newMesh,cache.sceneryModels,{healingSurface=true})end
+  cache.importedInteriorCount,cache.importedInteriorError=interiorCount,interiorError
+  cache.importedTrees={}
+  local trees,treeError,treeCount=V.require('ImportedTrees').buildGen3(cells,R.newMesh,cache.importedTrees,{region=V.require('Gen3Hoenn').active()and'hoenn'or'kanto',mapId=def.id or req.mapId})
+@@ -1329,9 +1329,10 @@
+   local prop,screen=cache.healer,cache.healScreen
+   if prop then
+    local x,z,h=prop.cx*16,prop.cy*16,prop.recipe.h+.18+(prop.groundHeight or 0)
+-   effect('heal-balls',32,24,function()g.translate(-80,-28);heal.drawBalls()end,
+-    {{x+3,h,z+12},{x+29,h,z+12},{x+29,h,z+28},{x+3,h,z+28}},nil,
+-    function(c,emit)return V.require('Gen3HealingBalls').canvas(c,x,h,z,emit)end)
++   local surface=V.require('Gen3ImportedInteriors').healingSurface(prop)
++   local vertices=surface and surface.vertices or{{x+3,h,z+12},{x+29,h,z+12},{x+29,h,z+28},{x+3,h,z+28}}
++   effect('heal-balls',32,24,function()g.translate(-80,-28);heal.drawBalls()end,vertices,nil,
++    function(c,emit)return V.require('Gen3HealingBalls').canvas(c,x,h,z,emit,surface and surface.balls)end)
+    if screen then
+     local sx,sz=screen.cx*16,screen.serviceRoom and 4.30 or screen.cy*16+(screen.recipe.frontOffset or 32.2)+.04
+     effect('heal-monitor',32,16,function()g.translate(-112,-16);heal.drawMonitor()end,
