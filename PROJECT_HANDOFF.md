@@ -1,3 +1,14 @@
+# Emerald Rustboro fence classifier checkpoint — 2026-10-23
+
+Exact native census adds eight omitted rail/endcap MIDs (15 blocked cells),
+fixes opposite-side depth axes and the repeated grass horizontal family.
+Official .96 standalone: 2400 unique city cells,180 eligible/180 built,
+unchanged native grid/recovery0; Gym/south gate front/side captures inspected.
+Focused source atomicity/29-family/ground/bounds test passes. Root owns joined
+corner/contact geometry and final acceptance. R/S parity follows immediately.
+See [coverage evidence](docs/RUSTBORO_FENCE_COVERAGE_2026-10-23.md).
+Littleroot e1bf4167 remains held for a later model batch; Shipyard WIP preserved.
+
 # Resumed regional model coverage1.58.0 — 2026-10-23
 
 Merged Kanto b3e82032/f0287c65, Hoenn c5d0607b/15607548/85fe43a9,
