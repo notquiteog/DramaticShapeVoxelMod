@@ -17,7 +17,7 @@ return function(game)
   Shape.layout(cells);V.require('Gen3Elevation').bind(cells,{region})
   local g;for _,q in ipairs(civics)do if q.custom and q.custom.name==f[4]and q.cx==f[2]and q.cy==f[3]then g=q end end;assert(g,'missing original Mart')
   local M=V.require('Gen3ModernHoennBuildings')
-  local parts={};local result,err=M.build(g,cells,V.require('Voxel3D').newMesh,parts);assert(result,err);assert(#parts==f[6] and g[f[5]] and #g[f[5]].parts==f[7])
+  local parts={};local result,err=M.build(g,cells,V.require('Voxel3D').newMesh,parts);assert(result,err);assert(#parts==f[6]+1 and g[f[5]] and #g[f[5]].parts==f[7])
   local D=M;for state=0,2 do local draws=0;D.draw(g,{x=g.cx+f[8],y=g.cy+f[9],frame=state},function()draws=draws+1 end);assert(draws==f[10])end
   D.release(g);V.require('SceneryModels').releaseBatches(parts);g.importedHoenn=nil
   assert(not M.ownsDoor(g,g.cx+f[8],g.cy+f[9]));result=M.build(g,cells,function()return nil end,{});assert(not result and not g.importedHoenn and not g[f[5]])

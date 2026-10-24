@@ -51,6 +51,20 @@
   "originalTriangles": 285,
   "processedTriangles": 328,
   "excludedTriangles": 11,
+  "uvRepairs": [
+    {
+      "part": "to_gym_001-mesh:lambert12_011-material",
+      "sourceTriangleIndices": [
+        41,
+        103
+      ],
+      "paintUV": [
+        0.796875,
+        0.5
+      ],
+      "reason": "Existing rear tower quad projected the complete facade atlas; continue the original neutral side-wall paint strip. Positions and all other source UVs unchanged."
+    }
+  ],
   "closure": "Measured rear wall/belt/roof returns, both roof soffits, foundation. No source door/window/sign/roof silhouette removed; original source shadow triangles omitted.",
   "nativePlacement": "Gen3ImportedHGSSGyms exact native drawing/permission adapter, with triangle-mask clearance and original paired door geometry; source eligibility and rendered acceptance are tracked separately.",
   "textures": {

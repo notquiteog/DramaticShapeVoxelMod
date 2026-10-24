@@ -5,6 +5,7 @@ from pathlib import Path
 from oras_scenery_source import decoder,need
 from import_oras_grass import lua
 from import_oras_center_doors import mul,sample
+from oras_rear_closure import close_rear
 
 def convert(root,decoder_path,nitrogen_path,output):
  load,load_textures,png=decoder(decoder_path);sys.path.insert(0,str(nitrogen_path));from nitrogen.platforms.ctr.bch import open_bch
@@ -53,8 +54,9 @@ def convert(root,decoder_path,nitrogen_path,output):
    else:raise ValueError('Petalburg source underside triangulation failed')
   ii.extend([i+1 for i in loop]);cap=dict(next(p for p in parts if p['name']=='touka_house2'),name='authored_closed_underside',vertices=bottom,indices=ii);parts.append(cap)
   for p in parts:p['vertices']=[[v[0]/span,v[1]/span,v[2]/span]+v[3:]for v in p['vertices']]
+  rear,rearproof=close_rear(parts,'touka_house2',[170.5/256,60.5/128],span);parts.append(rear)
   data['oras_petalburg_home_'+name]=dict(parts=parts,anchors={'door':[0,0,0],'doorLeft':[-12/span,0,0],'doorRight':[12/span,0,0],'doorTop':[0,45/span,0]})
-  report[name]=dict(gr=gr,model=m.name,sourceTrianglesByMaterial=counts,undersideTriangles=len(ii)//3,sourceOrigin=[cx,base,cz],sourceBchSha256=hashlib.sha256(raw).hexdigest(),originalHorizontalGroundFaces=0)
+  report[name]=dict(gr=gr,model=m.name,sourceTrianglesByMaterial=counts,undersideTriangles=len(ii)//3,sourceOrigin=[cx,base,cz],sourceBchSha256=hashlib.sha256(raw).hexdigest(),originalHorizontalGroundFaces=0,rearClosure=rearproof)
  # Actual BM0004 rigid -80degree hinged panel and its own AD slot1 glass bank.
  raw=(root/'mapprops-nitrogen/3/0004/000.bch').read_bytes();m=load(raw)[0];ind=open_bch(raw).models[0];need(m.name=='c101_bm_door01','unexpected Petalburg door')
  worlds=[];errors={}

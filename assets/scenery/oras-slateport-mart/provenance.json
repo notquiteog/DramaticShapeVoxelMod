@@ -1,0 +1,73 @@
+{
+  "source": "Supplied Alpha Sapphire RomFS, Slateport GR149/ZO14/AD20/BM9",
+  "model": "c102_00_00",
+  "sourceStaticOrigin": [
+    360,
+    0,
+    360
+  ],
+  "bodyOrigin": [
+    315.0,
+    18.0,
+    81.0
+  ],
+  "normalizationSpan": 103.62200927734375,
+  "sourceBodyTriangles": 703,
+  "undersideTriangles": 12,
+  "rearClosure": {
+    "authoredRearTriangles": 219,
+    "profileBands": 90,
+    "sourcePaintTexel": [
+      0.064453125,
+      0.861328125
+    ],
+    "insetSourceUnits": 0.1
+  },
+  "originalGroundTriangles": 0,
+  "originalWarpDestination": 266,
+  "originalDoorPlacement": [
+    675,
+    18,
+    441
+  ],
+  "doorPhysicalTriangles": 43,
+  "doorSideContactNativeInset": 0.05,
+  "sourceSliderX": [
+    13.99993896484375,
+    27.499969482421875,
+    41.0
+  ],
+  "movingInverseBindError": 0.0,
+  "textures": {
+    "11_pokecen_frind": {
+      "size": [
+        256,
+        256
+      ],
+      "rgbaSha256": "b42e6698c9d5f4d27c345479698a2d391da4b92f74e18f4dd61824d9140ce3f1",
+      "pngSha256": "68ae100458b9b9d77d2da2d2d8c8509373df972004cfd8caa51510fafd252017"
+    },
+    "1_fs_door_02": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "6c3d5010aa90a9b414fe9ba3033d6084cdb9255e1d615bdcadeb51b8b40782de",
+      "pngSha256": "a62860c6ab222750ff9ef395277107e83b9f27a997456d567fb3003bb25f6151"
+    },
+    "1_fs_door_01": {
+      "size": [
+        32,
+        32
+      ],
+      "rgbaSha256": "245eebaf051bd3533cccf66d453cf8366093d319624e2bc235d8f6ec8d14d376",
+      "pngSha256": "b7d9d8d189a8c6724808dedbfca72af7e51b5cd500638613a8a281b54326aa47"
+    }
+  },
+  "sha256": {
+    "body": "4018cfe3d4e25fc646e9bdb939209559a71de4a09aac28e59987df0f0548e943",
+    "door": "074c7e7d41d567d31eb1f238e040c3d797303d3778dfb26e53d81b43db811bf6",
+    "animation": "ad890fe9148c6777341f974c1c85bafe0134e0aac7d9c53f3eeaec87a0931fb3"
+  },
+  "processing": "Own original physical source geometry/UVs/indices independently checked; source exposure RGB and24 nonphysical door light triangles omitted. Actual source rim closes underside, original side profiles close rear. Native fit and ground-contact acceptance are separate."
+}

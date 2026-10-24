@@ -4,6 +4,48 @@
 - Official .96/API3 standalone source and atomic missing-texture runs PASS all 98 rooms; all owner front/whole and available side views reviewed. All 2,161 native map hashes/furniture-family counts unchanged; only +281 source candidates. Seventeen-source coplanar check and focused data/fit/guard/fallback tests PASS; importer regeneration byte-identical.
 - Evidence: `docs/ORAS_OLDALE_CHAIRS_2026-10-23.md` and component/run ledgers. Candidate count 2,382; accepted components 2,337; every whole-map acceptance remains false. Generic room framing/service furniture still queued. No version/push/release.
 
+# Resumed regional model coverage1.58.0 — 2026-10-23
+
+Merged Kanto b3e82032/f0287c65, Hoenn c5d0607b/15607548/85fe43a9,
+and interiors e7c6e5d7/63b4b51b atop the released API3 main. Source suite486PASS,
+0fail,58external-fixture skips;639production files compile under nativeLuaJIT2.1.
+All5GBA combined-mod entry/returns and current worker source checks pass.
+Exact package validation/release is coordinated at root; source agents remain
+active on next Kanto/Hoenn/interior families. Complete-map coverage remains
+unverified/incomplete. See docs/REGIONAL_SOURCE_INTEGRATION_2026-10-23.md.
+
+# Kanto queued landmarks rechecked on merged API3 — 2026-10-23
+
+Latest official0.3.96 standalone source review after release1.57.12 merge passes
+FR/LG Copycat+Mr Psychic:8 placements,4 real entry-return pairs,4 no-warp
+projections, unchanged native hashes and source panel frames0..2. Inspected
+source/contact/side/rear/first-person captures; original trees partly occlude
+LG connected Copycat rear, identical rear inspected on FR city. Fourteen
+focused suites pass after adding actual SharedModelMesh to9 queued fixtures.
+No production Scene edits or release. See KANTO_API3_SOURCE_RECHECK_2026-10-23.md.
+Continuing original Silph Co. source fit/closure assessment, then next unmatched
+Kanto family; full coverage remains incomplete.
+
+# Kanto source coverage resumed after API3 release — 2026-10-23
+
+Merged release1.57.12 API3/current-engine work into the isolated Kanto source
+branch. Preserved queued regional source/door families and the released Museum
+solid staircase. Reverify the merged queued placements before extending missing
+Kanto exterior families. No version bump or release; integration remains root-owned.
+
+# Queued Hoenn exteriors accepted on API3/0.3.96 — 2026-10-23
+
+After merging released main ea14555c, owned standalone .96 QA passes all15 source
+jobs/30 exact Rustboro/Devon/SlateportMart/Museum/Harbor placements, including all
+original cached door states, recessed contacts and failed-upload rollback. All15
+native entry jobs/36 original entrances and normal returns pass across R/E/S,
+with unchanged native grid hashes and zero streaming recovery. Current captured
+contacts/front/side/rear/roof views inspected. Five isolated source fixtures now
+load real SharedModelMesh (15607548). Root combined acceptance remains separate;
+Shipyard stays inactive and original .95 missing-asset gameplay proof stays .95.
+See [current verification](docs/ORAS_QUEUED_EXTERIORS_API3_2026-10-23.md).
+Littleroot GR6/ZO6 own-source houses are now being extracted; no new coverage claimed.
+
 # Portable API3 migration — 2026-10-23
 
 Final release verification: all seven immutable release ZIPs pass **88/88**
@@ -114,6 +156,219 @@ This is NOT full165FPS completion or physical mobile certification. Model covera
 remains with the other owner. Final1.57.8 package passed seven-mod load/render in
 all11games and forest/lab/first-person checks in all6GB/GBC editions. All593
 packaged Lua files compile. Documentation-only follow-up preserves tested code.
+
+# Original ORAS Slateport Harbor — 2026-10-23
+
+Own GR150/AD20/BM93/ZO14→275 Harbor dispatches as hoennHarbors. Includes its
+actual Comb2/t106_02 physical wall layer; source exposure RGB, original PICA
+portal marker and BM light faces omitted. Original paired slider travel and
+native open entrance preserved. Underside/rear closed, contacts−.05; all fitted
+body/leaf states coplanar-zero. Official0.3.95 three final R/S/E source uploads,
+three actual-Scene entries/normal returns and one Emerald missing-source
+return pass; all-angle source/native captures inspected. No Scene edits.
+Candidates43EM42RU42SA of244;117 missing. Shipyard stays fallback due exact
+native foyer(26,37)/portal(26,38) source-fit conflict; no clearance relaxation.
+See [batch evidence](docs/ORAS_SLATEPORT_HARBOR_2026-10-23.md). Regional work continues.
+
+# Original ORAS Oceanic Museum — 2026-10-23
+
+Own GR150/AD20/BM40/ZO14→273 Museum now routes as hoennMuseums. Original1306
+body/68 door triangles retain roof/windows/dish/fixtures; underside/rear and
+finite roof-hardware backings close the original open geometry. Meeting leaf
+caps separate0.05 native units per side. Native unanimated0x32a stays visually
+open; original admission uses normal input. Official0.3.95 three R/S/E source
+uploads, six open-idle entrances/returns, two Emerald missing-source returns
+and Ruby walkable rear/roof checks pass. Evidence is tracked in
+[batch evidence](docs/ORAS_OCEANIC_MUSEUM_2026-10-23.md). Original native data
+and model bounds remain fixed; no Scene edit. Candidates42EM41RU41SA of244,
+120 missing. Slateport Shipyard/Harbor and the wider source queue continue.
+
+# Own ORAS Slateport Mart — 2026-10-23
+
+Distinct GR149 pc_base/AD20 paint and original BM9/ZO14→266 slider now route
+through the Hoenn facade as hoennMarts. Exact native4×4 footprint, portal,
+collision and source proportions stay fixed. Rear/underside are closed; no
+source ground plane is copied. The final source audit also corrects Slateport's
+slider side contact and float-quantized ground-ring coordinates in the older
+three Marts. Official0.3.95 twelve native four-Mart source/pose/contact/rollback
+checks, twelve actual entrances/returns and four Emerald missing-source
+fallback entries/returns pass. Source/contact regressions reject both original
+defects. Source all-angle/native contact/front/side/rear views inspected; native
+hashes unchanged and recovery zero. Census candidates now41EM40RU40SA of244,
+123 missing. No whole-map acceptance claim. See
+[batch evidence](docs/ORAS_SLATEPORT_MART_2026-10-23.md). Slateport facilities
+continue next; Rustboro Flat2/tower stay pending fit/full-side source review.
+
+# Original ORAS Devon Corporation — 2026-10-23
+
+Authentic GR33/ZO16/AD11/BM14 Devon now dispatches as rustboroDevon:1597 body
+triangles,46 paired-door triangles, exact source rear/underside closures and
+native paired portals. Uniform native fit preserves the walkable front strip.
+Official0.3.95 three native source/cap/pose/rollback cases, six actual R/S/E
+entries/returns and two Emerald missing-source fallback entries pass. Source
+all-angle and native contact/door/side/rear views inspected; native hashes
+unchanged, recovery zero. Census candidates now40EM39RU39SA of244;126 missing.
+No Scene edits or whole-map completion claim. See
+[batch evidence](docs/ORAS_DEVON_CORPORATION_2026-10-23.md). Flat2/tower continue.
+
+# Remove original Oldale glass-return overlap — 2026-10-23
+
+Two southeast source-glass triangles lose only the area shared with their
+neighbor, preserving the union silhouette and interpolated source paint. The
+northwest house,14 physical southeast glass triangles, rear closure and native
+portal/ground remain fixed. Actual-source coplanar checks and official0.3.95
+six R/S/E native house placements pass; views inspected. See
+[correction evidence](docs/ORAS_REAR_CLOSURES_2026-10-23.md). Devon continues.
+
+# Correct original ORAS open backs — 2026-10-23
+
+Fifteen owned Gym/Mart/Oldale/Petalburg/Rustboro source bodies now append actual
+rear closures from their original side profiles and paint. Earlier rear views
+were misread through open source backs; rear acceptance is withdrawn and
+superseded by135 real-source rays, unchanged bounds/source arrays and zero new
+coplanar overlap across113,442 candidate pairs. All51 native R/S/E placements
+pass with unchanged layout hashes and zero streaming recovery. Existing native door/collision/contact
+checks remain valid. No new family/map coverage is claimed. See
+[correction evidence](docs/ORAS_REAR_CLOSURES_2026-10-23.md). Oldale southeast
+source glass-return overlap is addressed by the follow-up above.
+
+# Original Rustboro flat/southern-home continuation — 2026-10-23
+
+Flat1 and House3 extend the authentic Rustboro source family to six variants.
+Source36 coplanar window returns clip to their exposed strips; prior four arrays
+and BM13 poses remain exact. Official0.3.95 native18 uploads/door/cap checks and
+18 actual R/S/E entries/returns pass; Emerald six-door missing-source fallback
+passes. Native hashes unchanged; contact captures inspected from walkable cells.
+Live controller interference was isolated through the QA engine config before
+acceptance. Flat2 is source-located but its native-anchor fit fills only35% of
+the blocked drawing, so remains fallback. Devon/tower continue next. See
+[batch evidence](docs/ORAS_RUSTBORO_FLATS_2026-10-23.md).
+
+# Original Rustboro home/school source batch — 2026-10-23
+
+Four own ORAS Rustboro variants and BM13 original hinges now dispatch through
+Gen3ModernHoennBuildings (`kind=rustboroHomes`). Native12 R/S/E source/door/cap/
+rollback checks pass on official0.3.95; source all-angle renders inspected.
+Exact native map art/warps and original ZO16/GR object placements bind ownership.
+Only Y0 rings/closures recess; no source ground planes or native warp changes.
+Actual latest-parent Scene activates all four;12 R/S/E entry/return tests and
+four missing-source native fallbacks pass. Inspected contact views are clean;
+some sides remain tree-obscured. No whole-map acceptance claim. Remaining Rustboro
+flats, southern home, tower and Devon continue next. See
+[batch evidence](docs/ORAS_RUSTBORO_HOMES_2026-10-23.md).
+
+# Genuine Mr Psychic source/native acceptance, scenery pause — 2026-10-23
+
+Authentic southeast HGSS ybc_h01 plus ybc_dor1_001 now covers only native Mr
+Psychic city/connection drawings. Source scene matrices prove original panel
+placement; measured rear/barrel underside/foundation/panel returns close cuts,
+original physical triangles/UV/PNG bytes remain unchanged, source shadows removed.
+Official0.3.96 FR/LG four placements/two real entry-return pairs/two no-warp
+projections pass; source/native/contact/poses inspected, LG missing PNG fallback
+passes. Native hashes/support/warps unchanged. Focused native/pose/atomic tests,
+Copycat regression,592-file LuaJIT compile and6 deterministic outputs pass.
+Canonical79 eligible/72 accepted/54 unmatched/6324 unclassified blocked cells each
+edition. Adjacent sign49,22 MID2 wrongly selects shared ground1, outside building
+scope, reported to root. Dispatcher saffronPsychic routes lifecycle/ownsDoor;
+no production Scene/package claim. See docs/SAFFRON_PSYCHIC_SOURCE_2026-10-23.md.
+User reprioritized seven-mod0.3.96 API audit; no more scenery work until that task
+is ready. This clean commit closes the current verified source family.
+
+# Genuine Saffron Copycat source and native acceptance — 2026-10-23
+
+Exact Copycat city/connection placements now use real HGSS ybc_mmc plus its
+separately instanced ybc_dor1 panel, verified by original source scene matrices.
+Rear barrel/gable/curved soffit/foundation and full panel returns close measured
+cuts; original physical triangles/UV/PNG bytes retained, source shadows excluded.
+Native0.3.96 FR/LG:4 reviewed placements,2 real entry-return pairs,2 explicit
+nonenterable projections. Native hashes/contact/door poses inspected; LG missing
+PNG fallback passes. Native hide flag0x3e only in disposable fixture; no save.
+Focused LuaJIT native/triangle/pose/atomic-failure/dispatcher tests,589-file compile
+and7 deterministic outputs pass. Canonical per edition77 eligible/70 accepted/
+56 unmatched/6324 unclassified blocked cells; Mr Psychic remains unmatched.
+Production Scene hook: dispatcher saffronCopycat, full draw/release/ownsDoor route.
+No production Scene changes or combined-package claim. See
+`docs/SAFFRON_COPYCAT_SOURCE_2026-10-23.md`. Continuing matching Mr Psychic source.
+
+# Museum rendered coverage accepted after solid stairs — 2026-10-23
+
+Queued regional census now records Museum renderedAccepted=true on official0.3.96
+FR/LG: both main/staff native entry-return pairs, source footprint, front/side/
+rotated/first-person solid contact verified after focused e9fdfe43. Corrected
+old diagnosis: approach row7 ordinary behavior0 was unclaimed arch+stair art;
+semantic terrace duplication was a separate shared defect. Canonical per-edition
+counts75 eligible/68 accepted/58 unmatched/6324 unclassified blocked cells; prior
+134 other accepted assemblies remain explicitly0.3.95 evidence. This metadata
+follow-up is separate from the release's focused staircase cherry-pick. See
+`docs/PEWTER_MUSEUM_NATIVE_REVIEW_2026-10-23.md` and canonical JSONL.
+
+# Museum exact footprint/current-engine review, shared stairs gap — 2026-10-23
+
+Latest official engine became0.3.96; verified official source/shell SHA256 and
+fresh public imports into new isolated profiles produce required cache140.
+Museum main/staff native portals pass both editions and repeat after exact
+projected-triangle/native-mask guard; LG missing-PNG both entries/returns pass.
+Native/source/contact/side/closure captures inspected; all original map hashes,
+source/PNG data and portal fits unchanged. Museum remains renderedAccepted=false:
+shared generic terrace steps project arch artwork onto treads and draw duplicate
+coplanar cap/tread faces. Parent owns Gen3Stairs; preserve native rise and emit
+one clean tread rather than moving source/ground. Canonical inventory now0.3.96,
+while older accepted assemblies explicitly retain renderedRuntime0.3.95. Museum
+nativeReview separately records0.3.96/source-footprint/returned portals/gap.
+Counts unchanged75 eligible/67 accepted/58 unmatched/6324 unclassified blocked
+cells per edition. Exact native guards/adversarial triangle test pass. No Scene
+edits, shared stair fix or production-package acceptance. See
+docs/PEWTER_MUSEUM_NATIVE_REVIEW_2026-10-23.md. Continuing Saffron Copycat source.
+
+# Viridian original source doors and ordinary-house acceptance — 2026-10-23
+
+Ordinary native house(24,8) now uses its genuine inward source panel without a
+static duplicate/native-card overlay. The shared ordinary/flower door gains its
+missing back/underside from measured bounds and original brown side paint;
+original8 triangles/UVs/PNGs unchanged,12 triangles form a closed panel. Native
+0.3.95 FR/LG both houses:4 placements/4 real entry-return pairs, unchanged native
+hashes, source/full opening/contact/native2D views inspected. LG ordinary missing
+PNG source+entry-return fallback passes; deterministic six-file conversion and
+focused LuaJIT topology/clearance/lifecycle checks pass. Native HD2D flower cards
+stay unchanged. Canonical75 eligible/67 accepted/58 unmatched/6324 unclassified
+blocked cells per edition; seven shared-ground gaps remain. Production Scene
+must route existing ordinary groups through Gen3ViridianFlowerHouseDoors, or
+consolidate new dispatcher viridianHouses. No Scene edits or package acceptance.
+See docs/VIRIDIAN_SOURCE_DOORS_2026-10-23.md. Museum rendered review is next.
+
+# FR/LG original Center sliding doors and native census — 2026-10-23
+
+Static HGSS Centers no longer retain duplicate glass beneath native animation
+cards. Original glass splits at its UV midpoint into native-frame sliding leaves,
+preserving source plane/height/UVs/opacity; full body/all poses stay on original
+blocked cells. Exact Vermilion water-header and blocked Saffron connection guards
+complete18 detected standard drawings. Official0.3.95 Linux/LÖVE11.5 source
+fixtures cover36 placements/34 real entry-return pairs across FR/LG; LG missing
+PNG fallback passes18. Source topology, native comparisons and contact captures
+inspected; source-alpha Celadon replay, focused LuaJIT tests and immutable native
+hash checks pass. Four/Six Island synthetic Rival flags are documented, never
+saved. Sixteen Centers per edition accepted; both Saffron placements need shared
+native-yellow paving. Canonical census75 eligible/66 accepted/58 unmatched,
+6324 unclassified blocked cells per edition. Source data/PNG bytes unchanged.
+Production Scene is parent-owned: route existing Center groups through new
+Gen3KantoCenterDoors draw/release/ownsDoor, or dispatcher kantoCenters. No release
+or combined-package acceptance is claimed. See docs/HGSS_CENTER_DOORS_2026-10-23.md.
+
+# FR/LG shared HGSS Mart source batch — 2026-10-23
+
+Standalone dispatcher adds `hgssMarts`; production Scene integration remains
+parent-owned. Authentic HGSS structural/window/door/sign adaptation fills the
+native right-door Mart footprint, with closed rear/soffit/foundation and explicit
+contact-ring inset. Exact native hashes and all24 placements pass on official
+v0.3.95 Linux/LÖVE11.5, with22 real entry/return pairs; Saffron connection has
+no warp. Disposable Four Island/Viridian story flags are documented. LG missing
+PNG fallback passes all12. Source/native front/side/rear/door captures inspected;
+focused LuaJIT tests and deterministic source conversion pass. Source eligibility
+is12 Marts per edition; only10 are rendered accepted, because both Saffron
+placements need parent-owned native yellow paving. Canonical per-edition census:
+426 maps,133 assemblies,73 eligible,50 accepted,60 unmatched,6324 unclassified
+blocked cells. No whole-game or production-package acceptance is claimed.
+See docs/HGSS_MARTS_2026-10-23.md and canonical JSONL for exact evidence/gaps.
 
 # Depth/fence/foliage release1.57.8 — 2026-10-23
 

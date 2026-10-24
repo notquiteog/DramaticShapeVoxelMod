@@ -22,7 +22,7 @@ return function(game)
    if #v==28 and #i==78 then for _,p in ipairs(v)do assert(math.abs(p[2]+.05)<1e-8);capCount=capCount+1 end end
    return V.require('Voxel3D').newMesh(v,i,format)
   end
-  local result,err=M.build(g,cells,upload,parts);assert(result,err);assert(capCount==28 and #parts==3 and g.importedOldaleDoors and #g.importedOldaleDoors.parts==6)
+  local result,err=M.build(g,cells,upload,parts);assert(result,err);assert(capCount==28 and #parts==4 and g.importedOldaleDoors and #g.importedOldaleDoors.parts==6)
   local D=V.require('Gen3OldaleDoors');for state=0,2 do local draws=0;D.draw(g,{x=g.cx+1,y=g.cy+3,frame=state},function()draws=draws+1 end);assert(draws==2)end
   D.release(g);V.require('SceneryModels').releaseBatches(parts);g.importedHoenn=nil
   result=M.build(g,cells,function()return nil end,{});assert(not result and not g.importedHoenn and not g.importedOldaleDoors)

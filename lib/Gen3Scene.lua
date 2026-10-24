@@ -1584,7 +1584,7 @@ function M.draw(game,vw,vh,cam)
 end
 -- Read-only producer data; PerformanceExport detaches the tables for callers.
 function M.performanceSnapshot()
- return {stream=stream.stats,prepares=M.prepares or 0,builds=M.builds or 0,
+ local snapshot={stream=stream.stats,prepares=M.prepares or 0,builds=M.builds or 0,
   cacheHits=M.cacheHits or 0,map=M.sceneDef and M.sceneDef.id,
   distance=M.distance,renderWidth=M.renderWidth,renderHeight=M.renderHeight,
   water={wetRockCells=cache.wetRockCells or 0,draws=#(cache.waterDraws or{}),levels=#(cache.waterLevels or{}),banks=cache.bankFaceCount or 0},
@@ -1600,6 +1600,10 @@ function M.performanceSnapshot()
    oldaleHomes=cache.modernBuildingCounts and cache.modernBuildingCounts.oldaleHomes or 0,
    gymNotices=cache.importedGymNoticeCount or 0,placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),pewterMuseum=#(cache.importedPewterMuseum or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
   geometryCache=V.require('NativeGeometryCache').stats}
+ -- Dispatchers add reviewed families independently; expose every successful
+ -- upload count without maintaining a second, incomplete family list here.
+ for kind,count in pairs(cache.modernBuildingCounts or{})do snapshot.scenery[kind]=count end
+ return snapshot
 end
 function M.invalidate()actorFrames:clear();V.require('Gen3TruckCargo').clear();V.require('Gen3TruckExterior').clear();V.require('Gen3Boats').clear();V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
 function M.release()

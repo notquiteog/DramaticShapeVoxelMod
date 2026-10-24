@@ -28,6 +28,15 @@
   ],
   "divisor": 128.2879981994629,
   "sourceTriangles": 1040,
+  "rearClosure": {
+    "authoredRearTriangles": 352,
+    "profileBands": 160,
+    "sourcePaintTexel": [
+      0.052734375,
+      0.39453125
+    ],
+    "insetSourceUnits": 0.1
+  },
   "undersideTriangles": 16,
   "noticeBounds": [
     16.683719635009766,

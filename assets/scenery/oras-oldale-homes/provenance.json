@@ -4,10 +4,21 @@
   "variants": {
     "southeast": {
       "sourcePhysicalTriangles": 1038,
+      "coplanarGlassReturnTrianglesClipped": 2,
+      "rearClosure": {
+        "authoredRearTriangles": 149,
+        "profileBands": 59,
+        "sourcePaintTexel": [
+          0.861328125,
+          0.12890625
+        ],
+        "insetSourceUnits": 0.1
+      },
       "sourceTrianglesByPart": [
         1024,
         14,
-        26
+        26,
+        149
       ],
       "sourceWorldOffset": [
         0,
@@ -19,10 +30,21 @@
     },
     "northwest": {
       "sourcePhysicalTriangles": 1030,
+      "coplanarGlassReturnTrianglesClipped": 0,
+      "rearClosure": {
+        "authoredRearTriangles": 147,
+        "profileBands": 59,
+        "sourcePaintTexel": [
+          0.861328125,
+          0.12890625
+        ],
+        "insetSourceUnits": 0.1
+      },
       "sourceTrianglesByPart": [
         1024,
         6,
-        26
+        26,
+        147
       ],
       "sourceWorldOffset": [
         -270,
@@ -92,5 +114,5 @@
     "door": "64e73fe826542f2272855d749da437553b12860d92ce51a97e2e6e1c16f2e95f",
     "animation": "2c4f4f6f185aade89bbba2bc992fd4318d358564a5e0f851836abbeec7331b74"
   },
-  "processing": "Exact original body and door positions/UVs/triangles independently checked with Nitrogen. Source exposure RGB and24 nonphysical light-effect triangles omitted. Each own house variant retains every source fixture and its own front/side glass. Exact source bottom rim closes below floor at upload using one reviewed solid original foundation texel; original source body has no horizontal y0 floor triangles. No source terrain, fences, sprites or flowers included."
+  "processing": "Original body and door positions/UVs/triangles independently checked with Nitrogen. Two southeast glass return triangles retain only their exposed area using interpolated original UVs, eliminating original planar overlap without changing the union silhouette. Source exposure RGB and24 nonphysical light-effect triangles omitted. Each own house variant retains every source fixture and its own front/side glass. Exact source bottom rim closes below floor at upload using one reviewed solid original foundation texel; original source body has no horizontal y0 floor triangles. No source terrain, fences, sprites or flowers included."
 }

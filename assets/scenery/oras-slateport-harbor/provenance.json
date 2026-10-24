@@ -1,0 +1,123 @@
+{
+  "source": "Supplied Alpha Sapphire RomFS; original Slateport GR150/ZO14\u2192275/AD20/BM93",
+  "sourceStaticOrigin": [
+    1080,
+    0,
+    360
+  ],
+  "sourceOrigin": [
+    927.0,
+    0.0,
+    171.0
+  ],
+  "normalizationSpan": 267.0,
+  "sourceTrianglesByMaterial": {
+    "c106_window": 48,
+    "c106_01": 1068,
+    "Comb2": 174
+  },
+  "excludedPicaPortalMaskTriangles": [
+    40,
+    41,
+    42,
+    43
+  ],
+  "undersideTriangles": 10,
+  "rearClosure": {
+    "authoredRearTriangles": 134,
+    "profileBands": 66,
+    "sourcePaintTexel": [
+      0.724609375,
+      0.443359375
+    ],
+    "insetSourceUnits": 0.1
+  },
+  "belowGroundTrianglesClipped": 16,
+  "sourceDoorPlacement": [
+    927,
+    0,
+    171
+  ],
+  "doorPhysicalTriangles": 68,
+  "closedLeafContactNativeInset": 0.05,
+  "nativeFit": {
+    "width": 112,
+    "depth": 80,
+    "padding": 0.25,
+    "doorAnchor": [
+      56,
+      0,
+      74.25
+    ],
+    "groundInset": 0.05
+  },
+  "rigidLeafOwners": [
+    2,
+    1,
+    2,
+    1
+  ],
+  "doorSliderX": [
+    [
+      0.0,
+      -36.0
+    ],
+    [
+      9.05400051176548,
+      -45.05400162935257
+    ],
+    [
+      18.0,
+      -54.0
+    ]
+  ],
+  "movingInverseBindError": 0.0,
+  "textures": {
+    "11_c106_mado": {
+      "size": [
+        128,
+        64
+      ],
+      "rgbaSha256": "9cb6fa01b71b824d9b2eabf491ecb662eea0b4e5910b56eed1e51be7a0b068c7",
+      "pngSha256": "270e1fceb7c381bbea22e302b15144a79bdbaa1c4f0550ed099579c1822dbb9a"
+    },
+    "11_t106_01": {
+      "size": [
+        256,
+        256
+      ],
+      "rgbaSha256": "606c3a1f450e237028efb25803e71df39ff487fbd72e03dd78d24d6f10b3fa93",
+      "pngSha256": "6a66d9a4653295a5250e1c1de6ae6276a8ac495299b209868d23663503432696"
+    },
+    "11_t106_02": {
+      "size": [
+        256,
+        256
+      ],
+      "rgbaSha256": "d364df57385b9038e4167af208aea6dd7927bbbd1c5230b41611082523945d64",
+      "pngSha256": "db8d39206a30263281e5339c0726b045e0215f52178638dc3906c4c27830388b"
+    },
+    "1_kaina_doors01": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "c6f33cc60fb63e9b68990fb55b57f8b99d123de26693ed6ea92a53469d5fbb7a",
+      "pngSha256": "dabbf2f4005311d3c9ac7758faa5d0db9ee9f7d523be121633acf3bf32c1a8e3"
+    },
+    "1_c102_mado": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "77aeafd8fb3e9b5105d4782066f3a467f50d9846266317b82c3535118015e9b9",
+      "pngSha256": "d6c2fa96e542c973e6f62e9ec39035639ab5663c8b90f1c03b36b57e1aebab5b"
+    }
+  },
+  "sha256": {
+    "body": "caf87e8ec2522e1cd9e470f3221fc584dce8548436d15ac92b2308cee0ae651e",
+    "door": "199aa3505d940edfdfaed1f90179ec76e1b57d8ccd0477be852bdda5e4df40bd",
+    "animation": "31c89b1a7ef81ef6147a102b6639332a732020252ba48800112e646c91b55199"
+  },
+  "processing": "Original physical source vertices/UVs/indices independently checked. Original BM ground/portal placement retained; hidden geometry below sourceY0 clipped. Source exposure RGB,24 nonphysical BM light faces and4 original PICA portal-mask marker faces omitted. Original foundation caps and rear follow actual profiles. Native fit and contact acceptance remain separate."
+}
