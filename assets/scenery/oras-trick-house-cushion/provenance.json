@@ -1,0 +1,33 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO372 -> AD165 -> MM279 -> GR629",
+  "model": "r110r0102_00_00",
+  "modelBchSha256": "336673b46f560347ad3d9f2f66ae2bb3ef0482e00834c66df536a957287c67af",
+  "textureBchSha256": "99ef99cbff40408e47965649c163a51b4ed16d31e052b66b8c2e3042db65a210",
+  "submesh": 2,
+  "component": 0,
+  "originalTriangles": 128,
+  "authoredClosureTriangles": 14,
+  "textureSize": [
+    64,
+    64
+  ],
+  "rgbaSha256": "7182f6aacc2f5d7bb321cf101bbbc00b07b56234e4fb46272a68b4a926df6e0d",
+  "pngSha256": "3ef3fb2292a7e98844a7b07850b0dbc0139d6ed2cdf7709e70a9504408c986d8",
+  "sourceBounds": [
+    -54.1331787109375,
+    1.0,
+    -233.3813018798828,
+    -36.82862091064453,
+    4.814080238342285,
+    -216.07679748535156
+  ],
+  "origin": [
+    -45.480899810791016,
+    1.0,
+    -224.7290496826172
+  ],
+  "uniformDivisor": 17.30455780029297,
+  "processing": "Original complete low floor cushion, original proportions, triangles, UV, opaque cloth texture and unlit white vertex RGBA retained. Exposed open underside closed at all sixteen exact original rim vertices; no floor, shadow or light source geometry. Uniform native one-cell fit and bottom-only .025 contact recess."
+}

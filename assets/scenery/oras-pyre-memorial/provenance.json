@@ -1,0 +1,43 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO86 -> AD53 -> MM47 -> GR301",
+  "model": "d108r0101_00_00",
+  "submesh": 0,
+  "sourceComponents": [
+    {
+      "firstTriangle": 12,
+      "triangles": 72
+    },
+    {
+      "firstTriangle": 1113,
+      "triangles": 36
+    },
+    {
+      "firstTriangle": 1133,
+      "triangles": 16
+    }
+  ],
+  "sourceTriangles": 124,
+  "authoredClosureTriangles": 79,
+  "modelBchSha256": "bc49e4041ce0598ad47ed8734b0e89eaf6d5fa90bce8d538e7e62c711ea3ab1f",
+  "textureBchSha256": "32627423b5e376dc58ad90c6839b81670b1d89ea8624b52500b3c61a7919d3d0",
+  "textureRgbaSha256": "23cc08f21ae7d817447c469a6fbc8750146ddef8e753798ccc381d6c68ce339f",
+  "pngSha256": "7c1e0582999bde6a78a4bc71d0336518c5548a82dc071eb20cd0fb195a6186ce",
+  "sourceFront": "+Z",
+  "sourceBounds": [
+    163.7593994140625,
+    0.5162001252174377,
+    92.63007354736328,
+    178.47860717773438,
+    21.067399978637695,
+    107.40149688720703
+  ],
+  "origin": [
+    171.11900329589844,
+    0.5162001252174377,
+    100.01578521728516
+  ],
+  "uniformDivisor": 14.719207763671875,
+  "processing": "One complete original memorial arch, stepped base and beveled plaque selected from the 106-instance cemetery batch. All124 source triangles, positions/UV and original opaque PNG preserved; grayscale vertex shading removed. Omitted base back closed along its exact angled source profile and underside, arch rear closed. Tiny original arch/plaque gaps gain perimeter skirts to the existing plinth/case surfaces, without duplicate internal caps. No cemetery floor, source shadow, light or neighboring prop is selected. Uniform native single blocked-cell fit; physical bottom recess only."
+}

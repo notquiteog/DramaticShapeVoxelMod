@@ -53,7 +53,8 @@
       "repair": "No source TEXCOORD stream. Retained original geometry and white vertex RGB with original alpha on a generated solid white 1px material; declared glow texture is unused. No source UV projection invented."
     },
     "Dedicated screen moved forward 0.01 source units (0.05% of width) to resolve exported coplanar casing/screen depth fight; UVs/topology unchanged.",
-    "Authored blue case rear, keyboard/frame rear and underside closures follow original exported rim; native open knee space retained. Original 170 triangles unchanged."
+    "Authored blue case rear, keyboard/frame rear and underside closures follow original exported rim; native open knee space retained. Original 170 triangles unchanged.",
+    "Normalized bottom-plane floating-point noise below 1e-6 is snapped to exact Y0 so physical contact caps share one datum. Upper source positions, UV and RGBA are unchanged."
   ],
   "parts": [
     {

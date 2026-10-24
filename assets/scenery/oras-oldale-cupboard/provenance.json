@@ -1,0 +1,29 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO230 -> AD115 -> MM171 -> GR513",
+  "model": "t102r0101_00_00",
+  "submesh": 10,
+  "modelBchSha256": "93158e5006309bdc48a0b2aa4d06edbd5405ad521398100e19eef3286ed275c0",
+  "textureBchSha256": "5f24ec31412d5ca4611cf5d4c46115f63937bc4a18afba8d77cc144ec86583d4",
+  "textureRgbaSha256": "50bb883abe9e5cbb608d81d28569b74839e6679c0830462c93021c1a06fbd7d9",
+  "pngSha256": "ec87b82e0cf223b3afd6a80afbb68d45a394f01b8bc746619150d04040be1f3f",
+  "sourceTriangles": 242,
+  "authoredClosureTriangles": 104,
+  "sourceFront": "+Z",
+  "sourceBounds": [
+    -232.0,
+    1.0,
+    -286.0,
+    -200.0,
+    30.0,
+    -272.0
+  ],
+  "origin": [
+    -216.0,
+    1.0,
+    -279.0
+  ],
+  "uniformDivisor": 32.0,
+  "processing": "All original case, six cups/handles, three dishes, two doors and drawer surfaces retained. Original UV/PNG alpha and chromatic ceramic vertex tints retained; grayscale source shading removed. Reviewed open vessel bottoms/handle ends, panels, case underside/ceiling and shelf backs/undersides closed. Lower shelf side caps omitted where source inner case walls already cover them. Original case rear T seams are retained; no blanket branched-rim fan. No source floor, shadow or light geometry. Uniform native fit and physical bottom recess."
+}

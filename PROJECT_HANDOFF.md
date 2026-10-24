@@ -331,6 +331,42 @@ See docs/HGSS_MARTS_2026-10-23.md and canonical JSONL for exact evidence/gaps.
 
 # Depth/fence/foliage release1.57.8 — 2026-10-23
 
+# Original floor cushion family — 2026-10-23
+
+All54 Emerald native floor cushions on13 rooms use the matching original ORAS
+Trick House source:128 original+14 exact underside triangles, original PNG/UV,
+source proportions, one walkable cell, .025 bottom-only recess and no coplanar
+planes. Native0.3.96 all-owner front/available-side/room views and nine source
+angles reviewed; all54 missing-PNG fallback checks pass. Every raw census hash
+unchanged; two native entry-script deltas match before/source/fallback runs.
+Five-game candidates2101; accepted source components2056/274maps. Every whole
+map stays unaccepted; remaining furniture and room families continue. See
+docs/ORAS_FLOOR_CUSHIONS_2026-10-23.md.
+
+# Native fallback archive-box ceiling correction — 2026-10-23
+
+The six RSE Birch-lab fallback archive boxes now fit uniformly around their
+fixed shelf support: top31.6 below the native32 ceiling instead of35. Exact box
+union preserves zero coplanar contact faces. Shelf/floor/room/native cells stay
+unchanged. Six missing-source native0.3.96 placements and three room overviews
+reviewed; geometry/atomic-fallback suites pass. See
+docs/NATIVE_ARCHIVE_BOX_CEILING_2026-10-23.md. Other room families continue.
+
+# Original freestanding lab case / native0.3.96 census — 2026-10-23
+
+Six RSE Birch-lab common/end owners now use the complete original ORAS
+44-book double-bay case plus independently fitted original taped carton.
+Exact original-rim closures and within-bay book-group X repairs remove source
+coplanar overlaps; no duplicate carton base, upper geometry below room ceiling,
+cap-only .025 contact recess. All six native0.3.96 source/fallback placements,
+nine source views and geometric tests pass. Five-game2161-map census rerun on
+0.3.96 with genuine fresh FRLG cache140: every native hash unchanged.2047 source
+candidates and2002 historically accepted components on261 maps; whole-map
+acceptance stays false. Other room/furniture families and native fallback
+archive-box ceiling clip remain pending. See docs/ORAS_BIRCH_FREECASE_2026-10-23.md.
+
+# Depth/fence/foliage release1.57.7 — 2026-10-23
+
 Explicit building contact-ring recess prevents coplanar ground closures while
 preserving portals, upper geometry and native floors. Authentic ORAS rails now
 cover21 native RSE families/196EM195RU195SA cells, with exact native-ground
@@ -7040,3 +7076,77 @@ Focused LuaJIT geometry/guard tests and39up/34down stair tests pass. No producti
 Scene/source-adapter prerequisite. Root cherry-picks only this focused batch and
 owns exact-ZIP shared-terrace/Oak's Lab smoke and release. See
 `docs/PEWTER_MUSEUM_STAIRS_2026-10-23.md`; no whole-game coverage claim.
+
+# Interior source worker batches — 2026-10-23
+
+Verified source continuation: 61 BDSP institution racks, 158 legacy PC/TV/bed
+contacts, 74 genuine ORAS china cupboards, 39 Oldale kitchen units, and 682
+common Kanto graves using original Mt. Pyre memorials.
+The census has 2161 unchanged native hashes; 1186 furniture candidates,
+1141 accepted components across 240 maps, complete-map acceptance false. Exact
+bed rims replace 7 overlapping old caps; all 12 furniture models pass geometric
+coplanar-intersection checks. Kitchen undersides exclude the internal base
+footprint instead of duplicating its lid. Native 0.3.95 isolated all-fixture
+captures inspected; missing-PNG fallbacks and focused suites pass. Official
+Linux shell reports PASS then exits 1 on shutdown. Scene/release integration
+remains root-owned. See docs/IMPORTED_INTERIOR_CONTACTS_2026-10-23.md,
+docs/ORAS_CHINA_CUPBOARD_2026-10-23.md and docs/ORAS_KITCHEN_SINK_2026-10-23.md.
+The cemetery evidence/occlusion limits are in docs/ORAS_PYRE_MEMORIAL_2026-10-23.md.
+Remaining room/furniture coverage is still in progress; no full-game claim.
+
+RSE continuation: exact common and wall-shadow grave drawings now use the
+original Mt. Pyre memorial at all 793 locations on 18 floors (E261/R266/S266).
+All individual contact sheets and final room overviews inspected on official
+0.3.95; 13 native direct-LOS occlusions per edition recorded in the component
+ledger. Missing-PNG Emerald/FireRed floors pass; native fallback grave bottoms
+now share the cap-only contact recess, all upper geometry unchanged. Eleven
+focused suites pass. Full census: 2161 unchanged hashes, all prior families
+unchanged, 1979 candidates, 1934 accepted components on 258 maps. Whole-map
+acceptance false; irregular Mt. Pyre floor/wall framing remains outstanding.
+Details: docs/RSE_PYRE_MEMORIALS_2026-10-23.md. Scene and release stay root-owned.
+
+Original ORAS Flower Shop open bookcase: all 33 common generic-home bookcases
+(E11/R11/S11), original case plus twenty books. Original flat per-book pigments
+replace vertex lighting. Exact book rims, exposed undersides and foot bottoms
+closed, buried caps omitted; four tiny original top-joint coplanar slivers
+removed at their source rim. 476 original +144 authored triangles, separate
+wood/book closures, source proportions and native apron retained. All 33 native
+first-person/overview entries and nine source views inspected; E11 missing-PNG
+fallback pass. Ten focused suites pass, all thirteen source models have zero
+positive-area coplanar intersections; regeneration byte-identical. Full census
+2161 hashes/family counts unchanged, 2012 candidates, 1967 accepted components
+on 258 maps, whole-map false. docs/ORAS_FLOWER_BOOKCASE_2026-10-23.md. Separate
+small-bookcase native family and room framing remain pending. Scene root-owned.
+
+Separate small-bookcase continuation verified all E5/R6/S6 locations with the
+same original bookcase source. Exact separate native art/collision guard;
+all 17 before-images, first-person entries and room overviews inspected.
+Missing-PNG fallback passes all 17; Ruby/Sapphire Game Corner's native two-cell
+entry-script closure is recorded separately and untouched. Three focused
+source/identity suites pass. Five-edition census hashes/families unchanged,
+2029 candidates, 1984 accepted components/258 maps, whole-map false. Original
+bookcase source now has 50 accepted placements. Room-boundary work continues.
+
+Original ORAS Birch lab case now covers all twelve Birch/Lanette wall cases
+(E4/R4/S4). Complete original case, two bins, two shelves and fifteen books:
+310 original +102 exact closure triangles. Source vertex RGBA lighting removed;
+one three-book group separates 0.06 source units to eliminate five original
+coplanar slivers. Exact tilted/collinear source rims retained; no duplicate
+shelf-back/end caps. Closed books, bins and outer case pass edge-owner tests,
+all fourteen source models pass coplanar geometry tests. All 12 final individual
+native entries/six overviews and nine source angles inspected; all 12 final
+missing-PNG fallback pass. Six focused suites and byte-identical regeneration
+pass. Full census 2161 hashes/families/prior candidates unchanged, 2041 candidates,
+1996 accepted components on 261 maps; whole-map false. See
+docs/ORAS_BIRCH_BOOKCASE_2026-10-23.md. Scene stays root-owned; free cases next.
+
+Native free-case fallback fix: only birch_free_books/birch_free_books_end opt
+into exact box union and Y0 contact recess. Original shelf/frame/box/lid shared
+faces overlapped; all internal/duplicate coplanar faces now removed while
+original UVs/upper dimensions/native cells stay fixed. Regression reproduces
+old overlap, proves zero coplanar faces plus exact union surface areas. Six
+focused suites pass; all six RSE native fixtures reviewed close/far/overview,
+hashes unchanged. Separate accepted-native-fixes.jsonl records this native-only
+scope. Existing archive-box top35 still clips room ceiling32; source case/box
+assembly is in progress. No new source-coverage acceptance. See
+docs/NATIVE_LAB_CASE_UNION_2026-10-23.md. Scene remains root-owned.

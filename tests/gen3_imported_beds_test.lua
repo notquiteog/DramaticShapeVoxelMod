@@ -6,16 +6,17 @@ V.require=function(n)return assert(modules[n],n)end
 modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local I=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
-assert(I.register(I.bedId));assert(S.info(I.bedId).parts==3)
+assert(I.register(I.bedId));assert(S.info(I.bedId).parts==6)
 local model=modules.ImportedInteriorBedData.oras_comfortable_bed;local source,closure=0,0
 for _,part in ipairs(model.parts)do if part.authored then closure=closure+#part.indices/3 else source=source+#part.indices/3 end end
-assert(source==534 and closure==90,'source bedding or closure provenance changed')
+assert(source==534 and closure==122,'source bedding or closure provenance changed')
 local vertices,fit=S.vertices(I.bedId,{width=32,depth=32,height=18,padding=.25})
 assert(fit.bounds[4]-fit.bounds[1]>20.5 and fit.bounds[6]-fit.bounds[3]>31.4 and fit.bounds[5]<12)
 for _,part in ipairs(vertices)do for _,v in ipairs(part.vertices)do assert(v[1]>=.25 and v[1]<=31.75 and v[3]>=.25 and v[3]<=31.75 and v[2]>=0,'bed entered walking apron')end end
 local build=S.buildBatches;local failure=false
 S.buildBatches=function(list,_,opts)
  assert(#list==1 and list[1].model==I.bedId and list[1].x==0 and list[1].z==48 and list[1].y==2)
+ assert(list[1].fit.groundInset==.025,'bed source underside meets native floor plane')
  if failure then return nil,'missing bed texture'end;return opts.parts
 end
 for _,version in ipairs{'ruby','sapphire','emerald'}do
@@ -35,3 +36,11 @@ for _,version in ipairs{'ruby','sapphire','emerald'}do
 end
 S.buildBatches=build
 print('PASS full-blocked native Hoenn beds, original source proportions/bedding, authored closure, clearance and missing-resource/native fallback')
+local edges={}
+local function point(v)return string.format('%.7f/%.7f/%.7f',v[1],v[2],v[3])end
+for _,p in ipairs(model.parts)do for i=1,#p.indices,3 do
+ local q={};for j=0,2 do q[#q+1]=point(p.vertices[p.indices[i+j]])end
+ for j=1,3 do local a,b=q[j],q[j%3+1];local k=a<b and a..':'..b or b..':'..a;edges[k]=(edges[k]or 0)+1 end
+end end
+for _,count in pairs(edges)do assert(count==2,'original bed rim remains open or has an internal duplicate edge')end
+print('PASS exact original bed rims form closed manifold surfaces')

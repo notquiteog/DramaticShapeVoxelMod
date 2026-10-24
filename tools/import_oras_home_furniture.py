@@ -24,7 +24,7 @@ def source_part(sub, texture, selected=None):
         role='source_house_furniture',alphaMode='cutout',opacity=1,wrapS='repeat',wrapT='repeat')
 
 
-def close_rims(part, expected, sample):
+def close_rims(part, expected, sample, texture_size=64):
     """Close only reviewed boundary loops along their original source rims."""
     points={}
     edges=collections.Counter()
@@ -71,7 +71,7 @@ def close_rims(part, expected, sample):
             center[1]=min(v[1] for v in ps)
         else:
             need(max(v[1] for v in ps)-min(v[1] for v in ps)<.001,'unreviewed nonhorizontal source rim')
-        uv=[(sample[0]+.5)/64,(sample[1]+.5)/64]
+        uv=[(sample[0]+.5)/texture_size,(sample[1]+.5)/texture_size]
         vs=[center+uv+[1]]+[list(p)+uv+[1]for p in ps]
         # Oppose each original directed edge; no source triangles are edited.
         indices=[]

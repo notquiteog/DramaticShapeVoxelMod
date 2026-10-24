@@ -1,0 +1,31 @@
+{
+  "source": "User-supplied 361484.zip",
+  "game": "Pokemon Brilliant Diamond / Shining Pearl",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK / ILCA",
+  "archiveSha256": "0a66bf07bc636fd3a40e32647eb494593431ad5a99be85585770b306a3ea22af",
+  "scene": "1F.dae",
+  "sceneSha256": "25d1957f0139cd0d4210f611693fdff506eb13035161e086316e3b62d75da001",
+  "geometry": "P_C_001_Server_01-mesh",
+  "texture": "T_C_001_Server_01_C.png",
+  "texturePngSha256": "a8054ec13bb3e99fdc169f9b9fe7465a114007574282c7465e0c11622978515e",
+  "textureRgbaSha256": "634a302437603b6adc84e59df271ce017a3d020132248f79d58b8921e951b3c0",
+  "sourceBounds": [
+    0.14152534900000002,
+    -2.9198583087818498e-08,
+    0.17074999999999999,
+    0.14850000000000002,
+    0.014999571093508116,
+    0.17924948083685807
+  ],
+  "origin": [
+    0.14501267450000002,
+    -2.9198583087818498e-08,
+    0.17499974041842903
+  ],
+  "uniformDivisor": 0.006974650999999998,
+  "sourceTriangles": 36,
+  "authoredClosureTriangles": 6,
+  "sourceFront": "+Z",
+  "contactPrecisionTolerance": 1e-06,
+  "processing": "Selected original static server only. Original Collada hierarchy/meter/Y-up transforms, positions, UVs and original PNG retained; uniformly normalized. Only original underside Y precision noise below 1e-6 normalized units snaps to the bottom plane; upper geometry stays exact. One authored underside cap follows the existing six-edge rim. RGB is white; no source shadow planes, floors, glow, lighting/effect textures or other room furniture. Native fits preserve source proportions and recess only Y0 contact vertices below unchanged native floors."
+}

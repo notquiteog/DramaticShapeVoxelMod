@@ -33,6 +33,7 @@ function M.install(recipes)
  -- Pair-local matching leaves identical numeric IDs in other rooms alone.
  for _,mid in ipairs({0x291,0x293,0x2be,0x2bf,0x2d8,0x2d9})do
   add('tower_grave_'..mid,'building__rom_082d4efc',{{mid}},'fr_tower_grave',0x282)
+  recipes[#recipes].groundInset=.025
  end
  add('room_bed','player_house',{{0x283,0x284,0x285},{0x28b,0x28c,0x28d},{0x293,0x294,0x295}},'fr_bed')
  add('room_computer','player_house',{{0x287,0x20},{0x28f,0x86},{0x297,0x5a}},'fr_room_pc')
@@ -215,17 +216,29 @@ end
 function M.append(p,source,box,sample,emit)
  if not p.recipe.design then return false end
  local x,z=p.cx*16,p.cy*16
- local function point(a)return {a[1]+x,a[2],a[3]+z}end
- return Geometry.draw(p.recipe.design,{
+ local function height(y)
+  if p.recipe.groundInset and math.abs(y)<1e-7 then return -p.recipe.groundInset end
+  return y
+ end
+ local function point(a)return {a[1]+x,height(a[2]),a[3]+z}end
+ local joined=p.recipe.joinedBoxes and{}or nil
+ local result=Geometry.draw(p.recipe.design,{
   sample=sample,recipe=p.recipe,width=p.w,height=p.d,
   face=function(vertices,uv,shade)
    local points={};for i,a in ipairs(vertices)do points[i]=point(a)end
    emit(points,uv,shade or 1)
   end,
   box=function(l,b,n,r,h,s,uv)
+   b,h=height(b),height(h)
+   if joined then joined[#joined+1]={lo={l+x,b,n+z},hi={r+x,h,s+z},uv=uv};return end
    box(l+x,b,n+z,r+x,h,s+z,uv)
    emit({{l+x,b,s+z},{r+x,b,s+z},{r+x,b,n+z},{l+x,b,n+z}},uv,.65)
   end,
   source=function(sx,sy,w,h,a,b,c,d)source(sx,sy,w,h,point(a),point(b),point(c),point(d))end})
+ if joined then
+  local union=V and V.require('Gen3BoxUnion')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3BoxUnion.lua')
+  union.append(joined,emit)
+ end
+ return result
 end
 return M
