@@ -1,3 +1,20 @@
+# Exact civic floors; stale Scene door paths held — 2026-10-23
+
+Source-proven native Cerulean Gym lawn and Saffron Dojo/Center/Mart paving now
+require four complete regional drawings in Gen3Civic. All seven FRLG placements
+pass native.96 views/entry/return or no-warp projection with unchanged hashes;
+masked-source fallbacks and Oak's Lab regression pass.19 focused Lua suites,
+actual FR/LG atlas proof and review-history regression pass. Five ground-held
+placements accepted, but visual review found stale Scene direct paths bypassing
+standard Center/plain Viridian door draw/release/ownership. Root Scene remains
+unchanged. Scratch-only removal patch restores all18 Center doors/edition plus
+plain Viridian; native candidate results are separate from production evidence.
+Current canonical per edition82 eligible/63 accepted/54 unmatched,19 explicit
+Scene-door holds;136 assembly denominator unchanged. Later failed review now
+invalidates older acceptance. Root must integrate scratch scene-dispatch.patch
+and replace holds after final source verification. See KANTO_CIVIC_FLOORS_2026-10-23.md.
+Continue missing regional source families; no bump/push/release.
+
 # Wider One Island Center — 2026-10-23
 
 Exact7×6 One Island native Center now reuses genuine closed HGSS Center/sliding

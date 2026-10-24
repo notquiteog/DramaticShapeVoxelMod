@@ -38,6 +38,26 @@ local function hoennGround(g)
  -- A third-party recipe reusing a label is not proof of the same source art.
  if spec and last and last[1]==spec[2]and last[#last]==spec[3]then return spec[1]end
 end
+-- Exact Kanto service drawings have native grass/paving at their foundation
+-- corners. Nearby reviewed paths/grass must not replace those original floors.
+local kantoFloors={
+ {pair='general__rom_082d4af4',kind='gym',ground=1,rows={{313,314,314,314,314,314,315},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{336,337,338,339,340,341,342},{344,345,346,347,348,349,350}}},
+ {pair='general__rom_082d4b9c',kind='gym',ground=0x2e5,rows={{816,817,799,817,799,818},{824,825,825,825,825,826},{832,833,833,833,833,834},{821,822,823,811,812,827},{829,830,831,819,820,835}}},
+ {pair='general__rom_082d4b9c',kind='center',ground=0x2e5,rows={{764,765,766,774,767},{72,73,74,75,391},{80,81,82,83,399},{88,89,90,91,407},{735,97,98,390,775}}},
+ {pair='general__rom_082d4b9c',kind='mart',ground=0x2e5,rows={{760,761,762,763},{48,49,50,51},{56,57,58,59},{758,65,98,759}}},
+}
+local function kantoGround(g,cells)
+ for _,spec in ipairs(kantoFloors)do
+  if g.pair==spec.pair and g.kind==spec.kind and g.width==#spec.rows[1]and g.depth==#spec.rows then
+   local match=true
+   for y,row in ipairs(spec.rows)do for x,mid in ipairs(row)do
+    local q=cells[(g.cx+x-1)..':'..(g.cy+y-1)]
+    if not(q and q.civic==g and q.pair==spec.pair and q.mid==mid and not(q.prop or q.stageHidden or q.boundary))then match=false end
+   end end
+   if match then return spec.ground end
+  end
+ end
+end
 -- Reviewed NORMAL-layer roof overhangs whose under atlas contains only native
 -- terrain. Exact source MID at each column matters: nearby roof tiles can have
 -- tree crowns or building pixels in their bottom layer. Coordinates are zero
@@ -192,9 +212,9 @@ function M.prepare(cells,gyms,families)
  -- This also supplies raised foundations: original facade/roof pixels must
  -- never be stretched down the retaining face below a building.
  for _,g in ipairs(out)do
-  local fixed=hoennGround(g);g.sourceGround=fixed
+  local fixed=hoennGround(g)or kantoGround(g,cells);g.sourceGround=fixed
   g.sourceUnderlays={}
-  local under=fixed and g.ts and g.ts.layered and hoennUnderlays[g.custom.name]
+  local under=fixed and g.custom and g.ts and g.ts.layered and hoennUnderlays[g.custom.name]
   for x,mid in ipairs(under or{})do
    if g.rows[1][x]==mid then g.sourceUnderlays[(g.cx+x-1)..':'..g.cy]=mid end
   end

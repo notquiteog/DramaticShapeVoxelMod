@@ -25,7 +25,8 @@ SOURCES={
  'hgss_pewter_house':'assets/scenery/pewter-house/provenance.json',
  **{k:'assets/scenery/pallet-buildings/'+k+'/provenance.json'for k in['hgss_pallet_red','hgss_pallet_rival','hgss_pallet_oak']},
 }
-def summarize(paths,output,accepted):
+def summarize(paths,output,accepted,rejected=None):
+ rejected={}if rejected is None else rejected
  root=Path(__file__).resolve().parents[1];sources={}
  for key,path in SOURCES.items():
   p=root/path;d=json.loads(p.read_text());sources[key]={k:d[k]for k in['sourcePage','archiveSha256']};sources[key]['modelSha256']=d.get('sourceModelSha256',d.get('sourceDaeSha256'));sources[key]['provenanceSha256']=hashlib.sha256(p.read_bytes()).hexdigest()
@@ -49,7 +50,11 @@ def summarize(paths,output,accepted):
     q['gap']=None if model else('Matching complete native Mart location/drawing/permission adapter pending.'if g['family']=='mart'else'Matching regional source selection and complete native adapter pending.')
     candidate=next((c for c in candidates if c['map']==r['map']and c['x']==g['x']and c['y']==g['y']),None)
     if candidate and not model:q['sourceCandidate']=candidate;q['gap']=candidate['gap']
-    q['renderedGap']=None if not model or q['renderedAccepted']else(matched[0]['renderedGap']if matched else'Native building/warp review passed; shared native-ground donor assessment pending.'if model in('hgss_cerulean_gym','hgss_saffron_dojo')or model=='hgss_kanto_center'and r['map']in('FR_SAFFRON_CITY','FR_SAFFRON_CITY_CONNECTION')or model=='hgss_kanto_mart'and r['map']in('FR_SAFFRON_CITY','FR_SAFFRON_CITY_CONNECTION')else'Native rendered review not recorded.')
+    rejected_proof=rejected.get(accepted_key)
+    if rejected_proof:
+     assert rejected_proof['nativeHash']==r['nativeHash'],'rejected review native map hash changed'
+     if rejected_proof.get('sourceModel'):assert rejected_proof['sourceModel']==model,'rejected review source family changed'
+    q['renderedGap']=None if not model or q['renderedAccepted']else(rejected_proof['renderedGap']if rejected_proof and rejected_proof.get('renderedGap')else matched[0]['renderedGap']if matched else'Native building/warp review passed; shared native-ground donor assessment pending.'if model in('hgss_cerulean_gym','hgss_saffron_dojo')or model=='hgss_kanto_center'and r['map']in('FR_SAFFRON_CITY','FR_SAFFRON_CITY_CONNECTION')or model=='hgss_kanto_mart'and r['map']in('FR_SAFFRON_CITY','FR_SAFFRON_CITY_CONNECTION')else'Native rendered review not recorded.')
     civics.append(q);families[(r['edition'],g['family'])].append((r['map'],q))
    row={k:r[k]for k in['edition','map','mapType','outdoor','pair','width','height','supported','nativeHash','unclassifiedBlockedCells']}
    row.update(scope='exterior_buildings_only',runtime=r.get('runtime','v0.3.95'),inventoryOnly=True,assemblies=civics,modernEligible=sum(bool(g['modernEligible'])for g in civics),renderedAccepted=sum(g['renderedAccepted']for g in civics),unmatchedAssemblies=sum(not g['modernEligible']for g in civics))
@@ -64,15 +69,23 @@ def summarize(paths,output,accepted):
   for(ed,family),values in sorted(families.items()):
    w.writerow([ed,family,len(values),sum(bool(g['modernEligible'])for _,g in values),sum(g['renderedAccepted']for _,g in values),'|'.join(sorted({m for m,_ in values})),'|'.join(sorted({g['modernEligible']for _,g in values if g['modernEligible']})),'|'.join(sorted({g['gap']for _,g in values if g['gap']})),'|'.join(sorted({g['renderedGap']for _,g in values if g['renderedGap']}))])
  print(json.dumps(counts,sort_keys=True))
-if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('ledgers',type=Path,nargs='+');p.add_argument('--output',type=Path,default=Path('docs/coverage'));p.add_argument('--accepted',type=Path,nargs='*',default=[]);a=p.parse_args()
- accepted={}
- for path in a.accepted:
+def load_reviews(paths):
+ accepted={};rejected={}
+ for path in paths:
   for r in json.loads(path.read_text()):
    assert not r.get('missingAssets'),'fallback cannot be rendered acceptance'
-   if r.get('renderedVerified')is False:continue
-   assert r.get('returned')or r.get('nonEnterable')and r.get('renderedVerified')
    key=(r['edition'],r['map'],r['x'],r['y'])
+   if r.get('renderedVerified')is False:
+    accepted.pop(key,None);rejected[key]=r;continue
+   assert r.get('returned')or r.get('nonEnterable')and r.get('renderedVerified')
    if key in accepted:assert accepted[key]['nativeHash']==r['nativeHash'],'contradictory accepted native hashes'
-   accepted[key]=r
- summarize(a.ledgers,a.output,accepted)
+   accepted[key]=r;rejected.pop(key,None)
+ return accepted,rejected
+if __name__=='__main__':
+ p=argparse.ArgumentParser();p.add_argument('ledgers',type=Path,nargs='+');p.add_argument('--output',type=Path,default=Path('docs/coverage'));p.add_argument('--accepted',type=Path,nargs='*',default=[]);a=p.parse_args()
+ current_holds=Path(__file__).resolve().parents[1]/'docs/coverage/frlg-exterior-render-holds-2026-10-23.json'
+ # Checked-in current failures supersede historical screenshots until verified
+ # integration removes the matching hold; rerunning an older command cannot
+ # silently restore stale acceptance.
+ accepted,rejected=load_reviews(a.accepted+([current_holds]if current_holds.exists()else[]))
+ summarize(a.ledgers,a.output,accepted,rejected)
