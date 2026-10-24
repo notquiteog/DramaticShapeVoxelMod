@@ -17,6 +17,7 @@ for _,part in ipairs(verts)do for _,v in ipairs(part.vertices)do assert(v[1]>=.2
 local build=S.buildBatches;local failure=false
 S.buildBatches=function(list,_,opts)
  assert(#list==1 and list[1].model==I.tvId and list[1].y==11 and list[1].z==32)
+ assert(list[1].fit.groundInset==.025,'TV source underside meets native cabinet plane')
  if failure then return nil,'texture absent'end
  return opts.parts
 end

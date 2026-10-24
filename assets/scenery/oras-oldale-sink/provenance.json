@@ -1,0 +1,31 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO230 -> AD115 -> MM171 -> GR513",
+  "model": "t102r0101_00_00",
+  "submesh": 12,
+  "modelBchSha256": "93158e5006309bdc48a0b2aa4d06edbd5405ad521398100e19eef3286ed275c0",
+  "textureBchSha256": "5f24ec31412d5ca4611cf5d4c46115f63937bc4a18afba8d77cc144ec86583d4",
+  "textureRgbaSha256": "02ab38aa3067d14c61795691527e68dabcc7872e2f17c8e36fb303940becd25c",
+  "pngSha256": "f33add91e903d9c4908f3199edfb59985f94fdb2f7899dc1cd80be87c16358cb",
+  "sourceTriangles": 484,
+  "authoredClosureTriangles": 86,
+  "counterJoinArea": 132.0,
+  "sourceFront": "+X",
+  "nativeQuarterTurn": 1,
+  "sourceBounds": [
+    -287.0,
+    0.9999905228614807,
+    -287.0,
+    -271.0,
+    22.810619354248047,
+    -235.0
+  ],
+  "origin": [
+    -279.0,
+    0.9999905228614807,
+    -261.0
+  ],
+  "uniformDivisor": 16.0,
+  "processing": "Complete original sink basin, faucet, worktop, drawers, three dishes and two colored cups. Original positions/UV/PNG and chromatic ceramic tints retained; grayscale vertex shading removed. Vessel bottoms, actual spout top and base underside closed. Counter underside is a disjoint annulus around the open base top; no duplicate coplanar internal caps. Source collinear countertop T seam has zero area and receives no face. Faucet stem bottom joins the original counter surface without another cap. No floor, shadow or source light geometry. Uniform native blocked-body fit with quarter-turn and physical bottom recess."
+}

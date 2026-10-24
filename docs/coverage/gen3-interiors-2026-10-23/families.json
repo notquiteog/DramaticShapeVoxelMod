@@ -1,53 +1,8 @@
 {
-  "schema": 1,
-  "engine": "0.3.95",
+  "engine": "0.3.96",
   "evidence": "native adapter census",
-  "renderedAccepted": false,
-  "totals": {
-    "emerald": {
-      "maps": 519,
-      "rooms": 301,
-      "furniture": 1830,
-      "candidateFurniture": 90,
-      "nativeWallFinishRooms": 79
-    },
-    "ruby": {
-      "maps": 395,
-      "rooms": 231,
-      "furniture": 1210,
-      "candidateFurniture": 92,
-      "nativeWallFinishRooms": 84
-    },
-    "sapphire": {
-      "maps": 395,
-      "rooms": 231,
-      "furniture": 1210,
-      "candidateFurniture": 92,
-      "nativeWallFinishRooms": 84
-    },
-    "firered": {
-      "maps": 426,
-      "rooms": 253,
-      "furniture": 2937,
-      "candidateFurniture": 28,
-      "nativeWallFinishRooms": 65
-    },
-    "leafgreen": {
-      "maps": 426,
-      "rooms": 253,
-      "furniture": 2937,
-      "candidateFurniture": 28,
-      "nativeWallFinishRooms": 65
-    }
-  },
-  "limitations": [
-    "Candidate placement is not proof of successful texture/mesh upload or rendered acceptance.",
-    "Furniture extraction does not prove every native object was recognized.",
-    "Native continuous room finishes are not claims of imported modern room coverage."
-  ],
   "families": {
     "birch_books": {
-      "kind": "designed",
       "design": "em_lab_books",
       "editions": {
         "emerald": {
@@ -72,10 +27,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_birch_bookcase"
+      ]
     },
     "birch_computer": {
-      "kind": "designed",
       "design": "em_lab_computer",
       "editions": {
         "emerald": {
@@ -100,10 +57,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "birch_east_book_stacks": {
-      "kind": "labStacks",
       "design": null,
       "editions": {
         "ruby": {
@@ -119,10 +76,10 @@
           ]
         }
       },
+      "kind": "labStacks",
       "sourceCandidates": []
     },
     "birch_east_small_desk": {
-      "kind": "labSideDesk",
       "design": null,
       "editions": {
         "ruby": {
@@ -138,10 +95,10 @@
           ]
         }
       },
+      "kind": "labSideDesk",
       "sourceCandidates": []
     },
     "birch_emerald_book_stack_562": {
-      "kind": "labStacks",
       "design": null,
       "editions": {
         "emerald": {
@@ -152,10 +109,10 @@
           ]
         }
       },
+      "kind": "labStacks",
       "sourceCandidates": []
     },
     "birch_emerald_book_stack_666": {
-      "kind": "labStacks",
       "design": null,
       "editions": {
         "emerald": {
@@ -165,10 +122,10 @@
           ]
         }
       },
+      "kind": "labStacks",
       "sourceCandidates": []
     },
     "birch_floor_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "emerald": {
@@ -190,10 +147,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "birch_free_books": {
-      "kind": "designed",
       "design": "em_lab_free_books",
       "editions": {
         "emerald": {
@@ -215,10 +172,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_birch_freestanding_case"
+      ]
     },
     "birch_free_books_end": {
-      "kind": "designed",
       "design": "em_lab_free_books",
       "editions": {
         "emerald": {
@@ -240,10 +199,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_birch_freestanding_case"
+      ]
     },
     "birch_machine": {
-      "kind": "labMachine",
       "design": null,
       "editions": {
         "emerald": {
@@ -265,10 +226,10 @@
           ]
         }
       },
+      "kind": "labMachine",
       "sourceCandidates": []
     },
     "birch_native_seat_569": {
-      "kind": "designed",
       "design": "em_lab_seat_pad",
       "editions": {
         "emerald": {
@@ -290,10 +251,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "birch_native_seat_577": {
-      "kind": "designed",
       "design": "em_lab_seat_pad",
       "editions": {
         "emerald": {
@@ -315,10 +276,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "birch_native_seat_585": {
-      "kind": "designed",
       "design": "em_lab_seat_pad",
       "editions": {
         "emerald": {
@@ -340,10 +301,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "birch_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "emerald": {
@@ -365,10 +326,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "birch_research_desk": {
-      "kind": "designed",
       "design": "em_lab_desk",
       "editions": {
         "emerald": {
@@ -390,10 +351,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "birch_server": {
-      "kind": "designed",
       "design": "em_lab_server",
       "editions": {
         "emerald": {
@@ -415,10 +376,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "designed",
+      "sourceCandidates": [
+        "bdsp_galactic_server"
+      ]
     },
     "birch_side_cupboard": {
-      "kind": "labSideCabinet",
       "design": null,
       "editions": {
         "emerald": {
@@ -443,10 +406,10 @@
           ]
         }
       },
+      "kind": "labSideCabinet",
       "sourceCandidates": []
     },
     "birch_south_book_stacks": {
-      "kind": "labStacks",
       "design": null,
       "editions": {
         "emerald": {
@@ -468,10 +431,10 @@
           ]
         }
       },
+      "kind": "labStacks",
       "sourceCandidates": []
     },
     "birch_south_workstation": {
-      "kind": "labWorkstation",
       "design": null,
       "editions": {
         "emerald": {
@@ -496,10 +459,10 @@
           ]
         }
       },
+      "kind": "labWorkstation",
       "sourceCandidates": []
     },
     "birch_southeast_workstation": {
-      "kind": "labWorkstation",
       "design": null,
       "editions": {
         "emerald": {
@@ -521,10 +484,10 @@
           ]
         }
       },
+      "kind": "labWorkstation",
       "sourceCandidates": []
     },
     "birch_starter_desk": {
-      "kind": "designed",
       "design": "em_lab_starter",
       "editions": {
         "emerald": {
@@ -546,10 +509,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "birch_wall_note_524": {
-      "kind": "designed",
       "design": "em_lab_wall_note",
       "editions": {
         "emerald": {
@@ -574,10 +537,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "birch_wall_note_525": {
-      "kind": "designed",
       "design": "em_lab_wall_note",
       "editions": {
         "emerald": {
@@ -599,10 +562,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "center_2f_gate": {
-      "kind": "centerGate",
       "design": null,
       "editions": {
         "firered": {
@@ -654,10 +617,10 @@
           ]
         }
       },
+      "kind": "centerGate",
       "sourceCandidates": []
     },
     "center_2f_left_counter": {
-      "kind": "centerUpperCounter",
       "design": null,
       "editions": {
         "firered": {
@@ -709,10 +672,10 @@
           ]
         }
       },
+      "kind": "centerUpperCounter",
       "sourceCandidates": []
     },
     "center_2f_left_return": {
-      "kind": "centerUpperCounter",
       "design": null,
       "editions": {
         "firered": {
@@ -764,10 +727,10 @@
           ]
         }
       },
+      "kind": "centerUpperCounter",
       "sourceCandidates": []
     },
     "center_2f_link_counter_870": {
-      "kind": "centerUpperCounter",
       "design": null,
       "editions": {
         "firered": {
@@ -819,10 +782,10 @@
           ]
         }
       },
+      "kind": "centerUpperCounter",
       "sourceCandidates": []
     },
     "center_2f_link_counter_871": {
-      "kind": "centerUpperCounter",
       "design": null,
       "editions": {
         "firered": {
@@ -874,10 +837,10 @@
           ]
         }
       },
+      "kind": "centerUpperCounter",
       "sourceCandidates": []
     },
     "center_2f_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -931,10 +894,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "center_2f_terminal_758": {
-      "kind": "centerUpperTerminal",
       "design": "fr_upper_pc",
       "editions": {
         "firered": {
@@ -986,10 +949,10 @@
           ]
         }
       },
+      "kind": "centerUpperTerminal",
       "sourceCandidates": []
     },
     "center_counter_701": {
-      "kind": "counter",
       "design": null,
       "editions": {
         "firered": {
@@ -1005,10 +968,10 @@
           ]
         }
       },
+      "kind": "counter",
       "sourceCandidates": []
     },
     "center_counter_left": {
-      "kind": "centerWing",
       "design": null,
       "editions": {
         "firered": {
@@ -1060,10 +1023,10 @@
           ]
         }
       },
+      "kind": "centerWing",
       "sourceCandidates": []
     },
     "center_counter_right": {
-      "kind": "centerWing",
       "design": null,
       "editions": {
         "firered": {
@@ -1115,10 +1078,10 @@
           ]
         }
       },
+      "kind": "centerWing",
       "sourceCandidates": []
     },
     "center_escalator_down": {
-      "kind": "escalator",
       "design": null,
       "editions": {
         "firered": {
@@ -1170,10 +1133,10 @@
           ]
         }
       },
+      "kind": "escalator",
       "sourceCandidates": []
     },
     "center_escalator_up": {
-      "kind": "escalator",
       "design": null,
       "editions": {
         "firered": {
@@ -1225,10 +1188,10 @@
           ]
         }
       },
+      "kind": "escalator",
       "sourceCandidates": []
     },
     "center_front_desk": {
-      "kind": "centerCounter",
       "design": null,
       "editions": {
         "firered": {
@@ -1280,10 +1243,10 @@
           ]
         }
       },
+      "kind": "centerCounter",
       "sourceCandidates": []
     },
     "center_healer": {
-      "kind": "centerHealer",
       "design": null,
       "editions": {
         "emerald": {
@@ -1306,6 +1269,54 @@
             "EM_SLATEPORT_CITY_POKEMON_CENTER_1F",
             "EM_SOOTOPOLIS_CITY_POKEMON_CENTER_1F",
             "EM_VERDANTURF_TOWN_POKEMON_CENTER_1F"
+          ]
+        },
+        "firered": {
+          "count": 19,
+          "maps": [
+            "FR_CELADON_CITY_POKEMON_CENTER_1F",
+            "FR_CERULEAN_CITY_POKEMON_CENTER_1F",
+            "FR_CINNABAR_ISLAND_POKEMON_CENTER_1F",
+            "FR_FIVE_ISLAND_POKEMON_CENTER_1F",
+            "FR_FOUR_ISLAND_POKEMON_CENTER_1F",
+            "FR_FUCHSIA_CITY_POKEMON_CENTER_1F",
+            "FR_INDIGO_PLATEAU_POKEMON_CENTER_1F",
+            "FR_LAVENDER_TOWN_POKEMON_CENTER_1F",
+            "FR_PEWTER_CITY_POKEMON_CENTER_1F",
+            "FR_ROUTE_10_POKEMON_CENTER_1F",
+            "FR_ROUTE_4_POKEMON_CENTER_1F",
+            "FR_SAFFRON_CITY_POKEMON_CENTER_1F",
+            "FR_SEVEN_ISLAND_POKEMON_CENTER_1F",
+            "FR_SIX_ISLAND_POKEMON_CENTER_1F",
+            "FR_THREE_ISLAND_POKEMON_CENTER_1F",
+            "FR_TWO_ISLAND_POKEMON_CENTER_1F",
+            "FR_VERMILION_CITY_POKEMON_CENTER_1F",
+            "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
+            "SEVII_ONE_ISLAND_POKECENTER"
+          ]
+        },
+        "leafgreen": {
+          "count": 19,
+          "maps": [
+            "FR_CELADON_CITY_POKEMON_CENTER_1F",
+            "FR_CERULEAN_CITY_POKEMON_CENTER_1F",
+            "FR_CINNABAR_ISLAND_POKEMON_CENTER_1F",
+            "FR_FIVE_ISLAND_POKEMON_CENTER_1F",
+            "FR_FOUR_ISLAND_POKEMON_CENTER_1F",
+            "FR_FUCHSIA_CITY_POKEMON_CENTER_1F",
+            "FR_INDIGO_PLATEAU_POKEMON_CENTER_1F",
+            "FR_LAVENDER_TOWN_POKEMON_CENTER_1F",
+            "FR_PEWTER_CITY_POKEMON_CENTER_1F",
+            "FR_ROUTE_10_POKEMON_CENTER_1F",
+            "FR_ROUTE_4_POKEMON_CENTER_1F",
+            "FR_SAFFRON_CITY_POKEMON_CENTER_1F",
+            "FR_SEVEN_ISLAND_POKEMON_CENTER_1F",
+            "FR_SIX_ISLAND_POKEMON_CENTER_1F",
+            "FR_THREE_ISLAND_POKEMON_CENTER_1F",
+            "FR_TWO_ISLAND_POKEMON_CENTER_1F",
+            "FR_VERMILION_CITY_POKEMON_CENTER_1F",
+            "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
+            "SEVII_ONE_ISLAND_POKECENTER"
           ]
         },
         "ruby": {
@@ -1349,60 +1360,12 @@
             "SA_SOOTOPOLIS_CITY_POKEMON_CENTER_1F",
             "SA_VERDANTURF_TOWN_POKEMON_CENTER_1F"
           ]
-        },
-        "firered": {
-          "count": 19,
-          "maps": [
-            "FR_CELADON_CITY_POKEMON_CENTER_1F",
-            "FR_CERULEAN_CITY_POKEMON_CENTER_1F",
-            "FR_CINNABAR_ISLAND_POKEMON_CENTER_1F",
-            "FR_FIVE_ISLAND_POKEMON_CENTER_1F",
-            "FR_FOUR_ISLAND_POKEMON_CENTER_1F",
-            "FR_FUCHSIA_CITY_POKEMON_CENTER_1F",
-            "FR_INDIGO_PLATEAU_POKEMON_CENTER_1F",
-            "FR_LAVENDER_TOWN_POKEMON_CENTER_1F",
-            "FR_PEWTER_CITY_POKEMON_CENTER_1F",
-            "FR_ROUTE_10_POKEMON_CENTER_1F",
-            "FR_ROUTE_4_POKEMON_CENTER_1F",
-            "FR_SAFFRON_CITY_POKEMON_CENTER_1F",
-            "FR_SEVEN_ISLAND_POKEMON_CENTER_1F",
-            "FR_SIX_ISLAND_POKEMON_CENTER_1F",
-            "FR_THREE_ISLAND_POKEMON_CENTER_1F",
-            "FR_TWO_ISLAND_POKEMON_CENTER_1F",
-            "FR_VERMILION_CITY_POKEMON_CENTER_1F",
-            "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
-            "SEVII_ONE_ISLAND_POKECENTER"
-          ]
-        },
-        "leafgreen": {
-          "count": 19,
-          "maps": [
-            "FR_CELADON_CITY_POKEMON_CENTER_1F",
-            "FR_CERULEAN_CITY_POKEMON_CENTER_1F",
-            "FR_CINNABAR_ISLAND_POKEMON_CENTER_1F",
-            "FR_FIVE_ISLAND_POKEMON_CENTER_1F",
-            "FR_FOUR_ISLAND_POKEMON_CENTER_1F",
-            "FR_FUCHSIA_CITY_POKEMON_CENTER_1F",
-            "FR_INDIGO_PLATEAU_POKEMON_CENTER_1F",
-            "FR_LAVENDER_TOWN_POKEMON_CENTER_1F",
-            "FR_PEWTER_CITY_POKEMON_CENTER_1F",
-            "FR_ROUTE_10_POKEMON_CENTER_1F",
-            "FR_ROUTE_4_POKEMON_CENTER_1F",
-            "FR_SAFFRON_CITY_POKEMON_CENTER_1F",
-            "FR_SEVEN_ISLAND_POKEMON_CENTER_1F",
-            "FR_SIX_ISLAND_POKEMON_CENTER_1F",
-            "FR_THREE_ISLAND_POKEMON_CENTER_1F",
-            "FR_TWO_ISLAND_POKEMON_CENTER_1F",
-            "FR_VERMILION_CITY_POKEMON_CENTER_1F",
-            "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
-            "SEVII_ONE_ISLAND_POKECENTER"
-          ]
         }
       },
+      "kind": "centerHealer",
       "sourceCandidates": []
     },
     "center_map": {
-      "kind": "cabinet",
       "design": "fr_native_cabinet",
       "editions": {
         "firered": {
@@ -1454,10 +1417,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "center_medical_cabinet": {
-      "kind": "centerMedical",
       "design": null,
       "editions": {
         "firered": {
@@ -1509,10 +1472,10 @@
           ]
         }
       },
+      "kind": "centerMedical",
       "sourceCandidates": []
     },
     "center_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -1560,10 +1523,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "center_screen": {
-      "kind": "cabinet",
       "design": null,
       "editions": {
         "emerald": {
@@ -1586,6 +1549,54 @@
             "EM_SLATEPORT_CITY_POKEMON_CENTER_1F",
             "EM_SOOTOPOLIS_CITY_POKEMON_CENTER_1F",
             "EM_VERDANTURF_TOWN_POKEMON_CENTER_1F"
+          ]
+        },
+        "firered": {
+          "count": 19,
+          "maps": [
+            "FR_CELADON_CITY_POKEMON_CENTER_1F",
+            "FR_CERULEAN_CITY_POKEMON_CENTER_1F",
+            "FR_CINNABAR_ISLAND_POKEMON_CENTER_1F",
+            "FR_FIVE_ISLAND_POKEMON_CENTER_1F",
+            "FR_FOUR_ISLAND_POKEMON_CENTER_1F",
+            "FR_FUCHSIA_CITY_POKEMON_CENTER_1F",
+            "FR_INDIGO_PLATEAU_POKEMON_CENTER_1F",
+            "FR_LAVENDER_TOWN_POKEMON_CENTER_1F",
+            "FR_PEWTER_CITY_POKEMON_CENTER_1F",
+            "FR_ROUTE_10_POKEMON_CENTER_1F",
+            "FR_ROUTE_4_POKEMON_CENTER_1F",
+            "FR_SAFFRON_CITY_POKEMON_CENTER_1F",
+            "FR_SEVEN_ISLAND_POKEMON_CENTER_1F",
+            "FR_SIX_ISLAND_POKEMON_CENTER_1F",
+            "FR_THREE_ISLAND_POKEMON_CENTER_1F",
+            "FR_TWO_ISLAND_POKEMON_CENTER_1F",
+            "FR_VERMILION_CITY_POKEMON_CENTER_1F",
+            "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
+            "SEVII_ONE_ISLAND_POKECENTER"
+          ]
+        },
+        "leafgreen": {
+          "count": 19,
+          "maps": [
+            "FR_CELADON_CITY_POKEMON_CENTER_1F",
+            "FR_CERULEAN_CITY_POKEMON_CENTER_1F",
+            "FR_CINNABAR_ISLAND_POKEMON_CENTER_1F",
+            "FR_FIVE_ISLAND_POKEMON_CENTER_1F",
+            "FR_FOUR_ISLAND_POKEMON_CENTER_1F",
+            "FR_FUCHSIA_CITY_POKEMON_CENTER_1F",
+            "FR_INDIGO_PLATEAU_POKEMON_CENTER_1F",
+            "FR_LAVENDER_TOWN_POKEMON_CENTER_1F",
+            "FR_PEWTER_CITY_POKEMON_CENTER_1F",
+            "FR_ROUTE_10_POKEMON_CENTER_1F",
+            "FR_ROUTE_4_POKEMON_CENTER_1F",
+            "FR_SAFFRON_CITY_POKEMON_CENTER_1F",
+            "FR_SEVEN_ISLAND_POKEMON_CENTER_1F",
+            "FR_SIX_ISLAND_POKEMON_CENTER_1F",
+            "FR_THREE_ISLAND_POKEMON_CENTER_1F",
+            "FR_TWO_ISLAND_POKEMON_CENTER_1F",
+            "FR_VERMILION_CITY_POKEMON_CENTER_1F",
+            "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
+            "SEVII_ONE_ISLAND_POKECENTER"
           ]
         },
         "ruby": {
@@ -1629,60 +1640,12 @@
             "SA_SOOTOPOLIS_CITY_POKEMON_CENTER_1F",
             "SA_VERDANTURF_TOWN_POKEMON_CENTER_1F"
           ]
-        },
-        "firered": {
-          "count": 19,
-          "maps": [
-            "FR_CELADON_CITY_POKEMON_CENTER_1F",
-            "FR_CERULEAN_CITY_POKEMON_CENTER_1F",
-            "FR_CINNABAR_ISLAND_POKEMON_CENTER_1F",
-            "FR_FIVE_ISLAND_POKEMON_CENTER_1F",
-            "FR_FOUR_ISLAND_POKEMON_CENTER_1F",
-            "FR_FUCHSIA_CITY_POKEMON_CENTER_1F",
-            "FR_INDIGO_PLATEAU_POKEMON_CENTER_1F",
-            "FR_LAVENDER_TOWN_POKEMON_CENTER_1F",
-            "FR_PEWTER_CITY_POKEMON_CENTER_1F",
-            "FR_ROUTE_10_POKEMON_CENTER_1F",
-            "FR_ROUTE_4_POKEMON_CENTER_1F",
-            "FR_SAFFRON_CITY_POKEMON_CENTER_1F",
-            "FR_SEVEN_ISLAND_POKEMON_CENTER_1F",
-            "FR_SIX_ISLAND_POKEMON_CENTER_1F",
-            "FR_THREE_ISLAND_POKEMON_CENTER_1F",
-            "FR_TWO_ISLAND_POKEMON_CENTER_1F",
-            "FR_VERMILION_CITY_POKEMON_CENTER_1F",
-            "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
-            "SEVII_ONE_ISLAND_POKECENTER"
-          ]
-        },
-        "leafgreen": {
-          "count": 19,
-          "maps": [
-            "FR_CELADON_CITY_POKEMON_CENTER_1F",
-            "FR_CERULEAN_CITY_POKEMON_CENTER_1F",
-            "FR_CINNABAR_ISLAND_POKEMON_CENTER_1F",
-            "FR_FIVE_ISLAND_POKEMON_CENTER_1F",
-            "FR_FOUR_ISLAND_POKEMON_CENTER_1F",
-            "FR_FUCHSIA_CITY_POKEMON_CENTER_1F",
-            "FR_INDIGO_PLATEAU_POKEMON_CENTER_1F",
-            "FR_LAVENDER_TOWN_POKEMON_CENTER_1F",
-            "FR_PEWTER_CITY_POKEMON_CENTER_1F",
-            "FR_ROUTE_10_POKEMON_CENTER_1F",
-            "FR_ROUTE_4_POKEMON_CENTER_1F",
-            "FR_SAFFRON_CITY_POKEMON_CENTER_1F",
-            "FR_SEVEN_ISLAND_POKEMON_CENTER_1F",
-            "FR_SIX_ISLAND_POKEMON_CENTER_1F",
-            "FR_THREE_ISLAND_POKEMON_CENTER_1F",
-            "FR_TWO_ISLAND_POKEMON_CENTER_1F",
-            "FR_VERMILION_CITY_POKEMON_CENTER_1F",
-            "FR_VIRIDIAN_CITY_POKEMON_CENTER_1F",
-            "SEVII_ONE_ISLAND_POKECENTER"
-          ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "center_seat_757": {
-      "kind": "centerSeat",
       "design": null,
       "editions": {
         "firered": {
@@ -1772,10 +1735,10 @@
           ]
         }
       },
+      "kind": "centerSeat",
       "sourceCandidates": []
     },
     "center_seat_765": {
-      "kind": "centerSeat",
       "design": null,
       "editions": {
         "firered": {
@@ -1865,10 +1828,10 @@
           ]
         }
       },
+      "kind": "centerSeat",
       "sourceCandidates": []
     },
     "center_table": {
-      "kind": "centerTable",
       "design": null,
       "editions": {
         "firered": {
@@ -1920,10 +1883,10 @@
           ]
         }
       },
+      "kind": "centerTable",
       "sourceCandidates": []
     },
     "center_terminal": {
-      "kind": "cabinet",
       "design": "fr_center_pc",
       "editions": {
         "firered": {
@@ -1975,12 +1938,12 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": [
         "oras_center_pc"
       ]
     },
     "center_vending": {
-      "kind": "cabinet",
       "design": "fr_center_storage",
       "editions": {
         "firered": {
@@ -2030,10 +1993,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "center_wall_652": {
-      "kind": "centerWall",
       "design": null,
       "editions": {
         "firered": {
@@ -2089,10 +2052,10 @@
           ]
         }
       },
+      "kind": "centerWall",
       "sourceCandidates": []
     },
     "center_wall_734": {
-      "kind": "centerWall",
       "design": null,
       "editions": {
         "firered": {
@@ -2144,10 +2107,10 @@
           ]
         }
       },
+      "kind": "centerWall",
       "sourceCandidates": []
     },
     "center_wall_735": {
-      "kind": "centerWall",
       "design": null,
       "editions": {
         "firered": {
@@ -2199,10 +2162,10 @@
           ]
         }
       },
+      "kind": "centerWall",
       "sourceCandidates": []
     },
     "center_wall_766": {
-      "kind": "centerWall",
       "design": null,
       "editions": {
         "firered": {
@@ -2254,10 +2217,10 @@
           ]
         }
       },
+      "kind": "centerWall",
       "sourceCandidates": []
     },
     "center_wall_upper": {
-      "kind": "centerWall",
       "design": null,
       "editions": {
         "firered": {
@@ -2309,10 +2272,10 @@
           ]
         }
       },
+      "kind": "centerWall",
       "sourceCandidates": []
     },
     "checked_table": {
-      "kind": "table",
       "design": null,
       "editions": {
         "firered": {
@@ -2344,10 +2307,10 @@
           ]
         }
       },
+      "kind": "table",
       "sourceCandidates": []
     },
     "cinnabar_quiz_656": {
-      "kind": "designed",
       "design": "fr_cinnabar_quiz",
       "editions": {
         "firered": {
@@ -2363,10 +2326,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "cinnabar_quiz_712": {
-      "kind": "designed",
       "design": "fr_cinnabar_quiz",
       "editions": {
         "firered": {
@@ -2382,10 +2345,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "common_house_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -2415,10 +2378,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "condo_books": {
-      "kind": "designed",
       "design": "fr_condo_books",
       "editions": {
         "firered": {
@@ -2436,10 +2399,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "condo_meeting_table": {
-      "kind": "designed",
       "design": "fr_condo_meeting_table",
       "editions": {
         "firered": {
@@ -2455,10 +2418,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "condo_meeting_table_single_book": {
-      "kind": "designed",
       "design": "fr_condo_meeting_table",
       "editions": {
         "firered": {
@@ -2474,10 +2437,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "condo_planter_712": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -2497,10 +2460,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "condo_planter_713": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -2520,10 +2483,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "condo_planter_714": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -2543,10 +2506,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "condo_sofa": {
-      "kind": "designed",
       "design": "fr_condo_sofa",
       "editions": {
         "firered": {
@@ -2564,10 +2527,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "condo_sofa_wide": {
-      "kind": "designed",
       "design": "fr_condo_sofa",
       "editions": {
         "firered": {
@@ -2583,10 +2546,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "condo_workstation_661": {
-      "kind": "designed",
       "design": "fr_condo_workstation",
       "editions": {
         "firered": {
@@ -2602,10 +2565,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "condo_workstation_755": {
-      "kind": "designed",
       "design": "fr_condo_workstation",
       "editions": {
         "firered": {
@@ -2621,10 +2584,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_half_east": {
-      "kind": "designed",
       "design": "fr_corner_half_east",
       "editions": {
         "firered": {
@@ -2640,10 +2603,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_half_end_west": {
-      "kind": "designed",
       "design": "fr_corner_half_west",
       "editions": {
         "firered": {
@@ -2659,10 +2622,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_half_west": {
-      "kind": "designed",
       "design": "fr_corner_half_west",
       "editions": {
         "firered": {
@@ -2678,10 +2641,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_pair": {
-      "kind": "designed",
       "design": "fr_corner_pair",
       "editions": {
         "firered": {
@@ -2697,10 +2660,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_pair_end": {
-      "kind": "designed",
       "design": "fr_corner_pair_end",
       "editions": {
         "firered": {
@@ -2716,10 +2679,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_stool_682": {
-      "kind": "designed",
       "design": "fr_corner_chair",
       "editions": {
         "firered": {
@@ -2735,10 +2698,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_stool_683": {
-      "kind": "designed",
       "design": "fr_corner_chair",
       "editions": {
         "firered": {
@@ -2754,10 +2717,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_stool_690": {
-      "kind": "designed",
       "design": "fr_corner_chair",
       "editions": {
         "firered": {
@@ -2773,10 +2736,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_stool_691": {
-      "kind": "designed",
       "design": "fr_corner_chair",
       "editions": {
         "firered": {
@@ -2792,10 +2755,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_stool_698": {
-      "kind": "designed",
       "design": "fr_corner_chair",
       "editions": {
         "firered": {
@@ -2811,10 +2774,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "corner_stool_699": {
-      "kind": "designed",
       "design": "fr_corner_chair",
       "editions": {
         "firered": {
@@ -2830,10 +2793,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "daycare_cushion": {
-      "kind": "designed",
       "design": "fr_daycare_cushion",
       "editions": {
         "firered": {
@@ -2851,10 +2814,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "department_game_demo": {
-      "kind": "designed",
       "design": "fr_department_game_demo",
       "editions": {
         "firered": {
@@ -2870,10 +2833,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "department_glass_case": {
-      "kind": "designed",
       "design": "fr_department_glass",
       "editions": {
         "firered": {
@@ -2889,10 +2852,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "department_stock_island": {
-      "kind": "designed",
       "design": "fr_department_stock",
       "editions": {
         "firered": {
@@ -2912,10 +2875,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_column": {
-      "kind": "designed",
       "design": "fr_elite_column",
       "editions": {
         "firered": {
@@ -2931,10 +2894,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_horn_880": {
-      "kind": "designed",
       "design": "fr_elite_horn",
       "editions": {
         "firered": {
@@ -2950,10 +2913,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_horn_881": {
-      "kind": "designed",
       "design": "fr_elite_horn",
       "editions": {
         "firered": {
@@ -2969,10 +2932,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_ice_stack": {
-      "kind": "designed",
       "design": "fr_elite_ice",
       "editions": {
         "firered": {
@@ -2988,10 +2951,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_stone_stack": {
-      "kind": "designed",
       "design": "fr_elite_stone",
       "editions": {
         "firered": {
@@ -3007,10 +2970,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_wall_835": {
-      "kind": "designed",
       "design": "fr_elite_wall",
       "editions": {
         "firered": {
@@ -3026,10 +2989,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_wall_836": {
-      "kind": "designed",
       "design": "fr_elite_wall",
       "editions": {
         "firered": {
@@ -3045,10 +3008,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_wall_847": {
-      "kind": "designed",
       "design": "fr_elite_wall",
       "editions": {
         "firered": {
@@ -3064,10 +3027,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_wall_850": {
-      "kind": "designed",
       "design": "fr_elite_wall",
       "editions": {
         "firered": {
@@ -3083,10 +3046,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_wall_851": {
-      "kind": "designed",
       "design": "fr_elite_wall",
       "editions": {
         "firered": {
@@ -3102,10 +3065,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_wall_855": {
-      "kind": "designed",
       "design": "fr_elite_wall",
       "editions": {
         "firered": {
@@ -3121,10 +3084,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_wall_866": {
-      "kind": "designed",
       "design": "fr_elite_wall",
       "editions": {
         "firered": {
@@ -3140,10 +3103,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "elite_wall_867": {
-      "kind": "designed",
       "design": "fr_elite_wall",
       "editions": {
         "firered": {
@@ -3159,10 +3122,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "em_tower_information_console": {
-      "kind": "towerConsole",
       "design": null,
       "editions": {
         "emerald": {
@@ -3172,10 +3135,10 @@
           ]
         }
       },
+      "kind": "towerConsole",
       "sourceCandidates": []
     },
     "em_tower_reception": {
-      "kind": "towerCounter",
       "design": null,
       "editions": {
         "emerald": {
@@ -3185,10 +3148,10 @@
           ]
         }
       },
+      "kind": "towerCounter",
       "sourceCandidates": []
     },
     "gate_plant_751": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -3206,10 +3169,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "gym_notice_board": {
-      "kind": "sign",
       "design": null,
       "editions": {
         "firered": {
@@ -3235,10 +3198,10 @@
           ]
         }
       },
+      "kind": "sign",
       "sourceCandidates": []
     },
     "hoenn_berry_soil_14c": {
-      "kind": "earlyHoennProp",
       "design": null,
       "editions": {
         "emerald": {
@@ -3260,10 +3223,10 @@
           ]
         }
       },
+      "kind": "earlyHoennProp",
       "sourceCandidates": []
     },
     "hoenn_berry_soil_28d": {
-      "kind": "earlyHoennProp",
       "design": null,
       "editions": {
         "emerald": {
@@ -3285,10 +3248,10 @@
           ]
         }
       },
+      "kind": "earlyHoennProp",
       "sourceCandidates": []
     },
     "hoenn_center_front_desk": {
-      "kind": "centerCounter",
       "design": null,
       "editions": {
         "emerald": {
@@ -3353,10 +3316,10 @@
           ]
         }
       },
+      "kind": "centerCounter",
       "sourceCandidates": []
     },
     "hoenn_center_left": {
-      "kind": "centerWing",
       "design": null,
       "editions": {
         "emerald": {
@@ -3424,10 +3387,10 @@
           ]
         }
       },
+      "kind": "centerWing",
       "sourceCandidates": []
     },
     "hoenn_center_map": {
-      "kind": "cabinet",
       "design": null,
       "editions": {
         "emerald": {
@@ -3495,10 +3458,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "hoenn_center_medicine": {
-      "kind": "designed",
       "design": "em_center_medicine",
       "editions": {
         "emerald": {
@@ -3560,10 +3523,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_center_pc": {
-      "kind": "designed",
       "design": "fr_center_pc",
       "editions": {
         "emerald": {
@@ -3631,12 +3594,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_center_pc"
       ]
     },
     "hoenn_center_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "emerald": {
@@ -3728,10 +3691,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "hoenn_center_right": {
-      "kind": "centerWing",
       "design": null,
       "editions": {
         "emerald": {
@@ -3799,10 +3762,10 @@
           ]
         }
       },
+      "kind": "centerWing",
       "sourceCandidates": []
     },
     "hoenn_center_table": {
-      "kind": "centerTable",
       "design": null,
       "editions": {
         "emerald": {
@@ -3870,10 +3833,10 @@
           ]
         }
       },
+      "kind": "centerTable",
       "sourceCandidates": []
     },
     "hoenn_center_terminal": {
-      "kind": "centerMedical",
       "design": null,
       "editions": {
         "emerald": {
@@ -3941,10 +3904,10 @@
           ]
         }
       },
+      "kind": "centerMedical",
       "sourceCandidates": []
     },
     "hoenn_center_wall_528": {
-      "kind": "centerWall",
       "design": null,
       "editions": {
         "emerald": {
@@ -4059,10 +4022,10 @@
           ]
         }
       },
+      "kind": "centerWall",
       "sourceCandidates": []
     },
     "hoenn_center_wall_531": {
-      "kind": "centerWall",
       "design": null,
       "editions": {
         "emerald": {
@@ -4089,10 +4052,10 @@
           ]
         }
       },
+      "kind": "centerWall",
       "sourceCandidates": []
     },
     "hoenn_center_wall_535": {
-      "kind": "centerWall",
       "design": null,
       "editions": {
         "emerald": {
@@ -4207,10 +4170,10 @@
           ]
         }
       },
+      "kind": "centerWall",
       "sourceCandidates": []
     },
     "hoenn_center_wall_583": {
-      "kind": "centerWall",
       "design": null,
       "editions": {
         "emerald": {
@@ -4236,10 +4199,10 @@
           ]
         }
       },
+      "kind": "centerWall",
       "sourceCandidates": []
     },
     "hoenn_center_wall_612": {
-      "kind": "centerWall",
       "design": null,
       "editions": {
         "emerald": {
@@ -4265,10 +4228,10 @@
           ]
         }
       },
+      "kind": "centerWall",
       "sourceCandidates": []
     },
     "hoenn_cushion_550": {
-      "kind": "centerSeat",
       "design": null,
       "editions": {
         "emerald": {
@@ -4383,10 +4346,10 @@
           ]
         }
       },
+      "kind": "centerSeat",
       "sourceCandidates": []
     },
     "hoenn_cushion_564": {
-      "kind": "centerSeat",
       "design": null,
       "editions": {
         "emerald": {
@@ -4501,10 +4464,10 @@
           ]
         }
       },
+      "kind": "centerSeat",
       "sourceCandidates": []
     },
     "hoenn_escalator_down_0": {
-      "kind": "escalator",
       "design": null,
       "editions": {
         "emerald": {
@@ -4570,10 +4533,10 @@
           ]
         }
       },
+      "kind": "escalator",
       "sourceCandidates": []
     },
     "hoenn_escalator_up_0": {
-      "kind": "escalator",
       "design": null,
       "editions": {
         "emerald": {
@@ -4639,10 +4602,10 @@
           ]
         }
       },
+      "kind": "escalator",
       "sourceCandidates": []
     },
     "hoenn_facility_general_devon_computer": {
-      "kind": "designed",
       "design": "em_office_computer",
       "editions": {
         "emerald": {
@@ -4652,10 +4615,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_facility_general_devon_plans": {
-      "kind": "designed",
       "design": "em_office_plans",
       "editions": {
         "emerald": {
@@ -4665,10 +4628,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_facility_general_devon_stool": {
-      "kind": "designed",
       "design": "em_office_stool",
       "editions": {
         "emerald": {
@@ -4678,10 +4641,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_facility_general_space_computer": {
-      "kind": "designed",
       "design": "em_office_computer",
       "editions": {
         "emerald": {
@@ -4692,10 +4655,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_facility_general_space_controls": {
-      "kind": "designed",
       "design": "em_space_controls",
       "editions": {
         "emerald": {
@@ -4705,10 +4668,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_facility_general_space_controls_end": {
-      "kind": "designed",
       "design": "em_space_controls",
       "editions": {
         "emerald": {
@@ -4719,10 +4682,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_facility_general_space_controls_pair": {
-      "kind": "designed",
       "design": "em_space_controls",
       "editions": {
         "emerald": {
@@ -4732,10 +4695,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_facility_general_space_desk": {
-      "kind": "designed",
       "design": "em_office_desk",
       "editions": {
         "emerald": {
@@ -4745,10 +4708,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_facility_general_space_plans": {
-      "kind": "designed",
       "design": "em_office_plans",
       "editions": {
         "emerald": {
@@ -4758,10 +4721,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_facility_general_space_stool": {
-      "kind": "designed",
       "design": "em_office_stool",
       "editions": {
         "emerald": {
@@ -4772,10 +4735,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_field_garden_troughs": {
-      "kind": "earlyHoennProp",
       "design": null,
       "editions": {
         "emerald": {
@@ -4797,10 +4760,10 @@
           ]
         }
       },
+      "kind": "earlyHoennProp",
       "sourceCandidates": []
     },
     "hoenn_field_gym_notice": {
-      "kind": "earlyHoennProp",
       "design": null,
       "editions": {
         "emerald": {
@@ -4822,10 +4785,10 @@
           ]
         }
       },
+      "kind": "earlyHoennProp",
       "sourceCandidates": []
     },
     "hoenn_home_bed": {
-      "kind": "designed",
       "design": "em_home_bed",
       "editions": {
         "emerald": {
@@ -4853,12 +4816,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_comfortable_bed"
       ]
     },
     "hoenn_home_books": {
-      "kind": "designed",
       "design": "em_home_books",
       "editions": {
         "emerald": {
@@ -4910,10 +4873,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_flower_bookcase"
+      ]
     },
     "hoenn_home_chair_555": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -4985,10 +4950,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_chair_556": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -5066,10 +5031,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_chair_738": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -5130,10 +5095,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_cushion": {
-      "kind": "designed",
       "design": "em_home_cushion",
       "editions": {
         "emerald": {
@@ -5155,10 +5120,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_trick_house_floor_cushion"
+      ]
     },
     "hoenn_home_fortree_appliance": {
-      "kind": "designed",
       "design": "em_home_appliance",
       "editions": {
         "emerald": {
@@ -5169,10 +5136,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_fortree_cabinet": {
-      "kind": "designed",
       "design": "em_fortree_cabinet",
       "editions": {
         "emerald": {
@@ -5183,10 +5150,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_fortree_counter_left": {
-      "kind": "designed",
       "design": "em_fortree_counter",
       "editions": {
         "emerald": {
@@ -5196,10 +5163,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_fortree_counter_right": {
-      "kind": "designed",
       "design": "em_fortree_counter",
       "editions": {
         "emerald": {
@@ -5209,10 +5176,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_fortree_drawers": {
-      "kind": "designed",
       "design": "em_fortree_drawers",
       "editions": {
         "emerald": {
@@ -5224,10 +5191,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_fortree_support": {
-      "kind": "designed",
       "design": "em_fortree_support",
       "editions": {
         "emerald": {
@@ -5242,10 +5209,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_fridge": {
-      "kind": "designed",
       "design": "em_home_fridge",
       "editions": {
         "emerald": {
@@ -5303,12 +5270,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_oldale_refrigerator"
       ]
     },
     "hoenn_home_kitchen_drawers": {
-      "kind": "designed",
       "design": "em_home_drawers",
       "editions": {
         "emerald": {
@@ -5371,10 +5338,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_picture": {
-      "kind": "designed",
       "design": "em_home_picture",
       "editions": {
         "emerald": {
@@ -5429,10 +5396,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "emerald": {
@@ -5484,10 +5451,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "hoenn_home_round_window": {
-      "kind": "designed",
       "design": "em_home_round_window",
       "editions": {
         "emerald": {
@@ -5508,10 +5475,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustboro_appliance": {
-      "kind": "designed",
       "design": "em_home_appliance",
       "editions": {
         "emerald": {
@@ -5523,10 +5490,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustboro_chair_left": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -5541,10 +5508,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustboro_chair_right": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -5558,10 +5525,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustboro_sink": {
-      "kind": "designed",
       "design": "em_home_sink",
       "editions": {
         "emerald": {
@@ -5573,10 +5540,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustboro_small_table": {
-      "kind": "designed",
       "design": "em_home_table",
       "editions": {
         "emerald": {
@@ -5587,10 +5554,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustboro_sofa": {
-      "kind": "designed",
       "design": "em_home_sofa",
       "editions": {
         "emerald": {
@@ -5600,10 +5567,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustboro_table": {
-      "kind": "designed",
       "design": "em_home_wide_table",
       "editions": {
         "emerald": {
@@ -5614,10 +5581,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustic_appliance": {
-      "kind": "designed",
       "design": "em_home_appliance",
       "editions": {
         "emerald": {
@@ -5631,10 +5598,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustic_bookcase": {
-      "kind": "designed",
       "design": "em_home_rustic_books",
       "editions": {
         "emerald": {
@@ -5644,10 +5611,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustic_glass_cabinet": {
-      "kind": "designed",
       "design": "em_home_glass_tall",
       "editions": {
         "emerald": {
@@ -5667,10 +5634,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustic_glass_low": {
-      "kind": "designed",
       "design": "em_home_glass_low",
       "editions": {
         "emerald": {
@@ -5680,10 +5647,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_rustic_tv": {
-      "kind": "designed",
       "design": "em_home_tv",
       "editions": {
         "emerald": {
@@ -5696,10 +5663,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_safari_table": {
-      "kind": "designed",
       "design": "em_home_table",
       "editions": {
         "emerald": {
@@ -5709,10 +5676,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_sink": {
-      "kind": "designed",
       "design": "em_home_sink",
       "editions": {
         "emerald": {
@@ -5770,10 +5737,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_oldale_kitchen_sink"
+      ]
     },
     "hoenn_home_small_books": {
-      "kind": "designed",
       "design": "em_home_books",
       "editions": {
         "emerald": {
@@ -5809,10 +5778,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_flower_bookcase"
+      ]
     },
     "hoenn_home_small_tv": {
-      "kind": "designed",
       "design": "em_home_small_tv",
       "editions": {
         "emerald": {
@@ -5875,12 +5846,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_home_tv"
       ]
     },
     "hoenn_home_sootopolis_books": {
-      "kind": "designed",
       "design": "em_home_rustic_books",
       "editions": {
         "emerald": {
@@ -5891,10 +5862,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_sootopolis_chair_left": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -5909,10 +5880,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_sootopolis_chair_right": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -5929,10 +5900,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_sootopolis_drawers": {
-      "kind": "designed",
       "design": "em_fortree_drawers",
       "editions": {
         "emerald": {
@@ -5946,10 +5917,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_sootopolis_fridge": {
-      "kind": "designed",
       "design": "em_home_fridge",
       "editions": {
         "emerald": {
@@ -5961,10 +5932,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_sootopolis_low_appliance": {
-      "kind": "designed",
       "design": "em_home_appliance",
       "editions": {
         "emerald": {
@@ -5975,10 +5946,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_sootopolis_sink": {
-      "kind": "designed",
       "design": "em_home_sink",
       "editions": {
         "emerald": {
@@ -5989,10 +5960,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_sootopolis_sofa": {
-      "kind": "designed",
       "design": "em_home_sofa",
       "editions": {
         "emerald": {
@@ -6003,10 +5974,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_sootopolis_table": {
-      "kind": "designed",
       "design": "em_home_table",
       "editions": {
         "emerald": {
@@ -6021,10 +5992,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_table_orange": {
-      "kind": "designed",
       "design": "em_home_table",
       "editions": {
         "emerald": {
@@ -6055,10 +6026,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_table_plain": {
-      "kind": "designed",
       "design": "em_home_table",
       "editions": {
         "emerald": {
@@ -6115,12 +6086,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_oldale_neighbor_table"
       ]
     },
     "hoenn_home_table_rustic": {
-      "kind": "designed",
       "design": "em_home_table",
       "editions": {
         "emerald": {
@@ -6140,10 +6111,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_table_rustic_empty": {
-      "kind": "designed",
       "design": "em_home_table",
       "editions": {
         "emerald": {
@@ -6156,10 +6127,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_table_yellow": {
-      "kind": "designed",
       "design": "em_home_table",
       "editions": {
         "emerald": {
@@ -6217,12 +6188,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_oldale_checked_table"
       ]
     },
     "hoenn_home_tunnel_entrance": {
-      "kind": "designed",
       "design": "em_home_tunnel_entrance",
       "editions": {
         "emerald": {
@@ -6233,10 +6204,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_tv": {
-      "kind": "designed",
       "design": "em_home_tv",
       "editions": {
         "emerald": {
@@ -6329,10 +6300,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_oldale_china_cupboard"
+      ]
     },
     "hoenn_home_wallpaper": {
-      "kind": "designed",
       "design": "em_home_wallpaper",
       "editions": {
         "emerald": {
@@ -6354,10 +6327,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_wide_drawers": {
-      "kind": "designed",
       "design": "em_home_wide_drawers",
       "editions": {
         "emerald": {
@@ -6388,10 +6361,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_home_window": {
-      "kind": "designed",
       "design": "em_home_window",
       "editions": {
         "emerald": {
@@ -6466,10 +6439,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_counter": {
-      "kind": "designed",
       "design": "em_lilycove_counter",
       "editions": {
         "emerald": {
@@ -6479,10 +6452,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_floor_statue": {
-      "kind": "carvedStatue",
       "design": null,
       "editions": {
         "emerald": {
@@ -6492,10 +6465,10 @@
           ]
         }
       },
+      "kind": "carvedStatue",
       "sourceCandidates": []
     },
     "hoenn_lilycove_gallery": {
-      "kind": "designed",
       "design": "em_lilycove_gallery",
       "editions": {
         "emerald": {
@@ -6505,10 +6478,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_north_return": {
-      "kind": "designed",
       "design": "em_lilycove_wall_return",
       "editions": {
         "emerald": {
@@ -6518,10 +6491,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_partition_return": {
-      "kind": "designed",
       "design": "em_lilycove_wall_return",
       "editions": {
         "emerald": {
@@ -6531,10 +6504,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_picture_wall_523": {
-      "kind": "designed",
       "design": "em_lilycove_picture_wall",
       "editions": {
         "emerald": {
@@ -6544,10 +6517,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_picture_wall_536": {
-      "kind": "designed",
       "design": "em_lilycove_picture_wall",
       "editions": {
         "emerald": {
@@ -6557,10 +6530,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_picture_wall_538": {
-      "kind": "designed",
       "design": "em_lilycove_picture_wall",
       "editions": {
         "emerald": {
@@ -6570,10 +6543,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_picture_wall_540": {
-      "kind": "designed",
       "design": "em_lilycove_picture_wall",
       "editions": {
         "emerald": {
@@ -6583,10 +6556,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_picture_wall_541": {
-      "kind": "designed",
       "design": "em_lilycove_picture_wall",
       "editions": {
         "emerald": {
@@ -6596,10 +6569,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_picture_wall_542": {
-      "kind": "designed",
       "design": "em_lilycove_picture_wall",
       "editions": {
         "emerald": {
@@ -6609,10 +6582,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_picture_wall_557": {
-      "kind": "designed",
       "design": "em_lilycove_picture_wall",
       "editions": {
         "emerald": {
@@ -6622,10 +6595,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_picture_wall_559": {
-      "kind": "designed",
       "design": "em_lilycove_picture_wall",
       "editions": {
         "emerald": {
@@ -6635,10 +6608,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_small_sculpture": {
-      "kind": "designed",
       "design": "em_lilycove_ball_sculpture",
       "editions": {
         "emerald": {
@@ -6648,10 +6621,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_statue_644": {
-      "kind": "carvedStatue",
       "design": null,
       "editions": {
         "emerald": {
@@ -6661,10 +6634,10 @@
           ]
         }
       },
+      "kind": "carvedStatue",
       "sourceCandidates": []
     },
     "hoenn_lilycove_statue_645": {
-      "kind": "carvedStatue",
       "design": null,
       "editions": {
         "emerald": {
@@ -6674,10 +6647,10 @@
           ]
         }
       },
+      "kind": "carvedStatue",
       "sourceCandidates": []
     },
     "hoenn_lilycove_stone_display": {
-      "kind": "designed",
       "design": "em_lilycove_stone_display",
       "editions": {
         "emerald": {
@@ -6687,10 +6660,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_upper_left_corner": {
-      "kind": "designed",
       "design": "em_lilycove_upper_wall",
       "editions": {
         "emerald": {
@@ -6700,10 +6673,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_upper_rear": {
-      "kind": "designed",
       "design": "em_lilycove_upper_wall",
       "editions": {
         "emerald": {
@@ -6713,10 +6686,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_upper_right_corner": {
-      "kind": "designed",
       "design": "em_lilycove_upper_wall",
       "editions": {
         "emerald": {
@@ -6726,10 +6699,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_lilycove_upper_wing": {
-      "kind": "designed",
       "design": "em_lilycove_upper_wall",
       "editions": {
         "emerald": {
@@ -6739,10 +6712,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_link_counter_717": {
-      "kind": "centerUpperCounter",
       "design": null,
       "editions": {
         "emerald": {
@@ -6768,10 +6741,10 @@
           ]
         }
       },
+      "kind": "centerUpperCounter",
       "sourceCandidates": []
     },
     "hoenn_link_counter_719": {
-      "kind": "centerUpperCounter",
       "design": null,
       "editions": {
         "emerald": {
@@ -6797,10 +6770,10 @@
           ]
         }
       },
+      "kind": "centerUpperCounter",
       "sourceCandidates": []
     },
     "hoenn_link_counter_728": {
-      "kind": "centerUpperCounter",
       "design": null,
       "editions": {
         "emerald": {
@@ -6826,10 +6799,10 @@
           ]
         }
       },
+      "kind": "centerUpperCounter",
       "sourceCandidates": []
     },
     "hoenn_link_counter_729": {
-      "kind": "centerUpperCounter",
       "design": null,
       "editions": {
         "emerald": {
@@ -6855,10 +6828,10 @@
           ]
         }
       },
+      "kind": "centerUpperCounter",
       "sourceCandidates": []
     },
     "hoenn_link_gate": {
-      "kind": "centerGate",
       "design": null,
       "editions": {
         "emerald": {
@@ -6884,10 +6857,10 @@
           ]
         }
       },
+      "kind": "centerGate",
       "sourceCandidates": []
     },
     "hoenn_link_keys_738": {
-      "kind": "designed",
       "design": "fr_upper_pc",
       "editions": {
         "emerald": {
@@ -6913,10 +6886,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_link_keys_739": {
-      "kind": "designed",
       "design": "fr_upper_pc",
       "editions": {
         "emerald": {
@@ -6942,10 +6915,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_link_pc": {
-      "kind": "designed",
       "design": "fr_upper_pc",
       "editions": {
         "emerald": {
@@ -6971,10 +6944,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_link_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "emerald": {
@@ -7043,10 +7016,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "hoenn_mart_clock": {
-      "kind": "designed",
       "design": "em_start_clock",
       "editions": {
         "emerald": {
@@ -7102,10 +7075,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mart_counter": {
-      "kind": "martCheckout",
       "design": null,
       "editions": {
         "emerald": {
@@ -7127,10 +7100,10 @@
           ]
         }
       },
+      "kind": "martCheckout",
       "sourceCandidates": []
     },
     "hoenn_mart_glass": {
-      "kind": "designed",
       "design": "em_mart_glass",
       "editions": {
         "emerald": {
@@ -7186,10 +7159,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mart_island": {
-      "kind": "designed",
       "design": "em_mart_island",
       "editions": {
         "emerald": {
@@ -7248,10 +7221,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mart_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "emerald": {
@@ -7307,10 +7280,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "hoenn_mart_register": {
-      "kind": "martRegister",
       "design": null,
       "editions": {
         "emerald": {
@@ -7366,10 +7339,10 @@
           ]
         }
       },
+      "kind": "martRegister",
       "sourceCandidates": []
     },
     "hoenn_mart_sidecase": {
-      "kind": "designed",
       "design": "em_mart_sidecase",
       "editions": {
         "emerald": {
@@ -7425,10 +7398,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mart_stock_545": {
-      "kind": "designed",
       "design": "em_mart_stock",
       "editions": {
         "emerald": {
@@ -7484,10 +7457,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mart_stock_560": {
-      "kind": "designed",
       "design": "em_mart_stock",
       "editions": {
         "emerald": {
@@ -7543,10 +7516,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mauville_bin_558": {
-      "kind": "designed",
       "design": "em_game_corner_bin",
       "editions": {
         "emerald": {
@@ -7556,10 +7529,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mauville_bin_566": {
-      "kind": "designed",
       "design": "em_game_corner_bin",
       "editions": {
         "emerald": {
@@ -7569,10 +7542,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mauville_roulette": {
-      "kind": "designed",
       "design": "em_roulette_table",
       "editions": {
         "emerald": {
@@ -7582,10 +7555,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mauville_slot_bank": {
-      "kind": "designed",
       "design": "em_slot_bank",
       "editions": {
         "emerald": {
@@ -7595,10 +7568,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mauville_wall_machine_526": {
-      "kind": "designed",
       "design": "em_game_corner_machine",
       "editions": {
         "emerald": {
@@ -7608,10 +7581,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_mauville_wall_machine_527": {
-      "kind": "designed",
       "design": "em_game_corner_machine",
       "editions": {
         "emerald": {
@@ -7621,10 +7594,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_museum_cylinder": {
-      "kind": "designed",
       "design": "em_museum_cylinder",
       "editions": {
         "emerald": {
@@ -7635,10 +7608,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_museum_divider": {
-      "kind": "designed",
       "design": "em_museum_divider",
       "editions": {
         "emerald": {
@@ -7648,10 +7621,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_museum_glass_case": {
-      "kind": "designed",
       "design": "em_museum_glass",
       "editions": {
         "emerald": {
@@ -7661,10 +7634,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_museum_parts": {
-      "kind": "designed",
       "design": "em_museum_parts",
       "editions": {
         "emerald": {
@@ -7674,10 +7647,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_museum_ship": {
-      "kind": "designed",
       "design": "em_museum_ship",
       "editions": {
         "emerald": {
@@ -7687,10 +7660,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_museum_tall_wall_case": {
-      "kind": "designed",
       "design": "em_museum_wall_case",
       "editions": {
         "emerald": {
@@ -7700,10 +7673,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_museum_terminal": {
-      "kind": "designed",
       "design": "em_museum_terminal",
       "editions": {
         "emerald": {
@@ -7713,10 +7686,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_museum_wall_case": {
-      "kind": "designed",
       "design": "em_museum_wall_case",
       "editions": {
         "emerald": {
@@ -7726,10 +7699,50 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
-    "hoenn_start_bed_left": {
+    "hoenn_pyre_memorial": {
+      "design": "fr_tower_grave",
+      "editions": {
+        "emerald": {
+          "count": 195,
+          "maps": [
+            "EM_MT_PYRE_1F",
+            "EM_MT_PYRE_2F",
+            "EM_MT_PYRE_3F",
+            "EM_MT_PYRE_4F",
+            "EM_MT_PYRE_5F",
+            "EM_MT_PYRE_6F"
+          ]
+        }
+      },
       "kind": "designed",
+      "sourceCandidates": [
+        "oras_pyre_memorial"
+      ]
+    },
+    "hoenn_pyre_memorial_wall_shadow": {
+      "design": "fr_tower_grave",
+      "editions": {
+        "emerald": {
+          "count": 66,
+          "maps": [
+            "EM_MT_PYRE_1F",
+            "EM_MT_PYRE_2F",
+            "EM_MT_PYRE_3F",
+            "EM_MT_PYRE_4F",
+            "EM_MT_PYRE_5F",
+            "EM_MT_PYRE_6F"
+          ]
+        }
+      },
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_pyre_memorial"
+      ]
+    },
+    "hoenn_start_bed_left": {
       "design": "em_start_bed",
       "editions": {
         "emerald": {
@@ -7751,10 +7764,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_bed_right": {
-      "kind": "designed",
       "design": "em_start_bed",
       "editions": {
         "emerald": {
@@ -7776,10 +7789,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_bedroom_drawers": {
-      "kind": "designed",
       "design": "em_start_dresser",
       "editions": {
         "emerald": {
@@ -7804,10 +7817,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_computer_left": {
-      "kind": "designed",
       "design": "em_start_pc_left",
       "editions": {
         "emerald": {
@@ -7829,10 +7842,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_computer_right": {
-      "kind": "designed",
       "design": "em_start_pc_right",
       "editions": {
         "emerald": {
@@ -7854,10 +7867,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_console_left": {
-      "kind": "designed",
       "design": "em_start_console",
       "editions": {
         "emerald": {
@@ -7879,10 +7892,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_console_right": {
-      "kind": "designed",
       "design": "em_start_console",
       "editions": {
         "emerald": {
@@ -7892,10 +7905,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_console_rs_right": {
-      "kind": "designed",
       "design": "em_start_console",
       "editions": {
         "ruby": {
@@ -7911,10 +7924,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_dining_chair_537": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -7938,10 +7951,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_dining_chair_540": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -7965,10 +7978,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_dining_chair_545": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -7992,10 +8005,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_dining_chair_548": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -8019,10 +8032,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_dining_table": {
-      "kind": "designed",
       "design": "em_start_table",
       "editions": {
         "emerald": {
@@ -8046,12 +8059,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_littleroot_dining_table"
       ]
     },
     "hoenn_start_fridge": {
-      "kind": "designed",
       "design": "em_start_fridge",
       "editions": {
         "emerald": {
@@ -8076,12 +8089,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_littleroot_fridge"
       ]
     },
     "hoenn_start_high_window": {
-      "kind": "designed",
       "design": "em_start_high_window",
       "editions": {
         "emerald": {
@@ -8106,10 +8119,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_kitchen_cabinet": {
-      "kind": "designed",
       "design": "em_start_cabinet",
       "editions": {
         "emerald": {
@@ -8131,10 +8144,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_kitchen_cabinet_right": {
-      "kind": "designed",
       "design": "em_start_cabinet",
       "editions": {
         "emerald": {
@@ -8156,10 +8169,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_living_drawers": {
-      "kind": "designed",
       "design": "em_start_dresser",
       "editions": {
         "emerald": {
@@ -8181,10 +8194,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_living_tv": {
-      "kind": "designed",
       "design": "em_start_tv",
       "editions": {
         "emerald": {
@@ -8208,10 +8221,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_may_seat_704": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -8221,10 +8234,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_may_seat_707": {
-      "kind": "designed",
       "design": "em_start_seat_pad",
       "editions": {
         "emerald": {
@@ -8234,10 +8247,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_may_table": {
-      "kind": "designed",
       "design": "em_start_may_table",
       "editions": {
         "emerald": {
@@ -8247,10 +8260,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_sink_hob": {
-      "kind": "designed",
       "design": "em_start_kitchen",
       "editions": {
         "emerald": {
@@ -8275,10 +8288,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_wall_clock_left": {
-      "kind": "designed",
       "design": "em_start_clock",
       "editions": {
         "emerald": {
@@ -8288,10 +8301,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_wall_clock_right": {
-      "kind": "designed",
       "design": "em_start_clock",
       "editions": {
         "emerald": {
@@ -8315,10 +8328,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_wall_picture": {
-      "kind": "designed",
       "design": "em_start_picture",
       "editions": {
         "emerald": {
@@ -8343,10 +8356,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_start_wall_window": {
-      "kind": "designed",
       "design": "em_start_window",
       "editions": {
         "emerald": {
@@ -8371,10 +8384,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hoenn_truck_cargo": {
-      "kind": "designed",
       "design": "em_truck_cargo",
       "editions": {
         "emerald": {
@@ -8396,12 +8409,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_truck_cardboard_box"
       ]
     },
     "hotel_lobby_cushion": {
-      "kind": "designed",
       "design": "gb_seat",
       "editions": {
         "firered": {
@@ -8417,10 +8430,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hotel_lobby_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -8436,10 +8449,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "hotel_lobby_sofa": {
-      "kind": "designed",
       "design": "fr_hotel_sofa",
       "editions": {
         "firered": {
@@ -8455,10 +8468,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "hotel_lobby_table": {
-      "kind": "designed",
       "design": "fr_hotel_table",
       "editions": {
         "firered": {
@@ -8474,10 +8487,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "house_left_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -8493,10 +8506,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "house_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -8512,10 +8525,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "kanto_map_house": {
-      "kind": "designed",
       "design": "fr_home_map",
       "editions": {
         "firered": {
@@ -8541,10 +8554,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "kanto_note_house": {
-      "kind": "designed",
       "design": "fr_home_note",
       "editions": {
         "firered": {
@@ -8560,10 +8573,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "kanto_seat_house_back": {
-      "kind": "chair",
       "design": "fr_home_seat",
       "editions": {
         "firered": {
@@ -8593,10 +8606,10 @@
           ]
         }
       },
+      "kind": "chair",
       "sourceCandidates": []
     },
     "kanto_seat_house_front": {
-      "kind": "chair",
       "design": "fr_home_seat",
       "editions": {
         "firered": {
@@ -8626,10 +8639,10 @@
           ]
         }
       },
+      "kind": "chair",
       "sourceCandidates": []
     },
     "kanto_seat_player_house_back": {
-      "kind": "chair",
       "design": "fr_home_seat",
       "editions": {
         "firered": {
@@ -8645,10 +8658,10 @@
           ]
         }
       },
+      "kind": "chair",
       "sourceCandidates": []
     },
     "kanto_seat_player_house_front": {
-      "kind": "chair",
       "design": "fr_home_seat",
       "editions": {
         "firered": {
@@ -8664,10 +8677,10 @@
           ]
         }
       },
+      "kind": "chair",
       "sourceCandidates": []
     },
     "kanto_window_house": {
-      "kind": "designed",
       "design": "fr_home_window",
       "editions": {
         "firered": {
@@ -8697,10 +8710,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "kanto_window_player_house": {
-      "kind": "designed",
       "design": "fr_home_window",
       "editions": {
         "firered": {
@@ -8716,10 +8729,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "kitchen_sink_hob": {
-      "kind": "counter",
       "design": "fr_kitchen",
       "editions": {
         "firered": {
@@ -8751,10 +8764,10 @@
           ]
         }
       },
+      "kind": "counter",
       "sourceCandidates": []
     },
     "lab_aquarium": {
-      "kind": "cabinet",
       "design": "fr_lab_aquarium",
       "editions": {
         "firered": {
@@ -8770,10 +8783,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "lab_books_free_corner": {
-      "kind": "cabinet",
       "design": "fr_native_books",
       "editions": {
         "firered": {
@@ -8789,10 +8802,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "lab_books_free_right": {
-      "kind": "cabinet",
       "design": "fr_native_books",
       "editions": {
         "firered": {
@@ -8808,10 +8821,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "lab_complete_books": {
-      "kind": "designed",
       "design": "fr_lab_books",
       "editions": {
         "firered": {
@@ -8827,10 +8840,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "lab_computer": {
-      "kind": "cabinet",
       "design": "fr_lab_pc",
       "editions": {
         "firered": {
@@ -8846,10 +8859,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "lab_free_books": {
-      "kind": "designed",
       "design": "fr_lab_free_books",
       "editions": {
         "firered": {
@@ -8865,10 +8878,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "lab_plant_left": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -8884,10 +8897,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "lab_plant_right": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -8903,10 +8916,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "lab_pokedex_desk": {
-      "kind": "desk",
       "design": "fr_lab_pokedex_desk",
       "editions": {
         "firered": {
@@ -8922,10 +8935,10 @@
           ]
         }
       },
+      "kind": "desk",
       "sourceCandidates": []
     },
     "lab_pokemon_machine": {
-      "kind": "labMachine",
       "design": null,
       "editions": {
         "firered": {
@@ -8941,10 +8954,10 @@
           ]
         }
       },
+      "kind": "labMachine",
       "sourceCandidates": []
     },
     "lab_server": {
-      "kind": "cabinet",
       "design": "fr_lab_server",
       "editions": {
         "firered": {
@@ -8960,10 +8973,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "cabinet",
+      "sourceCandidates": [
+        "bdsp_galactic_server"
+      ]
     },
     "lab_side_terminal": {
-      "kind": "cabinet",
       "design": "fr_native_cabinet",
       "editions": {
         "firered": {
@@ -8979,10 +8994,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "lab_terminal": {
-      "kind": "cabinet",
       "design": "fr_lab_terminal",
       "editions": {
         "firered": {
@@ -8998,10 +9013,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "lab_wall_display": {
-      "kind": "cabinet",
       "design": "fr_native_cabinet",
       "editions": {
         "firered": {
@@ -9017,10 +9032,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "lab_work_table": {
-      "kind": "table",
       "design": "fr_lab_starter_table",
       "editions": {
         "firered": {
@@ -9036,10 +9051,10 @@
           ]
         }
       },
+      "kind": "table",
       "sourceCandidates": []
     },
     "league_boundary_statue_576": {
-      "kind": "statue",
       "design": null,
       "editions": {
         "firered": {
@@ -9055,10 +9070,10 @@
           ]
         }
       },
+      "kind": "statue",
       "sourceCandidates": []
     },
     "league_statue_576": {
-      "kind": "statue",
       "design": null,
       "editions": {
         "firered": {
@@ -9074,10 +9089,10 @@
           ]
         }
       },
+      "kind": "statue",
       "sourceCandidates": []
     },
     "league_statue_577": {
-      "kind": "statue",
       "design": null,
       "editions": {
         "firered": {
@@ -9093,10 +9108,10 @@
           ]
         }
       },
+      "kind": "statue",
       "sourceCandidates": []
     },
     "living_cupboard": {
-      "kind": "designed",
       "design": "fr_cupboard",
       "editions": {
         "firered": {
@@ -9112,10 +9127,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "living_television": {
-      "kind": "designed",
       "design": "fr_living_tv",
       "editions": {
         "firered": {
@@ -9131,12 +9146,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_home_tv"
       ]
     },
     "lorelei_bookcase": {
-      "kind": "designed",
       "design": "fr_condo_books",
       "editions": {
         "firered": {
@@ -9152,10 +9167,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "lorelei_display_case": {
-      "kind": "designed",
       "design": "fr_lorelei_display",
       "editions": {
         "firered": {
@@ -9171,10 +9186,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "lorelei_native_bed": {
-      "kind": "designed",
       "design": "fr_lorelei_bed",
       "editions": {
         "firered": {
@@ -9190,10 +9205,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "lorelei_native_table": {
-      "kind": "designed",
       "design": "fr_lorelei_table",
       "editions": {
         "firered": {
@@ -9209,10 +9224,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "mansion_monitor_terminal": {
-      "kind": "cabinet",
       "design": "fr_native_monitor",
       "editions": {
         "firered": {
@@ -9228,10 +9243,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "mansion_potted_tree": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -9247,10 +9262,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "mansion_server": {
-      "kind": "cabinet",
       "design": "fr_native_rack",
       "editions": {
         "firered": {
@@ -9266,10 +9281,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "cabinet",
+      "sourceCandidates": [
+        "bdsp_galactic_server"
+      ]
     },
     "mansion_tape_terminal": {
-      "kind": "cabinet",
       "design": "fr_native_rack",
       "editions": {
         "firered": {
@@ -9285,10 +9302,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "mart_bench": {
-      "kind": "table",
       "design": "fr_mart_bench",
       "editions": {
         "firered": {
@@ -9326,10 +9343,10 @@
           ]
         }
       },
+      "kind": "table",
       "sourceCandidates": []
     },
     "mart_checkout": {
-      "kind": "counter",
       "design": "fr_mart_counter",
       "editions": {
         "firered": {
@@ -9367,10 +9384,10 @@
           ]
         }
       },
+      "kind": "counter",
       "sourceCandidates": []
     },
     "mart_checkout_end": {
-      "kind": "counter",
       "design": "fr_mart_counter_end",
       "editions": {
         "firered": {
@@ -9408,10 +9425,10 @@
           ]
         }
       },
+      "kind": "counter",
       "sourceCandidates": []
     },
     "mart_checkout_return": {
-      "kind": "martRegister",
       "design": "fr_mart_register",
       "editions": {
         "firered": {
@@ -9449,10 +9466,10 @@
           ]
         }
       },
+      "kind": "martRegister",
       "sourceCandidates": []
     },
     "mart_complete_glass_bank": {
-      "kind": "designed",
       "design": "em_mart_glass",
       "editions": {
         "firered": {
@@ -9490,10 +9507,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "mart_complete_island": {
-      "kind": "designed",
       "design": "fr_mart_island",
       "editions": {
         "firered": {
@@ -9531,10 +9548,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "mart_edge_island": {
-      "kind": "designed",
       "design": "fr_mart_sidecase",
       "editions": {
         "firered": {
@@ -9572,10 +9589,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "mart_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -9613,10 +9630,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "mart_rear_books": {
-      "kind": "cabinet",
       "design": "fr_mart_cooler",
       "editions": {
         "firered": {
@@ -9654,10 +9671,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "mart_wall_notice": {
-      "kind": "cabinet",
       "design": "fr_native_cabinet",
       "editions": {
         "firered": {
@@ -9695,10 +9712,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "museum_bookcase": {
-      "kind": "cabinet",
       "design": "fr_museum_bookcase",
       "editions": {
         "firered": {
@@ -9714,10 +9731,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "museum_edge_potted_tree": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -9735,10 +9752,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "museum_fossil_case": {
-      "kind": "displayCase",
       "design": null,
       "editions": {
         "firered": {
@@ -9754,10 +9771,10 @@
           ]
         }
       },
+      "kind": "displayCase",
       "sourceCandidates": []
     },
     "museum_potted_tree": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -9775,10 +9792,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "museum_reception_bend": {
-      "kind": "reception",
       "design": null,
       "editions": {
         "firered": {
@@ -9794,10 +9811,10 @@
           ]
         }
       },
+      "kind": "reception",
       "sourceCandidates": []
     },
     "museum_reception_north": {
-      "kind": "reception",
       "design": null,
       "editions": {
         "firered": {
@@ -9813,10 +9830,10 @@
           ]
         }
       },
+      "kind": "reception",
       "sourceCandidates": []
     },
     "museum_reception_south": {
-      "kind": "reception",
       "design": null,
       "editions": {
         "firered": {
@@ -9832,10 +9849,10 @@
           ]
         }
       },
+      "kind": "reception",
       "sourceCandidates": []
     },
     "museum_space_exhibit": {
-      "kind": "designed",
       "design": "fr_space_exhibit",
       "editions": {
         "firered": {
@@ -9851,10 +9868,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "neighbor_house_left_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -9884,10 +9901,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "neighbor_living_cupboard": {
-      "kind": "designed",
       "design": "fr_cupboard",
       "editions": {
         "firered": {
@@ -9917,10 +9934,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "neighbor_living_television": {
-      "kind": "designed",
       "design": "fr_living_tv",
       "editions": {
         "firered": {
@@ -9950,12 +9967,12 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": [
         "oras_home_tv"
       ]
     },
     "neighbor_room_television": {
-      "kind": "designed",
       "design": "fr_home_bookcase",
       "editions": {
         "firered": {
@@ -9971,10 +9988,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "neighbor_wall_picture": {
-      "kind": "designed",
       "design": "fr_wall_picture",
       "editions": {
         "firered": {
@@ -9990,10 +10007,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "oak_native_exit_mat": {
-      "kind": "designed",
       "design": "fr_lab_exit_mat",
       "editions": {
         "firered": {
@@ -10009,10 +10026,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_desk_1": {
-      "kind": "designed",
       "design": "fr_office_table",
       "editions": {
         "firered": {
@@ -10028,10 +10045,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_desk_2": {
-      "kind": "designed",
       "design": "fr_office_table",
       "editions": {
         "firered": {
@@ -10047,10 +10064,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_desk_3": {
-      "kind": "designed",
       "design": "fr_office_table",
       "editions": {
         "firered": {
@@ -10066,10 +10083,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_desk_4": {
-      "kind": "designed",
       "design": "fr_office_table",
       "editions": {
         "firered": {
@@ -10085,10 +10102,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_plant_768": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -10106,10 +10123,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "office_plant_769": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -10129,10 +10146,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "office_plant_770": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -10148,10 +10165,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "office_plant_847": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -10183,10 +10200,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "office_president_sofa": {
-      "kind": "designed",
       "design": "fr_sofa",
       "editions": {
         "firered": {
@@ -10202,10 +10219,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_president_table": {
-      "kind": "designed",
       "design": "fr_round_table",
       "editions": {
         "firered": {
@@ -10221,10 +10238,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_sofa": {
-      "kind": "designed",
       "design": "fr_sofa",
       "editions": {
         "firered": {
@@ -10240,10 +10257,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_stool_739": {
-      "kind": "designed",
       "design": "fr_stool",
       "editions": {
         "firered": {
@@ -10263,10 +10280,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_stool_740": {
-      "kind": "designed",
       "design": "fr_stool",
       "editions": {
         "firered": {
@@ -10286,10 +10303,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_stool_786": {
-      "kind": "designed",
       "design": "fr_stool",
       "editions": {
         "firered": {
@@ -10317,10 +10334,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_stool_794": {
-      "kind": "designed",
       "design": "fr_stool",
       "editions": {
         "firered": {
@@ -10336,10 +10353,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "office_stool_902": {
-      "kind": "designed",
       "design": "fr_stool",
       "editions": {
         "firered": {
@@ -10361,10 +10378,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "pallet_mailbox": {
-      "kind": "mailbox",
       "design": null,
       "editions": {
         "firered": {
@@ -10380,10 +10397,10 @@
           ]
         }
       },
+      "kind": "mailbox",
       "sourceCandidates": []
     },
     "pewter_gym_prop_687": {
-      "kind": "relief",
       "design": null,
       "editions": {
         "firered": {
@@ -10399,10 +10416,10 @@
           ]
         }
       },
+      "kind": "relief",
       "sourceCandidates": []
     },
     "pewter_gym_prop_690": {
-      "kind": "plaque",
       "design": null,
       "editions": {
         "firered": {
@@ -10418,10 +10435,10 @@
           ]
         }
       },
+      "kind": "plaque",
       "sourceCandidates": []
     },
     "power_plant_drums_720_0": {
-      "kind": "designed",
       "design": "fr_industrial_drums",
       "editions": {
         "firered": {
@@ -10437,10 +10454,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "power_plant_drums_720_1": {
-      "kind": "designed",
       "design": "fr_industrial_drums",
       "editions": {
         "firered": {
@@ -10456,10 +10473,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "power_plant_drums_721_0": {
-      "kind": "designed",
       "design": "fr_industrial_drums",
       "editions": {
         "firered": {
@@ -10475,10 +10492,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "power_plant_drums_721_1": {
-      "kind": "designed",
       "design": "fr_industrial_drums",
       "editions": {
         "firered": {
@@ -10494,10 +10511,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "power_plant_drums_721_2": {
-      "kind": "designed",
       "design": "fr_industrial_drums",
       "editions": {
         "firered": {
@@ -10513,10 +10530,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "power_plant_generator": {
-      "kind": "designed",
       "design": "fr_generator",
       "editions": {
         "firered": {
@@ -10532,10 +10549,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "power_plant_generator_floor": {
-      "kind": "designed",
       "design": "fr_generator",
       "editions": {
         "firered": {
@@ -10551,10 +10568,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "power_plant_rubble": {
-      "kind": "designed",
       "design": "fr_industrial_rubble",
       "editions": {
         "firered": {
@@ -10570,10 +10587,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "powerplant_monitor_terminal": {
-      "kind": "cabinet",
       "design": "fr_native_monitor",
       "editions": {
         "firered": {
@@ -10589,10 +10606,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "powerplant_server": {
-      "kind": "cabinet",
       "design": "fr_native_rack",
       "editions": {
         "firered": {
@@ -10608,10 +10625,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "cabinet",
+      "sourceCandidates": [
+        "bdsp_galactic_server"
+      ]
     },
     "powerplant_tape_terminal": {
-      "kind": "cabinet",
       "design": "fr_native_rack",
       "editions": {
         "firered": {
@@ -10627,10 +10646,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "rocket_executive_desk": {
-      "kind": "designed",
       "design": "fr_executive_table",
       "editions": {
         "firered": {
@@ -10646,10 +10665,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "rocket_processing_machine": {
-      "kind": "designed",
       "design": "fr_processing_machine",
       "editions": {
         "firered": {
@@ -10669,10 +10688,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "rom_082d4ca4_prop_648": {
-      "kind": "relief",
       "design": null,
       "editions": {
         "firered": {
@@ -10688,10 +10707,10 @@
           ]
         }
       },
+      "kind": "relief",
       "sourceCandidates": []
     },
     "rom_082d4ca4_prop_663": {
-      "kind": "plaque",
       "design": null,
       "editions": {
         "firered": {
@@ -10707,10 +10726,10 @@
           ]
         }
       },
+      "kind": "plaque",
       "sourceCandidates": []
     },
     "rom_082d4cbc_prop_673": {
-      "kind": "relief",
       "design": null,
       "editions": {
         "firered": {
@@ -10726,10 +10745,10 @@
           ]
         }
       },
+      "kind": "relief",
       "sourceCandidates": []
     },
     "rom_082d4cbc_prop_681": {
-      "kind": "plaque",
       "design": null,
       "editions": {
         "firered": {
@@ -10745,10 +10764,10 @@
           ]
         }
       },
+      "kind": "plaque",
       "sourceCandidates": []
     },
     "rom_082d4d1c_prop_720": {
-      "kind": "relief",
       "design": null,
       "editions": {
         "firered": {
@@ -10764,10 +10783,10 @@
           ]
         }
       },
+      "kind": "relief",
       "sourceCandidates": []
     },
     "rom_082d4d1c_prop_721": {
-      "kind": "relief",
       "design": null,
       "editions": {
         "firered": {
@@ -10783,10 +10802,10 @@
           ]
         }
       },
+      "kind": "relief",
       "sourceCandidates": []
     },
     "rom_082d4d1c_prop_722": {
-      "kind": "plaque",
       "design": null,
       "editions": {
         "firered": {
@@ -10802,10 +10821,10 @@
           ]
         }
       },
+      "kind": "plaque",
       "sourceCandidates": []
     },
     "rom_082d4d34_prop_651": {
-      "kind": "bin",
       "design": null,
       "editions": {
         "firered": {
@@ -10821,10 +10840,10 @@
           ]
         }
       },
+      "kind": "bin",
       "sourceCandidates": []
     },
     "rom_082d4d34_prop_697": {
-      "kind": "relief",
       "design": null,
       "editions": {
         "firered": {
@@ -10840,10 +10859,10 @@
           ]
         }
       },
+      "kind": "relief",
       "sourceCandidates": []
     },
     "rom_082d4d34_prop_698": {
-      "kind": "plaque",
       "design": null,
       "editions": {
         "firered": {
@@ -10859,10 +10878,10 @@
           ]
         }
       },
+      "kind": "plaque",
       "sourceCandidates": []
     },
     "rom_082d4d4c_prop_696": {
-      "kind": "relief",
       "design": null,
       "editions": {
         "firered": {
@@ -10878,10 +10897,10 @@
           ]
         }
       },
+      "kind": "relief",
       "sourceCandidates": []
     },
     "rom_082d4d4c_prop_697": {
-      "kind": "plaque",
       "design": null,
       "editions": {
         "firered": {
@@ -10897,10 +10916,10 @@
           ]
         }
       },
+      "kind": "plaque",
       "sourceCandidates": []
     },
     "rom_082d4d64_prop_662": {
-      "kind": "relief",
       "design": null,
       "editions": {
         "firered": {
@@ -10916,10 +10935,10 @@
           ]
         }
       },
+      "kind": "relief",
       "sourceCandidates": []
     },
     "rom_082d4d64_prop_670": {
-      "kind": "plaque",
       "design": null,
       "editions": {
         "firered": {
@@ -10935,10 +10954,10 @@
           ]
         }
       },
+      "kind": "plaque",
       "sourceCandidates": []
     },
     "rom_082d4d7c_prop_687": {
-      "kind": "relief",
       "design": null,
       "editions": {
         "firered": {
@@ -10954,10 +10973,10 @@
           ]
         }
       },
+      "kind": "relief",
       "sourceCandidates": []
     },
     "rom_082d4d7c_prop_696": {
-      "kind": "plaque",
       "design": null,
       "editions": {
         "firered": {
@@ -10973,10 +10992,10 @@
           ]
         }
       },
+      "kind": "plaque",
       "sourceCandidates": []
     },
     "room_bed": {
-      "kind": "designed",
       "design": "fr_bed",
       "editions": {
         "firered": {
@@ -10992,10 +11011,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "room_computer": {
-      "kind": "designed",
       "design": "fr_room_pc",
       "editions": {
         "firered": {
@@ -11011,10 +11030,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "room_console": {
-      "kind": "designed",
       "design": "fr_console",
       "editions": {
         "firered": {
@@ -11030,10 +11049,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "room_dresser": {
-      "kind": "designed",
       "design": "fr_room_dresser",
       "editions": {
         "firered": {
@@ -11049,10 +11068,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "room_television": {
-      "kind": "designed",
       "design": "fr_home_bookcase",
       "editions": {
         "firered": {
@@ -11068,10 +11087,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "route23_stone_bollard": {
-      "kind": "stoneBollard",
       "design": null,
       "editions": {
         "firered": {
@@ -11087,10 +11106,10 @@
           ]
         }
       },
+      "kind": "stoneBollard",
       "sourceCandidates": []
     },
     "route_gate_exit_mat": {
-      "kind": "designed",
       "design": "fr_route_exit_mat",
       "editions": {
         "firered": {
@@ -11122,10 +11141,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "route_gate_glass_table": {
-      "kind": "designed",
       "design": "fr_route_glass_table",
       "editions": {
         "firered": {
@@ -11155,10 +11174,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "route_gate_plant_744": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -11192,10 +11211,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "route_gate_plant_745": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -11245,10 +11264,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "route_gate_plant_746": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -11298,10 +11317,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "route_gate_seat_742": {
-      "kind": "designed",
       "design": "fr_route_seat",
       "editions": {
         "firered": {
@@ -11331,10 +11350,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "route_gate_seat_743": {
-      "kind": "designed",
       "design": "fr_route_seat",
       "editions": {
         "firered": {
@@ -11364,10 +11383,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "route_gate_window": {
-      "kind": "designed",
       "design": "fr_route_window",
       "editions": {
         "firered": {
@@ -11389,10 +11408,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "rs_institution_cylinder": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11410,10 +11429,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_computer": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11429,10 +11448,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_display_case": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11448,10 +11467,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_east_return": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11467,10 +11486,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_east_seat": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11486,10 +11505,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_instrument": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11505,10 +11524,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_meeting_island": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11524,10 +11543,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_plans": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11543,10 +11562,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_president_desk": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11562,10 +11581,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_rear_bench": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11581,10 +11600,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_reception": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11600,10 +11619,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_stool": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11619,10 +11638,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_west_return": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11638,10 +11657,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_devon_west_seat": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11657,10 +11676,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_divider": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11676,10 +11695,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_ball": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11695,10 +11714,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_counter": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11714,10 +11733,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_figure": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11733,10 +11752,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_partition": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11752,10 +11771,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_picture_0": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11771,10 +11790,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_picture_1": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11790,10 +11809,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_picture_2": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11809,10 +11828,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_picture_3": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11828,10 +11847,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_picture_4": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11847,10 +11866,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_picture_5": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11866,10 +11885,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_picture_6": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11885,10 +11904,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_picture_7": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11904,10 +11923,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_return_north": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11923,10 +11942,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_return_partition": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11942,10 +11961,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_stone": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11961,10 +11980,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_upper_figure_0": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11980,10 +11999,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_upper_figure_1": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -11999,10 +12018,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_upper_left_corner": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12018,10 +12037,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_upper_rear": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12037,10 +12056,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_upper_right_corner": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12056,10 +12075,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_gallery_upper_wing": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12075,10 +12094,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_glass": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12094,10 +12113,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_ocean_wall_diagram_0": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12113,10 +12132,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_ocean_wall_diagram_1": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12132,10 +12151,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_ocean_wall_diagram_2": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12151,10 +12170,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_parts": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12170,10 +12189,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_reception_left": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12189,10 +12208,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_reception_right": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12208,10 +12227,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_ship": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12227,10 +12246,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_space_computer": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12248,10 +12267,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_space_controls": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12267,10 +12286,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_space_controls_end": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12288,10 +12307,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_space_controls_pair": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12307,10 +12326,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_space_desk": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12326,10 +12345,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_space_plans": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12345,10 +12364,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_space_stool": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12366,10 +12385,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_tall_case": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12385,10 +12404,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_terminal": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12404,10 +12423,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_terminal_wide": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12423,10 +12442,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_institution_wall_case": {
-      "kind": "rsInstitution",
       "design": null,
       "editions": {
         "ruby": {
@@ -12442,10 +12461,10 @@
           ]
         }
       },
+      "kind": "rsInstitution",
       "sourceCandidates": []
     },
     "rs_link_booth_1": {
-      "kind": "rsLinkBooth",
       "design": null,
       "editions": {
         "ruby": {
@@ -12489,10 +12508,10 @@
           ]
         }
       },
+      "kind": "rsLinkBooth",
       "sourceCandidates": []
     },
     "rs_link_booth_2": {
-      "kind": "rsLinkBooth",
       "design": null,
       "editions": {
         "ruby": {
@@ -12536,10 +12555,10 @@
           ]
         }
       },
+      "kind": "rsLinkBooth",
       "sourceCandidates": []
     },
     "rs_link_booth_3": {
-      "kind": "rsLinkBooth",
       "design": null,
       "editions": {
         "ruby": {
@@ -12583,10 +12602,10 @@
           ]
         }
       },
+      "kind": "rsLinkBooth",
       "sourceCandidates": []
     },
     "rs_link_partition_end": {
-      "kind": "rsLinkPartition",
       "design": null,
       "editions": {
         "ruby": {
@@ -12630,10 +12649,10 @@
           ]
         }
       },
+      "kind": "rsLinkPartition",
       "sourceCandidates": []
     },
     "rs_mart_checkout": {
-      "kind": "martCheckout",
       "design": null,
       "editions": {
         "ruby": {
@@ -12671,10 +12690,72 @@
           ]
         }
       },
+      "kind": "martCheckout",
       "sourceCandidates": []
     },
+    "rs_pyre_memorial": {
+      "design": "fr_tower_grave",
+      "editions": {
+        "ruby": {
+          "count": 200,
+          "maps": [
+            "RU_MT_PYRE_1F",
+            "RU_MT_PYRE_2F",
+            "RU_MT_PYRE_3F",
+            "RU_MT_PYRE_4F",
+            "RU_MT_PYRE_5F",
+            "RU_MT_PYRE_6F"
+          ]
+        },
+        "sapphire": {
+          "count": 200,
+          "maps": [
+            "SA_MT_PYRE_1F",
+            "SA_MT_PYRE_2F",
+            "SA_MT_PYRE_3F",
+            "SA_MT_PYRE_4F",
+            "SA_MT_PYRE_5F",
+            "SA_MT_PYRE_6F"
+          ]
+        }
+      },
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_pyre_memorial"
+      ]
+    },
+    "rs_pyre_memorial_wall_shadow": {
+      "design": "fr_tower_grave",
+      "editions": {
+        "ruby": {
+          "count": 66,
+          "maps": [
+            "RU_MT_PYRE_1F",
+            "RU_MT_PYRE_2F",
+            "RU_MT_PYRE_3F",
+            "RU_MT_PYRE_4F",
+            "RU_MT_PYRE_5F",
+            "RU_MT_PYRE_6F"
+          ]
+        },
+        "sapphire": {
+          "count": 66,
+          "maps": [
+            "SA_MT_PYRE_1F",
+            "SA_MT_PYRE_2F",
+            "SA_MT_PYRE_3F",
+            "SA_MT_PYRE_4F",
+            "SA_MT_PYRE_5F",
+            "SA_MT_PYRE_6F"
+          ]
+        }
+      },
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_pyre_memorial"
+      ]
+    },
     "rs_tower_reception": {
-      "kind": "towerCounter",
       "design": null,
       "editions": {
         "ruby": {
@@ -12690,10 +12771,10 @@
           ]
         }
       },
+      "kind": "towerCounter",
       "sourceCandidates": []
     },
     "saffron_column": {
-      "kind": "designed",
       "design": "fr_saffron_column",
       "editions": {
         "firered": {
@@ -12709,10 +12790,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "saffron_gym_notice_board": {
-      "kind": "sign",
       "design": null,
       "editions": {
         "firered": {
@@ -12730,10 +12811,10 @@
           ]
         }
       },
+      "kind": "sign",
       "sourceCandidates": []
     },
     "saffron_mailbox": {
-      "kind": "mailbox",
       "design": null,
       "editions": {
         "firered": {
@@ -12751,10 +12832,10 @@
           ]
         }
       },
+      "kind": "mailbox",
       "sourceCandidates": []
     },
     "saffron_telepad": {
-      "kind": "designed",
       "design": "fr_saffron_telepad",
       "editions": {
         "firered": {
@@ -12770,10 +12851,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "school_board": {
-      "kind": "designed",
       "design": "fr_school_board",
       "editions": {
         "firered": {
@@ -12791,10 +12872,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "school_books": {
-      "kind": "designed",
       "design": "fr_school_books",
       "editions": {
         "firered": {
@@ -12812,10 +12893,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "school_map": {
-      "kind": "designed",
       "design": "fr_school_map",
       "editions": {
         "firered": {
@@ -12833,10 +12914,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "school_plant_641": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -12854,10 +12935,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "school_plant_642": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -12875,10 +12956,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "school_seat": {
-      "kind": "designed",
       "design": "fr_school_seat",
       "editions": {
         "firered": {
@@ -12896,10 +12977,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "school_teacher_desk": {
-      "kind": "designed",
       "design": "fr_school_desk",
       "editions": {
         "firered": {
@@ -12917,10 +12998,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "school_windows": {
-      "kind": "designed",
       "design": "fr_school_windows",
       "editions": {
         "firered": {
@@ -12938,10 +13019,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "sevii_bookcase": {
-      "kind": "designed",
       "design": "fr_home_bookcase",
       "editions": {
         "firered": {
@@ -12957,10 +13038,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "sevii_dining_chair_359": {
-      "kind": "designed",
       "design": "fr_sevii_chair",
       "editions": {
         "firered": {
@@ -12976,10 +13057,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "sevii_dining_chair_367": {
-      "kind": "designed",
       "design": "fr_sevii_chair",
       "editions": {
         "firered": {
@@ -12995,10 +13076,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "sevii_dining_table": {
-      "kind": "designed",
       "design": "fr_lorelei_table",
       "editions": {
         "firered": {
@@ -13014,10 +13095,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "sevii_planter": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -13033,10 +13114,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "sevii_wardrobe": {
-      "kind": "designed",
       "design": "fr_sevii_wardrobe",
       "editions": {
         "firered": {
@@ -13052,10 +13133,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_barrel": {
-      "kind": "designed",
       "design": "fr_ship_barrel",
       "editions": {
         "firered": {
@@ -13073,10 +13154,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_bed_777": {
-      "kind": "designed",
       "design": "fr_ship_bed",
       "editions": {
         "firered": {
@@ -13112,10 +13193,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_bed_809": {
-      "kind": "designed",
       "design": "fr_ship_bed",
       "editions": {
         "firered": {
@@ -13143,10 +13224,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_bin": {
-      "kind": "designed",
       "design": "fr_ship_bin",
       "editions": {
         "firered": {
@@ -13162,10 +13243,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_books": {
-      "kind": "designed",
       "design": "fr_native_books",
       "editions": {
         "firered": {
@@ -13181,10 +13262,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_cabin_table": {
-      "kind": "designed",
       "design": "fr_ship_table",
       "editions": {
         "firered": {
@@ -13200,10 +13281,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_chair_771": {
-      "kind": "designed",
       "design": "fr_ship_chair",
       "editions": {
         "firered": {
@@ -13219,10 +13300,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_chair_820": {
-      "kind": "designed",
       "design": "fr_ship_chair",
       "editions": {
         "firered": {
@@ -13250,10 +13331,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_chair_828": {
-      "kind": "designed",
       "design": "fr_ship_chair",
       "editions": {
         "firered": {
@@ -13289,10 +13370,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_plant_779": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -13328,10 +13409,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "ship_plant_811": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -13359,10 +13440,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "ship_porthole": {
-      "kind": "designed",
       "design": "fr_ship_porthole",
       "editions": {
         "firered": {
@@ -13386,10 +13467,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_rail_859": {
-      "kind": "designed",
       "design": "fr_ship_rail",
       "editions": {
         "firered": {
@@ -13405,10 +13486,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_rail_860": {
-      "kind": "designed",
       "design": "fr_ship_rail",
       "editions": {
         "firered": {
@@ -13424,10 +13505,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_rail_886": {
-      "kind": "designed",
       "design": "fr_ship_rail",
       "editions": {
         "firered": {
@@ -13443,10 +13524,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_rail_944": {
-      "kind": "designed",
       "design": "fr_ship_rail",
       "editions": {
         "firered": {
@@ -13462,10 +13543,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_rail_945": {
-      "kind": "designed",
       "design": "fr_ship_rail",
       "editions": {
         "firered": {
@@ -13481,10 +13562,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_rail_946": {
-      "kind": "designed",
       "design": "fr_ship_rail",
       "editions": {
         "firered": {
@@ -13500,10 +13581,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "ship_side_table": {
-      "kind": "designed",
       "design": "fr_ship_side_table",
       "editions": {
         "firered": {
@@ -13531,10 +13612,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "silph_edge_potted_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -13562,10 +13643,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "silph_monitor_terminal": {
-      "kind": "cabinet",
       "design": "fr_native_monitor",
       "editions": {
         "firered": {
@@ -13595,10 +13676,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "silph_potted_plant": {
-      "kind": "plant",
       "design": null,
       "editions": {
         "firered": {
@@ -13628,10 +13709,10 @@
           ]
         }
       },
+      "kind": "plant",
       "sourceCandidates": []
     },
     "silph_server": {
-      "kind": "cabinet",
       "design": "fr_native_rack",
       "editions": {
         "firered": {
@@ -13661,10 +13742,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "cabinet",
+      "sourceCandidates": [
+        "bdsp_galactic_server"
+      ]
     },
     "silph_tape_terminal": {
-      "kind": "cabinet",
       "design": "fr_native_rack",
       "editions": {
         "firered": {
@@ -13690,10 +13773,10 @@
           ]
         }
       },
+      "kind": "cabinet",
       "sourceCandidates": []
     },
     "tanoby_masonry_697": {
-      "kind": "designed",
       "design": "fr_tanoby_masonry",
       "editions": {
         "firered": {
@@ -13721,10 +13804,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "tanoby_masonry_726": {
-      "kind": "designed",
       "design": "fr_tanoby_masonry",
       "editions": {
         "firered": {
@@ -13752,10 +13835,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "tower_grave_657": {
-      "kind": "designed",
       "design": "fr_tower_grave",
       "editions": {
         "firered": {
@@ -13781,10 +13864,12 @@
           ]
         }
       },
-      "sourceCandidates": []
+      "kind": "designed",
+      "sourceCandidates": [
+        "oras_pyre_memorial"
+      ]
     },
     "tower_grave_659": {
-      "kind": "designed",
       "design": "fr_tower_grave",
       "editions": {
         "firered": {
@@ -13808,10 +13893,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "tower_grave_702": {
-      "kind": "designed",
       "design": "fr_tower_grave",
       "editions": {
         "firered": {
@@ -13829,10 +13914,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "tower_grave_703": {
-      "kind": "designed",
       "design": "fr_tower_grave",
       "editions": {
         "firered": {
@@ -13850,10 +13935,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "tower_grave_728": {
-      "kind": "designed",
       "design": "fr_tower_grave",
       "editions": {
         "firered": {
@@ -13877,10 +13962,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "tower_grave_729": {
-      "kind": "designed",
       "design": "fr_tower_grave",
       "editions": {
         "firered": {
@@ -13900,10 +13985,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "tower_pc_emerald": {
-      "kind": "towerTerminal",
       "design": null,
       "editions": {
         "emerald": {
@@ -13913,10 +13998,10 @@
           ]
         }
       },
+      "kind": "towerTerminal",
       "sourceCandidates": []
     },
     "tower_pc_rs": {
-      "kind": "towerTerminal",
       "design": null,
       "editions": {
         "ruby": {
@@ -13932,10 +14017,10 @@
           ]
         }
       },
+      "kind": "towerTerminal",
       "sourceCandidates": []
     },
     "tower_portal_emerald_114": {
-      "kind": "towerDoor",
       "design": null,
       "editions": {
         "emerald": {
@@ -13945,10 +14030,10 @@
           ]
         }
       },
+      "kind": "towerDoor",
       "sourceCandidates": []
     },
     "tower_portal_emerald_7": {
-      "kind": "towerDoor",
       "design": null,
       "editions": {
         "emerald": {
@@ -13959,10 +14044,10 @@
           ]
         }
       },
+      "kind": "towerDoor",
       "sourceCandidates": []
     },
     "tower_portal_rs_114": {
-      "kind": "towerDoor",
       "design": null,
       "editions": {
         "ruby": {
@@ -13978,10 +14063,10 @@
           ]
         }
       },
+      "kind": "towerDoor",
       "sourceCandidates": []
     },
     "tower_reception_elbow": {
-      "kind": "designed",
       "design": "fr_tower_reception",
       "editions": {
         "firered": {
@@ -13997,10 +14082,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "tower_reception_return": {
-      "kind": "designed",
       "design": "fr_tower_reception_return",
       "editions": {
         "firered": {
@@ -14016,10 +14101,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "trainer_battle_piers": {
-      "kind": "towerPiers",
       "design": null,
       "editions": {
         "firered": {
@@ -14049,10 +14134,10 @@
           ]
         }
       },
+      "kind": "towerPiers",
       "sourceCandidates": []
     },
     "trainer_center_battle_piers": {
-      "kind": "towerPiers",
       "design": null,
       "editions": {
         "firered": {
@@ -14082,10 +14167,10 @@
           ]
         }
       },
+      "kind": "towerPiers",
       "sourceCandidates": []
     },
     "trainer_elevator_door": {
-      "kind": "towerDoor",
       "design": null,
       "editions": {
         "firered": {
@@ -14101,10 +14186,10 @@
           ]
         }
       },
+      "kind": "towerDoor",
       "sourceCandidates": []
     },
     "trainer_floor_2_wall_relief": {
-      "kind": "towerRelief",
       "design": null,
       "editions": {
         "firered": {
@@ -14120,10 +14205,10 @@
           ]
         }
       },
+      "kind": "towerRelief",
       "sourceCandidates": []
     },
     "trainer_floor_3_wall_relief": {
-      "kind": "towerRelief",
       "design": null,
       "editions": {
         "firered": {
@@ -14139,10 +14224,10 @@
           ]
         }
       },
+      "kind": "towerRelief",
       "sourceCandidates": []
     },
     "trainer_floor_4_wall_relief": {
-      "kind": "towerRelief",
       "design": null,
       "editions": {
         "firered": {
@@ -14158,10 +14243,10 @@
           ]
         }
       },
+      "kind": "towerRelief",
       "sourceCandidates": []
     },
     "trainer_floor_5_wall_relief": {
-      "kind": "towerRelief",
       "design": null,
       "editions": {
         "firered": {
@@ -14177,10 +14262,10 @@
           ]
         }
       },
+      "kind": "towerRelief",
       "sourceCandidates": []
     },
     "trainer_floor_6_wall_relief": {
-      "kind": "towerRelief",
       "design": null,
       "editions": {
         "firered": {
@@ -14196,10 +14281,10 @@
           ]
         }
       },
+      "kind": "towerRelief",
       "sourceCandidates": []
     },
     "trainer_floor_7_wall_relief": {
-      "kind": "towerRelief",
       "design": null,
       "editions": {
         "firered": {
@@ -14215,10 +14300,10 @@
           ]
         }
       },
+      "kind": "towerRelief",
       "sourceCandidates": []
     },
     "trainer_floor_8_wall_relief": {
-      "kind": "towerRelief",
       "design": null,
       "editions": {
         "firered": {
@@ -14234,10 +14319,10 @@
           ]
         }
       },
+      "kind": "towerRelief",
       "sourceCandidates": []
     },
     "trainer_floor_wall_relief": {
-      "kind": "towerRelief",
       "design": null,
       "editions": {
         "firered": {
@@ -14253,10 +14338,10 @@
           ]
         }
       },
+      "kind": "towerRelief",
       "sourceCandidates": []
     },
     "trainer_left_reception": {
-      "kind": "towerCounter",
       "design": null,
       "editions": {
         "firered": {
@@ -14272,10 +14357,10 @@
           ]
         }
       },
+      "kind": "towerCounter",
       "sourceCandidates": []
     },
     "trainer_lobby_screen": {
-      "kind": "towerScreen",
       "design": null,
       "editions": {
         "firered": {
@@ -14291,10 +14376,10 @@
           ]
         }
       },
+      "kind": "towerScreen",
       "sourceCandidates": []
     },
     "trainer_lobby_terminal": {
-      "kind": "towerTerminal",
       "design": null,
       "editions": {
         "firered": {
@@ -14310,10 +14395,10 @@
           ]
         }
       },
+      "kind": "towerTerminal",
       "sourceCandidates": []
     },
     "trainer_right_reception": {
-      "kind": "towerCounter",
       "design": null,
       "editions": {
         "firered": {
@@ -14329,10 +14414,10 @@
           ]
         }
       },
+      "kind": "towerCounter",
       "sourceCandidates": []
     },
     "vermilion_electric_gate": {
-      "kind": "designed",
       "design": "fr_vermilion_gate",
       "editions": {
         "firered": {
@@ -14348,10 +14433,10 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
     },
     "vermilion_puzzle_bin": {
-      "kind": "designed",
       "design": "fr_vermilion_bin",
       "editions": {
         "firered": {
@@ -14367,7 +14452,52 @@
           ]
         }
       },
+      "kind": "designed",
       "sourceCandidates": []
+    }
+  },
+  "limitations": [
+    "Candidate placement is not proof of successful texture/mesh upload or rendered acceptance.",
+    "Furniture extraction does not prove every native object was recognized.",
+    "Native continuous room finishes are not claims of imported modern room coverage."
+  ],
+  "renderedAccepted": false,
+  "schema": 1,
+  "totals": {
+    "emerald": {
+      "candidateFurniture": 465,
+      "furniture": 2091,
+      "maps": 519,
+      "nativeWallFinishRooms": 79,
+      "rooms": 301
+    },
+    "firered": {
+      "candidateFurniture": 398,
+      "furniture": 2937,
+      "maps": 426,
+      "nativeWallFinishRooms": 65,
+      "rooms": 253
+    },
+    "leafgreen": {
+      "candidateFurniture": 398,
+      "furniture": 2937,
+      "maps": 426,
+      "nativeWallFinishRooms": 65,
+      "rooms": 253
+    },
+    "ruby": {
+      "candidateFurniture": 420,
+      "furniture": 1476,
+      "maps": 395,
+      "nativeWallFinishRooms": 84,
+      "rooms": 231
+    },
+    "sapphire": {
+      "candidateFurniture": 420,
+      "furniture": 1476,
+      "maps": 395,
+      "nativeWallFinishRooms": 84,
+      "rooms": 231
     }
   }
 }

@@ -15,7 +15,7 @@ for _,edition in ipairs{'RU_','SA_','EM_'}do for _,f in ipairs{{'petalburg_city_
  local recipe=assert(recipes[f[1]]);local custom={family='rse',name=recipe.name,rows=recipe.rows};local g={cx=f[3],cy=f[4],pair=f[5],width=6,depth=5,kind='gym',groundHeight=2,custom=custom};local region={x=0,y=0,def={id=edition..f[2]}};local cells={}
  for y=0,4 do for x=0,5 do cells[(g.cx+x)..':'..(g.cy+y)]={civic=g,cx=g.cx+x,cy=g.cy+y,mid=recipe.rows[y+1][x+1],pair=g.pair,region=region,base=2,collision=y==0 and f[6][x+1]or(y==4 and({0,0,7,113,7,0})[x+1]or 7)}end end
  assert(G.eligible(g,cells));local c=cells[g.cx..':'..(g.cy+1)];c.collision=0;assert(not G.eligible(g,cells));c.collision=7
- local parts={};assert(G.build(g,cells,mesh,parts));assert(g.importedHoenn.model==G.id and #parts==6 and #g.importedGymDoors.parts==9)
+ local parts={};assert(G.build(g,cells,mesh,parts));assert(g.importedHoenn.model==G.id and #parts==7 and #g.importedGymDoors.parts==9)
  local fit=g.importedHoenn;assert(math.abs(fit.anchors.door[1]-56)<1e-6 and math.abs(fit.anchors.door[3]-54)<1e-6)
  assert(fit.bounds[4]-fit.bounds[1]>79 and fit.bounds[6]-fit.bounds[3]>56)
  assert(D.ownsDoor(g,g.cx+3,g.cy+4)and not D.ownsDoor(g,g.cx+2,g.cy+4))
@@ -31,6 +31,6 @@ end end
 -- A source triangle with blocked endpoints can still cross a walking cell.
 local g={cx=0,cy=0};local cells={['0:1']={civic=g,collision=7},['2:1']={civic=g,collision=7},['0:3']={civic=g,collision=7}}
 assert(not G.clearance(g,cells,{{vertices={{1,0,1},{47,0,1},{1,0,47}},indices={1,2,3}}}),'triangle crossed walking cells')
-local data=modules.ImportedHoennGymData;assert(#data.oras_hoenn_gym.parts==6 and #data.oras_hoenn_gym_notice.parts==2)
-local sourceTris=0;for _,p in ipairs(data.oras_hoenn_gym.parts)do sourceTris=sourceTris+#p.indices/3 end;assert(sourceTris==1056)
+local data=modules.ImportedHoennGymData;assert(#data.oras_hoenn_gym.parts==7 and #data.oras_hoenn_gym_notice.parts==2)
+local sourceTris=0;for _,p in ipairs(data.oras_hoenn_gym.parts)do if p.name~='authored_closed_rear'then sourceTris=sourceTris+#p.indices/3 end end;assert(sourceTris==1056)
 assert(released>0);print('PASS '..count..' guarded source Gym candidates, original hinged states, exact warp anchor, full triangle walk clearance, source closures and atomic missing-texture rollback')

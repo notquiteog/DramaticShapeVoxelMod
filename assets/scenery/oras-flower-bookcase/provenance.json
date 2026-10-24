@@ -1,0 +1,159 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO366 -> AD161 -> MM273 -> GR623",
+  "model": "r104ar0101_00_00",
+  "modelBchSha256": "f1f6aa9aa985098cbea64068d9ee3ef33f7e0421491c367cf548195fe82c3657",
+  "textureBchSha256": "6a311f9d7cb85d6aa527c5b7f6e531599a6a99e26940bda4199d33bed651aa9a",
+  "textures": {
+    "books02": {
+      "rgbaSha256": "f7fe1975643ae23f1dbc741589d13f004e4f6c06365bcc7175901c2fd2da7f2b",
+      "pngSha256": "581e85cefd8dc5627da6607a38be371cc18e41f63579b47794cd4369c8adf135"
+    },
+    "bookshelf01": {
+      "rgbaSha256": "4ca30cca27a421f076e33213322ed554f5e615c62d73e459eb8761c0b818ef58",
+      "pngSha256": "3814adcb5ae4a369b808dc5709f98a591ba053740d8a5efd3ba79b258860b23b"
+    }
+  },
+  "originalTriangles": 476,
+  "authoredClosureTriangles": 144,
+  "bookColors": [
+    [
+      0.37254901960784315,
+      0.6196078431372549,
+      0.37254901960784315,
+      1.0
+    ],
+    [
+      0.8509803921568627,
+      0.8509803921568627,
+      0.5882352941176471,
+      1.0
+    ],
+    [
+      0.8509803921568627,
+      0.7647058823529411,
+      0.5882352941176471,
+      1.0
+    ],
+    [
+      0.37254901960784315,
+      0.6196078431372549,
+      0.37254901960784315,
+      1.0
+    ],
+    [
+      0.37254901960784315,
+      0.6196078431372549,
+      0.37254901960784315,
+      1.0
+    ],
+    [
+      0.49019607843137253,
+      0.5686274509803921,
+      0.49019607843137253,
+      1.0
+    ],
+    [
+      0.30980392156862746,
+      1.0,
+      0.9411764705882353,
+      1.0
+    ],
+    [
+      0.788235294117647,
+      0.6862745098039216,
+      0.6862745098039216,
+      1.0
+    ],
+    [
+      0.8509803921568627,
+      0.8509803921568627,
+      0.7372549019607844,
+      1.0
+    ],
+    [
+      0.8509803921568627,
+      0.7019607843137254,
+      0.40784313725490196,
+      1.0
+    ],
+    [
+      1.0,
+      1.0,
+      0.3058823529411765,
+      1.0
+    ],
+    [
+      0.43529411764705883,
+      0.5686274509803921,
+      0.43529411764705883,
+      1.0
+    ],
+    [
+      0.8509803921568627,
+      0.7019607843137254,
+      0.40784313725490196,
+      1.0
+    ],
+    [
+      1.0,
+      1.0,
+      0.3058823529411765,
+      1.0
+    ],
+    [
+      0.43529411764705883,
+      0.5686274509803921,
+      0.43529411764705883,
+      1.0
+    ],
+    [
+      0.30980392156862746,
+      1.0,
+      0.9411764705882353,
+      1.0
+    ],
+    [
+      0.8509803921568627,
+      0.7529411764705882,
+      0.5568627450980392,
+      1.0
+    ],
+    [
+      0.8901960784313725,
+      0.580392156862745,
+      0.580392156862745,
+      1.0
+    ],
+    [
+      0.8509803921568627,
+      0.7529411764705882,
+      0.5568627450980392,
+      1.0
+    ],
+    [
+      0.8509803921568627,
+      0.7529411764705882,
+      0.5568627450980392,
+      1.0
+    ]
+  ],
+  "sourceFront": "-X",
+  "nativeQuarterTurn": 3,
+  "sourceBounds": [
+    -36.00410079956055,
+    1.1144700050354004,
+    -35.82820129394531,
+    -17.924299240112305,
+    39.00529861450195,
+    18.537399291992188
+  ],
+  "origin": [
+    -26.964200019836426,
+    1.1144700050354004,
+    -8.645401000976562
+  ],
+  "uniformDivisor": 18.079801559448242,
+  "processing": "All original case and twenty books, original UV/PNG. Original per-book pigment is flat brightest source tint; directional/ambient vertex shading removed. Wood uses original texture without source vertex lighting. Book open rims close at exact vertices; exposed foot bottoms and plank undersides closed, buried case/divider/foot-top caps omitted. Four-foot holes partition lower underside. Two original panel upper rims at 36.382 recess to original plank underside, removing actual source coplanar slivers. No floor, source shadow or lighting geometry. Uniform native fit and exact Y0 contact recess."
+}

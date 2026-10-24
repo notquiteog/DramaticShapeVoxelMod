@@ -49,7 +49,7 @@ return function(game)
    adapterOnly=true,renderedAcceptance=false,importableTreePlacements=#trees,importableFurniture=#interior}
   local seenTrees={}
   for _,g in ipairs(civics)do
-   local imported=V.require('Gen3ImportedCenters').eligible(g,cells)or V.require('Gen3ImportedHoenn').eligible(g,cells)or V.require('Gen3ImportedGyms').eligible(g,cells)or V.require('Gen3ImportedMarts').eligible(g,cells)or V.require('Gen3ImportedOldaleHomes').eligible(g,cells)or V.require('Gen3ImportedPetalburgHomes').eligible(g,cells)
+   local imported=V.require('Gen3ImportedCenters').eligible(g,cells)or V.require('Gen3ImportedHoenn').eligible(g,cells)or V.require('Gen3ImportedGyms').eligible(g,cells)or V.require('Gen3ImportedMarts').eligible(g,cells)or V.require('Gen3ImportedOldaleHomes').eligible(g,cells)or V.require('Gen3ImportedPetalburgHomes').eligible(g,cells)or V.require('Gen3ImportedRustboroHomes').eligible(g,cells)or V.require('Gen3ImportedDevon').eligible(g,cells)or V.require('Gen3ImportedSlateportMart').eligible(g,cells)or V.require('Gen3ImportedSlateportMuseum').eligible(g,cells)or V.require('Gen3ImportedSlateportHarbor').eligible(g,cells)
    local ground={};for y=g.cy,g.cy+g.depth-1 do for x=g.cx,g.cx+g.width-1 do local c=cells[x..':'..y];if c and c.civic==g then ground[Civic.ground(c)]=true end end end
    local floors={};for mid in pairs(ground)do floors[#floors+1]=mid end;table.sort(floors)
    row.civics[#row.civics+1]={family=g.custom and g.custom.name or g.family or g.kind,x=g.cx,y=g.cy,width=g.width,depth=g.depth,ground=floors,modernCandidate=not not imported}

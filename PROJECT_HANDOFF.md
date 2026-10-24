@@ -10,6 +10,16 @@ native grass proofs and deterministic import pass. Canonical per-edition census
 See docs/CERULEAN_CLOSED_HOUSE_SOURCE_2026-10-23.md. No release/version bump;
 continuing next missing family; Silph uniform-fit depth mismatch remains held.
 
+# Resumed regional model coverage1.58.0 — 2026-10-23
+
+Merged Kanto b3e82032/f0287c65, Hoenn c5d0607b/15607548/85fe43a9,
+and interiors e7c6e5d7/63b4b51b atop the released API3 main. Source suite486PASS,
+0fail,58external-fixture skips;639production files compile under nativeLuaJIT2.1.
+All5GBA combined-mod entry/returns and current worker source checks pass.
+Exact package validation/release is coordinated at root; source agents remain
+active on next Kanto/Hoenn/interior families. Complete-map coverage remains
+unverified/incomplete. See docs/REGIONAL_SOURCE_INTEGRATION_2026-10-23.md.
+
 # Kanto queued landmarks rechecked on merged API3 — 2026-10-23
 
 Latest official0.3.96 standalone source review after release1.57.12 merge passes
@@ -28,6 +38,19 @@ Merged release1.57.12 API3/current-engine work into the isolated Kanto source
 branch. Preserved queued regional source/door families and the released Museum
 solid staircase. Reverify the merged queued placements before extending missing
 Kanto exterior families. No version bump or release; integration remains root-owned.
+
+# Queued Hoenn exteriors accepted on API3/0.3.96 — 2026-10-23
+
+After merging released main ea14555c, owned standalone .96 QA passes all15 source
+jobs/30 exact Rustboro/Devon/SlateportMart/Museum/Harbor placements, including all
+original cached door states, recessed contacts and failed-upload rollback. All15
+native entry jobs/36 original entrances and normal returns pass across R/E/S,
+with unchanged native grid hashes and zero streaming recovery. Current captured
+contacts/front/side/rear/roof views inspected. Five isolated source fixtures now
+load real SharedModelMesh (15607548). Root combined acceptance remains separate;
+Shipyard stays inactive and original .95 missing-asset gameplay proof stays .95.
+See [current verification](docs/ORAS_QUEUED_EXTERIORS_API3_2026-10-23.md).
+Littleroot GR6/ZO6 own-source houses are now being extracted; no new coverage claimed.
 
 # Portable API3 migration — 2026-10-23
 
@@ -139,6 +162,106 @@ This is NOT full165FPS completion or physical mobile certification. Model covera
 remains with the other owner. Final1.57.8 package passed seven-mod load/render in
 all11games and forest/lab/first-person checks in all6GB/GBC editions. All593
 packaged Lua files compile. Documentation-only follow-up preserves tested code.
+
+# Original ORAS Slateport Harbor — 2026-10-23
+
+Own GR150/AD20/BM93/ZO14→275 Harbor dispatches as hoennHarbors. Includes its
+actual Comb2/t106_02 physical wall layer; source exposure RGB, original PICA
+portal marker and BM light faces omitted. Original paired slider travel and
+native open entrance preserved. Underside/rear closed, contacts−.05; all fitted
+body/leaf states coplanar-zero. Official0.3.95 three final R/S/E source uploads,
+three actual-Scene entries/normal returns and one Emerald missing-source
+return pass; all-angle source/native captures inspected. No Scene edits.
+Candidates43EM42RU42SA of244;117 missing. Shipyard stays fallback due exact
+native foyer(26,37)/portal(26,38) source-fit conflict; no clearance relaxation.
+See [batch evidence](docs/ORAS_SLATEPORT_HARBOR_2026-10-23.md). Regional work continues.
+
+# Original ORAS Oceanic Museum — 2026-10-23
+
+Own GR150/AD20/BM40/ZO14→273 Museum now routes as hoennMuseums. Original1306
+body/68 door triangles retain roof/windows/dish/fixtures; underside/rear and
+finite roof-hardware backings close the original open geometry. Meeting leaf
+caps separate0.05 native units per side. Native unanimated0x32a stays visually
+open; original admission uses normal input. Official0.3.95 three R/S/E source
+uploads, six open-idle entrances/returns, two Emerald missing-source returns
+and Ruby walkable rear/roof checks pass. Evidence is tracked in
+[batch evidence](docs/ORAS_OCEANIC_MUSEUM_2026-10-23.md). Original native data
+and model bounds remain fixed; no Scene edit. Candidates42EM41RU41SA of244,
+120 missing. Slateport Shipyard/Harbor and the wider source queue continue.
+
+# Own ORAS Slateport Mart — 2026-10-23
+
+Distinct GR149 pc_base/AD20 paint and original BM9/ZO14→266 slider now route
+through the Hoenn facade as hoennMarts. Exact native4×4 footprint, portal,
+collision and source proportions stay fixed. Rear/underside are closed; no
+source ground plane is copied. The final source audit also corrects Slateport's
+slider side contact and float-quantized ground-ring coordinates in the older
+three Marts. Official0.3.95 twelve native four-Mart source/pose/contact/rollback
+checks, twelve actual entrances/returns and four Emerald missing-source
+fallback entries/returns pass. Source/contact regressions reject both original
+defects. Source all-angle/native contact/front/side/rear views inspected; native
+hashes unchanged and recovery zero. Census candidates now41EM40RU40SA of244,
+123 missing. No whole-map acceptance claim. See
+[batch evidence](docs/ORAS_SLATEPORT_MART_2026-10-23.md). Slateport facilities
+continue next; Rustboro Flat2/tower stay pending fit/full-side source review.
+
+# Original ORAS Devon Corporation — 2026-10-23
+
+Authentic GR33/ZO16/AD11/BM14 Devon now dispatches as rustboroDevon:1597 body
+triangles,46 paired-door triangles, exact source rear/underside closures and
+native paired portals. Uniform native fit preserves the walkable front strip.
+Official0.3.95 three native source/cap/pose/rollback cases, six actual R/S/E
+entries/returns and two Emerald missing-source fallback entries pass. Source
+all-angle and native contact/door/side/rear views inspected; native hashes
+unchanged, recovery zero. Census candidates now40EM39RU39SA of244;126 missing.
+No Scene edits or whole-map completion claim. See
+[batch evidence](docs/ORAS_DEVON_CORPORATION_2026-10-23.md). Flat2/tower continue.
+
+# Remove original Oldale glass-return overlap — 2026-10-23
+
+Two southeast source-glass triangles lose only the area shared with their
+neighbor, preserving the union silhouette and interpolated source paint. The
+northwest house,14 physical southeast glass triangles, rear closure and native
+portal/ground remain fixed. Actual-source coplanar checks and official0.3.95
+six R/S/E native house placements pass; views inspected. See
+[correction evidence](docs/ORAS_REAR_CLOSURES_2026-10-23.md). Devon continues.
+
+# Correct original ORAS open backs — 2026-10-23
+
+Fifteen owned Gym/Mart/Oldale/Petalburg/Rustboro source bodies now append actual
+rear closures from their original side profiles and paint. Earlier rear views
+were misread through open source backs; rear acceptance is withdrawn and
+superseded by135 real-source rays, unchanged bounds/source arrays and zero new
+coplanar overlap across113,442 candidate pairs. All51 native R/S/E placements
+pass with unchanged layout hashes and zero streaming recovery. Existing native door/collision/contact
+checks remain valid. No new family/map coverage is claimed. See
+[correction evidence](docs/ORAS_REAR_CLOSURES_2026-10-23.md). Oldale southeast
+source glass-return overlap is addressed by the follow-up above.
+
+# Original Rustboro flat/southern-home continuation — 2026-10-23
+
+Flat1 and House3 extend the authentic Rustboro source family to six variants.
+Source36 coplanar window returns clip to their exposed strips; prior four arrays
+and BM13 poses remain exact. Official0.3.95 native18 uploads/door/cap checks and
+18 actual R/S/E entries/returns pass; Emerald six-door missing-source fallback
+passes. Native hashes unchanged; contact captures inspected from walkable cells.
+Live controller interference was isolated through the QA engine config before
+acceptance. Flat2 is source-located but its native-anchor fit fills only35% of
+the blocked drawing, so remains fallback. Devon/tower continue next. See
+[batch evidence](docs/ORAS_RUSTBORO_FLATS_2026-10-23.md).
+
+# Original Rustboro home/school source batch — 2026-10-23
+
+Four own ORAS Rustboro variants and BM13 original hinges now dispatch through
+Gen3ModernHoennBuildings (`kind=rustboroHomes`). Native12 R/S/E source/door/cap/
+rollback checks pass on official0.3.95; source all-angle renders inspected.
+Exact native map art/warps and original ZO16/GR object placements bind ownership.
+Only Y0 rings/closures recess; no source ground planes or native warp changes.
+Actual latest-parent Scene activates all four;12 R/S/E entry/return tests and
+four missing-source native fallbacks pass. Inspected contact views are clean;
+some sides remain tree-obscured. No whole-map acceptance claim. Remaining Rustboro
+flats, southern home, tower and Devon continue next. See
+[batch evidence](docs/ORAS_RUSTBORO_HOMES_2026-10-23.md).
 
 # Genuine Mr Psychic source/native acceptance, scenery pause — 2026-10-23
 
@@ -254,6 +377,42 @@ blocked cells. No whole-game or production-package acceptance is claimed.
 See docs/HGSS_MARTS_2026-10-23.md and canonical JSONL for exact evidence/gaps.
 
 # Depth/fence/foliage release1.57.8 — 2026-10-23
+
+# Original floor cushion family — 2026-10-23
+
+All54 Emerald native floor cushions on13 rooms use the matching original ORAS
+Trick House source:128 original+14 exact underside triangles, original PNG/UV,
+source proportions, one walkable cell, .025 bottom-only recess and no coplanar
+planes. Native0.3.96 all-owner front/available-side/room views and nine source
+angles reviewed; all54 missing-PNG fallback checks pass. Every raw census hash
+unchanged; two native entry-script deltas match before/source/fallback runs.
+Five-game candidates2101; accepted source components2056/274maps. Every whole
+map stays unaccepted; remaining furniture and room families continue. See
+docs/ORAS_FLOOR_CUSHIONS_2026-10-23.md.
+
+# Native fallback archive-box ceiling correction — 2026-10-23
+
+The six RSE Birch-lab fallback archive boxes now fit uniformly around their
+fixed shelf support: top31.6 below the native32 ceiling instead of35. Exact box
+union preserves zero coplanar contact faces. Shelf/floor/room/native cells stay
+unchanged. Six missing-source native0.3.96 placements and three room overviews
+reviewed; geometry/atomic-fallback suites pass. See
+docs/NATIVE_ARCHIVE_BOX_CEILING_2026-10-23.md. Other room families continue.
+
+# Original freestanding lab case / native0.3.96 census — 2026-10-23
+
+Six RSE Birch-lab common/end owners now use the complete original ORAS
+44-book double-bay case plus independently fitted original taped carton.
+Exact original-rim closures and within-bay book-group X repairs remove source
+coplanar overlaps; no duplicate carton base, upper geometry below room ceiling,
+cap-only .025 contact recess. All six native0.3.96 source/fallback placements,
+nine source views and geometric tests pass. Five-game2161-map census rerun on
+0.3.96 with genuine fresh FRLG cache140: every native hash unchanged.2047 source
+candidates and2002 historically accepted components on261 maps; whole-map
+acceptance stays false. Other room/furniture families and native fallback
+archive-box ceiling clip remain pending. See docs/ORAS_BIRCH_FREECASE_2026-10-23.md.
+
+# Depth/fence/foliage release1.57.7 — 2026-10-23
 
 Explicit building contact-ring recess prevents coplanar ground closures while
 preserving portals, upper geometry and native floors. Authentic ORAS rails now
@@ -6964,3 +7123,77 @@ Focused LuaJIT geometry/guard tests and39up/34down stair tests pass. No producti
 Scene/source-adapter prerequisite. Root cherry-picks only this focused batch and
 owns exact-ZIP shared-terrace/Oak's Lab smoke and release. See
 `docs/PEWTER_MUSEUM_STAIRS_2026-10-23.md`; no whole-game coverage claim.
+
+# Interior source worker batches — 2026-10-23
+
+Verified source continuation: 61 BDSP institution racks, 158 legacy PC/TV/bed
+contacts, 74 genuine ORAS china cupboards, 39 Oldale kitchen units, and 682
+common Kanto graves using original Mt. Pyre memorials.
+The census has 2161 unchanged native hashes; 1186 furniture candidates,
+1141 accepted components across 240 maps, complete-map acceptance false. Exact
+bed rims replace 7 overlapping old caps; all 12 furniture models pass geometric
+coplanar-intersection checks. Kitchen undersides exclude the internal base
+footprint instead of duplicating its lid. Native 0.3.95 isolated all-fixture
+captures inspected; missing-PNG fallbacks and focused suites pass. Official
+Linux shell reports PASS then exits 1 on shutdown. Scene/release integration
+remains root-owned. See docs/IMPORTED_INTERIOR_CONTACTS_2026-10-23.md,
+docs/ORAS_CHINA_CUPBOARD_2026-10-23.md and docs/ORAS_KITCHEN_SINK_2026-10-23.md.
+The cemetery evidence/occlusion limits are in docs/ORAS_PYRE_MEMORIAL_2026-10-23.md.
+Remaining room/furniture coverage is still in progress; no full-game claim.
+
+RSE continuation: exact common and wall-shadow grave drawings now use the
+original Mt. Pyre memorial at all 793 locations on 18 floors (E261/R266/S266).
+All individual contact sheets and final room overviews inspected on official
+0.3.95; 13 native direct-LOS occlusions per edition recorded in the component
+ledger. Missing-PNG Emerald/FireRed floors pass; native fallback grave bottoms
+now share the cap-only contact recess, all upper geometry unchanged. Eleven
+focused suites pass. Full census: 2161 unchanged hashes, all prior families
+unchanged, 1979 candidates, 1934 accepted components on 258 maps. Whole-map
+acceptance false; irregular Mt. Pyre floor/wall framing remains outstanding.
+Details: docs/RSE_PYRE_MEMORIALS_2026-10-23.md. Scene and release stay root-owned.
+
+Original ORAS Flower Shop open bookcase: all 33 common generic-home bookcases
+(E11/R11/S11), original case plus twenty books. Original flat per-book pigments
+replace vertex lighting. Exact book rims, exposed undersides and foot bottoms
+closed, buried caps omitted; four tiny original top-joint coplanar slivers
+removed at their source rim. 476 original +144 authored triangles, separate
+wood/book closures, source proportions and native apron retained. All 33 native
+first-person/overview entries and nine source views inspected; E11 missing-PNG
+fallback pass. Ten focused suites pass, all thirteen source models have zero
+positive-area coplanar intersections; regeneration byte-identical. Full census
+2161 hashes/family counts unchanged, 2012 candidates, 1967 accepted components
+on 258 maps, whole-map false. docs/ORAS_FLOWER_BOOKCASE_2026-10-23.md. Separate
+small-bookcase native family and room framing remain pending. Scene root-owned.
+
+Separate small-bookcase continuation verified all E5/R6/S6 locations with the
+same original bookcase source. Exact separate native art/collision guard;
+all 17 before-images, first-person entries and room overviews inspected.
+Missing-PNG fallback passes all 17; Ruby/Sapphire Game Corner's native two-cell
+entry-script closure is recorded separately and untouched. Three focused
+source/identity suites pass. Five-edition census hashes/families unchanged,
+2029 candidates, 1984 accepted components/258 maps, whole-map false. Original
+bookcase source now has 50 accepted placements. Room-boundary work continues.
+
+Original ORAS Birch lab case now covers all twelve Birch/Lanette wall cases
+(E4/R4/S4). Complete original case, two bins, two shelves and fifteen books:
+310 original +102 exact closure triangles. Source vertex RGBA lighting removed;
+one three-book group separates 0.06 source units to eliminate five original
+coplanar slivers. Exact tilted/collinear source rims retained; no duplicate
+shelf-back/end caps. Closed books, bins and outer case pass edge-owner tests,
+all fourteen source models pass coplanar geometry tests. All 12 final individual
+native entries/six overviews and nine source angles inspected; all 12 final
+missing-PNG fallback pass. Six focused suites and byte-identical regeneration
+pass. Full census 2161 hashes/families/prior candidates unchanged, 2041 candidates,
+1996 accepted components on 261 maps; whole-map false. See
+docs/ORAS_BIRCH_BOOKCASE_2026-10-23.md. Scene stays root-owned; free cases next.
+
+Native free-case fallback fix: only birch_free_books/birch_free_books_end opt
+into exact box union and Y0 contact recess. Original shelf/frame/box/lid shared
+faces overlapped; all internal/duplicate coplanar faces now removed while
+original UVs/upper dimensions/native cells stay fixed. Regression reproduces
+old overlap, proves zero coplanar faces plus exact union surface areas. Six
+focused suites pass; all six RSE native fixtures reviewed close/far/overview,
+hashes unchanged. Separate accepted-native-fixes.jsonl records this native-only
+scope. Existing archive-box top35 still clips room ceiling32; source case/box
+assembly is in progress. No new source-coverage acceptance. See
+docs/NATIVE_LAB_CASE_UNION_2026-10-23.md. Scene remains root-owned.

@@ -1,0 +1,61 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO227 -> AD114 -> MM168 -> GR510",
+  "model": "t101r0301_00_00",
+  "modelBchSha256": "88c0fe278846a20cb8092c275567b98f1d2a5266d7e532966ac5d87bf3a5993e",
+  "textureBchSha256": "8a5c8b608b90d257a485c081e63c170a2babd54e157054fdb3f274ae03b6e158",
+  "textures": {
+    "t101r0301_book": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "7fb32271ed0cac1d2d83f3e6322598f16b70271c825a8a2594f1ad8b58c737f0",
+      "pngSha256": "1310193c2ba7221b4e532fbd974764c3b2dbd75b1157f0d74c553c8e63f9cbcc"
+    },
+    "t101r0301_obj01": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "e6c3b8ca44cbe64edafb14aee698f331a42988942415e6b10e852cb4fcc73e22",
+      "pngSha256": "5c55400045d67e8be5ec3abec7760d5fdd0d14a246b7f663d4e81e5c05ccdec7"
+    }
+  },
+  "selection": {
+    "bookSubmesh": 0,
+    "threeBookGroups": [
+      154,
+      158,
+      162,
+      198,
+      202
+    ],
+    "caseSubmesh": 3,
+    "caseGroups": [
+      48,
+      92,
+      110,
+      114
+    ]
+  },
+  "originalTriangles": 310,
+  "authoredClosureTriangles": 102,
+  "sourceFront": "+Z",
+  "sourceBounds": [
+    -213.3997039794922,
+    0.2000007927417755,
+    -233.60000610351562,
+    -179.3997039794922,
+    45.400001525878906,
+    -217.60000610351562
+  ],
+  "origin": [
+    -196.3997039794922,
+    0.2000007927417755,
+    -225.60000610351562
+  ],
+  "uniformDivisor": 34.0,
+  "processing": "Complete original laboratory case, twin drawer bins, two shelves and fifteen books. Independent original positions/UV/indices validated. Original colored PNG/UV retained; vertex RGBA lighting removed for solid original opaque materials. One original three-book group moves 0.06 source units left to remove coplanar back-plane slivers. Exact book rims, case rear/bottom, twin drawer cutouts/rear/bottom and shelf undersides closed; shelf-back/end caps omitted where original case walls already cover them. Source floor, shadows, lights and unrelated room objects excluded. Uniform native fit and Y0 contact recess."
+}

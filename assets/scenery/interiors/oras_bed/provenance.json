@@ -16,7 +16,7 @@
     }
   },
   "repairs": [
-    "Separately authored board rear, foot-bottom, base, blanket-end/underside and pillow-underside caps follow original rims; source534 triangles and source UV/PNG unchanged."
+    "Five original open rims are closed with 122 authored triangles at their exact source vertices. Minimum-area boundary triangulation excludes triangles overlapping original source planes. Original534 triangles, positions, UV and PNG are unchanged; former approximate concave fan caps are replaced."
   ],
   "sourceBounds": [
     -0.975718,
@@ -48,15 +48,33 @@
       "authored": false
     },
     {
-      "name": "authored_board_rear_and_feet",
-      "material": "authored_board_rear_and_feet",
-      "triangles": 38,
+      "name": "authored_exact_rim_closure_0",
+      "material": "authored_exact_rim",
+      "triangles": 32,
       "authored": true
     },
     {
-      "name": "authored_bedding_and_base_undersides",
-      "material": "authored_bedding_and_base_undersides",
-      "triangles": 52,
+      "name": "authored_exact_rim_closure_1",
+      "material": "authored_exact_rim",
+      "triangles": 16,
+      "authored": true
+    },
+    {
+      "name": "authored_exact_rim_closure_2",
+      "material": "authored_exact_rim",
+      "triangles": 30,
+      "authored": true
+    },
+    {
+      "name": "authored_exact_rim_closure_3",
+      "material": "authored_exact_rim",
+      "triangles": 14,
+      "authored": true
+    },
+    {
+      "name": "authored_exact_rim_closure_4",
+      "material": "authored_exact_rim",
+      "triangles": 30,
       "authored": true
     }
   ]
