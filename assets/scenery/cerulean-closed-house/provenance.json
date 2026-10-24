@@ -1,0 +1,113 @@
+{
+  "asset": 592833,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592833/",
+  "title": "Cerulean closed regional house",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "93213bd623a031574bbaf35fe315724c518bc667119714c0470206b635f3732e",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Cerulean City/Cerulean City.dae",
+  "sourceModelSha256": "16016239d286fbeba49961943b3d5f28745040c49a01af5c9f3bffd6ae5fadf1",
+  "geometry": "ha_h01b-mesh",
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -30.95312,
+      1.95,
+      -28.0,
+      30.95312,
+      50.0,
+      18.0
+    ],
+    "sourceOrigin": [
+      0.0,
+      1.95,
+      -5.0
+    ],
+    "sourceUnitSpan": 61.90624,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.37152959055500706,
+      0.5,
+      0.7761737750507864,
+      0.37152959055500706
+    ]
+  },
+  "originalBounds": [
+    -30.95312,
+    1.0,
+    -28.0,
+    35.0,
+    50.0,
+    24.0
+  ],
+  "originalTriangles": 176,
+  "processedTriangles": 206,
+  "closure": "Continue measured rear olive siding/cyan plinth and brown beam, inset plain gable, exact original roof fascia copied to the rear cut, profiled roof soffit and recessed foundation. No new windows, vents, door or signs; original physical triangles/UV/PNG bytes retained, source shadows excluded.",
+  "textures": {
+    "h_mado.png": {
+      "sha256": "ddf8daca4b57e903f962c663f89f06be6d43ca5f29459d0094b4b8140514601f",
+      "bytes": 187
+    },
+    "hdc_h01b.png": {
+      "sha256": "95ffcc0725e0aa5d8c5a33ebc0f44c2406e55251a16e0ee84c3e3c0aaceb498f",
+      "bytes": 871
+    }
+  },
+  "parts": [
+    {
+      "name": "ha_h01b-mesh:h_mado_006-material",
+      "role": "structure",
+      "authored": false,
+      "triangles": 4
+    },
+    {
+      "name": "ha_h01b-mesh:hdc_h01b_001-material",
+      "role": "structure",
+      "authored": false,
+      "triangles": 164
+    },
+    {
+      "name": "authored_rear_siding",
+      "role": "structure",
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_beam",
+      "role": "structure",
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_beam_return",
+      "role": "structure",
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_inner_gable",
+      "role": "structure",
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_roof_fascia",
+      "role": "structure",
+      "authored": true,
+      "triangles": 8
+    },
+    {
+      "name": "authored_roof_soffit",
+      "role": "structure",
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "authored": true,
+      "triangles": 16
+    }
+  ]
+}

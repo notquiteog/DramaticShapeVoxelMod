@@ -3,6 +3,7 @@
 return function(game)
  local family=os.getenv('QA_FAMILY')or'gyms'
  local configs={
+  cerulean_closed={noEntrance=true,fixtures={{'FR_CERULEAN_CITY',31,25}},adapter='Gen3ImportedCeruleanClosedHouse',model='hgss_cerulean_closed_house',doorX=2,doorY=3,stat='ceruleanClosedHouse',source='^assets/scenery/cerulean%-closed%-house/',right=6,left={-1,3,math.pi/2},rear={2,-2,math.pi}},
   psychic={pendingGround=false,fixtures={{'FR_SAFFRON_CITY',46,17},{'FR_SAFFRON_CITY_CONNECTION',36,10}},adapter='Gen3ImportedSaffronPsychic',model='hgss_saffron_psychic',doorX=1,doorY=4,stat='saffronPsychic',source='^assets/scenery/saffron%-psychic/',right=7,left={-2,5,math.pi/4},rear={2,-2,math.pi}},
   copycat={pendingGround=false,fixtures={{'FR_SAFFRON_CITY',21,10},{'FR_SAFFRON_CITY_CONNECTION',11,3}},adapter='Gen3ImportedSaffronCopycat',model='hgss_saffron_copycat',doorX=1,doorY=4,stat='saffronCopycat',source='^assets/scenery/saffron%-copycat/',right=7,left={-2,5,math.pi/4},rear={2,-2,math.pi}},
   museum={pendingGround=true,fixtures={{'FR_PEWTER_CITY',12,0,5,6},{'FR_PEWTER_CITY',12,0,13,4}},adapter='Gen3ImportedPewterMuseum',model='hgss_pewter_museum',doorX=5,doorY=6,stat='pewterMuseum',source='^assets/scenery/pewter%-museum/',right=17,left={-2,4,math.pi/2},rear={8,-2,math.pi}},
@@ -26,7 +27,7 @@ return function(game)
  local edition=require('src.core.GameVersion').get();assert(edition=='firered'or edition=='leafgreen')
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
  local C,S=V.require('Gen3Integration'),V.require('Gen3Scene');local Map,P=require('src.core.game3.map'),require('src.core.game3.player')
- local observed={};local adapter=V.require(config.adapter or(family=='saffron_dojo'and'Gen3ImportedSaffronDojo'or'Gen3ImportedHGSSGyms'));local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=(g.importedHGSSGym or g.importedSaffronDojo or g.importedHGSSMart or g.importedViridianHouse or g.importedViridianFlowerHouse or g.importedPewterMuseum or g.importedSaffronCopycat or g.importedSaffronPsychic).model end;return ok,why end
+ local observed={};local adapter=V.require(config.adapter or(family=='saffron_dojo'and'Gen3ImportedSaffronDojo'or'Gen3ImportedHGSSGyms'));local original=adapter.build;adapter.build=function(g,...)local ok,why=original(g,...);if ok then observed[Map.currentDef().id..':'..g.cx..':'..g.cy]=(g.importedCeruleanClosedHouse or g.importedHGSSGym or g.importedSaffronDojo or g.importedHGSSMart or g.importedViridianHouse or g.importedViridianFlowerHouse or g.importedPewterMuseum or g.importedSaffronCopycat or g.importedSaffronPsychic).model end;return ok,why end
  local dir=os.getenv('SHOT_DIR');local json=require('src.link.Json');local out={};local missing=os.getenv('QA_MISSING_ASSETS')=='1'
  if missing then local read=V.mod.read;V.mod.read=function(self,path)if path:match(config.source)then return nil end;return read(self,path)end end
  game:_handleBootAction({action='new_game',start={map='FR_PEWTER_CITY',x=10,y=32,facing='up'}})
@@ -54,7 +55,7 @@ return function(game)
    if v[2]>=0 and v[2]<Map.currentDef().width and v[3]>=0 and v[3]<Map.currentDef().height then P.reset(v[2],v[3],'up');C.yaw=v[4];C.setLevel(6,game);settle();shot(index..'-'..v[1])else print('[FRLG VIEW OUTSIDE NATIVE BOUNDS]',map,v[1])end
   end end
   local destination
-  if map~='FR_SAFFRON_CITY_CONNECTION'then
+  if not config.noEntrance and map~='FR_SAFFRON_CITY_CONNECTION'then
   C.yaw=0;C.setLevel(3,game);P.reset(cx+doorX,cy+doorY+1,'up');game.input:reset();settle()
   local doors=require('src.core.game3.doors');local seen={}
   for _=1,160 do U.hold(game,'up',1);local a=doors.getActiveAnim();if a and not seen[a.frame]then seen[a.frame]=true;shot(index..'-enter-'..a.frame)end;if Map.currentDef().id~=map then break end end
@@ -63,8 +64,25 @@ return function(game)
   for _=1,260 do U.hold(game,'down',1);if Map.currentDef().id==map then break end end
   assert(Map.currentDef().id==map,'native return failed');settle();U.wait(90);shot(index..'-returned');assert(hash(Map.currentDef())==before,'native layout mutated')
   else for _,w in ipairs(Map.currentDef().warps or{})do assert(not(w.x==cx+doorX and w.y==cy+doorY),'projection has an unexpected native warp')end;assert(hash(Map.currentDef())==before,'native projection mutated')end
+  if family=='cerulean_closed'then
+   C.setLevel(3,game);C.yaw=0;P.reset(cx+2,cy+4,'up');game.input:reset();settle()
+   U.hold(game,'up',30);game.input:reset();U.wait(30)
+   assert(P.cellX==cx+2 and P.cellY==cy+4,'native solid front became walkable')
+   shot(index..'-front-blocked')
+   P.reset(cx,cy+4,'right');game.input:reset()
+   local function step(dir,x,y)
+    local oldX,oldY=P.cellX,P.cellY
+    for _=1,50 do U.hold(game,dir,1);if P.moving then break end end
+    game.input:reset();U.wait(24);assert(P.cellX==x and P.cellY==y,'native perimeter step failed '..dir..' want '..x..':'..y..' got '..P.cellX..':'..P.cellY)
+   end
+   for x=cx+1,cx+5 do step('right',x,cy+4)end
+   step('up',cx+5,cy+3);step('up',cx+5,cy+2)
+   U.hold(game,'left',30);game.input:reset();U.wait(30)
+   assert(P.cellX==cx+5 and P.cellY==cy+2,'native solid side became walkable')
+   settle();shot(index..'-side-blocked')
+  end
   C.setLevel(0,game);U.wait(15);shot(index..'-native')
-  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,runtime='v'..require('src.core.Version').engine,doorX=doorX,doorY=doorY,sourceModel=not missing and config.model or nil,nativeHash=before,destination=destination,returned=map~='FR_SAFFRON_CITY_CONNECTION',nonEnterable=map=='FR_SAFFRON_CITY_CONNECTION',renderedVerified=not missing and not pendingGround,renderedGap=pendingGround and'Shared native-ground donor assessment pending.'or nil,missingAssets=missing}
+  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,runtime='v'..require('src.core.Version').engine,doorX=doorX,doorY=doorY,sourceModel=not missing and config.model or nil,nativeHash=before,destination=destination,returned=not config.noEntrance and map~='FR_SAFFRON_CITY_CONNECTION',nativeWalkChecked=family=='cerulean_closed'or nil,nonEnterable=config.noEntrance==true or map=='FR_SAFFRON_CITY_CONNECTION',renderedVerified=not missing and not pendingGround,renderedGap=pendingGround and'Shared native-ground donor assessment pending.'or nil,missingAssets=missing}
   local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close()
  end end
  local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close();print('[FRLG IMPORTED EXTERIORS] PASS',family,#out)

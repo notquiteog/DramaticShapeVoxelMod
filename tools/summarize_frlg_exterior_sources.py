@@ -3,6 +3,7 @@
 import argparse,collections,csv,hashlib,json
 from pathlib import Path
 SOURCES={
+ 'hgss_cerulean_closed_house':'assets/scenery/cerulean-closed-house/provenance.json',
  'hgss_kanto_mart':'assets/scenery/hgss-mart/provenance.json',
  'hgss_celadon_balcony_block':'assets/scenery/celadon-blocks/provenance.json',
  'hgss_saffron_dojo':'assets/scenery/saffron-dojo/provenance.json',

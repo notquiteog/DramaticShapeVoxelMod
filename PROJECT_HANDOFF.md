@@ -1,3 +1,15 @@
+# Cerulean closed regional house — 2026-10-23
+
+Original HGSS Cerulean nonenterable house now matches exact FRLG City(31,25).
+Uniform source fit, closed rear/soffit/foundation, source-proven native lawn and
+contact-only recess; no invented portal/sign, native maps unchanged. Official.96
+both-edition real perimeter/blocked-wall walking, inspected views and neighboring
+Mart entry/return PASS0; missing-asset LG fallback PASS0.14 focused Lua suites,
+native grass proofs and deterministic import pass. Canonical per-edition census
+80 eligible/73 rendered accepted/53 unmatched;7 separate ground gaps remain.
+See docs/CERULEAN_CLOSED_HOUSE_SOURCE_2026-10-23.md. No release/version bump;
+continuing next missing family; Silph uniform-fit depth mismatch remains held.
+
 # Kanto queued landmarks rechecked on merged API3 — 2026-10-23
 
 Latest official0.3.96 standalone source review after release1.57.12 merge passes

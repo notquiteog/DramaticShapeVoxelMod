@@ -223,7 +223,8 @@ return {
 {688,707,656,708,689,690},
 {696,705,664,701,703,698},
 }},
-{name='cerulean_house_short',pair='general__rom_082d4af4',header=2,back=8,roofEnd=40,wallBottom=63,bevel=3,rows={
+-- Native672..674 roof margins and696 foundation margin are lawn; nearby212/228 are road.
+{name='cerulean_house_short',pair='general__rom_082d4af4',ground=1,header=2,back=8,roofEnd=40,wallBottom=63,bevel=3,rows={
 {672,673,665,673,674},
 {680,681,681,681,682},
 {688,689,689,689,690},
