@@ -7,7 +7,7 @@ local M={}
 local registered={}
 function M.register(id)
  if registered[id]and Models.info(id)then return true end
- local ok,data=pcall(V.require,'ImportedFenceData')
+ local ok,data=pcall(V.require,id:match('^oras_rustboro_joined_')and'ImportedFenceJoinedData'or'ImportedFenceData')
  if not ok or type(data)~='table'or not data[id]then return nil,'imported fence source unavailable'end
  local success,why=Models.register(id,data[id],{read=function(path)return V.mod:read(path)end})
  if success then registered[id]=true end
@@ -31,10 +31,10 @@ function M.placements(cells)
   local id=M.eligible(c)
   if id=='oras_rural_fence'then out[#out+1]={model=id,x=c.cx*16,y=c.base or 0,z=c.cy*16,
    fit={width=16,depth=16,padding=0},source=c,marker=id}
-  elseif id then for _,segment in ipairs(Families.ornate[c.mid])do
-   out[#out+1]={model='oras_rustboro_fence_'..segment[1],x=c.cx*16,y=c.base or 0,z=c.cy*16,
-    fit={width=16,depth=16,height=11,padding=0,rotation=segment[4],anchor='center',targetX=segment[2],targetZ=segment[3]},source=c,marker=id}
-  end end
+  elseif id then
+   out[#out+1]={model='oras_rustboro_joined_'..c.mid,x=c.cx*16,y=c.base or 0,z=c.cy*16,
+    fit={width=16,depth=16,height=11,groundInset=.025,padding=0,anchor='center',targetX=8,targetZ=8},source=c,marker=id}
+  end
  end
  table.sort(out,function(a,b)return a.z==b.z and a.x<b.x or a.z<b.z end)
  return out

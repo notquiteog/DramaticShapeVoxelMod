@@ -1,3 +1,20 @@
+# Rustboro fence release1.58.1 — 2026-10-23
+
+Fixes43 missing Emerald fence cells (44 in R/S), reversed depth stripes and the
+incorrect grass-row L. Full native art board review adds2a7/352 omitted by the
+initial known-family census. Each RSE city now has208 reviewed source owners
+across31 families. Joined original ORAS geometry has14 shared definitions,
+zero positive-area coplanar overlaps and recessed bottom contacts; exact native
+paving/grass donors remain local. Official0.3.96 native city censuses preserve
+all2400 native cells and report zero recovery. Full suite486PASS/0fail/58fixture
+skips;640production files compile in nativeLuaJIT. Final source/package native
+checks and checksum are recorded in release verification. See
+[joins and evidence](docs/RUSTBORO_FENCE_JOINS_2026-10-23.md).
+
+Other agents continue rural fence variants, Kanto original-source buildings and
+interiors. Their next checkpoint batches stay separate; whole-game coverage
+remains incomplete. Actor/flower HD2D defaults and standalone/API3 are unchanged.
+
 # Complete Rustboro native art census — 2026-10-23
 
 Broader all-used-art review found long horizontal2a7(26cells) and end352(2)
