@@ -39,6 +39,7 @@ function M.ruralMid(secondary,mid)
 end
 -- Mauville's original brown-log vocabulary uses that city's own newer ORAS
 -- metal frame/panel.281 is building art, not a neighboring fence variant.
+M.verdanturf={[0x34d]=true} -- Actual General/Mauville gray-post art, four town cells.
 M.mauville={
  [0x273]={{16,3.5,8,1},{12.5,9.75,14,0}},
  [0x280]={{12.5,9.75,14,0},{2,3.5,15,1}},
@@ -130,6 +131,9 @@ end
 function M.shape(primary,secondary,mid,behavior,collision)
  if primary~='general'or collision~=7 then return end
  if M.ruralMid(secondary,mid)then return{kind='flat',reviewedSurface=true,nativeFence='rural149',ground=1}end
+ if secondary=='mauville'and M.verdanturf[mid]then
+  return{kind='flat',reviewedSurface=true,nativeFence='verdanturf',ground=0x34e}
+ end
  if secondary=='mauville'and M.mauville[mid]then
   return{kind='flat',reviewedSurface=true,nativeFence='mauville',ground=1}
  end

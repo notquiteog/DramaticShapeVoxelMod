@@ -1,3 +1,15 @@
+# Original Verdanturf fence checkpoint — 2026-10-23
+
+Exact native General/Mauville34d fixes the previously unreachable Verdanturf
+fallback: four town cells per edition now use original GR0054/AD0013 pointed
+pickets. Preserve exact dense-lawn34e rather than general grass1. Official.96
+native RSE4/4 each plus north/rear/close repeats PASS; missing-PNG EM4 native
+fallback PASS, unchanged native grids/recovery0. Original34-triangle model is
+closed/coplanarzero; independent110visible-pixel donor proof passes all3.
+See docs/ORAS_VERDANTURF_FENCE_2026-10-23.md. Larger shared rural texture-cache
+release gate remains root-owned. Continuing uncovered Lavaridge variants;
+held Littleroot houses/inactive Shipyard remain separate.
+
 # Original Mauville railings checkpoint — 2026-10-23
 
 Actual original GR0739/AD0198 source replaces eleven exact Mauville railing

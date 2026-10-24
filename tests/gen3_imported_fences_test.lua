@@ -143,3 +143,17 @@ for _,p in ipairs(M.placements(mauville))do
  assert(p.fit.targetX==8 and p.fit.targetZ==8 and p.x==p.source.cx*16 and p.z==p.source.cy*16)
 end
 print('PASS11 exact Mauville native families, false281 exclusion, omitted corners, standalone source rollback and anchored ground contacts')
+-- Actual Verdanturf outdoors use the Mauville pair, not a separate Verdanturf
+-- pair. Its gray posts need the exact dense-lawn34e donor, not general grass1.
+local q=cell(5);q.secondary='mauville';q.mid=0x34d;q.shape={nativeFence='verdanturf'};q.ts.midToSlot={}
+assert(H.emeraldShape('general','mauville',0x34d,0,7).nativeFence=='verdanturf')
+assert(R.ownShape('general','mauville',0x34d,0,7).nativeFence=='verdanturf')
+assert(not F.shape('general','verdanturf',0x34d,0,7))
+assert(not F.shape('general','mauville',0x34d,0,0))
+assert(not M.eligible(q),'missing dense-lawn donor must retain native art')
+q.ts.midToSlot[0x34e]=1;assert(M.eligible(q)=='oras_verdanturf_fence')
+available=false;assert(not M.build({q},function()end,{}));assert(not q.importedFence and not M.floor(q))
+available=true;local vp,ve,vn=M.build({q},function()end,{})
+assert(vp and not ve and vn==1 and M.floor(q)==0x34e and M.underOnly(q))
+assert(M.placements({q})[1].model=='oras_verdanturf_pickets')
+print('PASS Verdanturf actual native pair/grass donor, collision guards, source rollback and anchored pickets')

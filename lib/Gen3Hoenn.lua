@@ -231,10 +231,7 @@ function M.emeraldShape(primary,secondary,mid,behavior,collision)
    for k,v in pairs(fenceMauville[mid])do out[k]=v end
    return out
   end
-  if secondary=='verdanturf' and mid==0x34d then
-   return {kind='fence',ground=1,material=mid,height=7,postWidth=5.8,rails={6},
-    postSamples={face={4,10},cap={3,5},rail={6,5}}}
-  end
+
   if behavior and behavior>=0x38 and behavior<=0x3b and mid<0x200 then
    return {kind='ledge',ground=(mid>=0x10e and mid<=0x127) and 0x124 or 1,
     direction=({[0x38]='east',[0x39]='west',[0x3a]='north',[0x3b]='south'})[behavior]}
