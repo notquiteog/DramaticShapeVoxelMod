@@ -5,6 +5,7 @@ local V=...
 local Data=V.require('GrassModelData')
 local Instances=V.require('ModelInstances')
 local Budget=V.require('BuildBudget')
+local Shared=V.require('SharedModelMesh')
 local M={FALLBACK_VERTEX_LIMIT=8192}
 local variants,images={},{}
 local function finite(n)return type(n)=='number'and n==n and math.abs(n)<math.huge end
@@ -55,7 +56,8 @@ end
 local function releaseParts(parts)
  for _,part in ipairs(parts)do
   if part.mesh and part.mesh.release then part.mesh:release()end
-  if part.model and part.model.release then part.model:release()end
+  if part.lease then Shared.release(part.lease)elseif part.model and part.model.release then part.model:release()end
+  part.lease=nil
   part.mesh,part.model,part.count,part.positions=nil,nil,0,{}
  end
 end
@@ -96,12 +98,13 @@ function M.buildBatches(placements,newMesh,options)
     parts[#parts+1]=part;return part
    end
    local part=newPart(g.positions)
-   part.model=assert(newMesh(vertices,indices),'grass prototype upload failed')
+   part.model,part.lease=Shared.acquire(vertices,indices,nil,newMesh,image)
+   assert(part.model,'grass prototype upload failed')
    part.model:setTexture(image)
    part.mesh=Instances.new(part.model,g.positions)
    part.instanced=part.mesh~=nil
    if not part.mesh then
-    part.model:release();part.model=nil
+    Shared.release(part.lease);part.lease=nil;part.model=nil
     -- Keep fallback uploads bounded on drivers without instancing. Each part
     -- retains its exact placement/vertex slots for immediate native Cut edits.
     local limit=math.max(1,math.floor(M.FALLBACK_VERTEX_LIMIT/#vertices))

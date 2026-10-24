@@ -91,9 +91,11 @@ function M.battleFloor(def,x,z,layer,walkable)
  end
 end
 function M.bind(cells,regions)
+ local tick=V.require('BuildBudget').tick
  for _,region in ipairs(regions)do region.floorField=M.field(region.def)end
  Levels.align(regions)
  for _,c in pairs(cells)do
+  tick()
   for _,r in ipairs(regions)do local x,y=c.cx-r.x,c.cy-r.y
    if x>=0 and y>=0 and x<r.w and y<r.h then
     local floor=r.floorField and r.floorField.cells[Levels.key(x,y)]
@@ -116,6 +118,7 @@ function M.bind(cells,regions)
  end
  -- Complete assemblies use a single foundation, sampled at their entrance.
  for _,c in pairs(cells)do
+  tick()
   local g=c.column and c.column.group or c.civic or c.prop
   if g then
    if g.groundHeight==nil then

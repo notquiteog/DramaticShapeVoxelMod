@@ -1,5 +1,6 @@
 local modules={SceneryModelData=dofile('lib/SceneryModelData.lua'),PalletBuildingData=dofile('lib/PalletBuildingData.lua'),ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local K=assert(loadfile('lib/Gen3ImportedKanto.lua'))(V)
 local cells={}
@@ -20,18 +21,18 @@ for _,g in ipairs(groups)do
  g.stageHidden=true;assert(not K.eligible(g,cells));g.stageHidden=nil
  assert(not K.build(g,cells,function()error('must not reach GPU with missing PNG')end,{}));assert(not g.importedKanto and not c.civic)
  S.buildBatches=function(placements,_,opts)
-  local p=assert(placements[1]);local parts,fit=assert(S.vertices(p.model,p.fit));assert(p.y==3.95,'source closure was left coplanar with native lawn')
+  local p=assert(placements[1]);local parts,fit=assert(S.vertices(p.model,p.fit));assert(p.y==4 and fit.groundInset==.05,'building datum moved instead of source contact ring')
   assert(math.abs(fit.anchors.door[1]-(r.doorX*16+8))<1e-6)
   local shade,door,closure=false,false,false
   for i,part in ipairs(parts)do
    shade=shade or(part.lightingOnly and part.role=='source_shading')
    door=door or part.role=='source_door';closure=closure or part.name:find('authored_closed_underside')
-   for _,v in ipairs(part.vertices)do assert(v[1]>=.25-1e-6 and v[1]<=g.width*16-.25+1e-6 and v[3]>=.25-1e-6 and v[3]<=63.75+1e-6 and v[2]>=0)end
+   for _,v in ipairs(part.vertices)do assert(v[1]>=.25-1e-6 and v[1]<=g.width*16-.25+1e-6 and v[3]>=.25-1e-6 and v[3]<=63.75+1e-6 and v[2]>=-.05)end
    local source=modules.PalletBuildingData[r.model].parts[i]
    local flat=source.role=='source_shading';for _,v in ipairs(source.vertices)do if math.abs(v[2])>1e-8 then flat=false end end
    for j,v in ipairs(part.vertices)do
     local raw=source.vertices[j];assert(v[4]==raw[4]and v[5]==raw[5]and v[6]==1,'source UV changed or baked shade retained')
-    assert(math.abs(v[2]-raw[2]*fit.scale)<1e-8,'nonflat source geometry moved relative to model')
+    assert(math.abs(v[2]-(math.abs(raw[2])<1e-7 and -.05 or raw[2]*fit.scale))<1e-8,'upper geometry changed or contact ring remained coplanar')
     if flat then assert(part.lightingOnly and raw[2]==0,'lighting overlay not excluded or original source mutated')end
     if part.name=='authored_closed_underside'and raw[2]==0 then assert(v[2]+p.y<4,'closure cap still fights native ground')end
    end
@@ -40,7 +41,7 @@ for _,g in ipairs(groups)do
   return opts.parts
  end
  assert(K.build(g,cells,function()end,{}));assert(c.civic==g and g.importedKanto)
- local d=assert(K.doorSurface(g,g.cx+r.doorX,g.cy+4));assert(d.base==3.95 and d.base==g.importedKantoY and g.groundHeight==4 and d.w==14 and d.h==16)
+ local d=assert(K.doorSurface(g,g.cx+r.doorX,g.cy+4));assert(d.base==4 and d.base==g.importedKantoY and g.groundHeight==4 and d.w==14 and d.h==16)
  assert(math.abs((d.vertices[1][1]+d.vertices[2][1])/2-(g.cx+r.doorX)*16-8)<1e-6)
  assert(d.vertices[1][2]>d.vertices[4][2]);assert(not K.doorSurface(g,g.cx+r.doorX+1,g.cy+4))
  S.buildBatches=original

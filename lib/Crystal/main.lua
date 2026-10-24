@@ -283,27 +283,14 @@ end
 local VOXEL_MOD_IDS = { "DRAMATIC_SHAPE", "BATTLE_ART_VOXEL_FORK", "potato_voxel", "DRAMALESS_SHAPE" }
 
 function voxelMod()
-  local ok, Game = pcall(require, "src.core.Game")
-  if not (ok and Game and Game.mods and Game.mods.exports) then
-    return nil
+  for _,id in ipairs(VOXEL_MOD_IDS)do
+    local handle=mod.find and mod.find(id)
+    if handle and handle.exports then return handle.exports end
   end
-  for i = 1, #VOXEL_MOD_IDS do
-    local voxel = Game.mods.exports[VOXEL_MOD_IDS[i]]
-    if voxel then return voxel end
-  end
-  return nil
 end
 
--- The Gen 3 UI overhaul (gen3_battle_ui) draws its own HD party-ball
--- counters for both sides and does NOT suppress the vanilla ball row, so
--- when it is loaded our baked row would stack right on top of its pods.
--- True when that mod is live; the ball-row hook then yields to it.
 function gen3BattleUI()
-  local ok, Game = pcall(require, "src.core.Game")
-  if not (ok and Game and Game.mods and Game.mods.exports) then
-    return false
-  end
-  return Game.mods.exports["gen3_battle_ui"] and true or false
+  return mod.find and mod.find('gen3_battle_ui')~=nil or false
 end
 
 function voxelContext(battle)
@@ -1559,29 +1546,22 @@ end
 -- for each of them.  The engine resolves the sprite hook for any dex the
 -- mod has no art for by falling back to its own art, so a missing file
 -- is never a hard failure.
-local crystalDefs = {}
 pcall(function()
   for species, dex in pairs(speciesMap) do
     local def = mod.content.pokemon:get(species)
     if def then
-      crystalDefs[species] = def
-      mod.content.pokemon:patch(species, {
+      local patch = {
         spriteFront = frontPath(dex, "normal", 1),
         spriteBack = backPath(dex, "normal"),
-        battleScaleFront = 1,
-        battleScaleBack = 1,
-        trueColor = true,
-      })
+        trueColor = colorMode(),
+      }
+      -- API 3's portable Gen2 species records have no battleScale fields.
+      -- The native Gen1 schema still exposes its original scale controls.
+      if not isGen2 then patch.battleScaleFront,patch.battleScaleBack=1,1 end
+      mod.content.pokemon:patch(species, patch)
     end
   end
 end)
-
-local function syncTrueColor()
-  for species in pairs(crystalDefs) do
-    crystalDefs[species].trueColor = colorMode()
-  end
-end
-syncTrueColor()
 
 mod.hooks:wrap("pokemon.sprite", function(next, originalPath, ctx)
   if ctx and ctx.species == GHOST_SPECIES then
@@ -4611,7 +4591,6 @@ return function()
     readPlayerSpritePref(game and game.save)
     readBattlePicPref(game and game.save)
     readAnimModePref(game and game.save)
-    syncTrueColor()
   end)
 
   mod.events:on("save.created", function(event)
@@ -4634,7 +4613,6 @@ return function()
       -- boot skeleton: keep the persisted choice
       readPlayerSpritePref(save)
     end
-    syncTrueColor()
   end)
 
   mod.events:on("save.loaded", function(event)
@@ -4643,7 +4621,6 @@ return function()
     readPlayerSpritePref(event and event.save)
     readBattlePicPref(event and event.save)
     readAnimModePref(event and event.save)
-    syncTrueColor()
     -- The overworld (world/NPCs and the player) is already standing by the
     -- time save.loaded fires, so re-apply the skins from the freshly read
     -- prefs -- a CONTINUE then shows the saved choices without a manual

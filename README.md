@@ -1,3 +1,11 @@
+## 1.57.11 — Pewter Museum stone steps
+
+FireRed and LeafGreen’s museum approach now has two shallow solid steps meeting
+the original source doorway. Removes facade artwork from the ground and duplicate
+terrace faces. Native ground, collision and both entrances remain intact.
+Includes the latest committed rendering improvements; mods remain standalone.
+[Fix and verification](docs/PEWTER_MUSEUM_STAIRS_2026-10-23.md).
+
 ## 1.57.6 — Large forests and missing grass
 
 Fixes all-modern-tree fallback when connected route scenes exceed4096 trees,

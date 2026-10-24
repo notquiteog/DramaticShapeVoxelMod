@@ -1,0 +1,96 @@
+{
+  "source": "User-supplied Alpha Sapphire RomFS",
+  "body": "GR0004 world01_02_02 t102_01/chip_mado",
+  "variants": {
+    "southeast": {
+      "sourcePhysicalTriangles": 1038,
+      "sourceTrianglesByPart": [
+        1024,
+        14,
+        26
+      ],
+      "sourceWorldOffset": [
+        0,
+        0,
+        0
+      ],
+      "selection": "Own complete source triangles inside actual house region, never clipped or substituted",
+      "sourceWindowDetails": "Actual southeast14-triangle or northwest6-triangle source glass retained"
+    },
+    "northwest": {
+      "sourcePhysicalTriangles": 1030,
+      "sourceTrianglesByPart": [
+        1024,
+        6,
+        26
+      ],
+      "sourceWorldOffset": [
+        -270,
+        0,
+        -270
+      ],
+      "selection": "Own complete source triangles inside actual house region, never clipped or substituted",
+      "sourceWindowDetails": "Actual southeast14-triangle or northwest6-triangle source glass retained"
+    }
+  },
+  "door": "BM0003 t102_bm_door01",
+  "doorPhysicalTriangles": 84,
+  "doorAnglesRadians": [
+    0.0,
+    -0.6981316804885864,
+    -1.3962633609771729
+  ],
+  "movingInverseBindMaximumError": 0.0,
+  "sourceNormalizationOrigin": [
+    153.588,
+    0,
+    163.094
+  ],
+  "sourceNormalizationSpan": 97.0,
+  "doorAlignment": {
+    "closedOriginalRight": 13.493332959711552,
+    "originalOpeningRight": 147.676,
+    "instanceX": 134.18266704028844,
+    "instanceZ": 192.094
+  },
+  "textures": {
+    "11_t102_01": {
+      "size": [
+        256,
+        128
+      ],
+      "rgbaSha256": "c63d39cf9f6a6ffa24c6fd684f140a04de0f49b7edd7d126729a26d6d7afd5a2",
+      "pngSha256": "2846d531aeb9c11c35c3d9d19578cb023878672ed17575d6f144e9eee7a8d4b4"
+    },
+    "11_chip_mado": {
+      "size": [
+        128,
+        64
+      ],
+      "rgbaSha256": "e563d1eeab3932ea092884584fcf9f8a6087b9afd8d852d156b27d4111d4d651",
+      "pngSha256": "6d72fb214c4f29af73bb07ea1cc6c033a57b60198e0074c54a60b96611f0fdda"
+    },
+    "1_t102_door": {
+      "size": [
+        64,
+        128
+      ],
+      "rgbaSha256": "2604499b3af9d69f597ee971659f5bc96563bf0cafb66e479474ae7b85a4eb54",
+      "pngSha256": "11fbd708332a59f3a4d6d5d74e750a321148110ebd50f5fa2bf1cddf70bad339"
+    },
+    "1_chip_mado": {
+      "size": [
+        128,
+        64
+      ],
+      "rgbaSha256": "e06aad00cfc2b66a0883d8b681ab7e3efa4a6fe92f1e7ac37e028a84d2867271",
+      "pngSha256": "7c65fc37dbebd00e58ec8726168e85abd66a7374ad63fccf8661b95f2f4cf987"
+    }
+  },
+  "sha256": {
+    "body": "ee734f69a72adfcd9915f2d6734895d264b1de444a7e4545e182bac8a6454d6f",
+    "door": "64e73fe826542f2272855d749da437553b12860d92ce51a97e2e6e1c16f2e95f",
+    "animation": "2c4f4f6f185aade89bbba2bc992fd4318d358564a5e0f851836abbeec7331b74"
+  },
+  "processing": "Exact original body and door positions/UVs/triangles independently checked with Nitrogen. Source exposure RGB and24 nonphysical light-effect triangles omitted. Each own house variant retains every source fixture and its own front/side glass. Exact source bottom rim closes below floor at upload using one reviewed solid original foundation texel; original source body has no horizontal y0 floor triangles. No source terrain, fences, sprites or flowers included."
+}

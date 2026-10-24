@@ -118,6 +118,20 @@ set(3,'communityCasino','partial','lib/NativeLegendaryBuildings.lua; lib/CityArc
 set(3,'communityTrees','partial','lib/CommunityFlora.lua; lib/NativeLegendaryTrees.lua; lib/Gen3Scene.lua','Actual shared Gen1 mature bark/canopy/detail geometry is instanced and fitted to blocked path-edge footprints. Dedicated forest/Safari options retain ownership and OFF restores native models. Full wind behavior remains incomplete; explicit forest-only boundary scenery shares the same models. All five native Gen3 editions have isolated 0.3.85 ON/OFF runtime checks; Emerald Oldale and loaded neighbors additionally passed 750/750 eligible replacement placements without mixed fallback.')
 for gen=1,3 do set(gen,'hudColor','provider','lib/BattleTheme.lua; lib/UiBackplates.lua','Native HUD ink uses the shared COLOR/INVERTED setting. Semantic combat-card providers receive optional hudColor per draw; current Modern UI honors header ink/shadow without changing rail, HP or gender colors. Older independent providers may retain their own palette.')end
 for gen=1,3 do set(gen,'xdModels','partial','lib/XDModels.lua; lib/StadiumModels.lua; lib/Gen3XDActors.lua','Shared OFF/ON preference is editable in every native menu. A locally imported renderReady pack is required; absent, unvalidated, missing species/shiny/form records retain selected sprites. Multi-layer materials, paired GB actors and complete animation/import acceptance remain unfinished; menu availability is not model parity.')end
+for gen=1,3 do
+ set(gen,'visualStyleBuildings visualStyleTrees visualStyleFlowers visualStyleProps visualStyleInteriors visualStyleTerrain','partial','lib/VisualStyles.lua; lib/Gen3Scene.lua; lib/TreePresentation.lua; lib/ImportedTrees.lua','Shared independent MODERN 3D/NATIVE VOXEL/HD2D preferences are exposed and saved across native engines, with scene/shadow invalidation. Implemented consumers retain safe original-art fallback. Native category/family geometry and card coverage remain incomplete; menu presence does not establish all-model parity.')
+ set(gen,'visualStylePokemon visualStyleCharacters','partial','lib/VisualStyles.lua; lib/CharacterRenderers.lua; lib/StadiumModels.lua; lib/Gen3XDActors.lua','Shared independent actor styles default to original sprites. Optional model consumers honor MODERN selection and relinquish ownership for native voxel/HD2D choices. Matching all-species/trainer model assets and native actor consumers remain incomplete; XD packs remain gated until validated.')
+end
+for gen=1,2 do
+ set(gen,'visualStyleBuildings visualStyleFlowers visualStyleInteriors','missing',false,'Preference registration and persistence exist, but no complete native category-style renderer is wired in this generation. Existing native geometry/sprites remain; this is not a functioning style replacement.')
+end
+for gen=1,3 do
+ set(gen,'visualStyleTerrain','missing',false,'Preference exists; no terrain renderer consumes this three-way choice. Gen2 uses it only to gate the detailed-texture menu. Existing terrain controls continue independently.')
+end
+set(3,'visualStyleCharacters','missing',false,'Preference exists, but the shared GB CharacterRenderers style contract has no native Gen3 field-character consumer. Original native actors remain.')
+for gen=2,3 do
+ set(gen,'treeArtwork hdTreeTrunks sceneryProps','alias','lib/TreePresentation.lua; lib/VisualStyles.lua','New TREE STYLE and PROP STYLE preferences take precedence. Legacy TREE ART, TREE TRUNKS and ROCKS & PLANTS choices remain saved, but the new style policy overrides their presentation decisions; they are not independent working style controls while VisualStyles is present.')
+end
 function M.inventory(gen)
  local out={}
  for _,row in ipairs(V.require('SettingsCatalog'))do

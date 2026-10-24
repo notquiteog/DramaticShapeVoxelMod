@@ -63,55 +63,65 @@ function M.install(mod,schema,title,categories,liveSettings)
   end
   return out
  end
- if require('src.core.GameVersion').generation()==3 then
-  -- Game3 uses ctx-based native pages and does not dispatch ui.options.rows.
-  local Rows=require('src.ui.game3.option_rows')
-  if mod.read then
-   assert((loadstring or load)(assert(mod:read('lib/NativeOptionsOverflow.lua')),'@native_options_overflow'))()(mod,function()return active end)
-  end
-  -- Hot reload replaces this mod's owner without disturbing another mod's
-  -- native page. Old composed wrappers become inert and simply delegate.
-  Rows.modSettingsPages=Rows.modSettingsPages or {}
-  local previous=Rows.modSettingsPages[mod.id]
-  if previous then previous()end
-  Rows.modSettingsPages[mod.id]=function()active=false end
-  local build,group=Rows.build,Rows.group
-  local function owned(id)return type(id)=='string' and id:sub(1,#mod.id+1)==mod.id..':'end
-  Rows.build=function(ctx,...)
-   local out=build(ctx,...)
-   if active then for _,r in ipairs(rows(ctx.game))do
-    local step=r.step;r.step=function(c,dir)return step(c.game,dir)end
-    out[#out+1]=r
-   end end
-   return out
-  end
-  Rows.group=function(all,openPage)
-   if not active then return group(all,openPage)end
-   local kept,members,support={}, {}, {}
-   for _,r in ipairs(all)do
-    local dst=owned(r.id) and (r.supportOnly and support or members) or kept
-    dst[#dst+1]=r
+ local gen3=require('src.core.GameVersion').generation()==3
+ local screenId=mod.id..':options'
+ if gen3 then
+  local decorate
+  if mod.read then decorate=assert((loadstring or load)(assert(mod:read('lib/Gen3OptionScreen.lua')),'@Gen3OptionScreen'))().decorate end
+  -- API3's registered-screen bridge owns native stack/input and the GBA
+  -- viewport. Settings and category pages use public widgets only.
+  mod.content.screens:register(screenId,{new=function(game,pageTitle,pageRows)
+   local function openPage(label,members)return mod.ui.push(game,screenId,label,members)end
+   local source=pageRows
+   if not source then
+    local members,support={},{}
+    for _,row in ipairs(rows(game))do
+     local dest=row.supportOnly and support or members;dest[#dest+1]=row
+    end
+    source=categories and categories.native(members,openPage,mod.id)or members
+    if #support>0 then source[#source+1]={label='OPTION SUPPORT',group=true,
+     value=function()return #support..' OPTIONS'end,
+     activate=function()return openPage('OPTION SUPPORT',support)end}end
    end
-   local out=group(kept,openPage)
-   if categories then members=categories.native(members,openPage,mod.id)end
-   if #members>0 then out[#out+1]={id=mod.id..':settings',label=title or mod.id,group=true,
-    value=function()return #members..' OPTIONS'end,
-    activate=function()openPage(title or mod.id,members)end}end
-   if #support>0 then out[#out+1]={id=mod.id..':support',label=(title or mod.id)..' SUPPORT',group=true,
-    value=function()return #support..' OPTIONS'end,
-    activate=function()openPage('OPTION SUPPORT',support)end}end
-   return out
-  end
- else
-  mod.hooks:wrap('ui.options.rows',function(nextFn,game,base)
+   local items={}
+   local function refresh()
+    for i,row in ipairs(source)do items[i].right=row.value and row.value(game)or'OPEN'end
+   end
+   for i,row in ipairs(source)do items[i]={label=row.label,row=row}end
+   refresh();items[#items+1]={label='CANCEL'}
+   local menu=mod.ui.ListMenu.new(game,pageTitle or title or mod.id,items,{onChoose=function(item,self)
+    local row=item.row
+    if not row then return self:close()end
+    if row.activate then return row.activate(game)end
+    if row.step then row.step(game,1);refresh()end
+   end})
+   local update=menu.update
+   menu.update=function(self,dt)
+    if not active then return self:close()end
+    local input=game.input;local item=self.items[self.index];local row=item and item.row
+    if row and row.step and(input:wasPressed('left')or input:wasPressed('right'))then
+     row.step(game,input:wasPressed('left')and-1 or 1);refresh();return
+    end
+    return update(self,dt)
+   end
+   return decorate and decorate(menu)or menu
+  end})
+ end
+ mod.hooks:wrap('ui.options.rows',function(nextFn,game,base)
    local out=nextFn(game,base);if not active or type(out)~='table'then return out end
    local seen={};for _,r in ipairs(out)do if r.id then seen[r.id]=true end end
    local at=#out+1
    for i,r in ipairs(out)do if r.id=='cancel' or r.label=='CANCEL' or r.label=='BACK'then at=i;break end end
-   for _,r in ipairs(rows(game))do if not seen[r.id]then table.insert(out,at,r);at=at+1 end end
+   if gen3 then
+    local id=mod.id..':settings'
+    if not seen[id]then table.insert(out,at,{id=id,label=title or mod.id,group=true,
+     value=function()return #rows(game)..' OPTIONS'end,
+     activate=function(g)return mod.ui.push(g or game,screenId)end})end
+   else
+    for _,r in ipairs(rows(game))do if not seen[r.id]then table.insert(out,at,r);at=at+1 end end
+   end
    return out
-  end)
- end
+ end)
  mod.hooks:wrap('core.quit_to_launcher',function(nextFn,...)
   active=false;return nextFn(...)
  end)

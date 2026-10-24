@@ -1,6 +1,7 @@
 local data=dofile('lib/ImportedHoennData.lua')
 local modules={SceneryModelData={},ImportedHoennData=data,ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local H=assert(loadfile('lib/Gen3ImportedHoenn.lua'))(V)
 assert(H.register());local info=assert(S.info(H.id));assert(info.parts==5 and info.vertices<32768)

@@ -33,7 +33,7 @@ end
 -- script edits. Unchanged frames allocate no fingerprint strings/tables.
 local function new()
 local M={}
-local snapshot,oldKey,oldContext,lastX0,lastZ0,lastX1,lastZ1,battleX,battleZ,battleYaw
+local snapshot,oldKey,oldContext,oldContent,lastX0,lastZ0,lastX1,lastZ1,battleX,battleZ,battleYaw
 local function matches(regions,tiles,cam)
  if not snapshot or #snapshot~=#regions then return false end
  local battle=cam and cam.battle
@@ -63,7 +63,14 @@ local function matches(regions,tiles,cam)
 end
 function M.keys(regions,x0,z0,x1,z1,tiles,cam)
  if cam and cam.replay then return nil end
- if x0==lastX0 and z0==lastZ0 and x1==lastX1 and z1==lastZ1 and matches(regions,tiles,cam)then
+ if matches(regions,tiles,cam)then
+  -- Crossing a window changes four bounds, not the layouts, providers or
+  -- sparse edits. Keep their validated snapshot instead of sorting and
+  -- allocating it again during the very frame that starts streaming.
+  if x0~=lastX0 or z0~=lastZ0 or x1~=lastX1 or z1~=lastZ1 then
+   oldKey=table.concat({x0,z0,x1,z1,oldContent},';')
+   lastX0,lastZ0,lastX1,lastZ1=x0,z0,x1,z1
+  end
   return oldKey,oldContext
  end
  local key,context=fingerprint(regions,x0,z0,x1,z1,tiles,cam)
@@ -81,6 +88,7 @@ function M.keys(regions,x0,z0,x1,z1,tiles,cam)
  end
  local battle=cam and cam.battle
  battleX,battleZ,battleYaw=battle and cam.center[1] or nil,battle and cam.center[2] or nil,battle and cam.yaw or nil
+ oldContent=key:match('^[^;]*;[^;]*;[^;]*;[^;]*;(.*)$')
  oldKey,oldContext,lastX0,lastZ0,lastX1,lastZ1=key,context,x0,z0,x1,z1
  return key,context
 end

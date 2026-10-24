@@ -1,6 +1,6 @@
 -- Compatibility contract for mods that replace Battle Art's native UI.
 --
--- A consumer may wrap SUPPRESS_HOOK and claim one complete presentation
+-- A consumer may registerSuppression and claim one complete presentation
 -- surface for the current draw. Claims affect rendering only: Battle Art
 -- still owns battle state, animation, camera, sprites and the voxel arena.
 
@@ -20,6 +20,34 @@ BattlePresentation.SURFACES = {
 }
 
 local validSurface = { hud = true, text = true, panels = true }
+local owners, ordered, disposed = {}, {}, false
+local function reorder()
+  ordered = {}
+  for _, entry in pairs(owners) do ordered[#ordered + 1] = entry end
+  table.sort(ordered, function(a,b)
+    return a.priority == b.priority and a.owner < b.owner or a.priority > b.priority
+  end)
+end
+
+-- Public optional-mod handshake: API 3 only accepts engine-catalogued hook
+-- names. Keep third-party presentation claims out of that engine namespace.
+function BattlePresentation.registerSuppression(owner, callback, priority)
+  assert(type(owner)=='string' and owner~='', 'suppression owner required')
+  assert(type(callback)=='function', 'suppression callback required')
+  priority = priority or 0
+  assert(type(priority)=='number' and priority==priority and math.abs(priority)<math.huge,
+    'finite suppression priority required')
+  if disposed then return nil, 'presentation provider unloaded' end
+  local entry={owner=owner,callback=callback,priority=priority}
+  owners[owner]=entry;reorder()
+  return function()
+    if owners[owner]==entry then owners[owner]=nil;reorder() end
+  end
+end
+
+function BattlePresentation.dispose()
+  disposed=true;owners={};ordered={}
+end
 
 local function unclaimed()
   return false
@@ -78,6 +106,22 @@ function BattlePresentation.suppressed(surface, battle)
   if not validSurface[surface] then return false end
   if UiBackplates.uiHidden(surface) then return true end
 
+  local request={apiVersion=BattlePresentation.API_VERSION,
+    sourceModId=BattlePresentation.SOURCE_MOD_ID,surface=surface,battle=battle}
+  for _,entry in ipairs(ordered)do
+    if owners[entry.owner]==entry then
+      local ok,claimed=pcall(entry.callback,request)
+      if ok and claimed==true then return true end
+      if not ok then
+        owners[entry.owner]=nil
+        if V.mod.log and V.mod.log.warn then
+          V.mod.log:warn('presentation provider %s failed: %s',entry.owner,tostring(claimed))
+        end
+      end
+    end
+  end
+
+  -- Retain the version-1 hook for existing API 1/2 consumers only.
   if Runtime.wantsHook(BattlePresentation.SUPPRESS_HOOK) then
     local request = {
       apiVersion = BattlePresentation.API_VERSION,
@@ -96,6 +140,7 @@ end
 function BattlePresentation.export()
   return {
     apiVersion = BattlePresentation.API_VERSION,
+    registerSuppression = BattlePresentation.registerSuppression,
     theme = V.require('BattleTheme'),
     modernUIEnabled = V.require('ModernBattleUI').enabled,
     nativeHudOwned = function()

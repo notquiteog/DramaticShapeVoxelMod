@@ -4,7 +4,7 @@ local png='\137PNG\13\10\26\10'..string.char(0,0,0,13)..'IHDR'..string.char(0,0,
 local reads,uploaded,released={},{},0
 local function mesh()return{setTexture=function()end,release=function()released=released+1 end}end
 local V={require=function(n)
- if n=='SceneryModelData'then return{}elseif n=='BuildBudget'then return{check=function()end}
+ if n=='SharedModelMesh'then return dofile('lib/SharedModelMesh.lua')elseif n=='SceneryModelData'then return{}elseif n=='BuildBudget'then return{check=function()end}
  elseif n=='ModelInstances'then return{new=function()return mesh()end}end;error(n)
 end}
 love={filesystem={newFileData=function()return{release=function()end}end},graphics={newImage=function()local m=mesh();m.getDimensions=function()return 8,8 end;m.setFilter=function()end;m.setWrap=function()end;return m end}}

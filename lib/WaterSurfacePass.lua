@@ -5,9 +5,29 @@ local R=V.require('Voxel3D')
 local Water=V.require('Water')
 local Grid=V.require('VoxelGrid')
 local M={}
+-- Height-group bounds can cross the view even when every disjoint sheet is
+-- outside it. Cull individual identity-model sheets before allocating/copying
+-- reflection targets; offscreen surfaces contributed no pixels to those copies.
+local function visibleDraws(draws,options)
+ if (R.curveK or 0)~=0 then return draws end
+ local Cull,planes,visible
+ for i,d in ipairs(draws)do
+  local keep=true
+  if d.bounds and not d[3]then
+   if not Cull then Cull=V.require('FrustumCull');planes=options.frustum or Cull.prepare(R.vp)end
+   keep=Cull.visible(planes,d.bounds)
+  end
+  if not keep and not visible then
+   visible={};for j=1,i-1 do visible[j]=draws[j]end
+  elseif keep and visible then visible[#visible+1]=d end
+ end
+ return visible or draws
+end
 function M.draw(draws,cast,planarCast,options)
  if #draws==0 then return false end
  options=options or{}
+ draws=visibleDraws(draws,options)
+ if #draws==0 then return false end
  local curved=(R.curveK or 0)>0
  if curved then for _,d in ipairs(draws)do R.draw(d[1],d[2],d[3])end end
  local castTex

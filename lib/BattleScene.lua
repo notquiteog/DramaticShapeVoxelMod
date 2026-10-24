@@ -992,7 +992,7 @@ local function updateSendout(battle)
   if generationOK and generation.isGen2 and generation.isGen2() then
     nativeReader=V.require('NativeGen2Sendout')
     nativeReader.install()
-    nativeScreen=nativeReader.screen(V.mod.world.game,battle)
+    nativeScreen=nativeReader.screen(V.mod.game,battle)
     if not nativeScreen then sendoutSides={}; return end
   end
   local now = love.timer.getTime()

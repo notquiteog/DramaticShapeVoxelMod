@@ -3,6 +3,7 @@ local modules={SceneryModelData={},ImportedDewfordData=dofile('lib/ImportedDewfo
  ImportedDewfordDoorData=dofile('lib/ImportedDewfordDoorData.lua'),ModelInstances={},
  BuildBudget={check=function()end,track=function(o)assert(not tracked);tracked=o end,untrack=function(o)if tracked==o then tracked=nil end end}}
 local V={mod={read=function()return nil end},require=function(n)return assert(modules[n],n)end}
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local D=assert(loadfile('lib/Gen3DewfordDoors.lua'))(V);modules.Gen3DewfordDoors=D
 local House=assert(loadfile('lib/Gen3ImportedDewford.lua'))(V);assert(House.register())

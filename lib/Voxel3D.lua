@@ -994,7 +994,7 @@ function Voxel3D.newMesh(verts, map, format)
   BuildBudget.check()
   if not format and verts[1][9] then format=Voxel3D.TREE_FORMAT end
   if format==Voxel3D.TREE_FORMAT then
-    for _,v in ipairs(verts) do v[7],v[8],v[9]=v[7] or 0,v[8] or 0,v[9] or 0 end
+    V.require("MeshUpload").treeDefaults(verts)
   end
   local ok, mesh
   if #verts>=4096 then

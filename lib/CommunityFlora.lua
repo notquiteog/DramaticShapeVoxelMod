@@ -6635,22 +6635,28 @@ function MOUND.AMB.tick(map, outdoor, cfg, dt, px, pz, shoreF)
   if not rawget(_G, "__ds_amb_hooked") then
     _G.__ds_amb_hooked = true
     pcall(function()
-      local prev = love.update
-      love.update = function(...)
-        if prev then prev(...) end
-        local st = rawget(_G, "__ds_amb_state")
-        if st and love.timer.getTime() - st.beat > 0.5 then
-          for k2, sc in pairs(st.srcs) do
-            if sc and st.LOOPS and st.LOOPS[k2] then
+      V.mod.hooks:wrap('core.update',function(next,game,dt,...)
+        local result=next(game,dt,...)
+        local st=rawget(_G,'__ds_amb_state')
+        if st and love.timer.getTime()-st.beat>0.5 then
+          for key,source in pairs(st.srcs)do
+            if source and st.LOOPS and st.LOOPS[key]then
               pcall(function()
-                local v = sc:getVolume()
-                if v > 0.01 then sc:setVolume(v * 0.92)
-                elseif sc:isPlaying() then sc:stop() end
+                local volume=source:getVolume()
+                if volume>0.01 then source:setVolume(volume*0.92)
+                elseif source:isPlaying()then source:stop()end
               end)
             end
           end
         end
-      end
+        return result
+      end)
+      V.mod.hooks:wrap('core.quit_to_launcher',function(next,...)
+        local st=rawget(_G,'__ds_amb_state')
+        for _,source in pairs(st and st.srcs or{})do pcall(source.stop,source)end
+        _G.__ds_amb_state=nil;_G.__ds_amb_hooked=nil
+        return next(...)
+      end)
     end)
   end
   -- the row is a CHOICE now (OFF/LOW/MID/HIGH); pre-1.52 saves may
