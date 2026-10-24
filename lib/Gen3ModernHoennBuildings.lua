@@ -11,7 +11,8 @@ local devon={kind='rustboroDevon',adapter='Gen3ImportedDevon',doors='Gen3DevonDo
 local slateportMart={kind='hoennMarts',adapter='Gen3ImportedSlateportMart',doors='Gen3SlateportMartDoors',marker='importedMartDoors',models={oras_slateport_mart=true}}
 local museum={kind='hoennMuseums',adapter='Gen3ImportedSlateportMuseum',doors='Gen3MuseumDoors',marker='importedMuseumDoors',models={oras_slateport_museum=true}}
 local harbor={kind='hoennHarbors',adapter='Gen3ImportedSlateportHarbor',doors='Gen3HarborDoors',marker='importedHarborDoors',models={oras_slateport_harbor=true}}
-local routes={slateport_harbor=harbor,slateport_oceanic_museum=museum,slateport_city_mart=slateportMart,rustboro_devon_corporation=devon,petalburg_city_gym=gyms,dewford_town_gym=gyms,rustboro_city_gym=gyms,
+local littleroot={kind='littlerootHomes',adapter='Gen3ImportedLittlerootHomes',doors='Gen3LittlerootDoors',marker='importedLittlerootDoors',models={oras_littleroot_home_west=true,oras_littleroot_home_east=true}}
+local routes={littleroot_player_house=littleroot,littleroot_rival_house=littleroot,slateport_harbor=harbor,slateport_oceanic_museum=museum,slateport_city_mart=slateportMart,rustboro_devon_corporation=devon,petalburg_city_gym=gyms,dewford_town_gym=gyms,rustboro_city_gym=gyms,
  oldale_mart=marts,petalburg_city_mart=marts,rustboro_city_mart=marts,oldale_house=homes,petalburg_city_home=petalburg,petalburg_city_wide_home=petalburg,rustboro_small_tan=rustboro,rustboro_white_small=rustboro,rustboro_east_tan=rustboro,rustboro_wide_tan=rustboro,rustboro_south_tan=rustboro}
 local function route(g)
  return g and g.custom and g.custom.family=='rse'and routes[g.custom.name]

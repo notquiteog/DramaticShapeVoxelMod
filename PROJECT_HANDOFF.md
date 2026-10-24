@@ -1,3 +1,14 @@
+# Original Littleroot houses checkpoint — 2026-10-23
+
+Both GR6/ZO6/AD8 own houses and original BM2 hinges now dispatch as littlerootHomes.
+Official0.3.96 R/E/S:6 native source uploads/pose/contact/rollback checks,6 real
+entries/normal returns and2 Emerald missing-source fallback entries pass. Native
+hashes unchanged/recovery0; source/native all-angle/contact views inspected.
+Model caps/rears closed, original lintel contact separated locally; fitted all
+poses coplanar-zero. API3/standalone/default HD2D and original portals preserved.
+See [source evidence](docs/ORAS_LITTLEROOT_HOMES_2026-10-23.md). Candidates133/244;
+111 missing, Birch Lab next. Work now prioritizes user's Rustboro fence defect.
+
 # Queued Hoenn exteriors accepted on API3/0.3.96 — 2026-10-23
 
 After merging released main ea14555c, owned standalone .96 QA passes all15 source
