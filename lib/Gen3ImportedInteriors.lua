@@ -22,6 +22,7 @@ dataFiles.oras_center_bookcase='ImportedCenterBookcaseData'
 dataFiles.oras_center_reception_counter='ImportedCenterCounterData'
 dataFiles.oras_oldale_drawer_chest='ImportedOldaleDrawerData'
 dataFiles.oras_oldale_low_sideboard='ImportedOldaleSideboardData'
+dataFiles.oras_meteor_stalagmite='ImportedMeteorStalagmiteData'
 dataFiles.oras_pyre_memorial='ImportedPyreMemorialData'
 dataFiles.oras_flower_bookcase='ImportedFlowerBookcaseData'
 dataFiles.oras_birch_bookcase='ImportedBirchBookcaseData'
@@ -30,6 +31,9 @@ dataFiles.oras_birch_freestanding_case='ImportedBirchFreecaseData'
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
+ hoenn_meteor_stalagmite={pair='general__meteor_falls',primary='general',family='rse',kind='caveSpike',
+  rows={{0x254},{0x25C}},collisionRows={{7},{7}},model='oras_meteor_stalagmite',
+  fitWidth=16,fitDepth=16,fitHeight=32,zRows=1,groundInset=.025},
  hoenn_home_wide_drawers={pair='building__generic_building',family='rse',design='em_home_wide_drawers',
   rows={{0x268,0x269},{0x270,0x271}},collisionRows={{7,7},{0,0}},model='oras_oldale_low_sideboard',
   fitWidth=32,fitDepth=16,fitHeight=32,zRows=0,rotation=1,groundInset=.025},

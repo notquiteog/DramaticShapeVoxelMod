@@ -38,6 +38,7 @@ assert(#triangles==expected)
 end
 if ...=='helper'then return check end
 for _,q in ipairs{
+ {'lib/ImportedMeteorStalagmiteData.lua','oras_meteor_stalagmite',28},
  {'lib/ImportedOldaleSideboardData.lua','oras_oldale_low_sideboard',254},
  {'lib/ImportedOldaleDrawerData.lua','oras_oldale_drawer_chest',284},
  {'lib/ImportedCenterCounterData.lua','oras_center_reception_counter',160},
@@ -62,4 +63,4 @@ for _,q in ipairs{
  {'lib/ImportedOldaleFurnitureData.lua','oras_oldale_neighbor_table',488},
  {'lib/ImportedOldaleFridgeData.lua','oras_oldale_refrigerator',366},
 }do check(dofile(q[1])[q[2]],q[3])end
-print('PASS all twenty-three imported furniture models have zero positive-area coplanar source/closure overlaps')
+print('PASS all twenty-four imported furniture models have zero positive-area coplanar source/closure overlaps')

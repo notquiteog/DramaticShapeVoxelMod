@@ -7666,6 +7666,32 @@
       "kind": "designed",
       "sourceCandidates": []
     },
+    "hoenn_meteor_stalagmite": {
+      "editions": {
+        "emerald": {
+          "count": 5,
+          "maps": [
+            "EM_METEOR_FALLS_1F_1R"
+          ]
+        },
+        "ruby": {
+          "count": 5,
+          "maps": [
+            "RU_METEOR_FALLS_1F_1R"
+          ]
+        },
+        "sapphire": {
+          "count": 5,
+          "maps": [
+            "SA_METEOR_FALLS_1F_1R"
+          ]
+        }
+      },
+      "kind": "caveSpike",
+      "sourceCandidates": [
+        "oras_meteor_stalagmite"
+      ]
+    },
     "hoenn_museum_cylinder": {
       "design": "em_museum_cylinder",
       "editions": {
@@ -14536,9 +14562,9 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 640,
-      "candidateNativeFurnitureOwners": 658,
-      "furniture": 2091,
+      "candidateFurniture": 645,
+      "candidateNativeFurnitureOwners": 663,
+      "furniture": 2096,
       "maps": 519,
       "nativeWallFinishRooms": 79,
       "rooms": 301
@@ -14560,17 +14586,17 @@
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 596,
-      "candidateNativeFurnitureOwners": 612,
-      "furniture": 1476,
+      "candidateFurniture": 601,
+      "candidateNativeFurnitureOwners": 617,
+      "furniture": 1481,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 596,
-      "candidateNativeFurnitureOwners": 612,
-      "furniture": 1476,
+      "candidateFurniture": 601,
+      "candidateNativeFurnitureOwners": 617,
+      "furniture": 1481,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231

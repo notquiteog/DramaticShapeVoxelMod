@@ -1,3 +1,9 @@
+## 2026-10-23 — original Meteor Falls rock spikes
+
+- Complete native `254/25C` gold spike gains independent original ORAS GR260/sub0 component441–460: 20 source +8 exact rear/underside closures, closed edges and zero coplanar overlaps. Uniform one-cell foot, 32px height and bottom-only .025 recess; original native floors/collision/warps/actors stay fixed. Missing PNG keeps closed native-painted volume.
+- Official .96/API3 standalone source/before/missing-PNG RSE runs PASS all15 owners/3 rooms; native walkable first-person/orbit directions and nine source angles reviewed.424 focused identity/fit/closure/failure contracts, all24 source-plane checks, cave/PC/furniture suites and byte-identical regeneration PASS.
+- Fresh1309 RSE native hashes/previous families unchanged; canonical all2161 maps preserved. Candidates2761 pieces/2887 owners, accepted2632 components/283 map pairs, whole-map flagsfalse. Evidence `docs/ORAS_METEOR_STALAGMITES_2026-10-23.md` and metadata run/component ledgers. Scene untouched. Continuing Emerald Navel Rock's20 still-flat interiors; no versions/push/releases.
+
 ## 2026-10-23 — native rock enclosure and Meteor Falls
 
 - Meteor Falls gains explicit native cap/face rock volume (E violet/RS gold), original terrace/water/bridge/stairs retained. Separate two-cell golden pillars stay unclaimed for next independent fixture model. Source family changes only13 Meteor maps; combined Hoenn cave candidate set129.
