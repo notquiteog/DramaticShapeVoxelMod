@@ -15,6 +15,8 @@ from PIL import Image
 STRIPES = {0x2C6: 2, 0x2C7: 11, 0x2DC: 11, 0x2DE: 2, 0x2DF: 11,
            0x2EC: 11, 0x315: 2, 0x318: 10, 0x319: 3, 0x31D: 11}
 GROUND = {
+    0x2A7: [(0x2BB, q) for q in range(4)],
+    0x352: [(0x2E0, 0), (0x2E0, 1), (0x2E0, 2), (0x2BB, 0)],
     0x2C6: [(0x2BB, q) for q in range(4)],
     0x2C7: [(0x2BB, q) for q in range(4)],
     0x2DC: [(0x2BD, 0), (0x2BB, 1), (0x2BD, 2), (0x2BD, 3)],
@@ -56,10 +58,10 @@ def audit(folder):
                     assert actual[:3] in RAIL_RGB or actual == expected, (
                         hex(mid), quadrant, x, y, actual, expected)
     omitted = [row for row in data['grid'] if row['mid'] in GROUND]
-    assert len(omitted) == (15 if data['edition'] == 'emerald' else 16) and all(row['collision'] == 7 for row in omitted)
+    assert len(omitted) == (43 if data['edition'] == 'emerald' else 44) and all(row['collision'] == 7 for row in omitted)
     assert len(data['grid']) == 2400 == len(data['scene'])
     owners = [row for row in data['scene'].values() if row['eligible']]
-    assert len(owners) == 180 and all(row['importedFence'] for row in owners)
+    assert len(owners) == 208 and all(row['importedFence'] for row in owners)
     return {'edition': data['edition'], 'map': data['map'],
             'uniqueNativeCells': len(data['grid']), 'reviewedBuiltCells': len(owners),
             'formerlyOmittedCells': omitted,

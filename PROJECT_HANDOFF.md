@@ -1,3 +1,14 @@
+# Complete Rustboro native art census — 2026-10-23
+
+Broader all-used-art review found long horizontal2a7(26cells) and end352(2)
+missed by initial29-family review. Now31 exact ornatefamilies/208 cells in
+E/R/S. Own official.96 standalone each2400unique/208eligible/208built,
+unchanged native grid/recovery0; updated EMGym/RUeast-boundary captures inspected.
+Independent donor visible-pixel proof includes2a7/352 in each edition; hidden
+terrain under baked rails is not claimed byte-exact. Root owns joined source
+geometry/final acceptance. See updated RUSTBORO_FENCE_COVERAGE_2026-10-23.md.
+Continuing missing rural endcaps/depth-family census after this focused patch.
+
 # Emerald Rustboro fence classifier checkpoint — 2026-10-23
 
 Exact native census adds eight omitted rail/endcap MIDs (15 blocked cells),
