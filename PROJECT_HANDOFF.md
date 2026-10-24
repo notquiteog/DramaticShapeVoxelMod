@@ -1,3 +1,10 @@
+## 2026-10-23 — volumetric native Hoenn cave interiors
+
+- Fixed Hoenn cave vocabulary being swallowed by regional flat fallback. Reviewed brown/green/shared alternate/ice art now has native-palette raised rock caps/bevels and independent boulders; enclosed cap boulders no longer carve wells. Cave all-ground quads removed so native floors have one surface owner. Scene untouched, no hook.
+- Official .96/API3 standalone native final18 edition-map cases PASS, four first-person directions +overview/native inspected. Live native cells/elevations and warps identical across rendering. All2,161 pristine hashes/furniture/civics unchanged;116 Hoenn cave maps gain classifications (E44/R36/S36), no FRLG/outdoor classification changes.
+- 581 focused geometry/identity/dispatch/footprint/unique-floor contracts and existing Hoenn/cave/enclosure suites PASS. Metadata-only cave map/run ledgers retain whole-map acceptancefalse. Evidence: `docs/GEN3_CAVE_VOLUMES_2026-10-23.md`.
+- Beds preserved in scratch; continuing separate Meteor Falls/outer rock finish/openings/source queue. No version/push/release.
+
 ## 2026-10-23 — original ORAS low storage sideboards
 
 - All 12 Hoenn wide-storage owners (four per RSE edition) use original GR513/sub9 low case, recessed doors and runner. Original 108 triangles become 136 exposed +118 closures =254; exact runner/wood and case/base/ceiling unions have one surface owner. Uniform 32×16 blocked fit, original 16.2-pixel height, native apron and bottom-only .025 recess.

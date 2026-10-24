@@ -1,0 +1,46 @@
+-- Native cave drawings have an edition-local vocabulary. These are rock
+-- cap/face identities, never a heightmap inferred from blocked collision.
+local M={}
+local profiles={}
+local function add(secondary,ids,ground,cap,side,rocks)
+ local p=profiles[secondary]or{walls={},rocks={}};profiles[secondary]=p
+ for _,mid in ipairs(ids)do p.walls[mid]={ground=ground,cap=cap,side=side}end
+ for _,mid in ipairs(rocks or{})do p.rocks[mid]={ground=ground,height=mid%2==0 and 14 or 10}end
+end
+local brown={0x208,0x209,0x20A,0x210,0x211,0x212,0x218,0x219,0x21A,0x21B,0x21C,0x220,0x221,0x222,0x223,0x224}
+add('cave',brown,0x201,0x211,0x219,{0x202,0x203})
+add('rusturf_tunnel',brown,0x201,0x211,0x219,{0x203,0x204,0x205,0x206})
+-- The ice chamber lives in the shared cave sheet, not the overworld snow.
+add('cave',{0x377,0x378,0x379,0x37A,0x37B,0x37C,0x380,0x381,0x382,0x383,0x388,0x389,0x38A},0x38D,0x381,0x389,{0x37D,0x37E})
+-- Alternate native rock palettes within the same sheet.
+add('cave',{0x2D0,0x2D1,0x2D2,0x2D3,0x2D8,0x2D9,0x2DA,0x2DB,0x2DC,0x2E0,0x2E1,0x2E2,0x2E3,0x300,0x301,0x308,0x309,0x310,0x311},0x2D1,0x2D1,0x2D9,{0x2D4,0x2D5})
+add('cave',{0x2E7,0x2E8,0x2E9,0x2EA,0x2EF,0x2F0,0x2F1,0x2F2,0x2F3,0x2F4,0x2F7,0x2F8,0x2F9,0x2FA,0x303,0x304,0x30B,0x30C,0x312,0x313},0x2E8,0x2E8,0x2F8,{0x2EB,0x2EC})
+add('cave',{0x317,0x318,0x319,0x31A,0x31B,0x320,0x321,0x322,0x323,0x324,0x325,0x328,0x329,0x32A,0x32B,0x32C,0x32D,0x332,0x333,0x334,0x335,0x337,0x344,0x345,0x346,0x347},0x321,0x321,0x329,{0x31C,0x31D,0x330,0x331})
+function M.shape(primary,secondary,mid,behavior,collision)
+ if primary~='general'or collision~=7 then return end
+ local p=profiles[secondary];if not p then return end
+ local r=p.rocks[mid]
+ if r then return{kind='rock',ground=r.ground,height=r.height,caveRock=true}end
+ local w=p.walls[mid]
+ if w then return{kind='caveWall',height=28,ground=w.ground,cap=w.cap,side=w.side,nativeCave=true}end
+end
+function M.prepare(cells)
+ local raised={}
+ for _,c in pairs(cells)do if c.shape and c.shape.caveRock and not(c.prop or c.civic or c.stageHidden)then
+  local enclosed=true
+  for _,d in ipairs({{0,-1},{1,0},{0,1},{-1,0}})do
+   local n=cells[(c.cx+d[1])..':'..(c.cy+d[2])]
+   if not(n and n.pair==c.pair and n.collision==7 and n.shape and(n.shape.nativeCave or n.shape.caveRock))then enclosed=false;break end
+  end
+  if enclosed then raised[#raised+1]=c end
+ end end
+ for _,c in ipairs(raised)do
+  local r=c.shape;local p=profiles[c.secondary]
+  local wall
+  for _,w in pairs(p.walls)do if w.ground==r.ground then wall=w;break end end
+  if wall then c.shape={kind='caveWall',height=28,ground=wall.ground,cap=wall.cap,side=wall.side,
+   nativeCave=true,capRock=r}end
+ end
+ return #raised
+end
+return M

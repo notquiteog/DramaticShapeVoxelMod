@@ -156,6 +156,12 @@ function M.of(primary,secondary,mid,behavior,collision)
   return {kind='water',reviewedSurface=true,behavior=behavior}
  end
  local tower=Towers.shape(primary,secondary,mid,collision);if tower then return tower end
+ -- Resolve Hoenn cave vocabulary before the regional outdoor fallback.
+ -- That fallback intentionally returns flat for unknown drawings.
+ if hoenn then
+  local C=V and V.require and V.require('Gen3CaveProfiles')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3CaveProfiles.lua')
+  local cave=C.shape(primary,secondary,mid,behavior,collision);if cave then return cave end
+ end
  if hoenn then return H.shape(primary,secondary,mid,behavior,collision)end
  if primary=='general' and caves[secondary] and mid>=0x280 then
   if mid==0x282 or mid==0x283 then return {kind='rock',ground=0x281,height=mid==0x282 and 14 or 10} end
@@ -266,6 +272,7 @@ function M.column(cells,index)
   roofInset=top.secondary=='pallet_town' and (top.shape.roofType=='flat' and 12 or 8) or 0}
 end
 function M.layout(cells)
+ if V and V.require then V.require('Gen3CaveProfiles').prepare(cells)end
  local bands={}
  for key,c in pairs(cells)do
   local col=M.column(cells,key)

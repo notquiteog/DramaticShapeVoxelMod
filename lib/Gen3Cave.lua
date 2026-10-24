@@ -26,7 +26,22 @@ local function boulderMask(mask)
  return out
 end
 function M.wall(cells,c,emit,uvFor)
- return V.require('Gen3Terrain').append(cells,c,emit,uvFor)
+ -- The native floor owns ground-level bevel samples. A fully flat bottom
+ -- quad from the terrain grid would duplicate that plane and flicker.
+ V.require('Gen3Terrain').append(cells,c,function(v,t,shade)
+  local raised=false
+  for _,p in ipairs(v)do if p[2]>(c.base or 0)+1e-7 then raised=true;break end end
+  if raised then emit(v,t,shade)end
+ end,uvFor)
+ -- A native boulder surrounded by solid cap art belongs on that mass,
+ -- rather than carving a square well through it down to the cave floor.
+ if c.shape.capRock then
+  local top=V.require('Gen3Terrain').height(cells,c.cx*16+8,c.cy*16+8,c.shape.height)
+  M.rock({cx=c.cx,cy=c.cy,ts=c.ts,mid=c.mid,shape=c.shape.capRock},function(v,t,shade)
+   for _,p in ipairs(v)do p[2]=p[2]+top end
+   emit(v,t,shade)
+  end,uvFor)
+ end
 end
 function M.rock(c,emit,uvFor)
  if c.shape.seaRock then return V.require('Gen3SeaRocks').append(c,emit,uvFor)end
