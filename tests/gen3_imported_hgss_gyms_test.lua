@@ -4,10 +4,13 @@ local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local G=assert(loadfile('lib/Gen3ImportedGyms.lua'))(V);modules.Gen3ImportedGyms=G
 local H=assert(loadfile('lib/Gen3ImportedHGSSGyms.lua'))(V);modules.Gen3ImportedHGSSGyms=H
 local D=assert(loadfile('lib/Gen3HGSSGymDoors.lua'))(V);modules.Gen3HGSSGymDoors=D
-for _,pair in ipairs{'viridian_outdoor','pewter_outdoor','general__rom_082d4af4','general__rom_082d4b9c'}do
- local spec=H.selection{pair=pair};local g={pair=pair,kind='gym',width=spec.width,depth=5,cx=12,cy=12,groundHeight=0};local cells={};if spec.nativePlacement then g.cx,g.cy=43,8 end
- for y,row in ipairs(spec.rows)do for x,mid in ipairs(row)do cells[(g.cx+x-1)..':'..(g.cy+y-1)]={civic=g,pair=pair,mid=mid,collision=y==1 and((spec.headerBlocked or spec.headerLastBlocked and x==spec.width)and 7 or 0)or y==5 and(x>=3 and x<=5 and(x==4 and 113 or 7)or 0)or 7,base=0,region=spec.nativePlacement and{def={id='FR_SAFFRON_CITY'},x=0,y=0}or nil}end end
- assert(H.eligible(g,cells));local c=cells[g.cx..':'..g.cy];c.mid=0;assert(not H.eligible(g,cells));c.mid=spec.rows[1][1]
+for _,pair in ipairs{'viridian_outdoor','pewter_outdoor','general__rom_082d4af4','general__rom_082d4b9c','general__rom_082d4b24','general__rom_082d4b54'}do
+ local spec=H.selection{pair=pair};local g={pair=pair,kind='gym',width=spec.width,depth=5,cx=12,cy=12,groundHeight=0};local cells={};if spec.nativePlacement then g.cx,g.cy=43,8 elseif spec.location then g.cx,g.cy=spec.location[2],spec.location[3]end
+ for y,row in ipairs(spec.rows)do for x,mid in ipairs(row)do cells[(g.cx+x-1)..':'..(g.cy+y-1)]={civic=g,pair=pair,mid=mid,collision=y==1 and((spec.headerBlocked or spec.headerLastBlocked and x==spec.width)and 7 or 0)or y==5 and(x>=3 and x<=5 and(x==4 and 113 or 7)or 0)or 7,base=0,region=spec.nativePlacement and{def={id='FR_SAFFRON_CITY'},x=0,y=0}or spec.location and{def={id=spec.location[1]},x=0,y=0}or nil}end end
+ assert(H.eligible(g,cells));if spec.location then
+  local c=cells[g.cx..':'..g.cy];local id=c.region.def.id;c.region.def.id='THIRD_PARTY_CITY';assert(not H.eligible(g,cells));c.region.def.id=id
+  c.region.x=1;assert(not H.eligible(g,cells));c.region.x=0
+ end;local c=cells[g.cx..':'..g.cy];c.mid=0;assert(not H.eligible(g,cells));c.mid=spec.rows[1][1]
  c.boundary=true;assert(not H.eligible(g,cells));c.boundary=nil
  local door=cells[(g.cx+3)..':'..(g.cy+4)];door.collision=7;assert(not H.eligible(g,cells));door.collision=113
  if spec.nativePlacement then

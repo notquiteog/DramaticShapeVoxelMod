@@ -1,3 +1,19 @@
+# Coastal Gym source checkpoint — 2026-10-23
+
+Original HGSS Vermilion/Fuchsia Gyms now cover both exact native placements in
+FRLG, original regional paint/paired curved doors, measured source proportions,
+complete native guards and source-proven lawn. Also removes18 coplanar authored
+foundation/wall overlaps per six-Gym model by matching measured wall-edge
+heights, preserving original XYZ/UV/PNG/anchors. All six deterministic models
+pass zero-coplanar/nondegenerate proof. Four new native placements plus ten
+existing Gym regressions pass official.96 process0, source-panel draw asserted;
+two paired missing-source fallbacks pass. Real entries/returns/corner walking,
+source galleries and final native views inspected, occlusions documented.
+Fourteen Lua suites and actual native atlas proof pass. Full852 hashes unchanged;
+canonical84 eligible/84 accepted/52 unmatched peredition (136assemblies).
+See docs/VERMILION_FUCHSIA_GYM_SOURCES_2026-10-23.md. This is subsequent to
+released1.58.2, no version bump/push. Next user priority: outdoor cave entrances.
+
 # Source-door dispatcher integrated — 2026-10-23
 
 Standard Kanto Centers/plain Viridian house now use their existing dispatcher

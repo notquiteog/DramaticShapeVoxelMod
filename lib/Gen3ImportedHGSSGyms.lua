@@ -4,6 +4,8 @@ local V=...
 local Models=V.require('SceneryModels')
 local M={}
 local specs={
+ ['general__rom_082d4b24']={id='hgss_vermilion_gym',width=7,location={'FR_VERMILION_CITY',11,21},rows={{313,314,314,314,314,314,315},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{336,337,338,339,340,341,342},{344,345,346,347,348,349,350}}},
+ ['general__rom_082d4b54']={id='hgss_fuchsia_gym',width=7,headerBlocked=true,location={'FR_FUCHSIA_CITY',6,28},rows={{645,646,646,646,646,646,647},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{336,337,338,339,340,341,342},{344,345,346,347,348,349,350}}},
  viridian_outdoor={id='hgss_viridian_gym',width=6,rows={{685,686,686,686,686,687},{321,322,322,322,322,323},{329,330,330,330,330,331},{336,337,338,339,340,342},{344,345,346,347,348,350}}},
  pewter_outdoor={id='hgss_pewter_gym',width=7,rows={{313,314,314,314,314,314,315},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{336,337,338,339,340,341,342},{344,345,346,347,348,349,350}}},
  ['general__rom_082d4b9c']={id='hgss_saffron_gym',width=7,headerBlocked=true,nativePlacement=true,rows={{768,769,770,769,770,769,771},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{773,337,338,339,340,341,342},{784,785,786,347,787,788,789}}},
@@ -19,6 +21,10 @@ function M.eligible(g,cells)
  local spec=M.selection(g)
  if not(spec and g.kind=='gym'and g.width==spec.width and g.depth==5 and not g.stageHidden)then return false end
  local closed=false
+ if spec.location then
+  local c=cells[g.cx..':'..g.cy];local r=c and c.region;local loc=spec.location
+  if not(r and r.def and r.def.id==loc[1]and g.cx-(r.x or 0)==loc[2]and g.cy-(r.y or 0)==loc[3])then return false end
+ end
  if spec.nativePlacement then
   local c=cells[g.cx..':'..g.cy];local r=c and c.region;local id=r and r.def and r.def.id
   local x,y=g.cx-(r and r.x or 0),g.cy-(r and r.y or 0)

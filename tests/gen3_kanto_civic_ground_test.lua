@@ -1,5 +1,7 @@
 local C=assert(loadfile('lib/Gen3Civic.lua'))()
 local specs={
+ {'FR_VERMILION_CITY',11,21,'general__rom_082d4b24','gym',1,{{313,314,314,314,314,314,315},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{336,337,338,339,340,341,342},{344,345,346,347,348,349,350}}},
+ {'FR_FUCHSIA_CITY',6,28,'general__rom_082d4b54','gym',1,{{645,646,646,646,646,646,647},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{336,337,338,339,340,341,342},{344,345,346,347,348,349,350}}},
  {'FR_CERULEAN_CITY',28,17,'general__rom_082d4af4','gym',1,{{313,314,314,314,314,314,315},{321,322,322,322,322,322,323},{329,330,330,330,330,330,331},{336,337,338,339,340,341,342},{344,345,346,347,348,349,350}}},
  {'FR_SAFFRON_CITY',37,8,'general__rom_082d4b9c','gym',741,{{816,817,799,817,799,818},{824,825,825,825,825,826},{832,833,833,833,833,834},{821,822,823,811,812,827},{829,830,831,819,820,835}}},
  {'FR_SAFFRON_CITY',22,34,'general__rom_082d4b9c','center',741,{{764,765,766,774,767},{72,73,74,75,391},{80,81,82,83,399},{88,89,90,91,407},{735,97,98,390,775}}},
@@ -32,5 +34,5 @@ for _,s in ipairs(specs)do for _,projection in ipairs(s[1]=='FR_SAFFRON_CITY'and
   out=prepare(checkSpec,cells,cx,cy);for _,v in ipairs(out)do assert(not v.sourceGround,'unknown source evidence was accepted '..mutation)end
  end
 end end
-assert(count==7)
-print('PASS7 exact Kanto civic native floors, stitched-region offsets, neighbor-donor refusal, unchanged native cells and unknown-art/pair/owner fallback')
+assert(count==9)
+print('PASS9 exact Kanto civic native floors, stitched-region offsets, neighbor-donor refusal, unchanged native cells and unknown-art/pair/owner fallback')

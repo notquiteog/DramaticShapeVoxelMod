@@ -3,6 +3,8 @@
 return function(game)
  local family=os.getenv('QA_FAMILY')or'gyms'
  local configs={
+  vermilion_gym={coastalGym=true,adapter='Gen3ImportedHGSSGyms',model='hgss_vermilion_gym',doorHelper='Gen3HGSSGymDoors',fixtures={{'FR_VERMILION_CITY',11,21}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/hgss_vermilion_gym/',right=9},
+  fuchsia_gym={coastalGym=true,adapter='Gen3ImportedHGSSGyms',model='hgss_fuchsia_gym',doorHelper='Gen3HGSSGymDoors',fixtures={{'FR_FUCHSIA_CITY',6,28}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/hgss_fuchsia_gym/',right=9},
   saffron_centers={doorHelper='Gen3KantoCenterDoors',fixtures={{'FR_SAFFRON_CITY',22,34},{'FR_SAFFRON_CITY_CONNECTION',12,27}},adapter='Gen3ImportedKantoCenters',model='hgss_kanto_center',doorX=2,doorY=4,stat='kantoCenters',source='^assets/scenery/hgss%-center/',right=6,left={-1,4,math.pi/2},rear={2,-2,math.pi}},
   saffron_marts={fixtures={{'FR_SAFFRON_CITY',38,18},{'FR_SAFFRON_CITY_CONNECTION',28,11}},adapter='Gen3ImportedHGSSMarts',model='hgss_kanto_mart',doorX=2,doorY=3,stat='hgssMarts',source='^assets/scenery/hgss%-mart/',right=6,left={-1,4,math.pi/4},rear={2,-3,math.pi}},
   center_regression={doorHelper='Gen3KantoCenterDoors',fixtures={{'FR_PEWTER_CITY',15,21}},adapter='Gen3ImportedKantoCenters',model='hgss_kanto_center',doorX=2,doorY=4,stat='kantoCenters',source='^assets/scenery/hgss%-center/',right=6,left={-1,4,math.pi/2},rear={2,-2,math.pi}},
@@ -17,9 +19,9 @@ return function(game)
   marts={fixtures={{'FR_CERULEAN_CITY',27,25},{'FR_CINNABAR_ISLAND',17,8},{'FR_FOUR_ISLAND',20,23},{'FR_FUCHSIA_CITY',9,12},{'FR_LAVENDER_TOWN',18,12},{'FR_PEWTER_CITY',26,15},{'FR_SAFFRON_CITY',38,18},{'FR_SAFFRON_CITY_CONNECTION',28,11},{'FR_SIX_ISLAND',18,8},{'FR_THREE_ISLAND',16,9},{'FR_VERMILION_CITY',27,14},{'FR_VIRIDIAN_CITY',34,16}},adapter='Gen3ImportedHGSSMarts',model='hgss_kanto_mart',doorX=2,doorY=3,stat='hgssMarts',source='^assets/scenery/hgss%-mart/',right=6,left={-1,4,math.pi/4},rear={2,-3,math.pi}},
   marts_pilot={fixtures={{'FR_PEWTER_CITY',26,15},{'FR_SAFFRON_CITY',38,18},{'FR_SAFFRON_CITY_CONNECTION',28,11}},adapter='Gen3ImportedHGSSMarts',model='hgss_kanto_mart',doorX=2,doorY=3,stat='hgssMarts',source='^assets/scenery/hgss%-mart/',right=6,left={-1,4,math.pi/4},rear={2,-3,math.pi}},
   saffron_dojo={adapter='Gen3ImportedSaffronDojo',model='hgss_saffron_dojo',fixtures={{'FR_SAFFRON_CITY',37,8},{'FR_SAFFRON_CITY_CONNECTION',27,1}},doorX=3,doorY=4,stat='saffronDojo',source='^assets/scenery/saffron%-dojo/',pendingGround=false,right=6,left={-1,5,math.pi/4},rear={3,0,math.pi}},
-  saffron_gym={fixtures={{'FR_SAFFRON_CITY',43,8},{'FR_SAFFRON_CITY_CONNECTION',33,1}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/hgss_saffron_gym/',right=9,left={-1,5,math.pi/4},rear={3,0,math.pi}},
+  saffron_gym={doorHelper='Gen3HGSSGymDoors',fixtures={{'FR_SAFFRON_CITY',43,8},{'FR_SAFFRON_CITY_CONNECTION',33,1}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/hgss_saffron_gym/',right=9,left={-1,5,math.pi/4},rear={3,0,math.pi}},
   gyms={fixtures={{'FR_PEWTER_CITY',12,12},{'FR_VIRIDIAN_CITY',33,6}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/',right=9},
-  gyms_all={fixtures={{'FR_PEWTER_CITY',12,12},{'FR_VIRIDIAN_CITY',33,6},{'FR_CERULEAN_CITY',28,17}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/',right=9},
+  gyms_all={doorHelper='Gen3HGSSGymDoors',fixtures={{'FR_PEWTER_CITY',12,12},{'FR_VIRIDIAN_CITY',33,6},{'FR_CERULEAN_CITY',28,17}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/',right=9},
   cerulean_gym={adapter='Gen3ImportedHGSSGyms',model='hgss_cerulean_gym',fixtures={{'FR_CERULEAN_CITY',28,17}},doorX=3,doorY=4,stat='hgssGyms',source='^assets/scenery/hgss%-kanto%-gyms/hgss_cerulean_gym/',right=9},
   houses={fixtures={{'FR_PEWTER_CITY',8,28},{'FR_PEWTER_CITY',32,9}},doorX=1,doorY=2,stat='pewterHouses',source='^assets/scenery/pewter%-house/'},
   viridian_flowers={adapter='Gen3ImportedViridianFlowerHouses',model='hgss_viridian_flower_house',fixtures={{'FR_VIRIDIAN_CITY',24,15}},doorX=1,doorY=3,stat='viridianFlowerHouses',source='^assets/scenery/viridian%-house/'},
@@ -73,6 +75,19 @@ return function(game)
   for _=1,260 do U.hold(game,'down',1);if Map.currentDef().id==map then break end end
   assert(Map.currentDef().id==map,'native return failed');settle();U.wait(90);shot(index..'-returned');assert(hash(Map.currentDef())==before,'native layout mutated')
   else for _,w in ipairs(Map.currentDef().warps or{})do assert(not(w.x==cx+doorX and w.y==cy+doorY),'projection has an unexpected native warp')end;assert(hash(Map.currentDef())==before,'native projection mutated')end
+  if config.coastalGym then
+   C.setLevel(3,game);C.yaw=0
+   local function step(dir,x,y)
+    for _=1,50 do U.hold(game,dir,1);if P.moving then break end end
+    game.input:reset();U.wait(24);assert(P.cellX==x and P.cellY==y,'native Gym corner walk failed')
+   end
+   P.reset(cx+1,cy+5,'up');game.input:reset();step('up',cx+1,cy+4)
+   U.hold(game,'right',30);game.input:reset();U.wait(24);assert(P.cellX==cx+1 and P.cellY==cy+4,'native blocked front pillar changed')
+   U.hold(game,'up',30);game.input:reset();U.wait(24);assert(P.cellX==cx+1 and P.cellY==cy+4,'native blocked wall changed')
+   P.reset(cx+5,cy+5,'up');game.input:reset();step('up',cx+5,cy+4)
+   U.hold(game,'left',30);game.input:reset();U.wait(24);assert(P.cellX==cx+5 and P.cellY==cy+4,'native blocked right pillar changed')
+   settle();shot(index..'-corner-clearance-walked');assert(hash(Map.currentDef())==before,'native Gym map mutated')
+  end
   if family=='cerulean_closed'then
    C.setLevel(3,game);C.yaw=0;P.reset(cx+2,cy+4,'up');game.input:reset();settle()
    U.hold(game,'up',30);game.input:reset();U.wait(30)
@@ -115,7 +130,7 @@ return function(game)
    settle();shot(index..'-pillar-ground-walked');assert(hash(Map.currentDef())==before,'native projection permissions changed')
   end
   C.setLevel(0,game);U.wait(15);shot(index..'-native')
-  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,runtime='v'..require('src.core.Version').engine,doorX=doorX,doorY=doorY,sourceModel=not missing and config.model or nil,nativeHash=before,destination=destination,returned=not config.noEntrance and map~='FR_SAFFRON_CITY_CONNECTION',nativeWalkChecked=(family=='cerulean_closed'or family=='celadon_short'or family=='one_island_center')or nil,nonEnterable=config.noEntrance==true or map=='FR_SAFFRON_CITY_CONNECTION',renderedVerified=not missing and not pendingGround,renderedGap=pendingGround and'Shared native-ground donor assessment pending.'or nil,missingAssets=missing}
+  out[#out+1]={edition=require('src.core.GameVersion').get(),map=map,x=cx,y=cy,runtime='v'..require('src.core.Version').engine,doorX=doorX,doorY=doorY,sourceModel=not missing and(config.model or observed[map..':'..cx..':'..cy])or nil,nativeHash=before,destination=destination,returned=not config.noEntrance and map~='FR_SAFFRON_CITY_CONNECTION',nativeWalkChecked=(config.coastalGym or family=='cerulean_closed'or family=='celadon_short'or family=='one_island_center')or nil,nonEnterable=config.noEntrance==true or map=='FR_SAFFRON_CITY_CONNECTION',renderedVerified=not missing and not pendingGround,renderedGap=pendingGround and'Shared native-ground donor assessment pending.'or nil,missingAssets=missing}
   local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close()
  end end
  local f=assert(io.open(dir..'/results.json','w'));f:write(json.encode(out));f:close();assert(#game.mods.errors==0,table.concat(game.mods.errors,'\n'));print('[FRLG IMPORTED EXTERIORS] PASS',family,#out)

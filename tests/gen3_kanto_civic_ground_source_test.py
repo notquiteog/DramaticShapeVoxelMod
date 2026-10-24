@@ -20,6 +20,12 @@ def check(root):
   assert all(composite(m)[y*16+x]in lawn for y in range(8,16))
  for m in [313,314,315]:assert set(u[m])=={13} and any(o[m])
  for m in [212,228]:assert not set(u[m])<=lawn
+ for city in ['VermilionCity','FuchsiaCity']:
+  u,o,composite=pair(city);lawn=set(u[1])
+  assert lawn=={8,13,14}and not any(o[1])
+  for m,x in [(344,0),(350,15)]:
+   assert composite(m)[-16:]==u[1][-16:]
+   assert all(composite(m)[y*16+x]in lawn for y in range(8,16))
  u,o,composite=pair('SaffronCity')
  floor=u[0x2e5];paving=set(floor)
  assert paving=={166,167,168,169,170,171} and not any(o[0x2e5])
@@ -35,7 +41,7 @@ def check(root):
  # Service roof-header upper art is real; it must not be flattened as ground.
  for m in [760,761,762,763,764,765,766,774,767]:assert any(o[m])
  assert any(v not in paving for v in composite(735)), 'must retain foundation-art case'
- print('PASS',root,'native Cerulean lawn and Saffron service/Dojo paving margins; original clean donors exclude facade/roof art and neighboring wrong surfaces')
+ print('PASS',root,'native Cerulean/Vermilion/Fuchsia lawn and Saffron service/Dojo paving margins; original clean donors exclude facade/roof art and neighboring wrong surfaces')
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('roots',type=Path,nargs='+')
  for root in p.parse_args().roots:check(root)
