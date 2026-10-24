@@ -5,6 +5,7 @@ local modules={SceneryModelData={},ModelInstances={},BuildBudget={check=function
  Gen3PublicPCFrames=dofile('lib/Gen3PublicPCFrames.lua'),ImportedInteriorTVData=dofile('lib/ImportedInteriorTVData.lua')}
 local V={mod={read=function(path)local f=assert(io.open(path,'rb'));local s=f:read('*a');f:close();return s end}}
 V.require=function(n)return assert(modules[n],n)end
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local I=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 assert(I.register(I.tvId));local info=S.info(I.tvId);assert(info.parts==3)

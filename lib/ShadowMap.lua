@@ -172,6 +172,7 @@ local blank = nil             -- 1x1 stand-in so the sampler is never unbound
 local drawing = false
 local ready = false
 local lastSig = nil
+local lightPlanes
 local prevBlend, prevAlphaMode = nil, nil
 
 local IDENTITY = Mat4.identity()
@@ -370,15 +371,27 @@ end
 -- scene sees no signature and recasts normally into the retained canvas.
 function ShadowMap.discard()
   ready, lastSig = false, nil
+  lightPlanes=nil
 end
 
 -- The direction the light TRAVELS, normalized. The shear is the shadow a
 -- unit of height throws, so the displacement from a point to where its
 -- shadow lands is (KX, -1, KZ) -- which is the ray.
-local function sunDir()
+local sunX, sunZ, rayX, rayY, rayZ
+local function sunRay()
   local x, y, z = ShadowMap.KX, -1, ShadowMap.KZ
-  local l = math.sqrt(x * x + y * y + z * z)
-  return { x / l, y / l, z / l }
+  if x ~= sunX or z ~= sunZ then
+    local l = math.sqrt(x * x + y * y + z * z)
+    sunX, sunZ = x, z
+    rayX, rayY, rayZ = x / l, y / l, z / l
+  end
+  return rayX, rayY, rayZ
+end
+
+local function sunDir()
+  -- Keep the public result independently owned; callers may modify it.
+  local x, y, z = sunRay()
+  return { x, y, z }
 end
 
 ShadowMap.sunDir = sunDir
@@ -539,10 +552,19 @@ ShadowMap.SNUG = 0.9
 -- still between redraws of the map, so a lit frame that reuses last
 -- frame's map computes the same displacement it was stored with.
 function ShadowMap.snug(model)
-  local f = sunDir()
+  local x, y, z = sunRay()
   local s = -ShadowMap.slack * ShadowMap.SNUG
-  return Mat4.mul(Mat4.translate(f[1] * s, f[2] * s, f[3] * s),
-                  model or IDENTITY)
+  x, y, z = x * s, y * s, z * s
+  local m = model or IDENTITY
+  -- Every caster and receiver uses this translation. Specialize T * model
+  -- instead of allocating a ray and translation and doing a full multiply.
+  -- Read values each call (animated models can mutate) and return fresh storage.
+  return {
+    m[1]+x*m[13], m[2]+x*m[14], m[3]+x*m[15], m[4]+x*m[16],
+    m[5]+y*m[13], m[6]+y*m[14], m[7]+y*m[15], m[8]+y*m[16],
+    m[9]+z*m[13], m[10]+z*m[14], m[11]+z*m[15], m[12]+z*m[16],
+    m[13], m[14], m[15], m[16],
+  }
 end
 
 -- Whether the map has to be redrawn for `sig` -- a caller-built stamp of
@@ -556,6 +578,7 @@ end
 -- Begin the sun pass. Returns false when it could not start, in which case
 -- the caller must not draw into it or call finish.
 function ShadowMap.begin(cx, cy, vw, vh)
+  lightPlanes=nil
   drawUniforms.reset()
   -- Native adapters can call begin directly without available(). OFF must
   -- skip allocation and submission as well as sampling in the scene shader.
@@ -601,6 +624,15 @@ function ShadowMap.begin(cx, cy, vw, vh)
   drawing = true
   ready = false
   return true
+end
+
+-- Cull only against the light's actual rasterized volume. Main-camera bounds
+-- are invalid here: an offscreen object can still shade visible ground.
+-- Callers opt in only for known physical world bounds without deformation.
+function ShadowMap.frustum()
+  if not drawing then return nil end
+  if not lightPlanes then lightPlanes=V.require('FrustumCull').prepare(ShadowMap.clipVP)end
+  return lightPlanes
 end
 
 -- Match the visible interior bounds for terrain and actor casters.
@@ -650,6 +682,7 @@ end
 function ShadowMap.finish(sig)
   if not drawing then return end
   drawing = false
+  lightPlanes=nil
   love.graphics.setShader()
   love.graphics.setDepthMode()
   love.graphics.setCanvas()
@@ -663,6 +696,7 @@ end
 function ShadowMap.invalidate()
   canvas, canvasRes, blank = nil, 0, nil
   drawing, ready, lastSig = false, false, nil
+  lightPlanes=nil
 end
 
 return ShadowMap

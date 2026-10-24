@@ -3,6 +3,7 @@ local modules={SceneryModelData={},ImportedTreeData={},ImportedHoennGymData=dofi
 local png='\137PNG\13\10\26\10'..string.char(0,0,0,13)..'IHDR'..string.char(0,0,0,8,0,0,0,8)
 local missing=false;local released=0
 local V={mod={read=function()if not missing then return png end end}};V.require=function(n)return assert(modules[n],n)end
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local G=assert(loadfile('lib/Gen3ImportedGyms.lua'))(V);modules.Gen3ImportedGyms=G
 local D=assert(loadfile('lib/Gen3GymDoors.lua'))(V);modules.Gen3GymDoors=D

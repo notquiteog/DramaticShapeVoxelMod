@@ -38,6 +38,13 @@ reported location. Passing Lua tests alone is insufficient.
 - Preserve source proportions, roofs, lettering, fixtures and regional art.
   Do not invent attachments or substitute unrelated furniture. Continuous
   lettering must remain on a continuous sign surface.
+- Prevent Z-fighting by giving each visible wall, floor, riser and trim area
+  one surface owner. Remove duplicate/internal faces and overlapping coplanar
+  boxes; align frames with the actual wall and cut the required opening.
+  Recess source model contact rings/underside caps slightly below native ground
+  without translating upper geometry, portal anchors, native floors or collision.
+  Inspect moving/rotated, near and distant views; a static image or depth bias
+  alone is not proof that overlapping geometry is correct.
 - Keep geometry inside the original blocked footprint and mostly fill that
   footprint. Preserve aisles, door openings, counter staff clearance and native
   collision. Use source/local floor or ground; nearby paving is not proof that

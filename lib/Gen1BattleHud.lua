@@ -84,12 +84,15 @@ local function paint(b)
   end
 end
 function M.install()
-  V.mod.hooks:wrap('battle.presentation.suppress_native.v1',function(next,request)
+  local release=V.require('BattlePresentation').registerSuppression(V.mod.id,function(request)
     if request and M.active(request.battle)then
       if request.surface=='hud' then return true end
       if request.surface=='text' and commands(request.battle)then return true end
     end
-    return next(request)
+    return false
+  end)
+  V.mod.hooks:wrap('core.quit_to_launcher',function(next,...)
+    release();return next(...)
   end)
   V.mod.hooks:wrap('render.hud',function(next,game,viewport)
     local result=next(game,viewport)

@@ -335,7 +335,8 @@ local function installed(def)
   if not def then return false end
   if installedAtlases[def] == nil then
     local path = atlasPath(def)
-    installedAtlases[def] = path and love.filesystem.getInfo(path,"file") ~= nil or false
+    if V.mod.assets.info then installedAtlases[def]=V.mod.assets:info(def.image)~=nil
+    else installedAtlases[def]=path and love.filesystem.getInfo(path,'file')~=nil or false end
   end
   return installedAtlases[def]
 end

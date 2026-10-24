@@ -37,7 +37,7 @@ game.screen=nil;assert(not M.screen(game,s))
 print('PASS native GSC sendout identity, shiny dedupe, wild/trainer sides, capture, stage and lifecycle guards')
 local native=0;local View={drawObjects=function(_,runner,battle,extra)native=native+1;return nil,extra end}
 package.loaded['src.ui.gen2.BattleAnimView']=View
-local requireOld=V.require;V.mod={world={game=game}}
+local requireOld=V.require;V.mod={game=game,world={}}
 V.require=function(k)if k=='PokeballSettings'then return{active=function()return enabled end}end;return requireOld(k)end
 M.install();local wrapped=View.drawObjects;M.install();assert(View.drawObjects==wrapped)
 game.screen=s;s.afterSendOut={side='player',mon=mon};s.anim={animId='ANIM_SEND_OUT_MON',param=0}

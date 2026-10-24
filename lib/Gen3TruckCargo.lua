@@ -190,6 +190,9 @@ end
 -- world translation preserves those offsets in opaque, shadow and reflection
 -- passes, without consuming player/character style or mutating any object.
 function M.draw(gid,x,z,height,spr,frame,draw,reflection)
+ -- Most actors never use this provider. Reject before querying map state or
+ -- allocating a protected closure in every main/reflection/shadow pass.
+ if tonumber(gid)~=113 then return false end
  local ok,result=pcall(function()
   local GV=require('src.core.GameVersion')
   local Map=require('src.core.game3.map')

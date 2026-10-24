@@ -7,27 +7,38 @@ package.loaded['src.ui.game3.option_rows']=Rows
 local game={options={modOptions={}},mods={modOptions={}},writeOptions=function(g)g.writes=(g.writes or 0)+1 end}
 local schemas={{key='toggle',label='TOGGLE',type='toggle',default=true},{key='choice',type='choice',choices={{'ORIGINAL','original'},{'ART','art'}},default='original'},
  {key='number',type='number',default=2,min=1,max=3,step=1}}
-local mods={}
+local mods={};local opened
 for _,id in ipairs({'A','B'})do
- local m={id=id,hooks={},options={},callbacks={}}
+ local m={id=id,hooks={},options={},callbacks={},content={screens={}}};local factories={}
  function m.options:get(key)
-  local s=game.mods.modOptions[id];if s and s[key]~=nil then return s[key]end
+  local b=game.mods.modOptions[id];if b and b[key]~=nil then return b[key]end
   for _,r in ipairs(schemas)do if r.key==key then return r.default end end
  end
  function m.hooks:wrap(event,fn)m.callbacks[event]=fn end
+ function m.content.screens:register(key,value)factories[key]=value end
+ m.ui={ListMenu={new=function(g,title,items,opts)
+  return{title=title,items=items,index=1,update=function()end,close=function()end}
+ end}}
+ m.ui.push=function(g,key,...)opened=factories[key].new(g,...);return opened end
  mods[id]=m;Adapter.install(m,schemas,id)
 end
-Adapter.install(mods.A,schemas,'A') -- hot reload leaves exactly one page
-local ctx={game=game};local rows=Rows.build(ctx);assert(#rows==7 and rows[1].id=='textSpeed')
-local title,page
-local groups=Rows.group(rows,function(t,p)title,page=t,p end);assert(#groups==3)
-for _,r in ipairs(groups)do if r.id=='A:settings'then r.activate(ctx)end end;assert(title=='A' and #page==3)
-assert(page[1].value()=='ON');page[1].step(ctx,1);assert(page[1].value()=='OFF' and game.options.modOptions.A.toggle==false)
-page[2].step(ctx,-1);assert(page[2].value()=='ART')
-page[3].step(ctx,8);assert(page[3].value()=='3','numeric max not clamped')
-assert(events[1].mod=='A' and events[1].value==false and game.writes==3)
+Adapter.install(mods.A,schemas,'A')
+local function allRows()
+ local out={{id='textSpeed',label='TEXT SPEED'}}
+ for _,id in ipairs({'A','B'})do out=mods[id].callbacks['ui.options.rows'](function(_,r)return r end,game,out)end
+ return out
+end
+local out=allRows();assert(#out==3 and out[1].id=='textSpeed')
+for _,r in ipairs(out)do if r.id=='A:settings'then r.activate(game)end end
+assert(opened.title=='A'and #opened.items==4)
+local page={};for _,item in ipairs(opened.items)do if item.row then page[#page+1]=item.row end end
+assert(page[1].value()=='ON');page[1].step(game,1);assert(page[1].value()=='OFF'and game.options.modOptions.A.toggle==false)
+page[2].step(game,-1);assert(page[2].value()=='ART')
+page[3].step(game,8);assert(page[3].value()=='3')
+assert(events[1].mod=='A'and events[1].value==false and game.writes==3)
 mods.A.callbacks['core.quit_to_launcher'](function()end)
-assert(#Rows.build(ctx)==4,'unload lost another mod or kept stale rows')
+assert(#allRows()==2,'unload lost another mod or kept stale settings')
+
 generation=2
 Adapter.install(mods.A,schemas)
 local hook=mods.A.callbacks['ui.options.rows']

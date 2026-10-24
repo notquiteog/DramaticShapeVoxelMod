@@ -1,6 +1,7 @@
 local tracked
 local modules={SceneryModelData=dofile('lib/SceneryModelData.lua'),ImportedCenterDoorData=dofile('lib/ImportedCenterDoorData.lua'),ModelInstances={new=function()return nil end},BuildBudget={check=function()end,track=function(o)assert(not tracked);tracked=o end,untrack=function(o)if tracked==o then tracked=nil end end}}
 local V={mod={read=function()return nil end},require=function(n)return assert(modules[n],n)end}
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 local D=assert(loadfile('lib/Gen3CenterDoors.lua'))(V);modules.Gen3CenterDoors=D
 local C=assert(loadfile('lib/Gen3ImportedCenters.lua'))(V);assert(C.register())

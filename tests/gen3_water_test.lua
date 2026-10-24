@@ -44,3 +44,11 @@ assert(W.dominant({[5]=1,[4]=1})==4,'palette choice depends on table iteration')
 local materialParts={{pair='a',waterMid=4,waters={{mesh=mesh1,height=.05}}}}
 local materialDraws=W.draws(materialParts);W.sync(materialDraws,{a=ts});assert(materialDraws[1][5]==W.tint(ts,4),'water draw lost native palette')
 print('PASS water/rock sheet continuity across native elevations, source immutability, land standdown and stable live-atlas draw grouping')
+
+local _,levels=W.draws({{waters={{mesh='a',height=0,bounds={0,0,0,16,0,16}}}},
+ {waters={{mesh='b',height=0,bounds={-16,0,16,0,0,32}},{mesh='c',height=2}}}})
+assert(levels[1].bounds[1]==-16 and levels[1].bounds[4]==16 and levels[1].bounds[6]==32)
+assert(not levels[2].bounds,'unknown provider water bounds must fail open')
+local _,unknown=W.draws({{waters={{mesh='a',height=0},{mesh='b',height=0,bounds={0,0,0,16,0,16}}}}})
+assert(not unknown[1].bounds,'partial bounded tileset hid unbounded sheet')
+print('PASS full water-plane bounds union and unknown-provider visibility fallback')

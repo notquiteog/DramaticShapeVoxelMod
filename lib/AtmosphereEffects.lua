@@ -47,19 +47,29 @@ local function vertices(data,stride)
  for k in pairs(data)do if not finite(k,1,#data)or k%1~=0 then return nil,'invalid vertex index' end end
  return out
 end
+-- Keep the protected draw callable stable: packets already own validated data.
+local function drawPacket(g,mat,mesh,img,q,vp,eye)
+ g.setShader(mat.gpu);mat.gpu:send('vp','row',vp)
+ if mat.hasEye then mat.gpu:send('eye',eye)end
+ for k,v in pairs(mat.defaults)do local value=q.uniforms[k];if value==nil then value=v end;mat.gpu:send(k,value)end
+ mesh.gpu:setTexture(img and img.gpu or nil)
+ g.setDepthMode('lequal',false);g.setMeshCullMode('none');g.setBlendMode(q.blend,'alphamultiply');g.setColor(q.tint[1],q.tint[2],q.tint[3],q.tint[4]);g.draw(mesh.gpu)
+end
+local function clearQueue(r)for i=#r.queue,1,-1 do r.queue[i]=nil end end
 function M.new()
- local service={};local records={};local totalBytes,totalVerts,totalMaterials=0,0,0;local frame,eligible=0,false;local atmosphere=Atmosphere.new();local centerCamera={available=false,reason="no_completed_center_camera"}
+ local service={};local records={};local sortedOwners
+ local totalBytes,totalVerts,totalMaterials=0,0,0;local frame,eligible=0,false;local atmosphere=Atmosphere.new();local centerCamera={available=false,reason="no_completed_center_camera"}
  local function drop(r)
   if not r.live then return end;r.live=false
   if r.lease then r.lease.dispose()end
   for _,res in pairs(r.resources)do if res.gpu and res.gpu.release then pcall(res.gpu.release,res.gpu)end end
   totalBytes=totalBytes-r.bytes;totalVerts=totalVerts-r.verts;totalMaterials=totalMaterials-r.counts.material
-  r.resources={};r.queue={};records[r.owner]=nil
+  r.resources={};r.queue={};records[r.owner]=nil;sortedOwners=nil
  end
  function service.owner(owner)
   if records[owner]then return records[owner].api end
   local r={owner=owner,live=true,resources={},queue={},bytes=0,uploads=0,verts=0,counts={material=0,mesh=0,image=0}}
-  records[owner]=r;local api={};r.api=api
+  records[owner]=r;sortedOwners=nil;local api={};r.api=api
   local function valid()return r.live and records[owner]==r end
   local function resource(key,kind)local v=r.resources[key];return v and v.kind==kind and v or nil end
   local function add(kind,gpu,extra)
@@ -81,7 +91,7 @@ function M.new()
    end
    if not sh:hasUniform('vp')then sh:release();return nil,'material must consume host vp' end
    totalMaterials=totalMaterials+1
-   return add('material',sh,{defaults=defaults,skyDepth=spec.skyDepth==true})
+   return add('material',sh,{defaults=defaults,hasEye=sh:hasUniform('eye'),skyDepth=spec.skyDepth==true})
   end
   function api:mesh(spec)
    if not valid()then return nil,'revoked owner'end
@@ -153,13 +163,13 @@ function M.new()
    if not r.lease then local lease,err=atmosphere.acquire(owner);if not lease then return nil,err end;r.lease=lease end
    local ok,err=r.lease.submit(packet,frame);r.wantsCelestials=ok and packet.sky and packet.sky.replaceCelestials==true or false;return ok,err
   end
-  function api:clear()r.wantsCelestials=false;if not valid()then return nil,'revoked owner'end;r.queue={};if r.lease then r.lease.clear()end;return true end
+  function api:clear()r.wantsCelestials=false;if not valid()then return nil,'revoked owner'end;clearQueue(r);if r.lease then r.lease.clear()end;return true end
   return api
  end
  function service.beginFrame(id,allowed,camera)
   frame,eligible=id,allowed==true;atmosphere.beginFrame(id,eligible)
   centerCamera=eligible and copy(camera or {available=false,reason="no_completed_center_camera",currentFrame=id}) or {available=false,reason="ineligible_world_frame",currentFrame=id}
-  for _,r in pairs(records)do r.queue={};r.uploads=0;r.wantsCelestials=false;r.celestialDrawn=false end
+  for _,r in pairs(records)do clearQueue(r);r.uploads=0;r.wantsCelestials=false;r.celestialDrawn=false end
  end
  function service.revoke(owner)local r=records[owner];if r then drop(r)end end
  function service.reset()centerCamera={available=false,reason="host_reset"};local list={};for _,r in pairs(records)do list[#list+1]=r end;for _,r in ipairs(list)do drop(r)end;atmosphere.reset()end
@@ -178,27 +188,24 @@ function M.new()
  function service.clearState(owner)local r=records[owner];if r and r.lease then r.lease.clear()end end
  function service.draw(phase,vp,eye,allowed)
   if not eligible or not allowed or not PHASE[phase]then return true end
-  local g=love.graphics;local problems={}
+  local g=love.graphics;local problems
   if phase=='celestial_before_clouds'then for _,r in pairs(records)do r.celestialDrawn=false end end
-  local owners={};for owner in pairs(records)do owners[#owners+1]=owner end;table.sort(owners)
-  for _,owner in ipairs(owners)do local r=records[owner];local drew=false;local startErrors=#problems
+  if not sortedOwners then
+   sortedOwners={};for owner in pairs(records)do sortedOwners[#sortedOwners+1]=owner end;table.sort(sortedOwners)
+  end
+  local owners=sortedOwners
+  for _,owner in ipairs(owners)do local r=records[owner];local drew=false;local startErrors=problems and #problems or 0
    for _,q in ipairs(r.queue)do if q.phase==phase then
     local mat,mesh,img=r.resources[q.material],r.resources[q.mesh],q.image and r.resources[q.image]
-    if not mat or not mesh or(q.image and not img)then problems[#problems+1]='released queued resource';break end
+    if not mat or not mesh or(q.image and not img)then problems=problems or {};problems[#problems+1]='released queued resource';break end
     g.push('all')
-    local ok,err=pcall(function()
-     g.setShader(mat.gpu);mat.gpu:send('vp','row',vp)
-     if mat.gpu:hasUniform('eye')then mat.gpu:send('eye',eye)end
-     for k,v in pairs(mat.defaults)do local value=q.uniforms[k];if value==nil then value=v end;mat.gpu:send(k,value)end
-     mesh.gpu:setTexture(img and img.gpu or nil)
-     g.setDepthMode('lequal',false);g.setMeshCullMode('none');g.setBlendMode(q.blend,'alphamultiply');g.setColor(q.tint[1],q.tint[2],q.tint[3],q.tint[4]);g.draw(mesh.gpu)
-    end)
+    local ok,err=pcall(drawPacket,g,mat,mesh,img,q,vp,eye)
     g.pop()
-    if not ok then problems[#problems+1]=tostring(err);break end;drew=true
+    if not ok then problems=problems or {};problems[#problems+1]=tostring(err);break end;drew=true
    end end
-   if #problems>startErrors then drop(r)elseif phase=='celestial_before_clouds'then r.celestialDrawn=drew;atmosphere.celestialStatus(owner,drew)end
+   if (problems and #problems or 0)>startErrors then drop(r)elseif phase=='celestial_before_clouds'then r.celestialDrawn=drew;atmosphere.celestialStatus(owner,drew)end
   end
-  if #problems>0 then return nil,table.concat(problems,'\n')end;return true
+  if problems then return nil,table.concat(problems,'\n')end;return true
  end
  return service
 end

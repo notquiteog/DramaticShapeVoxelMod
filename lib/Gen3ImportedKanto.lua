@@ -4,9 +4,8 @@ local V=...
 local Models=V.require('SceneryModels')
 local M={recipes={}}
 local registered={}
--- Keep the physical closure below the native lawn; source-only shadow overlays
--- are omitted centrally by SceneryModels and need no coplanar lifting shim.
-local footingDepth=.05
+-- Recess only source contact-ring vertices; portals and upper geometry retain
+-- their native datum. Source shadow overlays are omitted by SceneryModels.
 local houses={{0x281,0x282,0x282,0x282,0x283},{0x289,0x28a,0x28a,0x28a,0x28b},
  {0x291,0x293,0x292,0x292,0x294},{0x298,0x299,0x29a,0x29b,0x29c},{0x2a0,0x2a3,0x2a2,0x2a1,0x2a4}}
 local lab={{0x2a8,0x2a9,0x2a9,0x2a9,0x2a9,0x2bd,0x2b5},{0x2b0,0x2b1,0x2b1,0x2b1,0x2b1,0x2b3,0x2b4},
@@ -61,8 +60,8 @@ end
 function M.build(g,cells,newMesh,parts)
  if not M.eligible(g,cells)then return false end
  local r=g.kantoRecipe;local ok,err=M.register(r.model);if not ok then return false,err end
- local fit={width=g.width*16,depth=64,padding=.25,anchor='door',targetX=r.doorX*16+8,targetZ=49}
- local placement={model=r.model,x=g.cx*16,y=(g.groundHeight or 0)-footingDepth,z=(g.cy+1)*16,fit=fit}
+ local fit={groundInset=.05,width=g.width*16,depth=64,padding=.25,anchor='door',targetX=r.doorX*16+8,targetZ=49}
+ local placement={model=r.model,x=g.cx*16,y=g.groundHeight or 0,z=(g.cy+1)*16,fit=fit}
  local result,why=Models.buildBatches({placement},newMesh,{parts=parts})
  if not result then return false,why end
  g.importedKanto=assert(Models.fit(r.model,fit))

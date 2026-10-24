@@ -27,6 +27,7 @@ local function prepare()
  parts=result;M.lastError=nil;return parts
 end
 function M.draw(gid,x,z,height,facing,draw,reflection)
+ if tonumber(gid)~=88 then return false end
  if not M.eligible(gid,require('src.core.GameVersion').get())or not V.require('VisualStyles').modern('props')then return false end
  local ok,result=pcall(function()
   local ready=prepare();if not ready then return false end

@@ -34,3 +34,5 @@ source archives, native pixels and QA captures remain outside the package.
 
 This batch does not assert complete coverage of every building, map or interior.
 The canonical all-map census and queued source families continue separately.
+
+Before merging concurrent committed work:424 suites pass,0 fail,58 external-fixture skips;559 production LuaJIT files compile. Final combined package verification recorded in the handoff.

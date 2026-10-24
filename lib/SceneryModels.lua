@@ -3,7 +3,11 @@
 local V=...
 local Instances=V.require('ModelInstances')
 local Budget=V.require('BuildBudget')
-local M={limits={models=64,parts=32,vertices=32768,indices=98304,variants=32,cachedVertices=262144,catalogVertices=262144,textures=64,textureBytes=8388608,placements=4096,fallbackVertices=262144,catalogBytes=10485760,cachedBytes=10485760}}
+local Shared
+-- Many small regional sources must fit without relaxing byte/vertex ceilings.
+-- A native four-town tour already needs more than64 texture/sampler entries.
+local M={limits={models=256,parts=32,vertices=32768,indices=98304,variants=32,cachedVertices=262144,catalogVertices=262144,textures=256,textureBytes=8388608,placements=4096,fallbackVertices=262144,catalogBytes=10485760,cachedBytes=10485760}}
+
 -- Explicit format avoids confusing source RGBA with the existing tree anchors.
 M.COLOR_FORMAT={{"VertexPosition","float",3},{"VertexTexCoord","float",2},{"VertexShade","float",1},{"VertexColor","float",4}}
 local definitions,images,failed,variants,order={},{},{},{},{}
@@ -152,11 +156,15 @@ function M.vertices(id,opts)
  for i,p in ipairs(d.parts)do
   local q={vertices={},indices=p.indices,texture=p.texture,wrapS=p.wrapS,wrapT=p.wrapT,opacity=p.opacity,role=p.role,alphaMode=p.alphaMode,name=p.name,material=p.material,diffuse=p.diffuse,lightingOnly=p.lightingOnly,vertexColorRole=p.vertexColorRole}
   q.format=p.colors and M.COLOR_FORMAT or nil
+  local lowX,lowY,lowZ,highX,highY,highZ=math.huge,math.huge,math.huge,-math.huge,-math.huge,-math.huge
   for j,v in ipairs(p.vertices)do
    local x,z=rotate(v[1],v[3],fit.rotation);local row={x*fit.scale+fit.x,(fit.groundInset>0 and math.abs(v[2])<1e-7 and -fit.groundInset or v[2]*fit.scale),z*fit.scale+fit.z,v[4],v[5],v[6]}
    if p.colors then for _,n in ipairs(p.colors[j])do row[#row+1]=n end end
    q.vertices[j]=row
+   lowX,lowY,lowZ=math.min(lowX,row[1]),math.min(lowY,row[2]),math.min(lowZ,row[3])
+   highX,highY,highZ=math.max(highX,row[1]),math.max(highY,row[2]),math.max(highZ,row[3])
   end
+  q.bounds={lowX,lowY,lowZ,highX,highY,highZ}
   parts[i]=q
  end
  while #order>=M.limits.variants or cachedVertices+d.count>M.limits.cachedVertices or cachedBytes+d.bytes>M.limits.cachedBytes do local old=table.remove(order,1);if not old then break end;cachedVertices=cachedVertices-variants[old].count;cachedBytes=cachedBytes-variants[old].bytes;variants[old]=nil end
@@ -207,7 +215,7 @@ function M.retryImages(id)
  return true
 end
 local function releaseParts(parts)
- for _,p in ipairs(parts)do if p.mesh and p.mesh.release then p.mesh:release()end;if p.model and p.model.release then p.model:release()end;p.mesh,p.model=nil,nil end
+ for _,p in ipairs(parts)do if p.mesh and p.mesh.release then p.mesh:release()end;if p.lease then Shared.release(p.lease)elseif p.model and p.model.release then p.model:release()end;p.mesh,p.model,p.lease=nil,nil,nil end
 end
 -- Placements {model,x,y,z,fit={width,depth,...}}. options.parts may be the
 -- scene-owned destination; every part enters it before any resource/yield, so
@@ -216,13 +224,31 @@ end
 -- renderer uploader; returned image-bound parts retain source material metadata.
 -- Draw with ModelInstances.draw. Physical alpha/opacity are preserved. Proven
 -- baked shadow overlays never load textures or upload; dynamic shadows own them.
+local fitFields={'groundInset','width','depth','padding','rotation','height','anchor','targetX','targetZ'}
+
 function M.buildBatches(placements,newMesh,options)
+ Shared=Shared or V.require('SharedModelMesh')
  if type(placements)~='table'or #placements>M.limits.placements or type(newMesh)~='function'then return nil,'invalid scenery batch'end
  local groups,keys={},{};local workVertices,workBytes=0,0
+ local lastId,lastParts,lastKey;local lastFit={};local scanned=0
  for _,p in ipairs(placements)do
+  scanned=scanned+1;if scanned%32==0 then Budget.check()end
   if type(p)~='table'or not(finite(p.x)and finite(p.y)and finite(p.z))then return nil,'invalid scenery placement'end
-  local parts,fit=M.vertices(p.model,p.fit);if not parts then return nil,fit end
-  local key=table.concat({p.model,fit.rotation,fit.scale,fit.x,fit.z,fit.groundInset},':')
+  -- Forest placements commonly repeat the same authored fit thousands of
+  -- times. Snapshot its inputs, not the caller's mutable options table.
+  local same=lastParts and p.model==lastId
+  if same then for _,field in ipairs(fitFields)do
+   if lastFit[field]~=(p.fit and p.fit[field])then same=false;break end
+  end end
+  local parts,key=lastParts,lastKey
+  if not same then
+   local fit;parts,fit=M.vertices(p.model,p.fit);if not parts then return nil,fit end
+   key=table.concat({p.model,fit.rotation,fit.scale,fit.x,fit.z,fit.groundInset},':')
+   lastId,lastParts,lastKey=p.model,parts,key
+   for _,field in ipairs(fitFields)do lastFit[field]=p.fit and p.fit[field]end
+  end
+
+
   if not groups[key]then
    workBytes=workBytes+parts.bytes;if workBytes>M.limits.cachedBytes then return nil,'scenery batch byte budget exceeded'end
    workVertices=workVertices+parts.count;if workVertices>M.limits.cachedVertices then return nil,'scenery batch prototype budget exceeded'end
@@ -237,19 +263,23 @@ function M.buildBatches(placements,newMesh,options)
   for _,key in ipairs(keys)do local g=groups[key]
    for partIndex,p in ipairs(g.parts)do if not p.lightingOnly then
     local part={modelId=g.id,part=partIndex,name=p.name,material=p.material,opacity=p.opacity,alphaMode=p.alphaMode,role=p.role,count=#g.positions,diffuse=p.diffuse};out[#out+1]=part
-    local l,n,b,r,t,f=math.huge,math.huge,math.huge,-math.huge,-math.huge,-math.huge
-    for _,v in ipairs(p.vertices)do
-     l,n,b=math.min(l,v[1]),math.min(n,v[2]),math.min(b,v[3])
-     r,t,f=math.max(r,v[1]),math.max(t,v[2]),math.max(f,v[3])
-    end
+    part.localBounds=p.bounds
+    local l,n,b,r,t,f=unpack(p.bounds)
     local x,y,z=0,0,0
-    for _,offset in ipairs(g.positions)do x,y,z=x+offset[1],y+offset[2],z+offset[3]end
+    local lx,ly,lz,hx,hy,hz=math.huge,math.huge,math.huge,-math.huge,-math.huge,-math.huge
+    for _,offset in ipairs(g.positions)do
+     x,y,z=x+offset[1],y+offset[2],z+offset[3]
+     lx,ly,lz=math.min(lx,offset[1]),math.min(ly,offset[2]),math.min(lz,offset[3])
+     hx,hy,hz=math.max(hx,offset[1]),math.max(hy,offset[2]),math.max(hz,offset[3])
+    end
+    part.bounds={lx+l,ly+n,lz+b,hx+r,hy+t,hz+f}
     part.center={x/#g.positions+(l+r)/2,y/#g.positions+(n+t)/2,z/#g.positions+(b+f)/2}
     part.image=assert(M.image(g.id,p.texture,p.wrapS,p.wrapT),'scenery image unavailable')
-    part.model=assert(newMesh(p.vertices,p.indices,p.format),'scenery prototype upload failed');part.model:setTexture(part.image)
-    part.mesh=Instances.new(part.model,g.positions);part.instanced=part.mesh~=nil
+    part.model,part.lease=Shared.acquire(p.vertices,p.indices,p.format,newMesh,part.image)
+    assert(part.model,'scenery prototype upload failed');part.model:setTexture(part.image)
+    part.mesh=Instances.new(part.model,g.positions,true);part.instanced=part.mesh~=nil
     if not part.mesh then
-     part.model:release();part.model=nil
+     Shared.release(part.lease);part.lease=nil;part.model=nil
      assert(#p.vertices*#g.positions<=M.limits.fallbackVertices,'scenery fallback vertex budget exceeded')
      assert(#p.vertices*#g.positions*(p.format and 40 or 24)<=M.limits.cachedBytes,'scenery fallback byte budget exceeded')
      local verts,indices={},{}

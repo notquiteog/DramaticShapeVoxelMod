@@ -475,8 +475,7 @@ local function battleMenuFront(ctx)
     if not rel then return nil end
     local assetPath = V.mod.assets:path(rel)
     if not assetPath then return nil end
-    if love and love.filesystem and love.filesystem.getInfo
-        and not love.filesystem.getInfo(assetPath) then
+    if V.mod.assets.info and not V.mod.assets:info(rel) then
       return nil
     end
     return assetPath

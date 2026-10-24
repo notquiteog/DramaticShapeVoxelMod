@@ -160,8 +160,8 @@ function Instance:playContext(name,loop)
  self.time,self.frame,self.finished=0,-1,false
  return self:update(0)
 end
-function Instance:playMove(move,loop)
- return self:playContext('attack',loop)
+function Instance:playMove(move,loop,metadata)
+ return self:playContext(V.require('XDMoveContext').resolve(metadata),loop)
 end
 function Instance:isFinished()return self.finished end
 function Instance:update(dt)

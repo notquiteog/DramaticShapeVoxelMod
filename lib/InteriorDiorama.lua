@@ -166,7 +166,7 @@ function M.geometry(p,side,opened)
  end
  local b,h=p.bounds,p.height;local x0,z0,x1,z1=b[1],b[2],b[3],b[4]
  local verts,indices={},{}
- local function face(points,swatch,shade)
+ local function emitFace(points,swatch,shade)
   local n=#verts
   -- One material texel per face. Alternating palette indices at corners
   -- interpolates across the quad's triangles; nearest filtering then makes
@@ -182,6 +182,27 @@ function M.geometry(p,side,opened)
    verts[#verts+1]={a[1],a[2],a[3],tu,tv,shade or 1}
   end
   for _,k in ipairs({1,2,3,1,3,4})do indices[#indices+1]=n+k end
+ end
+ local function face(points,swatch,shade)
+  -- A flush native stair frame occupies the front two pixels of the wall
+  -- aperture. Its outer jamb sides replace those buried wall returns; do
+  -- not keep a second coplanar wallpaper face inside the same solid seam.
+  local doors=p.homeFinish and p.homeFinish.stairs and side==1 and p.doorways and p.doorways[1]
+  local x=points[1][1];local sameX=true
+  for _,q in ipairs(points)do if math.abs(q[1]-x)>1e-7 then sameX=false end end
+  local jamb=false
+  for _,door in ipairs(doors or{})do if math.abs(x-door[1])<1e-7 or math.abs(x-door[2])<1e-7 then jamb=true end end
+  if sameX and jamb then
+   local lo,hi=math.huge,-math.huge;for _,q in ipairs(points)do lo=math.min(lo,q[2]);hi=math.max(hi,q[2])end
+   local height=math.min(30,h-4)
+   local function piece(bottom,top,recess)
+    if top<=bottom then return end
+    local q={}
+    for _,v in ipairs(points)do q[#q+1]={v[1],math.abs(v[2]-lo)<1e-7 and bottom or top,recess and math.min(v[3],z0-2)or v[3]}end
+    emitFace(q,swatch,shade)
+   end
+   piece(lo,math.min(hi,height),true);piece(math.max(lo,height),hi,false)
+  else emitFace(points,swatch,shade)end
  end
  local function box(a,y0,c,d,y1,f,swatch)
   face({{a,y1,c},{d,y1,c},{d,y1,f},{a,y1,f}},swatch,1)

@@ -15,7 +15,9 @@ local BattleArt = {
 }
 
 local created, released, drawCalls, shadowCalls = {}, 0, {}, {}
+local attempts = 0
 local function newFakeInstance(species, variant, options)
+  attempts = attempts + 1
   if species == 99 then return nil, "deliberate missing pack" end
   local instance = {
     species=species,variant=variant,options=options,finished=false,
@@ -171,5 +173,29 @@ providerEnabled=true
 providerBattleEnabled=false
 ok(not StadiumModels.active(),
   "turning Stadium battle off restores Battle Art sprites")
+
+providerBattleEnabled=true
+StadiumModels.release()
+battle.player={mon={species=25}}
+battle.enemy={mon={species=133}}
+StadiumModels.update(battle,0.1)
+local before=#created
+local previous=created[before-1]
+battle.player.mon={species=25}
+StadiumModels.update(battle,0.1)
+ok(#created==before+1 and previous.released,"same-species switch resets actor despite reused battler")
+StadiumModels.update(battle,0.1)
+ok(#created==before+1,"unchanged mon retains actor")
+battle.enemy.mon={species=99}
+StadiumModels.update(battle,0.1)
+local failedAttempts=attempts
+StadiumModels.update(battle,0.1)
+ok(attempts==failedAttempts,"failed mon does not allocate each frame")
+battle.enemy.mon={species=99}
+StadiumModels.update(battle,0.1)
+ok(attempts==failedAttempts+1,"replacement retries its own model independently")
+StadiumModels.update(battle,0.1)
+ok(attempts==failedAttempts+1,"failed replacement remains cached")
+StadiumModels.release()
 
 print(("%d checks passed (Battle Art Stadium model bridge)"):format(checks))

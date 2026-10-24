@@ -10,6 +10,12 @@ local function release(id)
  if e and e.instance then pcall(e.instance.release,e.instance)end
  held[id]=nil
 end
+-- Keep failed actor identity cached: bad optional assets must not allocate and
+-- fail again every draw. A switch/form/style change creates a fresh attempt.
+local function fail(e)
+ if e and e.instance then pcall(e.instance.release,e.instance);e.instance=nil end
+end
+local function finite(n)return type(n)=='number'and n==n and n>-math.huge and n<math.huge end
 function M.clear()
  for id in pairs(held)do release(id)end
  owner=nil
@@ -18,8 +24,8 @@ function M.context(id,name)
  if not enabled()then return end
  local e=held[id]
  if e and e.instance then
-  local ok=e.instance:playContext(name,false)
-  if ok then e.context=name end
+  local ok,result=pcall(e.instance.playContext,e.instance,name,false)
+  if not ok then fail(e)elseif result then e.context=name end
  end
 end
 function M.install()
@@ -65,11 +71,11 @@ function M.prepare(frame)
   local p=Anim.present(id)
   local form=pack.formFor and pack.formFor(b,dex,p)or nil
   local e=held[id]
-  if e and(e.battler~=b or e.dex~=dex or e.variant~=variant or e.form~=form)then release(id);e=nil end
+  if e and(e.battler~=b or e.mon~=mon or e.dex~=dex or e.variant~=variant or e.form~=form)then release(id);e=nil end
   if not e and b and dex then
    local ok,instance=pcall(pack.newInstance,dex,variant,{form=form})
    if not ok then instance=nil end
-   e={battler=b,dex=dex,variant=variant,form=form,instance=instance}
+   e={battler=b,mon=mon,dex=dex,variant=variant,form=form,instance=instance}
    held[id]=e
   end
   local card=frame.byId[id]
@@ -77,7 +83,9 @@ function M.prepare(frame)
   local ghost=Ui.showsGhost and Ui.showsGhost(id%2==0 and'player'or'enemy',frame.st)
   if e and e.instance and card and p and p.visible~=false
    and not p.substitute and not p.pendingTransform and not ghost then
-   local metric=e.instance:metrics()
+   local valid,metric=pcall(e.instance.metrics,e.instance)
+   if not valid or type(metric)~='table'or not finite(metric.height)or metric.height<=0
+    or not finite(metric.floor)then fail(e)else
    local height=math.max(5,math.min(18,14*math.sqrt(metric.height)))
    local scale=height/metric.height*(p.scale or 1)
    local point=frame.points[id]
@@ -88,12 +96,17 @@ function M.prepare(frame)
     Mat.mul(Mat.rotateY(yaw),Mat.mul(Mat.scale(scale,scale,scale),
      Mat.translate(0,-metric.floor,0))))
    -- Time is updated once per prepared frame, never once per shadow/light pass.
-   e.instance:update(love.timer.getDelta())
-   if e.context and e.context~='faint'and e.instance:isFinished()then
-    e.instance:playContext('idle',true);e.context=nil
-   elseif not e.context and(tonumber(p.flash)or 0)>0 then M.context(id,'damage')end
-   e.height=height
-   frame.xdActors[id]=e
+   local ok,updated=pcall(e.instance.update,e.instance,love.timer.getDelta())
+   if not ok or updated==false then fail(e)else
+    local finished,done=pcall(e.instance.isFinished,e.instance)
+    if not finished then fail(e)
+    elseif e.context and e.context~='faint'and done then
+     local idle,res=pcall(e.instance.playContext,e.instance,'idle',true)
+     if not idle or not res then fail(e)else e.context=nil end
+    elseif not e.context and(tonumber(p.flash)or 0)>0 then M.context(id,'damage')end
+    if e.instance then e.height=height;frame.xdActors[id]=e end
+   end
+   end
   end
  end
 end
@@ -103,7 +116,7 @@ function M.draw(frame,card,shadow)
  if not(e and e.instance)then return false end
  local draw=shadow or V.require('Voxel3D').draw
  local ok,result=pcall(e.instance.drawWith,e.instance,draw,e.matrix)
- if not ok or not result then release(card.id);frame.xdActors[card.id]=nil;return false end
+ if not ok or not result then fail(e);frame.xdActors[card.id]=nil;return false end
  return true
 end
 return M
