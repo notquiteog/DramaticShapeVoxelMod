@@ -34,7 +34,8 @@ return function(game)
    source[#source+1]=table.concat({mid,collision,raw.elev},':')
   end end
   V.require('Gen3SeaRocks').prepare(cells);V.require('Gen3Forest').prepare(cells)
-  local civics=Civic.prepare(cells,V.require('Gen3Buildings').prepare(cells),V.data('gen3_exteriors'))
+  local recipes={};for _,r in ipairs(V.require('Gen3RouteGates').recipes)do recipes[#recipes+1]=r end;for _,r in ipairs(V.data('gen3_exteriors'))do recipes[#recipes+1]=r end
+  local civics=Civic.prepare(cells,V.require('Gen3Buildings').prepare(cells),recipes)
   for _,g in ipairs(V.require('Gen3ImportedKanto').prepare(cells,{region}))do civics[#civics+1]=g end
   V.require('Gen3NativeLamps').prepare(cells);V.require('Gen3Stairs').prepare(cells)
   local furniture=Furniture.extract(cells)

@@ -1,3 +1,14 @@
+# Exact gate denominator corrected — 2026-10-23
+
+Read-only FRLG ledger now mirrors production RouteGates+exterior recipe order.
+All426 maps/edition native.96 PASS0:3 already-native-modeled Route2 gates were
+previously omitted. Current denominator136, eligible81, accepted74, unmatched55,
+unclassified blocked6232; no geometry or acceptance added. Original HGSS gate
+north/south candidate fits only67.725 of128px native width with full ramps;
+portal/floor fit remains held. Source galleries inspected, exact candidate gaps
+recorded. Supersedes earlier133-denominator summaries; see KANTO_GATE_CENSUS_2026-10-23.md.
+Continuing regional source acquisition/placement; no release/version bump.
+
 # Celadon single-floor original source — 2026-10-23
 
 Genuine ta_h01 closed house now matches exact FRLG Celadon(20,26); original
