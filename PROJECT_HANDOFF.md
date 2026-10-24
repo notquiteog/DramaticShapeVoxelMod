@@ -1,3 +1,15 @@
+# Further Celadon source fits held — 2026-10-23
+
+Original HGSS department store has one portal versus native two64px apart;
+anchored source fit79/80×51/52px cannot fill144×144 blocked body. Original HGSS
+Mansion's right-offset portal limits centered native fit73.07×52.86 inside
+112×80 (<44percent area). Native2D/current3D and original source galleries
+inspected on.96; no stretching/duplicated source doors or new acceptance. Exact
+candidate gaps now keyed in canonical ledger; counts/native hashes unchanged.
+See docs/KANTO_LANDMARK_FIT_GAPS_2026-10-23.md. Further regional source ZIPs
+Vermilion592879/Fuchsia592836 remain absent; normal download403/no browser here.
+Root-owned Scene dispatcher fix has complete candidate proof ready separately.
+
 # Exact civic floors; stale Scene door paths held — 2026-10-23
 
 Source-proven native Cerulean Gym lawn and Saffron Dojo/Center/Mart paving now

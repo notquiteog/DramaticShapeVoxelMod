@@ -119,6 +119,80 @@
       "renderedAccepted": false,
       "gap": "Available north/south HGSS kn_gate_a source retains only67.73 of128px native width when its full ramps fit the96px body depth. Orthogonal kn_gate_b has east/west portals. Matching native footprint/portal/floor adaptation is unverified; no stretching or doorway substitution enabled.",
       "sourceModelSha256": "789316266c83cc38c036cd4000da572e4c8127cad886c4485571d5549f0b3966"
+    },
+    {
+      "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592831/",
+      "archiveSha256": "f2289da05c3190d9b21940b88f66233fc6b106198ab922aa64261384ed4b483f",
+      "sourceModelSha256": "4a391a04af9bbad3391a35b8dd2bbe9cdda3800ff6626be0639e31ca7eab2d75",
+      "map": "FR_CELADON_CITY",
+      "pair": "general__rom_082d4b3c",
+      "runtime": "v0.3.96",
+      "renderedAccepted": false,
+      "geometry": "ta_depart-mesh",
+      "doorGeometry": "p_door_004-mesh",
+      "doorOffset": [
+        0.4453,
+        2.45313,
+        32.4023
+      ],
+      "x": 9,
+      "y": 5,
+      "nativeWidth": 144,
+      "nativeBlockedDepth": 144,
+      "nativeDoorTargets": [
+        [
+          40,
+          136
+        ],
+        [
+          104,
+          136
+        ]
+      ],
+      "uniformPortalFits": [
+        [
+          78.913680012758,
+          51.474167942871
+        ],
+        [
+          80.095097791762,
+          52.244788412698
+        ]
+      ],
+      "gap": "Genuine HGSS ta_depart has one central entrance; native store has two entrances64px apart. Preserving either native doorway limits uniform source width to78.91/80.10 of144px and depth51.47/52.24 of144px. Original source cannot fill native body or serve both native portals without changing its front/footprint; matching native portal/footprint adaptation remains unverified."
+    },
+    {
+      "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592831/",
+      "archiveSha256": "f2289da05c3190d9b21940b88f66233fc6b106198ab922aa64261384ed4b483f",
+      "sourceModelSha256": "4a391a04af9bbad3391a35b8dd2bbe9cdda3800ff6626be0639e31ca7eab2d75",
+      "map": "FR_CELADON_CITY",
+      "pair": "general__rom_082d4b3c",
+      "runtime": "v0.3.96",
+      "renderedAccepted": false,
+      "geometry": "ta_mansion-mesh",
+      "doorGeometry": "p_door_005-mesh",
+      "doorOffset": [
+        25.24218,
+        2.45313,
+        19.9101
+      ],
+      "x": 27,
+      "y": 4,
+      "nativeWidth": 112,
+      "nativeBlockedDepth": 80,
+      "nativeDoorTargets": [
+        [
+          56,
+          72
+        ]
+      ],
+      "uniformPortalFits": [
+        [
+          73.072647482639,
+          52.862899624888
+        ]
+      ],
+      "gap": "Genuine HGSS ta_mansion has its original entry offset25.24218 source units to the right. Preserving the native centered door limits uniform fit to73.07 of112px width and52.86 of80px blocked depth, under44percent of native blocked area. Matching portal/footprint adaptation remains unverified; no stretching, new entrance or shifted native door is enabled."
     }
   ]
 }
