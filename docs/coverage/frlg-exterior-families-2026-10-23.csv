@@ -9,7 +9,7 @@ firered,celadon_tall_door,1,0,0,FR_CELADON_CITY,,"Genuine HGSS ta_mansion has it
 firered,celadon_tall_wide,1,0,0,FR_CELADON_CITY,,Matching regional source selection and complete native adapter pending.,
 firered,celadon_three_storey_vent,1,0,0,FR_CELADON_CITY,,Matching regional source selection and complete native adapter pending.,
 firered,celadon_vent_block,1,0,0,FR_CELADON_CITY,,Matching regional source selection and complete native adapter pending.,
-firered,center,18,18,0,FR_CELADON_CITY|FR_CERULEAN_CITY|FR_CINNABAR_ISLAND|FR_FIVE_ISLAND|FR_FOUR_ISLAND|FR_FUCHSIA_CITY|FR_LAVENDER_TOWN|FR_PEWTER_CITY|FR_ROUTE_10|FR_ROUTE_4|FR_SAFFRON_CITY|FR_SAFFRON_CITY_CONNECTION|FR_SEVEN_ISLAND|FR_SIX_ISLAND|FR_THREE_ISLAND|FR_TWO_ISLAND|FR_VERMILION_CITY|FR_VIRIDIAN_CITY,hgss_kanto_center,,Scene direct build bypasses dispatcher source-door draw/release/ownership; native closed leaf is absent. Root Scene integration pending.
+firered,center,18,18,18,FR_CELADON_CITY|FR_CERULEAN_CITY|FR_CINNABAR_ISLAND|FR_FIVE_ISLAND|FR_FOUR_ISLAND|FR_FUCHSIA_CITY|FR_LAVENDER_TOWN|FR_PEWTER_CITY|FR_ROUTE_10|FR_ROUTE_4|FR_SAFFRON_CITY|FR_SAFFRON_CITY_CONNECTION|FR_SEVEN_ISLAND|FR_SIX_ISLAND|FR_THREE_ISLAND|FR_TWO_ISLAND|FR_VERMILION_CITY|FR_VIRIDIAN_CITY,hgss_kanto_center,,
 firered,cerulean_bike_house,1,0,0,FR_CERULEAN_CITY,,Matching regional source selection and complete native adapter pending.,
 firered,cerulean_house_medium,1,0,0,FR_CERULEAN_CITY,,Matching regional source selection and complete native adapter pending.,
 firered,cerulean_house_north,1,0,0,FR_CERULEAN_CITY,,Matching regional source selection and complete native adapter pending.,
@@ -56,7 +56,7 @@ firered,vermilion_club,1,0,0,FR_VERMILION_CITY,,Matching regional source selecti
 firered,vermilion_shed,1,0,0,FR_VERMILION_CITY,,Matching regional source selection and complete native adapter pending.,
 firered,vermilion_shed_wide,1,0,0,FR_VERMILION_CITY,,Matching regional source selection and complete native adapter pending.,
 firered,viridian_flower_house,1,1,1,FR_VIRIDIAN_CITY,hgss_viridian_flower_house,,
-firered,viridian_house,1,1,0,FR_VIRIDIAN_CITY,hgss_viridian_house,,Scene direct build bypasses dispatcher source-door draw/release/ownership; native closed leaf is absent. Root Scene integration pending.
+firered,viridian_house,1,1,1,FR_VIRIDIAN_CITY,hgss_viridian_house,,
 leafgreen,celadon_department_store,1,0,0,FR_CELADON_CITY,,Genuine HGSS ta_depart has one central entrance; native store has two entrances64px apart. Preserving either native doorway limits uniform source width to78.91/80.10 of144px and depth51.47/52.24 of144px. Original source cannot fill native body or serve both native portals without changing its front/footprint; matching native portal/footprint adaptation remains unverified.,
 leafgreen,celadon_low_roof_block,1,1,1,FR_CELADON_CITY,hgss_celadon_balcony_block,,
 leafgreen,celadon_low_roof_vent,1,0,0,FR_CELADON_CITY,,Matching regional source selection and complete native adapter pending.,
@@ -67,7 +67,7 @@ leafgreen,celadon_tall_door,1,0,0,FR_CELADON_CITY,,"Genuine HGSS ta_mansion has 
 leafgreen,celadon_tall_wide,1,0,0,FR_CELADON_CITY,,Matching regional source selection and complete native adapter pending.,
 leafgreen,celadon_three_storey_vent,1,0,0,FR_CELADON_CITY,,Matching regional source selection and complete native adapter pending.,
 leafgreen,celadon_vent_block,1,0,0,FR_CELADON_CITY,,Matching regional source selection and complete native adapter pending.,
-leafgreen,center,18,18,0,FR_CELADON_CITY|FR_CERULEAN_CITY|FR_CINNABAR_ISLAND|FR_FIVE_ISLAND|FR_FOUR_ISLAND|FR_FUCHSIA_CITY|FR_LAVENDER_TOWN|FR_PEWTER_CITY|FR_ROUTE_10|FR_ROUTE_4|FR_SAFFRON_CITY|FR_SAFFRON_CITY_CONNECTION|FR_SEVEN_ISLAND|FR_SIX_ISLAND|FR_THREE_ISLAND|FR_TWO_ISLAND|FR_VERMILION_CITY|FR_VIRIDIAN_CITY,hgss_kanto_center,,Scene direct build bypasses dispatcher source-door draw/release/ownership; native closed leaf is absent. Root Scene integration pending.
+leafgreen,center,18,18,18,FR_CELADON_CITY|FR_CERULEAN_CITY|FR_CINNABAR_ISLAND|FR_FIVE_ISLAND|FR_FOUR_ISLAND|FR_FUCHSIA_CITY|FR_LAVENDER_TOWN|FR_PEWTER_CITY|FR_ROUTE_10|FR_ROUTE_4|FR_SAFFRON_CITY|FR_SAFFRON_CITY_CONNECTION|FR_SEVEN_ISLAND|FR_SIX_ISLAND|FR_THREE_ISLAND|FR_TWO_ISLAND|FR_VERMILION_CITY|FR_VIRIDIAN_CITY,hgss_kanto_center,,
 leafgreen,cerulean_bike_house,1,0,0,FR_CERULEAN_CITY,,Matching regional source selection and complete native adapter pending.,
 leafgreen,cerulean_house_medium,1,0,0,FR_CERULEAN_CITY,,Matching regional source selection and complete native adapter pending.,
 leafgreen,cerulean_house_north,1,0,0,FR_CERULEAN_CITY,,Matching regional source selection and complete native adapter pending.,
@@ -114,4 +114,4 @@ leafgreen,vermilion_club,1,0,0,FR_VERMILION_CITY,,Matching regional source selec
 leafgreen,vermilion_shed,1,0,0,FR_VERMILION_CITY,,Matching regional source selection and complete native adapter pending.,
 leafgreen,vermilion_shed_wide,1,0,0,FR_VERMILION_CITY,,Matching regional source selection and complete native adapter pending.,
 leafgreen,viridian_flower_house,1,1,1,FR_VIRIDIAN_CITY,hgss_viridian_flower_house,,
-leafgreen,viridian_house,1,1,0,FR_VIRIDIAN_CITY,hgss_viridian_house,,Scene direct build bypasses dispatcher source-door draw/release/ownership; native closed leaf is absent. Root Scene integration pending.
+leafgreen,viridian_house,1,1,1,FR_VIRIDIAN_CITY,hgss_viridian_house,,

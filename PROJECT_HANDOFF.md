@@ -1,3 +1,17 @@
+# Source-door dispatcher integrated — 2026-10-23
+
+Standard Kanto Centers/plain Viridian house now use their existing dispatcher
+for original panel draw/animation ownership/chimney/teardown. Only11 stale Scene
+lines removed; production exactly matches the verified candidate. Final native
+.96 current-source38-placement rerun PASS0 across FRLG, actual door draw asserted,
+real entries/returns and blocked projection guards, unchanged native hashes.
+Final overviews/door states and identical-code candidate close views inspected.
+Four focused suites/Scene compile/review-history regression pass. All19/edition
+holds cleared: canonical82 eligible/82 accepted/54 unmatched,136 assemblies;
+whole-game coverage remains incomplete. Details/commands:
+docs/KANTO_SOURCE_DOOR_DISPATCH_2026-10-23.md. Root coordinates1.58.2 release;
+continue source intake without version bumps/pushes.
+
 # Further Celadon source fits held — 2026-10-23
 
 Original HGSS department store has one portal versus native two64px apart;

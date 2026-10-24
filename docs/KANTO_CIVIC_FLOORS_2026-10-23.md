@@ -1,5 +1,9 @@
 # Exact Kanto civic floors and source-door integration hold
 
+The subsequent production dispatcher integration resolves the19 door holds
+documented at this checkpoint. Current counts are82 eligible/82 accepted per
+edition; see KANTO_SOURCE_DOOR_DISPATCH_2026-10-23.md for final production proof.
+
 Four complete original drawings now select their own source-proven native
 underlay instead of nearest unrelated terrain: Cerulean Gym uses lawn1; Saffron
 Dojo, Center and Mart use native paving0x2E5. These cover seven assemblies per

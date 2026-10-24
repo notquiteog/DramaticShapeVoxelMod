@@ -43,9 +43,11 @@ passes process0 and displays original2D plus current3D drawings. Neutral source
 front/quarter/back and all-side galleries inspected; source open rear/underside
 limits remain visible. This is intake evidence, not completed native source
 placement or LeafGreen visual acceptance. Both editions' canonical native hashes
-and family/eligibility/acceptance counts remain unchanged by this metadata:
+and family/eligibility/acceptance counts were unchanged by this metadata checkpoint:
 426 maps,136 assemblies,82 eligible,63 accepted,54 unmatched,19 explicit current
-Scene-door holds per edition. No whole-game completion claim.
+Scene-door holds per edition. The later production dispatcher integration clears
+those19 holds: current82/82, see KANTO_SOURCE_DOOR_DISPATCH_2026-10-23.md.
+No whole-game completion claim.
 
 Scratch evidence: `.scratch/frlg-exteriors/api3-resume/out/next-fit-native-firered`
 and `.scratch/frlg-exteriors/source-intake/portal-views`, source fit data
