@@ -6429,7 +6429,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_low_sideboard"
+      ]
     },
     "hoenn_home_window": {
       "design": "em_home_window",
@@ -14534,8 +14536,8 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 636,
-      "candidateNativeFurnitureOwners": 654,
+      "candidateFurniture": 640,
+      "candidateNativeFurnitureOwners": 658,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
@@ -14558,16 +14560,16 @@
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 592,
-      "candidateNativeFurnitureOwners": 608,
+      "candidateFurniture": 596,
+      "candidateNativeFurnitureOwners": 612,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 592,
-      "candidateNativeFurnitureOwners": 608,
+      "candidateFurniture": 596,
+      "candidateNativeFurnitureOwners": 612,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,

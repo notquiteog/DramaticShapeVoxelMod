@@ -1,3 +1,10 @@
+## 2026-10-23 — original ORAS low storage sideboards
+
+- All 12 Hoenn wide-storage owners (four per RSE edition) use original GR513/sub9 low case, recessed doors and runner. Original 108 triangles become 136 exposed +118 closures =254; exact runner/wood and case/base/ceiling unions have one surface owner. Uniform 32×16 blocked fit, original 16.2-pixel height, native apron and bottom-only .025 recess.
+- Official .96/API3 standalone source + missing-texture runs PASS all 12 rooms; fronts/whole orbits, three available sides, room/fallback overviews and nine source angles inspected. All 23 source-plane checks, geometry/contact/fit/identity/failure tests and byte-identical sideboard/prior-drawer regeneration PASS.
+- All 2,161 native hashes/families unchanged; no native entry deltas. Candidates 2,746 pieces / 2,872 owners (including 84 held/default-native counter prototypes); accepted 2,617 components / 280 map pairs, whole-map flags false. Scene untouched.
+- Evidence: `docs/ORAS_OLDALE_SIDEBOARDS_2026-10-23.md`, sideboard component/run ledgers. Continuing bedroom/cabin bed identity and source-footprint audit; no versions/push/releases.
+
 ## 2026-10-23 — original ORAS three-drawer chests
 
 - Exact Hoenn narrow drawer family: 44 owners/rooms (E14/R15/S15), original GR513/sub11 chest. Three drawers/knobs, sculpted feet, inset base and tilted top retain source proportions/paint. Exact contact unions remove buried faces; final 284 triangles, one blocked cell, walking apron clear, bottom-only .025 recess.

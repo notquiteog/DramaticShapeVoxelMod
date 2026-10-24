@@ -14,6 +14,7 @@ V.require=function(name)
  if name=='ImportedCenterHealerData'then return dofile('lib/ImportedCenterHealerData.lua')end
  if name=='ImportedCenterBookcaseData'then return dofile('lib/ImportedCenterBookcaseData.lua')end
  if name=='ImportedOldaleDrawerData'then return dofile('lib/ImportedOldaleDrawerData.lua')end
+ if name=='ImportedOldaleSideboardData'then return dofile('lib/ImportedOldaleSideboardData.lua')end
  if name=='ImportedOldaleSinkData'then return dofile('lib/ImportedOldaleSinkData.lua')end
  if name=='ImportedPyreMemorialData'then return dofile('lib/ImportedPyreMemorialData.lua')end
  if name=='ImportedFlowerBookcaseData'then return dofile('lib/ImportedFlowerBookcaseData.lua')end
@@ -26,6 +27,7 @@ V.require=function(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='hoenn_home_wide_drawers',pair='building__generic_building',design='em_home_wide_drawers',rows={{0x268,0x269},{0x270,0x271}},coll={{7,7},{0,0}},x=0,z=1,id='oras_oldale_low_sideboard',fit={32,16,0},rotation=1},
  {name='hoenn_home_kitchen_drawers',pair='building__generic_building',design='em_home_drawers',rows={{0x268},{0x270}},coll={{7},{0}},x=7,z=1,id='oras_oldale_drawer_chest',fit={16,16,0}},
  {name='hoenn_center_medicine',pair='building__pokemon_center',design='em_center_medicine',rows={{0x269,0x26a},{0x271,0x272},{0x279,0x27a}},coll={{7,7},{7,7},{0,0}},x=2,z=0,id='oras_center_bookcase',fit={32,16,1}},
  {name='center_healer',kind='centerHealer',pair='building__pokemon_center',rows={{0x222,0x223},{0x22a,0x22b}},coll={{7,7},{7,7}},x=5,z=1,id='oras_center_healer',fit={32,32,0},height=28},

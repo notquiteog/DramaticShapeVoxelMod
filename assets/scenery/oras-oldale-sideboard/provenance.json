@@ -1,0 +1,36 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO230 -> AD115 -> MM171 -> GR513",
+  "model": "t102r0101_00_00",
+  "submesh": 9,
+  "material": "t102_shelf01",
+  "originalTriangles": 108,
+  "exposedSourceTriangles": 136,
+  "authoredClosureTriangles": 118,
+  "finalTriangles": 254,
+  "sourceRunnerThickness": 0.4878196716308594,
+  "thinDoorDepth": 0.03,
+  "sourceRearThickness": 0.03,
+  "runnerContactArea": 433.35739082843065,
+  "topUndersideExposedArea": 451.97326803051817,
+  "modelBchSha256": "93158e5006309bdc48a0b2aa4d06edbd5405ad521398100e19eef3286ed275c0",
+  "textureBchSha256": "5f24ec31412d5ca4611cf5d4c46115f63937bc4a18afba8d77cc144ec86583d4",
+  "rgbaSha256": "2ecf72c833b8f84947a6ccc1776d192be7e70df89f394fda9096eb6bb38472b0",
+  "pngSha256": "ad8036df8bbfd87ebb7284cb0d4b4a8cefb8c594f1173eba777ec8f65347b832",
+  "sourceBounds": [
+    -286.6231994628906,
+    1.0,
+    -197.5,
+    -271.2745056152344,
+    19.0,
+    -162.5
+  ],
+  "origin": [
+    -278.9488525390625,
+    1.0,
+    -180.0
+  ],
+  "uniformDivisor": 15.34869384765625,
+  "processing": "Original complete low case, recessed doors, central separator and painted runner retained with original UV/opaque PNG; vertex lighting white. Buried post ends clip at source underside. Exact top/base contacts exclude post/separator/rear/door joints. Source runner gains a rim down to the existing case top; its actual contact is subtracted from wood top with interpolated UV, no buried underside cap. Source rear/separator gaps join without moving upper geometry; doors gain thin backs, no duplicate contact edges. No room floor, shadows, source lighting, flowers or vases."
+}

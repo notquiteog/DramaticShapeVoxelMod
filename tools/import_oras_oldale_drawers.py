@@ -29,8 +29,8 @@ def subtract(polygons, cutters):
     return polygons
 
 
-def cut_panel(part, hole):
-    """Subtract the real knob contact while interpolating original source UV."""
+def cut_panel(part, hole, axes=(0,1)):
+    """Subtract a convex contact while interpolating original source UV."""
     if area(hole) < 0:
         hole = list(reversed(hole))
     out = copy.deepcopy(part)
@@ -38,7 +38,7 @@ def cut_panel(part, hole):
 
     def halfspace(poly, a, b, inside):
         def distance(v):
-            return ((b[0]-a[0])*(v[1]-a[1])-(b[1]-a[1])*(v[0]-a[0]))*(1 if inside else -1)
+            return ((b[0]-a[0])*(v[axes[1]]-a[1])-(b[1]-a[1])*(v[axes[0]]-a[0]))*(1 if inside else -1)
         result = []
         if not poly:
             return result
@@ -57,7 +57,7 @@ def cut_panel(part, hole):
                 clean.append(v)
         if len(clean) > 1 and sum(abs(clean[0][k]-clean[-1][k]) for k in range(3)) < 1e-8:
             clean.pop()
-        return clean if len(clean) > 2 and abs(area([[v[0],v[1]] for v in clean])) > 1e-9 else []
+        return clean if len(clean) > 2 and abs(area([[v[k] for k in axes] for v in clean])) > 1e-9 else []
 
     for at in range(0,len(part['indices']),3):
         remaining = [part['vertices'][n-1] for n in part['indices'][at:at+3]]
