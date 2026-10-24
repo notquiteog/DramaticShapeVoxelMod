@@ -1,0 +1,53 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO230 -> AD115 -> MM171 -> GR513",
+  "model": "t102r0101_00_00",
+  "submesh": 11,
+  "material": "t102_shelf04",
+  "originalTriangles": 92,
+  "exposedSourceTriangles": 128,
+  "authoredClosureTriangles": 156,
+  "finalTriangles": 284,
+  "maxContactRoundoffCorrection": 0.0015697479248046875,
+  "thinPanelDepth": 0.03,
+  "panelAreas": {
+    "52": {
+      "original": 71.51252603212197,
+      "knobContact": 4.9115662796539254,
+      "exposed": 66.60095975246807
+    },
+    "54": {
+      "original": 71.5,
+      "knobContact": 4.911546611139784,
+      "exposed": 66.58845338886022
+    },
+    "56": {
+      "original": 71.5001049041748,
+      "knobContact": 4.911546611139784,
+      "exposed": 66.58855829303506
+    }
+  },
+  "exposedBottomArea": 209.7647247314453,
+  "exposedFeetTopArea": 0.2866363525390625,
+  "exposedTopUndersideProjectedArea": 169.6700000000003,
+  "modelBchSha256": "93158e5006309bdc48a0b2aa4d06edbd5405ad521398100e19eef3286ed275c0",
+  "textureBchSha256": "5f24ec31412d5ca4611cf5d4c46115f63937bc4a18afba8d77cc144ec86583d4",
+  "rgbaSha256": "74771a400f2200338531a910763311e99b75f1e9ccafaf51ed37807c3b8a530b",
+  "pngSha256": "30ac21df66f59f4fda822c0b7ea8ec42970b048c8b04012f31f961d910ff45e2",
+  "sourceBounds": [
+    -179.0,
+    1.0,
+    -287.0,
+    -163.0,
+    29.49995994567871,
+    -271.0
+  ],
+  "origin": [
+    -171.0,
+    1.0,
+    -279.0
+  ],
+  "uniformDivisor": 16.0,
+  "processing": "Original three drawers, hexagonal knobs, four feet, case, separator recesses and tilted top retained with original UV/opaque PNG; vertex lighting white. Tiny original contact roundoff joins existing cap plane. Front panels subtract exact knob hex contacts with interpolated source UV; collars attach without buried caps. Thin drawer backs touch case-owned sides/separators. Exact feet/case floor union preserves inset front and exposed foot overhangs; top underside excludes case/panel joints. No source room floor, shadows or lighting."
+}

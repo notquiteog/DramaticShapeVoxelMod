@@ -1,0 +1,80 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO228 -> AD108 -> MM169 -> GR511",
+  "model": "t102pc0101_00_00",
+  "submeshes": [
+    16,
+    15
+  ],
+  "originalTriangles": 454,
+  "authoredClosureTriangles": 96,
+  "finalTriangles": 550,
+  "modelBchSha256": "7d566794d839dd481b00316cd955bf471e0981a0a615188fae0c340ae72346fc",
+  "textureBchSha256": "bbb7e711608e4ff4ae1c4205e88f71bf04dc9a71b25a178fe7f1f54432c06368",
+  "textures": {
+    "pc_mc01": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "fae4d1795414d2ce0946effc9e1b027ae36c9fc92f5613c11bcce6c0c9d6dcee",
+      "pngSha256": "5e9abadaaa0fa276e8e3a05e22c139289a6458a529578c47dc69f9db5e4ebe3f"
+    },
+    "pc_mc02": {
+      "size": [
+        32,
+        64
+      ],
+      "rgbaSha256": "252e58868a3750ad8d6e70247a4636643b7390452d326d6c4415d99294c0ace9",
+      "pngSha256": "26d2202cb994b9b420281a5fa900622df4c9b447b11a29f6c3097838d6803597"
+    }
+  },
+  "originalJoinedRims": [
+    12,
+    12,
+    22,
+    38,
+    11,
+    11,
+    8,
+    12,
+    8,
+    12
+  ],
+  "trayBounds": [
+    -45.38330078125,
+    20.36680030822754,
+    -98.902099609375,
+    -29.11669921875,
+    20.36680030822754,
+    -75.71520233154297
+  ],
+  "authoredBallRadius": 1.789326171875,
+  "authoredBallGrid": {
+    "columns": [
+      0.28,
+      0.72
+    ],
+    "rows": [
+      0.2,
+      0.5,
+      0.8
+    ]
+  },
+  "sourceBounds": [
+    -55.2943000793457,
+    -1.0,
+    -104.90699768066406,
+    -19.205699920654297,
+    27.333200454711914,
+    -71.0
+  ],
+  "origin": [
+    -37.25,
+    -1.0,
+    -87.95349884033203
+  ],
+  "uniformDivisor": 36.088600158691406,
+  "processing": "All original machine/tray vertices, indices, UV and opaque PNG retained; vertex lighting white. Eleven exact exposed planar closures join original rims, including floor/rear split on their shared edge; no separate tray joint cap. Concave rims use nonoverlapping ear triangles. Authored six-ball grid lies within original flat tray bounds, uniformly transformed with the source. No room floor/shadow/light geometry."
+}

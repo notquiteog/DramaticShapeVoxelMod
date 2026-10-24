@@ -15,6 +15,14 @@ dataFiles.oras_oldale_refrigerator='ImportedOldaleFridgeData'
 dataFiles.bdsp_galactic_server='ImportedInstitutionServerData'
 dataFiles.oras_oldale_china_cupboard='ImportedOldaleCupboardData'
 dataFiles.oras_oldale_kitchen_sink='ImportedOldaleSinkData'
+dataFiles.oras_oldale_backed_chair='ImportedOldaleChairData'
+dataFiles.oras_center_glass_table='ImportedCenterTableData'
+dataFiles.oras_center_healer='ImportedCenterHealerData'
+dataFiles.oras_center_bookcase='ImportedCenterBookcaseData'
+dataFiles.oras_center_reception_counter='ImportedCenterCounterData'
+dataFiles.oras_oldale_drawer_chest='ImportedOldaleDrawerData'
+dataFiles.oras_oldale_low_sideboard='ImportedOldaleSideboardData'
+dataFiles.oras_meteor_stalagmite='ImportedMeteorStalagmiteData'
 dataFiles.oras_pyre_memorial='ImportedPyreMemorialData'
 dataFiles.oras_flower_bookcase='ImportedFlowerBookcaseData'
 dataFiles.oras_birch_bookcase='ImportedBirchBookcaseData'
@@ -23,6 +31,33 @@ dataFiles.oras_birch_freestanding_case='ImportedBirchFreecaseData'
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
+ hoenn_meteor_stalagmite={pair='general__meteor_falls',primary='general',family='rse',kind='caveSpike',
+  rows={{0x254},{0x25C}},collisionRows={{7},{7}},model='oras_meteor_stalagmite',
+  fitWidth=16,fitDepth=16,fitHeight=32,zRows=1,groundInset=.025},
+ hoenn_home_wide_drawers={pair='building__generic_building',family='rse',design='em_home_wide_drawers',
+  rows={{0x268,0x269},{0x270,0x271}},collisionRows={{7,7},{0,0}},model='oras_oldale_low_sideboard',
+  fitWidth=32,fitDepth=16,fitHeight=32,zRows=0,rotation=1,groundInset=.025},
+ hoenn_home_kitchen_drawers={pair='building__generic_building',family='rse',design='em_home_drawers',
+  rows={{0x268},{0x270}},collisionRows={{7},{0}},model='oras_oldale_drawer_chest',
+  fitWidth=16,fitDepth=16,fitHeight=32,zRows=0,groundInset=.025},
+ hoenn_center_medicine={pair='building__pokemon_center',family='rse',design='em_center_medicine',
+  rows={{0x269,0x26a},{0x271,0x272},{0x279,0x27a}},collisionRows={{7,7},{7,7},{0,0}},
+  model='oras_center_bookcase',fitWidth=32,fitDepth=16,fitHeight=32,groundInset=.025},
+ center_healer={byPair={
+  ['building__pokemon_center']={pair='building__pokemon_center',family='rse',kind='centerHealer',rows={{0x222,0x223},{0x22a,0x22b}},collisionRows={{7,7},{7,7}},
+   model='oras_center_healer',fitWidth=32,fitDepth=32,fitHeight=28,zRows=0,groundInset=.025},
+  network={pair='network',kind='centerHealer',rows={{0x2aa,0x2ab},{0x2b2,0x2b3}},collisionRows={{7,7},{7,7}},
+   model='oras_center_healer',fitWidth=32,fitDepth=32,fitHeight=28,zRows=0,groundInset=.025}}},
+ hoenn_center_table={pair='building__pokemon_center',family='rse',kind='centerTable',rows={{0x23d,0x23e},{0x245,0x246}},collisionRows={{7,7},{7,7}},
+  model='oras_center_glass_table',fitWidth=32,fitDepth=32,fitHeight=16,zRows=0,groundInset=.025},
+ center_table={pair='network',kind='centerTable',rows={{0x29c,0x29d},{0x2a4,0x2a5}},collisionRows={{7,7},{7,7}},
+  model='oras_center_glass_table',fitWidth=32,fitDepth=32,fitHeight=16,zRows=0,groundInset=.025},
+ hoenn_home_chair_555={pair='building__generic_building',family='rse',design='em_start_seat_pad',rows={{0x22b}},collisionRows={{0}},
+  model='oras_oldale_backed_chair',fitWidth=16,fitDepth=16,fitHeight=32,zRows=0,rotation=1,groundInset=.025},
+ hoenn_home_chair_556={pair='building__generic_building',family='rse',design='em_start_seat_pad',rows={{0x22c}},collisionRows={{0}},
+  model='oras_oldale_backed_chair',fitWidth=16,fitDepth=16,fitHeight=32,zRows=0,rotation=3,groundInset=.025},
+ hoenn_home_chair_738={pair='building__generic_building',family='rse',design='em_start_seat_pad',rows={{0x2e2}},collisionRows={{0}},
+  model='oras_oldale_backed_chair',fitWidth=16,fitDepth=16,fitHeight=32,zRows=0,rotation=3,groundInset=.025},
  hoenn_home_cushion={pair='building__generic_building',family='rse',design='em_home_cushion',rows={{0x244}},collisionRows={{0}},
   model='oras_trick_house_floor_cushion',fitWidth=16,fitDepth=16,fitHeight=4,zRows=0,groundInset=.025},
  birch_free_books={pair='building__lab',family='rse',design='em_lab_free_books',rows={{0x224,0x225},{0x22c,0x22d},{0x234,0x235}},collisionRows={{0,0},{7,7},{7,7}},
@@ -78,6 +113,14 @@ local families={
   rows={{0x24a,0x24b},{0x252,0x253}},collisionRows={{7,7},{7,7}},
   model='oras_oldale_neighbor_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0,groundInset=.025},
 }
+local function familyFor(p)
+ local f=p and p.recipe and families[p.recipe.name]
+ return f and(f.byPair and f.byPair[p.pair]or not f.byPair and f)or nil
+end
+local function placement(p,f)
+ return{model=f.model or M.id,x=p.cx*16,y=(p.groundHeight or 0)+(f.cabinet or 0),z=(p.cy+(f.zRows or 1))*16,
+  fit={width=f.fitWidth or 16,depth=f.fitDepth or 16,height=f.fitHeight or(f.model and 17 or 24),padding=.25,groundInset=f.groundInset,rotation=f.rotation},source=p}
+end
 function M.register(id)
  id=id or M.id
  if registered[id]and Models.info(id)then return true end
@@ -95,8 +138,12 @@ function M.register(id)
  registered[id]=true;return true
 end
 function M.eligible(p,cells)
- local r=p and p.recipe;local f=r and families[r.name]
+ if p and p.recipe and(p.recipe.name=='hoenn_center_front_desk'or p.recipe.name=='center_front_desk')then
+  return V.require('Gen3ImportedCenterCounter').eligible(p,cells)
+ end
+ local r=p and p.recipe;local f=familyFor(p)
  if not f or r.design~=f.design or r.family~=f.family or p.pair~=f.pair
+  or f.kind and r.kind~=f.kind
   or p.w~=#f.rows[1]*16 or p.d~=#f.rows*16 or p.stageHidden then return false end
  local base
  for row,expectedRow in ipairs(f.rows)do
@@ -130,29 +177,61 @@ function M.placements(cells)
    if p.recipe and p.recipe.name=='hoenn_truck_cargo'then
     for _,item in ipairs(V.require('Gen3ImportedTruckRoom').placements(p,cells))do list[#list+1]=item end
    elseif M.eligible(p,cells)then
-    local f=families[p.recipe.name]
-    list[#list+1]={model=f.model or M.id,x=p.cx*16,y=(p.groundHeight or 0)+(f.cabinet or 0),z=(p.cy+(f.zRows or 1))*16,
-     fit={width=f.fitWidth or 16,depth=f.fitDepth or 16,height=f.fitHeight or(f.model and 17 or 24),padding=.25,groundInset=f.groundInset,rotation=f.rotation},source=p}
+    if p.recipe.name=='hoenn_center_front_desk'or p.recipe.name=='center_front_desk'then
+     list[#list+1]=V.require('Gen3ImportedCenterCounter').placement(p,cells)
+    else list[#list+1]=placement(p,familyFor(p))end
    end
   end
  end
  table.sort(list,function(a,b)return a.z==b.z and a.x<b.x or a.z<b.z end)
  return list
 end
-function M.build(cells,newMesh,parts)
+-- The native engine owns timing/count/palette. Only successful source uploads
+-- expose this visual surface; a failed upload keeps the ordinary native tray.
+function M.healingSurface(p)
+ if not p or p.importedInterior~='oras_center_healer'then return end
+ local f=familyFor(p);if not f or f.model~='oras_center_healer'then return end
+ local item=placement(p,f);local fit=Models.fit(item.model,item.fit);if not fit then return end
+ local function world(name)
+  local a=fit.anchors[name];if not a then return end
+  return{item.x+a[1],item.y+a[2]+.18,item.z+a[3]}
+ end
+ local vertices={}
+ for _,name in ipairs{'tray_back_left','tray_back_right','tray_front_right','tray_front_left'}do
+  local a=world(name);if not a then return end;vertices[#vertices+1]=a
+ end
+ local centers={};for i=1,6 do local a=world('ball_'..i);if not a then return end;centers[i]=a end
+ local edge=world('ball_radius');if not edge then return end
+ local radius=math.sqrt((edge[1]-centers[1][1])^2+(edge[2]-centers[1][2])^2+(edge[3]-centers[1][3])^2)
+ return{vertices=vertices,balls={centers=centers,radius=radius}}
+end
+function M.build(cells,newMesh,parts,capabilities)
  local list=M.placements(cells)
+ -- Animated families require a renderer that uses their fitted surface. Older
+ -- consumers keep the complete native healer rather than misplaced effects.
+ local ready={};for _,p in ipairs(list)do
+  local healer=p.model=='oras_center_healer'
+  local counter=p.model=='oras_center_reception_counter'
+  -- Counter geometry is verified, but its source-native proportions can hide
+  -- the Nurse at eye level. Keep it opt-in until that separate visual gate is
+  -- resolved; source eligibility/census must not imply accepted rendering.
+  if(not healer or capabilities and capabilities.healingSurface)
+   and(not counter or capabilities and capabilities.receptionCounter)then ready[#ready+1]=p end
+ end;list=ready
  if #list==0 then return parts,nil,0 end
  for _,p in ipairs(list)do local ok,err=M.register(p.model);if not ok then return nil,err,0 end end
  local result,why=Models.buildBatches(list,newMesh,{parts=parts})
  -- Mark only after every texture and mesh uploads. A failed source load keeps
  -- the complete native furniture, including its existing wall/ground handling.
- if result then for _,p in ipairs(list)do p.source.importedInterior=p.marker or p.model end end
+ if result then for _,p in ipairs(list)do
+  for _,source in ipairs(p.sources or{p.source})do source.importedInterior=p.marker or p.model end
+ end end
  return result,why,result and #list or 0
 end
 -- Retain the exact native cabinet and wall note as separate components.
 -- The parent supplies its ordinary elevation/wall-attachment emit callback.
 function M.remainder(p,emit,uvFor)
- local f=families[p.recipe.name]
+ local f=familyFor(p)
  if p.importedInterior~=M.tvId or not f or not f.cabinet then return false end
  V.require('Gen3Furniture').append(p,function(vertices,uv,shade,anchor)
   local low,high=math.huge,-math.huge

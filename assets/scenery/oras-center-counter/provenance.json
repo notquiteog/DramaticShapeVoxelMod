@@ -1,0 +1,47 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO228 -> AD108 -> MM169 -> GR511",
+  "model": "t102pc0101_00_00",
+  "submesh": 0,
+  "material": "Comb14",
+  "selectedComponents": [
+    76,
+    90,
+    182,
+    202,
+    232
+  ],
+  "selectedOriginalTriangles": 86,
+  "exposedOriginalTriangles": 100,
+  "authoredPlaqueThickness": 0.03,
+  "authoredClosureTriangles": 60,
+  "finalTriangles": 160,
+  "closureAreas": {
+    "underside_outer_overhang": 219.5,
+    "underside_inner_overhang": 440.5,
+    "floor_contact": 1938.0,
+    "staff_front": 1344.0,
+    "rear_left": 222.5,
+    "rear_right": 222.5
+  },
+  "modelBchSha256": "7d566794d839dd481b00316cd955bf471e0981a0a615188fae0c340ae72346fc",
+  "textureBchSha256": "bbb7e711608e4ff4ae1c4205e88f71bf04dc9a71b25a178fe7f1f54432c06368",
+  "rgbaSha256": "565c52c3e9ad1abfd370ee203994446d03712f475d02c44a7738befae594d28c",
+  "pngSha256": "597cf2546a96346976975d85ba4c3eb5d3faf50e6c8a7bfc31208d35626a97d8",
+  "sourceBounds": [
+    -70.0,
+    0.0,
+    -105.75,
+    52.0,
+    18.321500778198242,
+    -56.0
+  ],
+  "origin": [
+    -9.0,
+    0.0,
+    -80.875
+  ],
+  "uniformDivisor": 122.0,
+  "processing": "Original complete U-counter top, base exterior, staff-facing arms and service plaque selected; separate overhead arch excluded. Source positions/UV/PNG and white vertex lighting retained. Buried base ends clip at the actual top underside Y14. Exact outer and inner underside strips exclude the base joint; bottom/rear/staff-facing openings close on original source bounds. No internal Y14 cap. Plaque retains original top and adds .03-source-unit thickness, clear of counter. Native staff clearance and composite fit require separate runtime acceptance."
+}

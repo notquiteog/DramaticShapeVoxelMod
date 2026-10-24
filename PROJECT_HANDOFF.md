@@ -249,6 +249,79 @@ release blocked pending lifetime/dedup and repeated uninterruptedtour. No budget
 raised/no live resource eviction. See docs/HOENN_RURAL_FENCES_2026-10-23.md.
 Held Littleroot e1bf4167 and inactive Shipyard WIP remain preserved separately.
 
+## 2026-10-23 — native Emerald Navel Rock volumes and real exit arch
+
+- Exact native pale/dark blocked rock vocabulary raises2169 wall cells/11boulders across20 Emerald Navel maps (18 normal caves, Lugia bottom chamber, shared art on outdoor summit). Walking caps/sky/stairs/ladders/water stay native; summit whole-presentation unaccepted.
+- Native exit header is one closed union arch with16×24 actual aperture; no internal/duplicate planes, foot caps only-.025. Actual two-intent native arrow exit toNavel exterior PASS. Scene untouched.
+- Official .96/API3 native final20 maps PASS, all80 first-person directions plus native/modern overviews reviewed, live cells/elevation/warps unchanged.560 focused art/footprint/arch/closed-area-volume contracts and existing cave/shell/furniture/Meteor suites PASS. All519 Emerald native hashes/civics unchanged; one new native arch owner, source candidates/acceptance counts unchanged. Whole-map flagsfalse. Evidence `docs/GEN3_NAVEL_ROCK_VOLUMES_2026-10-23.md` and metadata ledgers. Continuing volcanic/underwater/source-column queues, no versions/push/releases.
+
+## 2026-10-23 — original Meteor Falls rock spikes
+
+- Complete native `254/25C` gold spike gains independent original ORAS GR260/sub0 component441–460: 20 source +8 exact rear/underside closures, closed edges and zero coplanar overlaps. Uniform one-cell foot, 32px height and bottom-only .025 recess; original native floors/collision/warps/actors stay fixed. Missing PNG keeps closed native-painted volume.
+- Official .96/API3 standalone source/before/missing-PNG RSE runs PASS all15 owners/3 rooms; native walkable first-person/orbit directions and nine source angles reviewed.424 focused identity/fit/closure/failure contracts, all24 source-plane checks, cave/PC/furniture suites and byte-identical regeneration PASS.
+- Fresh1309 RSE native hashes/previous families unchanged; canonical all2161 maps preserved. Candidates2761 pieces/2887 owners, accepted2632 components/283 map pairs, whole-map flagsfalse. Evidence `docs/ORAS_METEOR_STALAGMITES_2026-10-23.md` and metadata run/component ledgers. Scene untouched. Continuing Emerald Navel Rock's20 still-flat interiors; no versions/push/releases.
+
+## 2026-10-23 — native rock enclosure and Meteor Falls
+
+- Meteor Falls gains explicit native cap/face rock volume (E violet/RS gold), original terrace/water/bridge/stairs retained. Separate two-cell golden pillars stay unclaimed for next independent fixture model. Source family changes only13 Meteor maps; combined Hoenn cave candidate set129.
+- GBA caves with reviewed wall art use one composed native rock material on a closed faceted outer strip outside native bounds. Exact shared vertices, real merged passage apertures/jambs/lintel/threshold, no stacked-box internal faces; foundation/ceiling ownership separate.
+- Latest official.96/API3 standalone final18 all5 native cases PASS; all4 first-person directions +overview/native inspected; cell/elevation/warp invariance asserted.597 profiles +5532 closed mesh/portal/footprint/surface contracts and enclosure suite PASS. Fresh1309-map Hoenn census preserves native hashes/furniture/civics.
+- Evidence: `docs/GEN3_CAVE_ENCLOSURE_AND_METEOR_2026-10-23.md`, metadata-only Meteor/shell run ledgers. Whole-map flagsfalse. Scene untouched; continuing golden pillars/source interior mouths. No bumps/push/releases.
+
+## 2026-10-23 — volumetric native Hoenn cave interiors
+
+- Fixed Hoenn cave vocabulary being swallowed by regional flat fallback. Reviewed brown/green/shared alternate/ice art now has native-palette raised rock caps/bevels and independent boulders; enclosed cap boulders no longer carve wells. Cave all-ground quads removed so native floors have one surface owner. Scene untouched, no hook.
+- Official .96/API3 standalone native final18 edition-map cases PASS, four first-person directions +overview/native inspected. Live native cells/elevations and warps identical across rendering. All2,161 pristine hashes/furniture/civics unchanged;116 Hoenn cave maps gain classifications (E44/R36/S36), no FRLG/outdoor classification changes.
+- 581 focused geometry/identity/dispatch/footprint/unique-floor contracts and existing Hoenn/cave/enclosure suites PASS. Metadata-only cave map/run ledgers retain whole-map acceptancefalse. Evidence: `docs/GEN3_CAVE_VOLUMES_2026-10-23.md`.
+- Beds preserved in scratch; continuing separate Meteor Falls/outer rock finish/openings/source queue. No version/push/release.
+
+## 2026-10-23 — original ORAS low storage sideboards
+
+- All 12 Hoenn wide-storage owners (four per RSE edition) use original GR513/sub9 low case, recessed doors and runner. Original 108 triangles become 136 exposed +118 closures =254; exact runner/wood and case/base/ceiling unions have one surface owner. Uniform 32×16 blocked fit, original 16.2-pixel height, native apron and bottom-only .025 recess.
+- Official .96/API3 standalone source + missing-texture runs PASS all 12 rooms; fronts/whole orbits, three available sides, room/fallback overviews and nine source angles inspected. All 23 source-plane checks, geometry/contact/fit/identity/failure tests and byte-identical sideboard/prior-drawer regeneration PASS.
+- All 2,161 native hashes/families unchanged; no native entry deltas. Candidates 2,746 pieces / 2,872 owners (including 84 held/default-native counter prototypes); accepted 2,617 components / 280 map pairs, whole-map flags false. Scene untouched.
+- Evidence: `docs/ORAS_OLDALE_SIDEBOARDS_2026-10-23.md`, sideboard component/run ledgers. Continuing bedroom/cabin bed identity and source-footprint audit; no versions/push/releases.
+
+## 2026-10-23 — original ORAS three-drawer chests
+
+- Exact Hoenn narrow drawer family: 44 owners/rooms (E14/R15/S15), original GR513/sub11 chest. Three drawers/knobs, sculpted feet, inset base and tilted top retain source proportions/paint. Exact contact unions remove buried faces; final 284 triangles, one blocked cell, walking apron clear, bottom-only .025 recess.
+- Official .96/API3 standalone source + atomic missing-source runs PASS all 44 rooms; all front/whole/side/overview/fallback and nine source angles inspected. All 22 imported source models pass coplanar checks; contact/knob-hole/fit/identity/failure tests, SDK resources and clean regeneration PASS.
+- All 2,161 pristine hashes/families unchanged. Five edition-room native entry scripts change seven cells identically before/source/fallback (Steven's houses and RS Mossdeep Game Corner); no render mutation. Metadata records both pristine/live states.
+- Evidence: `docs/ORAS_OLDALE_DRAWERS_2026-10-23.md`, chest component/run ledgers. Candidates 2,734 pieces / 2,860 native owners (including 84 unaccepted/default-native counter prototypes). Accepted 2,605 components / 280 edition-map pairs, whole-map flags false. Scene untouched; continuing low sideboard/wide drawers, no versions/push/releases.
+
+## 2026-10-23 — reception source/composite prototype held behind visual gate
+
+- Preserved original GR511 U-counter: 86 selected source triangles, buried base ends clipped, exact exposed union/closed plaque = 160. All 21 source-plane checks, underside/floor areas, every triangular native blocked-footprint grid, composite identity and atomic/default-native standdown tests PASS. Source regeneration byte-identical.
+- Native .96/API3 opt-in source + missing-texture runs PASS all 84 complete groups (E16/R15/S15/FR19/LG19), preserving hashes and native entry state. Visual review rejects first-person Nurse visibility at original uniform height (14.34/16.74 pixels); no source squash or actor/floor change applied. Separate League arrangements stay native.
+- `Gen3ImportedInteriors.build` requires explicit `receptionCounter=true`; root Scene is untouched and keeps native counters. Prototype metadata remains `renderedAccepted=false`; accepted ledger stays 2,561 components / 280 map pairs. Census candidates 2,690 pieces / 2,816 native owners; three-owner group aliases and piece-count exceptions are explicit.
+- Evidence/blocker: `docs/ORAS_CENTER_COUNTER_PROTOTYPE_2026-10-23.md`. Continuing original Oldale three-drawer chest for 44 Hoenn room owners; counter source alternatives/modular span still pending. No versions/push/releases.
+
+## 2026-10-23 — original ORAS Center bookcases
+
+- Exact Hoenn Center rack: 43 owners/rooms (E15/R14/S14); FRLG has no matching family. Original 202 triangles minus two buried coplanar book-end triangles, plus 24 exposed closures = 224. Source proportions, separate wallpaper, native apron and bottom-only .025 recess retained.
+- Official .96/API3 standalone source and atomic missing-texture runs PASS all 43 rooms; fronts/whole orbits/available sides/overviews and nine source angles inspected. No native hash or entry-script deltas. Twenty-model coplanar checks, exact contact-area/fit/identity/fallback tests and clean importer regeneration PASS.
+- Fresh 2,161-map census adds only 43 placements. Candidates 2,606 model pieces / 2,564 native furniture owners; maps now explicitly record composite truck piece counts. Accepted components 2,561 across 280 edition/map pairs; every whole-map acceptance remains false.
+- Evidence: `docs/ORAS_CENTER_BOOKCASES_2026-10-23.md`, component and bookcase-run ledgers. Scene untouched. Continuing original reception U-counter as one shared fit across its three native owners; no versions/push/releases.
+
+## 2026-10-23 — original ORAS healers and source animation surfaces
+
+- Exact native healer owners across all five games: 87 rooms (E17/R16/S16/FR19/LG19). Original machine/tray454 triangles +96 exact exposed rim closures; uniform source bounds, contact-only .025 recess, no coplanar overlaps across all 19 source models.
+- .96/API3 standalone source and missing-source native runs PASS all 87 rooms. Actual native FLDEFF25 shows counts1..6 and completes in every edition, source and fallback; all native map hashes unchanged. Source-derived six-ball layout fits the real raised tray; normal first-person housing occlusion remains physical. Whole-map coverage stays false.
+- Scene remains root-owned/untouched. `Gen3ImportedInteriors.build` requires `{healingSurface=true}` before activating this animated family; unaware consumers keep native healer. Reviewed isolated bridge patch: `docs/integration/gen3-healer-scene.patch`. Source helper + optional native-ball layout tests and clean regeneration PASS.
+- Evidence: `docs/ORAS_CENTER_HEALERS_2026-10-23.md`, source and component/run ledgers. Candidates 2,563; accepted components 2,518 (healers explicitly require reviewed bridge), 280 edition/map pairs. Continuing service furniture/room framing; no version/push/release.
+
+## 2026-10-23 — original ORAS Center tables across all five GBA games
+
+- Replaced two exact native Center-table families with original glass top/reflection/leg source: 94 owners (E18/R17/S17/FR21/LG21), 87 edition-room instances. Uniform native bounds, bottom-only .025 contact recess and exact leg/underside union; no Scene, floor, actor, healing or gameplay changes.
+- Latest official .96/API3 standalone source and atomic missing-texture runs PASS all owners/rooms. Native hashes stay identical before/after; all 2,161 census hashes/family counts unchanged, only +94 table candidates. All 18 source-plane checks, geometry/fit/kind/identity/fallback tests and clean importer regeneration PASS.
+- Evidence: `docs/ORAS_CENTER_TABLES_2026-10-23.md`, component and center-table-runs ledgers. Candidate count 2,476, accepted components 2,431; whole-map flags remain false. Center healer requires source-derived animation surface; room framing remains queued. No version/push/release.
+
+## 2026-10-23 — original ORAS Oldale backed chairs (component scope)
+
+- Replaced three exact RSE chair families with original Oldale chair geometry/UV/texture: 281 owners across 98 edition-room instances (E91/R95/S95). Original proportions, opposite native orientations, uniform one-cell fit and bottom-only .025 contact recess. Exact exposed leg/seat union removes buried overlaps; no Scene/gameplay/default changes.
+- Official .96/API3 standalone source and atomic missing-texture runs PASS all 98 rooms; all owner front/whole and available side views reviewed. All 2,161 native map hashes/furniture-family counts unchanged; only +281 source candidates. Seventeen-source coplanar check and focused data/fit/guard/fallback tests PASS; importer regeneration byte-identical.
+- Evidence: `docs/ORAS_OLDALE_CHAIRS_2026-10-23.md` and component/run ledgers. Candidate count 2,382; accepted components 2,337; every whole-map acceptance remains false. Generic room framing/service furniture still queued. No version/push/release.
+
 # Rustboro fence release1.58.1 — 2026-10-23
 
 Fixes43 missing Emerald fence cells (44 in R/S), reversed depth stripes and the

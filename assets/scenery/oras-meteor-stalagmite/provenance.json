@@ -1,0 +1,35 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO71 -> AD107 -> MM32 -> GR260",
+  "model": "d101r0101_00_00",
+  "submesh": 0,
+  "material": "gake_basic",
+  "componentTriangles": [
+    441,
+    460
+  ],
+  "originalTriangles": 20,
+  "authoredClosureTriangles": 8,
+  "finalTriangles": 28,
+  "sourceModelSha256": "b48097b15e70f96d1c99d47e0323d2ae99029a12167f99f686d6d1792ea18773",
+  "sourceTextureBankSha256": "189f892da7d1a5cc25739d43d085bc384c70c3a8bd1602eb065f572f7365a4a4",
+  "pngSha256": "b3cd2219f8b47105cee0e90942b110cf261803d1c3289a040c2461e122119922",
+  "whiteVertexLighting": true,
+  "normalization": {
+    "sourceBounds": [
+      190.0,
+      144.0,
+      -294.0,
+      206.0,
+      190.0,
+      -280.0
+    ],
+    "origin": [
+      198.0,
+      144.0,
+      -287.0
+    ],
+    "uniformDivisor": 16.0
+  }
+}

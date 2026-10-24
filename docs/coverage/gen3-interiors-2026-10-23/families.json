@@ -972,6 +972,10 @@
       "sourceCandidates": []
     },
     "center_counter_left": {
+      "candidateOwnerCounts": {
+        "firered": 19,
+        "leafgreen": 19
+      },
       "design": null,
       "editions": {
         "firered": {
@@ -1024,9 +1028,17 @@
         }
       },
       "kind": "centerWing",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "center_counter_right": {
+      "candidateOwnerCounts": {
+        "firered": 19,
+        "leafgreen": 19
+      },
       "design": null,
       "editions": {
         "firered": {
@@ -1079,7 +1091,11 @@
         }
       },
       "kind": "centerWing",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "center_escalator_down": {
       "design": null,
@@ -1192,6 +1208,10 @@
       "sourceCandidates": []
     },
     "center_front_desk": {
+      "candidateOwnerCounts": {
+        "firered": 19,
+        "leafgreen": 19
+      },
       "design": null,
       "editions": {
         "firered": {
@@ -1244,7 +1264,11 @@
         }
       },
       "kind": "centerCounter",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "center_healer": {
       "design": null,
@@ -1363,7 +1387,9 @@
         }
       },
       "kind": "centerHealer",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_center_healer"
+      ]
     },
     "center_map": {
       "design": "fr_native_cabinet",
@@ -1884,7 +1910,9 @@
         }
       },
       "kind": "centerTable",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_center_glass_table"
+      ]
     },
     "center_terminal": {
       "design": "fr_center_pc",
@@ -3252,6 +3280,11 @@
       "sourceCandidates": []
     },
     "hoenn_center_front_desk": {
+      "candidateOwnerCounts": {
+        "emerald": 16,
+        "ruby": 15,
+        "sapphire": 15
+      },
       "design": null,
       "editions": {
         "emerald": {
@@ -3317,9 +3350,18 @@
         }
       },
       "kind": "centerCounter",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "hoenn_center_left": {
+      "candidateOwnerCounts": {
+        "emerald": 16,
+        "ruby": 15,
+        "sapphire": 15
+      },
       "design": null,
       "editions": {
         "emerald": {
@@ -3388,7 +3430,11 @@
         }
       },
       "kind": "centerWing",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "hoenn_center_map": {
       "design": null,
@@ -3524,7 +3570,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_center_bookcase"
+      ]
     },
     "hoenn_center_pc": {
       "design": "fr_center_pc",
@@ -3695,6 +3743,11 @@
       "sourceCandidates": []
     },
     "hoenn_center_right": {
+      "candidateOwnerCounts": {
+        "emerald": 16,
+        "ruby": 15,
+        "sapphire": 15
+      },
       "design": null,
       "editions": {
         "emerald": {
@@ -3763,7 +3816,11 @@
         }
       },
       "kind": "centerWing",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "hoenn_center_table": {
       "design": null,
@@ -3834,7 +3891,9 @@
         }
       },
       "kind": "centerTable",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_center_glass_table"
+      ]
     },
     "hoenn_center_terminal": {
       "design": null,
@@ -4951,7 +5010,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_backed_chair"
+      ]
     },
     "hoenn_home_chair_556": {
       "design": "em_start_seat_pad",
@@ -5032,7 +5093,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_backed_chair"
+      ]
     },
     "hoenn_home_chair_738": {
       "design": "em_start_seat_pad",
@@ -5096,7 +5159,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_backed_chair"
+      ]
     },
     "hoenn_home_cushion": {
       "design": "em_home_cushion",
@@ -5339,7 +5404,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_drawer_chest"
+      ]
     },
     "hoenn_home_picture": {
       "design": "em_home_picture",
@@ -6362,7 +6429,9 @@
         }
       },
       "kind": "designed",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_oldale_low_sideboard"
+      ]
     },
     "hoenn_home_window": {
       "design": "em_home_window",
@@ -7597,6 +7666,32 @@
       "kind": "designed",
       "sourceCandidates": []
     },
+    "hoenn_meteor_stalagmite": {
+      "editions": {
+        "emerald": {
+          "count": 5,
+          "maps": [
+            "EM_METEOR_FALLS_1F_1R"
+          ]
+        },
+        "ruby": {
+          "count": 5,
+          "maps": [
+            "RU_METEOR_FALLS_1F_1R"
+          ]
+        },
+        "sapphire": {
+          "count": 5,
+          "maps": [
+            "SA_METEOR_FALLS_1F_1R"
+          ]
+        }
+      },
+      "kind": "caveSpike",
+      "sourceCandidates": [
+        "oras_meteor_stalagmite"
+      ]
+    },
     "hoenn_museum_cylinder": {
       "design": "em_museum_cylinder",
       "editions": {
@@ -7700,6 +7795,18 @@
         }
       },
       "kind": "designed",
+      "sourceCandidates": []
+    },
+    "hoenn_navel_exit_arch": {
+      "editions": {
+        "emerald": {
+          "count": 1,
+          "maps": [
+            "EM_NAVEL_ROCK_ENTRANCE"
+          ]
+        }
+      },
+      "kind": "cavePortal",
       "sourceCandidates": []
     },
     "hoenn_pyre_memorial": {
@@ -14459,42 +14566,49 @@
   "limitations": [
     "Candidate placement is not proof of successful texture/mesh upload or rendered acceptance.",
     "Furniture extraction does not prove every native object was recognized.",
-    "Native continuous room finishes are not claims of imported modern room coverage."
+    "Native continuous room finishes are not claims of imported modern room coverage.",
+    "Map sourceCandidates count native furniture owners. Composite truck owners expand into several pieces; complete reception groups combine three owners into one model. sourceCandidatePlacementCount records exceptions; candidateFurniture totals count pieces, candidateNativeFurnitureOwners count owners.",
+    "Original reception counter is a geometry/upload prototype only: default build retains native counter; first-person Nurse visibility remains unaccepted."
   ],
   "renderedAccepted": false,
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 465,
-      "furniture": 2091,
+      "candidateFurniture": 645,
+      "candidateNativeFurnitureOwners": 663,
+      "furniture": 2097,
       "maps": 519,
       "nativeWallFinishRooms": 79,
       "rooms": 301
     },
     "firered": {
-      "candidateFurniture": 398,
+      "candidateFurniture": 457,
+      "candidateNativeFurnitureOwners": 495,
       "furniture": 2937,
       "maps": 426,
       "nativeWallFinishRooms": 65,
       "rooms": 253
     },
     "leafgreen": {
-      "candidateFurniture": 398,
+      "candidateFurniture": 457,
+      "candidateNativeFurnitureOwners": 495,
       "furniture": 2937,
       "maps": 426,
       "nativeWallFinishRooms": 65,
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 420,
-      "furniture": 1476,
+      "candidateFurniture": 601,
+      "candidateNativeFurnitureOwners": 617,
+      "furniture": 1481,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 420,
-      "furniture": 1476,
+      "candidateFurniture": 601,
+      "candidateNativeFurnitureOwners": 617,
+      "furniture": 1481,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231

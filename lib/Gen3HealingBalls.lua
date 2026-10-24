@@ -11,7 +11,7 @@ function M.rows(data,column)
  end end
  return math.max(0,math.min(3,math.floor((last-6)/4)))
 end
-function M.append(data,x,y,z,emit)
+function M.append(data,x,y,z,emit,layout)
  local count=0
  for col=0,1 do
   local rows=M.rows(data,col)
@@ -24,10 +24,13 @@ function M.append(data,x,y,z,emit)
   end
   for row=0,rows-1 do
    count=count+1
-   local cx,cy,cz=x+11.72+col*7.33,y+1.6,z+14.35+row*3.77
+   local radius=layout and layout.radius or 1.6
+   local center=layout and layout.centers[col*3+row+1]
+   local cx,cy,cz=x+11.72+col*7.33,y+radius,z+14.35+row*3.77
+   if center then cx,cy,cz=center[1],center[2],center[3]end
    local function point(a,b)
-    local r=1.6*math.cos(b)
-    return {cx+r*math.cos(a),cy+1.6*math.sin(b),cz+r*math.sin(a)}
+    local r=radius*math.cos(b)
+    return {cx+r*math.cos(a),cy+radius*math.sin(b),cz+r*math.sin(a)}
    end
    for lat=0,5 do
     local lo=-math.pi/2+lat*math.pi/6;local hi=lo+math.pi/6
@@ -41,13 +44,13 @@ function M.append(data,x,y,z,emit)
  end
  return count
 end
-function M.canvas(canvas,x,y,z,emit)
+function M.canvas(canvas,x,y,z,emit,layout)
  local now=love and love.timer and love.timer.getTime()or os.clock()
  if retry[canvas]and now<retry[canvas]then return false end
  local ok,data=pcall(canvas.newImageData,canvas)
  if not ok or not data then retry[canvas]=now+1;return false end
  retry[canvas]=nil
- M.append(data,x,y,z,emit);data:release()
+ M.append(data,x,y,z,emit,layout);data:release()
  return true
 end
 return M

@@ -141,6 +141,9 @@ local function texture(theme)
  local image=love.graphics.newImage(data);image:setFilter('nearest','nearest');data:release();materials[theme]=image;return image
 end
 function M.geometry(p,side,opened)
+ if p.gen==3 and p.cave and p.nativeCaveFinish and side<=4 then
+  return V.require('Gen3CaveShell').geometry(p,side,opened)
+ end
  -- The native irregular rock/leaf contours own every secret-base wall.
  -- A second rectangular shell would bisect their corridors and exits.
  if p.secretBase and side<=4 then return {},{} end
@@ -338,6 +341,23 @@ function M.forMap(map,gen)
  local p=M.profile(def,gen)
  if not p then cache[def]=false;return end
  if p.cave and not p.secretBase then
+  if gen==3 then
+   local pair=def.midLayout.pair
+   local spec=V.require('Gen3Tilesets').resolve(pair,require('src.import.gba.versions').TILESET_PAIRS)
+   local behavior=require('src.core.game3.scripting.interaction_scripts').behaviors[pair]or{}
+   local Shapes=V.require('Gen3TileShape')
+   local counts={};local chosen,best
+   for y=0,def.height-1 do for x=0,def.width-1 do local c=def.midLayout:cellAt(x,y)
+    local s=Shapes.of(spec.primary,spec.secondary,c.mid,behavior[c.mid],c.coll)
+    if s.kind=='caveWall'and s.side then counts[s.side]=(counts[s.side]or 0)+1 end
+   end end
+   for mid,n in pairs(counts)do if not best or n>best or n==best and mid<chosen then chosen,best=mid,n end end
+   if chosen then
+    local ts=require('src.core.game3.tileset_native').get(pair)
+    local image=V.require('Gen3RoomWallpaper').material({id=def.id,voxelWallpaper={chosen,chosen,single=true}},ts)
+    if image then M.setWallpaper(p,image);p.wallpaperHeight=28;p.nativeCaveFinish=true end
+   end
+  end
   local field=gen==2 and V.require('Gen2Elevation').field(map) or gen==3 and V.require('Gen3Elevation').field(def)
   for _,c in pairs(field and field.cells or {})do p.height=math.max(p.height,(c.high or c.height or 0)+64)end
   -- Only native exits/connections open the shell. Several cave boundary

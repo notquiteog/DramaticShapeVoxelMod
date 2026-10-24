@@ -1,0 +1,44 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO228 -> AD108 -> MM169 -> GR511",
+  "model": "t102pc0101_00_00",
+  "submesh": 9,
+  "material": "Comb26",
+  "texture": "pc_hon01",
+  "originalTriangles": 202,
+  "removedBuriedContactTriangles": [
+    150,
+    151
+  ],
+  "retainedOriginalTriangles": 200,
+  "authoredClosureTriangles": 24,
+  "finalTriangles": 224,
+  "originalRims": [
+    6,
+    4,
+    26,
+    22,
+    22,
+    6
+  ],
+  "modelBchSha256": "7d566794d839dd481b00316cd955bf471e0981a0a615188fae0c340ae72346fc",
+  "textureBchSha256": "bbb7e711608e4ff4ae1c4205e88f71bf04dc9a71b25a178fe7f1f54432c06368",
+  "rgbaSha256": "396bc5f8edaf5ffdc5f8a3cfdca253a09c7220a9bc93d4a71065c430f99fe288",
+  "pngSha256": "7751c2003e7f9113af718a60bd45616a022399d0a2db22da1befe495d7a08eb6",
+  "sourceBounds": [
+    -107.0,
+    1.0,
+    -105.75,
+    -73.0,
+    24.131799697875977,
+    -92.25
+  ],
+  "origin": [
+    -90.0,
+    1.0,
+    -99.0
+  ],
+  "uniformDivisor": 34.0,
+  "processing": "All original positions/UV and opaque PNG retained; two original book-end triangles buried coplanar against the inner case wall removed, all other source indices retained. Source vertex lighting white. Exact exposed case, foot, shelf undersides and book rear/end closures. Existing shelf/wall contacts and original exposed book ends receive no duplicate caps. Concave rear preserves the original gap between feet; tilted book bottom follows its original plane. No native room floor or source lighting geometry."
+}

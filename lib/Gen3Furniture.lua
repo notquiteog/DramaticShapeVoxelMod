@@ -3,6 +3,8 @@
 local V=...
 local M={}
 local CashRegister=V and V.require('Gen3CashRegister')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3CashRegister.lua')
+local CaveColumns=V and V.require('Gen3CaveColumns')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3CaveColumns.lua')
+local NavelPortal=V and V.require('Gen3NavelPortal')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3NavelPortal.lua')
 local recipes={
  {name='route23_stone_bollard',primary='general',pair='general__rom_082d4b84',rows={{0x2c6}},kind='stoneBollard',ground=0x28a,localGround=true,blockedRows={[1]=true}},
  {name='pallet_mailbox',primary='general',pair='pallet_outdoor',rows={{0x2A5},{0x2AD}},kind='mailbox',h=20,ground=0x296,depth=7},
@@ -86,6 +88,8 @@ for _,r in ipairs(Institution)do recipes[#recipes+1]=r end
 local Tower=V and V.require('Gen3TowerInteriors') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3TowerInteriors.lua')
 for _,r in ipairs(Tower.recipes)do recipes[#recipes+1]=r end
 Designed.install(recipes)
+for _,r in ipairs(CaveColumns.recipes)do recipes[#recipes+1]=r end
+for _,r in ipairs(NavelPortal.recipes)do recipes[#recipes+1]=r end
 local Hoenn=V and V.require('Gen3Hoenn') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3Hoenn.lua')
 for _,r in ipairs(Hoenn.recipes)do recipes[#recipes+1]=r end
 local Memorials=V and V.require('Gen3MemorialFurniture')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3MemorialFurniture.lua')
@@ -106,6 +110,7 @@ Route.install(recipes)
 local Early=V and V.require('Gen3EarlyProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3EarlyProps.lua')
 for _,r in ipairs(Early.recipes)do recipes[#recipes+1]=r end
 local function recipeActive(r)
+ if r.caveInterior then return Hoenn.active()end
  if r.earlyHoenn then local ok,GV=pcall(require,'src.core.GameVersion');return Early.active(r,ok and GV.get and GV.get())end
  if Hoenn.recipeActive then return Hoenn.recipeActive(r)end
  return Hoenn.active()==(r.family=='rse')
@@ -234,6 +239,8 @@ function M.append(p,emit,uvFor)
   local v=t[1][2]+(t[3][2]-t[1][2])*(sy%16+.5)/16
   return {{u,v},{u,v},{u,v},{u,v}}
  end
+ if r.kind=='caveSpike'then CaveColumns.append(p,emit,sample);return end
+ if r.kind=='cavePortal'then NavelPortal.append(p,emit,uvFor);return end
  if V and V.require('Gen3ServiceRooms').fixture(p,source,box,sample,emit)then return end
  if r.spriteAlternative=='rock' and V and p.ts.imageData and V.require('TreePresentation').props:get()=='cards' then
   V.require('Gen3Cave').rock({cx=p.cx,cy=p.cy,ts=p.ts,mid=r.rows[1][1],shape={ground=r.ground,height=7}},emit,uvFor)
