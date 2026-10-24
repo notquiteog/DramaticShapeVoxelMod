@@ -1,3 +1,22 @@
+# Verified Kanto release1.58.2 — 2026-10-23
+
+Integrated the verified Kanto chain through52d9bdca: original Cerulean/Celadon
+houses, wider One Island Center, seven exact civic floor selections and the
+standard Center/plain Viridian source-door dispatcher repair. Final native
+source-door checks pass38/38 placements across FR/LG with actual draw asserted;
+original entries/returns and native grids remain intact. Source suite491PASS,
+0fail,58external-fixture skips;646production LuaJIT files compile. Exact ZIP
+compatibility and combined Kanto checks accompany release verification.
+
+Kanto World is active again. User-unlocked normal-browser downloads supplied
+verified Vermilion592879 and Fuchsia592836 archives for further source intake;
+raw archives remain excluded. Hoenn worker owns a separate bounded resource
+lifetime/dedup fix before rural long-tour release; interiors continue independently.
+Current Kanto source ledger has82 eligible/rendered accepted assemblies per
+edition,54 unmatched; complete-game coverage remains unfinished. See
+[Kanto dispatcher evidence](docs/KANTO_SOURCE_DOOR_DISPATCH_2026-10-23.md).
+Standalone/API3 and HD2D actor/flower defaults remain unchanged.
+
 # Source-door dispatcher integrated — 2026-10-23
 
 Standard Kanto Centers/plain Viridian house now use their existing dispatcher
