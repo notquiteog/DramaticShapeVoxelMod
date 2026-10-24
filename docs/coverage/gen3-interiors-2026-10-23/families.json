@@ -1884,7 +1884,9 @@
         }
       },
       "kind": "centerTable",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_center_glass_table"
+      ]
     },
     "center_terminal": {
       "design": "fr_center_pc",
@@ -3834,7 +3836,9 @@
         }
       },
       "kind": "centerTable",
-      "sourceCandidates": []
+      "sourceCandidates": [
+        "oras_center_glass_table"
+      ]
     },
     "hoenn_center_terminal": {
       "design": null,
@@ -14471,35 +14475,35 @@
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 556,
+      "candidateFurniture": 574,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
       "rooms": 301
     },
     "firered": {
-      "candidateFurniture": 398,
+      "candidateFurniture": 419,
       "furniture": 2937,
       "maps": 426,
       "nativeWallFinishRooms": 65,
       "rooms": 253
     },
     "leafgreen": {
-      "candidateFurniture": 398,
+      "candidateFurniture": 419,
       "furniture": 2937,
       "maps": 426,
       "nativeWallFinishRooms": 65,
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 515,
+      "candidateFurniture": 532,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 515,
+      "candidateFurniture": 532,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,

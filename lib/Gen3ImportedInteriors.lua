@@ -16,6 +16,7 @@ dataFiles.bdsp_galactic_server='ImportedInstitutionServerData'
 dataFiles.oras_oldale_china_cupboard='ImportedOldaleCupboardData'
 dataFiles.oras_oldale_kitchen_sink='ImportedOldaleSinkData'
 dataFiles.oras_oldale_backed_chair='ImportedOldaleChairData'
+dataFiles.oras_center_glass_table='ImportedCenterTableData'
 dataFiles.oras_pyre_memorial='ImportedPyreMemorialData'
 dataFiles.oras_flower_bookcase='ImportedFlowerBookcaseData'
 dataFiles.oras_birch_bookcase='ImportedBirchBookcaseData'
@@ -24,6 +25,10 @@ dataFiles.oras_birch_freestanding_case='ImportedBirchFreecaseData'
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
 local families={
+ hoenn_center_table={pair='building__pokemon_center',family='rse',kind='centerTable',rows={{0x23d,0x23e},{0x245,0x246}},collisionRows={{7,7},{7,7}},
+  model='oras_center_glass_table',fitWidth=32,fitDepth=32,fitHeight=16,zRows=0,groundInset=.025},
+ center_table={pair='network',kind='centerTable',rows={{0x29c,0x29d},{0x2a4,0x2a5}},collisionRows={{7,7},{7,7}},
+  model='oras_center_glass_table',fitWidth=32,fitDepth=32,fitHeight=16,zRows=0,groundInset=.025},
  hoenn_home_chair_555={pair='building__generic_building',family='rse',design='em_start_seat_pad',rows={{0x22b}},collisionRows={{0}},
   model='oras_oldale_backed_chair',fitWidth=16,fitDepth=16,fitHeight=32,zRows=0,rotation=1,groundInset=.025},
  hoenn_home_chair_556={pair='building__generic_building',family='rse',design='em_start_seat_pad',rows={{0x22c}},collisionRows={{0}},
@@ -104,6 +109,7 @@ end
 function M.eligible(p,cells)
  local r=p and p.recipe;local f=r and families[r.name]
  if not f or r.design~=f.design or r.family~=f.family or p.pair~=f.pair
+  or f.kind and r.kind~=f.kind
   or p.w~=#f.rows[1]*16 or p.d~=#f.rows*16 or p.stageHidden then return false end
  local base
  for row,expectedRow in ipairs(f.rows)do

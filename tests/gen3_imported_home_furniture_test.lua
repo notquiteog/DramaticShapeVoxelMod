@@ -10,6 +10,7 @@ V.require=function(name)
  if name=='ImportedOldaleFridgeData'then return dofile('lib/ImportedOldaleFridgeData.lua')end
  if name=='ImportedOldaleCupboardData'then return dofile('lib/ImportedOldaleCupboardData.lua')end
  if name=='ImportedOldaleChairData'then return dofile('lib/ImportedOldaleChairData.lua')end
+ if name=='ImportedCenterTableData'then return dofile('lib/ImportedCenterTableData.lua')end
  if name=='ImportedOldaleSinkData'then return dofile('lib/ImportedOldaleSinkData.lua')end
  if name=='ImportedPyreMemorialData'then return dofile('lib/ImportedPyreMemorialData.lua')end
  if name=='ImportedFlowerBookcaseData'then return dofile('lib/ImportedFlowerBookcaseData.lua')end
@@ -22,6 +23,8 @@ V.require=function(name)
 end
 local M=assert(loadfile('lib/Gen3ImportedInteriors.lua'))(V)
 local fixtures={
+ {name='hoenn_center_table',kind='centerTable',pair='building__pokemon_center',rows={{0x23d,0x23e},{0x245,0x246}},coll={{7,7},{7,7}},x=11,z=6,id='oras_center_glass_table',fit={32,32,0},height=16},
+ {name='center_table',kind='centerTable',family=false,pair='network',rows={{0x29c,0x29d},{0x2a4,0x2a5}},coll={{7,7},{7,7}},x=11,z=6,id='oras_center_glass_table',fit={32,32,0},height=16},
  {name='hoenn_home_chair_555',pair='building__generic_building',design='em_start_seat_pad',rows={{0x22b}},coll={{0}},x=2,z=4,id='oras_oldale_backed_chair',fit={16,16,0},rotation=1},
  {name='hoenn_home_chair_556',pair='building__generic_building',design='em_start_seat_pad',rows={{0x22c}},coll={{0}},x=6,z=4,id='oras_oldale_backed_chair',fit={16,16,0},rotation=3},
  {name='hoenn_home_chair_738',pair='building__generic_building',design='em_start_seat_pad',rows={{0x2e2}},coll={{0}},x=6,z=4,id='oras_oldale_backed_chair',fit={16,16,0},rotation=3},
@@ -52,7 +55,7 @@ local fixtures={
 for _,q in ipairs(fixtures)do
  local cells={};local pair=q.pair or'building__brendans_mays_house'
  local p={cx=q.x,cy=q.z,w=#q.rows[1]*16,d=#q.rows*16,pair=pair,groundHeight=8,
-  recipe={name=q.name,design=q.design,family=q.family~=false and'rse'or nil,rows=q.rows}}
+  recipe={name=q.name,design=q.design,kind=q.kind,family=q.family~=false and'rse'or nil,rows=q.rows}}
  for y,row in ipairs(q.rows)do for x,mid in ipairs(row)do
   cells[(q.x+x-1)..':'..(q.z+y-1)]={cx=q.x+x-1,cy=q.z+y-1,mid=mid,collision=q.coll[y][x],base=8,primary=q.primary or'building',region={mapId=q.mapId},pair=pair,prop=p}
  end end
@@ -70,6 +73,7 @@ for _,q in ipairs(fixtures)do
  for _,key in ipairs{'stageHidden','stairs','civic','boundary'}do last[key]=true;assert(not M.eligible(p,cells),key);last[key]=nil end
  if q.mapId then local old=last.region;last.region={mapId='EM_MOSSDEEP_CITY_SPACE_CENTER_1F'};assert(not M.eligible(p,cells),'foreign room accepted');last.region=old end
  local original=p.recipe.design;p.recipe.design='unrelated';assert(not M.eligible(p,cells));p.recipe.design=original
+ if q.kind then local old=p.recipe.kind;p.recipe.kind='unrelated';assert(not M.eligible(p,cells),'wrong furniture kind accepted');p.recipe.kind=old end
  available=false;local result,err,n=M.build(cells,function()end,{})
  assert(not result and err and n==0 and not p.importedInterior,'failed source upload hid complete native furniture')
  available=true;local parts={};result,err,n=M.build(cells,function()end,parts)

@@ -1,0 +1,44 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO228 -> AD108 -> MM169 -> GR511",
+  "model": "t102pc0101_00_00",
+  "submesh": 13,
+  "material": "Comb25",
+  "selectedComponents": [
+    0,
+    46,
+    50,
+    54,
+    86,
+    90,
+    102,
+    114,
+    126
+  ],
+  "originalTriangles": 142,
+  "exposedSourceTriangles": 166,
+  "authoredClosureTriangles": 92,
+  "finalTriangles": 258,
+  "modelBchSha256": "7d566794d839dd481b00316cd955bf471e0981a0a615188fae0c340ae72346fc",
+  "textureBchSha256": "bbb7e711608e4ff4ae1c4205e88f71bf04dc9a71b25a178fe7f1f54432c06368",
+  "rgbaSha256": "b67f086a9aa581b0d35ef14acae34179a7eb86e12f4515f25398bd866060c8b1",
+  "pngSha256": "2b793995189ca1ec5afd0ec163498a0ddf4251dde5b06162ff042474f01694fd",
+  "undersideExposedArea": 909.9299112078988,
+  "undersideUnionArea": 909.9299112078988,
+  "sourceBounds": [
+    76.5,
+    1.5,
+    0.0,
+    108.0,
+    11.0,
+    31.5
+  ],
+  "origin": [
+    92.25,
+    1.5,
+    15.75
+  ],
+  "uniformDivisor": 31.5,
+  "processing": "Original complete shaped glass top, four separate source reflection ribbons and four hexagonal legs. Original visible geometry/UV/PNG retained, vertex lighting white. Buried leg ends clip exactly at source underside; underside partitions around actual twelve-vertex leg intersections. Exposed leg bottoms close; no buried leg caps or room lighting/floor/shadow geometry. Uniform native fit with bottom-contact-only recess."
+}

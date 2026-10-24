@@ -1,3 +1,9 @@
+## 2026-10-23 — original ORAS Center tables across all five GBA games
+
+- Replaced two exact native Center-table families with original glass top/reflection/leg source: 94 owners (E18/R17/S17/FR21/LG21), 87 edition-room instances. Uniform native bounds, bottom-only .025 contact recess and exact leg/underside union; no Scene, floor, actor, healing or gameplay changes.
+- Latest official .96/API3 standalone source and atomic missing-texture runs PASS all owners/rooms. Native hashes stay identical before/after; all 2,161 census hashes/family counts unchanged, only +94 table candidates. All 18 source-plane checks, geometry/fit/kind/identity/fallback tests and clean importer regeneration PASS.
+- Evidence: `docs/ORAS_CENTER_TABLES_2026-10-23.md`, component and center-table-runs ledgers. Candidate count 2,476, accepted components 2,431; whole-map flags remain false. Center healer requires source-derived animation surface; room framing remains queued. No version/push/release.
+
 ## 2026-10-23 — original ORAS Oldale backed chairs (component scope)
 
 - Replaced three exact RSE chair families with original Oldale chair geometry/UV/texture: 281 owners across 98 edition-room instances (E91/R95/S95). Original proportions, opposite native orientations, uniform one-cell fit and bottom-only .025 contact recess. Exact exposed leg/seat union removes buried overlaps; no Scene/gameplay/default changes.
