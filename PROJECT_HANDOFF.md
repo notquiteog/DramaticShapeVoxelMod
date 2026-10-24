@@ -1,3 +1,14 @@
+# Emerald Rustboro fence classifier checkpoint — 2026-10-23
+
+Exact native census adds eight omitted rail/endcap MIDs (15 blocked cells),
+fixes opposite-side depth axes and the repeated grass horizontal family.
+Official .96 standalone: 2400 unique city cells,180 eligible/180 built,
+unchanged native grid/recovery0; Gym/south gate front/side captures inspected.
+Focused source atomicity/29-family/ground/bounds test passes. Root owns joined
+corner/contact geometry and final acceptance. R/S parity follows immediately.
+See [coverage evidence](docs/RUSTBORO_FENCE_COVERAGE_2026-10-23.md).
+Littleroot e1bf4167 remains held for a later model batch; Shipyard WIP preserved.
+
 # Original Littleroot houses checkpoint — 2026-10-23
 
 Both GR6/ZO6/AD8 own houses and original BM2 hinges now dispatch as littlerootHomes.
