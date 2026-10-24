@@ -117,6 +117,8 @@ function M.prepare(cells,regions)
    end
   end
  end
+ local ok,stone=pcall(V.require,'Gen3DottedHoleEntrance')
+ if ok and stone then count=count+stone.prepare(cells,regions)end
  return count
 end
 function M.append(c,emit,uvFor)

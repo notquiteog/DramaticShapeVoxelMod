@@ -14,6 +14,24 @@ scenery entered that bug release. Latest released Kanto main1.58.2 merged here,
 all held Littleroot/Shipyard source preserved. Next: distinct white Sootopolis
 facade and water/underwater openings. See the conditional/Terra cave depth docs.
 
+# Dotted Hole geometry / explicit shared-shadow render hold — 2026-10-23
+
+Both FRLG closed/open original native states now have closed white columns,
+continuous braille and a recessed arch; original collision/warps/floors remain.
+All four final native actual entry-return/sealed-bump/projection walks PASS0;
+final front/side/threshold/overview views inspected.296/316 triangles, zero
+coplanar/degenerate geometry. Exact original lower projection matches court198,
+not lawn1. Same-map original compiled Cut script refresh PASS0 LeafGreen.
+Default shared shadows show diagonal slab/column acne; identical final source
+with shadows off is clean. Root owns shared renderer correction: this batch
+is geometry verified, rendered acceptance HELD, user shadows remain unchanged.
+22 accepted native cave entrances/edition, one render-held Dotted Hole, seven
+Tanoby stone entrances unmodeled; summit stair independent. Modern building
+135/84 eligible/84 accepted/51 unmatched unchanged. Source/commands/evidence:
+docs/DOTTED_HOLE_NATIVE_GEOMETRY_2026-10-23.md. Required hooks: prior generic
+CaveEntrances prepare/append + true-triangle Scene emitter; explicit floor-only
+terrainSupport=false retained. No new source intake; no bump/push/release.
+
 # Ruby Path native story-state continuation — 2026-10-23
 
 Exact(42,39) grey reveal now follows original script-opened838/public113/elev0

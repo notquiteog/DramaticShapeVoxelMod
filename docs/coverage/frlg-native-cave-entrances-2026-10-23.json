@@ -741,7 +741,69 @@
       "wholeMapCovered": false,
       "nativeHash": "5ce69aeb77e5874046ce532110cd7439201f1527144e4eac00359c641062c929",
       "nativeGeometryAccepted": false,
-      "gap": "Dotted Hole Braille stone door and opened-state recess require separate guarded geometry."
+      "gap": "Default shared shadows produce diagonal acne on the braille slab and white columns; identical final source geometry is clean with shadows off. Shared renderer fix is root-owned.",
+      "nativeGeometryVerified": true,
+      "nativeRenderedGap": "Default shared shadows produce diagonal acne on the braille slab and white columns; identical final source geometry is clean with shadows off. Shared renderer fix is root-owned.",
+      "stateReviews": {
+        "closed": {
+          "nativeProjectionWalked": true,
+          "nativeClosedBump": true,
+          "sourceHashes": {
+            "lib/Gen3CaveEntrances.lua": "a45f12e5a11ce33af9d7d3e261ea0430d6b75884500483ae86eb625be7458d95",
+            "lib/Gen3Terrain.lua": "bd8ef6266cb1b7215005ee4d7bb714fbb12a44801190a545ddebed17e6f929fe",
+            "lib/Gen3Scene.lua": "309cc38641a5ef05eafca1735bb1392ceb5b769619b03de299bc371b1f01be7a",
+            "lib/Gen3DottedHoleEntrance.lua": "aabe51364625f556d87a60ac1cc7b0e674935a2204b1f5f702e2f2bb16712c02"
+          },
+          "renderedVerified": false,
+          "returned": false,
+          "x": 24,
+          "y": 24,
+          "edition": "firered",
+          "runtime": "v0.3.96",
+          "map": "FR_SIX_ISLAND_RUIN_VALLEY",
+          "state": "closed_braille",
+          "nativeHash": "5ce69aeb77e5874046ce532110cd7439201f1527144e4eac00359c641062c929",
+          "geometryVerified": true,
+          "renderedGap": "Default shared shadows produce diagonal acne on the braille slab and white columns; identical final source geometry is clean with shadows off. Shared renderer fix is root-owned.",
+          "inspectedViews": [
+            "overview",
+            "front",
+            "left",
+            "right",
+            "threshold",
+            "projection-walked"
+          ]
+        },
+        "open": {
+          "map": "FR_SIX_ISLAND_RUIN_VALLEY",
+          "nativeHash": "df7894d2d06efc9679e82388be62adfb2625f2a7e8d33dc12592db53cf400938",
+          "nativeProjectionWalked": true,
+          "edition": "firered",
+          "runtime": "v0.3.96",
+          "renderedVerified": false,
+          "returned": true,
+          "x": 24,
+          "y": 24,
+          "sourceHashes": {
+            "lib/Gen3CaveEntrances.lua": "a45f12e5a11ce33af9d7d3e261ea0430d6b75884500483ae86eb625be7458d95",
+            "lib/Gen3Scene.lua": "309cc38641a5ef05eafca1735bb1392ceb5b769619b03de299bc371b1f01be7a",
+            "lib/Gen3Terrain.lua": "bd8ef6266cb1b7215005ee4d7bb714fbb12a44801190a545ddebed17e6f929fe",
+            "lib/Gen3DottedHoleEntrance.lua": "aabe51364625f556d87a60ac1cc7b0e674935a2204b1f5f702e2f2bb16712c02"
+          },
+          "nativeClosedBump": false,
+          "state": "native_cut_opened",
+          "geometryVerified": true,
+          "renderedGap": "Default shared shadows produce diagonal acne on the braille slab and white columns; identical final source geometry is clean with shadows off. Shared renderer fix is root-owned.",
+          "inspectedViews": [
+            "overview",
+            "front",
+            "left",
+            "right",
+            "threshold",
+            "projection-walked"
+          ]
+        }
+      }
     },
     {
       "nativeCollision": 113,
@@ -1565,7 +1627,69 @@
       "wholeMapCovered": false,
       "nativeHash": "5ce69aeb77e5874046ce532110cd7439201f1527144e4eac00359c641062c929",
       "nativeGeometryAccepted": false,
-      "gap": "Dotted Hole Braille stone door and opened-state recess require separate guarded geometry."
+      "gap": "Default shared shadows produce diagonal acne on the braille slab and white columns; identical final source geometry is clean with shadows off. Shared renderer fix is root-owned.",
+      "nativeGeometryVerified": true,
+      "nativeRenderedGap": "Default shared shadows produce diagonal acne on the braille slab and white columns; identical final source geometry is clean with shadows off. Shared renderer fix is root-owned.",
+      "stateReviews": {
+        "closed": {
+          "renderedVerified": false,
+          "nativeHash": "5ce69aeb77e5874046ce532110cd7439201f1527144e4eac00359c641062c929",
+          "nativeProjectionWalked": true,
+          "nativeClosedBump": true,
+          "runtime": "v0.3.96",
+          "edition": "leafgreen",
+          "returned": false,
+          "sourceHashes": {
+            "lib/Gen3Scene.lua": "309cc38641a5ef05eafca1735bb1392ceb5b769619b03de299bc371b1f01be7a",
+            "lib/Gen3DottedHoleEntrance.lua": "aabe51364625f556d87a60ac1cc7b0e674935a2204b1f5f702e2f2bb16712c02",
+            "lib/Gen3CaveEntrances.lua": "a45f12e5a11ce33af9d7d3e261ea0430d6b75884500483ae86eb625be7458d95",
+            "lib/Gen3Terrain.lua": "bd8ef6266cb1b7215005ee4d7bb714fbb12a44801190a545ddebed17e6f929fe"
+          },
+          "x": 24,
+          "map": "FR_SIX_ISLAND_RUIN_VALLEY",
+          "y": 24,
+          "state": "closed_braille",
+          "geometryVerified": true,
+          "renderedGap": "Default shared shadows produce diagonal acne on the braille slab and white columns; identical final source geometry is clean with shadows off. Shared renderer fix is root-owned.",
+          "inspectedViews": [
+            "overview",
+            "front",
+            "left",
+            "right",
+            "threshold",
+            "projection-walked"
+          ]
+        },
+        "open": {
+          "nativeHash": "df7894d2d06efc9679e82388be62adfb2625f2a7e8d33dc12592db53cf400938",
+          "map": "FR_SIX_ISLAND_RUIN_VALLEY",
+          "nativeClosedBump": false,
+          "edition": "leafgreen",
+          "renderedVerified": false,
+          "returned": true,
+          "runtime": "v0.3.96",
+          "state": "native_cut_opened",
+          "sourceHashes": {
+            "lib/Gen3DottedHoleEntrance.lua": "aabe51364625f556d87a60ac1cc7b0e674935a2204b1f5f702e2f2bb16712c02",
+            "lib/Gen3CaveEntrances.lua": "a45f12e5a11ce33af9d7d3e261ea0430d6b75884500483ae86eb625be7458d95",
+            "lib/Gen3Scene.lua": "309cc38641a5ef05eafca1735bb1392ceb5b769619b03de299bc371b1f01be7a",
+            "lib/Gen3Terrain.lua": "bd8ef6266cb1b7215005ee4d7bb714fbb12a44801190a545ddebed17e6f929fe"
+          },
+          "x": 24,
+          "y": 24,
+          "nativeProjectionWalked": true,
+          "geometryVerified": true,
+          "renderedGap": "Default shared shadows produce diagonal acne on the braille slab and white columns; identical final source geometry is clean with shadows off. Shared renderer fix is root-owned.",
+          "inspectedViews": [
+            "overview",
+            "front",
+            "left",
+            "right",
+            "threshold",
+            "projection-walked"
+          ]
+        }
+      }
     },
     {
       "nativeCollision": 113,
@@ -1656,5 +1780,7 @@
     }
   ],
   "scriptOpenedMouthStatesAcceptedPerEdition": 1,
-  "uniqueEntrancesWithAcceptedNativeGeometryPerEdition": 22
+  "uniqueEntrancesWithAcceptedNativeGeometryPerEdition": 22,
+  "uniqueEntrancesWithVerifiedRenderHeldGeometryPerEdition": 1,
+  "unmodeledStoneEntrancesPerEdition": 7
 }
