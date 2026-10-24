@@ -1,3 +1,13 @@
+# Resumed regional model coverage1.58.0 — 2026-10-23
+
+Merged Kanto b3e82032/f0287c65, Hoenn c5d0607b/15607548/85fe43a9,
+and interiors e7c6e5d7/63b4b51b atop the released API3 main. Source suite486PASS,
+0fail,58external-fixture skips;639production files compile under nativeLuaJIT2.1.
+All5GBA combined-mod entry/returns and current worker source checks pass.
+Exact package validation/release is coordinated at root; source agents remain
+active on next Kanto/Hoenn/interior families. Complete-map coverage remains
+unverified/incomplete. See docs/REGIONAL_SOURCE_INTEGRATION_2026-10-23.md.
+
 # Kanto queued landmarks rechecked on merged API3 — 2026-10-23
 
 Latest official0.3.96 standalone source review after release1.57.12 merge passes
@@ -16,6 +26,19 @@ Merged release1.57.12 API3/current-engine work into the isolated Kanto source
 branch. Preserved queued regional source/door families and the released Museum
 solid staircase. Reverify the merged queued placements before extending missing
 Kanto exterior families. No version bump or release; integration remains root-owned.
+
+# Queued Hoenn exteriors accepted on API3/0.3.96 — 2026-10-23
+
+After merging released main ea14555c, owned standalone .96 QA passes all15 source
+jobs/30 exact Rustboro/Devon/SlateportMart/Museum/Harbor placements, including all
+original cached door states, recessed contacts and failed-upload rollback. All15
+native entry jobs/36 original entrances and normal returns pass across R/E/S,
+with unchanged native grid hashes and zero streaming recovery. Current captured
+contacts/front/side/rear/roof views inspected. Five isolated source fixtures now
+load real SharedModelMesh (15607548). Root combined acceptance remains separate;
+Shipyard stays inactive and original .95 missing-asset gameplay proof stays .95.
+See [current verification](docs/ORAS_QUEUED_EXTERIORS_API3_2026-10-23.md).
+Littleroot GR6/ZO6 own-source houses are now being extracted; no new coverage claimed.
 
 # Portable API3 migration — 2026-10-23
 
