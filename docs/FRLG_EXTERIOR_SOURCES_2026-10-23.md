@@ -1,10 +1,10 @@
 # FR/LG exterior source ledger and Pewter houses — 2026-10-23
 
 The native audit enumerates **426 maps per edition**, including **76 outdoor
-maps**, **132 detected civic assemblies**, and **54 distinct civic families**.
-It separately records **26 source-eligible assemblies** and **106 unmatched
-assemblies per edition**. Nine families have at least one eligible source adapter;
-45 families still have none. The Gym family is partial:2 of11 assemblies per
+maps**, **133 detected civic assemblies**, and **55 distinct civic families**.
+It separately records **75 source-eligible assemblies** and **58 unmatched
+assemblies per edition**. Sixteen families have at least one eligible source adapter;
+39 families still have none. The Gym family is partial:7 of11 assemblies per
 edition have matching sources. These are
 assembly counts, not percentages of whole-game completion.
 
@@ -14,12 +14,18 @@ The canonical identifier-only report is
 metatile/collision/elevation SHA256, pair, dimensions, map type and explicit
 outdoor classification. Every detected assembly has its native drawing hash,
 source archive/model/provenance hashes where available, exact coordinates,
-source eligibility and separate rendered acceptance. The inspected batches accept
-the two Pewter houses, Viridian/Pewter Gyms, Viridian flower-house exterior and
-three Pallet buildings per edition (8 placements). Historical acceptance of the other source
-families is deliberately not inferred from an eligibility census.
+source eligibility and separate rendered acceptance. The current inventory is
+v0.3.96; each accepted assembly retains its actual `renderedRuntime` (currently
+v0.3.95). Separate rejected native reviews never promote visual acceptance. The inspected batches accept
+67 placements per edition: two Pewter houses, Viridian/Pewter Gyms, Viridian
+flower-house exterior, three Pallet buildings, two Lavender ordinary houses and
+the Name Rater tent, plus22 ordinary/tall Saffron blocks across the actual city
+and connection maps, the Saffron Gym plus its closed connection projection, and five plain Celadon
+balcony blocks, ten Marts,16 standard Centers and the ordinary Viridian house. Historical acceptance of other source families is not
+inferred from an eligibility census. The ordinary Viridian source door and shared
+closed-panel repair are recorded in `VIRIDIAN_SOURCE_DOORS_2026-10-23.md`.
 
-There are also **6346 unclassified blocked outdoor cells per edition**. This
+There are also **6324 unclassified blocked outdoor cells per edition**. This
 includes terrain and boundaries; it is not a count of missing buildings. The
 civic census cannot prove the absence of additional source assemblies there.
 Maps without detected civics remain inventory records, not completeness claims.
@@ -29,7 +35,8 @@ Rebuild with `tools/qa/frlg-exterior-source-ledger.lua` on an isolated native
 runtime, then pass both JSONL files to
 `tools/summarize_frlg_exterior_sources.py`. The latter's optional `--accepted`
 files must come from manually inspected native scene/warp verification; it does
-not promote eligible assets by itself.
+not promote eligible assets by itself. Accepted native hashes must still match
+the current inventory, and recorded source IDs must still match eligibility.
 
 ## Newer regional Pewter ordinary houses
 
@@ -110,16 +117,53 @@ and the parent combined production Scene remain separate acceptance work.
 
 ## Exact next gaps
 
+Pewter Museum now passes both native entrances/returns and an exact projected
+triangle/native-mask guard on0.3.96, but remains visually unaccepted: shared
+terrace stairs spread native arch artwork over treads and duplicate coplanar
+caps. See `PEWTER_MUSEUM_NATIVE_REVIEW_2026-10-23.md` and the identifier-only
+`docs/coverage/frlg-native-exterior-reviews-2026-10-23.json`.
+
 The table lists every unmatched family and map. The regional Viridian and Pewter Gyms now have guarded, inspected adapters;
 see `HGSS_KANTO_GYMS_2026-10-23.md`. The native flower-house variant is recorded
 in `VIRIDIAN_FLOWER_HOUSE_2026-10-23.md`. Other Gym locations remain unmatched.
 
-The twelve Mart drawings per edition include eleven real entrances and one
-Saffron connection projection whose original door permission is blocked. The
-local newer HGSS Viridian Mart has a left entrance and tall freestanding east
-sign. Uniformly aligning it to FR/LG's right native entrance constrains its
-physical body to about22px inside the64px native width. That is an inadequate
-fit. An explicit faithful aperture/sign adaptation or better matching source is
-required; the whole source is not blindly placed. The public catalog returned
-HTTP403 during source discovery; existing downloaded regional archives remain
-available, so local regional work can continue.
+The twelve detected Mart drawings now have a guarded source adapter with an
+explicit native portal/sign adaptation, preserving original dimensions, UVs and
+native footprints. All11 real entrances/returns per edition pass; ten drawings
+per edition are accepted. The two Saffron copies retain a shared grass-versus-
+street donor gap. See `HGSS_MARTS_2026-10-23.md`. Regional source downloads still
+need normal browser verification where Cloudflare blocks access; downloaded
+local sources remain usable.
+
+All18 detected standard Center drawings now have source eligibility, including
+Vermilion's exact water-composite header and the blocked Saffron connection.
+Seventeen native entrances/returns per edition and LG missing-PNG fallback for
+all18 pass. Sixteen Centers per edition are accepted; both Saffron placements
+retain native-yellow-street versus shared-grass donor gaps. Original glass now
+slides as source leaves rather than overlapping a native animation card. See
+`HGSS_CENTER_DOORS_2026-10-23.md`. The wider One Island complex still needs its
+own source/inventory treatment.
+
+Lavender ordinary houses at(8,8)/(3,13) now have matching HGSS source and native
+acceptance; see `docs/LAVENDER_HOUSES_2026-10-23.md`. The distinct Name Rater header
+at(8,13), omitted by the old recipe, is now classified and uses its actual HGSS
+tent: see `docs/LAVENDER_NAME_RATER_2026-10-23.md`. Its new assembly increases the
+census denominator; Tower and further unclassified cells remain source gaps.
+
+Cerulean Gym now has a matching regional HGSS source and passed native model/door
+review, but its shared floor donor is under review (native lawn versus current
+yellow path). Its `renderedAccepted` stays false until that assessment resolves;
+`renderedGap`/`rendered_gap` distinguish this from unavailable source families.
+
+Saffron ordinary/tall nonenterable blocks now retain their matching regional
+source models; see `SAFFRON_BLOCKS_2026-10-23.md`. Low/enterable Saffron houses,
+Silph Co. remains a distinct unmatched source drawing. The genuine Fighting
+Dojo source now passes native geometry/entry checks but remains unaccepted
+pending its shared sand/grass-versus-street ground donor; see
+`SAFFRON_DOJO_2026-10-23.md`. The
+Saffron Gym and its closed connection projection now have matching sources.
+
+Celadon plain block variants now have matching source and native acceptance; see
+`CELADON_BLOCKS_2026-10-23.md`. Available-but-rejected source candidates carry
+explicit archive/model hashes and measured fit gaps in
+`docs/coverage/frlg-exterior-candidates-2026-10-23.json` and the canonical map rows.

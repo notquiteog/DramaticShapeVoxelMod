@@ -1,6 +1,7 @@
 local data=dofile('lib/ImportedHomeFurnitureData.lua')
 for name,model in pairs(dofile('lib/ImportedOldaleFurnitureData.lua'))do data[name]=model end
 for name,model in pairs(dofile('lib/ImportedOldaleFridgeData.lua'))do data[name]=model end
+for name,model in pairs(dofile('lib/ImportedInstitutionServerData.lua'))do data[name]=model end
 local V={mod={read=function(path)local f=io.open(path,'rb');if not f then return end;local s=f:read('*a');f:close();return s end}}
 local modules={SceneryModelData={},ModelInstances={},BuildBudget={check=function()end}}
 V.require=function(name)return assert(modules[name],name)end
@@ -9,6 +10,7 @@ local expected={oras_littleroot_dining_table={100,190,32,32},oras_littleroot_fri
 expected.oras_oldale_checked_table={236,488,32,32}
 expected.oras_oldale_neighbor_table={236,488,32,32}
 expected.oras_oldale_refrigerator={166,366,16,16,.85,1}
+expected.bdsp_galactic_server={36,42,16,16,.79}
 for name,q in pairs(expected)do
  local m=assert(data[name]);local n=0;local edges={};local faces={}
  assert(#m.parts[1].indices/3==q[1],'source triangles changed')

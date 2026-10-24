@@ -1065,9 +1065,17 @@ function M.draw(id,A)
   -- The original yellow archive box on each freestanding shelf is a
   -- separate closed object, with a lid and recessed drawer handle.
   local gold=T(10,8)
+  -- Uniformly fit this independent box around its fixed support point.
+  -- The former 35-pixel top crossed the native 32-pixel room ceiling.
+  -- Keep the source crop, lid/handle proportions and case geometry intact.
+  local oldB,oldS=B,S
+  local function fitted(v)return{10+(v[1]-10)*.6,26.5+(v[2]-26.5)*.6,26+(v[3]-26)*.6}end
+  B=function(l,b,n,r,h,s,uv)local a,c=fitted{l,b,n},fitted{r,h,s};return oldB(a[1],a[2],a[3],c[1],c[2],c[3],uv)end
+  S=function(x,y,w,h,a,b,c,d)return oldS(x,y,w,h,fitted(a),fitted(b),fitted(c),fitted(d))end
   B(5,26.5,20,15,34,32,gold);B(4.5,34,19.5,15.5,35,32.5,gold)
   front({6,4,9,10},5,26.5,15,34,32.02)
   B(8,29,32,12,29.6,32.4,T(10,13))
+  B,S=oldB,oldS
  elseif id=='em_lab_books' then
   -- A freestanding double shelf: solid back and end panels, individually
   -- raised books and readable native spines on both open tiers.

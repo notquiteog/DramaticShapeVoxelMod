@@ -1,55 +1,87 @@
 #!/usr/bin/env python3
 """Select original ORAS Comfortable Bed geometry; source archives stay scratch."""
-import argparse, hashlib, io, json, zipfile
+import argparse, collections, hashlib, io, json, math, zipfile
 from pathlib import Path, PurePosixPath
 from PIL import Image
 from import_scenery_models import obj, materials, normalize, safe_path
 from import_oras_grass import lua
 
-def closures():
-    wood=[];cloth=[]
-    def poly(out,points,xy):
-        uv=[(xy[0]+.5)/128,(xy[1]+.5)/128]
-        for i in range(1,len(points)-1):
-            for p in (points[0],points[i],points[i+1]):out.append(list(p)+uv+[1])
-    def panel(points):poly(wood,points,(20,20))
-    def lining(points):poly(cloth,points,(100,50))
-    # Curved rear-board caps follow the original exported outer rims.
-    panel([[-.9003,.0003,-1.468652],[.9332,.0003,-1.468652],
-           [.9332,.7871,-1.468652],[.7562,.8934,-1.468652],
-           [.5125,.9679,-1.468652],[.2403,1.0228,-1.468652],
-           [.0164,1.035193,-1.468652],[-.2075,1.0228,-1.468652],
-           [-.4797,.9679,-1.468652],[-.7234,.8934,-1.468652],[-.9003,.7871,-1.468652]])
-    panel([[-.9003,.0003,-1.468652],[.9332,.0003,-1.468652],
-           [.9332,.0003,-1.35844],[-.9003,.0003,-1.35844]])
-    rear=[[-.975718,.0756,1.3751],[.95806,.0756,1.3751],
-          [.95806,.5525,1.3751],[.9182,.646,1.3751],[.8165,.7003,1.3751],
-          [.5782,.746,1.3751],[.2741,.7776,1.3751],[-.0088,.7882,1.3751],
-          [-.2917,.7776,1.3751],[-.5959,.746,1.3751],[-.8342,.7003,1.3751],
-          [-.9358,.646,1.3751],[-.975718,.5525,1.3751]]
-    panel(rear)
-    for a,b in [(-.975718,-.8639),(.8462,.95806)]:
-        panel([[a,-.006201,1.3751],[b,-.006201,1.3751],[b,.0756,1.3751],[a,.0756,1.3751]])
-    for outline in [[(-.975718,1.3751),(-.8639,1.3751),(-.8639,1.4542),(-.8737,1.4843),(-.9198,1.494388),(-.9659,1.4843),(-.975718,1.4542)],
-                    [(.8462,1.3751),(.95806,1.3751),(.95806,1.4542),(.9483,1.4843),(.9021,1.494388),(.856,1.4843),(.8462,1.4542)]]:
-        panel([[x,-.006201,z]for x,z in outline])
-    panel([[-.8639,.0756,1.3751],[.8462,.0756,1.3751],[.8462,.0756,1.4371],[-.8639,.0756,1.4371]])
-    # Original base/frame underside, preserving space below the bed and its
-    # leg silhouette. Blue blanket and white pillow keep their original tops.
-    lining([[x,.101,z]for x,z in [(-.5939,-1.3311),(.6133,-1.3311),(.7915,-1.2661),(.8314,-1.135),
-            (.8314,1.128),(.7915,1.2921),(-.7721,1.2921),(-.8119,1.128),(-.8119,-1.135),(-.7721,-1.2661)]])
-    lining([[x,.2048,z]for x,z in [(-.8889,-.826),(.9185,-.826),(.9236,-.7846),(.9407,-.6435),
-            (.9185,-.5302),(.8963,-.4632),(.9185,-.3843),(.9574,.2941),(.9185,1.4272),
-            (-.8889,1.4272),(-.9277,.2941),(-.8889,-.3843),(-.8666,-.4632),(-.8889,-.5302),(-.911,-.6435),(-.8939,-.7846)]])
-    for z,top in [(-.826,[(-.885,.3351),(-.7822,.4807),(-.471,.5451),(-.2745,.5539),(.0019,.5471),(.4749,.5318),(.8119,.5163),(.9147,.3351)]),
-                  (1.4272,[(-.885,.3504),(-.7822,.496),(-.471,.5604),(-.2745,.5691),(.0019,.5624),(.4749,.5163),(.8119,.5163),(.9147,.3504)])]:
-        lining([[-.8889,.2048,z],[.9185,.2048,z]]+[[x,y,z]for x,y in reversed(top)])
-    lining([[x,.4357,z]for x,z in [(.3886,-.7393),(.4404,-.8814),(.4615,-1.0208),(.4404,-1.1602),(.3886,-1.3023),
-             (.2158,-1.3278),(.0016,-1.3385),(-.2125,-1.3278),(-.3854,-1.3023),(-.4372,-1.1602),
-             (-.4583,-1.0208),(-.4372,-.8814),(-.3854,-.7393),(-.2125,-.7138),(.0016,-.7035),(.2158,-.7138)]])
-    return [{'name':'authored_'+name,'material':'authored_'+name,'texture':'sutekinabed.png',
-             'diffuse':[.64,.64,.64],'opacity':1,'vertices':vertices,'wrapS':'repeat','wrapT':'repeat','authored':True}
-            for name,vertices in [('board_rear_and_feet',wood),('bedding_and_base_undersides',cloth)]]
+
+def closures(source):
+    vertices=source['vertices'];points={};edges=collections.Counter();direction={}
+    if len(vertices)!=1602:raise ValueError('Original 534-triangle bed stream changed')
+    for i in range(0,len(vertices),3):
+        q=[]
+        for v in vertices[i:i+3]:k=tuple(v[:3]);points.setdefault(k,v[:3]);q.append(k)
+        for a,b in zip(q,q[1:]+q[:1]):key=tuple(sorted((a,b)));edges[key]+=1;direction[key]=(a,b)
+    if any(n>2 for n in edges.values()):raise ValueError('Nonmanifold original bed')
+    adjacent={};loops=[]
+    for e,n in edges.items():
+        if n==1:
+            a,b=direction[e]
+            if a in adjacent:raise ValueError('Branching original bed rim')
+            adjacent[a]=b
+    while adjacent:
+        at=start=next(iter(adjacent));loop=[]
+        while True:
+            loop.append(at);at=adjacent.pop(at)
+            if at==start:break
+        loops.append(loop)
+    if sorted(map(len,loops))!=[16,18,32,32,34]:raise ValueError('Original bed rims changed')
+    def cross(a,b):return[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]
+    def dot(a,b):return sum(x*y for x,y in zip(a,b))
+    def delta(a,b):return[a[k]-b[k]for k in range(3)]
+    original=[]
+    for i in range(0,len(vertices),3):
+        ps=[v[:3]for v in vertices[i:i+3]];normal=cross(delta(ps[1],ps[0]),delta(ps[2],ps[0]));length=math.sqrt(dot(normal,normal));normal=[x/length for x in normal]
+        original.append((ps,normal,dot(normal,ps[0])))
+    def overlapping(ps):
+        normal=cross(delta(ps[1],ps[0]),delta(ps[2],ps[0]));length=math.sqrt(dot(normal,normal));normal=[x/length for x in normal]
+        for qs,n,d in original:
+            if abs(dot(n,normal))<1-1e-9 or any(abs(dot(n,p)-d)>1e-7 for p in ps):continue
+            axis=max(range(3),key=lambda k:abs(n[k]));dims=[k for k in range(3)if k!=axis]
+            flat=lambda p:(p[dims[0]],p[dims[1]])
+            polygon=list(map(flat,ps));clip=list(map(flat,qs))
+            side=lambda u,v,w:(v[0]-u[0])*(w[1]-u[1])-(v[1]-u[1])*(w[0]-u[0])
+            sign=1 if side(*clip)>0 else -1
+            for u,v in zip(clip,clip[1:]+clip[:1]):
+                result=[]
+                for a,b in zip(polygon,polygon[1:]+polygon[:1]):
+                    da,db=side(u,v,a)*sign,side(u,v,b)*sign
+                    if da>=-1e-11:result.append(a)
+                    if da>0>db or da<0<db:
+                        t=da/(da-db);result.append(tuple(a[k]+(b[k]-a[k])*t for k in range(2)))
+                polygon=result
+                if len(polygon)<3:break
+            size=abs(sum(a[0]*b[1]-b[0]*a[1]for a,b in zip(polygon,polygon[1:]+polygon[:1])))/2
+            if size>1e-10:return True
+        return False
+    out=[]
+    for number,points in enumerate(loops):
+        def area(i,k,j):
+            a,b,c=points[i],points[k],points[j];u=[b[d]-a[d]for d in range(3)];v=[c[d]-a[d]for d in range(3)]
+            return math.sqrt(sum(x*x for x in (u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0])))/2
+        n=len(points);cost={};split={}
+        for i in range(n-1):cost[i,i+1]=0
+        for span in range(2,n):
+            for i in range(n-span):
+                j=i+span;best=math.inf
+                for k in range(i+1,j):
+                    size=area(i,k,j)
+                    if size<1e-12 or overlapping([points[i],points[k],points[j]]):continue
+                    candidate=cost.get((i,k),math.inf)+cost.get((k,j),math.inf)+size
+                    if candidate<best:best=candidate;split[i,j]=k
+                cost[i,j]=best
+        if not math.isfinite(cost[0,n-1]):raise ValueError('Cannot close original bed rim')
+        triangles=[]
+        def visit(i,j):
+            if j-i<2:return
+            k=split[i,j];triangles.append((i,j,k));visit(i,k);visit(k,j)
+        visit(0,n-1)
+        xy=(20,20)if n in (18,34)else(100,50);uv=[(xy[0]+.5)/128,(xy[1]+.5)/128]
+        rows=[list(points[i])+uv+[1]for t in triangles for i in t]
+        out.append(dict(name='authored_exact_rim_closure_'+str(number),material='authored_exact_rim',texture='sutekinabed.png',diffuse=[.64,.64,.64],opacity=1,vertices=rows,wrapS='repeat',wrapT='repeat',authored=True))
+    return out
 
 
 def convert(path, output):
@@ -62,8 +94,8 @@ def convert(path, output):
         source,fixes=obj(raw,materials(z.read('Comfortable Bed/sutekinabed.mtl')),names)
         parts=[p for p in source if p['material']=='sutekinabed.png']
         if len(parts)!=1:raise ValueError('Unexpected bed source material split')
-        parts.extend(closures())
-        fixes.append('Separately authored board rear, foot-bottom, base, blanket-end/underside and pillow-underside caps follow original rims; source534 triangles and source UV/PNG unchanged.')
+        parts.extend(closures(parts[0]))
+        fixes.append('Five original open rims are closed with 122 authored triangles at their exact source vertices. Minimum-area boundary triangulation excludes triangles overlapping original source planes. Original534 triangles, positions, UV and PNG are unchanged; former approximate concave fan caps are replaced.')
         meta=normalize(parts)
         folder=output/'assets/scenery/interiors/oras_bed';folder.mkdir(parents=True,exist_ok=True)
         textures={}
@@ -74,6 +106,7 @@ def convert(path, output):
             p['texture']='assets/scenery/interiors/oras_bed/'+name
             p['role']='structure';p['alphaMode']='cutout'
         data={'oras_comfortable_bed':{'parts':parts,'anchors':{},'revision':1}}
+        (output/'lib').mkdir(parents=True,exist_ok=True)
         (output/'lib/ImportedInteriorBedData.lua').write_text('-- Generated by tools/import_interior_bed.py; attribution is beside the selected texture.\nreturn '+lua(data)+'\n')
         report={'asset':294940,'title':'Comfortable Bed','game':'Pokémon Omega Ruby / Alpha Sapphire','author':'Hallow','submitted':'2015-11-15',
                 'sourcePage':'https://models.spriters-resource.com/3ds/pokemonomegarubyalphasapphire/asset/294940/',

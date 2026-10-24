@@ -1,0 +1,118 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "sources": [
+    {
+      "nativeLink": "ZO227 -> AD114 -> MM168 -> GR510",
+      "model": "t101r0301_00_00",
+      "modelBchSha256": "88c0fe278846a20cb8092c275567b98f1d2a5266d7e532966ac5d87bf3a5993e",
+      "textureBchSha256": "8a5c8b608b90d257a485c081e63c170a2babd54e157054fdb3f274ae03b6e158",
+      "bookGroups": [
+        64,
+        68,
+        72,
+        104,
+        108,
+        134,
+        138,
+        142,
+        146,
+        150,
+        166,
+        170,
+        174,
+        178,
+        182,
+        186,
+        190,
+        194
+      ],
+      "caseGroups": [
+        0,
+        32,
+        40,
+        610,
+        614,
+        626,
+        630
+      ]
+    },
+    {
+      "nativeLink": "ZO450 -> AD200 -> MM352 -> GR743",
+      "model": "c103r0701_00_00",
+      "modelBchSha256": "2e58bae81d3799663f45f8f1ebbd4cdd43b4a73941fdc0e1d762ccc420076f41",
+      "textureBchSha256": "30c3e2372c9cb2193fa16285f4cda30cdeda36798fb21dc3b06d6c186f8a2ed9",
+      "submesh": 10,
+      "group": 0,
+      "triangles": 10
+    }
+  ],
+  "originalTriangles": 820,
+  "authoredClosureTriangles": 274,
+  "bookGroupXRepairs": {
+    "64": 0.0,
+    "142": 0.012593994140615905,
+    "138": 0.07119323730466931,
+    "134": 0.10498168945309772,
+    "72": -2.802990722656233,
+    "68": -0.04019836425780454,
+    "150": -0.08560302734375114,
+    "146": -0.07099487304688523,
+    "104": -0.5240197753905989,
+    "178": -0.44241027832029545,
+    "174": -0.41881469726561704,
+    "170": -0.19920471191406364,
+    "166": -0.17960693359376023,
+    "182": 0.11361267089844773,
+    "186": 0.16220214843750114,
+    "194": 0.0,
+    "108": -0.12558105468750114,
+    "190": -0.06598999023438523
+  },
+  "cartonUniformScale": 1.4285974036469005,
+  "textures": {
+    "t101r0301_book": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "7fb32271ed0cac1d2d83f3e6322598f16b70271c825a8a2594f1ad8b58c737f0",
+      "pngSha256": "1310193c2ba7221b4e532fbd974764c3b2dbd75b1157f0d74c553c8e63f9cbcc",
+      "path": "assets/scenery/oras-birch-bookcase/t101r0301_book.png"
+    },
+    "t101r0301_obj01": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "e6c3b8ca44cbe64edafb14aee698f331a42988942415e6b10e852cb4fcc73e22",
+      "pngSha256": "5c55400045d67e8be5ec3abec7760d5fdd0d14a246b7f663d4e81e5c05ccdec7",
+      "path": "assets/scenery/oras-birch-bookcase/t101r0301_obj01.png"
+    },
+    "box01": {
+      "size": [
+        128,
+        64
+      ],
+      "rgbaSha256": "1ff56e86a86e33625cb79b29a1de9b883aca7e476fdd03921cd423bd8119effb",
+      "pngSha256": "c26b36053aa555e8ff3b572a27e937184ff256d7d0059e57764488407c38dfe9",
+      "path": "assets/scenery/oras-birch-freecase/box01.png"
+    }
+  },
+  "sourceFront": "+Z",
+  "sourceBounds": [
+    -213.53419494628906,
+    0.0,
+    -105.01239776611328,
+    -145.55780029296875,
+    57.15013124600888,
+    -72.77037048339844
+  ],
+  "origin": [
+    -179.5459976196289,
+    0.0,
+    -88.89138412475586
+  ],
+  "uniformDivisor": 67.97639465332031,
+  "processing": "Complete original double-bay case, four bins, four shelves, forty-four books and an independent original storage carton. Original UV/PNG/triangles retained, vertex RGBA lighting removed. Whole book groups translate only in X inside their original bays to remove actual coplanar/intersecting contacts; original leaning angles and proportions retained. Exact original book/case/bin rims closed, including all collinear source vertices and bin underside tilt; buried shelf-back/end caps omitted. Carton uniformly fitted as an independent ten-pixel-wide item resting exactly on the original case top; its original open base receives no duplicate plane. Native full 32x32 blocked-body footprint and floor recess; no source floor/shadow/light geometry."
+}

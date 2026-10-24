@@ -3,6 +3,16 @@
 local V=...
 local M={}
 local specs={
+ {kind='saffronPsychic',building='Gen3ImportedSaffronPsychic',doors='Gen3SaffronPsychicDoors',marker='importedSaffronPsychic'},
+ {kind='saffronCopycat',building='Gen3ImportedSaffronCopycat',doors='Gen3SaffronCopycatDoors',marker='importedSaffronCopycat'},
+ {kind='viridianHouses',building='Gen3ImportedViridianHouses',doors='Gen3ViridianFlowerHouseDoors',marker='importedViridianHouse'},
+ {kind='kantoCenters',building='Gen3ImportedKantoCenters',doors='Gen3KantoCenterDoors',marker='importedKantoCenter'},
+ {kind='hgssMarts',building='Gen3ImportedHGSSMarts',doors='Gen3HGSSMartDoors',marker='importedHGSSMart'},
+ {kind='celadonBlocks',building='Gen3ImportedCeladonBlocks',marker='importedCeladonBlock'},
+ {kind='saffronDojo',building='Gen3ImportedSaffronDojo',doors='Gen3SaffronDojoEntrance',marker='importedSaffronDojo'},
+ {kind='saffronBlocks',building='Gen3ImportedSaffronBlocks',marker='importedSaffronBlock'},
+ {kind='lavenderNameRater',building='Gen3ImportedLavenderNameRater',doors='Gen3LavenderTentEntrance',marker='importedLavenderNameRater'},
+ {kind='lavenderHouses',building='Gen3ImportedLavenderHouses',doors='Gen3LavenderHouseDoors',marker='importedLavenderHouse'},
  {kind='viridianFlowerHouses',building='Gen3ImportedViridianFlowerHouses',doors='Gen3ViridianFlowerHouseDoors',marker='importedViridianFlowerHouse'},
  {kind='pewterHouses',building='Gen3ImportedPewterHouses',doors='Gen3PewterHouseDoors',marker='importedPewterHouse'},
  {kind='hgssGyms',building='Gen3ImportedHGSSGyms',doors='Gen3HGSSGymDoors',marker='importedHGSSGym'},
@@ -26,14 +36,15 @@ function M.build(g,cells,newMesh,parts)
 end
 function M.draw(g,anim,draw)
  local s=owner(g);if not s then return false end
+ if not s.doors then return true end
  return V.require(s.doors).draw(g,anim,draw)
 end
 function M.release(g)
  local s=owner(g);if not s then return false end
- V.require(s.doors).release(g);local a=V.require(s.building);if a.release then a.release(g)end;g[s.marker]=nil;return true
+ if s.doors then V.require(s.doors).release(g)end;local a=V.require(s.building);if a.release then a.release(g)end;g[s.marker]=nil;return true
 end
 function M.ownsDoor(g,x,y)
- local s=owner(g);return s and V.require(s.doors).ownsDoor(g,x,y)or false
+ local s=owner(g);return s and s.doors and V.require(s.doors).ownsDoor(g,x,y)or false
 end
 function M.doorSurface(g,x,y)
  local s=owner(g);if not s then return end

@@ -1,3 +1,18 @@
+## 1.58.0 — Regional source buildings and interiors
+
+- Add source HGSS Lavender, Saffron and Celadon buildings, regional Gyms/Marts,
+  original Center panels, Copycat and Mr Psychic doors in FireRed/LeafGreen.
+- Add original ORAS Rustboro homes/school/Devon and Slateport Mart, Oceanic
+  Museum and Harbor, including native entrances and source door poses.
+- Add original ORAS cupboards, sinks, bookcases, laboratory cases/cartons,
+  floor cushions and memorials, plus source BDSP institutional server racks.
+- Close source rear/underside geometry, remove overlapping source/contact
+  surfaces and keep native ground, walkability, walls and entrances intact.
+- Preserve Portable API3, standalone compatibility and HD2D actor/flower defaults.
+
+This integrates reviewed source families; whole-map/game coverage remains in
+progress. See [scope and verification](docs/REGIONAL_SOURCE_INTEGRATION_2026-10-23.md).
+
 ## 1.57.11 — Pewter Museum stone steps
 
 FireRed and LeafGreen’s museum approach now has two shallow solid steps meeting

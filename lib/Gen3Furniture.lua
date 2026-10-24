@@ -88,6 +88,8 @@ for _,r in ipairs(Tower.recipes)do recipes[#recipes+1]=r end
 Designed.install(recipes)
 local Hoenn=V and V.require('Gen3Hoenn') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3Hoenn.lua')
 for _,r in ipairs(Hoenn.recipes)do recipes[#recipes+1]=r end
+local Memorials=V and V.require('Gen3MemorialFurniture')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3MemorialFurniture.lua')
+for _,r in ipairs(Memorials)do recipes[#recipes+1]=r end
 local Kanto=V and V.require('Gen3KantoHomes')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3KantoHomes.lua')
 Kanto.install(recipes)
 local RS=V and V.require('Gen3RubySapphire') or dofile((os.getenv('DS_MOD_PATH') or '.')..'/lib/Gen3RubySapphire.lua')
@@ -96,6 +98,9 @@ local RSInstitutions=V and V.require('Gen3RSInstitutions') or dofile((os.getenv(
 for _,r in ipairs(RSInstitutions.recipes)do recipes[#recipes+1]=r end
 local Research=V and V.require('Gen3ResearchRooms')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3ResearchRooms.lua')
 Research.install(recipes)
+for _,r in ipairs(recipes)do if r.name=='birch_free_books'or r.name=='birch_free_books_end'then
+ r.joinedBoxes=true;r.groundInset=.025
+end end
 local Route=V and V.require('Gen3RouteRooms')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3RouteRooms.lua')
 Route.install(recipes)
 local Early=V and V.require('Gen3EarlyProps')or dofile((os.getenv('DS_MOD_PATH')or'.')..'/lib/Gen3EarlyProps.lua')

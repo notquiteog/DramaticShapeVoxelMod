@@ -1,0 +1,181 @@
+{
+  "asset": 592877,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592877/",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Saffron City/Saffron City.dae",
+  "geometry": "ya_gym-mesh",
+  "doorGeometry": "gym_door_006-mesh",
+  "doorOffset": [
+    0.0059,
+    -0.67383,
+    22.8867
+  ],
+  "archiveSha256": "f7597b3bc790147e55b98b7fcef935e6dae731479d3e26083caaf3e919c9fe1a",
+  "sourceModelSha256": "789316266c83cc38c036cd4000da572e4c8127cad886c4485571d5549f0b3966",
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -55.66992,
+      1.604297,
+      -41.39258,
+      56.04883,
+      61.52734,
+      29.39258
+    ],
+    "sourceOrigin": [
+      0.18945500000000237,
+      1.604297,
+      -6.000000000000002
+    ],
+    "sourceUnitSpan": 111.71875,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.3168007160839161,
+      0.5,
+      0.5363740911888112,
+      0.3168007160839161
+    ]
+  },
+  "originalBounds": [
+    -55.66992,
+    1.0,
+    -41.39258,
+    61.84375,
+    61.52734,
+    34.38672
+  ],
+  "originalTriangles": 285,
+  "processedTriangles": 328,
+  "excludedTriangles": 11,
+  "uvRepairs": [
+    {
+      "part": "ya_gym-mesh:lambert12_003-material",
+      "sourceTriangleIndices": [
+        41,
+        103
+      ],
+      "paintUV": [
+        0.796875,
+        0.5
+      ],
+      "reason": "Existing rear tower quad projected the complete facade atlas; continue the original neutral side-wall paint strip. Positions and all other source UVs unchanged."
+    }
+  ],
+  "closure": "Measured rear wall/belt/roof returns, both roof soffits, foundation. No source door/window/sign/roof silhouette removed; original source shadow triangles omitted.",
+  "nativePlacement": "Gen3ImportedHGSSGyms exact native drawing/permission adapter, with triangle-mask clearance and original paired door geometry; source eligibility and rendered acceptance are tracked separately.",
+  "textures": {
+    "kn_gym_c.png": {
+      "sha256": "f4800e2a09aa7d8c1f537ef586a118217be6eb7cc4ad77e2151cebe384c48315",
+      "bytes": 149
+    },
+    "ya_gym_b.png": {
+      "sha256": "dce08ae844e322cbe3b0b75e8d407770d4bd36de1ce8915ffcc7a17ae59aa633",
+      "bytes": 572
+    },
+    "kn_gym_a.png": {
+      "sha256": "d7693cf924bc9b4ab7cd177506b85b29a45afc9e1863905a545f31aa9849991d",
+      "bytes": 275
+    },
+    "gym_door.png": {
+      "sha256": "33c2a96dbe73a0eec83f3cf84429fbbf29b4b10a3eac81e1b4874b95ef31d6c8",
+      "bytes": 258
+    }
+  },
+  "parts": [
+    {
+      "name": "ya_gym-mesh:lambert14_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 6
+    },
+    {
+      "name": "ya_gym-mesh:lambert15_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 14
+    },
+    {
+      "name": "ya_gym-mesh:lambert13_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 20
+    },
+    {
+      "name": "ya_gym-mesh:lambert11_003-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 50
+    },
+    {
+      "name": "ya_gym-mesh:lambert5_006-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 54
+    },
+    {
+      "name": "ya_gym-mesh:lambert12_003-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 122
+    },
+    {
+      "name": "gym_door_006-mesh:gym_door_005-material",
+      "role": "source_door",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "authored_rear_wall",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_blue_belt",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_roof_return",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_roof_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_entrance_tower_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 34
+    }
+  ]
+}

@@ -2,11 +2,16 @@ local modules={SceneryModelData=dofile('lib/SceneryModelData.lua'),PewterMuseumD
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
 modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
+modules.Gen3ImportedGyms=assert(loadfile('lib/Gen3ImportedGyms.lua'))(V)
 local P=assert(loadfile('lib/Gen3ImportedPewterMuseum.lua'))(V)
 local recipe;for _,r in ipairs(dofile('data/gen3_exteriors.lua'))do if r.name=='pewter_museum'then recipe=r end end
 local g={cx=12,cy=0,width=16,depth=7,family=recipe.name,pair=recipe.pair,custom=recipe,groundHeight=2};local cells={}
 for y,row in ipairs(P.rows)do for x,mid in ipairs(row)do cells[(g.cx+x-1)..':'..(g.cy+y-1)]={pair=g.pair,mid=mid,base=2,collision=P.permission(x-1,y-1),civic=P.owned(x-1,y-1)and g or nil}end end
-assert(P.eligible(g,cells));local c=cells['12:0']
+assert(P.eligible(g,cells));assert(P.register());local parts=assert(S.vertices(P.id,{width=256,depth=112,padding=.25,groundInset=.05,anchor='door',targetX=88,targetZ=110}));assert(P.clearance(g,cells,parts))
+-- A triangle whose vertices are blocked can still cross the native wing's
+-- walkable header gap; the exact clipper must reject its interior.
+assert(not P.clearance(g,cells,{{vertices={{170,2,20},{240,2,40},{170,2,40}},indices={1,2,3}}}),'triangle cannot bridge native walkable wing header')
+local c=cells['12:0']
 c.mid=0;assert(not P.eligible(g,cells));c.mid=P.rows[1][1]
 c.base=3;assert(not P.eligible(g,cells));c.base=2
 c.boundary='mountain';assert(not P.eligible(g,cells));c.boundary=nil

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regional HGSS Viridian/Pewter Gym sources. No automatic native placement."""
+"""Regional HGSS Viridian/Pewter/Cerulean/Saffron Gym sources. No automatic native placement."""
 import argparse,copy,hashlib,json
 from pathlib import Path,PurePosixPath
 from import_hgss_center import archive_items
@@ -10,7 +10,24 @@ from scenery_closures import hull
 SPECS={
  'hgss_viridian_gym':(592881,'to_gym_001-mesh','gym_door_007-mesh',[-.0508,-1.24609,22.8867],'to_gym_b.png'),
  'hgss_pewter_gym':(592849,'nbc_gym_001-mesh','gym_door_005-mesh',[.0059,-.67383,22.88672],'nbc_gym_b.png'),
+ 'hgss_saffron_gym':(592877,'ya_gym-mesh','gym_door_006-mesh',[.0059,-.67383,22.8867],'ya_gym_b.png'),
+ 'hgss_cerulean_gym':(592833,'ha_gym-mesh','gym_door_001-mesh',[-.05078,-.67383,22.88672],'ha_gym_b.png'),
 }
+def repair_rear_tower_uvs(parts):
+ """Repair only the rear tower quad's atlas-wide exporter projection."""
+ repairs=[]
+ for p in parts:
+  if p['texture']!='kn_gym_a.png':continue
+  touched=[]
+  for start in range(0,len(p['vertices']),3):
+   face=p['vertices'][start:start+3]
+   if all(v[2]<-40 and 35.4<v[1]<44.2 for v in face):
+    touched.append(start//3)
+    for v in face:v[3],v[4]=25.5/32,.5
+  if touched:repairs.append({'part':p['name'],'sourceTriangleIndices':touched,'paintUV':[25.5/32,.5],'reason':'Existing rear tower quad projected the complete facade atlas; continue the original neutral side-wall paint strip. Positions and all other source UVs unchanged.'})
+ assert sum(len(q['sourceTriangleIndices'])for q in repairs)==2,'unreviewed rear tower topology'
+ return repairs
+
 def close_gym(parts,wall_texture):
  source=next(p for p in parts if p['texture']=='kn_gym_a.png');band_source=next(p for p in parts if p['texture']==wall_texture and len(p['vertices'])//3==50);out=[]
  def part(name,base=None):
@@ -43,13 +60,13 @@ def convert(archives,output):
  for key,(asset,body,door,offset,wall_texture)in SPECS.items():
   rawzip=(archives/(str(asset)+'.zip')).read_bytes();items,repairs=archive_items(rawzip);source=next(n for n in items if n.endswith('.dae'));raw=items[source]
   parts=extract(raw,{key:body},{key:(door,offset)})[key];original=copy.deepcopy(parts)
-  parts=[p for p in parts if p['texture']!='h_kage.png'];parts.extend(close_gym(parts,wall_texture));meta=normalize(parts);original_meta=normalize(original)
+  parts=[p for p in parts if p['texture']!='h_kage.png'];uv_repairs=repair_rear_tower_uvs(parts);parts.extend(close_gym(parts,wall_texture));meta=normalize(parts);original_meta=normalize(original)
   names={PurePosixPath(n).name:n for n in items};dest=output/'assets/scenery/hgss-kanto-gyms'/key;dest.mkdir(parents=True,exist_ok=True);textures={}
   for p in parts:
    name=p['texture'];blob=items[names[name]];(dest/name).write_bytes(blob);textures[name]={'sha256':hashlib.sha256(blob).hexdigest(),'bytes':len(blob)};p['texture']='assets/scenery/hgss-kanto-gyms/'+key+'/'+name
   door_vertices=[v for p in parts if p['role']=='source_door'for v in p['vertices']];door_anchor=[(min(v[i]for v in door_vertices)+max(v[i]for v in door_vertices))/2 for i in range(3)];door_anchor[1]=min(v[1]for v in door_vertices);door_anchor[2]=max(v[2]for v in door_vertices)
   data[key]={'parts':[p for p in parts if p['role']!='source_door'],'doorParts':[p for p in parts if p['role']=='source_door'],'bounds':meta['bounds'],'anchors':{'door':door_anchor}}
-  reports[key]={'asset':asset,'sourcePage':f'https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/{asset}/','game':'Pokémon HeartGold / SoulSilver','author':'Kuramapika1','submitted':'2026-09-01','originalGameArt':'Nintendo / Creatures / GAME FREAK','sourceFile':source,'geometry':body,'doorGeometry':door,'doorOffset':offset,'archiveSha256':hashlib.sha256(rawzip).hexdigest(),'sourceModelSha256':hashlib.sha256(raw).hexdigest(),'containerRepairs':repairs,'normalization':meta,'originalBounds':original_meta['sourceBounds'],'originalTriangles':sum(p['triangles']for p in original),'processedTriangles':sum(p['triangles']for p in parts),'excludedTriangles':11,'closure':'Measured rear wall/belt/roof returns, both roof soffits, foundation. No source door/window/sign/roof silhouette removed; original source shadow triangles omitted.','nativePlacement':'Gen3ImportedHGSSGyms exact native drawing/permission adapter, with triangle-mask clearance and original paired door geometry; source eligibility and rendered acceptance are tracked separately.','textures':textures,'parts':[{'name':p['name'],'role':p['role'],'opacity':p['opacity'],'authored':p.get('authored',False),'triangles':p['triangles']}for p in parts]}
+  reports[key]={'asset':asset,'sourcePage':f'https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/{asset}/','game':'Pokémon HeartGold / SoulSilver','author':'Kuramapika1','submitted':'2026-09-01','originalGameArt':'Nintendo / Creatures / GAME FREAK','sourceFile':source,'geometry':body,'doorGeometry':door,'doorOffset':offset,'archiveSha256':hashlib.sha256(rawzip).hexdigest(),'sourceModelSha256':hashlib.sha256(raw).hexdigest(),'containerRepairs':repairs,'normalization':meta,'originalBounds':original_meta['sourceBounds'],'originalTriangles':sum(p['triangles']for p in original),'processedTriangles':sum(p['triangles']for p in parts),'excludedTriangles':11,'uvRepairs':uv_repairs,'closure':'Measured rear wall/belt/roof returns, both roof soffits, foundation. No source door/window/sign/roof silhouette removed; original source shadow triangles omitted.','nativePlacement':'Gen3ImportedHGSSGyms exact native drawing/permission adapter, with triangle-mask clearance and original paired door geometry; source eligibility and rendered acceptance are tracked separately.','textures':textures,'parts':[{'name':p['name'],'role':p['role'],'opacity':p['opacity'],'authored':p.get('authored',False),'triangles':p['triangles']}for p in parts]}
   (dest/'provenance.json').write_text(json.dumps(reports[key],indent=2,ensure_ascii=False)+'\n')
  (output/'lib').mkdir(parents=True,exist_ok=True);(output/'lib/HGSSKantoGymData.lua').write_text('-- Generated by tools/import_hgss_kanto_gyms.py; source eligibility is separate from native rendered acceptance.\nreturn '+lua(data)+'\n');return data,reports
 if __name__=='__main__':

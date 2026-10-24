@@ -1,0 +1,158 @@
+{
+  "asset": 592877,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592877/",
+  "title": "Saffron Copycat house",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "f7597b3bc790147e55b98b7fcef935e6dae731479d3e26083caaf3e919c9fe1a",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Saffron City/Saffron City.dae",
+  "sourceModelSha256": "789316266c83cc38c036cd4000da572e4c8127cad886c4485571d5549f0b3966",
+  "geometry": "ybc_mmc-mesh",
+  "doorGeometry": "ybc_dor1-mesh",
+  "doorLocalOffset": [
+    2,
+    -0.638672,
+    9.45117
+  ],
+  "doorPlacementEvidence": "Source scene matrices: Copycat world(-224,104,30.99999), door(-222,94.54883,30.36132), converted to common Y-up local coordinates. Offset precision keeps exact source floorY2.",
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -30.125,
+      1.95,
+      -22.0,
+      30.125,
+      62.58984,
+      20.0
+    ],
+    "sourceOrigin": [
+      0.0,
+      1.95,
+      -1.0
+    ],
+    "sourceUnitSpan": 60.25,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.34854771784232363,
+      0.5,
+      1.0064703734439835,
+      0.34854771784232363
+    ]
+  },
+  "originalBounds": [
+    -32.0,
+    1.0,
+    -26.0,
+    40.0,
+    62.58984,
+    32.0
+  ],
+  "originalTriangles": 329,
+  "processedTriangles": 371,
+  "entrance": "Genuine separately instanced source door retains original panel and transforms; native FR/LG frames drive authored inward0/42.5/85 degree hinge poses within native blocked cells. Source interior retained. Copycat placements only, never Mr. Psychic despite shared native art.",
+  "closure": "Rear two-floor siding/plinth continues measured original side strips; detailed front barrel fascia copied with reverse winding to exact rear cut, recessed inner gable/roof soffit and recessed underside foundation. Source door missing left/back/top/underside closes with measured original panel bounds and plain side paint; closed panel only appears in animated door batches. Original facade/windows/roof fixtures/interior/panel geometry/UV/PNG bytes retained. Source shading excluded.",
+  "textures": {
+    "ybc_mm02.png": {
+      "sha256": "52da56abb05a5de3143cbfa9378f66012b6f19673bb51e79d18ffa83d491bcbb",
+      "bytes": 136
+    },
+    "ybc_mado.png": {
+      "sha256": "af8493b3bc18c0d741bd1604b7682c46e0926f215d17aaa0235ff203989ac3ab",
+      "bytes": 200
+    },
+    "h_in.png": {
+      "sha256": "3142cd93a33fa44fa70b74cdd9ff93fda4501a146a26a1a274a89976f3d3ac12",
+      "bytes": 81
+    },
+    "ybc_mm01.png": {
+      "sha256": "c503588e7b8bb2e5d2a48f3580f9e214d9125660bd198403b7c2680860a82fc1",
+      "bytes": 836
+    },
+    "ybc_h1a.png": {
+      "sha256": "8817fd0ec01df2a88558e4a44f1c5e1f3ad3562386c9ddd5d445bedc5807e324",
+      "bytes": 427
+    }
+  },
+  "parts": [
+    {
+      "name": "ybc_mmc-mesh:ybc_mm02-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 2
+    },
+    {
+      "name": "ybc_mmc-mesh:ybc_mado-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 6
+    },
+    {
+      "name": "ybc_mmc-mesh:h_in_012-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 14
+    },
+    {
+      "name": "ybc_mmc-mesh:ybc_mm01-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 295
+    },
+    {
+      "name": "ybc_dor1-mesh:ybc_h1a-material",
+      "role": "source_door",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "authored_rear_siding",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_rear_inner_gable",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_barrel_fascia",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 16
+    },
+    {
+      "name": "authored_roof_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 10
+    },
+    {
+      "name": "authored_door_returns",
+      "role": "source_door",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 8
+    }
+  ]
+}
