@@ -31,6 +31,23 @@ assert(H.emeraldShape('general','petalburg',0x149,0,7).nativeFence=='rural149')
 assert(R.ownShape('general','petalburg',0x149,0,7).nativeFence=='rural149')
 assert(not H.emeraldShape('general','petalburg',0x149,0,0).nativeFence)
 local F=V.require('Gen3FenceFamilies');local ornate={}
+-- Actual Rustboro census regressions: eight art variants account for fifteen
+-- blocked city cells that previously kept flat rails; ordinary paving, roof
+-- tiles and walkable headers must never be recruited by MID adjacency.
+for _,mid in ipairs{0x2a7,0x352,0x2c6,0x2c7,0x2d7,0x2dc,0x2de,0x2df,0x2e6,0x2e7}do
+ assert(H.emeraldShape('general','rustboro',mid,0,7).nativeFence=='rustboro')
+ assert(R.ownShape('general','rustboro',mid,0,7).nativeFence=='rustboro')
+ assert(not F.shape('general','rustboro',mid,0,0))
+ assert(not F.shape('general','petalburg',mid,0,7))
+ assert(not F.shape('building','rustboro',mid,0,7))
+end
+for _,mid in ipairs{0x2b0,0x2b6,0x2c8,0x2ca,0x2d0,0x2e8,0x338,0x341}do
+ assert(not F.shape('general','rustboro',mid,0,7),'unreviewed non-rail source art')
+end
+assert(#F.ornate[0x2b7]==1 and F.ornate[0x2b7][1][4]==0,'southern grass rail is horizontal')
+assert(F.ornate[0x318][1][2]==11.5 and F.ornate[0x319][1][2]==4.5,'opposite city boundary stripe centers')
+assert(F.ornate[0x2ec][1][2]==12.5 and F.ornate[0x315][1][2]==3.5,'interior paving stripe centers')
+
 for mid,segments in pairs(F.ornate)do
  local q=cell(mid);q.mid=mid;q.shape={nativeFence='rustboro'};q.secondary='rustboro';q.ts.midToSlot={}
  for _,row in pairs(F.ground)do for _,g in ipairs(row)do q.ts.midToSlot[g[1]]=g[1]end end
@@ -41,7 +58,7 @@ end
 available=false;assert(not M.build(ornate,function()end,{}))
 for _,q in pairs(ornate)do assert(not q.importedFence)end
 available=true;local r,e,num=M.build(ornate,function()end,{})
-assert(r and not e and num==21,'unique native cells count')
+assert(r and not e and num==31,'unique native cells count')
 for _,q in pairs(ornate)do
  local quads={};local function emit(v,uv)quads[#quads+1]={v,uv}end
  assert(M.appendFloor(q,emit,function()return{{0,0},{1,0},{1,1},{0,1}}end,emit))
@@ -66,6 +83,7 @@ for _,data in pairs(V.require('ImportedFenceData'))do for _,p in ipairs(data.par
  end end
  for _,n in pairs(edges)do assert(n==2,'open physical fence edge')end
 end end
+for id,data in pairs(V.require('ImportedFenceJoinedData'))do assert(Real.register(id,data,{read=function()end}))end
 for _,p in ipairs(M.placements(ornate))do
  local verts,fit=assert(Real.vertices(p.model,p.fit));assert(math.abs(fit.bounds[5]-11)<1e-5,'corner fitting shrank height')
  for _,part in ipairs(verts)do for _,v in ipairs(part.vertices)do assert(v[1]>=-1e-5 and v[1]<=16.00001 and v[3]>=-1e-5 and v[3]<=16.00001,'fence crossed walking bounds')end end

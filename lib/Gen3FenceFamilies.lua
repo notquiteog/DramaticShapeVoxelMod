@@ -4,22 +4,38 @@ local M={}
 -- Length, centerX, centerZ, quarter-turn. All bases remain inside the original
 -- blocked tile. Thin native edge drawings describe actual railing in depth.
 M.ornate={
- [0x2b7]={{16,14,8,1},{14,7,14,0}},
- [0x2be]={{16,8,14,0}},[0x2bf]={{16,8,14,0}},
- [0x2cd]={{16,8,14,0}},[0x2d5]={{16,8,14,0}},
- [0x2fc]={{16,8,14,0}},[0x2e9]={{12,6,14,0},{14,2,7,1}},
- [0x2ec]={{16,2,8,1}},[0x315]={{16,14,8,1}},
- [0x318]={{16,2,8,1}},[0x319]={{16,14,8,1}},
- [0x31a]={{16,14,8,1},{6,11,14,0}},
- [0x31b]={{8,2,12,1}},[0x31d]={{16,2,8,1}},
- [0x320]={{14,2,7,1},{14,9,14,0}},
- [0x321]={{14,14,7,1},{14,7,14,0}},
- [0x32c]={{14,14,7,1},{14,7,14,0}},
- [0x32d]={{16,2,8,1},{14,9,14,0}},
+ [0x2a7]={{16,8,14,0}},[0x352]={{14,7,14,0}},
+ -- Full horizontal rails, including the grass variant formerly mistaken for
+ -- an L. End posts and actual depth runs are distinct native drawings.
+ [0x2b7]={{16,8,14,0}},
+ [0x2be]={{14,9,14,0}},[0x2bf]={{14,7,14,0}},
+ [0x2cd]={{14,9,14,0}},[0x2d5]={{14,7,14,0}},
+ [0x2d7]={{14,7,14,0}},[0x2e6]={{14,9,14,0}},[0x2e7]={{14,7,14,0}},
+ [0x2fc]={{16,8,14,0}},[0x2e9]={{12,6,14,0},{14,11.5,7,1}},
+ -- Three-pixel native depth stripes: dark/light/dark. Targets are their
+ -- pixel-edge centers, not the opposite edge of the paving/grass tile.
+ [0x2c6]={{16,3.5,8,1}},[0x2c7]={{16,12.5,8,1}},
+ [0x2dc]={{16,12.5,8,1}},[0x2de]={{16,3.5,8,1}},[0x2df]={{16,12.5,8,1}},
+ [0x2ec]={{16,12.5,8,1}},[0x315]={{16,3.5,8,1}},
+ [0x318]={{16,11.5,8,1}},[0x319]={{16,4.5,8,1}},
+ [0x31a]={{16,4.5,8,1},{6,3,14,0}},
+ [0x31b]={{16,11.5,8,1},{6,13,14,0}},[0x31d]={{16,12.5,8,1}},
+ [0x320]={{14,11.5,7,1},{6,13,14,0}},
+ [0x321]={{14,4.5,7,1},{6,3,14,0}},
+ [0x32c]={{14,3.5,7,1},{6,3,14,0}},
+ [0x32d]={{16,11.5,8,1},{6,13,14,0}},
 }
 -- Original lower 8px quadrants, proven pixel-identical to these clean native
 -- terrain quadrants in each R/S/E cache. Preserve exact mixed paving/grass.
 M.ground={
+ [0x2a7]={{0x2bb,0},{0x2bb,1},{0x2bb,2},{0x2bb,3}},
+ [0x352]={{0x2e0,0},{0x2e0,1},{0x2e0,2},{0x2bb,0}},
+ [0x2c6]={{0x2bb,0},{0x2bb,1},{0x2bb,2},{0x2bb,3}},
+ [0x2c7]={{0x2bb,0},{0x2bb,1},{0x2bb,2},{0x2bb,3}},
+ [0x2dc]={{0x2bd,0},{0x2bb,1},{0x2bd,2},{0x2bd,3}},
+ [0x2d7]={{1,0},{1,1},{1,2},{1,3}},
+ [0x2de]={{1,0},{1,1},{1,2},{1,3}},[0x2df]={{1,0},{1,1},{1,2},{1,3}},
+ [0x2e6]={{1,0},{1,1},{1,2},{1,3}},[0x2e7]={{1,0},{1,1},{1,2},{1,3}},
  [0x2b7]={{1,0},{1,1},{1,2},{1,3}},
  [0x2be]={{0x2bb,0},{0x2bb,1},{0x2bb,2},{0x2bb,3}},
  [0x2bf]={{0x2bb,0},{0x2bb,1},{0x2bb,2},{0x2bb,3}},
@@ -57,7 +73,7 @@ function M.plantRows(c)
  return (id:match('^RU_')or id:match('^SA_'))and M.plantsRS[c.mid]or M.plants[c.mid]
 end
 for mid in pairs(M.plants)do
- M.ornate[mid]=mid==0x337 and{{14,2,7,1},{14,9,14,0}}or{{16,8,14,0}}
+ M.ornate[mid]=mid==0x337 and{{14,11.5,7,1},{14,9,14,0}}or{{16,8,14,0}}
  M.ground[mid]={{1,0},{1,1},{1,2},{1,3}}
 end
 function M.shape(primary,secondary,mid,behavior,collision)

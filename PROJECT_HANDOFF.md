@@ -17,6 +17,46 @@
 - Official .96/API3 standalone source and atomic missing-texture runs PASS all 98 rooms; all owner front/whole and available side views reviewed. All 2,161 native map hashes/furniture-family counts unchanged; only +281 source candidates. Seventeen-source coplanar check and focused data/fit/guard/fallback tests PASS; importer regeneration byte-identical.
 - Evidence: `docs/ORAS_OLDALE_CHAIRS_2026-10-23.md` and component/run ledgers. Candidate count 2,382; accepted components 2,337; every whole-map acceptance remains false. Generic room framing/service furniture still queued. No version/push/release.
 
+# Rustboro fence release1.58.1 — 2026-10-23
+
+Fixes43 missing Emerald fence cells (44 in R/S), reversed depth stripes and the
+incorrect grass-row L. Full native art board review adds2a7/352 omitted by the
+initial known-family census. Each RSE city now has208 reviewed source owners
+across31 families. Joined original ORAS geometry has14 shared definitions,
+zero positive-area coplanar overlaps and recessed bottom contacts; exact native
+paving/grass donors remain local. Official0.3.96 native city censuses preserve
+all2400 native cells and report zero recovery. Full suite486PASS/0fail/58fixture
+skips;640production files compile in nativeLuaJIT. Final source/package native
+checks and checksum are recorded in release verification. See
+[joins and evidence](docs/RUSTBORO_FENCE_JOINS_2026-10-23.md).
+
+Other agents continue rural fence variants, Kanto original-source buildings and
+interiors. Their next checkpoint batches stay separate; whole-game coverage
+remains incomplete. Actor/flower HD2D defaults and standalone/API3 are unchanged.
+
+# Complete Rustboro native art census — 2026-10-23
+
+Broader all-used-art review found long horizontal2a7(26cells) and end352(2)
+missed by initial29-family review. Now31 exact ornatefamilies/208 cells in
+E/R/S. Own official.96 standalone each2400unique/208eligible/208built,
+unchanged native grid/recovery0; updated EMGym/RUeast-boundary captures inspected.
+Independent donor visible-pixel proof includes2a7/352 in each edition; hidden
+terrain under baked rails is not claimed byte-exact. Root owns joined source
+geometry/final acceptance. See updated RUSTBORO_FENCE_COVERAGE_2026-10-23.md.
+Continuing missing rural endcaps/depth-family census after this focused patch.
+
+# Emerald Rustboro fence classifier checkpoint — 2026-10-23
+
+Exact native census adds eight omitted rail/endcap MIDs (15 blocked cells),
+fixes opposite-side depth axes and the repeated grass horizontal family.
+Official .96 standalone: 2400 unique city cells,180 eligible/180 built,
+unchanged native grid/recovery0; Gym/south gate front/side captures inspected.
+Focused source atomicity/29-family/ground/bounds test passes. Root owns joined
+corner/contact geometry and final acceptance. R/S own native census also passes2400/180/180/recovery0; each restores16 cells.
+Independent source pixel/visible ground witnesses pass in all3editions.
+See [coverage evidence](docs/RUSTBORO_FENCE_COVERAGE_2026-10-23.md).
+Littleroot e1bf4167 remains held for a later model batch; Shipyard WIP preserved.
+
 # Resumed regional model coverage1.58.0 — 2026-10-23
 
 Merged Kanto b3e82032/f0287c65, Hoenn c5d0607b/15607548/85fe43a9,
