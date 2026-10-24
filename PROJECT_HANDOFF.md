@@ -1,3 +1,17 @@
+# Celadon single-floor original source — 2026-10-23
+
+Genuine ta_h01 closed house now matches exact FRLG Celadon(20,26); original
+asymmetric roof/windows/planter,140 closed architecture triangles and8 HD2D
+source flower groups/24triangles. Full-yaw footprint and zero degenerate or
+positive-area coplanar physical-face proofs pass. Native eastern street/rear
+header walking and neighboring Gym actual entry/return pass both games on.96,
+unchanged map hashes; FR missing-source fallback passes. No native front aisle
+exists (next building startsy30); valid street-facing captures inspected, other
+source sides/underside checked separately.16 focused Lua suites and source/native
+proofs pass. Canonical per edition81 eligible/74 accepted/52 unmatched,7 separate
+ground gaps. See docs/CELADON_SHORT_HOUSE_SOURCE_2026-10-23.md. No release/bump;
+continue gate/missing-source coverage; latest root1.58.1 is separate integration.
+
 # Cerulean closed regional house — 2026-10-23
 
 Original HGSS Cerulean nonenterable house now matches exact FRLG City(31,25).
