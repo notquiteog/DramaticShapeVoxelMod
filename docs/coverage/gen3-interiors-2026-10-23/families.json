@@ -972,6 +972,10 @@
       "sourceCandidates": []
     },
     "center_counter_left": {
+      "candidateOwnerCounts": {
+        "firered": 19,
+        "leafgreen": 19
+      },
       "design": null,
       "editions": {
         "firered": {
@@ -1024,9 +1028,17 @@
         }
       },
       "kind": "centerWing",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "center_counter_right": {
+      "candidateOwnerCounts": {
+        "firered": 19,
+        "leafgreen": 19
+      },
       "design": null,
       "editions": {
         "firered": {
@@ -1079,7 +1091,11 @@
         }
       },
       "kind": "centerWing",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "center_escalator_down": {
       "design": null,
@@ -1192,6 +1208,10 @@
       "sourceCandidates": []
     },
     "center_front_desk": {
+      "candidateOwnerCounts": {
+        "firered": 19,
+        "leafgreen": 19
+      },
       "design": null,
       "editions": {
         "firered": {
@@ -1244,7 +1264,11 @@
         }
       },
       "kind": "centerCounter",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "center_healer": {
       "design": null,
@@ -3256,6 +3280,11 @@
       "sourceCandidates": []
     },
     "hoenn_center_front_desk": {
+      "candidateOwnerCounts": {
+        "emerald": 16,
+        "ruby": 15,
+        "sapphire": 15
+      },
       "design": null,
       "editions": {
         "emerald": {
@@ -3321,9 +3350,18 @@
         }
       },
       "kind": "centerCounter",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "hoenn_center_left": {
+      "candidateOwnerCounts": {
+        "emerald": 16,
+        "ruby": 15,
+        "sapphire": 15
+      },
       "design": null,
       "editions": {
         "emerald": {
@@ -3392,7 +3430,11 @@
         }
       },
       "kind": "centerWing",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "hoenn_center_map": {
       "design": null,
@@ -3701,6 +3743,11 @@
       "sourceCandidates": []
     },
     "hoenn_center_right": {
+      "candidateOwnerCounts": {
+        "emerald": 16,
+        "ruby": 15,
+        "sapphire": 15
+      },
       "design": null,
       "editions": {
         "emerald": {
@@ -3769,7 +3816,11 @@
         }
       },
       "kind": "centerWing",
-      "sourceCandidates": []
+      "renderPrerequisite": "explicit receptionCounter capability; unresolved first-person Nurse visibility",
+      "renderedAccepted": false,
+      "sourceCandidates": [
+        "oras_center_reception_counter"
+      ]
     },
     "hoenn_center_table": {
       "design": null,
@@ -14474,46 +14525,47 @@
     "Candidate placement is not proof of successful texture/mesh upload or rendered acceptance.",
     "Furniture extraction does not prove every native object was recognized.",
     "Native continuous room finishes are not claims of imported modern room coverage.",
-    "Map sourceCandidates count native furniture owners; composite truck owners render several model pieces. sourceCandidatePlacementCount records that exception; candidateFurniture totals count pieces, candidateNativeFurnitureOwners count owners."
+    "Map sourceCandidates count native furniture owners. Composite truck owners expand into several pieces; complete reception groups combine three owners into one model. sourceCandidatePlacementCount records exceptions; candidateFurniture totals count pieces, candidateNativeFurnitureOwners count owners.",
+    "Original reception counter is a geometry/upload prototype only: default build retains native counter; first-person Nurse visibility remains unaccepted."
   ],
   "renderedAccepted": false,
   "schema": 1,
   "totals": {
     "emerald": {
-      "candidateFurniture": 606,
-      "candidateNativeFurnitureOwners": 592,
+      "candidateFurniture": 622,
+      "candidateNativeFurnitureOwners": 640,
       "furniture": 2091,
       "maps": 519,
       "nativeWallFinishRooms": 79,
       "rooms": 301
     },
     "firered": {
-      "candidateFurniture": 438,
-      "candidateNativeFurnitureOwners": 438,
+      "candidateFurniture": 457,
+      "candidateNativeFurnitureOwners": 495,
       "furniture": 2937,
       "maps": 426,
       "nativeWallFinishRooms": 65,
       "rooms": 253
     },
     "leafgreen": {
-      "candidateFurniture": 438,
-      "candidateNativeFurnitureOwners": 438,
+      "candidateFurniture": 457,
+      "candidateNativeFurnitureOwners": 495,
       "furniture": 2937,
       "maps": 426,
       "nativeWallFinishRooms": 65,
       "rooms": 253
     },
     "ruby": {
-      "candidateFurniture": 562,
-      "candidateNativeFurnitureOwners": 548,
+      "candidateFurniture": 577,
+      "candidateNativeFurnitureOwners": 593,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,
       "rooms": 231
     },
     "sapphire": {
-      "candidateFurniture": 562,
-      "candidateNativeFurnitureOwners": 548,
+      "candidateFurniture": 577,
+      "candidateNativeFurnitureOwners": 593,
       "furniture": 1476,
       "maps": 395,
       "nativeWallFinishRooms": 84,

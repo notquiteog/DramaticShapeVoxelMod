@@ -19,6 +19,7 @@ dataFiles.oras_oldale_backed_chair='ImportedOldaleChairData'
 dataFiles.oras_center_glass_table='ImportedCenterTableData'
 dataFiles.oras_center_healer='ImportedCenterHealerData'
 dataFiles.oras_center_bookcase='ImportedCenterBookcaseData'
+dataFiles.oras_center_reception_counter='ImportedCenterCounterData'
 dataFiles.oras_pyre_memorial='ImportedPyreMemorialData'
 dataFiles.oras_flower_bookcase='ImportedFlowerBookcaseData'
 dataFiles.oras_birch_bookcase='ImportedBirchBookcaseData'
@@ -125,6 +126,9 @@ function M.register(id)
  registered[id]=true;return true
 end
 function M.eligible(p,cells)
+ if p and p.recipe and(p.recipe.name=='hoenn_center_front_desk'or p.recipe.name=='center_front_desk')then
+  return V.require('Gen3ImportedCenterCounter').eligible(p,cells)
+ end
  local r=p and p.recipe;local f=familyFor(p)
  if not f or r.design~=f.design or r.family~=f.family or p.pair~=f.pair
   or f.kind and r.kind~=f.kind
@@ -161,7 +165,9 @@ function M.placements(cells)
    if p.recipe and p.recipe.name=='hoenn_truck_cargo'then
     for _,item in ipairs(V.require('Gen3ImportedTruckRoom').placements(p,cells))do list[#list+1]=item end
    elseif M.eligible(p,cells)then
-    list[#list+1]=placement(p,familyFor(p))
+    if p.recipe.name=='hoenn_center_front_desk'or p.recipe.name=='center_front_desk'then
+     list[#list+1]=V.require('Gen3ImportedCenterCounter').placement(p,cells)
+    else list[#list+1]=placement(p,familyFor(p))end
    end
   end
  end
@@ -191,15 +197,23 @@ function M.build(cells,newMesh,parts,capabilities)
  local list=M.placements(cells)
  -- Animated families require a renderer that uses their fitted surface. Older
  -- consumers keep the complete native healer rather than misplaced effects.
- if not(capabilities and capabilities.healingSurface)then
-  local ready={};for _,p in ipairs(list)do if p.model~='oras_center_healer'then ready[#ready+1]=p end end;list=ready
- end
+ local ready={};for _,p in ipairs(list)do
+  local healer=p.model=='oras_center_healer'
+  local counter=p.model=='oras_center_reception_counter'
+  -- Counter geometry is verified, but its source-native proportions can hide
+  -- the Nurse at eye level. Keep it opt-in until that separate visual gate is
+  -- resolved; source eligibility/census must not imply accepted rendering.
+  if(not healer or capabilities and capabilities.healingSurface)
+   and(not counter or capabilities and capabilities.receptionCounter)then ready[#ready+1]=p end
+ end;list=ready
  if #list==0 then return parts,nil,0 end
  for _,p in ipairs(list)do local ok,err=M.register(p.model);if not ok then return nil,err,0 end end
  local result,why=Models.buildBatches(list,newMesh,{parts=parts})
  -- Mark only after every texture and mesh uploads. A failed source load keeps
  -- the complete native furniture, including its existing wall/ground handling.
- if result then for _,p in ipairs(list)do p.source.importedInterior=p.marker or p.model end end
+ if result then for _,p in ipairs(list)do
+  for _,source in ipairs(p.sources or{p.source})do source.importedInterior=p.marker or p.model end
+ end end
  return result,why,result and #list or 0
 end
 -- Retain the exact native cabinet and wall note as separate components.

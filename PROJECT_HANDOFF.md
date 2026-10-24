@@ -1,3 +1,10 @@
+## 2026-10-23 — reception source/composite prototype held behind visual gate
+
+- Preserved original GR511 U-counter: 86 selected source triangles, buried base ends clipped, exact exposed union/closed plaque = 160. All 21 source-plane checks, underside/floor areas, every triangular native blocked-footprint grid, composite identity and atomic/default-native standdown tests PASS. Source regeneration byte-identical.
+- Native .96/API3 opt-in source + missing-texture runs PASS all 84 complete groups (E16/R15/S15/FR19/LG19), preserving hashes and native entry state. Visual review rejects first-person Nurse visibility at original uniform height (14.34/16.74 pixels); no source squash or actor/floor change applied. Separate League arrangements stay native.
+- `Gen3ImportedInteriors.build` requires explicit `receptionCounter=true`; root Scene is untouched and keeps native counters. Prototype metadata remains `renderedAccepted=false`; accepted ledger stays 2,561 components / 280 map pairs. Census candidates 2,690 pieces / 2,816 native owners; three-owner group aliases and piece-count exceptions are explicit.
+- Evidence/blocker: `docs/ORAS_CENTER_COUNTER_PROTOTYPE_2026-10-23.md`. Continuing original Oldale three-drawer chest for 44 Hoenn room owners; counter source alternatives/modular span still pending. No versions/push/releases.
+
 ## 2026-10-23 — original ORAS Center bookcases
 
 - Exact Hoenn Center rack: 43 owners/rooms (E15/R14/S14); FRLG has no matching family. Original 202 triangles minus two buried coplanar book-end triangles, plus 24 exposed closures = 224. Source proportions, separate wallpaper, native apron and bottom-only .025 recess retained.

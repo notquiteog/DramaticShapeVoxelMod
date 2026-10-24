@@ -5,7 +5,7 @@ return function(game)
  assert(love.filesystem.getIdentity():match('%-qa$'),'disposable QA identity required')
  local U=dofile(assert(os.getenv('QA_UTIL'),'QA_UTIL must name the external frame-driver helper'))
  local edition=require('src.core.GameVersion').get()
- local prefix=assert(({emerald='EM_',ruby='RU_',sapphire='SA_',firered='FR_',leafgreen='LG_'})[edition],'GBA only')
+ local prefix=assert(({emerald='EM_',ruby='RU_',sapphire='SA_',firered='FR_',leafgreen='FR_'})[edition],'GBA only')
  game:_handleBootAction({action='new_game',start={map=prefix..((edition=='firered' or edition=='leafgreen') and 'PALLET_TOWN' or 'LITTLEROOT_TOWN'),x=7,y=9,facing='down'}})
  local V=assert(game.mods.exports.BATTLE_ART_VOXEL_FORK).lib
  V.require('Gen3Integration').setLevel(0,game)
@@ -55,8 +55,13 @@ return function(game)
    row.civics[#row.civics+1]={family=g.custom and g.custom.name or g.family or g.kind,x=g.cx,y=g.cy,width=g.width,depth=g.depth,ground=floors,modernCandidate=not not imported}
    if imported then total.importableCivics=total.importableCivics+1 end
   end
-  local interiorSources={};for _,p in ipairs(interior)do interiorSources[p.source]=p.model end
-  for _,p in ipairs(furniture)do row.furniture[#row.furniture+1]={family=p.recipe.name,kind=p.recipe.kind,design=p.recipe.design,x=p.cx,y=p.cy,model=interiorSources[p]or false}end
+  local interiorSources,sourceGroups={},{};row.importableFurnitureOwners=0
+  for _,p in ipairs(interior)do for _,owner in ipairs(p.sources or{p.source})do
+   if not interiorSources[owner]then row.importableFurnitureOwners=row.importableFurnitureOwners+1 end
+   interiorSources[owner]=p.model
+   if p.sources then sourceGroups[owner]={family=p.source.recipe.name,x=p.source.cx,y=p.source.cy,ownerCount=#p.sources}end
+  end end
+  for _,p in ipairs(furniture)do row.furniture[#row.furniture+1]={family=p.recipe.name,kind=p.recipe.kind,design=p.recipe.design,x=p.cx,y=p.cy,model=interiorSources[p]or false,sourceGroup=sourceGroups[p]}end
   for _,c in pairs(cells)do
    row.kinds[c.shape.kind]=(row.kinds[c.shape.kind]or 0)+1
    if c.shape.kind=='tree'and c.shape.root and not(c.civic or c.prop)then
