@@ -109,6 +109,106 @@ remains with the other owner. Final1.57.8 package passed seven-mod load/render i
 all11games and forest/lab/first-person checks in all6GB/GBC editions. All593
 packaged Lua files compile. Documentation-only follow-up preserves tested code.
 
+# Original ORAS Slateport Harbor — 2026-10-23
+
+Own GR150/AD20/BM93/ZO14→275 Harbor dispatches as hoennHarbors. Includes its
+actual Comb2/t106_02 physical wall layer; source exposure RGB, original PICA
+portal marker and BM light faces omitted. Original paired slider travel and
+native open entrance preserved. Underside/rear closed, contacts−.05; all fitted
+body/leaf states coplanar-zero. Official0.3.95 three final R/S/E source uploads,
+three actual-Scene entries/normal returns and one Emerald missing-source
+return pass; all-angle source/native captures inspected. No Scene edits.
+Candidates43EM42RU42SA of244;117 missing. Shipyard stays fallback due exact
+native foyer(26,37)/portal(26,38) source-fit conflict; no clearance relaxation.
+See [batch evidence](docs/ORAS_SLATEPORT_HARBOR_2026-10-23.md). Regional work continues.
+
+# Original ORAS Oceanic Museum — 2026-10-23
+
+Own GR150/AD20/BM40/ZO14→273 Museum now routes as hoennMuseums. Original1306
+body/68 door triangles retain roof/windows/dish/fixtures; underside/rear and
+finite roof-hardware backings close the original open geometry. Meeting leaf
+caps separate0.05 native units per side. Native unanimated0x32a stays visually
+open; original admission uses normal input. Official0.3.95 three R/S/E source
+uploads, six open-idle entrances/returns, two Emerald missing-source returns
+and Ruby walkable rear/roof checks pass. Evidence is tracked in
+[batch evidence](docs/ORAS_OCEANIC_MUSEUM_2026-10-23.md). Original native data
+and model bounds remain fixed; no Scene edit. Candidates42EM41RU41SA of244,
+120 missing. Slateport Shipyard/Harbor and the wider source queue continue.
+
+# Own ORAS Slateport Mart — 2026-10-23
+
+Distinct GR149 pc_base/AD20 paint and original BM9/ZO14→266 slider now route
+through the Hoenn facade as hoennMarts. Exact native4×4 footprint, portal,
+collision and source proportions stay fixed. Rear/underside are closed; no
+source ground plane is copied. The final source audit also corrects Slateport's
+slider side contact and float-quantized ground-ring coordinates in the older
+three Marts. Official0.3.95 twelve native four-Mart source/pose/contact/rollback
+checks, twelve actual entrances/returns and four Emerald missing-source
+fallback entries/returns pass. Source/contact regressions reject both original
+defects. Source all-angle/native contact/front/side/rear views inspected; native
+hashes unchanged and recovery zero. Census candidates now41EM40RU40SA of244,
+123 missing. No whole-map acceptance claim. See
+[batch evidence](docs/ORAS_SLATEPORT_MART_2026-10-23.md). Slateport facilities
+continue next; Rustboro Flat2/tower stay pending fit/full-side source review.
+
+# Original ORAS Devon Corporation — 2026-10-23
+
+Authentic GR33/ZO16/AD11/BM14 Devon now dispatches as rustboroDevon:1597 body
+triangles,46 paired-door triangles, exact source rear/underside closures and
+native paired portals. Uniform native fit preserves the walkable front strip.
+Official0.3.95 three native source/cap/pose/rollback cases, six actual R/S/E
+entries/returns and two Emerald missing-source fallback entries pass. Source
+all-angle and native contact/door/side/rear views inspected; native hashes
+unchanged, recovery zero. Census candidates now40EM39RU39SA of244;126 missing.
+No Scene edits or whole-map completion claim. See
+[batch evidence](docs/ORAS_DEVON_CORPORATION_2026-10-23.md). Flat2/tower continue.
+
+# Remove original Oldale glass-return overlap — 2026-10-23
+
+Two southeast source-glass triangles lose only the area shared with their
+neighbor, preserving the union silhouette and interpolated source paint. The
+northwest house,14 physical southeast glass triangles, rear closure and native
+portal/ground remain fixed. Actual-source coplanar checks and official0.3.95
+six R/S/E native house placements pass; views inspected. See
+[correction evidence](docs/ORAS_REAR_CLOSURES_2026-10-23.md). Devon continues.
+
+# Correct original ORAS open backs — 2026-10-23
+
+Fifteen owned Gym/Mart/Oldale/Petalburg/Rustboro source bodies now append actual
+rear closures from their original side profiles and paint. Earlier rear views
+were misread through open source backs; rear acceptance is withdrawn and
+superseded by135 real-source rays, unchanged bounds/source arrays and zero new
+coplanar overlap across113,442 candidate pairs. All51 native R/S/E placements
+pass with unchanged layout hashes and zero streaming recovery. Existing native door/collision/contact
+checks remain valid. No new family/map coverage is claimed. See
+[correction evidence](docs/ORAS_REAR_CLOSURES_2026-10-23.md). Oldale southeast
+source glass-return overlap is addressed by the follow-up above.
+
+# Original Rustboro flat/southern-home continuation — 2026-10-23
+
+Flat1 and House3 extend the authentic Rustboro source family to six variants.
+Source36 coplanar window returns clip to their exposed strips; prior four arrays
+and BM13 poses remain exact. Official0.3.95 native18 uploads/door/cap checks and
+18 actual R/S/E entries/returns pass; Emerald six-door missing-source fallback
+passes. Native hashes unchanged; contact captures inspected from walkable cells.
+Live controller interference was isolated through the QA engine config before
+acceptance. Flat2 is source-located but its native-anchor fit fills only35% of
+the blocked drawing, so remains fallback. Devon/tower continue next. See
+[batch evidence](docs/ORAS_RUSTBORO_FLATS_2026-10-23.md).
+
+# Original Rustboro home/school source batch — 2026-10-23
+
+Four own ORAS Rustboro variants and BM13 original hinges now dispatch through
+Gen3ModernHoennBuildings (`kind=rustboroHomes`). Native12 R/S/E source/door/cap/
+rollback checks pass on official0.3.95; source all-angle renders inspected.
+Exact native map art/warps and original ZO16/GR object placements bind ownership.
+Only Y0 rings/closures recess; no source ground planes or native warp changes.
+Actual latest-parent Scene activates all four;12 R/S/E entry/return tests and
+four missing-source native fallbacks pass. Inspected contact views are clean;
+some sides remain tree-obscured. No whole-map acceptance claim. Remaining Rustboro
+flats, southern home, tower and Devon continue next. See
+[batch evidence](docs/ORAS_RUSTBORO_HOMES_2026-10-23.md).
+
 # Depth/fence/foliage release1.57.8 — 2026-10-23
 
 Explicit building contact-ring recess prevents coplanar ground closures while

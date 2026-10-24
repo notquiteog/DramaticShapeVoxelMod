@@ -17,7 +17,7 @@ return function(game)
   Shape.layout(cells);V.require('Gen3Elevation').bind(cells,{region})
   local g;for _,q in ipairs(civics)do if q.custom and q.custom.name==f[4]then g=q end end;assert(g,'missing original Mart')
   local M=V.require('Gen3ImportedMarts');assert(M.eligible(g,cells),'native Mart guard rejected')
-  local parts={};local result,err=M.build(g,cells,V.require('Voxel3D').newMesh,parts);assert(result,err);assert(#parts==2 and g.importedMartDoors and #g.importedMartDoors.parts==6)
+  local parts={};local result,err=M.build(g,cells,V.require('Voxel3D').newMesh,parts);assert(result,err);assert(#parts==3 and g.importedMartDoors and #g.importedMartDoors.parts==6)
   local D=V.require('Gen3MartDoors');for state=0,2 do local draws=0;D.draw(g,{x=g.cx+1,y=g.cy+3,frame=state},function()draws=draws+1 end);assert(draws==2)end
   D.release(g);V.require('SceneryModels').releaseBatches(parts);g.importedHoenn=nil
   result=M.build(g,cells,function()return nil end,{});assert(not result and not g.importedHoenn and not g.importedMartDoors)

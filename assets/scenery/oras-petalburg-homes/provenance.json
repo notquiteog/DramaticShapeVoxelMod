@@ -16,7 +16,16 @@
         281
       ],
       "sourceBchSha256": "71568e6bf1105c2f6a21aea687f536d6b90473749a28ad0020b05edbd09f8fe0",
-      "originalHorizontalGroundFaces": 0
+      "originalHorizontalGroundFaces": 0,
+      "rearClosure": {
+        "authoredRearTriangles": 133,
+        "profileBands": 35,
+        "sourcePaintTexel": [
+          0.666015625,
+          0.47265625
+        ],
+        "insetSourceUnits": 0.1
+      }
     },
     "west": {
       "gr": 8,
@@ -33,7 +42,16 @@
         -7
       ],
       "sourceBchSha256": "b008075154a17ea5d0fb5ed89262e448289f1196cd6d2cdc5a955914aa6b47e9",
-      "originalHorizontalGroundFaces": 0
+      "originalHorizontalGroundFaces": 0,
+      "rearClosure": {
+        "authoredRearTriangles": 83,
+        "profileBands": 35,
+        "sourcePaintTexel": [
+          0.666015625,
+          0.47265625
+        ],
+        "insetSourceUnits": 0.1
+      }
     },
     "east": {
       "gr": 8,
@@ -50,7 +68,16 @@
         101
       ],
       "sourceBchSha256": "b008075154a17ea5d0fb5ed89262e448289f1196cd6d2cdc5a955914aa6b47e9",
-      "originalHorizontalGroundFaces": 0
+      "originalHorizontalGroundFaces": 0,
+      "rearClosure": {
+        "authoredRearTriangles": 83,
+        "profileBands": 35,
+        "sourcePaintTexel": [
+          0.666015625,
+          0.47265625
+        ],
+        "insetSourceUnits": 0.1
+      }
     }
   },
   "normalizationSpan": 134.0,
