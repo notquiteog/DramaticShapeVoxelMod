@@ -82,5 +82,23 @@ for _,f in ipairs{{'JAGGED_PASS','lavaridge',16,18,0x25e,0x256,0,'MAGMA_HIDEOUT_
  end
  version='ruby';local b,rr=fixture();rr[1].def.id='RU_'..f[1];assert(C.prepare(b,rr)==0,'Emerald-only mouth leaked to RS');version='emerald'
 end
+-- All eight genuine weather states use exact separate native warp positions;
+-- unused Route113 ROM warp leftovers are deliberately absent.
+local weatherCount=0
+for name,points in pairs(C.weatherLocations)do for _,point in ipairs(points)do
+ version='emerald';local a,r,c,n=fixture();local x,y,state=point[1],point[2],point[3]
+ r[1].x=-x;r[1].y=-y;r[1].def.id='EM_'..name;r[1].def.warps={{x=x,y=y,destMap='EM_TERRA_CAVE_ENTRANCE'}}
+ local brown=name=='ROUTE114'or name=='ROUTE115';local pair=brown and'fallarbor'or name=='ROUTE116'and'rustboro'or'mauville'
+ for _,t in pairs(a)do t.pair='general__'..pair end
+ c.mid=state==1 and 0x34f or brown and 0x261 or 0xa7;n.mid=state==1 and 0x347 or brown and 0x259 or 0x9f
+ assert(C.prepare(a,r)==1,'genuine weather cave rejected')
+ local cap,side=state==1 and 0x269 or brown and 0x241 or 0x6c,state==1 and 0x270 or brown and 0x243 or 0x71
+ assert(c.caveEntrance.art.cap==cap and c.caveEntrance.art.side==side,'weather cave borrowed unrelated rock art')
+ c.caveEntrance=nil;n.caveEntrance=nil;c.collision=7;assert(C.prepare(a,r)==0,'closed weather cave claimed')
+ c.collision=113
+ for _,e in ipairs{'ruby','sapphire'}do version=e;local pre=e=='ruby'and'RU_'or'SA_';r[1].def.id=pre..name;r[1].def.warps[1].destMap=pre..'TERRA_CAVE_ENTRANCE';assert(C.prepare(a,r)==0,'Emerald weather mouth leaked to RS')end
+ weatherCount=weatherCount+1
+end end
+assert(weatherCount==8 and not C.weatherLocations.ROUTE113,'weather cave ledger includes unused native data')
 version='firered';local a,r=fixture();assert(C.prepare(a,r)==0,'Hoenn profile claimed Kanto')
 print('PASS Hoenn exact cave permissions/warps/blocked reveals, unchanged perimeter, one floor owner, recessed arch/ceiling/back and fail-closed contexts')

@@ -7,28 +7,36 @@ local common={EVER_GRANDE_CITY={{18,41},{18,27}},ROUTE105={{9,20}},ROUTE106={{48
  ROUTE112={{11,36},{22,10}},ROUTE114={{8,63}},ROUTE115={{27,37}},
  ROUTE120={{7,55}},ROUTE125={{22,19}},SKY_PILLAR_OUTSIDE={{17,13}},VERDANTURF_TOWN={{8,1}}}
 local emerald={JAGGED_PASS={{16,18}},ROUTE103={{45,6}},BATTLE_FRONTIER_OUTSIDE_EAST={{28,7}},BATTLE_FRONTIER_OUTSIDE_WEST={{39,55}}}
-local pairs={JAGGED_PASS='lavaridge',ROUTE103='petalburg',EVER_GRANDE_CITY='ever_grande',ROUTE105='dewford',ROUTE106='dewford',ROUTE110='mauville',ROUTE111='mauville',ROUTE116='rustboro',ROUTE112='lavaridge',ROUTE114='fallarbor',ROUTE115='fallarbor',ROUTE120='fortree',ROUTE125='mossdeep',SKY_PILLAR_OUTSIDE='pacifidlog',VERDANTURF_TOWN='mauville',BATTLE_FRONTIER_OUTSIDE_EAST='battle_frontier_outside_east',BATTLE_FRONTIER_OUTSIDE_WEST='battle_frontier_outside_west'}
+local weather={ROUTE114={{7,4,1},{6,46,2}},ROUTE115={{21,6,3},{36,10,4}},ROUTE116={{59,13,5},{79,6,6}},ROUTE118={{42,6,7},{9,6,8}}}
+local pairs={ROUTE118='mauville',JAGGED_PASS='lavaridge',ROUTE103='petalburg',EVER_GRANDE_CITY='ever_grande',ROUTE105='dewford',ROUTE106='dewford',ROUTE110='mauville',ROUTE111='mauville',ROUTE116='rustboro',ROUTE112='lavaridge',ROUTE114='fallarbor',ROUTE115='fallarbor',ROUTE120='fortree',ROUTE125='mossdeep',SKY_PILLAR_OUTSIDE='pacifidlog',VERDANTURF_TOWN='mauville',BATTLE_FRONTIER_OUTSIDE_EAST='battle_frontier_outside_east',BATTLE_FRONTIER_OUTSIDE_WEST='battle_frontier_outside_west'}
 local destinations={JAGGED_PASS='MAGMA_HIDEOUT_1F',ROUTE103='ALTERING_CAVE',EVER_GRANDE_CITY='VICTORY_ROAD_1F',ROUTE105='ISLAND_CAVE',ROUTE106='GRANITE_CAVE_1F',ROUTE110='NEW_MAUVILLE_ENTRANCE',ROUTE111='DESERT_RUINS',ROUTE116='RUSTURF_TUNNEL',ROUTE112='FIERY_PATH',ROUTE114='METEOR_FALLS_1F_1R',ROUTE115='METEOR_FALLS_1F_1R',ROUTE120='ANCIENT_TOMB',ROUTE125='SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM',SKY_PILLAR_OUTSIDE='SKY_PILLAR_ENTRANCE',VERDANTURF_TOWN='RUSTURF_TUNNEL',BATTLE_FRONTIER_OUTSIDE_EAST='ARTISAN_CAVE_1F',BATTLE_FRONTIER_OUTSIDE_WEST='ARTISAN_CAVE_B1F'}
 local regional={
  lavaridge={mouth=0x25e,header=0x256,cap=0x271,side=0x274,height=12,projectedHeader=true},
  fallarbor={mouth=0x261,header=0x259,cap=0x241,side=0x243,height=16},
 }
+local fallarborRed={mouth=0x34f,header=0x347,cap=0x269,side=0x270,height=16}
 local ordinary={mouth=0xa7,cap=0x6c,side=0x71,height=8}
-M.locations=common;M.emeraldLocations=emerald
+M.locations=common;M.emeraldLocations=emerald;M.weatherLocations=weather
 local function free(c)return c and not(c.civic or c.prop or c.stairs or c.column or c.caveEntrance or c.boundary)end
 function M.prepare(cells,regions)
  local version=V.require('Generation').version()
  local pre=({emerald='EM_',ruby='RU_',sapphire='SA_'})[version];if not pre then return 0 end
  local Terrain=V.require('Gen3Terrain');local count=0
  for _,r in ipairs(regions or{})do local def=r.def;local name=def.id:sub(#pre+1)
-  for _,p in ipairs(def.id:sub(1,#pre)==pre and(common[name]or(version=='emerald'and emerald[name]))or{})do
+  local points={}
+  if def.id:sub(1,#pre)==pre then
+   for _,p in ipairs(common[name]or(version=='emerald'and emerald[name])or{})do points[#points+1]=p end
+   if version=='emerald'then for _,p in ipairs(weather[name]or{})do points[#points+1]=p end end
+  end
+  for _,p in ipairs(points)do
    local x,y=r.x+p[1],r.y+p[2];local c=cells[x..':'..y];local n=cells[x..':'..(y-1)]
    local w,e,s=cells[(x-1)..':'..y],cells[(x+1)..':'..y],cells[x..':'..(y+1)]
    local nw,ne=cells[(x-1)..':'..(y-1)],cells[(x+1)..':'..(y-1)]
-   local art=regional[pairs[name]]or ordinary
+   local art=p[3]==1 and fallarborRed or regional[pairs[name]]or ordinary
+   local destination=p[3]and'TERRA_CAVE_ENTRANCE'or destinations[name]
    local warp;for _,q in ipairs(def.warps or{})do if q.x==p[1]and q.y==p[2]then warp=q;break end end
    if free(c)and free(n)and c.primary=='general'and c.mid==art.mouth and c.collision==113
-    and c.pair=='general__'..pairs[name] and warp and warp.destMap==pre..destinations[name]
+    and c.pair=='general__'..pairs[name] and warp and warp.destMap==pre..destination
     and(art.header and n.mid==art.header or not art.header and(n.mid==0x9f or n.mid==0x64))
     and(n.collision==7 or art.projectedHeader and n.collision==0) and c.pair==n.pair and warp
     and free(w)and free(e)and free(nw)and free(ne)and w.collision==7 and e.collision==7

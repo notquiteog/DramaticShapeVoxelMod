@@ -9,7 +9,7 @@ from pathlib import Path
 from oras_geometry_audit import coplanar_overlaps
 
 def audit(report):
-    assert report['closedRegiPreserved'] and report['recovery']==0
+    assert(report.get('closedRegiPreserved')or report.get('closedWeatherPreserved')==8)and report['recovery']==0
     assert len(report['entries'])>=2 and len(report['entries'])%2==0 and all(e['returned']and e['level']in(0,3)for e in report['entries'])
     results=[]
     for owner in report['owners']:
