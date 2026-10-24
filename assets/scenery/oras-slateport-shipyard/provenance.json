@@ -1,0 +1,391 @@
+{
+  "source": "Supplied Alpha Sapphire RomFS; original Slateport GR152/ZO14\u2192267/AD20/BM39",
+  "sourceStaticOrigin": [
+    1080.0,
+    0.0,
+    1080.0
+  ],
+  "sourceOrigin": [
+    855.0,
+    18.5,
+    891.0
+  ],
+  "normalizationSpan": 226.0,
+  "sourceTrianglesByMaterial": {
+    "museum_waku": 984,
+    "chip_mado": 60,
+    "tent_shipyard_body": 711,
+    "tent_shipyard_crane": 506
+  },
+  "sourcePhysicalAlpha": {
+    "museum_waku": 1.0,
+    "chip_mado": 1.0,
+    "tent_shipyard": 0.8661417322834646
+  },
+  "reviewedCoplanarCleanup": {
+    "tent_shipyard_body": [
+      {
+        "originalTriangle": 449,
+        "coveredBy": [
+          423,
+          438
+        ],
+        "remainingTriangles": 7
+      },
+      {
+        "originalTriangle": 455,
+        "coveredBy": [
+          426,
+          428
+        ],
+        "remainingTriangles": 8
+      }
+    ],
+    "tent_shipyard_crane": [
+      {
+        "originalTriangle": 154,
+        "coveredBy": [
+          116
+        ],
+        "remainingTriangles": 0
+      },
+      {
+        "originalTriangle": 155,
+        "coveredBy": [
+          116,
+          118
+        ],
+        "remainingTriangles": 0
+      },
+      {
+        "originalTriangle": 480,
+        "coveredBy": [
+          8,
+          9,
+          44,
+          45,
+          51,
+          53,
+          90,
+          91
+        ],
+        "remainingTriangles": 21
+      },
+      {
+        "originalTriangle": 481,
+        "coveredBy": [
+          8,
+          9,
+          44,
+          45,
+          51,
+          53,
+          90,
+          91
+        ],
+        "remainingTriangles": 17
+      }
+    ]
+  },
+  "belowGroundTrianglesClipped": 37,
+  "undersideTriangles": 217,
+  "rearClosure": {
+    "authoredRearTriangles": 311,
+    "profileBands": 145,
+    "sourcePaintTexel": [
+      0.126953125,
+      0.787109375
+    ],
+    "insetSourceUnits": 0.1
+  },
+  "roofFixtureShells": {
+    "sourceThickness": 0.1,
+    "preservesOriginalBounds": true,
+    "components": [
+      {
+        "sourceTriangles": 20,
+        "boundaryEdges": 12,
+        "backingAndRimTriangles": 95,
+        "paintTexel": [
+          0.806640625,
+          0.759765625
+        ]
+      },
+      {
+        "sourceTriangles": 18,
+        "boundaryEdges": 14,
+        "backingAndRimTriangles": 50,
+        "paintTexel": [
+          0.802734375,
+          0.759765625
+        ]
+      },
+      {
+        "sourceTriangles": 6,
+        "boundaryEdges": 8,
+        "backingAndRimTriangles": 22,
+        "paintTexel": [
+          0.888671875,
+          0.123046875
+        ]
+      },
+      {
+        "sourceTriangles": 6,
+        "boundaryEdges": 8,
+        "backingAndRimTriangles": 6,
+        "paintTexel": [
+          0.806640625,
+          0.759765625
+        ]
+      },
+      {
+        "sourceTriangles": 6,
+        "boundaryEdges": 8,
+        "backingAndRimTriangles": 6,
+        "paintTexel": [
+          0.806640625,
+          0.759765625
+        ]
+      },
+      {
+        "sourceTriangles": 12,
+        "boundaryEdges": 4,
+        "backingAndRimTriangles": 20,
+        "paintTexel": [
+          0.697265625,
+          0.771484375
+        ]
+      },
+      {
+        "sourceTriangles": 6,
+        "boundaryEdges": 8,
+        "backingAndRimTriangles": 22,
+        "paintTexel": [
+          0.841796875,
+          0.982421875
+        ]
+      },
+      {
+        "sourceTriangles": 6,
+        "boundaryEdges": 8,
+        "backingAndRimTriangles": 22,
+        "paintTexel": [
+          0.841796875,
+          0.982421875
+        ]
+      },
+      {
+        "sourceTriangles": 20,
+        "boundaryEdges": 12,
+        "backingAndRimTriangles": 50,
+        "paintTexel": [
+          0.806640625,
+          0.759765625
+        ]
+      },
+      {
+        "sourceTriangles": 6,
+        "boundaryEdges": 8,
+        "backingAndRimTriangles": 24,
+        "paintTexel": [
+          0.802734375,
+          0.767578125
+        ]
+      },
+      {
+        "sourceTriangles": 4,
+        "boundaryEdges": 6,
+        "backingAndRimTriangles": 14,
+        "paintTexel": [
+          0.806640625,
+          0.759765625
+        ]
+      },
+      {
+        "sourceTriangles": 4,
+        "boundaryEdges": 6,
+        "backingAndRimTriangles": 15,
+        "paintTexel": [
+          0.806640625,
+          0.759765625
+        ]
+      },
+      {
+        "sourceTriangles": 6,
+        "boundaryEdges": 8,
+        "backingAndRimTriangles": 24,
+        "paintTexel": [
+          0.802734375,
+          0.759765625
+        ]
+      },
+      {
+        "sourceTriangles": 4,
+        "boundaryEdges": 6,
+        "backingAndRimTriangles": 12,
+        "paintTexel": [
+          0.806640625,
+          0.767578125
+        ]
+      },
+      {
+        "sourceTriangles": 4,
+        "boundaryEdges": 6,
+        "backingAndRimTriangles": 12,
+        "paintTexel": [
+          0.806640625,
+          0.767578125
+        ]
+      },
+      {
+        "sourceTriangles": 6,
+        "boundaryEdges": 8,
+        "backingAndRimTriangles": 22,
+        "paintTexel": [
+          0.841796875,
+          0.982421875
+        ]
+      },
+      {
+        "sourceTriangles": 6,
+        "boundaryEdges": 8,
+        "backingAndRimTriangles": 22,
+        "paintTexel": [
+          0.841796875,
+          0.982421875
+        ]
+      },
+      {
+        "sourceTriangles": 4,
+        "boundaryEdges": 6,
+        "backingAndRimTriangles": 16,
+        "paintTexel": [
+          0.888671875,
+          0.123046875
+        ]
+      },
+      {
+        "sourceTriangles": 4,
+        "boundaryEdges": 6,
+        "backingAndRimTriangles": 16,
+        "paintTexel": [
+          0.880859375,
+          0.123046875
+        ]
+      },
+      {
+        "sourceTriangles": 4,
+        "boundaryEdges": 6,
+        "backingAndRimTriangles": 16,
+        "paintTexel": [
+          0.880859375,
+          0.123046875
+        ]
+      },
+      {
+        "sourceTriangles": 6,
+        "boundaryEdges": 8,
+        "backingAndRimTriangles": 22,
+        "paintTexel": [
+          0.888671875,
+          0.123046875
+        ]
+      },
+      {
+        "sourceTriangles": 4,
+        "boundaryEdges": 6,
+        "backingAndRimTriangles": 16,
+        "paintTexel": [
+          0.888671875,
+          0.123046875
+        ]
+      }
+    ],
+    "addedTriangles": 524,
+    "coplanarCleanup": [
+      {
+        "originalTriangle": 63,
+        "coveredBy": [
+          58,
+          60
+        ],
+        "remainingTriangles": 2
+      },
+      {
+        "originalTriangle": 64,
+        "coveredBy": [
+          58,
+          60
+        ],
+        "remainingTriangles": 2
+      },
+      {
+        "originalTriangle": 89,
+        "coveredBy": [
+          59
+        ],
+        "remainingTriangles": 2
+      }
+    ]
+  },
+  "sourceDoorPlacement": [
+    855,
+    18,
+    891
+  ],
+  "doorPhysicalTriangles": 67,
+  "doorAngles": [
+    0.0,
+    -0.6981316804885864,
+    -1.3962633609771729
+  ],
+  "movingInverseBindError": 0.0,
+  "textures": {
+    "11_kaina_mono01": {
+      "size": [
+        256,
+        256
+      ],
+      "rgbaSha256": "201bb3af29e601516b15b835b39532a7e356435c64f036bf77ad916ab73246d6",
+      "pngSha256": "a276ec7d387f45d22caaefca90d523a064bc81b0e102a7aea9ccf3f2116ddef4"
+    },
+    "11_c102_mado": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "98920ce1616d06f2a6a0536996fcd16c12f4e174826ed8dc3068aced79711e5d",
+      "pngSha256": "dbf41cd59f532c8bab2127e317ea947320228f8ed38f55aaab83b7e98d00bcef"
+    },
+    "11_ichiba_ship": {
+      "size": [
+        256,
+        256
+      ],
+      "rgbaSha256": "01f851840e19c0a80b1c313e4c603037365185c6dac6d1b73d7b550887f5da3d",
+      "pngSha256": "dee7b61129091f2b7dd6349e26611d3521e32583a2e0b2730836378ceb9382cd"
+    },
+    "1_kaina_doors01": {
+      "size": [
+        128,
+        128
+      ],
+      "rgbaSha256": "c6f33cc60fb63e9b68990fb55b57f8b99d123de26693ed6ea92a53469d5fbb7a",
+      "pngSha256": "dabbf2f4005311d3c9ac7758faa5d0db9ee9f7d523be121633acf3bf32c1a8e3"
+    },
+    "1_c102_mado": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "77aeafd8fb3e9b5105d4782066f3a467f50d9846266317b82c3535118015e9b9",
+      "pngSha256": "d6c2fa96e542c973e6f62e9ec39035639ab5663c8b90f1c03b36b57e1aebab5b"
+    }
+  },
+  "sha256": {
+    "body": "202de3c3de2ff7ebf9c75fd1ac4d6c8d86a10eaa5ad04c7f23c6a52235e8f9b5",
+    "door": "99a88d190c1b46ad959740a64eac743c9e7fd543103f4b91d6365c8ecb0cf2be",
+    "animation": "894d6131adc4b58c33d41bc8dad2629ac8638dfcc7a4dd515dd2088f526967d0"
+  },
+  "processing": "Original visible source coordinates/UVs independently checked. Only below-ground source triangles clipped at original18.5 ground; original BM placement retained. Source RGB exposure and24 light triangles omitted; physical alpha preserved. Native fit/acceptance separate."
+}

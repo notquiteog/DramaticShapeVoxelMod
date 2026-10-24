@@ -70,6 +70,10 @@ return function(game)
  end
 
  for _,q in ipairs(targets)do
+  if q.map:match('SOOTOPOLIS_CITY$')then
+   local R=require('src.core.game3.rse.init')
+   if edition~='emerald'then R.setFlag('FLAG_LEGEND_ESCAPED_SEAFLOOR_CAVERN',true,game.session);R.setFlag('FLAG_LEGENDARY_BATTLE_COMPLETED',true,game.session);out.fixture.FLAG_LEGEND_ESCAPED_SEAFLOOR_CAVERN=true;out.fixture.FLAG_LEGENDARY_BATTLE_COMPLETED=true end
+  end
   local def=assert(game.data.maps[q.map]);local layout=assert(Map.ensureMidLayout(game,q.map,def));local vx,vy
   for _,delta in ipairs{{0,3},{0,2},{1,3},{-1,3},{0,1},{1,2},{-1,2}}do local xx,yy=q.x+delta[1],q.y+delta[2]
    if xx>=0 and yy>=0 and xx<def.width and yy<def.height and layout:cellAt(xx,yy).coll==0 and not Collision.isWaterOn(def,xx,yy)then vx,vy=xx,yy;break end
@@ -99,12 +103,16 @@ return function(game)
   assert(cell.caveEntrance.owner==cell and cell.caveEntrance.header.caveEntrance==cell.caveEntrance,'incomplete two-row ownership')
   out.owners[#out.owners+1]={map=q.map,x=q.x,y=q.y,mid=cell.mid,header=cell.caveEntrance.header.mid,nativeHash=before}
   if capture then
-   shot(name..'-front');C.setLevel(6,game);U.wait(4);shot(name..'-first');C.setLevel(7,game);C.yaw=math.pi/2;C.pitch=.5;U.wait(4);shot(name..'-side');C.yaw=math.pi;U.wait(4);shot(name..'-rear')
+   shot(name..'-front')
+   if q.map:match('SOOTOPOLIS_CITY$')then assert(Collision.isWalkable(q.x,q.y+1)and not require('src.core.game3.objects').blocks(q.x,q.y+1));P.reset(q.x,q.y+1,'up');U.wait(4)end
+   C.setLevel(6,game);U.wait(4);shot(name..'-first')
+   if q.map:match('SOOTOPOLIS_CITY$')then P.reset(vx,vy,'up');U.wait(4)end
+   C.setLevel(7,game);C.yaw=math.pi/2;C.pitch=.5;U.wait(4);shot(name..'-side');C.yaw=math.pi;U.wait(4);shot(name..'-rear')
   end
   assert(before==hash(def),'native MID/collision/elevation mutated')
   print('[HOENN CAVE OWNER]',edition,q.map,q.x,q.y)
  end
- local entryTargets={{'ROUTE116',47,8,'RUSTURF_TUNNEL'},{'ROUTE112',11,36,'FIERY_PATH'},{'ROUTE114',8,63,'METEOR_FALLS_1F_1R'}}
+ local entryTargets={{'ROUTE116',47,8,'RUSTURF_TUNNEL'},{'ROUTE112',11,36,'FIERY_PATH'},{'ROUTE114',8,63,'METEOR_FALLS_1F_1R'},{'SOOTOPOLIS_CITY',31,16,'CAVE_OF_ORIGIN_ENTRANCE'}}
  if edition=='emerald'then entryTargets[#entryTargets+1]={'JAGGED_PASS',16,18,'MAGMA_HIDEOUT_1F'};entryTargets[#entryTargets+1]={'ROUTE103',45,6,'ALTERING_CAVE'}end
  if os.getenv('QA_ENTRY_MAP')then local kept={};for _,entry in ipairs(entryTargets)do if selected(pre..entry[1],os.getenv('QA_ENTRY_MAP'))then kept[#kept+1]=entry end end;entryTargets=kept end
  for _,entry in ipairs(entryTargets)do

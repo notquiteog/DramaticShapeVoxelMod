@@ -2,15 +2,16 @@
 -- native collision, warp, elevations and the compact distant cliffs stay intact.
 local V=...
 local M={}
-local common={EVER_GRANDE_CITY={{18,41},{18,27}},ROUTE105={{9,20}},ROUTE106={{48,16}},
+local common={SOOTOPOLIS_CITY={{31,16}},EVER_GRANDE_CITY={{18,41},{18,27}},ROUTE105={{9,20}},ROUTE106={{48,16}},
  ROUTE110={{35,24}},ROUTE111={{29,87}},ROUTE116={{47,8},{65,10}},
  ROUTE112={{11,36},{22,10}},ROUTE114={{8,63}},ROUTE115={{27,37}},
  ROUTE120={{7,55}},ROUTE125={{22,19}},SKY_PILLAR_OUTSIDE={{17,13}},VERDANTURF_TOWN={{8,1}}}
 local emerald={JAGGED_PASS={{16,18}},ROUTE103={{45,6}},BATTLE_FRONTIER_OUTSIDE_EAST={{28,7}},BATTLE_FRONTIER_OUTSIDE_WEST={{39,55}}}
 local weather={ROUTE114={{7,4,1},{6,46,2}},ROUTE115={{21,6,3},{36,10,4}},ROUTE116={{59,13,5},{79,6,6}},ROUTE118={{42,6,7},{9,6,8}}}
-local pairs={ROUTE118='mauville',JAGGED_PASS='lavaridge',ROUTE103='petalburg',EVER_GRANDE_CITY='ever_grande',ROUTE105='dewford',ROUTE106='dewford',ROUTE110='mauville',ROUTE111='mauville',ROUTE116='rustboro',ROUTE112='lavaridge',ROUTE114='fallarbor',ROUTE115='fallarbor',ROUTE120='fortree',ROUTE125='mossdeep',SKY_PILLAR_OUTSIDE='pacifidlog',VERDANTURF_TOWN='mauville',BATTLE_FRONTIER_OUTSIDE_EAST='battle_frontier_outside_east',BATTLE_FRONTIER_OUTSIDE_WEST='battle_frontier_outside_west'}
-local destinations={JAGGED_PASS='MAGMA_HIDEOUT_1F',ROUTE103='ALTERING_CAVE',EVER_GRANDE_CITY='VICTORY_ROAD_1F',ROUTE105='ISLAND_CAVE',ROUTE106='GRANITE_CAVE_1F',ROUTE110='NEW_MAUVILLE_ENTRANCE',ROUTE111='DESERT_RUINS',ROUTE116='RUSTURF_TUNNEL',ROUTE112='FIERY_PATH',ROUTE114='METEOR_FALLS_1F_1R',ROUTE115='METEOR_FALLS_1F_1R',ROUTE120='ANCIENT_TOMB',ROUTE125='SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM',SKY_PILLAR_OUTSIDE='SKY_PILLAR_ENTRANCE',VERDANTURF_TOWN='RUSTURF_TUNNEL',BATTLE_FRONTIER_OUTSIDE_EAST='ARTISAN_CAVE_1F',BATTLE_FRONTIER_OUTSIDE_WEST='ARTISAN_CAVE_B1F'}
+local pairs={SOOTOPOLIS_CITY='sootopolis',ROUTE118='mauville',JAGGED_PASS='lavaridge',ROUTE103='petalburg',EVER_GRANDE_CITY='ever_grande',ROUTE105='dewford',ROUTE106='dewford',ROUTE110='mauville',ROUTE111='mauville',ROUTE116='rustboro',ROUTE112='lavaridge',ROUTE114='fallarbor',ROUTE115='fallarbor',ROUTE120='fortree',ROUTE125='mossdeep',SKY_PILLAR_OUTSIDE='pacifidlog',VERDANTURF_TOWN='mauville',BATTLE_FRONTIER_OUTSIDE_EAST='battle_frontier_outside_east',BATTLE_FRONTIER_OUTSIDE_WEST='battle_frontier_outside_west'}
+local destinations={SOOTOPOLIS_CITY='CAVE_OF_ORIGIN_ENTRANCE',JAGGED_PASS='MAGMA_HIDEOUT_1F',ROUTE103='ALTERING_CAVE',EVER_GRANDE_CITY='VICTORY_ROAD_1F',ROUTE105='ISLAND_CAVE',ROUTE106='GRANITE_CAVE_1F',ROUTE110='NEW_MAUVILLE_ENTRANCE',ROUTE111='DESERT_RUINS',ROUTE116='RUSTURF_TUNNEL',ROUTE112='FIERY_PATH',ROUTE114='METEOR_FALLS_1F_1R',ROUTE115='METEOR_FALLS_1F_1R',ROUTE120='ANCIENT_TOMB',ROUTE125='SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM',SKY_PILLAR_OUTSIDE='SKY_PILLAR_ENTRANCE',VERDANTURF_TOWN='RUSTURF_TUNNEL',BATTLE_FRONTIER_OUTSIDE_EAST='ARTISAN_CAVE_1F',BATTLE_FRONTIER_OUTSIDE_WEST='ARTISAN_CAVE_B1F'}
 local regional={
+ sootopolis={mouth=0x221,header=0x25b,cap=0x2d9,side=0x2e1,height=16,hoodRamp=12},
  lavaridge={mouth=0x25e,header=0x256,cap=0x271,side=0x274,height=12,projectedHeader=true},
  fallarbor={mouth=0x261,header=0x259,cap=0x241,side=0x243,height=16},
 }
@@ -90,7 +91,7 @@ function M.append(c,emit,uvFor)
  local function top(xx,zz)
   local old=p.boundary[zz][xx]
   if xx==0 or xx==16 or zz==-16 then return old end
-  local t=(zz+16)/24
+  local t=math.min(1,(zz+16)/(p.art.hoodRamp or 24))
   return old+(math.max(old,ridge[xx])-old)*t
  end
  for zz=-16,4,4 do for i=1,#xs-1 do local a,b=xs[i],xs[i+1]
