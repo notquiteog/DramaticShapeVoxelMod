@@ -81,14 +81,21 @@ function M.texture(parts,check)
  local cols=math.max(1,math.ceil(math.sqrt(ny*(nz+2)/(nx+2))))
  local width,height=(nx+2)*cols,(nz+2)*math.ceil(ny/cols)
  local data=love.image.newImageData(width,height)
- for iy=0,ny-1 do
+ -- bake already stores only illuminated voxels. Walking the entire town's
+ -- bounding volume here makes widely separated buildings expensive even
+ -- though the intervening texels stay transparent in the new ImageData.
+ local written=0
+ for k,value in pairs(field.values)do
+  local index=k-1
+  local ix=index%nx;local slice=math.floor(index/nx)
+  local iz=slice%nz;local iy=math.floor(slice/nz)
   local ox,oz=(iy%cols)*(nx+2)+1,math.floor(iy/cols)*(nz+2)+1
-  for iz=0,nz-1 do for ix=0,nx-1 do
-   local v=(field.values[(iy*nz+iz)*nx+ix+1]or 0)/1.2
-   if v>0 then data:setPixel(ox+ix,oz+iz,v,v,v,1)end
-  end end
-  if check then check()end
+  local v=value/1.2
+  if v>0 then data:setPixel(ox+ix,oz+iz,v,v,v,1)end
+  written=written+1
+  if check and written%1024==0 then check()end
  end
+ if check then check()end
  field.image=love.graphics.newImage(data);field.image:setFilter('linear','linear');field.image:setWrap('clamp','clamp')
  data:release();field.values=nil;field.atlas={width,height,cols}
  return field

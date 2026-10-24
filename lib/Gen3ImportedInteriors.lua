@@ -6,6 +6,11 @@ local PCFrames=V.require('Gen3PublicPCFrames')
 local M={id='oras_center_pc',tvId='oras_home_tv',bedId='oras_comfortable_bed'}
 local registered={}
 local dataFiles={oras_center_pc='ImportedInteriorData',oras_home_tv='ImportedInteriorTVData',oras_comfortable_bed='ImportedInteriorBedData'}
+dataFiles.oras_littleroot_dining_table='ImportedHomeFurnitureData'
+dataFiles.oras_littleroot_fridge='ImportedHomeFurnitureData'
+dataFiles.oras_oldale_checked_table='ImportedOldaleFurnitureData'
+dataFiles.oras_oldale_neighbor_table='ImportedOldaleFurnitureData'
+dataFiles.oras_oldale_refrigerator='ImportedOldaleFridgeData'
 -- Complete public-PC and genuine TV drawings include the wall above and
 -- walkable perspective apron. TV identity additionally requires native 0x86
 -- behavior; similarly named cupboards, home desks and labs are not substitutes.
@@ -16,6 +21,21 @@ local families={
  living_television={pair='player_house',design='fr_living_tv',rows={{0x2d},{0x35},{0x3d}},model='oras_home_tv',cabinet=6,note=true},
  hoenn_home_bed={pair='building__generic_building',family='rse',design='em_home_bed',rows={{0x25a,0x25b},{0x262,0x263}},model='oras_comfortable_bed',blocked=true,fitWidth=32,fitDepth=32,fitHeight=18,zRows=0},
  neighbor_living_television={pair='house',design='fr_living_tv',rows={{0x2d},{0x35},{0x3d}},model='oras_home_tv',cabinet=6,note=true},
+ hoenn_start_dining_table={pair='building__brendans_mays_house',family='rse',design='em_start_table',
+  rows={{0x21a,0x21b},{0x222,0x223},{0x22a,0x22b}},collisionRows={{7,7},{7,7},{0,0}},
+  model='oras_littleroot_dining_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0,groundInset=.025},
+ hoenn_start_fridge={pair='building__brendans_mays_house',family='rse',design='em_start_fridge',
+  rows={{0x230},{0x238}},collisionRows={{7},{7}},
+  model='oras_littleroot_fridge',fitWidth=16,fitDepth=16,fitHeight=32,groundInset=.025},
+ hoenn_home_table_yellow={pair='building__generic_building',family='rse',design='em_home_table',
+  rows={{0x248,0x249},{0x250,0x251}},collisionRows={{7,7},{7,7}},
+  model='oras_oldale_checked_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0,groundInset=.025},
+ hoenn_home_fridge={pair='building__generic_building',family='rse',design='em_home_fridge',
+  rows={{0x278},{0x280},{0x288}},collisionRows={{7},{7},{0}},
+  model='oras_oldale_refrigerator',fitWidth=16,fitDepth=16,fitHeight=32,rotation=1,groundInset=.025},
+ hoenn_home_table_plain={pair='building__generic_building',family='rse',design='em_home_table',
+  rows={{0x24a,0x24b},{0x252,0x253}},collisionRows={{7,7},{7,7}},
+  model='oras_oldale_neighbor_table',fitWidth=32,fitDepth=32,fitHeight=32,zRows=0,groundInset=.025},
 }
 function M.register(id)
  id=id or M.id
@@ -45,7 +65,8 @@ function M.eligible(p,cells)
    local c=cells[(p.cx+col-1)..':'..(p.cy+row-1)]
    local collision
    if c then
-    if f.blocked then collision=c.collision==7
+    if f.collisionRows then collision=c.collision==f.collisionRows[row][col]
+    elseif f.blocked then collision=c.collision==7
     elseif row==2 then collision=c.collision==7 or f.model==nil and c.collision==0x93
     else collision=c.collision==(row==1 and 7 or 0)end
    end
@@ -68,7 +89,7 @@ function M.placements(cells)
    elseif M.eligible(p,cells)then
     local f=families[p.recipe.name]
     list[#list+1]={model=f.model or M.id,x=p.cx*16,y=(p.groundHeight or 0)+(f.cabinet or 0),z=(p.cy+(f.zRows or 1))*16,
-     fit={width=f.fitWidth or 16,depth=f.fitDepth or 16,height=f.fitHeight or(f.model and 17 or 24),padding=.25},source=p}
+     fit={width=f.fitWidth or 16,depth=f.fitDepth or 16,height=f.fitHeight or(f.model and 17 or 24),padding=.25,groundInset=f.groundInset,rotation=f.rotation},source=p}
    end
   end
  end

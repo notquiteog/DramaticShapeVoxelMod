@@ -1,0 +1,31 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO230 -> AD115 -> MM171 -> GR513",
+  "model": "t102r0101_00_00",
+  "submesh": 8,
+  "modelBchSha256": "93158e5006309bdc48a0b2aa4d06edbd5405ad521398100e19eef3286ed275c0",
+  "textureBchSha256": "5f24ec31412d5ca4611cf5d4c46115f63937bc4a18afba8d77cc144ec86583d4",
+  "textureRgbaSha256": "f221db0208c97dcb2039644745858112079a04b7a5a022dee754ee28ee516003",
+  "pngSha256": "9deb287dcb944a9d7017a6834c2d1bb1a692419e124b75c1237041aa9c21d647",
+  "sourceBounds": [
+    -286.5,
+    1.0,
+    -233.0,
+    -270.22100830078125,
+    38.5,
+    -217.0
+  ],
+  "origin": [
+    -278.3605041503906,
+    1.0,
+    -225.0
+  ],
+  "uniformDivisor": 16.27899169921875,
+  "sourceTriangles": 166,
+  "authoredClosureTriangles": 200,
+  "sourceFront": "+X",
+  "nativeQuarterTurn": 1,
+  "independentValidation": "Original selected positions, UV0 and triangle indices independently agree with Nitrogen; source is unskinned.",
+  "processing": "Complete original case, two handles, six paper notes and two solid magnets retained. Source underside rim closed; handle/magnet backs close 0.05 source units inside the original case front to avoid coplanar faces. Paper sheets gain 0.03-source-unit inner surfaces and closed thin rims. Source vertex RGB is white; original PNG RGBA and UVs unchanged. No floor, source shadow or light geometry. Uniform native fit; quarter-turn aligns original west-wall front with native south-facing refrigerator."
+}

@@ -43,3 +43,19 @@ for _,t in ipairs{0,.2,41,40*math.pi-.001}do
  end
 end
 print('PASS realistic FULL default, existing SKY/OFF, four shared programs, no relief/sourceRGB path, lifecycle and bounded continuous large-world surface')
+-- Exercise the production draw loop, including begin's uniform reset.
+local sends,draws=0,0
+local oldDraw=love.graphics.draw
+love.graphics.draw=function()draws=draws+1 end
+W.shader=function()return {send=function()sends=sends+1 end}end
+local mesh={setTexture=function()end};local palette={.2,.4,.8,.88}
+local model=V.require('Mat4').identity()
+assert(W.begin(ctx,false));sends=0
+for i=1,100 do W.draw(mesh,nil,model,palette)end
+assert(draws==100 and sends==6,'water batching changed draw count or repeated uniforms')
+palette[2]=.5;model[4]=4;W.draw(mesh,nil,model,palette)
+assert(draws==101 and sends==8,'production draw lost mutable palette/model changes')
+W.finish();assert(W.begin(ctx,false));sends=0;W.draw(mesh,nil,model,palette)
+assert(sends==6,'new water pass reused uniforms overwritten by begin')
+W.finish();W.shader=factory;love.graphics.draw=oldDraw
+print('PASS production water mesh batch preserves 100 draws with 6 uniform sends, live changes and pass invalidation')

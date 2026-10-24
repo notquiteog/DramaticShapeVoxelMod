@@ -26,7 +26,7 @@ local function fitPlacement(bounds,y,rotation,source,model,policy)
  policy=policy or{}
  if w<(policy.minWidth or 23.9)or d<(policy.minDepth or 15.9)or math.max(w/d,d/w)>2.1 then return end
  model=model or M.model
- local Models=V.require('SceneryModels');if not Models.info(model)then return end
+ local Models=V.require('SceneryModels')
  local opts={width=w,depth=d,padding=.25,rotation=rotation or 0}
  local fitted=Models.fit(model,opts);if not fitted then return end
  if fitted.bounds[5]<(policy.minHeight or 20)then return end
@@ -60,8 +60,7 @@ local function ownerBounds(c,cells,options)
  end end
  return b,hoenn
 end
-function M.gen3Placement(c,cells,options)
- local b,hoenn=ownerBounds(c,cells,options);if not b then return end
+local function placementForBounds(c,cells,options,b,hoenn)
  local s=c.shape;local model=s.importedTreeModel;local policy
  if not model and not hoenn and c.primary=='general'then
   model=V.require('Gen3ImportedKantoTrees').select(c,options)
@@ -74,16 +73,23 @@ function M.gen3Placement(c,cells,options)
  if not model and(hoenn and s.treeFamily=='conifer'or not hoenn and s.treeFamily~='broad'and s.treeFamily~='round')then return end
  return fitPlacement(b,c.base or 0,(c.cx*17+c.cy*29)%4,c,model,policy)
 end
+function M.gen3Placement(c,cells,options)
+ local b,hoenn=ownerBounds(c,cells,options);if not b then return end
+ return placementForBounds(c,cells,options,b,hoenn)
+end
 function M.gen3Placements(cells,options)
  local list={};if not enabled()then return list end
+ local Budget=V.require('BuildBudget');local scanned=0
  for _,c in pairs(cells)do
+  scanned=scanned+1;if scanned%32==0 then Budget.check()end
   local b,hoenn=ownerBounds(c,cells,options)
   local adapter=b and hoenn and c.primary=='general'and not c.shape.importedTreeModel and V.require('Gen3ImportedHoennTrees')
   if adapter and adapter.select(c,options)then
    local group=adapter.placements(c,cells,options)
    for _,p in ipairs(group or{})do list[#list+1]=p end
-  else local p=M.gen3Placement(c,cells,options);if p then list[#list+1]=p end end
+  elseif b then local p=placementForBounds(c,cells,options,b,hoenn);if p then list[#list+1]=p end end
  end
+ Budget.check()
  table.sort(list,function(a,b)return a.z==b.z and a.x<b.x or a.z<b.z end)
  return list
 end

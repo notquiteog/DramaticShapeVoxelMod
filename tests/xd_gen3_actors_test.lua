@@ -1,5 +1,6 @@
 local Mat=dofile('lib/Mat4.lua')
 local enabled=true
+local fault
 local style='hd2d'
 local form='default';local substitute,pending,ghost=false,false,false
 local matrices={}
@@ -10,11 +11,11 @@ local modules={VisualStyles={modern=function(category)assert(category=='pokemon'
   assert(opts.form==form)
   made=made+1
   if dex==386 then error('deliberate optional provider construction failure')end
-  return {metrics=function()return {height=1,floor=-.2}end,
-   playContext=function(_,name)contexts[#contexts+1]=name;return true end,
+  return {metrics=function()return {height=fault=='metrics'and 0 or 1,floor=-.2}end,
+   playContext=function(_,name)if fault=='context'then error('bad clip')end;contexts[#contexts+1]=name;return true end,
    isFinished=function()return false end,
-   update=function()end,release=function()released=released+1 end,
-   drawWith=function(_,draw,m)assert(m[8]>=3);matrices[#matrices+1]=m;draw();return true end}
+   update=function()if fault=='update'then return false end end,release=function()released=released+1 end,
+   drawWith=function(_,draw,m)if fault=='draw'then error('bad draw')end;assert(m[8]>=3);matrices[#matrices+1]=m;draw();return true end}
  end}}
 package.loaded['src.core.game3.pokemon']={national=function(s)return s end,
  isShiny=function(m)return m.shiny end}
@@ -57,4 +58,27 @@ style='voxel';M.prepare(frame);assert(made==8,'native voxel borrowed modern mode
 style='modern';enabled=false;M.prepare(frame);assert(released==6)
 M.clear();assert(released==6,'cleanup is idempotent')
 uninstall();assert(anim.launchMove==native)
+style='modern';enabled=true;visible=true
+for _,case in ipairs({'metrics','update','context','draw'})do
+ M.clear();fault=case
+ local before=made;M.prepare(frame)
+ if case=='context'then for id=0,2 do M.context(id,'attack')end end
+ if case=='draw'then for id=0,2 do assert(not M.draw(frame,frame.byId[id]))end end
+ M.prepare(frame)
+ assert(made==before+4,'failed '..case..' retried allocations every frame')
+ for id=0,2 do assert(not M.draw(frame,frame.byId[id]),'failed '..case..' suppressed native fallback')end
+end
+M.clear()
+fault=nil
+M.prepare(frame)
+local before,oldReleased=made,released
+st.battlers[0].mon={}
+M.prepare(frame)
+assert(made==before+1 and released==oldReleased+1,'same-species replacement retained old actor pose')
+st.battlers[3].mon={}
+M.prepare(frame)
+assert(made==before+2,'replacement inherited previous failed model cache')
+M.prepare(frame)
+assert(made==before+2,'replacement failure retried every frame')
+M.clear()
 print('XD GBA actor lifecycle passed')

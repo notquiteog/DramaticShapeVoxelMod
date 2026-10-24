@@ -1,5 +1,6 @@
 local modules={SceneryModelData=dofile('lib/SceneryModelData.lua'),HGSSCenterData=dofile('lib/HGSSCenterData.lua'),Voxel3D={withSceneryMaterial=function(opacity,fn)assert(opacity==.8709677);fn()end},ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 modules.Gen3ImportedGyms=assert(loadfile('lib/Gen3ImportedGyms.lua'))(V)
 local D=assert(loadfile('lib/Gen3KantoCenterDoors.lua'))(V);modules.Gen3KantoCenterDoors=D

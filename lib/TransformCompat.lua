@@ -33,7 +33,7 @@ function Compat.install()
 
   -- BattleState dispatches deep-copied effect records, so wrapping the module's
   -- original TRANSFORM_EFFECT alone cannot cover normal battles.
-  if type(BattleState.effectRecord) == "function"
+  if not V.require("Generation").isGen2() and type(BattleState.effectRecord) == "function"
       and not BattleState.__battleArtTransformRecordHook then
     BattleState.__battleArtTransformRecordHook = true
     local innerEffectRecord = BattleState.effectRecord

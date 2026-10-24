@@ -1,5 +1,6 @@
 local modules={SceneryModelData=dofile('lib/SceneryModelData.lua'),ViridianHouseData=dofile('lib/ViridianHouseData.lua'),ModelInstances={},BuildBudget={check=function()end}}
 local V={mod={read=function()return nil end}};V.require=function(n)return assert(modules[n],n)end
+modules.SharedModelMesh=dofile('lib/SharedModelMesh.lua')
 local S=assert(loadfile('lib/SceneryModels.lua'))(V);modules.SceneryModels=S
 modules.Gen3ImportedGyms=assert(loadfile('lib/Gen3ImportedGyms.lua'))(V)
 local D=assert(loadfile('lib/Gen3ViridianFlowerHouseDoors.lua'))(V);modules.Gen3ViridianFlowerHouseDoors=D

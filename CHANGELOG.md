@@ -1,3 +1,54 @@
+## 1.57.12 — Portable API3 (2026-10-23)
+
+Move to Portable API3 public game, options/screens, asset access and owned installation caches. Fix canonical Crystal sprite records, optional HUD suppression ownership and ambient lifecycle. Native renderer gaps retain declared engine internals.
+
+Requires Gen1Recomp 0.3.96 or newer. No companion mod is required.
+
+## 1.57.10 — 2026-10-23
+
+- Activate reviewed original ORAS Hoenn Gyms, notices, regional Marts and Oldale/Petalburg homes with native source doors.
+- Add HGSS Pewter houses and regional Viridian/Pewter Gyms; preserve native entry, collision and ground.
+- Add original ORAS home tables/fridges across127 reviewed component placements, with recessed contact surfaces.
+- Fix flush home stair frames, overlapping risers, wall apertures and descending-well margins without changing native warps.
+- Preserve native HD2D flowers around the regional Viridian School model.
+- Prevent source furniture falling back after touring towns by lifting the small-texture count cap while preserving memory limits.
+
+## 1.57.9 — Measured rendering and streaming optimization
+
+- Share live GPU scenery prototypes between overlapping scenes, with explicit
+  leases and complete cancellation/failure cleanup; no idle GPU cache.
+- Conservatively reject off-camera Gen3 physical scenery, individual tree
+  instances and water passes. Keep all shadow casters, deformed/unknown geometry
+  and unsupported-driver fallbacks. Four native camera views are pixel-identical
+  with this culling enabled or disabled.
+- Reduce shared shadow matrix work, water uniform submissions and effect
+  allocations without changing visual quality or shadow cadence.
+- Avoid scanning unlit building-light voxels; retain exact light texture pixels.
+- Reduce terrain UV construction, repeated model fitting and boundary lookup
+  allocations. Slice tree placement and elevation work during streamed builds.
+
+Measured 1440p warm overworld work improves, but cold crossings and the steady
+165 FPS target remain unresolved. See docs/RENDER_OPTIMIZATION_2026-10-23.md.
+
+## 1.57.8 — 2026-10-23
+
+- Recess building contact rings beneath native ground to prevent coplanar closure artifacts, preserving doors and native tiles.
+- Add authentic ORAS rural/Rustboro fences across21 reviewed native families and preserve exact edition-specific ground/foliage.
+- Harmonize genuine ORAS evergreen foliage within Hoenn, preserving source geometry and other regions.
+
+## 1.57.7 — Streaming preparation and XD fallback
+
+- Reuse validated Gen3 world fingerprints while render windows move; native
+  edits and provider changes still invalidate immediately.
+- Slice large tree vertex normalization across cooperative build frames in
+  the shared renderer, retaining exact vertex data.
+- Route Gen1/2 XD physical/special attacks using native move categories.
+- Preserve sprites on failed XD metrics, updates or draws and avoid repeated
+  failed-instance allocations. XD readiness remains gated.
+
+Cold transition stalls and physical mobile verification remain outstanding;
+this release does not certify 165 FPS or complete XD parity.
+
 ## 1.57.6 — Large forests and missing grass
 
 Bound native tree uploads instead of falling back for the entire forest above

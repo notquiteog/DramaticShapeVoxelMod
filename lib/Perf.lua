@@ -26,6 +26,7 @@
 -- GPU-side saving shows up in the FRAME numbers rather than in the label
 -- for the pass that caused it, and both are reported.
 
+local V=...;V=V or {}
 local Perf = {}
 
 local clock = (love and love.timer and love.timer.getTime) or os.clock
@@ -34,7 +35,7 @@ local clock = (love and love.timer and love.timer.getTime) or os.clock
 -- it. Keep the old developer flag/report path on legacy engines, but never let
 -- probing that compatibility surface prevent the renderer from booting.
 local legacyFilesystem
-pcall(function() legacyFilesystem = love and love.filesystem end)
+if not(V.mod and V.mod.cache)then pcall(function()legacyFilesystem=love and love.filesystem end)end
 
 -- Read through pcall: the loader's sandbox does not hand a mod `os`, and
 -- instrumentation must never be the reason the mod fails to load. Same
@@ -47,6 +48,7 @@ local function envFlag(name)
 end
 
 local function flagFile()
+  if V.mod and V.mod.cache then local ok,yes=pcall(V.mod.cache.exists,V.mod.cache,'diagnostics/perf.flag');return ok and yes==true end
   if not (legacyFilesystem and legacyFilesystem.getInfo) then
     return false
   end
@@ -326,6 +328,11 @@ end
 -- without asking for unsafe filesystem access.
 function Perf.write(name, meta)
   local body = Perf.toJson(meta)
+  if V.mod and V.mod.cache then
+    local key='diagnostics/perf/'..tostring(name):gsub('[^%w_%-]','_')..'.json'
+    local ok,wrote=pcall(V.mod.cache.write,V.mod.cache,key,body)
+    if ok and wrote==true then print('[perf] cached '..key);return true end
+  end
   if legacyFilesystem then
     pcall(legacyFilesystem.createDirectory, "ds_bench")
     local ok = pcall(legacyFilesystem.write, "ds_bench/" .. name .. ".json", body)

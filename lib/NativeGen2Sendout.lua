@@ -32,7 +32,7 @@ function M.paired(screen,side,mon)
  if not(screen and screen.battle and screen.battle.doubles
   and V.require('PokeballSettings').active())then return nil end
  local ok,result=pcall(function()
-  if not M.screen(V.mod.world.game,screen)then return end
+  if not M.screen(V.mod.game,screen)then return end
   return M.cue(screen,side,mon)
  end)
  return ok and result or nil
@@ -49,7 +49,7 @@ function M.install()
  local View=require('src.ui.gen2.BattleAnimView')
  local original=View.drawObjects
  function View:drawObjects(runner,battle,...)
-  local s=M.screen(V.mod.world.game,battle)
+  local s=M.screen(V.mod.game,battle)
   local after=s and s.afterSendOut
   local poses=s and (s.legendaryQ57 or battle.legendaryQ57)
   local pose=poses and after and poses[after.side]

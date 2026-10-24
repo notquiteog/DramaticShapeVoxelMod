@@ -710,6 +710,7 @@ local active = nil        -- the shader this pass bound, or nil
 local activeNative = false
 local noPalette={0,0,0,0}
 local identity=Mat4.identity()
+local drawUniforms=V.require('WaterDrawUniforms').new()
 
 -- The ripple phase. Driven by the ENGINE's tile-animation clock, the same
 -- 60Hz counter the water tiles rotate on, so the ripple and the art it
@@ -850,6 +851,7 @@ function Water.begin(ctx, skyOnly)
   end
   Water.sendSky(sh, ctx)
   active = sh
+  drawUniforms:begin(sh)
   return true
 end
 
@@ -924,16 +926,16 @@ end
 function Water.draw(mesh, texture, model, nativePalette)
   if not (active and mesh) then return end
   if texture then mesh:setTexture(texture) end
-  pcall(active.send,active,'nativePalette',nativePalette or noPalette)
+  drawUniforms:send('nativePalette',nativePalette or noPalette)
   local safariScale=V.require("SafariMaterials").texelScale(texture)
   local atlasScale=safariScale or V.require("DecorAtlas").texelScale(texture)
   local garden = atlasScale>1 and V.require("CommunityVisuals").customRoads()
-  pcall(active.send,active,"reserveWater",safariScale and 1 or 0)
+  drawUniforms:send("reserveWater",safariScale and 1 or 0)
   -- Keep the existing tiny plant/pad clearance; normals remain full strength.
-  pcall(active.send,active,"waveHeight",safariScale and .22 or garden and .12 or V.require("NativeWaterSurface").HEIGHT)
-  pcall(active.send,active,"waveSlope",V.require("NativeWaterSurface").SLOPE)
-  pcall(active.send,active,"gardenWater",(safariScale or garden) and 1 or 0)
-  pcall(active.send, active, "model", "row", model or identity)
+  drawUniforms:send("waveHeight",safariScale and .22 or garden and .12 or V.require("NativeWaterSurface").HEIGHT)
+  drawUniforms:send("waveSlope",V.require("NativeWaterSurface").SLOPE)
+  drawUniforms:send("gardenWater",(safariScale or garden) and 1 or 0)
+  drawUniforms:send("model",model or identity,true)
   love.graphics.draw(mesh)
 end
 

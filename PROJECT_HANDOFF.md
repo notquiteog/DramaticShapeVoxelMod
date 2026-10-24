@@ -1,3 +1,121 @@
+# Kanto source coverage resumed after API3 release — 2026-10-23
+
+Merged release1.57.12 API3/current-engine work into the isolated Kanto source
+branch. Preserved queued regional source/door families and the released Museum
+solid staircase. Reverify the merged queued placements before extending missing
+Kanto exterior families. No version bump or release; integration remains root-owned.
+
+# Portable API3 migration — 2026-10-23
+
+Final release verification: all seven immutable release ZIPs pass **88/88**
+native checks on official0.3.96: each standalone across all11editions, then all
+seven together across all11. Actual edition-native options screens open; owned
+GBA pages render readable fonts, and exercised removed-API reports are empty.
+The matrix caught and resolved Skies/Ride private menu wrappers conflicting with
+public pages on FRLG. Source/public asset/cache, canonical battle/party, storage,
+source-only encounter and native lifecycle focused checks are documented per mod.
+Release versions: BattleArt1.57.12, Skies1.15.4, Ride0.5.7, Doubles0.14.8,
+Online0.11.4, Wilds2.6.9, ModernUI0.4.6. Stable releases attach package SHA-256
+and api3-verification.json. This verifies API boundaries/load/menu/render paths;
+full scenery coverage and every multiplayer/gameplay path remain unclaimed.
+This final handoff is not part of the install ZIP; packaged bytes are unchanged.
+
+Current user priority is migrating all seven ecosystem mods to latest official
+Gen1Recomp0.3.96 PortableAPI3, with native boundary/standalone checks. Scenery
+worker histories remain separate and paused at clean checkpoints. Battle Art
+now declaresAPI3/minengine0.3.96, uses publicmod.game, canonical Crystal patches,
+public option hooks/registered GBA pages, optional suppression registration,
+owned installation-cache/index and diagnostic writes, scoped asset info and
+public ambient update/quit hooks. Native GBA fonts decorate only the registered
+screen artwork; advanced renderer/native readers still require declared internals.
+457 source suites PASS,0fail,58external-fixture skips against exact official.96SDK;
+591 production LuaJIT files compile. Native Crystal/Emerald first API3 field/menu
+checks pass with empty removed-API reports. All11 cache seeds are current. Final
+seven-mod standalone/combined artifact matrix passes88/88; see the attached release report.
+See docs/API3_MIGRATION_2026-10-23.md; no full-feature/scenery-completion claim.
+
+# Focused Museum staircase release1.57.11 — 2026-10-23
+
+User requests Kanto World fix the Museum staircase and then release. Focused
+stair commit e9fdfe43 is integrated independently of the pending regional model
+queue. Pewter's exact approach row now has solid shallow steps meeting the
+existing1.0125px source threshold, native stone paint and one exposed surface
+per area. Native support/collision/warps and source building/door anchors remain
+unchanged. Generic semantic terraces emit exposed union faces. Worker official
+0.3.96 FR/LG fresh-import main/staff entry+return and rendered views pass; final
+combined ZIP evidence is recorded in release notes. All589 production Lua files
+compile; source suite final summary is in the release notes. Two inherited stale
+isolated test fixtures now include ActorFrameCache and current legacy aliases.
+Concurrent committed main through0c918826 retained; working edits untouched.
+Other regional worker batches remain queued and full-game coverage incomplete.
+See docs/PEWTER_MUSEUM_STAIRS_2026-10-23.md.
+
+# Full render-distance optimization — 2026-10-23
+
+User target explicitly includes FULL at1440p while moving. Not achieved;
+observed Full frame times40–51ms, zero warm rebuilds. Draw submissions reduced,
+light-frustum and water/sprite culling preserve four native camera views exactly.
+See docs/FULL_DISTANCE_PERFORMANCE_2026-10-23.md for measurement caveats.
+Parity worker fixed8Gen3style controls plus same-species actor model reset;
+full parity remains incomplete per docs/PARITY_AUDIT_2026-10-23.md.
+Models remain with the separate owner. Do not report AUTO as FULL evidence.
+
+### 2026-10-23 shared model actor replacement identity
+- GB Stadium/XD and native GBA XD consumers now include the underlying Pokémon object in live and failed actor identity. A same-species switch using a reused battler wrapper resets animation state instead of inheriting the previous actor's pose or failed-load cache. Stable failed actors still avoid per-frame retries.
+- Focused LuaJIT tests pass: XD GBA actor lifecycle, Stadium bridge (29 checks), XD identity, XD materials. This is lifecycle verification, not a visual or production-ready XD claim; the validated-pack gate remains unchanged.
+
+# Native style settings and parity audit — 2026-10-23
+
+Fixed eight missing Gen3 visual-style controls: shared schema/live settings,
+public export, categories and scene/shadow invalidation. Five native0.3.95
+control/persistence/invalidation checks and four Lua suites pass. Reconciled
+132-option catalogs now explicitly include missing style consumers and legacy
+style aliases. Full parity is NOT complete; see docs/PARITY_AUDIT_2026-10-23.md.
+No model coverage, renderer optimization or version changes in this batch.
+
+# Regional building/interior integration1.57.10 — 2026-10-23
+
+Production Scene now activates both reviewed regional dispatchers: ORAS Hoenn
+Gyms/notices/Marts/Oldale/Petalburg homes and HGSS Kanto Gyms/Pewter homes, with original
+animated source doors. Furniture adds127 reviewed physical placements across83
+RSE maps; the all2161-map ledger distinguishes candidates/components/full rooms.
+The native town tour reproduces64-texture fallback at5.14MB; bounded entry
+counts now256 with8MB texture/10MB catalog/vertex ceilings unchanged. Same RSE
+tour retains source furniture at65 textures with zero image failures. Contact
+insets survive the shared prototype and repeated-fit caches. Petalburg's exact
+legacy Gym-notice owner transfers only after successful source upload, preventing
+a duplicate old notice. Native15 Hoenn Mart/home entry+returns and FR Gym/LG
+home entries pass; source workers additionally inspect both Kanto editions.
+448 source suites pass,0 fail,58 external-fixture skips. Concurrent committed
+performance history through6f48a7b3 retained; active working-tree edits untouched.
+Whole-game/map/interior coverage remains incomplete and workers continue.
+Flat home stair frames now align to actual wallpaper, with unioned risers,
+closed descending wells and real column apertures. Only reviewed stair-bay
+meshes bypass room clipping;12RSE layouts and ascent/descent verified. Native
+wall/floor heights, bounds and gameplay remain fixed. Viridian School preserves
+native HD2D flower cards; Pallet source doors/tops retain their intended datum.
+See docs/REGIONAL_BUILDING_INTEGRATION_2026-10-23.md for scope and evidence.
+
+# Combined optimization/model release1.57.9 — 2026-10-23
+
+Merged remote model work83f1d36a with optimization work0ef5b831. Preserve both
+contact-inset geometry and cached-fit separation.43combined suites pass;1404Lua
+files compile. Combined native package results belong in the1.57.9release notes.
+
+# Rendering optimization1.57.8 — 2026-10-23
+
+Current batch shares live GPU prototypes, culls only proven offscreen Gen3 main
+geometry/water, retains full shadow coverage, reduces shared shadow/effect/water
+work, slices tree/elevation preparation and preserves exact terrain/light output.
+See docs/RENDER_OPTIMIZATION_2026-10-23.md for measurements and remaining limits.
+All41 focused integration suites pass; all1398 Lua files compile. Native four-view
+culling equivalence and five running connections pass on engine0.3.95. Warm battle
+frames remain below6ms in the fixture; cold FRLG entries still reach166–184ms.
+This is NOT full165FPS completion or physical mobile certification. Model coverage
+remains with the other owner. Final1.57.8 package passed seven-mod load/render in
+all11games and forest/lab/first-person checks in all6GB/GBC editions. All593
+packaged Lua files compile. Documentation-only follow-up preserves tested code.
+
 # Genuine Mr Psychic source/native acceptance, scenery pause — 2026-10-23
 
 Authentic southeast HGSS ybc_h01 plus ybc_dor1_001 now covers only native Mr
@@ -111,7 +229,7 @@ placements need parent-owned native yellow paving. Canonical per-edition census:
 blocked cells. No whole-game or production-package acceptance is claimed.
 See docs/HGSS_MARTS_2026-10-23.md and canonical JSONL for exact evidence/gaps.
 
-# Depth/fence/foliage release1.57.7 — 2026-10-23
+# Depth/fence/foliage release1.57.8 — 2026-10-23
 
 Explicit building contact-ring recess prevents coplanar ground closures while
 preserving portals, upper geometry and native floors. Authentic ORAS rails now
@@ -122,6 +240,31 @@ regions stay isolated. Native0.3.95 five-game streaming/map-hash checks pass;
 front/first/rotated contact and interior captures inspected. Full coverage is
 still in progress; three workers continue exterior/interior source families.
 See docs/DEPTH_FENCES_FOLIAGE_2026-10-23.md for scope and evidence limits.
+Combined source verification:432 suites pass,0 fail,58 external skips;562
+production LuaJIT files compile. Exact package Emerald/FireRed contact smoke
+passes with native hashes unchanged and no renderer recovery. Concurrent
+committed performance history through91b89ba3 is merged; active primary-working-
+tree edits stay untouched. Release package receives a final FAR64 route smoke.
+
+# Streaming/parity release1.57.7 — 2026-10-23
+
+Keep model coverage with the separate owner. Shared tree anchor normalization
+now yields every2048 vertices, preserving source data. Gen3 moving-window cache
+keys retain the validated content snapshot, avoiding repeated sorting/allocation
+while still detecting edits and provider changes. Parity worker62ae6982 adds
+native Gen1/2 XD attack categories and reliable failed-model sprite fallback.
+Latest official engine is0.3.95; native QA uses its source with LÖVE11.5 shell
+from0.3.89 and isolated profiles. See docs/STREAM_PARITY_2026-10-23.md for limits
+and final packaged checks. Full165FPS, completeXD/mobile parity remain unfinished.
+
+# XD move category and failure isolation — 2026-10-23
+
+GB model animation now receives native move categories instead of selecting
+Physical for every XD attack. GBA bad metrics/update/clip/draw retain sprites
+and cache failure to prevent per-frame reconstruction; shared GB providers also
+honor explicit update failure. Four focused Lua suites pass (24 Stadium bridge
+checks). No model readiness, native visual or phone certification. See
+`docs/XD_IMPORT_STATUS.md`; scenery/streaming/version files untouched.
 
 # User-requested consolidated release1.57.6 — 2026-10-22
 

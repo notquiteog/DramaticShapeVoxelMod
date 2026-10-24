@@ -1,6 +1,14 @@
 -- Declaration inventory. Per-generation consumers/status live in OptionSupport;
 -- declaring a setting or listing a row is never evidence that it works.
 return {
+ {key="visualStyleBuildings",label="BUILDING STYLE",module="VisualStyles"},
+ {key="visualStyleTrees",label="TREE STYLE",module="VisualStyles"},
+ {key="visualStyleFlowers",label="FLOWER STYLE",module="VisualStyles"},
+ {key="visualStyleProps",label="PROP STYLE",module="VisualStyles"},
+ {key="visualStyleInteriors",label="INTERIOR STYLE",module="VisualStyles"},
+ {key="visualStyleTerrain",label="TERRAIN STYLE",module="VisualStyles"},
+ {key="visualStylePokemon",label="POKEMON STYLE",module="VisualStyles"},
+ {key="visualStyleCharacters",label="CHARACTER STYLE",module="VisualStyles"},
  {key="xdModels",label="XD POKEMON MODELS",module="XDModels"},
  {key="itemBall",label="ITEM BALL",module="ItemPokeballs"},
  {key="kfpHorizon",label="KFP HORIZON",module="KantoFirstPerson"},

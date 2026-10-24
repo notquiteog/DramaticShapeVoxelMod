@@ -38,6 +38,8 @@ function M.install()
  V.require('CommunityVisuals').buildings.defaultIndex=1
  V.require("KfpAtmosphere").install(function()return (M.level or 0)>0 end)
  local mod=V.mod
+ local Styles=V.require('VisualStyles')
+ mod.exports.visualStyles=Styles
  V.require("Gen3CacheMenu").install()
  local FieldView=require('src.core.game3.field_view')
  local Display=require('src.core.game3.display')
@@ -77,6 +79,7 @@ function M.install()
  local uninstallShiny=V.require('NativeCrystalShiny').install()
  local sharedSettings={V.require('XDModels').setting,V.require('ItemPokeballs').setting,V.require('CommunityVisuals').trees,V.require('CommunityVisuals').casino,V.require('CommunityVisuals').courtyards,V.require('CommunityVisuals').prizeRoom,V.require('RamPrecache').setting,V.require('CommunityVisuals').buildings,V.require('CommunityVisuals').tunnels,V.require('CommunityVisuals').cityGround,V.require('CommunityVisuals').walls,V.require('CommunityVisuals').masonry,V.require('StandingTrainer').setting,V.require('CommunityVisuals').pillars,V.require('CommunityVisuals').roads,V.require('CommunityVisuals').rocket,V.require('CommunityVisuals').elevator,V.require('CommunityVisuals').cutTrees,V.require('CommunityVisuals').towerWall,V.require('CommunityVisuals').signs,V.require('CommunityVisuals').safari,V.require('CommunityVisuals').grass,legendary.setting,Trees.props,Trees.surfaces,V.require('ModernBattleUI').setting,V.require('CommunityVisuals').treeDetail,V.require('CommunityVisuals').caveSound,V.require('CommunityVisuals').kantoLife,
   V.require('Shadows').setting,V.require('WorldCurve').setting,V.require('VoxelGrid').setting}
+ for _,setting in ipairs(Styles.settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(V.require("Gen3Capture").settings())do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(V.require("NativeAtmosphere").settings)do sharedSettings[#sharedSettings+1]=setting end
  for _,setting in ipairs(SceneOptions.settings)do sharedSettings[#sharedSettings+1]=setting end
@@ -275,6 +278,7 @@ function M.install()
   if payload and payload.mod==mod.id then
    for _,setting in ipairs(sharedSettings)do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
    if legendary.changed(payload.key)then Scene.invalidate()end
+   if Styles.byKey[payload.key]then Scene.invalidate();V.require('ShadowMap').invalidate()end
    for _,setting in ipairs(nativeArt.settings())do if payload.key==setting.key then setting:sync(payload.value)end end
    for _,setting in ipairs({Trees.setting,Trees.art})do if payload.key==setting.key then setting:sync(payload.value);Trees.changed(payload.key)end end
   end

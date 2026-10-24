@@ -57,3 +57,21 @@ local foreign={{def={midLayout={cells={},pair='foreign'}}}}
 assert(K.keys(foreign,0,0,6,6,ts)==nil,'unknown provider cached')
 assert(key(),'unknown provider poisoned later native layout')
 print('PASS memoized border, cells, region, edit, battle, window and unknown-provider invalidation')
+
+-- Window-only movement must preserve the exact cold fingerprint, including
+-- sparse gameplay edits and provider identity, without sorting edits again.
+local moving=K.new()
+local originalSort=table.sort
+moving.keys(rs,0,0,6,6,ts)
+local sorts=0
+table.sort=function(...)sorts=sorts+1;return originalSort(...)end
+for x=1,100 do moving.keys(rs,x,0,x+6,6,ts)end
+table.sort=originalSort
+assert(sorts==0,'window movement sorted unchanged world edits')
+local hot=moving.keys(rs,100,0,106,6,ts)
+assert(hot==K.new().keys(rs,100,0,106,6,ts),'window shortcut changed fingerprint')
+l.overrides[9]={mid=17,coll=1,elev=3}
+assert(moving.keys(rs,101,0,107,6,ts)==K.new().keys(rs,101,0,107,6,ts),'edit during window change missed')
+ts.forest.imageData={}
+assert(moving.keys(rs,102,0,108,6,ts)==K.new().keys(rs,102,0,108,6,ts),'provider during window change missed')
+print('PASS window-only movement reuses content snapshot; concurrent edits/providers invalidate')

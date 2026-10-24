@@ -46,6 +46,7 @@ function M.context()return Map.currentDef()end
 local cache,foliage,bark,spriteMeshes={ },nil,nil,{}
 local savedCanvas,saved=false,false
 local quadIndices={1,2,3,1,3,4}
+local cardinalDirections={{-1,0},{1,0},{0,-1},{0,1}}
 local function quad(v,i,p,uv,shade,anchor)
  Budget.tick()
  local base=#v
@@ -113,6 +114,7 @@ function M.nativeRequired(game)
   or (Shop.isShopCamera and Shop.isShopCamera()) or (def.cave==1 and (game.session.flashLevel or 0)>0)
 end
 local function releaseGeometry(cache)
+ for _,entry in ipairs(cache.importedModern or{})do V.require(entry.adapter).release(entry.group)end
  for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').release(center)end
  for _,house in ipairs(cache.importedHoenn or{})do V.require('Gen3DewfordDoors').release(house)end
  if cache.grassModels then V.require('GrassModels').releaseBatches(cache.grassModels)end
@@ -122,6 +124,7 @@ local function releaseGeometry(cache)
  for _,part in ipairs(cache.parts or {})do
   if part.under then part.under:release() end
   if part.nativeGround then part.nativeGround:release() end
+  if part.homeStairs then part.homeStairs:release()end
   if part.roof then part.roof:release() end
   if part.plants then part.plants:release() end
   if part.water then part.water:release() end
@@ -293,8 +296,10 @@ local function build(req,cache,previous)
    if V.require('Gen3ServiceRooms').replacesFloor(c,plan)then c.serviceRoomFloor=plan.floor end
   end
  end
+ cache.homeStairProfile=nil
  if roomProfile and roomProfile.homeFinish then
   local home=roomProfile.homeFinish
+  if home.stairs then cache.homeStairProfile=roomProfile end
   cache.flatNativeWalls=true;cache.northWallFront=home.north+.04;cache.furnitureRecesses={}
   for _,p in ipairs(props)do p.homeWall=cache.northWallFront end
   if home.kanto then
@@ -302,7 +307,7 @@ local function build(req,cache,previous)
    home.outline={{b[1],b[2]},{b[3],b[2]},{b[3],b[4]},{b[1],b[4]}}
    for _,c in pairs(cells)do if c.cy<=1 and c.cy>=0 and c.cx*16>=b[1]and c.cx*16<b[3]then c.kantoHomeFloor=home.floor end end
   end
-  for _,c in pairs(cells)do if c.stairs then c.stairs.homeWall=cache.northWallFront end end
+  for _,c in pairs(cells)do if c.stairs then c.stairs.homeWall=cache.northWallFront;c.stairs.homeWallPlane=home.north end end
   local origin=cells['0:0']
   if origin then Interior.setWallpaper(roomProfile,V.require('Gen3RoomWallpaper').material({id=def.id,voxelWallpaper=home.wall},origin.ts))end
  end
@@ -406,6 +411,11 @@ local function build(req,cache,previous)
   local _,fenceError,fenceCount=V.require('Gen3ImportedFences').build(cells,R.newMesh,cache.sceneryModels)
   cache.importedFenceError,cache.importedFenceCount=fenceError,fenceError and 0 or fenceCount
  end
+ cache.importedGymNoticeError,cache.importedGymNoticeCount=nil,0
+ if Styles.modern('props')then
+  local _,err,n=V.require('Gen3ModernHoennBuildings').prepare(cells,R.newMesh,cache.sceneryModels)
+  cache.importedGymNoticeError,cache.importedGymNoticeCount=err,err and 0 or n
+ end
  local interiorError,interiorCount=nil,0
  if Styles.modern('interiors')then local _;_,interiorError,interiorCount=V.require('Gen3ImportedInteriors').build(cells,R.newMesh,cache.sceneryModels)end
  cache.importedInteriorCount,cache.importedInteriorError=interiorCount,interiorError
@@ -415,14 +425,16 @@ local function build(req,cache,previous)
  cache.bankModels={};cache.bankFaceCount=0
  local bankBatches={}
  local batches={};local wood,wi,leaf,li,hedges,hi={},{},{},{},{},{}
+ local starts={}
  for _,c in pairs(cells)do
   Budget.tick()
   local ts,x,z,shape=c.ts,c.cx*16,c.cy*16,c.shape
   local b=batches[c.pair]
-  if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},gv={},gi={},roofMids={}};batches[c.pair]=b end
+  if not b then b={pair=c.nativePair,secondary=c.secondary,v={},i={},rv={},ri={},pv={},pi={},wv={},wi={},gv={},gi={},sv={},si={},roofMids={}};batches[c.pair]=b end
   local uv=uvFor(ts,c.mid)
   local column=c.column
-  local starts={#b.v,#b.rv,#b.pv,#b.wv,#wood,#leaf,#hedges,#b.gv}
+  starts[1],starts[2],starts[3],starts[4]=#b.v,#b.rv,#b.pv,#b.wv
+  starts[5],starts[6],starts[7],starts[8],starts[9]=#wood,#leaf,#hedges,#b.gv,#b.sv
   local truckFloor=V.require('Gen3TruckCargo').floor(c)
   if truckFloor then
    plane(b.gv,b.gi,x,z,uvFor(ts,truckFloor)or uv)
@@ -431,7 +443,18 @@ local function build(req,cache,previous)
    -- Closed timber boards and the planned ocean replace that whole plane.
   elseif c.stairs or shape.kind=='steps' or shape.kind=='ladder' then
    if shape.kind=='ladder' and not shape.down then plane(b.v,b.i,x,z,uvFor(ts,shape.ground) or uv)end
-   Stairs.append(c,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor)
+   Stairs.append(c,function(p,t,shade)
+    local well=false
+    if cache.homeStairProfile and c.stairs and c.stairs.r.design=='hoenn_house'and c.stairs.homeWallPlane then
+     local openings=cache.homeStairProfile.doorways and cache.homeStairProfile.doorways[1]or{}
+     for _,opening in ipairs(openings)do
+      local inside=true
+      for _,v in ipairs(p)do if v[1]<opening[1]-1e-7 or v[1]>opening[2]+1e-7 then inside=false;break end end
+      if inside then well=true;break end
+     end
+    end
+    quad(well and b.sv or b.v,well and b.si or b.i,p,t,shade)
+   end,uvFor)
   elseif c.researchFloor then
    V.require('Gen3ServiceRooms').floor(c,cache.researchRoom,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.researchFloor)or uv)
   elseif c.kantoHomeFloor then
@@ -440,6 +463,8 @@ local function build(req,cache,previous)
    V.require('Gen3ServiceRooms').floor(c,cache.serviceRoom,function(p,t,shade)quad(b.v,b.i,p,t,shade)end,uvFor(ts,c.serviceRoomFloor)or uv)
   elseif c.institutionWallFloor then
    plane(b.v,b.i,x,z,uvFor(ts,c.institutionWallFloor)or uv)
+  elseif c.importedGymNotice then
+   plane(b.gv,b.gi,x,z,uvFor(ts,V.require('Gen3ModernHoennBuildings').ground(c))or uv)
   elseif c.nativeLamp then
    plane(b.v,b.i,x,z,uvFor(ts,c.nativeLampGround or V.require('Gen3NativeLamps').ground) or uv)
   elseif c.civic then
@@ -550,29 +575,34 @@ local function build(req,cache,previous)
    plane(b.v,b.i,x,z,uvFor(ts,column.ground or shape.ground) or uv)
    if not column.stageHidden then
    if shape.kind=='wall' or shape.kind=='roomWall' then
+    local function wallFace(q,t,shade)
+     local function emit(v,uv,s)quad(b.v,b.i,v,uv,s)end
+     if cache.homeStairProfile then return V.require('Gen3HomeRooms').stairWallFace(cache.homeStairProfile,q,t,shade,emit)end
+     return emit(q,t,shade)
+    end
     local row=c.cy-(column.first+column.roofs)
     local step=column.height/column.walls
     local top=column.height-row*step
     local portal=c.gym and (c.cx==c.gym.cx+3 or c.cx==c.gym.cx+4)
     local front=column.front+(portal and 4 or 0)
-    quad(b.v,b.i,{{x,top,front},{x+16,top,front},{x+16,top-step,front},{x,top-step,front}},uv,cache.flatNativeWalls and -1 or 1)
+    wallFace({{x,top,front},{x+16,top,front},{x+16,top-step,front},{x,top-step,front}},uv,cache.flatNativeWalls and -1 or 1)
     if portal then
      local u,t=uv[1][1]+(uv[2][1]-uv[1][1])*.12,uv[1][2]+(uv[3][2]-uv[1][2])*.12
      local trim=swatch(ts,u,t)
-     if row==0 then quad(b.v,b.i,{{x,top,column.front},{x+16,top,column.front},{x+16,top,front},{x,top,front}},trim,.9)end
+     if row==0 then wallFace({{x,top,column.front},{x+16,top,column.front},{x+16,top,front},{x,top,front}},trim,.9)end
      local side=c.cx==c.gym.cx+3 and x or x+16
-     quad(b.v,b.i,{{side,top,column.front},{side,top,front},{side,top-step,front},{side,top-step,column.front}},trim,.8)
+     wallFace({{side,top,column.front},{side,top,front},{side,top-step,front},{side,top-step,column.front}},trim,.8)
     end
     if column.indoor then
      local u,t=(uv[1][1]+uv[2][1])*.5,uv[1][2]
      local solid=swatch(ts,u,t)
      for _,dx in ipairs({-1,1})do
       if Roof.sideVisible(cells,c,dx)then local sx=dx<0 and x or x+16
-       quad(b.v,b.i,{{sx,top,column.back},{sx,top,column.front},{sx,top-step,column.front},{sx,top-step,column.back}},solid,.82)
+       wallFace({{sx,top,column.back},{sx,top,column.front},{sx,top-step,column.front},{sx,top-step,column.back}},solid,.82)
       end
      end
-     if row==0 then quad(b.v,b.i,{{x,column.height,column.back},{x+16,column.height,column.back},{x+16,column.height,column.front},{x,column.height,column.front}},solid)end
-     quad(b.v,b.i,{{x+16,top,column.back},{x,top,column.back},{x,top-step,column.back},{x+16,top-step,column.back}},solid,.7)
+     if row==0 then wallFace({{x,column.height,column.back},{x+16,column.height,column.back},{x+16,column.height,column.front},{x,column.height,column.front}},solid)end
+     wallFace({{x+16,top,column.back},{x,top,column.back},{x,top-step,column.back},{x+16,top-step,column.back}},solid,.7)
     end
    else
     b.roofMids[c.roofMid or c.mid]=true
@@ -642,10 +672,12 @@ local function build(req,cache,previous)
   local base=c.base or 0
   -- Terrain already owns absolute cap/retaining-face heights.
   if shape.kind=='cliff' or shape.kind=='caveWall' then base=0 end
+  if base~=0 then
   Elevation.lift(b.v,starts[1],base);Elevation.lift(b.rv,starts[2],base)
   Elevation.lift(b.pv,starts[3],base);Elevation.lift(b.wv,starts[4],base)
   Elevation.lift(wood,starts[5],base);Elevation.lift(leaf,starts[6],base)
-  Elevation.lift(hedges,starts[7],base);Elevation.lift(b.gv,starts[8],base)
+  Elevation.lift(hedges,starts[7],base);Elevation.lift(b.gv,starts[8],base);Elevation.lift(b.sv,starts[9],base)
+  end
   if c.bridge then V.require('Gen3Bridges').append(cells,c,function(v,t,shade)quad(b.v,b.i,v,t,shade)end,uvFor)end
   local waterTs,waterMid,waterHeight=V.require('Gen3Bridges').water(c,NativeWater.surface)
   if waterTs then
@@ -682,7 +714,7 @@ local function build(req,cache,previous)
     water and NativeWater.surface(c,u.layer)or u.height+base-c.floor.height)
   end
   if shape.kind~='cliff' and shape.kind~='caveWall' and shape.kind~='water' and not c.stairs and shape.kind~='steps' then
-   for _,d in ipairs({{-1,0},{1,0},{0,-1},{0,1}})do
+   for _,d in ipairs(cardinalDirections)do
     local n=cells[(c.cx+d[1])..':'..(c.cy+d[2])]
     if n and n.shape.kind~='cliff' and n.shape.kind~='caveWall' and n.shape.kind~='steps' and not n.stairs then
      local low=n.base or 0
@@ -750,7 +782,7 @@ local function build(req,cache,previous)
  end end
  local modelCache=V.require('NativeGeometryCache')
  modelCache.prepare(req.game,regions)
- for _,p in ipairs(props)do if not p.stageHidden then
+ for _,p in ipairs(props)do if not p.stageHidden and not V.require('Gen3ModernHoennBuildings').ownsProp(p)then
   local b=batches[p.pair]
   local start,plantStart=#b.v,#b.pv
   local cutout=p.recipe.cutout
@@ -768,6 +800,7 @@ local function build(req,cache,previous)
   end)
   Elevation.lift(b.v,start,p.groundHeight or 0);Elevation.lift(b.pv,plantStart,p.groundHeight or 0)
  end end
+ cache.importedModern={};cache.modernBuildingCounts={}
  cache.civics={};cache.importedCenters={};cache.importedKantoCenters={};cache.importedPewterMuseum={};cache.importedViridianHouses={};M.legendaryBuildingCount=0
  for _,g in ipairs(civics)do if not g.stageHidden and not g.importedKanto then
   local nativeKit=Styles.modern('buildings')and V.require('NativeLegendaryBuildings').build(g,def,cells)
@@ -790,13 +823,33 @@ local function build(req,cache,previous)
     local outlet=adapter.chimney(g);if outlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=outlet end
    end
   end
+  if not imported and Styles.modern('buildings')then
+   for _,name in ipairs{'Gen3ModernKantoBuildings','Gen3ModernHoennBuildings'}do
+    local adapter=V.require(name)
+    local entry={adapter=name,group=g};cache.importedModern[#cache.importedModern+1]=entry
+    local built,kind=adapter.build(g,cells,R.newMesh,cache.sceneryModels)
+    if built then
+     imported=true;kind=(adapter.kind and adapter.kind(g))or kind or
+      (g.custom.name:find('gym',1,true)and 'hoennGyms'or g.custom.name:find('mart',1,true)and 'hoennMarts'or 'oldaleHomes')
+     cache.modernBuildingCounts[kind]=(cache.modernBuildingCounts[kind]or 0)+1
+     if adapter.chimney then local outlet=adapter.chimney(g);if outlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=outlet end end
+     break
+    else cache.importedModern[#cache.importedModern]=nil end
+   end
+  end
   if not imported then
    imported=Styles.modern('buildings')and V.require('Gen3ImportedHoenn').build(g,cells,R.newMesh,cache.sceneryModels)
    if imported then cache.importedHoenn[#cache.importedHoenn+1]=g end
   end
   if not imported then
   local vertices,indices={},{}
-  modelCache.append(def.id or req.mapId,g,Civic.append,function(v,t,shade)quad(vertices,indices,v,t,shade)end)
+  modelCache.append(def.id or req.mapId,g,Civic.append,function(v,t,shade)
+   -- Native-art fallback structures need the same contact ownership as the
+   -- imported bodies. Keep original floor/doors above; bury only their Y0 ring.
+   local contact={}
+   for i,p in ipairs(v)do contact[i]={p[1],math.abs(p[2])<1e-7 and -.05 or p[2],p[3]}end
+   quad(vertices,indices,contact,t,shade)
+  end)
   if g.chimneyOutlet then cache.chimneyOutlets[#cache.chimneyOutlets+1]=g.chimneyOutlet end
   Elevation.lift(vertices,0,g.groundHeight or 0)
   local part={placement=g};cache.civics[#cache.civics+1]=part
@@ -850,7 +903,7 @@ local function build(req,cache,previous)
    part[name]=mesh
    Budget.check()
   end
-  upload('under',b.v,b.i);upload('nativeGround',b.gv,b.gi);upload('roof',b.rv,b.ri)
+  upload('under',b.v,b.i);upload('nativeGround',b.gv,b.gi);upload('homeStairs',b.sv,b.si);upload('roof',b.rv,b.ri)
   upload('plants',b.pv,b.pi,R.TREE_FORMAT)
   part.waterMid=NativeWater.dominant(b.waterMids)
   part.waters={};local levels={}
@@ -858,11 +911,17 @@ local function build(req,cache,previous)
    local h=b.wv[j][2];local group=levels[h]
    if not group then group={v={},i={}};levels[h]=group end
    local base=#group.v
-   for k=0,3 do group.v[#group.v+1]=b.wv[j+k]end
+   group.bounds=group.bounds or{math.huge,h,math.huge,-math.huge,h,-math.huge}
+   local bounds=group.bounds
+   for k=0,3 do
+    local vertex=b.wv[j+k];group.v[#group.v+1]=vertex
+    bounds[1],bounds[3]=math.min(bounds[1],vertex[1]),math.min(bounds[3],vertex[3])
+    bounds[4],bounds[6]=math.max(bounds[4],vertex[1]),math.max(bounds[6],vertex[3])
+   end
    for _,k in ipairs(quadIndices)do group.i[#group.i+1]=base+k end
   end
   for h,g in pairs(levels)do
-   local mesh=assert(R.newMesh(g.v,g.i));part.waters[#part.waters+1]={mesh=mesh,height=h};Budget.check()
+   local mesh=assert(R.newMesh(g.v,g.i));part.waters[#part.waters+1]={mesh=mesh,height=h,bounds=g.bounds};Budget.check()
   end
  end
  cache.rockInstances={}
@@ -935,14 +994,24 @@ local function prepare(game,vw,vh,cam)
  for _,name in ipairs({'sceneDef','distance','fadeExtent','fillCounts','forestTrees','treeFootprints','gymCount','civicCount','stairCount','chimneyCount','propCount','bridgeCount','dockCellCount','cliffCount','seaRockCount','tunnelCounts','prizeWallCount','cityGroundCount','legendaryBuildingCount','legendaryTreeCount'})do M[name]=cache[name]end
  return true
 end
+local framePlanes
+local Cull=V.require('FrustumCull')
 local function terrain(draw)
  local original=draw
- local function draw(...)
-  local previous=R.surfaceDetail
-  R.surfaceDetail=TreeStyle.surfaces:get()=='detailed'
-  local ok,err=pcall(original,...)
-  R.surfaceDetail=previous
-  if not ok then error(err,0)end
+ local lightPlanes=original==Shadow.draw and Shadow.frustum()or nil
+ local passPlanes=framePlanes
+ if original==Shadow.draw then passPlanes=lightPlanes end
+ -- Surface detail is a color-pass uniform, never used by the depth shader.
+ -- Resolve the setting once per pass, not once per mesh in large forests.
+ if original~=Shadow.draw then
+  local detailed=TreeStyle.surfaces:get()=='detailed'
+  draw=function(...)
+   local previous=R.surfaceDetail
+   R.surfaceDetail=detailed
+   local ok,err=pcall(original,...)
+   R.surfaceDetail=previous
+   if not ok then error(err,0)end
+  end
  end
  for _,p in ipairs(cache.parts)do
   -- Always bind the current native image: animations and palette updates stay live.
@@ -952,6 +1021,17 @@ local function terrain(draw)
    -- Reviewed building-header floors contain clean native terrain below a
    -- separate roof layer. Keep that roof off the ground in every draw pass.
    if p.nativeGround then draw(p.nativeGround,ts.image)end
+   if p.homeStairs then
+    -- Only reviewed stair-bay geometry may enter the actual wall opening.
+    -- Side floor strips and every unrelated mesh retain normal room clipping.
+    R.interiorClip(false)
+    local ok,err=pcall(function()
+     draw(p.homeStairs,ts.image)
+     if ts.overImage then draw(p.homeStairs,ts.overImage)end
+    end)
+    R.interiorClip(true)
+    if not ok then error(err,0)end
+   end
    -- A metatile's visible roof/sign artwork may live entirely in BG2.
    -- Apply both native layers to the SAME shaped surface, not just the floor.
    if ts.overImage then draw(p.under,ts.overImage) end
@@ -991,16 +1071,23 @@ local function terrain(draw)
  for _,batch in ipairs(cache.treeInstances or {})do draw(batch,V.require('NativeTreeArt').image())end
  for _,part in ipairs(cache.grassModels or{})do if part.count>0 then draw(part.mesh,part.image)end end
  for _,part in ipairs(cache.bankModels or{})do draw(part.mesh,part.image)end
- for _,part in ipairs(cache.importedTrees or{})do if part.count>0 then draw(part.mesh,part.image)end end
- V.require('SceneryDraw').opaque(cache.sceneryModels,draw,original==Shadow.draw)
+ for _,part in ipairs(cache.importedTrees or{})do
+  if part.count>0 and Cull.visible(passPlanes,part.bounds)then
+   local batch=part.mesh
+   batch=V.require('ModelInstances').visible(batch,passPlanes,part.localBounds,original==Shadow.draw and 'shadow'or nil)
+   if type(batch)~='table'or batch.count~=0 then draw(batch,part.image)end
+  end
+ end
+ V.require('SceneryDraw').opaque(cache.sceneryModels,draw,original==Shadow.draw,framePlanes,lightPlanes)
  local doorAnim=require('src.core.game3.doors').getActiveAnim()
+ for _,entry in ipairs(cache.importedModern or{})do V.require(entry.adapter).draw(entry.group,doorAnim,draw)end
  for _,center in ipairs(cache.importedCenters or{})do V.require('Gen3CenterDoors').draw(center,doorAnim,draw)end
  for _,house in ipairs(cache.importedHoenn or{})do V.require('Gen3DewfordDoors').draw(house,doorAnim,draw)end
 end
 local function waterMeshes()
  return NativeWater.sync(cache.waterDraws or{},Tiles._pairs)
 end
-local reflectPlane
+local reflectPlane,actorPlanes
 local dustMesh,dustImage
 local function rideDust(game,cam)
  local exports=game and game.mods and game.mods.exports
@@ -1025,22 +1112,27 @@ local function rideDust(game,cam)
   end
  end
 end
-local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
+local actorFrames=V.require('ActorFrameCache').new()
+local function prepareActor(row,gid,x,z,facing,phase,flip,level,cameraYaw,explicitFrame,bow,fieldMove,upright,depthOffset,lift,elevation,fishing,fishFrame,fieldMoveFrame,running)
+ local opts=row.opts or{};row.opts=opts
+ opts.frame,opts.bow,opts.fieldMove,opts.upright=explicitFrame,bow,fieldMove,upright
+ opts.depthOffset,opts.lift,opts.elevation=depthOffset,lift,elevation
+ opts.fishing,opts.fishFrame,opts.fieldMoveFrame,opts.running=fishing,fishFrame,fieldMoveFrame,running
  -- Neighbor snapshots may cover much farther than the rendered terrain.
  -- Do not leave those actors floating in the sky beyond its visible edge.
  if not (cache.cells and cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]) then return end
  local spr=Sprites.getDraw(gid);if not spr then return end
  -- View-relative artwork keeps the actor facing its world heading while the
  -- camera turns; this changes the sampled frame, never the entity direction.
- local worldFacing=facing
- facing=V.require('Gen3Integration').worldDirection(facing,-(cam.level>=6 and cam.yaw or 0))
+ facing=V.require('Gen3Integration').worldDirection(facing,-(level>=6 and cameraYaw or 0))
  local frame,mirror=Sprites.pose(spr,facing,phase,flip,opts)
  local q=spr.quads[frame];if not q then return end
+ local qx,qy,qw,qh=q:getViewport()
  local padding=SpriteAnchor.framePadding(spr,frame)
  local key=tostring(spr)..':'..tostring(spr.image)..':'..frame..':'..tostring(mirror)..':'..padding
  local mesh=spriteMeshes[key]
  if not mesh then
-  local qx,qy,qw,qh=q:getViewport();local iw,ih=spr.image:getDimensions()
+  local iw,ih=spr.image:getDimensions()
   local l,r=qx/iw,(qx+qw)/iw;if mirror then l,r=r,l end
   local v,i={},{}
   -- Shift in local card space so lean, free-camera yaw and reflection all
@@ -1048,7 +1140,7 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
   quad(v,i,{{-qw/2,qh-padding,0},{qw/2,qh-padding,0},{qw/2,-padding,0},{-qw/2,-padding,0}},{{l,qy/ih},{r,qy/ih},{r,(qy+qh)/ih},{l,(qy+qh)/ih}})
   mesh=R.newMesh(v,i);spriteMeshes[key]=mesh
  end
- local yaw=cam.level>=6 and -cam.yaw or 0
+ local yaw=level>=6 and -cameraYaw or 0
  -- The character stands at the CENTRE of the cell they occupy, (x+8, z+8),
  -- matching the GB billboards (Mat4.billboard places a card on px+8/py+8 and
  -- Gen 1/2 ground contact runs through the same point). The old z+16 sat the
@@ -1062,6 +1154,23 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  local contact=cache.cells[math.floor((x+8)/16)..':'..math.floor((z+8)/16)]
  if contact and contact.prop then floor=contact.prop.groundHeight or floor end
  local height=floor+(opts.lift or 0)
+ local pose=Mat.rotateY(yaw)
+ local base=Mat.mul(Mat.translate(x+8,height,z+8+(opts.depthOffset or 0)),pose)
+ -- Use the shared GB actor contact correction. Terrain retains its full
+ -- acne margin; the visible lookup must use the identical snugged caster.
+ local caster=Shadow.snug(base)
+ row.spr,row.frame,row.mesh,row.qw,row.qh,row.padding=spr,frame,mesh,qw,qh,padding
+ row.floor,row.height,row.pose,row.base,row.caster=floor,height,pose,base,caster
+ return true
+end
+local function actor(gid,x,z,facing,phase,flip,opts,cam,draw,identity)
+ local row=actorFrames:get(identity,prepareActor,gid,x,z,facing,phase,flip,cam.level,cam.yaw,
+  opts.frame,opts.bow,opts.fieldMove,opts.upright,opts.depthOffset,opts.lift,opts.elevation,
+  opts.fishing,opts.fishFrame,opts.fieldMoveFrame,opts.running)
+ if not row then return end
+ local spr,frame,mesh,qw,qh,padding=row.spr,row.frame,row.mesh,row.qw,row.qh,row.padding
+ local floor,height,pose,base,caster=row.floor,row.height,row.pose,row.base,row.caster
+ local worldFacing=facing
  if V.require('Gen3Boats').draw(gid,x,z+(opts.depthOffset or 0),height,worldFacing,draw,reflectPlane)then return end
  if V.require('Gen3TruckExterior').draw(gid,x,z+(opts.depthOffset or 0),height,spr,frame,draw,reflectPlane)then return end
  if V.require('Gen3TruckCargo').draw(gid,x,z+(opts.depthOffset or 0),height,spr,frame,draw,reflectPlane)then return end
@@ -1070,16 +1179,11 @@ local function actor(gid,x,z,facing,phase,flip,opts,cam,draw)
  if draw~=Shadow.draw and not reflectPlane and (opts.depthOffset or 0)==0 then
   V.require("ActorContact").draw(x+8,z+8,floor,height-floor,spr.width)
  end
- local pose=Mat.rotateY(yaw)
- local base=Mat.mul(Mat.translate(x+8,height,z+8+(opts.depthOffset or 0)),pose)
- -- Use the shared GB actor contact correction. Terrain retains its full
- -- acne margin; the visible lookup must use the identical snugged caster.
- local caster=Shadow.snug(base)
  if reflectPlane then height=2*reflectPlane-height+V.require('Water').CAST_RAISE end
  local model=reflectPlane and Mat.mul(Mat.translate(x+8,height,z+8+(opts.depthOffset or 0)),pose) or base
  if reflectPlane then model=Mat.mul(model,Mat.scale(1,-1,1))end
  if draw==Shadow.draw then draw(mesh,spr.image,caster)
- else draw(mesh,spr.image,model,nil,caster) end
+ elseif V.require('SpriteFrustum').visible(model,qw,qh,padding,actorPlanes)then draw(mesh,spr.image,model,nil,caster) end
 end
 function M.groundAt(x,z,layer)
  local water=NativeWater.at(cache.waterField,x,z,layer)
@@ -1093,6 +1197,9 @@ function M.groundAt(x,z,layer)
  return 0
 end
 local function actors(game,cam,draw)
+ -- Reflection uses a different current VP; never reuse main-camera planes.
+ actorPlanes=nil
+ if draw~=Shadow.draw and R.curveK==0 then actorPlanes=Cull.prepare(R.vp)end
  if cam.replay then
   local frame=cam.replay.frame
   for _,a in ipairs(frame.actors or {})do
@@ -1100,7 +1207,7 @@ local function actors(game,cam,draw)
     local support,offset=Furniture.support(cache.cells,a.graphicsId,a.x,a.y,(a.walkPhase or 0)==0)
     local z=a.id==255 and frame.y or a.y
     actor(a.graphicsId,a.x,z,a.facing,a.walkPhase,a.stepFlip,
-     {frame=a.frame,bow=a.bow,fieldMove=a.fieldMove,depthOffset=offset or 0,lift=support+(z-a.y)},cam,draw)
+     {frame=a.frame,bow=a.bow,fieldMove=a.fieldMove,depthOffset=offset or 0,lift=support+(z-a.y)},cam,draw,a)
    end
   end
   return
@@ -1112,7 +1219,7 @@ local function actors(game,cam,draw)
   local support,depthOffset=Furniture.support(cache.cells,gid,eo.px or eo.cellX*16,eo.py or eo.cellY*16,not eo.moving)
   actor(gid,(eo.px or eo.cellX*16)+(eo.raiseX or 0),eo.py or eo.cellY*16,
    eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,
-   {elevation=eo.currentElevation,bow=(eo.bowFrames or 0)>0 or eo.raiseHand,frame=eo.customFrame,upright=tonumber(gid)==92 or tonumber(gid)==94,depthOffset=depthOffset or 0,lift=support-(eo.raiseY or 0)},cam,draw)
+   {elevation=eo.currentElevation,bow=(eo.bowFrames or 0)>0 or eo.raiseHand,frame=eo.customFrame,upright=tonumber(gid)==92 or tonumber(gid)==94,depthOffset=depthOffset or 0,lift=support-(eo.raiseY or 0)},cam,draw,eo)
  end
  -- Connected maps use the engine's ghost snapshots; never advance those
  -- actors here (doing that per render would reintroduce fast wandering NPCs).
@@ -1124,7 +1231,7 @@ local function actors(game,cam,draw)
     for _,eo in ipairs(live)do
      actor(eo.graphicsId or (eo.def and (eo.def.graphicsId or eo.def.graphics)),
       (eo.px or eo.cellX*16)+entry.ox*16,(eo.py or eo.cellY*16)+entry.oy*16,
-      eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,{elevation=eo.currentElevation},cam,draw)
+      eo.facing or 'down',Objects.walkPhase(eo),eo.stepFlip,{elevation=eo.currentElevation},cam,draw,eo)
     end
    else
     local event=space and space.bundle and space.bundle.events and space.bundle.events[entry.id]
@@ -1135,7 +1242,7 @@ local function actors(game,cam,draw)
      local visible=not obj.flag or obj.flag==0 or (space and space.objectVisible and space.objectVisible(obj))
      if visible and (not bounds or (x>=0 and y>=0 and x<bounds.w and y<bounds.h)) then
       actor(obj.graphicsId or obj.graphics,(entry.ox+x)*16,(entry.oy+y)*16,
-       tostring(obj.facing or 'down'):lower(),0,false,{},cam,draw)
+       tostring(obj.facing or 'down'):lower(),0,false,{},cam,draw,obj)
      end
     end
    end
@@ -1144,7 +1251,7 @@ local function actors(game,cam,draw)
  if (draw==Shadow.draw or V.require('Gen3CameraRig').showsPlayer(cam))and Player.isVisible() then
   actor(Sprites.playerGraphicsId(game),(Player.px or 0)+(Player.spriteXOffset or 0),Player.py or 0,
    Player.facing,Player.walkPhase(),Player.drawFlip(),
-   {elevation=Player.currentElevation,fieldMove=(Player.fieldMoveAnim or 0)>0,lift=SpriteAnchor.playerLift(Player)},cam,draw)
+   {elevation=Player.currentElevation,fieldMove=(Player.fieldMoveAnim or 0)>0,lift=SpriteAnchor.playerLift(Player)},cam,draw,Player)
  end
 end
 -- Project the engine-owned door/healing frames into the existing 3D room.
@@ -1179,6 +1286,11 @@ local function fieldEffects(draw,cam)
  local doors=require('src.core.game3.doors');local a=doors.getActiveAnim()
  if a then
   local surface,sourceDoor
+  for _,entry in ipairs(cache.importedModern or{})do
+   local adapter=V.require(entry.adapter)
+   if adapter.ownsDoor(entry.group,a.x,a.y)then sourceDoor=true;break end
+   if adapter.doorSurface then surface=adapter.doorSurface(entry.group,a.x,a.y);if surface then break end end
+  end
   for _,g in ipairs(cache.importedCenters or{})do
    if g.importedCenterDoors and a.x==g.cx+1 and a.y==g.cy+3 then sourceDoor=true;break end
    surface=V.require('Gen3ImportedCenters').doorSurface(g,a.x,a.y)
@@ -1229,6 +1341,7 @@ local function fieldEffects(draw,cam)
  end
 end
 function M.restore()
+ actorFrames:clear()
  R.battleOcclusion(nil)
  R.fog=nil
  R.interior=nil
@@ -1241,6 +1354,7 @@ function M.restore()
 end
 function M.draw(game,vw,vh,cam)
  if not prepare(game,vw,vh,cam) then return false end
+ actorFrames:begin()
  materials()
  -- Script camera panning belongs to the flat renderer. It must not move the
  -- first-person eye or pull the user's orbit away during dialogue/replays.
@@ -1355,6 +1469,7 @@ function M.draw(game,vw,vh,cam)
  R.glassMask=nil;R.glassNight=not indoor and V.require('DayNight').windowLight() or 0
  R.buildingLightField=not indoor and cache.lightField or nil
  if not R.beginScene(renderWidth,renderHeight,cx,cz,vw,vh,background,'firered') then M.restore();return false end
+ framePlanes=R.curveK==0 and Cull.prepare(R.vp) or nil
  if cam.actors then
   local p=cam.actors.points
   local function row(id)
@@ -1384,11 +1499,16 @@ function M.draw(game,vw,vh,cam)
  else
   R.battleOcclusion(nil)
   local options=cache.waterOptions
+  options.frustum=framePlanes
   options.underColor,options.underDepth=nil,nil
-  if #water>0 and cache.wetRockCells>0 and V.require('Water').level()>=2 then
+  local visibleWater=false
+  for _,group in ipairs(cache.waterLevels or{})do
+   if Cull.visible(framePlanes,group.bounds)then visibleWater=true;break end
+  end
+  if visibleWater and cache.wetRockCells>0 and V.require('Water').level()>=2 then
    options.underColor,options.underDepth=R.captureUnderwater(true)
   end
-  for _,group in ipairs(cache.waterLevels or{})do
+  for _,group in ipairs(cache.waterLevels or{})do if Cull.visible(framePlanes,group.bounds)then
    local h=group.height
    options.plane=h
    V.require('WaterSurfacePass').draw(group,function()actors(game,cam,R.draw)end,function()
@@ -1397,7 +1517,7 @@ function M.draw(game,vw,vh,cam)
     reflectPlane=nil
     if not ok then error(err,0)end
    end,options)
-  end
+  end end
   if not cam.replay then V.require('Gen3ScreenEffects').background(require('src.core.game3.field_effects'),renderWidth,renderHeight)end
   actors(game,cam,R.draw)
   local rainProps=V.require('KfpRainProps')
@@ -1423,7 +1543,7 @@ function M.draw(game,vw,vh,cam)
   if not cam.replay then rideDust(game,cam);fieldEffects(R.draw,cam)end
  end
  R.battleOcclusion(nil)
- if not plate then V.require('SceneryDraw').blended(cache.sceneryModels,R.draw,R.eye)end
+ if not plate then V.require('SceneryDraw').blended(cache.sceneryModels,R.draw,R.eye,framePlanes)end
  if not plate then
   local wet=V.require('KfpWetGround')
   if not cam.battle and not cam.replay and wet.setting:get()~='off'then
@@ -1471,11 +1591,19 @@ function M.performanceSnapshot()
   grass={placements=cache.grassModelCount or 0,batches=#(cache.grassModels or{}),error=cache.grassModelError},
   importedTrees={placements=cache.importedTreeCount or 0,batches=#(cache.importedTrees or{}),error=cache.importedTreeError},
   fences={placements=cache.importedFenceCount or 0,error=cache.importedFenceError},
-  scenery={placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),pewterMuseum=#(cache.importedPewterMuseum or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
+  scenery={viridianFlowerHouses=cache.modernBuildingCounts and cache.modernBuildingCounts.viridianFlowerHouses or 0,
+   pewterHouses=cache.modernBuildingCounts and cache.modernBuildingCounts.pewterHouses or 0,
+   hgssGyms=cache.modernBuildingCounts and cache.modernBuildingCounts.hgssGyms or 0,
+   hoennGyms=cache.modernBuildingCounts and cache.modernBuildingCounts.hoennGyms or 0,
+   hoennMarts=cache.modernBuildingCounts and cache.modernBuildingCounts.hoennMarts or 0,
+   petalburgHomes=cache.modernBuildingCounts and cache.modernBuildingCounts.petalburgHomes or 0,
+   oldaleHomes=cache.modernBuildingCounts and cache.modernBuildingCounts.oldaleHomes or 0,
+   gymNotices=cache.importedGymNoticeCount or 0,placements=cache.sceneryModelCount or 0,centers=#(cache.importedCenters or{}),kanto=#(cache.importedKanto or{}),kantoCenters=#(cache.importedKantoCenters or{}),pewterMuseum=#(cache.importedPewterMuseum or{}),viridianHouses=#(cache.importedViridianHouses or{}),hoenn=#(cache.importedHoenn or{}),interiors=cache.importedInteriorCount or 0,interiorError=cache.importedInteriorError,batches=#(cache.sceneryModels or{}),error=cache.sceneryModelError},
   geometryCache=V.require('NativeGeometryCache').stats}
 end
-function M.invalidate()V.require('Gen3TruckCargo').clear();V.require('Gen3TruckExterior').clear();V.require('Gen3Boats').clear();V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
+function M.invalidate()actorFrames:clear();V.require('Gen3TruckCargo').clear();V.require('Gen3TruckExterior').clear();V.require('Gen3Boats').clear();V.require('KfpWetGround').invalidate();Boundary.clear();V.require('Gen3SeaRocks').clearGeometry();V.require('Gen3CivicMaterials').invalidate();future=nil;stream:clear();cache={}end
 function M.release()
+ actorFrames:clear()
  V.require('Gen3TruckCargo').clear();V.require('Gen3Boats').clear()
  V.require('Gen3TruckExterior').clear()
  V.require('Gen3SeaRocks').clearGeometry()

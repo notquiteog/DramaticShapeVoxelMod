@@ -7,7 +7,7 @@ local M={}
 -- LAMPS4: Center at the west lawn edge; passage lamp beside the south wall.
 local points={{4,14,1},{26,14,-1},{35,30,-1},{22,31,1}}
 local mesh,texture,mask
-local originX,originZ=0,0
+local model=Mat4.translate(0,0,0)
 local DARK,BRONZE,GLASS=0.5/6,1.5/6,2.5/6
 function M.geometry()
   local vertices,indices={},{}
@@ -94,10 +94,10 @@ local function build()
   d:setPixel(3,0,.96,.83,.53,1)
   d:setPixel(4,0,1.0,.90,.65,1)
   d:setPixel(5,0,.96,.83,.53,1)
-  texture=love.graphics.newImage(d);texture:setFilter('nearest','nearest')
+  texture=love.graphics.newImage(d);texture:setFilter('nearest','nearest');d:release()
   local md=love.image.newImageData(6,1)
   for x=0,5 do md:setPixel(x,0,1,1,1,x>=2 and 1 or 0) end
-  mask=love.graphics.newImage(md);mask:setFilter('nearest','nearest')
+  mask=love.graphics.newImage(md);mask:setFilter('nearest','nearest');md:release()
   mesh=R.newMesh(M.geometry())
 end
 function M.configure(state)
@@ -111,7 +111,7 @@ function M.configure(state)
     end
   end
   if not map then return end
-  originX,originZ=ox,oz
+  model=Mat4.translate(ox,0,oz)
   local positions={}
   for _,p in ipairs(points) do
     positions[#positions+1]={p[1]*8+4+ox,0,p[2]*8+4+oz}
@@ -121,7 +121,6 @@ end
 function M.draw(state)
   if not R.streetLamps then return end
   if not mesh then build() end
-  local model=Mat4.translate(originX,0,originZ)
   local old=R.glassMask
   R.glassMaskNow(mask);R.glass(true)
   local ok,err=pcall(R.draw,mesh,texture,model)

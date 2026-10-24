@@ -1,0 +1,66 @@
+{
+  "source": "User-supplied Pokemon Alpha Sapphire RomFS",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "nativeLink": "ZO230 -> AD115 -> MM171 -> GR513",
+  "model": "t102r0101_00_00",
+  "modelBchSha256": "93158e5006309bdc48a0b2aa4d06edbd5405ad521398100e19eef3286ed275c0",
+  "textureBchSha256": "5f24ec31412d5ca4611cf5d4c46115f63937bc4a18afba8d77cc144ec86583d4",
+  "textures": {
+    "t102_table01": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "7c658901c96bce1cdc3feb28052c215c4262d6a6df18ca2b03fc758e3bf3bb8e",
+      "pngSha256": "1eaf09ffb6c15763da16b8b97e30809fa5207cbb49d3fdfe414c51541f75b9cd"
+    },
+    "t102_table01_o": {
+      "size": [
+        64,
+        64
+      ],
+      "rgbaSha256": "b81602cdde16e773d122348b9f0a428f5fb4fc203ab9e63a8f3b77a6522cb52b",
+      "pngSha256": "81672c76235368131ae9091417a1414a8cb1d11394614c3741b9560e978414d2"
+    }
+  },
+  "sourceBounds": [
+    -144.64869689941406,
+    1.0,
+    -216.6488037109375,
+    -107.35130310058594,
+    18.0,
+    -179.3509979248047
+  ],
+  "origin": [
+    -126.0,
+    1.0,
+    -197.9999008178711
+  ],
+  "uniformDivisor": 37.297393798828125,
+  "originalTriangles": 320,
+  "authoredClosureTriangles": 168,
+  "neighbor": {
+    "nativeLink": "ZO231 -> AD115 -> MM172 -> GR514",
+    "model": "t102r0201_00_00",
+    "modelBchSha256": "7d3e0888474ef65d6fcb0c41568e9fc3849600e1b17ebfe1a182afd10fc5d5dc",
+    "sourceBounds": [
+      -144.64869689941406,
+      1.0,
+      -234.6488037109375,
+      -107.35130310058594,
+      18.0,
+      -197.3509979248047
+    ],
+    "origin": [
+      -126.0,
+      1.0,
+      -215.9999008178711
+    ],
+    "uniformDivisor": 37.297393798828125,
+    "sourceDiningTableTriangles": 320,
+    "authoredClosureTriangles": 168,
+    "selection": "Original main dining table and complete cloth only; separate wall table excluded."
+  },
+  "independentValidation": "Original selected positions, UV0 and triangle indices agree with Nitrogen. Source is unskinned.",
+  "processing": "Original table body and complete checked cloth retained. Source table/leg rims closed independently. Cloth gets a 0.12-source-unit inner surface and thin boundary rim rather than a solid slab below the hanging fabric. Source vertex RGB is white; source shadows, floor and lights excluded. Uniform native footprint fit; original texture RGBA/UV unchanged."
+}

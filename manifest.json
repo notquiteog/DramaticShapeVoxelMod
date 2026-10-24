@@ -1,8 +1,8 @@
 {
   "id": "BATTLE_ART_VOXEL_FORK",
   "name": "BATTLE ART VOXEL FORK",
-  "version": "1.57.7",
-  "api": 2,
+  "version": "1.57.12",
+  "api": 3,
   "entry": "main.lua",
   "profile": "content",
   "category": "GRAPHICS",
@@ -11,7 +11,7 @@
     "gen2",
     "gen3"
   ],
-  "game_version": "0.0.0-dev || >=0.2.73 <3.0.0",
+  "game_version": "0.0.0-dev || >=0.3.96 <3.0.0",
   "priority": 100,
   "dependencies": [],
   "optional_dependencies": [
