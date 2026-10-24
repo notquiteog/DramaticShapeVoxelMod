@@ -1,0 +1,142 @@
+{
+  "asset": 592877,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592877/",
+  "title": "Saffron Mr Psychic house",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "f7597b3bc790147e55b98b7fcef935e6dae731479d3e26083caaf3e919c9fe1a",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Saffron City/Saffron City.dae",
+  "sourceModelSha256": "789316266c83cc38c036cd4000da572e4c8127cad886c4485571d5549f0b3966",
+  "geometry": "ybc_h01-mesh",
+  "doorGeometry": "ybc_dor1_001-mesh",
+  "sourcePlacementEvidence": "Southeast regional house world(192,-280,30.99999), panel(194,-289.4512,30.36132); distinct from northwest Copycat(-224,104,30.99999). Common Y-up door offset(2,-.638672,9.4512) preserves exact source floorY2.",
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -30.125,
+      1.95,
+      -22.0,
+      30.125,
+      50.0,
+      20.0
+    ],
+    "sourceOrigin": [
+      0.0,
+      1.95,
+      -1.0
+    ],
+    "sourceUnitSpan": 60.25,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.34854771784232363,
+      0.5,
+      0.7975103734439833,
+      0.34854771784232363
+    ]
+  },
+  "originalBounds": [
+    -32.0,
+    1.0,
+    -26.0,
+    40.0,
+    50.0,
+    32.0
+  ],
+  "originalTriangles": 186,
+  "processedTriangles": 226,
+  "closure": "Measured rear yellow siding/green plinth, inset inner gable, original detailed front barrel fascia copied to exact rear cut, three-segment barrel soffit and recessed foundation. Genuine panel receives measured missing left/back/top/bottom returns with original side paint. Original physical geometry/UV/PNG bytes retained; source shadow triangles excluded.",
+  "entrance": "Original separately instanced panel; authored native-frame inward hinge0/42.5/85 degrees. Only exact Mr Psychic native city/connection placements, never Copycat or generic one-storey no-door houses. Native permissions/warps/ground remain authoritative.",
+  "textures": {
+    "ybc_mado.png": {
+      "sha256": "af8493b3bc18c0d741bd1604b7682c46e0926f215d17aaa0235ff203989ac3ab",
+      "bytes": 200
+    },
+    "h_in.png": {
+      "sha256": "3142cd93a33fa44fa70b74cdd9ff93fda4501a146a26a1a274a89976f3d3ac12",
+      "bytes": 81
+    },
+    "ybc_eo01.png": {
+      "sha256": "2eadc778b621e13b9d2755c162ffbdffda9e4a8ca7c67339567a69d2f73f7cce",
+      "bytes": 748
+    },
+    "ybc_h1a.png": {
+      "sha256": "8817fd0ec01df2a88558e4a44f1c5e1f3ad3562386c9ddd5d445bedc5807e324",
+      "bytes": 427
+    }
+  },
+  "parts": [
+    {
+      "name": "ybc_h01-mesh:ybc_mado_003-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 4
+    },
+    {
+      "name": "ybc_h01-mesh:h_in_016-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 14
+    },
+    {
+      "name": "ybc_h01-mesh:ybc_eo01-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 156
+    },
+    {
+      "name": "ybc_dor1_001-mesh:ybc_h1a-material",
+      "role": "source_door",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 8
+    },
+    {
+      "name": "authored_rear_siding",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_inner_gable",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_rear_barrel_fascia",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 16
+    },
+    {
+      "name": "authored_roof_soffit",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 6
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 10
+    },
+    {
+      "name": "authored_door_returns",
+      "role": "source_door",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 8
+    }
+  ]
+}

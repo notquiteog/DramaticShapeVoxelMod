@@ -16,7 +16,9 @@ function M.eligible(g,cells)
 end
 function M.register()
  if registered then return true end
- local ok,err=Models.register(M.id,V.require('ViridianHouseData')[M.id],{read=function(path)return V.mod:read(path)end})
+ local source=V.require('ViridianHouseData')[M.id];local parts={}
+ for _,p in ipairs(source.parts)do if p.role~='source_door'then parts[#parts+1]=p end end
+ local ok,err=Models.register(M.id,{parts=parts,anchors=source.anchors},{read=function(path)return V.mod:read(path)end})
  if ok then registered=true end;return ok,err
 end
 function M.build(g,cells,newMesh,parts)
@@ -24,8 +26,13 @@ function M.build(g,cells,newMesh,parts)
  local ok,err=M.register();if not ok then return false,err end
  local fit={groundInset=.05,width=80,depth=48,padding=.25,anchor='door',targetX=24,targetZ=35.4}
  local p={model=M.id,x=g.cx*16,y=g.groundHeight or 0,z=(g.cy+1)*16,fit=fit}
- local result,why=Models.buildBatches({p},newMesh,{parts=parts});if not result then return false,why end
- g.importedViridianHouse=assert(Models.fit(M.id,fit));return true
+ local fitted,why=Models.fit(M.id,fit);if not fitted then return false,why end
+ local geometry,why=Models.vertices(M.id,fit);if not geometry then return false,why end
+ local safe,why=V.require('Gen3ImportedGyms').clearance(g,cells,geometry);if not safe then return false,why end
+ fitted.model=M.id
+ local doors=V.require('Gen3ViridianFlowerHouseDoors');local ready,why=doors.build(g,fitted,newMesh);if not ready then return false,why end
+ local result,why=Models.buildBatches({p},newMesh,{parts=parts});if not result then doors.release(g);return false,why end
+ g.importedViridianHouse=fitted;doors.commit(g);return true
 end
 function M.doorSurface(g,tx,ty)
  local f=g.importedViridianHouse;if not f or tx~=g.cx+1 or ty~=g.cy+3 then return end

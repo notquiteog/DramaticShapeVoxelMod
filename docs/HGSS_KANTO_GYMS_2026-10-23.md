@@ -1,6 +1,6 @@
-# Source-matched Viridian/Pewter Gyms — 2026-10-23
+# Source-matched Viridian/Pewter/Cerulean/Saffron Gyms — 2026-10-23
 
-The two genuine regional sources are `to_gym_001-mesh` with
+The initial two genuine regional sources are `to_gym_001-mesh` with
 `gym_door_007-mesh` from [HGSS Viridian City](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592881/),
 and `nbc_gym_001-mesh` with `gym_door_005-mesh` from
 [HGSS Pewter City](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592849/).
@@ -40,7 +40,7 @@ open animation frames.
 
 ## Building/ground contact
 
-Both new Gym fits and the new Pewter-house fit explicitly use
+The Gym fits and Pewter-house fit explicitly use
 `groundInset=.05`, provided by shared commit0fb2b673. This moves only the
 source Y0 contact-ring vertices below native ground, including the matching
 edges across source parts. Anchors, physical upper geometry, UVs and the native
@@ -95,3 +95,96 @@ Gyms. `build` returns `true,kind` only after the selected child completes;
 `release`, `ownsDoor`, optional `doorSurface` and `chimney` route only active
 imported groups. Unknown drawings and failed uploads retain native fallback.
 This dispatcher adds no Scene, companion or engine callback dependency.
+
+
+## Cerulean source and rear UV repair
+
+The subsequent batch adds `ha_gym-mesh` with `gym_door_001-mesh` from
+[HGSS Cerulean City592833](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592833/),
+also Kuramapika1, September1,2026. Its actual blue Water-type badge and all source
+geometry/PNG bytes remain original. The exact7×5 native drawing includes a
+blocked northeast header cell; the guard retains that permission instead of
+assuming the entire header is walkable. The same original paired-panel poses,
+blocked-triangle clearance and explicit ground contact inset apply.
+
+All three source Gyms contained a separate exporter UV defect on their existing
+raised-tower rear quad: two triangles mapped the entire facade atlas, producing
+orange/gray vertical strips on the back. Those two original faces now sample the
+original neutral gray wall strip (`kn_gym_a.png`, U25.5/32,V0.5). Positions and all
+other UVs remain unchanged; no texture bytes are edited. Converter provenance
+records exact repaired source triangle indices. Before/after source and native
+rear captures show a continuous gray wall instead of the atlas projection.
+
+Both editions passed native Cerulean Gym entry and return. Both existing cities
+were rechecked in both editions after the UV repair, including rear/ground
+contacts, original door states and actual entry/return. LeafGreen with Cerulean
+PNG sources masked retained native source/fallback entry and return. Source and
+processed seven-direction captures, native front/left/right/rear/2D views and
+closure contacts were inspected. Latest official runtime was checked again:
+v0.3.95 with official Linux LÖVE11.5 shell, isolated profiles and Mesa llvmpipe;
+explicit drivers pass, while shell shutdown returns1. New focused assertions
+verify both original rear triangles retain the neutral wall paint.
+
+The reusable `QA_FAMILY=gyms_all` reviews all three cities; `cerulean_gym` targets
+only the new source. The dispatcher remains `hgssGyms`; no new Scene API is
+required. Deterministic conversion recreates the three models and provenance.
+
+Cerulean's shared Civic underlay currently shows yellow path between columns
+where native2D shows lawn. The building batch does not change shared floor
+selection. Native ground/collision hashes are unchanged, but Cerulean rendered
+acceptance is conservatively **pending** that shared native-ground donor review.
+Its metadata includes an explicit `renderedGap`. The source census now records30
+eligible/103 unmatched recognized assemblies per edition, with11 inspected;
+Gym source coverage is3/11 drawings and accepted Gym coverage remains2/11.
+These are inventory counts, not a game-completion percentage.
+
+
+## Saffron Gym and closed connection projection
+
+The subsequent regional source is `ya_gym-mesh` with `gym_door_006-mesh` from
+[HGSS Saffron City592877](https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592877/),
+also Kuramapika1, September1,2026. Its own original purple trim/badge, orange
+entrance columns, brown roof, paired glass panels, source UVs and PNG bytes
+remain. The same measured closed rear/belt/roof/soffit/foundation and two-face
+rear-tower UV repair apply because the physical source topology matches the
+other three regional Gyms. Original285 triangles include11 excluded shadow
+triangles; the final328 preserve all274 physical source triangles and add54
+closure triangles. Deterministic conversion reproduces all four models and
+provenance, with no changes to the previous three outputs.
+
+The exact7×5 native drawing on canonical pair `general__rom_082d4b9c` has an
+all-blocked roof header and distinct facade/corner metatiles. The adapter checks
+actual region identity and local coordinates: `FR_SAFFRON_CITY` at(43,8), or
+`FR_SAFFRON_CITY_CONNECTION` at(33,1). Only the city has native door permission113;
+the actual connection projection has permission7 and no warp. That closed
+projection renders its original source panels closed. The distinct6×5 Fighting
+Dojo is rejected. Header, native paving, blocked body union, ground datum and
+all collision/elevation/warp data remain unchanged. Source/door triangle clipping
+passes at the same X56/Z49 native entrance anchor; the shared contact-ring
+inset does not move the building or source door.
+
+Latest official release was checked before this batch: v0.3.95, using its
+Linux source/LÖVE11.5 shell, Mesa llvmpipe, isolated FR/LG QA profiles and no
+companions. Both city Gyms passed original held-input door frames0/1/2, entry to
+`FR_SAFFRON_CITY_GYM` and native return; native hashes remained identical. Both
+actual connection copies built this source with hashes unchanged; they have no
+entry/return claim. Missing-source-image LeafGreen retained native city entry/
+return and closed connection fallback. Original/closed seven-direction views,
+native overviews and front/right/left-quarter/rear-contact views were inspected.
+The broad rear view is obstructed by native forest, so the rear-contact camera
+uses the original blocked roof-header tile; this is a disposable QA camera
+fixture, not a change to walking collision. Full rear/roof closure is additionally
+visible in the independent closed-source viewer. No ground/closure flicker was
+observed. Drivers emitted PASS; shell shutdown remains1.
+
+The disposable fixture sets the official `FLAG_HIDE_SAFFRON_ROCKETS` (0x3E)
+through the public script flag API before loading Saffron, so the normal story
+NPC does not obstruct the doorway. It never saves this synthetic progress or
+changes production story logic. `QA_FAMILY=saffron_gym` in the reusable driver
+covers both actual maps and asserts the exact source built at each coordinate.
+The connection record explicitly marks `nonEnterable`, with no false warp test.
+The final ledger now records54 source eligible/35 inspected accepted/79 unmatched
+assemblies per edition. Gym source coverage is5/11 drawings; accepted Gym
+coverage is4/11, with Cerulean pending its separate shared-ground assessment.
+Other Gym sources, native low/enterable Saffron houses and Silph Co. remain gaps.
+No production Scene hook changes are required: dispatcher kind remains `hgssGyms`.

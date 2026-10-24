@@ -14,7 +14,7 @@ assert(H.register());local parts,fit=assert(S.vertices(H.id,{width=80,depth=48,p
 for _,p in ipairs(parts)do assert(p.role~='source_door'and p.role~='source_shading'and p.role~='ground_shadow');for _,v in ipairs(p.vertices)do assert(v[1]>=.25-1e-6 and v[1]<=79.75+1e-6 and v[3]>=.25-1e-6 and v[3]<=47.75+1e-6)end end
 local v,i=Cards.geometry(g,fit);assert(#v==8 and #i==12)
 for _,q in ipairs(v)do assert(#q==13 and q[1]>=384.25 and q[1]<=463.75 and q[3]>240 and q[3]<320)end
-for state=0,2 do local p=assert(D.geometry(g,fit,state));local count=0;for _,q in ipairs(p)do count=count+#q.indices/3 end;assert(count==8)end
+for state=0,2 do local p=assert(D.geometry(g,fit,state));local count=0;for _,q in ipairs(p)do count=count+#q.indices/3 end;assert(count==12)end
 assert(not H.build(g,cells,function()error('missing source door image must retain native model')end,{}));assert(not g.importedViridianFlowerHouse)
 -- A flower image/mesh is owned independently from immutable source PNGs.
 local released=0;g.importedViridianFlowerImage={release=function()released=released+1 end};Cards.release(g);Cards.release(g);assert(released==1)

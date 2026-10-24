@@ -1,0 +1,104 @@
+{
+  "asset": 592838,
+  "sourcePage": "https://models.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/asset/592838/",
+  "title": "Lavender Name Rater tent",
+  "game": "Pokémon HeartGold / SoulSilver",
+  "author": "Kuramapika1",
+  "submitted": "2026-09-01",
+  "originalGameArt": "Nintendo / Creatures / GAME FREAK",
+  "archiveSha256": "6ed6f6344bc73f602e8ccda34d09e1c98eab0a37fef53644bad3568aebe1f246",
+  "sourceFile": "DS _ DSi - Pokemon HeartGold _ SoulSilver - Locations - Lavender Town/Lavender Town.dae",
+  "sourceModelSha256": "4894171bc9d730da51e19dda942f98173e0617f0fd432645cba6bdbdfd29f9d5",
+  "geometry": "ko_seimei-mesh",
+  "entrance": "Original open curtains and inset interior back plane; no invented hinged panel or animation. Native FR/LG entrance scripts/timing unchanged.",
+  "containerRepairs": [],
+  "normalization": {
+    "sourceBounds": [
+      -36.04297,
+      2.2,
+      -23.92188,
+      35.92578,
+      87.37501,
+      16.94922
+    ],
+    "sourceOrigin": [
+      -0.058594999999996844,
+      2.2,
+      -3.4863300000000006
+    ],
+    "sourceUnitSpan": 71.96875,
+    "bounds": [
+      -0.5,
+      0.0,
+      -0.28395032566217976,
+      0.5,
+      1.1834999218410769,
+      0.28395032566217976
+    ]
+  },
+  "originalBounds": [
+    -37.35547,
+    1.117187,
+    -31.83203,
+    43.1875,
+    87.37501,
+    32.91406
+  ],
+  "originalTriangles": 134,
+  "processedTriangles": 144,
+  "closure": "Measured rear cloth at original three-height side profiles, stepped rear tent roof matching original front bands, eave return and recessed underside cap. Original front curtains, window recesses and source threshold unchanged. Source shading excluded.",
+  "textures": {
+    "h_mado.png": {
+      "sha256": "ddf8daca4b57e903f962c663f89f06be6d43ca5f29459d0094b4b8140514601f",
+      "bytes": 187
+    },
+    "ko_seimei.png": {
+      "sha256": "93746ce17c0779b29499471a62d09b055da029fa23b1b08b2b63c08b435e8a1e",
+      "bytes": 728
+    }
+  },
+  "parts": [
+    {
+      "name": "ko_seimei-mesh:h_mado_lm1_001-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 4
+    },
+    {
+      "name": "ko_seimei-mesh:ko_seimei_lm4-material",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": false,
+      "triangles": 114
+    },
+    {
+      "name": "authored_rear_tent_cloth",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 4
+    },
+    {
+      "name": "authored_rear_tent_roof",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 10
+    },
+    {
+      "name": "authored_rear_eave_return",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 2
+    },
+    {
+      "name": "authored_closed_foundation",
+      "role": "structure",
+      "opacity": 1.0,
+      "authored": true,
+      "triangles": 10
+    }
+  ]
+}

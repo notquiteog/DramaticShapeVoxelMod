@@ -1,3 +1,10 @@
+# Kanto source coverage resumed after API3 release — 2026-10-23
+
+Merged release1.57.12 API3/current-engine work into the isolated Kanto source
+branch. Preserved queued regional source/door families and the released Museum
+solid staircase. Reverify the merged queued placements before extending missing
+Kanto exterior families. No version bump or release; integration remains root-owned.
+
 # Portable API3 migration — 2026-10-23
 
 Final release verification: all seven immutable release ZIPs pass **88/88**
@@ -208,6 +215,119 @@ four missing-source native fallbacks pass. Inspected contact views are clean;
 some sides remain tree-obscured. No whole-map acceptance claim. Remaining Rustboro
 flats, southern home, tower and Devon continue next. See
 [batch evidence](docs/ORAS_RUSTBORO_HOMES_2026-10-23.md).
+
+# Genuine Mr Psychic source/native acceptance, scenery pause — 2026-10-23
+
+Authentic southeast HGSS ybc_h01 plus ybc_dor1_001 now covers only native Mr
+Psychic city/connection drawings. Source scene matrices prove original panel
+placement; measured rear/barrel underside/foundation/panel returns close cuts,
+original physical triangles/UV/PNG bytes remain unchanged, source shadows removed.
+Official0.3.96 FR/LG four placements/two real entry-return pairs/two no-warp
+projections pass; source/native/contact/poses inspected, LG missing PNG fallback
+passes. Native hashes/support/warps unchanged. Focused native/pose/atomic tests,
+Copycat regression,592-file LuaJIT compile and6 deterministic outputs pass.
+Canonical79 eligible/72 accepted/54 unmatched/6324 unclassified blocked cells each
+edition. Adjacent sign49,22 MID2 wrongly selects shared ground1, outside building
+scope, reported to root. Dispatcher saffronPsychic routes lifecycle/ownsDoor;
+no production Scene/package claim. See docs/SAFFRON_PSYCHIC_SOURCE_2026-10-23.md.
+User reprioritized seven-mod0.3.96 API audit; no more scenery work until that task
+is ready. This clean commit closes the current verified source family.
+
+# Genuine Saffron Copycat source and native acceptance — 2026-10-23
+
+Exact Copycat city/connection placements now use real HGSS ybc_mmc plus its
+separately instanced ybc_dor1 panel, verified by original source scene matrices.
+Rear barrel/gable/curved soffit/foundation and full panel returns close measured
+cuts; original physical triangles/UV/PNG bytes retained, source shadows excluded.
+Native0.3.96 FR/LG:4 reviewed placements,2 real entry-return pairs,2 explicit
+nonenterable projections. Native hashes/contact/door poses inspected; LG missing
+PNG fallback passes. Native hide flag0x3e only in disposable fixture; no save.
+Focused LuaJIT native/triangle/pose/atomic-failure/dispatcher tests,589-file compile
+and7 deterministic outputs pass. Canonical per edition77 eligible/70 accepted/
+56 unmatched/6324 unclassified blocked cells; Mr Psychic remains unmatched.
+Production Scene hook: dispatcher saffronCopycat, full draw/release/ownsDoor route.
+No production Scene changes or combined-package claim. See
+`docs/SAFFRON_COPYCAT_SOURCE_2026-10-23.md`. Continuing matching Mr Psychic source.
+
+# Museum rendered coverage accepted after solid stairs — 2026-10-23
+
+Queued regional census now records Museum renderedAccepted=true on official0.3.96
+FR/LG: both main/staff native entry-return pairs, source footprint, front/side/
+rotated/first-person solid contact verified after focused e9fdfe43. Corrected
+old diagnosis: approach row7 ordinary behavior0 was unclaimed arch+stair art;
+semantic terrace duplication was a separate shared defect. Canonical per-edition
+counts75 eligible/68 accepted/58 unmatched/6324 unclassified blocked cells; prior
+134 other accepted assemblies remain explicitly0.3.95 evidence. This metadata
+follow-up is separate from the release's focused staircase cherry-pick. See
+`docs/PEWTER_MUSEUM_NATIVE_REVIEW_2026-10-23.md` and canonical JSONL.
+
+# Museum exact footprint/current-engine review, shared stairs gap — 2026-10-23
+
+Latest official engine became0.3.96; verified official source/shell SHA256 and
+fresh public imports into new isolated profiles produce required cache140.
+Museum main/staff native portals pass both editions and repeat after exact
+projected-triangle/native-mask guard; LG missing-PNG both entries/returns pass.
+Native/source/contact/side/closure captures inspected; all original map hashes,
+source/PNG data and portal fits unchanged. Museum remains renderedAccepted=false:
+shared generic terrace steps project arch artwork onto treads and draw duplicate
+coplanar cap/tread faces. Parent owns Gen3Stairs; preserve native rise and emit
+one clean tread rather than moving source/ground. Canonical inventory now0.3.96,
+while older accepted assemblies explicitly retain renderedRuntime0.3.95. Museum
+nativeReview separately records0.3.96/source-footprint/returned portals/gap.
+Counts unchanged75 eligible/67 accepted/58 unmatched/6324 unclassified blocked
+cells per edition. Exact native guards/adversarial triangle test pass. No Scene
+edits, shared stair fix or production-package acceptance. See
+docs/PEWTER_MUSEUM_NATIVE_REVIEW_2026-10-23.md. Continuing Saffron Copycat source.
+
+# Viridian original source doors and ordinary-house acceptance — 2026-10-23
+
+Ordinary native house(24,8) now uses its genuine inward source panel without a
+static duplicate/native-card overlay. The shared ordinary/flower door gains its
+missing back/underside from measured bounds and original brown side paint;
+original8 triangles/UVs/PNGs unchanged,12 triangles form a closed panel. Native
+0.3.95 FR/LG both houses:4 placements/4 real entry-return pairs, unchanged native
+hashes, source/full opening/contact/native2D views inspected. LG ordinary missing
+PNG source+entry-return fallback passes; deterministic six-file conversion and
+focused LuaJIT topology/clearance/lifecycle checks pass. Native HD2D flower cards
+stay unchanged. Canonical75 eligible/67 accepted/58 unmatched/6324 unclassified
+blocked cells per edition; seven shared-ground gaps remain. Production Scene
+must route existing ordinary groups through Gen3ViridianFlowerHouseDoors, or
+consolidate new dispatcher viridianHouses. No Scene edits or package acceptance.
+See docs/VIRIDIAN_SOURCE_DOORS_2026-10-23.md. Museum rendered review is next.
+
+# FR/LG original Center sliding doors and native census — 2026-10-23
+
+Static HGSS Centers no longer retain duplicate glass beneath native animation
+cards. Original glass splits at its UV midpoint into native-frame sliding leaves,
+preserving source plane/height/UVs/opacity; full body/all poses stay on original
+blocked cells. Exact Vermilion water-header and blocked Saffron connection guards
+complete18 detected standard drawings. Official0.3.95 Linux/LÖVE11.5 source
+fixtures cover36 placements/34 real entry-return pairs across FR/LG; LG missing
+PNG fallback passes18. Source topology, native comparisons and contact captures
+inspected; source-alpha Celadon replay, focused LuaJIT tests and immutable native
+hash checks pass. Four/Six Island synthetic Rival flags are documented, never
+saved. Sixteen Centers per edition accepted; both Saffron placements need shared
+native-yellow paving. Canonical census75 eligible/66 accepted/58 unmatched,
+6324 unclassified blocked cells per edition. Source data/PNG bytes unchanged.
+Production Scene is parent-owned: route existing Center groups through new
+Gen3KantoCenterDoors draw/release/ownsDoor, or dispatcher kantoCenters. No release
+or combined-package acceptance is claimed. See docs/HGSS_CENTER_DOORS_2026-10-23.md.
+
+# FR/LG shared HGSS Mart source batch — 2026-10-23
+
+Standalone dispatcher adds `hgssMarts`; production Scene integration remains
+parent-owned. Authentic HGSS structural/window/door/sign adaptation fills the
+native right-door Mart footprint, with closed rear/soffit/foundation and explicit
+contact-ring inset. Exact native hashes and all24 placements pass on official
+v0.3.95 Linux/LÖVE11.5, with22 real entry/return pairs; Saffron connection has
+no warp. Disposable Four Island/Viridian story flags are documented. LG missing
+PNG fallback passes all12. Source/native front/side/rear/door captures inspected;
+focused LuaJIT tests and deterministic source conversion pass. Source eligibility
+is12 Marts per edition; only10 are rendered accepted, because both Saffron
+placements need parent-owned native yellow paving. Canonical per-edition census:
+426 maps,133 assemblies,73 eligible,50 accepted,60 unmatched,6324 unclassified
+blocked cells. No whole-game or production-package acceptance is claimed.
+See docs/HGSS_MARTS_2026-10-23.md and canonical JSONL for exact evidence/gaps.
 
 # Depth/fence/foliage release1.57.8 — 2026-10-23
 
